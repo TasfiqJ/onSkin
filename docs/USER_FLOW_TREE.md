@@ -2028,3 +2028,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Should the first durable native mobile E2E suite use Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another harness?
 - Which Expo web routes should graduate from human-simulated evidence plus `e2e:human:manifest` into a committed Playwright suite after dependency approval?
 - Where should long-lived release evidence live: `test-results/human-e2e/`, phase-specific docs folders, or both?
+
+## Flow: Lean V1 handoff integration (2026-09-27)
+
+- Priority: Critical; Expo web at 375x667, 390x844 and 430x932. Native iOS tabs/VoiceOver/device APIs need separate Apple-host evidence.
+- Entry: fresh local fixture on Welcome. Begin -> age -> goals -> unbundled consent -> quiz -> manual products -> durable profile -> reminders -> optional Apple/email account -> standard paywall -> Continue free -> routine -> Today.
+- Branches: denied/failed consent or storage remains fail-closed; Back retains quiz answers; unsupported notifications retain explicit choice/retry; account skip preserves guest owner; no Google or custom grant promise.
+- Tabs: Today / Progress / Shelf / You have full labels and selected state. Shelf manual Add remains visible with populated lists; filters/scroll restoration and error boundary remain. Manual entry validates input and preserves opened-date/freshness capture. Private Progress remains local/no-score.
+- Deferred direct entries: Ask/recommendations/community render closed boundary; catalog scan/search return to manual entry; win-back/reverse-trial reoffer return to ordinary upsell. No deferred child hooks mount.
+- Persistence: check off routine, refresh/relaunch, verify saved result; errors remain retryable. Inspect supported viewport overflow, 44px targets, keyboard and ordinary You spacing.
+- Evidence: `test-results/human-e2e/2026-09-27/handoff-integration/`; automation must use isolated local browser fixtures, not production credentials.

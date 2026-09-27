@@ -150,8 +150,8 @@ block(
 );
 block(
   errors,
-  has('docs/phase-10/beta-source-of-truth.md', /50-100 (total )?real target users/i),
-  'Phase 10 source of truth must require 50-100 real target users.',
+  has('docs/phase-10/beta-source-of-truth.md', /15-30 (total )?real target users/i),
+  'Phase 10 source of truth must require 15-30 real target users.',
 );
 block(
   errors,

@@ -31,7 +31,7 @@ describe('onboarding route contracts', () => {
 
     expect(source).toContain("We don't store your birth date.");
     expect(source).not.toContain('donâ');
-    expect(source).not.toContain('â€™');
+    expect(source).not.toContain('’');
   });
 
   it('keeps unreadable age-verification state out of the DOB form', () => {
@@ -198,193 +198,20 @@ describe('onboarding route contracts', () => {
   });
 
   it('keeps onboarding fixed-footer screens scrollable above phone actions', () => {
-    const age = readAppRoute('onboarding/age.tsx');
-    const goals = readAppRoute('onboarding/goals.tsx');
+    for (const route of ['goals', 'quiz']) {
+      const source = readAppRoute(`onboarding/${route}.tsx`);
+      expect(source).toContain('<ScrollView');
+      expect(source).toContain('contentContainerClassName="pb-28"');
+      expect(source).toContain('className="bg-paper pb-4 pt-2"');
+      expect(source).toContain('<OptionCard');
+      expect(source).not.toContain("width: '48%'");
+      expect(source).not.toContain('adjustsFontSizeToFit');
+    }
     const quiz = readAppRoute('onboarding/quiz.tsx');
-    const products = readAppRoute('onboarding/products.tsx');
-
-    expect(age).toContain('useWindowDimensions');
-    expect(age).toContain('const compactPhone = height < 640');
-    expect(age).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
-    expect(age).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
-    expect(age).toContain("contentContainerClassName={compactPhone ? 'pb-28 pt-6' : 'pb-8 pt-10'}");
-    expect(age).toContain(
-      "className={compactPhone ? 'mt-5 flex-row gap-2' : 'mt-8 flex-row gap-3'}",
-    );
-    expect(age).toContain('className="bg-paper pb-4 pt-2"');
-    expect(age).toContain('confirms your age before skin-health data');
-    expect(age).not.toContain('<View className="flex-1 justify-center">');
-    expect(goals).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
-    expect(quiz).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
-    expect(products).toContain('className="flex-1 overflow-hidden"');
-    expect(products).toContain('style={{ minHeight: 0 }}');
-    expect(goals).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
-    expect(quiz).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
-    expect(products).toMatch(
-      /<ScrollView\s+ref={scrollRef}\s+className="flex-1"\s+showsVerticalScrollIndicator/,
-    );
-    expect(goals).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
-    expect(quiz).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
-    expect(products).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
-    expect(goals).toContain('const compactPhone = height < 640');
-    expect(goals).toContain('const splitShortPhone = height < 420');
-    expect(quiz).toContain('const compactPhone = height < 640');
-    expect(quiz).toContain('const splitShortPhone = height < 460');
-    expect(quiz).toContain('function CompactQuizOptionCard');
-    expect(quiz).toContain("style={{ width: '48%' }}");
-    expect(quiz).toContain('numberOfLines={3}');
-    expect(quiz).toContain(
-      'style={splitShortPhone ? { fontSize: 24, lineHeight: 27 } : undefined}',
-    );
-    expect(products).toContain(
-      'height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone || splitShortPhone',
-    );
-    for (const source of [age, goals, products]) {
-      expect(source).toContain('const supportFloorTextPressurePhone =');
-      expect(source).toContain(
-        "width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
-      );
-    }
-    for (const source of [age, goals]) {
-      expect(source).toContain(
-        'const compactPhone = height < 640 || supportFloorTextPressurePhone;',
-      );
-    }
-    expect(products).toContain('const modernTextPressurePhone =');
-    expect(products).toContain(
-      "width <= 390 && height >= 800 && height < 900 && (fontScale >= 1.3 || Platform.OS === 'web')",
-    );
-    expect(products).toContain(
-      'height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone || splitShortPhone',
-    );
-    expect(products).toContain(
-      'const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;',
-    );
-    expect(products).toContain(
-      'const showProgressBody = !modernTextPressurePhone && !splitShortPhone;',
-    );
-    expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
-    expect(products).toContain('const inputRef = useRef<TextInput>(null)');
-    expect(products).toContain("placeholder={pseudoLocalizeString('e.g. Retinol serum')}");
-    expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
-    expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
-    expect(products).not.toContain('scrollRef.current?.scrollToEnd({ animated: true })');
-    expect(products).not.toContain('scrollToShelfList');
-    expect(products).toContain(
-      'scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) })',
-    );
-    expect(products).toContain('inputRef.current?.focus()');
-    expect(goals).toContain("splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-8'");
-    expect(goals).toContain('function CompactGoalCard');
-    expect(goals).toContain("width: '48%'");
-    expect(goals).toContain('min-h-[74px] rounded-card');
-    expect(goals).toContain('min-h-[60px] rounded-card');
-    expect(goals).toContain('splitShort?: boolean');
-    expect(goals).toContain('numberOfLines={splitShort ? 1 : 2}');
-    expect(goals).toContain('splitShort={splitShortPhone}');
-    expect(goals).toContain("'mt-4 flex-row flex-wrap gap-2'");
-    expect(goals).toContain("'mt-2 flex-row flex-wrap gap-1.5'");
-    expect(goals).toContain('<View className="mt-6 gap-3">');
-    expect(quiz).toContain("className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-7'}");
-    expect(quiz).toContain('<View className="mt-3 flex-row flex-wrap gap-2">');
-    expect(quiz).toContain("className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}");
-    expect(products).toContain('const splitShortPhone = height < 460;');
-    expect(products).toContain(
-      'const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;',
-    );
-    expect(products).toContain(
-      'const showProgressBody = !modernTextPressurePhone && !splitShortPhone;',
-    );
-    expect(products).toContain(
-      "className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-4' : 'mt-6'}",
-    );
-    expect(products).toContain(
-      'style={splitShortPhone ? { fontSize: 27, lineHeight: 30 } : undefined}',
-    );
-    expect(products).toContain("'mt-3 rounded-2xl bg-greige-chip px-4 py-2.5'");
-    expect(products).toContain("splitShortPhone\n                ? 'mt-3 p-4'");
-    expect(products).toContain(
-      'const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);',
-    );
-    expect(products).toContain('const selectedCategoryLabel =');
-    expect(products).toContain('setCategoryPickerOpen(false);');
-    expect(products).toContain('accessibilityLabel={');
-    expect(products).toContain('const showCompactCategoryFooter = compactFooterAdds');
-    expect(products).toContain("'Choose product category'");
-    expect(products).toContain(
-      'className="mb-2 min-h-[48px] flex-row items-center justify-between',
-    );
-    expect(products).toContain('<CategoryPickerSheet');
-    expect(products).toContain('visible={categoryPickerOpen}');
-    expect(products).toContain('if (!visible) return null;');
-    expect(products).toContain('className="absolute inset-0 justify-end"');
-    expect(products).toContain(
-      "style={{ backgroundColor: 'rgba(32,27,21,0.4)', zIndex: 20, elevation: 20 }}",
-    );
-    expect(products).toContain('accessibilityLabel="Choose product category"');
-    expect(products).toContain('accessibilityLabel="Dismiss category picker"');
-    expect(products).toContain('useSafeAreaInsets');
-    expect(products).toContain('const { height: viewportHeight } = useWindowDimensions();');
-    expect(products).toContain('const insets = useSafeAreaInsets();');
-    expect(products).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 52);');
-    expect(products).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
-    expect(products).toContain('aria-modal');
-    expect(products).toContain('role="dialog"');
-    expect(products).toContain('accessibilityLabel="Choose product category"');
-    expect(products).toContain(
-      'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
-    );
-    expect(products).toContain('paddingBottom: sheetPaddingBottom');
-    expect(products).toContain('{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }');
-    expect(products).toContain('aria-hidden={categoryPickerOpen || undefined}');
-    expect(products).toContain('accessibilityElementsHidden={categoryPickerOpen}');
-    expect(products).toContain(
-      "importantForAccessibility={categoryPickerOpen ? 'no-hide-descendants' : 'auto'}",
-    );
-    expect(products).toContain('showsVerticalScrollIndicator={false}');
-    expect(products).toContain('style={{ flexShrink: 1 }}');
-    expect(products).toContain('contentContainerClassName="pb-6"');
-    expect(products).toContain('keyboardShouldPersistTaps="handled"');
-    expect(products).toContain('setCategoryPickerOpen((open) => !open)');
-    expect(products).not.toContain('horizontal');
-    expect(products).not.toContain('contentContainerStyle={{ gap: 4, paddingRight: 8 }}');
-    expect(products).not.toContain('className="mt-2 flex-row flex-wrap gap-1.5"');
-    expect(products).not.toContain('import { Modal');
-    expect(products).not.toContain('<Modal');
-    expect(products).not.toContain('animationType="slide"');
-    expect(products).toContain('<View className="flex-row flex-wrap gap-2">');
-    expect(goals).not.toContain('compact={compactPhone}');
-    expect(quiz).toContain('compact={compactPhone}');
-    expect(goals).not.toContain('tight={compactPhone}');
-    expect(quiz).toContain('tight={compactPhone}');
-    expect(goals).toContain('contentContainerClassName="pb-28"');
-    expect(quiz).toContain('contentContainerClassName="pb-28"');
-    expect(products).toContain('const productsBottomPaddingClass =');
-    expect(products).toContain('splitShortPhone && showContinueAnyway && added.length === 1');
-    expect(products).toContain("? 'pb-44'");
-    expect(products).toContain("? 'pb-36'");
-    expect(products).toContain('contentContainerClassName={productsBottomPaddingClass}');
-    expect(goals).toContain('className="bg-paper pb-4 pt-2"');
-    expect(quiz).toContain('className="bg-paper pb-4 pt-2"');
-    expect(products).toContain('className="bg-paper pb-4 pt-2"');
-    expect(products).toContain('const footerPrimaryLabel = compactFooterAdds');
-    expect(products).toContain('? `Add ${remainingToTarget} more`');
-    expect(products).toContain('label={footerPrimaryLabel}');
-    expect(products).toContain('onPress={footerAction}');
-    expect(products).toContain('label={continueAnywayLabel}');
-    expect(products).toContain('variant="ghost"');
-    expect(products).toContain('className="mt-1 min-h-[48px] py-2"');
-    expect(products).not.toContain(
-      "compactFooterAdds ? 'Add to shelf' : added.length > 0 ? 'Continue' : 'Skip for now'",
-    );
-    expect(products).not.toContain('onPress={compactFooterAdds ? () => void add() : go}');
-    expect(products).toContain('{!compactPhone ? (');
-    expect(goals).not.toContain('contentContainerClassName="pb-4"');
-    expect(quiz).not.toContain('contentContainerClassName="pb-4"');
-    expect(products).not.toContain('contentContainerClassName="pb-4"');
-    expect(goals).not.toContain('<View className="pb-4">');
-    expect(quiz).not.toContain('<View className="pb-4">');
-    expect(products).not.toContain('<View className="pb-4">');
+    expect(quiz).toContain('hasCurrentHealthDataCollectionConsent');
+    expect(quiz).toContain('label="Back"');
+    expect(quiz).toContain('setIndex((i) => Math.max(0, i - 1))');
+    expect(readAppRoute('onboarding/products.tsx')).toContain('<CategoryPickerSheet');
   });
 
   it('nudges onboarding product intake toward the three-product first-insight target', () => {

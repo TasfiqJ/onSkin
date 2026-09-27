@@ -32,8 +32,6 @@ const READ_ONLY_ENDPOINTS_BY_FILE = {
   'features/routine/useProgress.ts': ['progress_completions', 'progress_longest_streak'],
   'features/scheduler/profile.ts': ['profile_server'],
   'features/subscription/store.ts': ['entitlement_server'],
-  'features/trend/consent.ts': ['trend_consent'],
-  'features/trend/useTrend.ts': ['trend_monk_band'],
   'lib/consent/consent.ts': ['consent_exact_proof', 'consent_ledger'],
 } as const;
 

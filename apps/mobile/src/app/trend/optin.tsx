@@ -9,6 +9,7 @@ export default function TrendOptInScreen() {
       surface="trend"
       fallbackRoute={APP_PROGRESS_ROUTE}
       fallbackLabel="Back to Progress"
+      trackView={false}
     />
   );
 }

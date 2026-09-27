@@ -36,29 +36,19 @@ export const phase7Capabilities = Object.freeze({
   nativeWidgets: false,
 } as const);
 
-export const phase7Flags = {
+// Lean V1: deployment flags cannot reopen deferred customer surfaces.
+export const phase7Flags = Object.freeze({
   finalDomainReady,
   productionSurfaceReady,
-  commerce: env.phase7CommerceEnabled && finalDomainReady,
-  communityPosting:
-    phase7Capabilities.communityQuestionSubmission &&
-    env.phase7CommunityPostingEnabled &&
-    productionSurfaceReady,
-  communityAggregates:
-    phase7Capabilities.communityAggregates &&
-    env.phase7CommunityPostingEnabled &&
-    productionSurfaceReady,
-  trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled && productionSurfaceReady,
-  cloudAsk: env.phase7CloudAskEnabled && productionSurfaceReady,
-  widgets: phase7Capabilities.nativeWidgets && env.phase7WidgetsEnabled && productionSurfaceReady,
-  shareCard:
-    env.phase7ShareCardEnabled &&
-    env.phase7ReviewedConflictSharingEnabled &&
-    env.phase8PublicLinksEnabled &&
-    productionSurfaceReady &&
-    finalDomainReady,
-  goalActiveRecommendations: env.phase7GoalActiveRecommendationsEnabled && productionSurfaceReady,
-} as const;
+  commerce: false,
+  communityPosting: false,
+  communityAggregates: false,
+  trend: false,
+  cloudAsk: false,
+  widgets: false,
+  shareCard: false,
+  goalActiveRecommendations: false,
+} as const);
 
 const SURFACE_TO_FLAG: Record<DeferredSurfaceKind, boolean> = {
   commerce: phase7Flags.commerce,

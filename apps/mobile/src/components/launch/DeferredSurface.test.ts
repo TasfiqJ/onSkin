@@ -20,4 +20,14 @@ describe('DeferredSurface mobile layout', () => {
     expect(source).toContain('variant="ghost"');
     expect(source).not.toContain('<View className="flex-1 justify-center">');
   });
+
+  it('can suppress route-view analytics for zero-admission surfaces', () => {
+    const source = readComponent();
+
+    expect(source).toContain('trackView = true');
+    expect(source).toContain('trackView?: boolean');
+    expect(source).toContain('if (!trackView) return;');
+    expect(source).toContain("track('phase7_deferred_surface_viewed', { surface })");
+    expect(source).toContain('[surface, trackView]');
+  });
 });

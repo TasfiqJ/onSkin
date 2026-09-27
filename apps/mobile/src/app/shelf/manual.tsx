@@ -169,11 +169,6 @@ export default function ManualAddScreen() {
     viewportWidth <= 390 && viewportHeight < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;
   const showManualIngredientsField = !supportFloorTextPressureManualPhone;
-  const manualIngredientsDeferredStyle = splitShortPhone
-    ? { marginTop: 300 }
-    : compactManualPhone
-      ? { marginTop: 616 }
-      : undefined;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -294,7 +289,7 @@ export default function ManualAddScreen() {
           </View>
 
           {showManualIngredientsField ? (
-            <View style={manualIngredientsDeferredStyle}>
+            <View className={compactManualPhone ? 'mt-1' : 'mt-2'}>
               <Text variant="label" tone="muted" className="mb-1.5 uppercase">
                 Ingredients
                 <Text

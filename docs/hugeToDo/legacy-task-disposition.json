@@ -1,0 +1,1841 @@
+{
+  "source": "history/pre-lean-2026-09-27-execution-status.json",
+  "items": [
+    {
+      "id": "H-01",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-02",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-03",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-04",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md",
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-05",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-06",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-07",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/review-packet-index.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md",
+        "docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-08",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-5/device-qa-checklist.md",
+        "docs/phase-5/generated/device-qa-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-09",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-10/tester-recruitment-sheet.md",
+        "docs/phase-10/tester-brief.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-10",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md",
+        "docs/phase-11/support-launch-readiness.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-11",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "H-12",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
+        "docs/phase-11/store-release-plan.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "V-01",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
+        "docs/phase-11/store-release-plan.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "V-02",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-01",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/2026-07-12-ios-all-features-master-plan-update.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-02",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/DECISIONS.md",
+        "04_repo_docs/docs/DECISIONS.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-03",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/generated/source-packet-audit.json",
+        "docs/generated/readiness-status-audit.json",
+        "LAUNCH_READINESS.md",
+        "BLOCKERS.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-04",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/launch-contract.json",
+        "scripts/launch/contract.mjs",
+        "scripts/launch/contract-smoke.mjs"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-05",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "scripts/launch/check-contract.mjs",
+        "scripts/docs/device-support-policy-audit.mjs",
+        "scripts/docs/readiness-status-audit.mjs",
+        "package.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-06",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "scripts/phase2/check-env.mjs",
+        "scripts/phase5/check-native-config.mjs",
+        "docs/hugeToDo/launch-contract.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-07",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/FOR_TAS_TO_DO.md",
+        "scripts/docs/tas-todo-audit.mjs",
+        "docs/generated/tas-todo-audit.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-08",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GOV-09",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/feature-inventory.json",
+        "docs/hugeToDo/task-graph.json",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/evidence-governance.json",
+        "docs/hugeToDo/worktree-boundary.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-01",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/feature-inventory.json",
+        "docs/hugeToDo/task-graph.json",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/evidence-governance.json",
+        "docs/hugeToDo/worktree-boundary.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-02",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "LAUNCH_READINESS.md",
+        "docs/generated/readiness-status-audit.json",
+        "docs/optimization/evidence/2026-07-12_local-verification-summary.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-03",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/feature-inventory.json",
+        "docs/hugeToDo/task-graph.json",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/evidence-governance.json",
+        "docs/hugeToDo/worktree-boundary.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-04",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/feature-inventory.json",
+        "docs/hugeToDo/task-graph.json",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/evidence-governance.json",
+        "docs/hugeToDo/worktree-boundary.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-05",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/feature-inventory.json",
+        "docs/hugeToDo/task-graph.json",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/evidence-governance.json",
+        "docs/hugeToDo/worktree-boundary.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-06",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/feature-inventory.json",
+        "docs/hugeToDo/task-graph.json",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/evidence-governance.json",
+        "docs/hugeToDo/worktree-boundary.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BASE-07",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        ".github/workflows/ios-launch-contract.yml",
+        ".github/workflows/quality.yml"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-01",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-01-naming-brief.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-02",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-02-scored-longlist.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-03",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md",
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-04",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-04-recommendation.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-05",
+      "previousStatus": "complete",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-06",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-07",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-08",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-09",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BRAND-10",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-01",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-02",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-03",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-04",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-05",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-06",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-07",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-08",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-09",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-10",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-11",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-12",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-13",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-14",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-15",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ACCT-16",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-01",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-02",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/app.base.json",
+        "docs/phase-5/native-build-runbook.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-03",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/app.base.json",
+        "apps/mobile/src/lib/auth/apple.ts",
+        "supabase/functions/account-deletion/index.ts",
+        "docs/phase-5/device-qa-checklist.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-04",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/launch-contract.json",
+        "docs/DEVICE_SUPPORT_POLICY.md",
+        "apps/mobile/app.base.json",
+        "docs/phase-5/device-qa-checklist.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-05",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/app.base.json",
+        "apps/mobile/app.config.js",
+        "apps/mobile/eas.json",
+        "docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-06",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/eas.json",
+        "docs/phase-2-production-infrastructure-runbook.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-07",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/eas.json",
+        "docs/phase-5/native-build-runbook.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-08",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/eas.json",
+        "docs/phase-5/native-build-runbook.md",
+        "docs/phase-5/generated/device-qa-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-09",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "scripts/phase9/store-build-inspect.mjs",
+        "docs/phase-9/generated/store-build-inspection.json",
+        "docs/phase-9/dependency-sbom.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-10",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md",
+        "apps/mobile/app.config.js",
+        "apps/mobile/src/lib/appConfig.test.ts"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "IOS-11",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/eas.json",
+        "apps/mobile/app.base.json",
+        "docs/phase-9/rollout-rollback-plan.md",
+        "docs/phase-11/incident-rollback-drill.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-01",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/functions/_shared/supabaseKeyMap.ts",
+        "supabase/functions/_shared/supabaseKeys.test.ts",
+        "supabase/functions/manifest.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-02",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/functions/revenuecat-webhook/webhookCore.test.ts",
+        "supabase/functions/order-report-poll/index.ts",
+        "docs/phase-9/generated/live-revenuecat-webhook.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-03",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/functions/manifest.json",
+        "supabase/config.toml",
+        "scripts/phase2/deploy-supabase-staging.ps1"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-04",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/functions/_shared/env.ts",
+        "supabase/functions/_shared/env.test.ts",
+        "scripts/phase2/deploy-supabase-staging-smoke.mjs"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-05",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/migrations",
+        "scripts/phase9/supabase-policy-lint.mjs",
+        "supabase/seed.sql"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-06",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "scripts/phase2/deploy-supabase-staging.ps1",
+        "docs/phase-2-production-infrastructure-runbook.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-07",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/config.toml",
+        "docs/phase-2-production-infrastructure-runbook.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-08",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "packages/types/src/database.types.ts",
+        "scripts/phase2/deploy-supabase-staging.ps1"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-09",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "scripts/phase9/live-supabase-adversarial.mjs",
+        "scripts/phase9/supabase-policy-lint.mjs",
+        "docs/phase-9/generated/live-supabase-adversarial.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-10",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/functions/account-deletion",
+        "supabase/functions/data-export",
+        "supabase/functions/consent-withdrawal"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-11",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+        "supabase/README.md",
+        "supabase/functions/manifest.json",
+        "supabase/migrations"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-12",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-2-production-infrastructure-runbook.md",
+        "scripts/phase2/deploy-supabase-staging.ps1",
+        "docs/phase-9/rollout-rollback-plan.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "DB-13",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-2-status.md",
+        "docs/phase-2-production-infrastructure-runbook.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "AUTH-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "AUTH-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "AUTH-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "AUTH-04",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "AUTH-05",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "AUTH-06",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-02",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-03",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-04",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-05",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-06",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-07",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-08",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CAT-09",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-04",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-05",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-06",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "CORE-07",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-04",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-05",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-06",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PHOTO-07",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-01",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-02",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md",
+        "docs/phase-6/payments-runbook.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-03",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md",
+        "docs/phase-6/payments-runbook.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-04",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "supabase/functions/revenuecat-webhook/webhookCore.ts",
+        "supabase/functions/revenuecat-webhook/webhookCore.test.ts",
+        "supabase/migrations/20260713000041_revenuecat_webhook_atomic_projection.sql",
+        "docs/phase-9/generated/live-revenuecat-webhook.json"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-05",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/iap/revenuecat.ts",
+        "apps/mobile/src/lib/auth/AuthProvider.tsx",
+        "docs/phase-6/phase-6-exit-review.md",
+        "docs/phase-6/generated/payments-qa-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-06",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql",
+        "supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql",
+        "supabase/functions/subscription-grants/index.ts",
+        "docs/phase-6/generated/payments-qa-packet.md",
+        "docs/phase-6/phase-6-exit-review.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-07",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/iap/revenuecat.ts",
+        "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
+        "docs/phase-6/payments-qa-checklist.md",
+        "docs/phase-6/generated/payments-qa-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-08",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/iap/revenuecat.ts",
+        "apps/mobile/src/app/paywall/winback.tsx",
+        "docs/phase-6/payments-qa-checklist.md",
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "PAY-09",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-11/revenue-finance-reconciliation.md",
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-02",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-03",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-04",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-05",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-06",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ASK-07",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-02",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-03",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-04",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-05",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-06",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "COM-07",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-02",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-03",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-04",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-05",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-06",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "UGC-07",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "NATIVE-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "NATIVE-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "NATIVE-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "SHARE-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LINK-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GROW-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GROW-02",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "GROW-03",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ADMIN-01",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ADMIN-02",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ADMIN-03",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ADMIN-04",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "ADMIN-05",
+      "previousStatus": "not_started",
+      "disposition": "post-launch",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-01",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md",
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-02",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/regulatory-positioning-memo.md",
+        "docs/phase-3/legal-regulatory-review-log.md",
+        "docs/phase-3/launch-claims-vocabulary.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-03",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/data-inventory.md",
+        "docs/phase-3/consent-matrix.md",
+        "docs/phase-3/privacy-security-review-log.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-04",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/clinical-review-log.md",
+        "docs/phase-3/generated/review-worklist.json",
+        "docs/phase-3/review-packet-index.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-05",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/cosmetic-chemistry-review-log.md",
+        "docs/phase-3/generated/review-worklist.json",
+        "docs/phase-3/review-packet-index.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-06",
+      "previousStatus": "external_pending",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/ip-fto-review-log.md",
+        "docs/phase-3/quiz-fto-summary.md",
+        "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "REV-07",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/review-packet-index.md",
+        "docs/phase-3/generated/review-worklist.json",
+        "docs/phase-3/signoffs/README.md",
+        "scripts/phase3/check-production-release.mjs"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "WEB-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-01",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/analytics/eventRegistry.ts",
+        "apps/mobile/src/lib/analytics/track.ts",
+        "docs/phase-9/observability-payload-audit.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-02",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/observability/sentry.ts",
+        "apps/mobile/src/lib/observability/scrub.ts",
+        "docs/phase-9/observability-payload-audit.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md",
+        "docs/phase-3/privacy-security-review-log.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-04",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "supabase/functions/account-deletion",
+        "supabase/functions/data-export",
+        "supabase/functions/consent-withdrawal",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-05",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-9/rollout-rollback-plan.md",
+        "docs/phase-11/incident-rollback-drill.md",
+        "docs/phase-11/store-release-plan.md",
+        "docs/phase-2-production-infrastructure-runbook.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-06",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-9/incident-response-plan.md",
+        "docs/phase-10/support-operations.md",
+        "docs/phase-11/support-launch-readiness.md",
+        "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "OPS-07",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "scripts/phase9/dependency-sbom.mjs",
+        "docs/phase-9/dependency-sbom.md",
+        "docs/phase-9/security-scanner-evidence.md",
+        "scripts/phase9/store-build-inspect.mjs"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-04",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-05",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-06",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-07",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-08",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-09",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "QA-10",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-04",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-05",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-06",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-07",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "BETA-08",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-01",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/legal/storeMetadata.ts",
+        "docs/phase-8/store-metadata-source-of-truth.md",
+        "docs/phase-3/store-metadata-review.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-8/store-metadata-source-of-truth.md",
+        "docs/phase-5/device-qa-checklist.md",
+        "docs/phase-11/store-release-plan.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-03",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
+        "docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md",
+        "docs/phase-8/store-compliance-packet.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-04",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/store-privacy-inventory.md",
+        "docs/phase-9/observability-payload-audit.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-05",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md",
+        "docs/phase-6/payments-runbook.md",
+        "docs/phase-11/store-release-plan.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-06",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-3/app-review-notes.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
+        "docs/phase-8/store-metadata-source-of-truth.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-07",
+      "previousStatus": "in_progress",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "scripts/phase9/store-build-inspect.mjs",
+        "docs/phase-9/generated/store-build-inspection.json",
+        "docs/phase-5/native-build-runbook.md",
+        "docs/phase-11/store-release-plan.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-08",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-9/release-candidates/_template/store-review-packet.md",
+        "docs/phase-3/app-review-notes.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-09",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-11/store-release-plan.md",
+        "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+        "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "STORE-10",
+      "previousStatus": "blocked",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [
+        "docs/phase-11/store-release-plan.md",
+        "docs/phase-11/ring-0-release-checklist.md",
+        "docs/phase-11/incident-rollback-drill.md"
+      ],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-01",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-02",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-03",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-04",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-05",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-06",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    },
+    {
+      "id": "LAUNCH-07",
+      "previousStatus": "not_started",
+      "disposition": "retained-source-or-external-evidence",
+      "evidenceRefs": [],
+      "note": "Historical evidence preserved; active acceptance is in the lean V1 plan. Local OCR is optional; manual intake remains required."
+    }
+  ]
+}

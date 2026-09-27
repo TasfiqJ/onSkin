@@ -33,8 +33,6 @@ const SUPABASE_CLIENT_FILES = [
   'features/scheduler/profile.ts',
   'features/settings/actions.ts',
   'features/subscription/store.ts',
-  'features/trend/consent.ts',
-  'features/trend/useTrend.ts',
   'lib/network/edgeFunctions.ts',
   'lib/offline/completionQueue.ts',
   'lib/offline/outbox.ts',

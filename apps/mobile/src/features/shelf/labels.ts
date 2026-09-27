@@ -11,10 +11,10 @@ export function paoSourceLabel(source: PaoSource): string {
     case 'catalog':
       return 'from catalog';
     case 'category_default':
-      return 'estimated';
+      return 'estimated from category';
     case 'unknown':
     default:
-      return 'estimate';
+      return 'PAO unknown';
   }
 }
 
@@ -25,9 +25,9 @@ export function expirySourceLabel(source: ExpirySource): string {
     case 'pao_computed':
       return 'opened date + PAO';
     case 'estimated':
-      return 'estimated shelf life';
+      return 'estimated from category';
     case 'unknown':
     default:
-      return 'date unknown';
+      return 'Date unknown';
   }
 }

@@ -37,6 +37,7 @@ function product(input: {
     openedAt: null,
     paoMonths: null,
     expiryDate: input.expiryDate ?? null,
+    expirySource: input.expiryDate ? 'printed' : 'unknown',
   } as ShelfProduct;
 }
 

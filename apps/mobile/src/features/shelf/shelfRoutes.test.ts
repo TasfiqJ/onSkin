@@ -420,7 +420,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactShelf = height < 640;');
-    expect(source).toContain('<ScanShelfButton source="scan_inline" />');
+    expect(source).toContain('<AddShelfButton source="empty_manual" />');
     expect(source).not.toContain('source="scan_fab"');
     expect(source).not.toContain('className="absolute inset-x-0 bottom-4 items-center"');
   });
@@ -443,7 +443,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('splitShort: boolean;');
     expect(source).toContain('splitShort={splitShortShelf}');
     expect(source).toContain('const compactNoArchiveShort = compact && !hasArchive && shortPhone;');
-    expect(source).toContain(": splitShort\n              ? 'items-center px-2 pb-28 pt-0'");
+    expect(source).toContain("'items-center px-2 pb-28 pt-0'");
     expect(source).toContain("? 'items-center px-2 pb-28 pt-2'");
     expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
     expect(source).toContain('{!splitShort ? (');
@@ -452,19 +452,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('height={compactNoArchiveShort ? 56 : 68}');
     expect(source).toContain('Let&apos;s build your cabinet.');
     expect(source).toContain("? 'max-w-[280px] text-center text-[25px] leading-[29px]'");
-    expect(source).toContain('Add what you already use. Scan a barcode, or add it by hand.');
+    expect(source).toContain('Add products you already own.');
     expect(source).toContain('We&apos;ll handle freshness');
-    expect(source).toContain('Scan a barcode, or add it by hand.');
+    expect(source).toContain('Add products you already own.');
     expect(source).toContain("? 'mt-1.5 max-w-[270px] text-center text-[14px] leading-[19px]'");
     expect(source).toContain("compactNoArchiveShort ? 'mt-4 gap-2'");
-    expect(source).toContain("trackProductAddStarted('empty_scan');");
-    expect(source).toContain("router.push('/shelf/scan');");
+    expect(source).toContain("trackProductAddStarted('empty_manual');");
+    expect(source).toContain("router.push('/shelf/manual');");
     expect(source).toContain('className="h-14 items-center justify-center rounded-pill bg-ink"');
     expect(source).toContain("trackProductAddStarted('empty_manual');");
     expect(source).toContain("router.push('/shelf/manual');");
     expect(source).toContain("? 'h-[48px] items-center justify-center'");
     expect(source).toContain(": 'h-[50px] items-center justify-center'");
-    expect(source).toContain('<ScanShelfButton source="scan_inline" />');
+    expect(source).toContain('<AddShelfButton source="empty_manual" />');
     expect(source).not.toContain('!isEmpty && !showLoading ? (');
   });
 
@@ -581,7 +581,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const hasArchive = archiveCount > 0;');
     expect(source).toContain('const compactWithArchive = compact && hasArchive;');
     expect(source).toContain('const compactNoArchiveShort = compact && !hasArchive && shortPhone;');
-    expect(source).toContain(": splitShort\n              ? 'items-center px-2 pb-28 pt-0'");
+    expect(source).toContain("'items-center px-2 pb-28 pt-0'");
     expect(source).toContain("? 'items-center px-2 pb-28 pt-2'");
     expect(source).toContain(': compactNoArchiveShort');
     expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
@@ -840,12 +840,7 @@ describe('Shelf route mobile contracts', () => {
       "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
     );
     expect(source).toContain('compactManualPhone');
-    expect(source).toContain('const manualIngredientsDeferredStyle = splitShortPhone');
-    expect(source).toContain('? { marginTop: 300 }');
-    expect(source).toContain('? { marginTop: 616 }');
-    expect(source).toContain('compactManualPhone\n      ? { marginTop: 616 }');
     expect(source).toContain('{showManualIngredientsField ? (');
-    expect(source).toContain('style={manualIngredientsDeferredStyle}');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',

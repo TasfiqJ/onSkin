@@ -4,6 +4,8 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
+import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
   ACTIVE_CATALOG_PRODUCT_FILTER,
   CATALOG_LOOKUP_PRODUCT_SELECT,
@@ -13,12 +15,8 @@ import {
 } from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const publishableKey =
-  Deno.env.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY') ??
-  Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ??
-  Deno.env.get('SUPABASE_ANON_KEY')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const publishableKey = readSupabasePublishableKey();
+const serviceKey = readSupabaseSecretKey();
 const catalogRateLimitMax = intEnv('CATALOG_RATE_LIMIT_MAX', 120, 1, 1000);
 const catalogRateLimitWindowSeconds = intEnv('CATALOG_RATE_LIMIT_WINDOW_SECONDS', 900, 60, 86400);
 const maxBodyBytes = userEdgeBodyMaxBytes();

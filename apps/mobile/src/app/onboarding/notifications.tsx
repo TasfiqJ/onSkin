@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { SOFT_ASK } from '@/features/notifications/copy';
 import {
@@ -108,11 +108,11 @@ export default function NotificationsScreen() {
           <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 24 }}>
             {SOFT_ASK.body}
           </Text>
-          <View className="mt-6 gap-1">
+          <Card className="mt-6 gap-1 px-4 py-3">
             {SOFT_ASK.bullets.map((b) => (
               <CheckRow key={b} label={b} />
             ))}
-          </View>
+          </Card>
         </View>
         <View className="pb-4">
           {failedChoice ? (

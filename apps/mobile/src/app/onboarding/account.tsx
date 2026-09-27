@@ -35,7 +35,7 @@ import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 export default function AccountScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const isFocused = useIsFocused();
-  const { signInWithApple, signInWithGoogle, sendEmailOtp, verifyEmailOtp } = useAuth();
+  const { signInWithApple, sendEmailOtp, verifyEmailOtp } = useAuth();
   const ownerScope = useOwnerQueryScope();
   const mountedRef = useRef(true);
   const focusedRef = useRef(isFocused);
@@ -205,19 +205,7 @@ export default function AccountScreen() {
                     />
                   </View>
                 ) : null}
-                <Button
-                  label="Continue with Google"
-                  variant="inverse"
-                  onPress={() => {
-                    if (busy || requestInFlightRef.current !== null) return;
-                    run(async (isCurrent) => {
-                      if (accountUpgradeE2EFixture || (await signInWithGoogle())) {
-                        if (isCurrent()) await finish(isCurrent);
-                      }
-                    });
-                  }}
-                  disabled={busy}
-                />
+
                 <View className="mt-2">
                   <Text variant="label" tone="muted" className="mb-2">
                     OR WITH EMAIL

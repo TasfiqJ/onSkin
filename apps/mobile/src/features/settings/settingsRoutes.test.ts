@@ -580,19 +580,11 @@ describe('Settings route contracts', () => {
 
   it('keeps You tab For You rows polished and accessible', () => {
     const source = readAppRoute('(tabs)/you.tsx');
-
-    expect(source).toContain(
-      'const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [',
-    );
-    expect(source).toContain("label: 'Skin Notes'");
-    expect(source).toContain("hint: 'Myth vs evidence, reviewed and claim-safe.'");
-    expect(source).toContain('label: BRAND.askName');
-    expect(source).toContain("hint: 'Your evidence-grounded advisor.'");
-    expect(source).toContain(
-      '<Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />',
-    );
-    expect(source).not.toContain('Skin Notes. Myth vs evidence');
-    expect(source).not.toContain('Your evidence-grounded advisor`, href');
+    expect(source).toContain("label: 'Pregnancy & breastfeeding'");
+    expect(source).toContain('PROFILE');
+    expect(source).not.toContain("label: 'Recommendations'");
+    expect(source).not.toContain("label: 'Skin Notes'");
+    expect(source).not.toContain('label: BRAND.askName');
   });
 
   it('keeps You tab first-viewport rows clear of the floating tab bar on short phones', () => {
@@ -636,33 +628,10 @@ describe('Settings route contracts', () => {
     expect(source).toContain('? routineRows.slice(1)');
     expect(source).toContain('? routineRows.slice(2)');
     expect(source).toContain('? routineRows.slice(3)');
-    expect(source).toContain('const secondaryRoutineTopMargin = tallTextPressureYou');
-    expect(source).toContain('const SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN = 640;');
-    expect(source).toContain('const TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN = 640;');
-    expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
-    expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
-    expect(source).toContain('const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;');
-    expect(source).toContain('const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;');
-    expect(source).toContain(
-      '<Card className="p-3" style={{ marginTop: secondaryRoutineTopMargin }}>',
-    );
-    expect(source).toContain('marginTop: secondaryRoutineTopMargin');
-    expect(source).toContain('? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN');
-    expect(source).toContain('? SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN');
-    expect(source).toContain('? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN');
-    expect(source).toContain(': COMPACT_SECONDARY_ROUTINE_TOP_MARGIN');
+    expect(source).not.toContain('secondaryRoutineTopMargin');
+    expect(source).not.toContain('COMPACT_FOR_YOU_TOP_MARGIN');
+    expect(source).toContain('<Card className="mt-4 p-3">');
     expect(source).toContain('MORE ROUTINE');
-    expect(source).toContain('const COMPACT_FOR_YOU_TOP_MARGIN = 240');
-    expect(source).toContain("className={compactPhone ? undefined : 'mt-4'}");
-    expect(source).toContain(
-      'style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}',
-    );
-    expect(source.indexOf('COMPACT_FOR_YOU_TOP_MARGIN')).toBeLessThan(
-      source.indexOf('function Row'),
-    );
-    expect(source.indexOf("className={compactPhone ? undefined : 'mt-4'}")).toBeGreaterThan(
-      source.indexOf('MORE ROUTINE'),
-    );
     expect(source).toContain('compact={compactPhone}');
     expect(source).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');

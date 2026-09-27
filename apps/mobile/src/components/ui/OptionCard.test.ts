@@ -14,7 +14,7 @@ describe('OptionCard controls', () => {
     expect(source).toContain('accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}');
     expect(source).toContain('compact?: boolean;');
     expect(source).toContain('tight?: boolean;');
-    expect(source).toContain("tight\n          ? 'min-h-[52px] px-4 py-2'");
+    expect(source).toContain("'min-h-[52px] px-4 py-2'");
     expect(source).toContain("? 'min-h-[60px] px-5 py-3'");
     expect(source).toContain(": 'min-h-[64px] px-5 py-4'");
     expect(source).not.toContain('min-h-[44px]');

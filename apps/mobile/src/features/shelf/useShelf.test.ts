@@ -88,7 +88,7 @@ function shelfProduct(overrides: Partial<ShelfProduct> = {}): ShelfProduct {
     paoMonths: 6,
     paoSource: 'category_default',
     expiryDate: null,
-    expirySource: 'pao_computed',
+    expirySource: 'estimated',
     status: 'active',
     finishedAt: null,
     addedVia: 'manual',
@@ -240,7 +240,7 @@ describe('shelf metadata formatting', () => {
       shelfProduct({
         category: 'spf',
         expiryDate: '2027-01-01',
-        expirySource: 'pao_computed',
+        expirySource: 'estimated',
         paoSource: 'category_default',
       }),
     );
@@ -257,7 +257,7 @@ describe('surfaced expiry estimate provenance', () => {
         shelfProduct({
           category: 'spf',
           expiryDate: '2026-12-01',
-          expirySource: 'pao_computed',
+          expirySource: 'estimated',
           paoSource: 'category_default',
         }),
       ),

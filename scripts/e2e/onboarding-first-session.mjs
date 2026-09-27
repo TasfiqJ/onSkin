@@ -550,6 +550,12 @@ function auditExpression() {
       if (!(node instanceof Element)) return false;
       const rect = node.getBoundingClientRect();
       const style = getComputedStyle(node);
+      for (let ancestor = node.parentElement; ancestor; ancestor = ancestor.parentElement) {
+        const overflow = getComputedStyle(ancestor).overflowY;
+        if (!['hidden', 'scroll', 'auto', 'clip'].includes(overflow)) continue;
+        const bounds = ancestor.getBoundingClientRect();
+        if (rect.bottom <= bounds.top || rect.top >= bounds.bottom) return false;
+      }
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
@@ -928,11 +934,11 @@ async function run() {
 
     await waitForPath(client, '/onboarding/paywall');
     await waitForText(client, 'Subscribe to Pro');
-    await waitForText(client, 'Explore first', 30_000);
+    await waitForText(client, 'Continue free', 30_000);
     const paywall = await captureStep(client, '17-paywall-current');
     await screenshot(client, '17-paywall');
     writeJson('17-paywall.json', paywall);
-    assert(paywall.bodyText.includes('Explore first'), 'Paywall did not expose Explore first.');
+    assert(paywall.bodyText.includes('Continue free'), 'Paywall did not expose Continue free.');
     if (accountUpgradeMode) {
       assert(accountCodeEntry, 'Account upgrade did not reach code entry.');
       assert(
@@ -947,9 +953,9 @@ async function run() {
       );
     }
 
-    await scrollTextIntoView(client, 'Explore first', { exact: false });
+    await scrollTextIntoView(client, 'Continue free', { exact: false });
     const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
-    await clickByText(client, 'Explore first', { exact: false });
+    await clickByText(client, 'Continue free', { exact: false });
     await waitForPath(client, '/routine/plan', 30_000);
     await waitForText(client, 'Your routine, in order.', 30_000);
     await waitForText(client, 'Start today', 30_000);
@@ -1209,7 +1215,7 @@ async function run() {
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
         : accountIsolationMode
           ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
-          : 'Completed onboarding through Explore first, routine plan, Start today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.',
+          : 'Completed onboarding through Continue free, routine plan, Start today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1263,7 +1269,7 @@ async function run() {
         accountUpgradeMode
           ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
           : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
-        'Used Explore first to unlock the routine plan without card entry.',
+        'Used Continue free to unlock the routine plan without card entry.',
         'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
         'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
         ...(accountIsolationMode

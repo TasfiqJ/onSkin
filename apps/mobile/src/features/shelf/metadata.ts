@@ -25,11 +25,20 @@ export function formatShelfMetaLine(p: ShelfProduct): string {
   else parts.push(keepTogether('no date set'));
   if (p.expirySource === 'printed' && p.expiryDate) {
     parts.push(keepTogether('printed expiry'));
-  } else if (p.paoMonths != null) {
-    const fromLabel = p.paoSource === 'label' || p.paoSource === 'catalog';
-    parts.push(
-      fromLabel ? keepTogether(`${p.paoMonths} mo PAO`) : keepTogether(`est. ${p.paoMonths} mo`),
-    );
+  } else if (
+    p.expirySource === 'pao_computed' &&
+    p.paoMonths != null &&
+    (p.paoSource === 'label' || p.paoSource === 'catalog')
+  ) {
+    parts.push(keepTogether(`${p.paoMonths} mo PAO`));
+  } else if (
+    p.expirySource === 'estimated' &&
+    p.paoMonths != null &&
+    p.paoSource === 'category_default'
+  ) {
+    parts.push(keepTogether(`est. ${p.paoMonths} mo`));
+  } else if (p.expirySource === 'unknown') {
+    parts.push(keepTogether('Date unknown'));
   }
   return parts.filter(Boolean).join(SHELF_META_SEPARATOR);
 }

@@ -34,7 +34,7 @@ import {
 } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
-import { functionalTagsForCategory, isSafetyCriticalCategory } from './categories';
+import { functionalTagsForCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
@@ -115,7 +115,6 @@ export function applyConflictChoicesToShelfData(
       ...item,
       paired,
       badge: expiryBadge(surfacedExpiry(item.product), today, {
-        safetyCritical: isSafetyCriticalCategory(item.category),
         paired,
         synergy: synergyIds.has(item.id),
         estimate: isEstimatedExpiry(item.product),
@@ -239,7 +238,6 @@ export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
             tags: [...tagsForIngredientList([p.name, ...p.ingredients]).tags],
           };
           const badge = expiryBadge(surfacedExpiry(p), today, {
-            safetyCritical: isSafetyCriticalCategory(p.category),
             paired: pairedIds.has(p.id),
             synergy: synergyIds.has(p.id),
             estimate: isEstimatedExpiry(p),

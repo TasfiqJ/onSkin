@@ -2,11 +2,12 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { format } from 'prettier';
+import { REQUIRED_FEATURE_IDS } from './contract.mjs';
 
 export const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 
 export const baselinePaths = {
-  plan: 'docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md',
+  plan: 'docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md',
   launchContract: 'docs/hugeToDo/launch-contract.json',
   featureInventory: 'docs/hugeToDo/feature-inventory.json',
   executionStatus: 'docs/hugeToDo/execution-status.json',
@@ -52,7 +53,14 @@ export const features = [
   ['F-18', 18, 'trend_insights', 'Trend insights', 'launch-blocked'],
   ['F-19', 19, 'widgets_live_activities', 'Widgets and Live Activities', 'inert'],
   ['F-20', 20, 'admin_tooling', 'Admin and operator review tooling', 'implemented'],
-].map(([id, number, key, name, readiness]) => ({ id, number, key, name, readiness }));
+].map(([id, number, key, name, readiness]) => ({
+  id,
+  number,
+  key,
+  name,
+  readiness,
+  launchRequired: REQUIRED_FEATURE_IDS.includes(number),
+}));
 
 export const gatedSurfaces = [
   ['P7-CLOUD-ASK', ['cloud_ask'], 'Cloud Ask', 'F-14'],
@@ -77,7 +85,13 @@ export const gatedSurfaces = [
   ['P8-REVIEW-PROMPT', ['review_prompts'], 'Review prompts', 'F-01'],
   ['P8-CREATOR-LINKS', ['creator_links'], 'Creator links', 'F-16'],
   ['P8-PAID-MEASUREMENT', ['paid_measurement'], 'Paid measurement', 'F-20'],
-].map(([id, surfaceKeys, name, featureId]) => ({ id, surfaceKeys, name, featureId }));
+].map(([id, surfaceKeys, name, featureId]) => ({
+  id,
+  surfaceKeys,
+  name,
+  featureId,
+  launchRequired: false,
+}));
 
 export function repoPath(path) {
   return path.replaceAll('\\', '/');
@@ -242,6 +256,7 @@ function nativeFeatures(name) {
 
 function dataFeatures(name) {
   const value = name.toLowerCase();
+  if (value.includes('localdateboundary')) return ['F-07', 'F-08'];
   if (value.includes('/trend/')) return ['F-18'];
   if (/photo/.test(value)) return ['F-09', ...(value.includes('trend') ? ['F-18'] : [])];
   if (/community|moderation|reaction|topic|question/.test(value)) return ['F-17'];
@@ -254,10 +269,15 @@ function dataFeatures(name) {
   if (/cycle|ramp/.test(value)) return ['F-08'];
   if (/routine/.test(value)) return ['F-06'];
   if (/conflict|sequencing|ingredient_tag/.test(value)) return ['F-05'];
-  if (/user_product|shelf|opened|pao/.test(value)) return ['F-03'];
+  if (/user_product|shelf|opened|pao|mobile_outbox/.test(value)) return ['F-03'];
   if (/product|catalog|brand|ingredient|obf/.test(value)) return ['F-04'];
-  if (/consent|profile|agegate|skinprofile|applock|largesecure/.test(value)) return ['F-02'];
-  if (/growth|waitlist|edge_rate/.test(value)) return ['F-20'];
+  if (
+    /consent|profile|agegate|skinprofile|applock|largesecure|privatesecure|account_deletion/.test(
+      value,
+    )
+  )
+    return ['F-02'];
+  if (/growth|waitlist|edge_rate|analytics|posthog/.test(value)) return ['F-20'];
   return [];
 }
 
@@ -459,45 +479,11 @@ export function buildFeatureInventory() {
   };
 }
 
-const groupPrerequisites = {
-  BRAND: ['GOV-08', 'BASE-07'],
-  ACCT: ['BRAND-01'],
-  IOS: ['ACCT-01', 'BRAND-06'],
-  DB: ['ACCT-08', 'BASE-07'],
-  AUTH: ['DB-03', 'IOS-07'],
-  CAT: ['DB-03', 'BRAND-06'],
-  CORE: ['AUTH-06', 'CAT-09'],
-  PHOTO: ['AUTH-06', 'CORE-07'],
-  PAY: ['ACCT-09', 'AUTH-06', 'IOS-04'],
-  ASK: ['CORE-07', 'DB-13', 'PAY-09'],
-  COM: ['CAT-09', 'CORE-07', 'PAY-09'],
-  UGC: ['AUTH-06', 'DB-13'],
-  NATIVE: ['IOS-11', 'CORE-07'],
-  SHARE: ['CORE-07', 'NATIVE-03'],
-  LINK: ['BRAND-06', 'IOS-11', 'SHARE-01'],
-  GROW: ['LINK-01', 'PAY-09'],
-  ADMIN: ['DB-13', 'UGC-07'],
-  REV: ['BRAND-10', 'BASE-07'],
-  WEB: ['BRAND-06', 'REV-07'],
-  OPS: ['ADMIN-05', 'ASK-07', 'COM-07', 'UGC-07'],
-  QA: ['OPS-07', 'NATIVE-03', 'LINK-01'],
-  BETA: ['QA-10'],
-  STORE: ['BETA-08', 'REV-07', 'WEB-01'],
-  LAUNCH: ['STORE-10', 'OPS-07'],
-};
-
-function prerequisitesFor(rows, row, index) {
-  const [group] = row.id.split('-');
-  if (group === 'H' || group === 'V') return [];
-  if (row.id === 'GOV-01') return [];
-  if (row.id === 'GOV-09') return ['GOV-03', 'BASE-01'];
-  if (group === 'GOV') return [rows[index - 1].id];
-  if (row.id === 'BASE-01') return ['GOV-03'];
-  if (group === 'BASE') return ['BASE-01'];
-  const groupRows = rows.filter(({ id }) => id.startsWith(`${group}-`));
-  const groupIndex = groupRows.findIndex(({ id }) => id === row.id);
-  if (groupIndex === 0) return groupPrerequisites[group] ?? ['BASE-07'];
-  return [groupRows[groupIndex - 1].id];
+function prerequisitesFor(_rows, row, _index) {
+  if (row.id.startsWith('H-') || row.id.startsWith('V-') || row.id === 'C-01') return [];
+  if (row.id === 'C-15')
+    return Array.from({ length: 14 }, (_, i) => `C-${String(i + 1).padStart(2, '0')}`);
+  return ['C-01'];
 }
 
 export function buildTaskGraph() {
@@ -519,7 +505,7 @@ export function buildTaskGraph() {
   };
 }
 
-const baselineComplete = new Set(['GOV-09', 'BASE-01', 'BASE-03', 'BASE-04', 'BASE-05', 'BASE-06']);
+const baselineComplete = new Set();
 
 export function buildExecutionStatus() {
   const graph = buildTaskGraph();

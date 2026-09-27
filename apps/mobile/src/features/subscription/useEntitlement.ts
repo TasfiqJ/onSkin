@@ -488,6 +488,9 @@ export function useEntitlementActions() {
     allowedKinds: readonly EntitlementActionKind[],
   ): SubscriptionState => {
     lease.assertCurrent();
+    if (input.kind === 'reverse_trial' || input.kind === 'winback_purchase') {
+      throw new Error('DEFERRED_SUBSCRIPTION_ACTION');
+    }
     if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('ENTITLEMENT_OWNER_STALE');
     const key = queryKeys.entitlement(ownerScope);
     const current = qc.getQueryData<SubscriptionState>(key);

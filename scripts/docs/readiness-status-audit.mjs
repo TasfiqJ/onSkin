@@ -25,8 +25,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 204);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2137);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 209);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2244);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -43,6 +43,8 @@ const staleTestPatterns = [
   /\b191\s+(?:mobile\s+)?test files?\b/i,
   /\b192\s+(?:mobile\s+)?test files?\b/i,
   /\b196\s+(?:mobile\s+)?test files?\b/i,
+  /\b204\s+(?:mobile\s+)?test files?\b/i,
+  /\b205\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -72,6 +74,9 @@ const staleTestPatterns = [
   /\b2037\s+tests?\b/i,
   /\b2048\s+tests?\b/i,
   /\b2094\s+tests?\b/i,
+  /\b2137\s+tests?\b/i,
+  /\b2172\s+tests?\b/i,
+  /\b2,?243\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -281,6 +286,16 @@ function matchingStalePatterns(text) {
     .map((pattern) => String(pattern));
 }
 
+function extractTestBaselines(text) {
+  return [
+    ...text.matchAll(/\b([\d,]+)\s+(?:mobile\s+)?test files?\s*\/\s*([\d,]+)\s+tests?\b/gi),
+  ].map((match) => ({
+    testFiles: Number(match[1].replaceAll(',', '')),
+    tests: Number(match[2].replaceAll(',', '')),
+    source: match[0],
+  }));
+}
+
 const blockers = [];
 const warnings = [];
 
@@ -348,6 +363,11 @@ const docs = [
 const docResults = docs.map((doc) => {
   const date = extractDate(doc.text);
   const stalePatterns = matchingStalePatterns(doc.text);
+  const testBaselines = extractTestBaselines(doc.text);
+  const unexpectedTestBaselines = testBaselines.filter(
+    (baseline) =>
+      baseline.testFiles !== expectedMobileTestFiles || baseline.tests !== expectedMobileTests,
+  );
   const hasExpectedTestPhrase =
     doc.text.includes(expectedTestPhrase) || doc.text.includes(expectedWorkspaceTestPhrase);
   const missingManifestNeedles = requiredManifestNeedles.filter(
@@ -362,6 +382,11 @@ const docResults = docs.map((doc) => {
   }
   if (doc.requireCurrentEvidence && stalePatterns.length > 0) {
     blockers.push(`${doc.path} contains stale test-count pattern(s): ${stalePatterns.join(', ')}.`);
+  }
+  if (doc.requireCurrentEvidence && unexpectedTestBaselines.length > 0) {
+    blockers.push(
+      `${doc.path} contains contradictory test baseline(s): ${unexpectedTestBaselines.map(({ source }) => source).join(', ')}. Expected ${expectedTestPhrase}.`,
+    );
   }
   if (doc.requireCurrentEvidence && !hasExpectedTestPhrase) {
     blockers.push(`${doc.path} does not mention current test baseline ${expectedTestPhrase}.`);
@@ -381,6 +406,8 @@ const docResults = docs.map((doc) => {
     date,
     expectedDate: evidenceDate,
     hasExpectedTestPhrase,
+    testBaselines,
+    unexpectedTestBaselines,
     missingManifestNeedles,
     stalePatterns,
     missingCommands,

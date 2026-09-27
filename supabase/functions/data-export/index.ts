@@ -5,6 +5,8 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
+import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
   boundedMap,
   checksumRows,
@@ -21,12 +23,8 @@ import {
 } from './exportCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const publishableKey =
-  Deno.env.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY') ??
-  Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ??
-  Deno.env.get('SUPABASE_ANON_KEY')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const publishableKey = readSupabasePublishableKey();
+const serviceKey = readSupabaseSecretKey();
 const dataExportRateLimitMax = intEnv('DATA_EXPORT_RATE_LIMIT_MAX', 5, 1, 100);
 const dataExportRateLimitWindowSeconds = intEnv(
   'DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS',

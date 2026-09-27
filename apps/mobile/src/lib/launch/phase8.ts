@@ -42,18 +42,10 @@ export const phase8PublicIdentity = {
 } as const;
 
 export const phase8Flags = {
-  publicLinks:
-    env.phase8PublicLinksEnabled && Boolean(finalDomain) && phase8PublicIdentity.marketingUrlReady,
-  reviewPrompt:
-    env.phase8ReviewPromptEnabled &&
-    (phase8PublicIdentity.appStoreUrlReady || phase8PublicIdentity.playStoreUrlReady),
-  creatorLinks:
-    env.phase8CreatorLinksEnabled && Boolean(finalDomain) && phase8PublicIdentity.supportEmailReady,
-  paidMeasurement:
-    env.phase8PaidMeasurementEnabled &&
-    Boolean(finalDomain) &&
-    phase8PublicIdentity.appStoreUrlReady &&
-    phase8PublicIdentity.playStoreUrlReady,
+  publicLinks: false,
+  reviewPrompt: false,
+  creatorLinks: false,
+  paidMeasurement: false,
 } as const;
 
 export const phase8RequiredPublicRoutes = [

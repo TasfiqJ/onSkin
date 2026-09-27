@@ -1,5 +1,7 @@
 # Master Plan Update Patch: iOS All-Features Launch
 
+> Superseded for launch scope on 2026-09-27 by IOS_LEAN_V1_EXECUTION_PLAN.md. Retained unchanged below as historical evidence.
+
 Date: 2026-07-12
 Author: Founder directive, prepared by Codex
 Status: Accepted

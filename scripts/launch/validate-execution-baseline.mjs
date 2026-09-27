@@ -100,9 +100,11 @@ if (existsSync(new URL(`../../${baselinePaths.featureInventory}`, import.meta.ur
   for (const id of expectedSurfaceIds)
     if (!surfaceIds.includes(id)) fail(`Feature inventory is missing gated surface ${id}.`);
   if (inventory.features.length !== 20)
-    fail(`Feature inventory must contain exactly 20 launch features.`);
+    fail(`Feature inventory must contain exactly 20 retained source features.`);
   const contractFeatureKeys = launchContract.requiredFeatures.map(({ key }) => key);
-  const inventoryFeatureKeys = inventory.features.map(({ key }) => key);
+  const inventoryFeatureKeys = inventory.features
+    .filter(({ launchRequired }) => launchRequired)
+    .map(({ key }) => key);
   for (const problem of exactSetProblems(
     'Feature inventory contract keys',
     contractFeatureKeys,
@@ -110,7 +112,9 @@ if (existsSync(new URL(`../../${baselinePaths.featureInventory}`, import.meta.ur
   ))
     fail(problem);
   const contractSurfaceKeys = [...launchContract.requiredSurfaces];
-  const inventorySurfaceKeys = inventory.gatedSurfaces.flatMap(({ surfaceKeys }) => surfaceKeys);
+  const inventorySurfaceKeys = inventory.gatedSurfaces
+    .filter(({ launchRequired }) => launchRequired)
+    .flatMap(({ surfaceKeys }) => surfaceKeys);
   for (const problem of exactSetProblems(
     'Gated surface contract keys',
     contractSurfaceKeys,

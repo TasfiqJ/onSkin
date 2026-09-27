@@ -1,8 +1,4 @@
-import {
-  canStartContextualReverseTrial,
-  isEntitlementEvidenceUncertain,
-  type SubscriptionState,
-} from './entitlement';
+import { isEntitlementEvidenceUncertain, type SubscriptionState } from './entitlement';
 
 export type DirectPaywallRoute = 'upsell' | 'winback' | 'downgrade' | 'reoffer' | 'onboarding';
 
@@ -140,7 +136,7 @@ export function directPaywallDecision(
   if (route === 'onboarding') {
     return isVerifiedFreeOrExpired(state)
       ? offer('free_or_expired', {
-          allowReverseTrial: canStartContextualReverseTrial(state),
+          allowReverseTrial: false,
         })
       : redirect(state.isPro ? 'routine_plan' : 'today');
   }

@@ -108,7 +108,7 @@ export function BehaviouralTriggers() {
 
   const prefs = query.isSuccess && read?.status === 'available' ? read.prefs : null;
   const enabled = {
-    promotional: prefs?.promotionalOptIn === true,
+    promotional: false, // Win-back and promotional experiments are post-launch.
     ramp: prefs?.streakNudges === true,
     replenishment: prefs?.replenishmentAlerts === true,
   };

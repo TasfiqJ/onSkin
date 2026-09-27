@@ -27,13 +27,14 @@ try {
     );
     process.exit(0);
   }
-  console.log('iOS all-features launch contract');
+  console.log('iOS lean V1 launch contract');
   console.log(`Path: ${LAUNCH_CONTRACT_PATH}`);
   console.log(`Program: ${contract.programId}`);
   console.log(`Platforms: ${contract.release.platforms.join(', ')}`);
   console.log(`Mode: ${contract.release.mode}`);
   console.log(`Required features: ${contract.requiredFeatures.length}`);
-  console.log(`Required Phase 7/8 surfaces: ${contract.requiredSurfaces.length}`);
+  console.log(`Deferred features: ${contract.deferredFeatures.length}`);
+  console.log(`Required optional Phase 7/8 surfaces: ${contract.requiredSurfaces.length}`);
   console.log(`iOS release evidence: ${platformRequirementStatus('ios', contract)}`);
   console.log(`Android release evidence: ${platformRequirementStatus('android', contract)}`);
   console.log('Launch contract is valid.');

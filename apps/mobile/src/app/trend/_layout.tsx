@@ -1,8 +1,8 @@
 import { Stack } from 'expo-router';
 
-// "Changes in your own photos" surfaces (docs/12 §5). The off-by-default opt-in and
-// the fairness floor, presented over the tabs. The refusal (docs/06) is preserved and
-// remains the default; this is the optional, on-device, no-number opt-in.
+// Preserve exact stale/direct-entry URLs while PHOTO-05A admission is closed.
+// Each child owns its analytics-free unavailable surface so the layout never
+// canonicalizes one route into the other.
 export default function TrendLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>

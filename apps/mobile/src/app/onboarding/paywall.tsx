@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { Button, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
@@ -71,7 +71,7 @@ export default function PaywallScreen() {
     isLoading: entitlement.isLoading,
     isError: entitlement.isError,
   });
-  const { startTrial, startReverseTrial } = useEntitlementActions();
+  const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering({ enabled: decision.loadOffering });
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const paidAction = usePaidActionHold(ownerScope.generation);
@@ -118,24 +118,6 @@ export default function PaywallScreen() {
           }
         },
         onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-      },
-    );
-  }
-
-  function onStartReverseTrial() {
-    if (!decision.allowReverseTrial || paidAction.isHeld) return;
-    setActionFeedback(null);
-    startReverseTrial.mutate(
-      {
-        kind: 'reverse_trial',
-        expectedEvidenceIdentity: entitlement.data?.evidenceIdentity ?? null,
-      },
-      {
-        onSuccess: (result) => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          if (result.active) router.replace('/routine/plan');
-        },
-        onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
       },
     );
   }
@@ -320,57 +302,13 @@ export default function PaywallScreen() {
           {purchasePresentation.reassurance}
         </Text>
 
-        {/* the second honest path. The reverse trial */}
-        <Pressable
-          accessibilityRole="button"
-          disabled={!decision.allowReverseTrial || paidAction.isHeld || startReverseTrial.isPending}
-          onPress={onStartReverseTrial}
-          className={
-            compactPaywall
-              ? 'mt-1.5 flex-row items-center gap-2 rounded-card px-3 py-2'
-              : 'mt-3 flex-row items-center gap-3 rounded-card p-3.5'
-          }
-          style={{
-            backgroundColor: colors.clayTint,
-            borderWidth: 1,
-            borderColor: 'rgba(165,105,75,0.22)',
-          }}
-        >
-          <View
-            className={
-              compactPaywall
-                ? 'h-7 w-7 items-center justify-center rounded-full'
-                : 'h-[34px] w-[34px] items-center justify-center rounded-full'
-            }
-            style={{ backgroundColor: 'rgba(165,105,75,0.15)' }}
-          >
-            <View className="h-3 w-3 rounded-full border-2" style={{ borderColor: colors.clay }} />
-          </View>
-          <View className="flex-1">
-            <Text
-              variant="bodySm"
-              className="font-sans-semibold"
-              style={{
-                color: colors.clayDeep,
-                fontSize: compactPaywall ? 12.5 : undefined,
-                lineHeight: compactPaywall ? 16 : undefined,
-              }}
-            >
-              {PAYWALL_COPY.offer.exploreTitle}
-            </Text>
-            <Text
-              variant="label"
-              style={{
-                color: colors.clay,
-                fontSize: compactPaywall ? 10.5 : 11.5,
-                lineHeight: compactPaywall ? 13 : undefined,
-              }}
-            >
-              {PAYWALL_COPY.offer.exploreBody}
-            </Text>
-          </View>
-          <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
-        </Pressable>
+        <Button
+          label="Continue free"
+          variant="ghost"
+          className="mt-3"
+          disabled={paidAction.isHeld}
+          onPress={() => router.replace('/routine/plan')}
+        />
 
         <PaywallFeedback
           compact={compactPaywall}

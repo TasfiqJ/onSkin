@@ -1,5 +1,81 @@
 {
-  "generatedAt": "2026-07-10T11:18:36.879Z",
+  "generatedAt": "2026-07-13T20:02:18.381Z",
+  "launchContract": {
+    "schemaVersion": 1,
+    "programId": "ios-all-features-2026",
+    "effectiveDate": "2026-07-12",
+    "releaseMode": "all-features",
+    "platforms": [
+      "ios"
+    ],
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false,
+    "requiredFeatureIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "requiredFeatureKeys": [
+      "brand_identity",
+      "onboarding_consent",
+      "shelf_intake",
+      "catalog",
+      "conflict_engine",
+      "routine_builder",
+      "today_adherence",
+      "cycle_scheduler",
+      "photo_progress",
+      "reminders",
+      "subscriptions",
+      "reverse_trial",
+      "recommendations",
+      "ask_advisor",
+      "conflict_share",
+      "commerce",
+      "community",
+      "trend_insights",
+      "widgets_live_activities",
+      "admin_tooling"
+    ],
+    "requiredSurfaces": [
+      "commerce",
+      "community_posting",
+      "community_aggregates",
+      "trend_insights",
+      "cloud_ask",
+      "widgets",
+      "live_activities",
+      "share_cards",
+      "reviewed_conflict_sharing",
+      "goal_active_recommendations",
+      "public_links",
+      "review_prompts",
+      "creator_links",
+      "paid_measurement"
+    ]
+  },
+  "platformStatus": {
+    "ios": "required",
+    "android": "not_applicable"
+  },
   "app": {
     "name": "RoutineKind",
     "slug": "routinekind",
@@ -10,7 +86,7 @@
     "scheme": "routinekind",
     "iosBundleIdentifier": "com.routinekind.app",
     "androidPackage": "com.routinekind.app",
-    "androidAllowBackup": false,
+    "androidAllowBackup": true,
     "androidPermissions": [
       "android.permission.CAMERA",
       "android.permission.POST_NOTIFICATIONS"
@@ -19,6 +95,7 @@
   "easBuildProfiles": {
     "development": {
       "channel": "development",
+      "iosImage": "sdk-56",
       "distribution": "internal",
       "developmentClient": true,
       "appVariant": "development",
@@ -26,6 +103,7 @@
     },
     "staging": {
       "channel": "staging",
+      "iosImage": "sdk-56",
       "distribution": "internal",
       "developmentClient": false,
       "appVariant": "staging",
@@ -33,6 +111,7 @@
     },
     "production": {
       "channel": "production",
+      "iosImage": "sdk-56",
       "distribution": "store",
       "developmentClient": false,
       "appVariant": "production",
@@ -45,7 +124,7 @@
       "scheme": "routinekind-development",
       "iosBundleIdentifier": "com.routinekind.app.development",
       "androidPackage": "com.routinekind.app.development",
-      "androidAllowBackup": false,
+      "androidAllowBackup": true,
       "appVariant": "development",
       "appEnvironment": "development"
     },
@@ -54,7 +133,7 @@
       "scheme": "routinekind-staging",
       "iosBundleIdentifier": "com.routinekind.app.staging",
       "androidPackage": "com.routinekind.app.staging",
-      "androidAllowBackup": false,
+      "androidAllowBackup": true,
       "appVariant": "staging",
       "appEnvironment": "staging"
     },
@@ -67,13 +146,8 @@
   "warnings": [
     "Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.",
     "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",
-    "Android artifact not supplied for hashing: set PHASE9_ANDROID_ARTIFACT=path.",
     "Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.",
-    "Missing Play internal/closed testing evidence: PHASE9_ANDROID_CLOSED_TEST_PASS=true.",
-    "Missing Android target API proof from built artifact: PHASE9_ANDROID_TARGET_API_PASS=true.",
-    "Missing Android 16 KB page-size proof: PHASE9_ANDROID_16KB_PASS=true.",
     "Missing iOS privacy report/privacy manifest evidence: PHASE9_IOS_PRIVACY_REPORT_PASS=true.",
-    "Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true.",
-    "Missing Google Play review packet evidence: PHASE9_PLAY_PACKET_PASS=true."
+    "Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true."
   ]
 }

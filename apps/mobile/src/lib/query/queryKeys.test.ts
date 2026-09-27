@@ -596,7 +596,6 @@ describe('owner-scoped query keys', () => {
     const you = read('app/(tabs)/you.tsx');
     const commerce = read('features/commerce/useCommerce.ts');
     const commerceConsentQuery = read('features/commerce/consentQuery.ts');
-    const trend = read('features/trend/useTrend.ts');
     const plan = read('features/routine/usePlan.ts');
     const reorder = read('app/routine/reorder.tsx');
     const settingsProfile = read('app/settings/skin-profile.tsx');
@@ -630,8 +629,6 @@ describe('owner-scoped query keys', () => {
     expect(commerce).toContain('commerceConsentQueryOptions(ownerScope)');
     expect(commerceConsentQuery).toContain('queryKeys.commerceConsent(ownerScope)');
     expect(commerceConsentQuery).toContain('runOwnerQueryOperation(ownerScope');
-    expect(trend).toContain('queryKeys.trendConsent(ownerScope)');
-    expect(trend).toContain('queryKeys.monkBand(ownerScope)');
     expect(plan).toContain('queryKeys.routineOrder(ownerScope)');
     expect(reorder).toContain(
       'queryClient.setQueryData(queryKeys.routineOrder(ownerScope), saved)',
@@ -664,7 +661,6 @@ describe('owner-scoped query keys', () => {
       you,
       commerce,
       commerceConsentQuery,
-      trend,
       plan,
       reorder,
       askConsent,

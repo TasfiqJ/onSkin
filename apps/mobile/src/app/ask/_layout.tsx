@@ -1,21 +1,18 @@
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
+import { APP_HOME_ROUTE } from '@/lib/navigation/safeBack';
 
-import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
-import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-
-function AskScreenLayout({ children }: { children: React.ReactNode }) {
+function DeferredScreen() {
   return (
-    <ShelfDataAvailabilityGate
-      onExit={() => backOrReplace(router, APP_HOME_ROUTE)}
-      exitLabel="Back to Today"
-    >
-      {children}
-    </ShelfDataAvailabilityGate>
+    <DeferredSurface
+      surface="cloudAsk"
+      fallbackRoute={APP_HOME_ROUTE}
+      fallbackLabel="Back to Today"
+      trackView={false}
+    />
   );
 }
 
-// Ask route group (docs/13). The deterministic chat home must stay reachable
-// even while the deeper cloud Ask layer remains deferred.
-export default function AskLayout() {
-  return <Stack screenLayout={AskScreenLayout} screenOptions={{ headerShown: false }} />;
+export default function DeferredLayout() {
+  return <Stack screenOptions={{ headerShown: false }} screenLayout={DeferredScreen} />;
 }

@@ -4,11 +4,12 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
+import { readEdgeAppEnvironment } from '../_shared/env.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const appEnvironment = Deno.env.get('APP_ENV') ?? Deno.env.get('EXPO_PUBLIC_APP_ENV') ?? 'unknown';
+const serviceKey = readSupabaseSecretKey();
+const appEnvironment = readEdgeAppEnvironment();
 const maxBodyBytes = userEdgeBodyMaxBytes();
 
 const REVERSE_TRIAL_DAYS = 7;
@@ -58,16 +59,10 @@ Deno.serve(async (req) => {
   if (body?.action !== 'start_reverse_trial') return json({ error: 'unknown_action' }, 400);
 
   const expiresAt = addDays(REVERSE_TRIAL_DAYS);
-  const environment =
-    appEnvironment === 'production'
-      ? 'production'
-      : appEnvironment === 'development'
-        ? 'development'
-        : 'unknown';
   const { data, error } = await supabase.rpc('grant_app_granted_reverse_trial', {
     p_user_id: userId,
     p_expires_at: expiresAt,
-    p_environment: environment,
+    p_environment: appEnvironment,
     p_product_id: null,
   });
   if (error) {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourcePlan": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md",
+  "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
   "readinessLabels": [
     "implemented",
     "stubbed",
@@ -15,140 +15,160 @@
       "number": 1,
       "key": "brand_identity",
       "name": "Rebrand and identity migration",
-      "readiness": "launch-blocked"
+      "readiness": "launch-blocked",
+      "launchRequired": true
     },
     {
       "id": "F-02",
       "number": 2,
       "key": "onboarding_consent",
       "name": "Onboarding, age gate, and consent",
-      "readiness": "implemented"
+      "readiness": "implemented",
+      "launchRequired": true
     },
     {
       "id": "F-03",
       "number": 3,
       "key": "shelf_intake",
       "name": "Shelf intake through manual entry, search, barcode, and real OCR",
-      "readiness": "needs-device-verification"
+      "readiness": "needs-device-verification",
+      "launchRequired": true
     },
     {
       "id": "F-04",
       "number": 4,
       "key": "catalog",
       "name": "Production product catalog import and quality",
-      "readiness": "stubbed"
+      "readiness": "stubbed",
+      "launchRequired": false
     },
     {
       "id": "F-05",
       "number": 5,
       "key": "conflict_engine",
       "name": "Reviewed conflict engine",
-      "readiness": "launch-blocked"
+      "readiness": "launch-blocked",
+      "launchRequired": true
     },
     {
       "id": "F-06",
       "number": 6,
       "key": "routine_builder",
       "name": "Routine builder",
-      "readiness": "implemented"
+      "readiness": "implemented",
+      "launchRequired": true
     },
     {
       "id": "F-07",
       "number": 7,
       "key": "today_adherence",
       "name": "Today check-off and adherence",
-      "readiness": "implemented"
+      "readiness": "implemented",
+      "launchRequired": true
     },
     {
       "id": "F-08",
       "number": 8,
       "key": "cycle_scheduler",
       "name": "Skin cycling and ramp scheduler",
-      "readiness": "implemented"
+      "readiness": "implemented",
+      "launchRequired": true
     },
     {
       "id": "F-09",
       "number": 9,
       "key": "photo_progress",
       "name": "Private photo progress",
-      "readiness": "needs-device-verification"
+      "readiness": "needs-device-verification",
+      "launchRequired": true
     },
     {
       "id": "F-10",
       "number": 10,
       "key": "reminders",
       "name": "Reminders",
-      "readiness": "needs-device-verification"
+      "readiness": "needs-device-verification",
+      "launchRequired": true
     },
     {
       "id": "F-11",
       "number": 11,
       "key": "subscriptions",
       "name": "RevenueCat paywall and entitlements",
-      "readiness": "stubbed"
+      "readiness": "stubbed",
+      "launchRequired": true
     },
     {
       "id": "F-12",
       "number": 12,
       "key": "reverse_trial",
       "name": "Reverse trial",
-      "readiness": "simulated"
+      "readiness": "simulated",
+      "launchRequired": false
     },
     {
       "id": "F-13",
       "number": 13,
       "key": "recommendations",
       "name": "Recommendations",
-      "readiness": "launch-blocked"
+      "readiness": "launch-blocked",
+      "launchRequired": false
     },
     {
       "id": "F-14",
       "number": 14,
       "key": "ask_advisor",
       "name": "Ask advisor, including the production cloud path",
-      "readiness": "launch-blocked"
+      "readiness": "launch-blocked",
+      "launchRequired": false
     },
     {
       "id": "F-15",
       "number": 15,
       "key": "conflict_share",
       "name": "Shareable conflict cards",
-      "readiness": "launch-blocked"
+      "readiness": "launch-blocked",
+      "launchRequired": false
     },
     {
       "id": "F-16",
       "number": 16,
       "key": "commerce",
       "name": "Commerce and replenishment",
-      "readiness": "inert"
+      "readiness": "inert",
+      "launchRequired": false
     },
     {
       "id": "F-17",
       "number": 17,
       "key": "community",
       "name": "Community and Skin Notes",
-      "readiness": "stubbed"
+      "readiness": "stubbed",
+      "launchRequired": false
     },
     {
       "id": "F-18",
       "number": 18,
       "key": "trend_insights",
       "name": "Trend insights",
-      "readiness": "launch-blocked"
+      "readiness": "launch-blocked",
+      "launchRequired": false
     },
     {
       "id": "F-19",
       "number": 19,
       "key": "widgets_live_activities",
       "name": "Widgets and Live Activities",
-      "readiness": "inert"
+      "readiness": "inert",
+      "launchRequired": false
     },
     {
       "id": "F-20",
       "number": 20,
       "key": "admin_tooling",
       "name": "Admin and operator review tooling",
-      "readiness": "implemented"
+      "readiness": "implemented",
+      "launchRequired": false
     }
   ],
   "gatedSurfaces": [
@@ -156,82 +176,94 @@
       "id": "P7-CLOUD-ASK",
       "surfaceKeys": ["cloud_ask"],
       "name": "Cloud Ask",
-      "featureId": "F-14"
+      "featureId": "F-14",
+      "launchRequired": false
     },
     {
       "id": "P7-COMMERCE",
       "surfaceKeys": ["commerce"],
       "name": "Commerce and order polling",
-      "featureId": "F-16"
+      "featureId": "F-16",
+      "launchRequired": false
     },
     {
       "id": "P7-COMMUNITY",
       "surfaceKeys": ["community_posting", "community_aggregates"],
       "name": "Community posting and public aggregates",
-      "featureId": "F-17"
+      "featureId": "F-17",
+      "launchRequired": false
     },
     {
       "id": "P7-TRENDS",
       "surfaceKeys": ["trend_insights"],
       "name": "Trend insights",
-      "featureId": "F-18"
+      "featureId": "F-18",
+      "launchRequired": false
     },
     {
       "id": "P7-WIDGETS",
       "surfaceKeys": ["widgets", "live_activities"],
       "name": "Widgets and Live Activities",
-      "featureId": "F-19"
+      "featureId": "F-19",
+      "launchRequired": false
     },
     {
       "id": "P7-SHARE-CARDS",
       "surfaceKeys": ["share_cards"],
       "name": "Share cards",
-      "featureId": "F-15"
+      "featureId": "F-15",
+      "launchRequired": false
     },
     {
       "id": "P7-CONFLICT-SHARING",
       "surfaceKeys": ["reviewed_conflict_sharing"],
       "name": "Reviewed conflict sharing",
-      "featureId": "F-05"
+      "featureId": "F-05",
+      "launchRequired": false
     },
     {
       "id": "P7-GOAL-RECOMMENDATIONS",
       "surfaceKeys": ["goal_active_recommendations"],
       "name": "Goal-active recommendations",
-      "featureId": "F-13"
+      "featureId": "F-13",
+      "launchRequired": false
     },
     {
       "id": "P8-PUBLIC-LINKS",
       "surfaceKeys": ["public_links"],
       "name": "Public links",
-      "featureId": "F-15"
+      "featureId": "F-15",
+      "launchRequired": false
     },
     {
       "id": "P8-REVIEW-PROMPT",
       "surfaceKeys": ["review_prompts"],
       "name": "Review prompts",
-      "featureId": "F-01"
+      "featureId": "F-01",
+      "launchRequired": false
     },
     {
       "id": "P8-CREATOR-LINKS",
       "surfaceKeys": ["creator_links"],
       "name": "Creator links",
-      "featureId": "F-16"
+      "featureId": "F-16",
+      "launchRequired": false
     },
     {
       "id": "P8-PAID-MEASUREMENT",
       "surfaceKeys": ["paid_measurement"],
       "name": "Paid measurement",
-      "featureId": "F-20"
+      "featureId": "F-20",
+      "launchRequired": false
     }
   ],
   "categoryCounts": {
-    "data-store": 85,
+    "data-store": 97,
     "edge-function": 11,
     "feature-flag": 17,
     "generated-packet": 30,
     "native-module": 43,
-    "route": 90,
+    "route": 93,
     "vendor-call": 14
   },
   "items": [
@@ -376,6 +408,13 @@
       "readiness": "launch-blocked"
     },
     {
+      "id": "data-store:local:apps/mobile/src/lib/analytics/posthogDurableStorage.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/analytics/posthogDurableStorage.ts",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:local:apps/mobile/src/lib/applock/store.ts",
       "category": "data-store",
       "source": "apps/mobile/src/lib/applock/store.ts",
@@ -383,9 +422,37 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:local:apps/mobile/src/lib/query/localDateBoundaryStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/query/localDateBoundaryStore.ts",
+      "featureIds": ["F-07", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/storage/privateSecureStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/storage/privateSecureStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:local:apps/mobile/src/lib/supabase/largeSecureStore.ts",
       "category": "data-store",
       "source": "apps/mobile/src/lib/supabase/largeSecureStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_click_tombstones",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000043_account_deletion_resumable.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_requests",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000043_account_deletion_resumable.sql",
       "featureIds": ["F-02"],
       "readiness": "implemented"
     },
@@ -432,6 +499,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:catalog_active_imports",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:catalog_corrections",
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -439,9 +513,30 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:catalog_import_batch_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:catalog_import_batches",
       "category": "data-store",
       "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_staged_products",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
       "featureIds": ["F-04"],
       "readiness": "implemented"
     },
@@ -520,6 +615,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260613000023_community.sql",
       "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:conflict_choice_mirror_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000051_conflict_choice_outbox_rpc.sql",
+      "featureIds": ["F-05"],
       "readiness": "implemented"
     },
     {
@@ -625,6 +727,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260612000003_catalog.sql",
       "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:mobile_outbox_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000046_shelf_outbox_rpc.sql",
+      "featureIds": ["F-03"],
       "readiness": "implemented"
     },
     {
@@ -786,6 +895,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260612000014_sequencing_rules.sql",
       "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:shelf_mirror_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000046_shelf_outbox_rpc.sql",
+      "featureIds": ["F-03"],
       "readiness": "implemented"
     },
     {
@@ -1686,6 +1802,13 @@
       "readiness": "stubbed"
     },
     {
+      "id": "route:conflict/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/conflict/_layout.tsx",
+      "featureIds": ["F-05"],
+      "readiness": "launch-blocked"
+    },
+    {
       "id": "route:conflict/[ruleId].tsx",
       "category": "route",
       "source": "apps/mobile/src/app/conflict/[ruleId].tsx",
@@ -2043,6 +2166,13 @@
       "readiness": "implemented"
     },
     {
+      "id": "route:settings/diagnostics.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/diagnostics.tsx",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
       "id": "route:settings/notifications.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/settings/notifications.tsx",
@@ -2076,6 +2206,13 @@
       "source": "apps/mobile/src/app/settings/timing.tsx",
       "featureIds": ["F-02", "F-20"],
       "readiness": "implemented"
+    },
+    {
+      "id": "route:share/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/share/_layout.tsx",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
     },
     {
       "id": "route:share/conflict/[ruleId].tsx",

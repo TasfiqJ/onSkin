@@ -69,13 +69,7 @@ export default function AnalyzingScreen() {
     return () => {
       cancelled = true;
     };
-  }, [
-    goals.length,
-    persistSkinProfile,
-    profileSaveFailureMode,
-    quizCompletion.complete,
-    retryKey,
-  ]);
+  }, [goals.length, persistSkinProfile, profileSaveFailureMode, quizCompletion.complete, retryKey]);
 
   useEffect(() => {
     if (renderStaticPulse || saveError) {
@@ -106,7 +100,7 @@ export default function AnalyzingScreen() {
 
   const scale = renderStaticPulse
     ? 1
-    : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
+    : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1.04] });
   const opacity = renderStaticPulse
     ? 0.65
     : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });
@@ -145,9 +139,9 @@ export default function AnalyzingScreen() {
       <View className="flex-1 items-center justify-center">
         <Animated.View
           style={{
-            width: 120,
-            height: 120,
-            borderRadius: 60,
+            width: 88,
+            height: 88,
+            borderRadius: 28,
             backgroundColor: colors.clayBright,
             transform: [{ scale }],
             opacity,

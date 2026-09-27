@@ -328,7 +328,7 @@ describe('shelf scan intake log', () => {
   });
 
   it('preserves a corrupt or future outbox and keeps the visible scan path best effort', async () => {
-    for (const raw of ['{bad-json', JSON.stringify({ version: 6, rows: [], revisions: [] })]) {
+    for (const raw of ['{bad-json', JSON.stringify({ version: 7, rows: [], revisions: [] })]) {
       mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
       await expect(
         record({ barcode: '1234567890123', result: 'no_match' }),

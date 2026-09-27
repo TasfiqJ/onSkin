@@ -2,14 +2,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 
-import { grantAskConsent, revokeAskConsent } from '../ask/consent';
+import { grantAskConsent } from '../ask/consent';
 import { grantCommunityConsent, withdrawCommunityConsent } from '../community/consent';
 import {
   declineHealthDataCollectionConsent,
   grantHealthDataCollectionConsent,
 } from '../onboarding/healthConsent';
 import { persistSettingsPrivacyConsentChoice } from '../settings/privacyConsentPersistence';
-import { grantTrendInsightsConsent, revokeTrendInsightsConsent } from '../trend/consent';
+import { revokeTrendInsightsConsent } from '../trend/consent';
 import { grantCommerceConsent } from './consent';
 
 const mocks = vi.hoisted(() => ({
@@ -360,78 +360,6 @@ describe('cross-surface consent workflow serialization', () => {
       'trend:local:false',
       'trend:deleted',
       'trend:withdrawal',
-    ]);
-  });
-
-  it('finishes a slow Trend grant before a later Ask withdrawal can start', async () => {
-    const slowGrant = deferred();
-    const events: string[] = [];
-    mocks.setTrendInsightsLocal.mockImplementation(async (granted: boolean) => {
-      events.push(`trend:local:${String(granted)}`);
-    });
-    mocks.recordConsent.mockImplementationOnce(async () => {
-      events.push('trend:ledger-started');
-      await slowGrant.promise;
-      events.push('trend:ledger-finished');
-    });
-    mocks.clearAskStore.mockImplementationOnce(async () => {
-      events.push('ask:cleared');
-    });
-    mocks.withdrawConsent.mockImplementationOnce(async () => {
-      events.push('ask:withdrawal');
-    });
-
-    const trend = grantTrendInsightsConsent();
-    await vi.waitFor(() => expect(events).toEqual(['trend:local:true', 'trend:ledger-started']));
-    const ask = revokeAskConsent();
-    await Promise.resolve();
-    await Promise.resolve();
-    expect(events).toEqual(['trend:local:true', 'trend:ledger-started']);
-
-    slowGrant.resolve();
-    await expect(Promise.all([trend, ask])).resolves.toEqual([undefined, undefined]);
-    expect(events).toEqual([
-      'trend:local:true',
-      'trend:ledger-started',
-      'trend:ledger-finished',
-      'ask:cleared',
-      'ask:withdrawal',
-    ]);
-  });
-
-  it('finishes a slow Ask withdrawal before a later Trend grant can start', async () => {
-    const slowWithdrawal = deferred();
-    const events: string[] = [];
-    mocks.clearAskStore.mockImplementationOnce(async () => {
-      events.push('ask:cleared');
-    });
-    mocks.withdrawConsent.mockImplementationOnce(async () => {
-      events.push('ask:withdrawal-started');
-      await slowWithdrawal.promise;
-      events.push('ask:withdrawal-finished');
-    });
-    mocks.setTrendInsightsLocal.mockImplementation(async (granted: boolean) => {
-      events.push(`trend:local:${String(granted)}`);
-    });
-    mocks.recordConsent.mockImplementationOnce(async () => {
-      events.push('trend:ledger');
-    });
-
-    const ask = revokeAskConsent();
-    await vi.waitFor(() => expect(events).toEqual(['ask:cleared', 'ask:withdrawal-started']));
-    const trend = grantTrendInsightsConsent();
-    await Promise.resolve();
-    await Promise.resolve();
-    expect(events).toEqual(['ask:cleared', 'ask:withdrawal-started']);
-
-    slowWithdrawal.resolve();
-    await expect(Promise.all([ask, trend])).resolves.toEqual([undefined, undefined]);
-    expect(events).toEqual([
-      'ask:cleared',
-      'ask:withdrawal-started',
-      'ask:withdrawal-finished',
-      'trend:local:true',
-      'trend:ledger',
     ]);
   });
 

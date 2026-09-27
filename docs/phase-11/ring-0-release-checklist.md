@@ -19,9 +19,11 @@ Ring 0 means the app is approved and controllable, but not promoted. The goal is
 ## Tasks
 
 - Release iOS manually only when command center is active.
-- Start Google production only for selected countries; do not assume a first-release percentage rollout exists.
+- Reject first-release percentage rollout assumptions; Apple phased release is
+  an update mechanism, not the control for this first public version.
+- Confirm App Store availability is United States only before release.
 - Install from public store listing after propagation.
-- Complete fresh-user smoke on iOS and Android.
+- Complete fresh-user smoke on supported physical iPhones.
 - Confirm public policy URLs and account deletion paths.
 - Confirm analytics, crash, payment, support, and store dashboards update.
 - Confirm no launch comms, creators, or paid campaigns are live.
@@ -30,7 +32,7 @@ Ring 0 means the app is approved and controllable, but not promoted. The goal is
 
 Ring 0 exits only when:
 
-- both stores are available as intended or platform-specific decision is documented
+- the US iPhone listing is available as intended and no unreviewed territory is enabled
 - no P0/P1 smoke issue exists
 - support receives and handles a test ticket
 - purchase/restore/manage subscription passes

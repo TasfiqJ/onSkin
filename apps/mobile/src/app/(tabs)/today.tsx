@@ -1,30 +1,25 @@
 import type { RoutineType } from '@onskin/types';
 import { router } from 'expo-router';
-import { memo, useCallback, useState } from 'react';
+import { memo } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
-import { AskTeaser } from '@/features/ask/AskTeaser';
+import { Button, Screen, Text, TodayFocusHeader } from '@/components/ui';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { hasUseTogetherChoiceBetween } from '@/features/scheduler/useCycle';
-import { RecommendationsTeaserFromSources } from '@/features/recommendations/RecommendationsTeaser';
 import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
   ShelfDataAvailabilityBoundary,
   ShelfDataUnavailableNotice,
 } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { useShelfFromBoundary } from '@/features/shelf/useShelf';
-import { ReverseTrialBannerFromEntitlement } from '@/features/subscription/ReverseTrialBanner';
-import type { SubscriptionState } from '@/features/subscription/entitlement';
 import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { stepKey } from '@/features/today/completionsStore';
 import { useTodayViewModel } from '@/features/today/useTodayViewModel';
 import { localClockLabel, useCurrentRoutineType } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
-import { phase7Flags } from '@/lib/launch/phase7';
 import {
   useLocalDateBoundary,
   type LocalDateBoundaryIdentity,
@@ -96,10 +91,6 @@ function compactRoutineInstruction(instruction: string): string {
   }
 }
 
-function streakLabel(days: number): string {
-  return `${days} ${days === 1 ? 'day' : 'days'}`;
-}
-
 function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   if (!compact) return slotLabel(slot);
   if (slot === 'exfoliate') return 'Exfol\niate';
@@ -108,65 +99,7 @@ function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   return 'Active';
 }
 
-const TodayHeader = memo(function TodayHeader({
-  clockLabel,
-  compact,
-  dark,
-  dateLabel,
-  entitlement,
-  streak,
-}: {
-  clockLabel: string;
-  compact: boolean;
-  dark: boolean;
-  dateLabel: string;
-  entitlement: SubscriptionState | undefined;
-  streak: number;
-}) {
-  return (
-    <>
-      <ReverseTrialBannerFromEntitlement
-        compact={compact}
-        data={entitlement}
-        tone={dark ? 'night' : 'light'}
-      />
-      {dark ? (
-        <>
-          <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
-            {dateLabel.toUpperCase()} · {clockLabel}
-          </Text>
-          <Text variant="titleLg" tone="inverse" className="mt-2">
-            Good evening.
-          </Text>
-        </>
-      ) : (
-        <>
-          <View className="mt-1 flex-row items-start justify-between">
-            <Text variant="label" tone="muted" className="font-mono mt-1">
-              {dateLabel.toUpperCase()}
-            </Text>
-            {streak > 0 ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="View your streak and adherence"
-                onPress={() => router.push('/routine/streak')}
-                className="min-h-[48px] flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-4 py-2.5"
-              >
-                <View className="h-1.5 w-1.5 rounded-full bg-clay" />
-                <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
-                  {streakLabel(streak)}
-                </Text>
-              </Pressable>
-            ) : null}
-          </View>
-          <Text variant="titleLg" className={compact ? 'mt-3' : 'mt-4'}>
-            Good morning.
-          </Text>
-        </>
-      )}
-    </>
-  );
-});
+const TodayHeader = memo(TodayFocusHeader);
 
 function EmptyRoutineCard({
   compact = false,
@@ -474,15 +407,6 @@ function TodayScreenContent({
   shelf: ReturnType<typeof useShelfFromBoundary>;
 }) {
   const { height, width } = useWindowDimensions();
-  const [recommendationDismissFailed, setRecommendationDismissFailed] = useState(false);
-  const markRecommendationDismissFailure = useCallback(
-    () => setRecommendationDismissFailed(true),
-    [],
-  );
-  const clearRecommendationDismissFailure = useCallback(
-    () => setRecommendationDismissFailed(false),
-    [],
-  );
   const type = routineType;
   const dark = type === 'PM';
   const todayViewModel = useTodayViewModel({ boundary, routineType, shelf });
@@ -525,9 +449,7 @@ function TodayScreenContent({
   const clockLabel = localClockLabel();
   const compactPhone = height < 700;
   const compactCycleStrip = compactPhone || width < 430;
-  const compactRecommendationPrompt = height < 860;
   const shortEmptyRoutine = compactPhone && height < 600;
-  const showRecommendations = hasRealRoutine && height >= 500;
   const showTonightTeaser =
     hasRealRoutine &&
     !compactPhone &&
@@ -593,12 +515,13 @@ function TodayScreenContent({
           contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
         >
           <TodayHeader
+            phase="AM"
             clockLabel={clockLabel}
-            compact={compactPhone}
-            dark={false}
             dateLabel={dateLabel}
-            entitlement={todayViewModel.entitlement.data}
-            streak={progress?.streak ?? 0}
+            total={steps.length}
+            completed={doneCount}
+            hasRoutine={hasRealRoutine}
+            streakDays={progress?.streak ?? 0}
           />
 
           {cadenceWithheldCount > 0 ? (
@@ -668,22 +591,6 @@ function TodayScreenContent({
               })}
             </View>
           )}
-
-          {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
-          {showRecommendations ? (
-            <RecommendationsTeaserFromSources
-              compact={compactRecommendationPrompt}
-              dismissFailed={recommendationDismissFailed}
-              onDismissFailure={markRecommendationDismissFailure}
-              onDismissSuccess={clearRecommendationDismissFailure}
-              profile={todayViewModel.recommendationProfile}
-              shelf={todayViewModel.recommendationShelf}
-              showGapPrompt
-            />
-          ) : null}
-
-          {/* Ask. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
-          {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
           {showTonightTeaser ? (
@@ -811,12 +718,13 @@ function TodayScreenContent({
         contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
       >
         <TodayHeader
+          phase="PM"
           clockLabel={clockLabel}
-          compact={compactPhone}
-          dark
           dateLabel={dateLabel}
-          entitlement={todayViewModel.entitlement.data}
-          streak={progress?.streak ?? 0}
+          total={pmSteps.length}
+          completed={donePm}
+          hasRoutine={hasRealRoutine}
+          streakDays={progress?.streak ?? 0}
         />
 
         {/* Recovery / pause banner. The scheduler's disruption state (docs/05 §7) */}

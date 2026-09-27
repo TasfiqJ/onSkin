@@ -770,9 +770,10 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('onSelectComparisonPhoto={selectComparisonPhoto}');
     expect(source).toContain('selection={compareSelection}');
     expect(source).toContain('if (picking) onSelectPhoto(picking, id);');
-    expect(source).toContain('function ProgressTrendBoundary({');
-    expect(source).toContain('return phase7Flags.trend ? (');
-    expect(source).not.toContain('useTrendInsightFromPhotos(photos, { enabled: false })');
+    expect(source).not.toContain('ProgressTrendBoundary');
+    expect(source).not.toContain('phase7Flags.trend');
+    expect(source).not.toContain('useTrendInsightFromPhotos');
+    expect(source).not.toContain("from '@/features/trend/");
   });
 
   it('plays real local time-lapse frames with finite and reduced-motion-safe controls', () => {

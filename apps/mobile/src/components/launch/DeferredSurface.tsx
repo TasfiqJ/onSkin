@@ -12,16 +12,19 @@ export function DeferredSurface({
   surface,
   fallbackRoute,
   fallbackLabel,
+  trackView = true,
 }: {
   surface: DeferredSurfaceKind;
   fallbackRoute?: AppFallbackRoute;
   fallbackLabel?: string;
+  trackView?: boolean;
 }) {
   const copy = deferredSurfaceCopy[surface];
 
   useEffect(() => {
+    if (!trackView) return;
     track('phase7_deferred_surface_viewed', { surface });
-  }, [surface]);
+  }, [surface, trackView]);
 
   return (
     <Screen edges={['top', 'bottom']}>

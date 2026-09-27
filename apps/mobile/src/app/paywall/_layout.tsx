@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 
 import {
   shouldReduceMotion,
@@ -11,7 +11,14 @@ export default function PaywallLayout() {
   const reduceMotion = useReduceMotionPreference();
   const modalAnimation = shouldReduceMotion(reduceMotion) ? 'none' : 'fade';
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{ headerShown: false }}
+      screenLayout={({ route, children }) =>
+        route.name === 'reoffer' || route.name === 'winback'
+          ? <Redirect href="/paywall/upsell" />
+          : <>{children}</>
+      }
+    >
       <Stack.Screen name="success" />
       <Stack.Screen name="reoffer" />
       <Stack.Screen name="downgrade" />

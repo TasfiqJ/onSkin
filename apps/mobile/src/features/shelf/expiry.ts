@@ -7,16 +7,19 @@ import type { ShelfProduct } from './store';
 // printed shelf life, if any. Shared by the shelf list and the detail hub so the
 // "best used by" date never diverges.
 export function surfacedExpiry(
-  p: Pick<ShelfProduct, 'isOpened' | 'openedAt' | 'paoMonths' | 'expiryDate'>,
+  p: Pick<
+    ShelfProduct,
+    'isOpened' | 'openedAt' | 'paoMonths' | 'expiryDate' | 'expirySource'
+  >,
 ): string | null {
-  if (!p.isOpened) return p.expiryDate ?? null;
+  if (p.expirySource === 'unknown') return null;
+  if (p.expirySource === 'printed') return p.expiryDate ?? null;
+  if (!p.isOpened) return null;
   return computeExpiry({ openedAt: p.openedAt, paoMonths: p.paoMonths, expiryDate: p.expiryDate });
 }
 
 export function isEstimatedExpiry(p: Pick<ShelfProduct, 'expirySource' | 'paoSource'>): boolean {
-  if (p.expirySource === 'printed') return false;
-  if (p.expirySource === 'estimated') return true;
-  return p.expirySource === 'pao_computed' && p.paoSource !== 'label' && p.paoSource !== 'catalog';
+  return p.expirySource === 'estimated' && p.paoSource === 'category_default';
 }
 
 /** "Sep 2026" month/year label for a surfaced expiry (docs/04 §5.6). */

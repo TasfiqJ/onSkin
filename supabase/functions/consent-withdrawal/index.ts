@@ -8,10 +8,10 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey = readSupabaseSecretKey();
 const maxBodyBytes = userEdgeBodyMaxBytes();
 
 type ConsentWithdrawalType =

@@ -22,17 +22,14 @@ import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { timelapseFrames } from '@/features/photos/timelapse';
-import type { PhotosQueryData, PhotosQueryResult } from '@/features/photos/usePhotos';
+import type { PhotosQueryData } from '@/features/photos/usePhotos';
 import { useProgressRouteViewModel } from '@/features/photos/useProgressRouteViewModel';
 import { ProGate } from '@/features/subscription/ProGate';
-import { TrendInsightFromSource } from '@/features/trend/TrendInsight';
-import { useTrendInsightFromPhotos } from '@/features/trend/useTrend';
 import {
   motionAwareModalAnimation,
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
-import { phase7Flags } from '@/lib/launch/phase7';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import { colors } from '@/theme/tokens';
 
@@ -161,7 +158,6 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
 
 // ── Compare-pair picker (docs/06 §4: "tap a date to change") ─────────────────
 type PhotoLite = PhotosQueryData['series'][number];
-type TrendInsightSource = ReturnType<typeof useTrendInsightFromPhotos>;
 type CompareSelection = Readonly<{ beforeId?: string; afterId?: string }>;
 type CompareSelectionTarget = 'before' | 'after';
 function PairPickerPhoto({
@@ -644,12 +640,10 @@ function PopulatedProgressHeader({
   data,
   mode,
   onModeChange,
-  trend,
 }: {
   data: PhotosQueryData;
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
-  trend: TrendInsightSource | null;
 }) {
   return (
     <>
@@ -677,11 +671,6 @@ function PopulatedProgressHeader({
         {PHOTO_COPY.tagline}
       </Text>
       <PhotoDeleteSyncStatus className="mt-4" />
-      {trend ? (
-        <View className="mt-4">
-          <TrendInsightFromSource source={trend} />
-        </View>
-      ) : null}
       <View className="mt-4 gap-2.5">
         <View className="flex-row items-center gap-2.5">
           <ModeTab
@@ -710,48 +699,18 @@ function PopulatedProgressHeader({
   );
 }
 
-function ProgressTrendBoundary({
-  data,
-  mode,
-  onModeChange,
-  compareSelection,
-  onSelectComparisonPhoto,
-  photos,
-}: {
-  data: PhotosQueryData;
-  mode: 'compare' | 'timeline';
-  onModeChange: (mode: 'compare' | 'timeline') => void;
-  compareSelection: CompareSelection;
-  onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
-  photos: PhotosQueryResult;
-}) {
-  const source = useTrendInsightFromPhotos(photos);
-  return (
-    <PhotoProgressContent
-      data={data}
-      mode={mode}
-      onModeChange={onModeChange}
-      compareSelection={compareSelection}
-      onSelectComparisonPhoto={onSelectComparisonPhoto}
-      trend={source}
-    />
-  );
-}
-
 function PhotoProgressContent({
   data,
   mode,
   onModeChange,
   compareSelection,
   onSelectComparisonPhoto,
-  trend,
 }: {
   data: PhotosQueryData;
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
   compareSelection: CompareSelection;
   onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
-  trend: TrendInsightSource | null;
 }) {
   const { height } = useWindowDimensions();
   const compactFirstRun = height < 520;
@@ -764,7 +723,7 @@ function PhotoProgressContent({
 
   const count = data.count;
   const populatedHeader = (
-    <PopulatedProgressHeader data={data} mode={mode} onModeChange={onModeChange} trend={trend} />
+    <PopulatedProgressHeader data={data} mode={mode} onModeChange={onModeChange} />
   );
 
   return (
@@ -801,39 +760,27 @@ function PhotoProgressContent({
   );
 }
 
-/** The disabled trend flag mounts no consent/Monk observer or background work. */
+/** PHOTO-05A: Progress owns photos only; unavailable Trend mounts no observer. */
 function PhotoProgressTab({
   data,
   mode,
   onModeChange,
   compareSelection,
   onSelectComparisonPhoto,
-  photoSource,
 }: {
   data: PhotosQueryData;
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
   compareSelection: CompareSelection;
   onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
-  photoSource: PhotosQueryResult;
 }) {
-  return phase7Flags.trend ? (
-    <ProgressTrendBoundary
-      data={data}
-      mode={mode}
-      onModeChange={onModeChange}
-      compareSelection={compareSelection}
-      onSelectComparisonPhoto={onSelectComparisonPhoto}
-      photos={photoSource}
-    />
-  ) : (
+  return (
     <PhotoProgressContent
       data={data}
       mode={mode}
       onModeChange={onModeChange}
       compareSelection={compareSelection}
       onSelectComparisonPhoto={onSelectComparisonPhoto}
-      trend={null}
     />
   );
 }
@@ -860,7 +807,6 @@ function ProgressRouteBoundary({
         onModeChange={onModeChange}
         compareSelection={compareSelection}
         onSelectComparisonPhoto={onSelectComparisonPhoto}
-        photoSource={viewModel.photos}
       />
     </PhotoStorageBoundary>
   );

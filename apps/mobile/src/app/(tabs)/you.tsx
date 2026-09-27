@@ -132,11 +132,6 @@ const DELETE_ACCOUNT_CONFIRM_TITLE = 'Delete account?';
 const DELETE_ACCOUNT_CONFIRM_MESSAGE =
   'This permanently deletes your account and data. Apple or Google subscription billing continues until you cancel in the store.';
 const DELETE_ACCOUNT_FAILED_TITLE = 'Deletion failed';
-const COMPACT_FOR_YOU_TOP_MARGIN = 240;
-const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;
-const SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN = 640;
-const TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN = 640;
-const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
 const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
 const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;
@@ -950,13 +945,11 @@ const YouStaticOverview = memo(function YouStaticOverview({
   height,
   highTextPressureYou,
   privacyDirectEntry,
-  secondaryRoutineTopMargin,
 }: {
   compactPhone: boolean;
   height: number;
   highTextPressureYou: boolean;
   privacyDirectEntry: boolean;
-  secondaryRoutineTopMargin: number;
 }) {
   recordYouStaticOverviewRender();
   usePublishYouRenderDiagnostics();
@@ -992,24 +985,7 @@ const YouStaticOverview = memo(function YouStaticOverview({
       href: '/settings/skin-profile',
       hint: 'Review your routine safety setting.',
     },
-    { label: 'Recommendations', href: '/recommendations' },
-    { label: 'Recommendation preferences', href: '/recommendations/preferences' },
-    {
-      label: 'Skin Notes',
-      href: '/community',
-      hint: 'Myth vs evidence, reviewed and claim-safe.',
-    },
   ];
-  if (phase7Flags.cloudAsk) {
-    forYouRows.unshift({
-      label: BRAND.askName,
-      href: '/ask',
-      hint: 'Your evidence-grounded advisor.',
-    });
-  }
-  if (phase7Flags.commerce) {
-    forYouRows.push({ label: 'Shoppable routines', href: '/commerce/stacks' });
-  }
 
   return (
     <>
@@ -1027,7 +1003,7 @@ const YouStaticOverview = memo(function YouStaticOverview({
         ))}
       </Card>
       {secondaryRoutineRows.length > 0 ? (
-        <Card className="p-3" style={{ marginTop: secondaryRoutineTopMargin }}>
+        <Card className="mt-4 p-3">
           <Text variant="label" tone="muted" className="mb-1">
             MORE ROUTINE
           </Text>
@@ -1042,12 +1018,9 @@ const YouStaticOverview = memo(function YouStaticOverview({
         </Card>
       ) : null}
       {privacyDirectEntry ? null : (
-        <Card
-          className={compactPhone ? undefined : 'mt-4'}
-          style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}
-        >
+        <Card className="mt-4">
           <Text variant="label" tone="muted" className="mb-1">
-            FOR YOU
+            PROFILE
           </Text>
           {forYouRows.map(({ label, href, hint }) => (
             <Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />
@@ -1638,14 +1611,6 @@ const YouMutationSections = memo(function YouMutationSections() {
       : shortWidePrivacyEntry
         ? PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN
         : undefined;
-  const shortPhone = compactPhone && height < 600;
-  const secondaryRoutineTopMargin = tallTextPressureYou
-    ? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN
-    : supportFloorTextPressureYou
-      ? SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN
-      : shortPhone
-        ? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN
-        : COMPACT_SECONDARY_ROUTINE_TOP_MARGIN;
 
   useEffect(() => {
     if (!privacyDirectEntry || !privacyCardReady) return;
@@ -1761,7 +1726,6 @@ const YouMutationSections = memo(function YouMutationSections() {
               height={height}
               highTextPressureYou={highTextPressureYou}
               privacyDirectEntry={privacyDirectEntry}
-              secondaryRoutineTopMargin={secondaryRoutineTopMargin}
             />
 
             {phase7Flags.commerce ? <YouCommerceSection /> : null}

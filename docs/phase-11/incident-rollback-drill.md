@@ -20,10 +20,16 @@ Status: BLOCKED until drill evidence is attached.
 3. Identify owner and backup.
 4. Freeze launch expansion.
 5. Decide rollback path: EAS Update rollback, feature flag, server rollback, store halt, binary hotfix.
-6. Draft user/support communication.
-7. Execute in staging or dry-run mode.
-8. Record timestamps and decision owner.
-9. Close incident only after monitoring confirms recovery.
+6. Prove the affected update and rollback target share the exact runtime
+   fingerprint. If the issue involves native code, plugins, entitlements,
+   permissions, privacy manifests, export declarations, WidgetKit/ActivityKit,
+   or binary configuration, reject EAS Update and use the binary/store path.
+7. Draft user/support communication.
+8. Execute in staging or dry-run mode.
+9. Re-run privacy, payment, deletion/export, owner-isolation, and affected-flow
+   smoke against the rollback result.
+10. Record timestamps and decision owner.
+11. Close incident only after monitoring confirms recovery.
 
 ## Required Evidence
 
@@ -31,6 +37,8 @@ Status: BLOCKED until drill evidence is attached.
 - issue scenario
 - owners present
 - rollback command or console path
+- source and rollback SHAs, update IDs, channel, and runtime fingerprint
+- proof that the rollback target was previously reviewed
 - communication draft
 - recovery metric
 - postmortem notes
@@ -42,3 +50,4 @@ Status: BLOCKED until drill evidence is attached.
 - no support macro for incident
 - no monitoring signal to confirm recovery
 - no decision rule for halt vs continue
+- an attempted OTA repair for a native or runtime-incompatible defect

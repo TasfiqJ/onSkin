@@ -1,10 +1,10 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { booleanEnv, readEdgeAppEnvironment } from '../_shared/env.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey = readSupabaseSecretKey();
 const appEnvironment = readEdgeAppEnvironment();
 const turnstileSecret =
   Deno.env.get('TURNSTILE_SECRET_KEY') ?? Deno.env.get('CF_TURNSTILE_SECRET_KEY') ?? '';

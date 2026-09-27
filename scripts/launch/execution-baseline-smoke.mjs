@@ -9,7 +9,7 @@ import {
 const planIds = parsePlanRows().map(({ id }) => id);
 assert.equal(
   planIds.length,
-  202,
+  24,
   'the plan-derived count must include Codex, human, reviewer, Apple, and vendor items',
 );
 assert(
@@ -31,6 +31,8 @@ assert(
 const inventory = buildFeatureInventory();
 const featureKeys = inventory.features.map(({ key }) => key);
 assert.equal(featureKeys.length, 20);
+assert.equal(inventory.features.filter((item) => item.launchRequired).length, 10);
+assert.equal(inventory.gatedSurfaces.filter((item) => item.launchRequired).length, 0);
 assert(exactSetProblems('features', featureKeys, featureKeys.slice(1)).length > 0);
 
 const surfaceKeys = gatedSurfaces.flatMap(({ surfaceKeys: keys }) => keys);

@@ -16,11 +16,11 @@ function readAskFeature(path: string): string {
 describe('Ask route launch contracts', () => {
   it('keeps the deterministic Ask home independent from the cloud Ask flag', () => {
     const layout = readAppRoute('ask/_layout.tsx');
-
-    expect(layout).toContain('screenLayout={AskScreenLayout}');
-    expect(layout).toContain('screenOptions={{ headerShown: false }}');
-    expect(layout).not.toContain('phase7Flags.cloudAsk');
-    expect(layout).not.toContain('DeferredSurface');
+    expect(layout).toContain('screenLayout={DeferredScreen}');
+    expect(layout).toContain('<DeferredSurface');
+    expect(layout).toContain('surface="cloudAsk"');
+    expect(layout).toContain('trackView={false}');
+    expect(layout).not.toContain('{children}');
   });
 
   it('defers only the cloud consent surface while cloud Ask is unavailable', () => {

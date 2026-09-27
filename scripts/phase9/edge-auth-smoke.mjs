@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { block, evidenceFlagEnabled, printResult, read, warn } from './lib.mjs';
+import { block, evidenceFlagEnabled, listFiles, printResult, read, warn } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -13,6 +13,12 @@ const userEdgeAuthHelper = read('supabase/functions/_shared/auth.ts');
 const userEdgeBodyHelper = read('supabase/functions/_shared/body.ts');
 const edgeEnvHelper = read('supabase/functions/_shared/env.ts');
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
+const supabaseKeyMapHelper = read('supabase/functions/_shared/supabaseKeyMap.ts');
+const supabasePublishableKeyHelper = read('supabase/functions/_shared/supabasePublishableKey.ts');
+const supabaseSecretKeyHelper = read('supabase/functions/_shared/supabaseSecretKey.ts');
+const clientSupabaseSecretReferences = listFiles('apps/mobile')
+  .filter((path) => /\.(?:js|jsx|ts|tsx)$/.test(path))
+  .filter((path) => /SUPABASE_(?:SECRET_KEYS|SECRET_KEY|SERVICE_ROLE_KEY)/.test(read(path)));
 
 function orderedPublicFormChecks(source, scope) {
   return new RegExp(
@@ -104,11 +110,15 @@ block(
 block(
   errors,
   /readEdgeAppEnvironment/.test(edgeEnvHelper) &&
+    /resolveEdgeAppEnvironment/.test(edgeEnvHelper) &&
     /APP_ENV/.test(edgeEnvHelper) &&
     /EXPO_PUBLIC_APP_ENV/.test(edgeEnvHelper) &&
     /trim\(\)\.toLowerCase\(\)/.test(edgeEnvHelper) &&
-    /return isEdgeAppEnvironment\(candidate\) \? candidate : 'production';/.test(edgeEnvHelper),
-  'Shared Edge env helper must normalize app env and fail closed to production.',
+    /APP_ENV_NOT_CONFIGURED/.test(edgeEnvHelper) &&
+    /APP_ENV_INVALID/.test(edgeEnvHelper) &&
+    /APP_ENV_CONFLICT/.test(edgeEnvHelper) &&
+    !/\? candidate : 'production'/.test(edgeEnvHelper),
+  'Shared Edge env helper must require APP_ENV and reject invalid or contradictory values.',
 );
 block(
   errors,
@@ -116,6 +126,35 @@ block(
     /trim\(\)\.toLowerCase\(\)/.test(edgeEnvHelper) &&
     /invalidValue/.test(edgeEnvHelper),
   'Shared Edge env helper must normalize boolean envs and support explicit invalid-value fail-closed behavior.',
+);
+block(
+  errors,
+  /defaultHostedSupabaseKey/.test(supabaseKeyMapHelper) &&
+    /JSON\.parse/.test(supabaseKeyMapHelper) &&
+    /\.default/.test(supabaseKeyMapHelper) &&
+    /_INVALID/.test(supabaseKeyMapHelper),
+  'Shared Supabase key-map parser must resolve the default hosted key and fail closed on malformed maps.',
+);
+block(
+  errors,
+  /SUPABASE_PUBLISHABLE_KEYS/.test(supabasePublishableKeyHelper) &&
+    /SUPABASE_PUBLISHABLE_KEY/.test(supabasePublishableKeyHelper) &&
+    /EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY/.test(supabasePublishableKeyHelper) &&
+    /SUPABASE_ANON_KEY/.test(supabasePublishableKeyHelper),
+  'Shared publishable-key resolver must prefer hosted maps with singular/local/legacy fallback.',
+);
+block(
+  errors,
+  /SUPABASE_SECRET_KEYS/.test(supabaseSecretKeyHelper) &&
+    /SUPABASE_SECRET_KEY/.test(supabaseSecretKeyHelper) &&
+    /SUPABASE_SERVICE_ROLE_KEY/.test(supabaseSecretKeyHelper) &&
+    !/EXPO_PUBLIC_/.test(supabaseSecretKeyHelper),
+  'Shared secret-key resolver must prefer hosted maps, keep server-only fallbacks, and never read public env names.',
+);
+block(
+  errors,
+  clientSupabaseSecretReferences.length === 0,
+  'Mobile source must never reference Supabase secret/service-role key variables.',
 );
 
 for (const fn of userJwtFunctions) {
@@ -159,13 +198,34 @@ for (const fn of userJwtFunctions) {
       handlerSource.indexOf("req.method !== 'POST'") < handlerSource.indexOf('auth.getUser'),
     `${fn} method check must run before caller auth resolution.`,
   );
-  if (fn !== 'data-export') {
-    block(
-      errors,
-      /SUPABASE_SECRET_KEY|SUPABASE_SERVICE_ROLE_KEY/.test(source),
-      `${fn} service-role use must be explicit and auditable.`,
-    );
-  }
+  block(
+    errors,
+    /readSupabaseSecretKey/.test(source) &&
+      !/Deno\.env\.get\(['"]SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)['"]\)/.test(source),
+    `${fn} must resolve server credentials through the shared hosted-key helper.`,
+  );
+}
+
+for (const fn of ['growth-event', 'order-report-poll', 'revenuecat-webhook', 'waitlist']) {
+  const source = read(`supabase/functions/${fn}/index.ts`);
+  block(
+    errors,
+    /readSupabaseSecretKey/.test(source) &&
+      !/Deno\.env\.get\(['"]SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)['"]\)/.test(source),
+    `${fn} must resolve server credentials through the shared hosted-key helper.`,
+  );
+}
+
+for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-export']) {
+  const source = read(`supabase/functions/${fn}/index.ts`);
+  block(
+    errors,
+    /readSupabasePublishableKey/.test(source) &&
+      !/Deno\.env\.get\(['"](?:EXPO_PUBLIC_)?SUPABASE_(?:PUBLISHABLE_KEY|ANON_KEY)['"]\)/.test(
+        source,
+      ),
+    `${fn} must resolve public credentials through the shared hosted-key helper.`,
+  );
 }
 
 for (const fn of [
@@ -212,6 +272,12 @@ block(
   errors,
   /reverse_trial_already_used/.test(subscriptionGrants),
   'subscription-grants must return a stable already-used reverse-trial conflict code.',
+);
+block(
+  errors,
+  /readEdgeAppEnvironment/.test(subscriptionGrants) &&
+    !/Deno\.env\.get\(['"]APP_ENV['"]\)\s*\?\?/.test(subscriptionGrants),
+  'subscription-grants must use the shared fail-closed app-environment resolver.',
 );
 
 const catalogReport = read('supabase/functions/catalog-report/index.ts');
@@ -316,7 +382,7 @@ for (const [label, source, scope, firstBodyMarker, firstWorkMarker] of [
     read('supabase/functions/catalog-search/index.ts'),
     'catalog-search',
     'readLimitedJson(req',
-    ".from('products')",
+    'admin.rpc(CATALOG_SEARCH_RPC',
   ],
   [
     'catalog-lookup',

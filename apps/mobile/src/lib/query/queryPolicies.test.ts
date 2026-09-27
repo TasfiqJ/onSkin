@@ -171,7 +171,6 @@ describe('query retry policies', () => {
     const cycleAnchor = read('features/routine/cycleAnchor.ts');
     const progress = read('features/routine/useProgress.ts');
     const profile = read('features/scheduler/profile.ts');
-    const trend = read('features/trend/useTrend.ts');
     const commerce = read('features/commerce/useCommerce.ts');
     const offering = read('features/subscription/useSubscriptionOffering.ts');
     const photos = read('features/photos/usePhotos.ts');
@@ -192,7 +191,6 @@ describe('query retry policies', () => {
         ),
       ).toHaveLength(2);
     }
-    expect(trend.match(/\.\.\.requestPolicyOwnedQueryPolicy/g)).toHaveLength(2);
     expect(commerce).toContain('...requestPolicyOwnedQueryPolicy');
     expect(offering).toContain('...stableErrorQueryPolicy');
     expect(offering).not.toMatch(/retry:\s*[1-9]/);

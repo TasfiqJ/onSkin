@@ -24,15 +24,15 @@ Phase 10 is not a feature phase. It is the evidence phase that decides whether p
 
 | Wave            |                   Target users | Purpose                                                                   | Entry gate                                     | Exit gate                                                  |
 | --------------- | -----------------------------: | ------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
-| Wave 0 internal |                           5-10 | Release rehearsal, support dry run, deletion/export/payment smoke         | Phase 9 candidate passes non-strict code gates | No P0/P1 build, privacy, support, or payment issue remains |
-| Wave 1 friendly |                          15-25 | First real-user comprehension, catalog friction, trust and support themes | Wave 0 exit and reviewed tester brief          | Top blockers fixed or explicitly accepted                  |
-| Wave 2 target   | 50-100 total real target users | Activation, retention, catalog usefulness, willingness-to-pay signal      | Dashboards and support categories live         | Public-launch memo can be written from evidence            |
+| Wave 0 internal |                           3-5 | Release rehearsal, support dry run, deletion/export/payment smoke         | Phase 9 candidate passes non-strict code gates | No P0/P1 build, privacy, support, or payment issue remains |
+| Wave 1 friendly |                          5-10 | First real-user comprehension, manual-entry friction, trust and support themes | Wave 0 exit and reviewed tester brief          | Top blockers fixed or explicitly accepted                  |
+| Wave 2 target   | 15-30 total real target users | Activation, retention, manual Shelf usefulness, willingness-to-pay signal      | Dashboards and support categories live         | Public-launch memo can be written from evidence            |
 
 Do not count employees, contractors, duplicate devices, or passive installs as target-user completion. A completed beta user must install the final beta build, complete onboarding, add real shelf context, see a first-value moment, attempt at least one routine or progress action, and have the option to provide feedback through the approved channel.
 
 ## Seven-Figure Evidence Bar
 
-At $49.99/year, $1,000,000 gross ARR requires about 20,005 active annual subscribers before refunds, taxes, failed payments, churn, and store fees. A 50-100 user beta cannot forecast that outcome precisely. Its job is to expose the failure modes that would make seven figures unrealistic:
+At $49.99/year, $1,000,000 gross ARR requires about 20,005 active annual subscribers before refunds, taxes, failed payments, churn, and store fees. A 15-30 user beta cannot forecast that outcome precisely. Its job is to expose the failure modes that would make seven figures unrealistic:
 
 - weak first-session value
 - onboarding confusion
@@ -81,7 +81,7 @@ Phase 10 cannot start if any of these are true:
 
 Phase 10 cannot exit to public launch if any of these are true:
 
-- Fewer than 50 real target users complete the beta loop.
+- Fewer than 15 real target users complete the beta loop.
 - D1/D7 activated retention is too weak to justify public traffic.
 - First value is unclear or delayed for a material segment.
 - Catalog misses, wrong matches, or manual fallback failures block routine setup.

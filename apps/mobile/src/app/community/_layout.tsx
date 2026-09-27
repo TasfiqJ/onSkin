@@ -1,15 +1,18 @@
 import { Stack } from 'expo-router';
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
+import { APP_HOME_ROUTE } from '@/lib/navigation/safeBack';
 
-// Community / "Skin Notes" surfaces (docs/11 §9), presented over the tabs. A calm
-// reference library. The hub + the myth-vs-evidence card (Phase 1, live); the
-// anonymous ask + "people like you" are Phase-2 previews (peer posting deferred).
-export default function CommunityLayout() {
+function DeferredScreen() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="note/[id]" />
-      <Stack.Screen name="ask" />
-      <Stack.Screen name="people-like-you" />
-    </Stack>
+    <DeferredSurface
+      surface="communityPosting"
+      fallbackRoute={APP_HOME_ROUTE}
+      fallbackLabel="Back to Today"
+      trackView={false}
+    />
   );
+}
+
+export default function DeferredLayout() {
+  return <Stack screenOptions={{ headerShown: false }} screenLayout={DeferredScreen} />;
 }

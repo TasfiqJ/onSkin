@@ -96,8 +96,7 @@ export default function WelcomeScreen() {
   // absent server write never re-onboards them. Falls back to the server row.
   const onboarded = useQuery({
     ...onboardingStatusQueryOptions(ownerScope),
-    enabled:
-      isFocused && !resetting && !initializing && (!!session || !isSupabaseConfigured),
+    enabled: isFocused && !resetting && !initializing && (!!session || !isSupabaseConfigured),
   });
 
   const checkingOnboarding = !!session || !isSupabaseConfigured;
@@ -144,10 +143,7 @@ export default function WelcomeScreen() {
       setBusy(false);
       return;
     }
-    if (
-      decision === 'navigate' &&
-      settleAnonymousOnboardingHandoff(pending.requestId)
-    ) {
+    if (decision === 'navigate' && settleAnonymousOnboardingHandoff(pending.requestId)) {
       router.push('/onboarding/age');
     }
   }, [
@@ -198,8 +194,8 @@ export default function WelcomeScreen() {
       failureKind === 'unsupported_profile'
         ? 'This saved profile needs a newer version of OnSkin.'
         : failureKind === 'invalid_profile'
-          ? 'We found saved profile data we can\'t safely read.'
-          : 'We couldn\'t safely check your progress.';
+          ? "We found saved profile data we can't safely read."
+          : "We couldn't safely check your progress.";
     const body =
       failureKind === 'unsupported_profile'
         ? 'Your saved profile was preserved unchanged. Update OnSkin, then check again.'
@@ -232,15 +228,15 @@ export default function WelcomeScreen() {
     <Screen>
       <View className="flex-1 justify-center">
         <Text variant="display">
-          Healthier skin in eight weeks, built around{' '}
+          A simpler routine, built around{' '}
           <Text variant="display" italic tone="clay">
             your
           </Text>{' '}
-          skin.
+          shelf.
         </Text>
         <Text variant="body" tone="muted" className="mt-4">
-          A routine that fits what&apos;s already on your shelf. And photos that never leave your
-          phone.
+          Use the products you already own, follow your AM/PM plan, and keep progress photos private
+          on this device.
         </Text>
       </View>
       <View className="pb-4">

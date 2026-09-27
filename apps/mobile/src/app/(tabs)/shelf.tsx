@@ -53,7 +53,7 @@ import { colors } from '@/theme/tokens';
 
 // Shelf list (Smart Shelf design screen 05, docs/04 §5.1): title + count,
 // All/Actives/Expiring filters, the calm conflict banner, product cards with the
-// five-state badge taxonomy, and the "Scan a barcode" FAB. Light-mode, calm,
+// five-state badge taxonomy, and the "Add a product" FAB. Light-mode, calm,
 // claim-safe. The cabinet that knows when to replace, never when to alarm.
 type Filter = 'all' | 'actives' | 'expiring';
 const ACTIVE_TAGS = new Set(['retinoid', 'aha', 'bha', 'benzoyl_peroxide', 'vitamin_c']);
@@ -114,11 +114,7 @@ function ShelfViewStateProvider({
   }, [isFocused]);
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (
-        !focusedRef.current ||
-        filterRef.current !== filter ||
-        restoringFilter.current !== null
-      ) {
+      if (!focusedRef.current || filterRef.current !== filter || restoringFilter.current !== null) {
         return;
       }
       scrollOffsets.current[filter] = Math.max(0, event.nativeEvent.contentOffset.y);
@@ -175,19 +171,19 @@ function ShelfViewStateProvider({
   return <ShelfViewStateContext.Provider value={state}>{children}</ShelfViewStateContext.Provider>;
 }
 
-function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
+function AddShelfButton({ source }: { source: ProductAddStartSource }) {
   return (
     <Pressable
       accessibilityRole="button"
       onPress={() => {
         haptics.select();
         trackProductAddStarted(source);
-        router.push('/shelf/scan');
+        router.push('/shelf/manual');
       }}
       style={({ pressed }) => [pressed ? { opacity: 0.86 } : null]}
-      className="rounded-pill bg-ink px-7 py-3.5"
+      className="min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-3.5"
     >
-      <Text className="font-sans-semibold text-[15px] text-paper">Scan a barcode</Text>
+      <Text className="font-sans-semibold text-[15px] text-paper">Add a product</Text>
     </Pressable>
   );
 }
@@ -340,11 +336,11 @@ function EmptyShelf({
         }
       >
         {splitShort ? (
-          <>Scan a barcode, or add it by hand.</>
+          <>Add products you already own.</>
         ) : (
           <>
-            Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness
-            and clashes.
+            Add products you already own. We&apos;ll handle freshness and
+            clashes.
           </>
         )}
       </Text>
@@ -357,19 +353,19 @@ function EmptyShelf({
           accessibilityRole="button"
           onPress={() => {
             haptics.select();
-            trackProductAddStarted('empty_scan');
-            router.push('/shelf/scan');
+            trackProductAddStarted('empty_manual');
+            router.push('/shelf/manual');
           }}
           className="h-14 items-center justify-center rounded-pill bg-ink"
         >
-          <Text className="font-sans-semibold text-[16px] text-paper">Scan a barcode</Text>
+          <Text className="font-sans-semibold text-[16px] text-paper">Add a product</Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() => {
             haptics.select();
-            trackProductAddStarted('empty_manual');
-            router.push('/shelf/manual');
+            trackProductAddStarted('scan_label');
+            router.push('/shelf/ocr');
           }}
           className={
             compactNoArchiveShort
@@ -378,7 +374,7 @@ function EmptyShelf({
           }
         >
           <Text className="font-sans-semibold text-[15px]" tone="muted">
-            Add by hand
+            Scan ingredient label
           </Text>
         </Pressable>
         {hasArchive ? (
@@ -501,13 +497,16 @@ function ShelfRowSeparator() {
 
 const ShelfListTitle = memo(function ShelfListTitle({ productCount }: { productCount: number }) {
   return (
-    <View className="mt-2 flex-row items-baseline justify-between">
-      <Text variant="title" className="text-[38px] leading-[40px]">
-        Shelf
-      </Text>
-      <Text variant="label" tone="muted">
-        {productCount} product{productCount === 1 ? '' : 's'}
-      </Text>
+    <View className="mt-2 flex-row items-center justify-between gap-3">
+      <View className="flex-1">
+        <Text variant="title" className="text-[38px] leading-[40px]">
+          Shelf
+        </Text>
+        <Text variant="label" tone="muted">
+          {productCount} product{productCount === 1 ? '' : 's'}
+        </Text>
+      </View>
+      <AddShelfButton source="empty_manual" />
     </View>
   );
 });
@@ -622,7 +621,7 @@ const ShelfListFooter = memo(function ShelfListFooter({
       ) : null}
 
       <View className="mt-6 items-center pb-2">
-        <ScanShelfButton source="scan_inline" />
+        <AddShelfButton source="empty_manual" />
       </View>
     </>
   );

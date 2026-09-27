@@ -230,11 +230,11 @@ describe('direct paywall policy', () => {
     }
   });
 
-  it('lets onboarding offer both paths only to never-entitled Free users', () => {
+  it('offers ordinary subscriptions without custom reverse-trial grants', () => {
     expect(directPaywallDecision('onboarding', { state: absent() })).toMatchObject({
       phase: 'offer',
       allowPurchase: true,
-      allowReverseTrial: true,
+      allowReverseTrial: false,
     });
     expect(directPaywallDecision('onboarding', { state: expired('normal') })).toMatchObject({
       phase: 'offer',

@@ -1,1457 +1,190 @@
 {
   "schemaVersion": 1,
-  "sourcePlan": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md",
-  "expectedWorkItemCount": 202,
+  "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
+  "expectedWorkItemCount": 24,
   "allowedStatuses": ["not_started", "in_progress", "blocked", "external_pending", "complete"],
   "items": [
     {
       "id": "H-01",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Create/control the Apple Account, complete identity verification and MFA, enroll, and pay Apple membership",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Complete Apple Account/Developer/App Store Connect identity, MFA, membership, truthful seller/legal entity, agreements, tax/banking and required payment steps.",
       "evidenceRefs": []
     },
     {
       "id": "H-02",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Choose individual versus organization seller and provide truthful legal-entity information",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Obtain written clearance for the exact final public name in the actual launch territory/classes, approve that exact spelling, and authorize/pay any domain/filing/reservation spend.",
       "evidenceRefs": []
     },
     {
       "id": "H-03",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Provide banking/tax information and accept Apple or vendor legal agreements",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Review the exact V1 release facts/corpora that require professional judgment: privacy/consumer-health/regulatory claims, conflict/routine/cycle clinical meaning, cosmetic-chemistry/application copy, relevant IP/content rights and export classification.",
       "evidenceRefs": []
     },
     {
       "id": "H-04",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Pay for domains, memberships, professionals, vendors, moderation, or approved usage budgets",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Create/approve/pay the minimum production services and complete any identity/MFA/terms challenge: Expo/EAS, Supabase, RevenueCat, final domain/DNS/hosting.",
       "evidenceRefs": []
     },
     {
       "id": "H-05",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Complete MFA, CAPTCHA, identity, phone, email, or payment challenges in external consoles",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Provide supported physical iPhone access and perform real-only actions: camera/OCR labels, protected photo flows/biometric unlock where used, local notification delivery, accessibility checks, StoreKit sandbox purchase/restore/manage, signed-build install/relaunch/background scenarios.",
       "evidenceRefs": []
     },
     {
       "id": "H-06",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve the final recommended name after formal clearance and authorize paid reservation/filing",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve final US-first launch territory, App Store prices/offers, spending ceilings, tax/business choices, support owner and any material residual risk.",
       "evidenceRefs": []
     },
     {
       "id": "H-07",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Provide genuine trademark/IP, privacy/legal, clinical, cosmetic-chemistry, and security decisions with real identity/authority",
-      "evidenceRefs": []
-    },
-    {
-      "id": "H-08",
-      "status": "external_pending",
-      "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Provide or connect supported physical iPhones and perform actions that cannot be simulated, including Face ID, real-world camera conditions, and sandbox purchase confirmation when required",
-      "evidenceRefs": []
-    },
-    {
-      "id": "H-09",
-      "status": "external_pending",
-      "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Supply genuine beta users and any legally required tester consent",
-      "evidenceRefs": []
-    },
-    {
-      "id": "H-10",
-      "status": "external_pending",
-      "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Staff real community moderation and customer-support escalation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "H-11",
-      "status": "external_pending",
-      "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve pricing, launch countries, budget ceilings, binding contracts, and material business risk",
-      "evidenceRefs": []
-    },
-    {
-      "id": "H-12",
-      "status": "external_pending",
-      "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Give explicit authorization to submit to App Review and to make the approved app public",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: After reviewing the immutable release packet, explicitly authorize App Review submission and, separately, public availability.",
       "evidenceRefs": []
     },
     {
       "id": "V-01",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve membership, app, subscriptions, TestFlight external beta, and App Store release",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Issue membership/capability/TestFlight/App Review/subscription/public-release outcomes.",
       "evidenceRefs": []
     },
     {
       "id": "V-02",
       "status": "external_pending",
       "blockedBy": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve affiliate, AI, domain, email, or other provider applications",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Issue production account/limit/contract approvals where the selected minimum services require them.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-01",
+      "id": "C-01",
       "status": "not_started",
       "blockedBy": [],
-      "nextAction": "Complete and capture acceptance evidence: Create an accepted Master Plan Update Patch for iOS-only, all indexed features at launch",
+      "nextAction": "Complete and capture acceptance evidence: Cut the repository from the superseded all-features launch contract to this lean V1 contract; rebuild validators, feature/task/status artifacts, active docs and legacy-task disposition.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-02",
+      "id": "C-02",
       "status": "not_started",
-      "blockedBy": ["GOV-01"],
-      "nextAction": "Complete and capture acceptance evidence: Add the founder directive to docs/DECISIONS.md",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Apply the full iOS UI/UX overhaul for Welcome, onboarding, native system tabs, Today, Shelf and shared design primitives.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-03",
+      "id": "C-03",
       "status": "not_started",
-      "blockedBy": ["GOV-02"],
-      "nextAction": "Complete and capture acceptance evidence: Reconcile MASTER_PLAN, PRODUCT_REQUIREMENTS, ARCHITECTURE, FEATURE_INDEX, ROADMAP, TESTING_STRATEGY, LAUNCH_READINESS, BLOCKERS, FOR_TAS_TO_DO, and V1 scope docs",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Hard-close and unlink deferred product/growth surfaces.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-04",
+      "id": "C-04",
       "status": "not_started",
-      "blockedBy": ["GOV-03"],
-      "nextAction": "Complete and capture acceptance evidence: Create one source-controlled launch contract consumed by validators",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Preserve guest-first onboarding and existing Apple/email account portability; defer Google sign-in in ordinary V1 navigation.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-05",
+      "id": "C-05",
       "status": "not_started",
-      "blockedBy": ["GOV-04"],
-      "nextAction": "Complete and capture acceptance evidence: Make Phase 2-11 validators, packet builders, device QA, performance, beta, and launch checks read that contract",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Make Shelf V1 manual-entry and local ingredient parsing first (optional local-label OCR); remove catalog/search/barcode as launch dependencies and ordinary entry points.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-06",
+      "id": "C-06",
       "status": "not_started",
-      "blockedBy": ["GOV-05"],
-      "nextAction": "Complete and capture acceptance evidence: Split Google Sign-In for iOS from Google Play/Android blockers",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Preserve/finish fail-closed reviewed guidance source boundary and produce exact professional-review packets for conflict/routine/cycle.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-07",
+      "id": "C-07",
       "status": "not_started",
-      "blockedBy": ["GOV-06"],
-      "nextAction": "Complete and capture acceptance evidence: Replace FOR_TAS_TO_DO with a true founder-touchpoint register generated from this ownership model",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish the owned-product routine/Today/cycle persistence and recovery source path.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-08",
+      "id": "C-08",
       "status": "not_started",
-      "blockedBy": ["GOV-07"],
-      "nextAction": "Complete and capture acceptance evidence: Add this execution plan to the active source-doc index in AGENTS.md and CLAUDE.md",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish private Progress V1 source path without trend/score claims.",
       "evidenceRefs": []
     },
     {
-      "id": "GOV-09",
-      "status": "complete",
-      "blockedBy": [],
-      "nextAction": "Keep the baseline artifact current and rerun launch:execution-baseline:check after relevant plan or repository changes.",
-      "evidenceRefs": [
-        "docs/hugeToDo/feature-inventory.json",
-        "docs/hugeToDo/task-graph.json",
-        "docs/hugeToDo/credential-inventory.json",
-        "docs/hugeToDo/evidence-governance.json",
-        "docs/hugeToDo/worktree-boundary.json"
-      ]
-    },
-    {
-      "id": "BASE-01",
-      "status": "complete",
-      "blockedBy": [],
-      "nextAction": "Keep the baseline artifact current and rerun launch:execution-baseline:check after relevant plan or repository changes.",
-      "evidenceRefs": [
-        "docs/hugeToDo/feature-inventory.json",
-        "docs/hugeToDo/task-graph.json",
-        "docs/hugeToDo/credential-inventory.json",
-        "docs/hugeToDo/evidence-governance.json",
-        "docs/hugeToDo/worktree-boundary.json"
-      ]
-    },
-    {
-      "id": "BASE-02",
-      "status": "not_started",
-      "blockedBy": ["BASE-01"],
-      "nextAction": "Complete and capture acceptance evidence: Run typecheck, lint, unit/integration tests, docs audits, brand audit, and non-mutating launch sweep",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BASE-03",
-      "status": "complete",
-      "blockedBy": [],
-      "nextAction": "Keep the baseline artifact current and rerun launch:execution-baseline:check after relevant plan or repository changes.",
-      "evidenceRefs": [
-        "docs/hugeToDo/feature-inventory.json",
-        "docs/hugeToDo/task-graph.json",
-        "docs/hugeToDo/credential-inventory.json",
-        "docs/hugeToDo/evidence-governance.json",
-        "docs/hugeToDo/worktree-boundary.json"
-      ]
-    },
-    {
-      "id": "BASE-04",
-      "status": "complete",
-      "blockedBy": [],
-      "nextAction": "Keep the baseline artifact current and rerun launch:execution-baseline:check after relevant plan or repository changes.",
-      "evidenceRefs": [
-        "docs/hugeToDo/feature-inventory.json",
-        "docs/hugeToDo/task-graph.json",
-        "docs/hugeToDo/credential-inventory.json",
-        "docs/hugeToDo/evidence-governance.json",
-        "docs/hugeToDo/worktree-boundary.json"
-      ]
-    },
-    {
-      "id": "BASE-05",
-      "status": "complete",
-      "blockedBy": [],
-      "nextAction": "Keep the baseline artifact current and rerun launch:execution-baseline:check after relevant plan or repository changes.",
-      "evidenceRefs": [
-        "docs/hugeToDo/feature-inventory.json",
-        "docs/hugeToDo/task-graph.json",
-        "docs/hugeToDo/credential-inventory.json",
-        "docs/hugeToDo/evidence-governance.json",
-        "docs/hugeToDo/worktree-boundary.json"
-      ]
-    },
-    {
-      "id": "BASE-06",
-      "status": "complete",
-      "blockedBy": [],
-      "nextAction": "Keep the baseline artifact current and rerun launch:execution-baseline:check after relevant plan or repository changes.",
-      "evidenceRefs": [
-        "docs/hugeToDo/feature-inventory.json",
-        "docs/hugeToDo/task-graph.json",
-        "docs/hugeToDo/credential-inventory.json",
-        "docs/hugeToDo/evidence-governance.json",
-        "docs/hugeToDo/worktree-boundary.json"
-      ]
-    },
-    {
-      "id": "BASE-07",
-      "status": "not_started",
-      "blockedBy": ["BASE-01"],
-      "nextAction": "Complete and capture acceptance evidence: Add CI jobs for iOS-scope contract validation and safe non-live checks",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-01",
-      "status": "not_started",
-      "blockedBy": ["GOV-08", "BASE-07"],
-      "nextAction": "Complete and capture acceptance evidence: Build the naming brief from product positioning, audience, claims limits, pronunciation, searchability, and global risk",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-02",
-      "status": "not_started",
-      "blockedBy": ["BRAND-01"],
-      "nextAction": "Complete and capture acceptance evidence: Generate and score a longlist",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-03",
-      "status": "not_started",
-      "blockedBy": ["BRAND-02"],
-      "nextAction": "Complete and capture acceptance evidence: Search exact and confusingly similar App Store names, web/common-law uses, launch-country trademark databases, domains, and public social handles",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-04",
-      "status": "not_started",
-      "blockedBy": ["BRAND-03"],
-      "nextAction": "Complete and capture acceptance evidence: Recommend one winner and two backups",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-05",
-      "status": "not_started",
-      "blockedBy": ["BRAND-04"],
-      "nextAction": "Complete and capture acceptance evidence: Produce the counsel-ready clearance packet",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-06",
-      "status": "not_started",
-      "blockedBy": ["BRAND-05"],
-      "nextAction": "Complete and capture acceptance evidence: Obtain formal clearance and approve the winner",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-07",
-      "status": "not_started",
-      "blockedBy": ["BRAND-06"],
-      "nextAction": "Complete and capture acceptance evidence: Reserve or prepare reservation of domain, App Store name, and public handles through authorized accounts",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-08",
-      "status": "not_started",
-      "blockedBy": ["BRAND-07"],
-      "nextAction": "Complete and capture acceptance evidence: Freeze the identity registry",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-09",
-      "status": "not_started",
-      "blockedBy": ["BRAND-08"],
-      "nextAction": "Complete and capture acceptance evidence: Migrate code, config, assets, copy, packages where appropriate, Supabase callbacks, RevenueCat, analytics, support, links, and store metadata",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BRAND-10",
-      "status": "not_started",
-      "blockedBy": ["BRAND-09"],
-      "nextAction": "Complete and capture acceptance evidence: Create final icon, splash, wordmark, store artwork, share watermark, and brand-use guide",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-01",
-      "status": "not_started",
-      "blockedBy": ["BRAND-01"],
-      "nextAction": "Complete and capture acceptance evidence: Apple Developer and App Store Connect",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-02",
-      "status": "not_started",
-      "blockedBy": ["ACCT-01"],
-      "nextAction": "Complete and capture acceptance evidence: Expo/EAS",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-03",
-      "status": "not_started",
-      "blockedBy": ["ACCT-02"],
-      "nextAction": "Complete and capture acceptance evidence: Supabase staging and production",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-04",
-      "status": "not_started",
-      "blockedBy": ["ACCT-03"],
-      "nextAction": "Complete and capture acceptance evidence: RevenueCat",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-05",
-      "status": "not_started",
-      "blockedBy": ["ACCT-04"],
-      "nextAction": "Complete and capture acceptance evidence: Domain, DNS, and hosting",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-06",
-      "status": "not_started",
-      "blockedBy": ["ACCT-05"],
-      "nextAction": "Complete and capture acceptance evidence: Transactional email/SMTP",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-07",
-      "status": "not_started",
-      "blockedBy": ["ACCT-06"],
-      "nextAction": "Complete and capture acceptance evidence: PostHog",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-08",
-      "status": "not_started",
-      "blockedBy": ["ACCT-07"],
-      "nextAction": "Complete and capture acceptance evidence: Sentry",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-09",
-      "status": "not_started",
-      "blockedBy": ["ACCT-08"],
-      "nextAction": "Complete and capture acceptance evidence: Cloudflare Turnstile",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-10",
-      "status": "not_started",
-      "blockedBy": ["ACCT-09"],
-      "nextAction": "Complete and capture acceptance evidence: Catalog sources",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-11",
-      "status": "not_started",
-      "blockedBy": ["ACCT-10"],
-      "nextAction": "Complete and capture acceptance evidence: AI/model provider",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-12",
-      "status": "not_started",
-      "blockedBy": ["ACCT-11"],
-      "nextAction": "Complete and capture acceptance evidence: Commerce/affiliate provider",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-13",
-      "status": "not_started",
-      "blockedBy": ["ACCT-12"],
-      "nextAction": "Complete and capture acceptance evidence: Support/helpdesk",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-14",
-      "status": "not_started",
-      "blockedBy": ["ACCT-13"],
-      "nextAction": "Complete and capture acceptance evidence: Moderation service/staff",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-15",
-      "status": "not_started",
-      "blockedBy": ["ACCT-14"],
-      "nextAction": "Complete and capture acceptance evidence: Attribution/paid measurement",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ACCT-16",
-      "status": "not_started",
-      "blockedBy": ["ACCT-15"],
-      "nextAction": "Complete and capture acceptance evidence: Subprocessor register",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-01",
-      "status": "not_started",
-      "blockedBy": ["ACCT-01", "BRAND-06"],
-      "nextAction": "Complete and capture acceptance evidence: Register the explicit App ID and exact final bundle ID",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-02",
-      "status": "not_started",
-      "blockedBy": ["IOS-01"],
-      "nextAction": "Complete and capture acceptance evidence: Configure Sign in with Apple, Push Notifications, Associated Domains, In-App Purchase, App Groups, WidgetKit, and Live Activity capabilities",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-03",
-      "status": "not_started",
-      "blockedBy": ["IOS-02"],
-      "nextAction": "Complete and capture acceptance evidence: Fix native Sign in with Apple config, including Expo property/plugin and deletion revocation credentials",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-04",
-      "status": "not_started",
-      "blockedBy": ["IOS-03"],
-      "nextAction": "Complete and capture acceptance evidence: Decide and configure iPhone/iPad support based on complete device QA",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-05",
-      "status": "not_started",
-      "blockedBy": ["IOS-04"],
-      "nextAction": "Complete and capture acceptance evidence: Configure version/build numbering, deployment target, icons, splash, permission text, localization, and encryption declaration",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-06",
-      "status": "not_started",
-      "blockedBy": ["IOS-05"],
-      "nextAction": "Complete and capture acceptance evidence: Link the EAS project, owner, project ID, channels, and development/preview/production environments",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-07",
-      "status": "not_started",
-      "blockedBy": ["IOS-06"],
-      "nextAction": "Complete and capture acceptance evidence: Configure distribution certificate, provisioning, APNs key, App Store Connect API key, and submit profile",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-08",
-      "status": "not_started",
-      "blockedBy": ["IOS-07"],
-      "nextAction": "Complete and capture acceptance evidence: Make EAS use a current Apple-compliant build image",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-09",
-      "status": "not_started",
-      "blockedBy": ["IOS-08"],
-      "nextAction": "Complete and capture acceptance evidence: Generate and inspect the full privacy manifest/report, required-reason API declarations, SDK signatures, entitlements, symbols, and binary metadata",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-10",
-      "status": "not_started",
-      "blockedBy": ["IOS-09"],
-      "nextAction": "Complete and capture acceptance evidence: Complete export-compliance assessment and configuration",
-      "evidenceRefs": []
-    },
-    {
-      "id": "IOS-11",
-      "status": "not_started",
-      "blockedBy": ["IOS-10"],
-      "nextAction": "Complete and capture acceptance evidence: Create rollback-safe EAS Update/channel policy",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-01",
-      "status": "not_started",
-      "blockedBy": ["ACCT-08", "BASE-07"],
-      "nextAction": "Complete and capture acceptance evidence: Add shared support for hosted SUPABASE_SECRET_KEYS and SUPABASE_PUBLISHABLE_KEYS maps with safe local/legacy fallback",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-02",
-      "status": "not_started",
-      "blockedBy": ["DB-01"],
-      "nextAction": "Complete and capture acceptance evidence: Correct revenuecat-webhook and order-report-poll gateway authentication",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-03",
-      "status": "not_started",
-      "blockedBy": ["DB-02"],
-      "nextAction": "Complete and capture acceptance evidence: Deploy every required function: account-deletion, catalog lookup/search/report, consent-withdrawal, data-export, growth-event, order-report-poll, revenuecat-webhook, subscription-grants, and waitlist",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-04",
-      "status": "not_started",
-      "blockedBy": ["DB-03"],
-      "nextAction": "Complete and capture acceptance evidence: Add explicit APP_ENV and complete secret/config validation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-05",
-      "status": "not_started",
-      "blockedBy": ["DB-04"],
-      "nextAction": "Complete and capture acceptance evidence: Reconcile every migration and apply to a fresh local instance",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-06",
-      "status": "not_started",
-      "blockedBy": ["DB-05"],
-      "nextAction": "Complete and capture acceptance evidence: Create and deploy staging through reviewed migration order",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-07",
-      "status": "not_started",
-      "blockedBy": ["DB-06"],
-      "nextAction": "Complete and capture acceptance evidence: Configure anonymous auth, manual linking, email OTP, SMTP, Apple/Google providers, Turnstile, redirect allowlists, rate limits, and session security",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-08",
-      "status": "not_started",
-      "blockedBy": ["DB-07"],
-      "nextAction": "Complete and capture acceptance evidence: Regenerate database types and remove schema drift",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-09",
-      "status": "not_started",
-      "blockedBy": ["DB-08"],
-      "nextAction": "Complete and capture acceptance evidence: Prove two-user and anonymous RLS, adversarial writes, canonical conflict pairs, Shelf provenance, consent immutability, moderation ownership, and admin isolation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-10",
-      "status": "not_started",
-      "blockedBy": ["DB-09"],
-      "nextAction": "Complete and capture acceptance evidence: Verify export, deletion, consent withdrawal, provider deletion, account-boundary cancellation, and temporary-file cleanup",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-11",
-      "status": "not_started",
-      "blockedBy": ["DB-10"],
-      "nextAction": "Complete and capture acceptance evidence: Configure Security Advisor, Performance Advisor, SSL/network posture, indexes, backups, recovery, resource alerts, and load limits",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-12",
-      "status": "not_started",
-      "blockedBy": ["DB-11"],
-      "nextAction": "Complete and capture acceptance evidence: Create reviewed production migration/deploy/rollback procedure",
-      "evidenceRefs": []
-    },
-    {
-      "id": "DB-13",
-      "status": "not_started",
-      "blockedBy": ["DB-12"],
-      "nextAction": "Complete and capture acceptance evidence: Create and deploy production after staging signoff",
-      "evidenceRefs": []
-    },
-    {
-      "id": "AUTH-01",
-      "status": "not_started",
-      "blockedBy": ["DB-03", "IOS-07"],
-      "nextAction": "Complete and capture acceptance evidence: Complete anonymous-first onboarding and same-user Apple, Google, and email upgrade",
-      "evidenceRefs": []
-    },
-    {
-      "id": "AUTH-02",
-      "status": "not_started",
-      "blockedBy": ["AUTH-01"],
-      "nextAction": "Complete and capture acceptance evidence: Complete email-change OTP templates, expiry, resend, rate-limit, invalid-code, and offline handling",
-      "evidenceRefs": []
-    },
-    {
-      "id": "AUTH-03",
-      "status": "not_started",
-      "blockedBy": ["AUTH-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete Sign in with Apple token revocation during account deletion",
-      "evidenceRefs": []
-    },
-    {
-      "id": "AUTH-04",
-      "status": "not_started",
-      "blockedBy": ["AUTH-03"],
-      "nextAction": "Complete and capture acceptance evidence: Configure Google OAuth for iOS without any Google Play dependency",
-      "evidenceRefs": []
-    },
-    {
-      "id": "AUTH-05",
-      "status": "not_started",
-      "blockedBy": ["AUTH-04"],
-      "nextAction": "Complete and capture acceptance evidence: Prove sign-out, token expiry, cold start, owner mismatch, cleanup failure, and A-to-B switching isolation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "AUTH-06",
-      "status": "not_started",
-      "blockedBy": ["AUTH-05"],
-      "nextAction": "Complete and capture acceptance evidence: Bind RevenueCat identity, analytics identity, query caches, encrypted stores, exports, and in-flight operations to the account generation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-01",
-      "status": "not_started",
-      "blockedBy": ["DB-03", "BRAND-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete OBF/CosIng licensing, attribution, image-rights, contribution, and correction posture",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-02",
-      "status": "not_started",
-      "blockedBy": ["CAT-01"],
-      "nextAction": "Complete and capture acceptance evidence: Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-03",
-      "status": "not_started",
-      "blockedBy": ["CAT-02"],
-      "nextAction": "Complete and capture acceptance evidence: Curate a production launch catalog from representative beta shelves",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-04",
-      "status": "not_started",
-      "blockedBy": ["CAT-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-05",
-      "status": "not_started",
-      "blockedBy": ["CAT-04"],
-      "nextAction": "Complete and capture acceptance evidence: Implement real iOS-native OCR with editable confidence-aware output",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-06",
-      "status": "not_started",
-      "blockedBy": ["CAT-05"],
-      "nextAction": "Complete and capture acceptance evidence: Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-07",
-      "status": "not_started",
-      "blockedBy": ["CAT-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-08",
-      "status": "not_started",
-      "blockedBy": ["CAT-07"],
-      "nextAction": "Complete and capture acceptance evidence: Add catalog/admin correction tooling and operational queues",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CAT-09",
-      "status": "not_started",
-      "blockedBy": ["CAT-08"],
-      "nextAction": "Complete and capture acceptance evidence: Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-01",
-      "status": "not_started",
-      "blockedBy": ["AUTH-06", "CAT-09"],
-      "nextAction": "Complete and capture acceptance evidence: Finalize onboarding, age gate, health profile, consent copy, scoring, and quiz IP posture",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-02",
-      "status": "not_started",
-      "blockedBy": ["CORE-01"],
-      "nextAction": "Complete and capture acceptance evidence: Complete versioned conflict taxonomy, pregnancy/breastfeeding rules, concentration evidence, severity, explanations, and replacements",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-03",
-      "status": "not_started",
-      "blockedBy": ["CORE-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete routine sequencing, frequency caps, skin-cycling, ramping, pause/recovery, overrides, and stop/refer behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-04",
-      "status": "not_started",
-      "blockedBy": ["CORE-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete durable AM/PM routine order and custom-cycle persistence",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-05",
-      "status": "not_started",
-      "blockedBy": ["CORE-04"],
-      "nextAction": "Complete and capture acceptance evidence: Complete Today check-off, adherence, missed-day recovery, and calm streak behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-06",
-      "status": "not_started",
-      "blockedBy": ["CORE-05"],
-      "nextAction": "Complete and capture acceptance evidence: Complete goal-active and product-specific recommendations with source provenance, reviewed eligibility, and commission isolation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "CORE-07",
-      "status": "not_started",
-      "blockedBy": ["CORE-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete shareable reviewed conflict behavior and privacy-safe selection",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-01",
-      "status": "not_started",
-      "blockedBy": ["AUTH-06", "CORE-07"],
-      "nextAction": "Complete and capture acceptance evidence: Complete local encrypted photo capture, storage, thumbnails, timeline, compare, detail, notes, and deletion",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-02",
-      "status": "not_started",
-      "blockedBy": ["PHOTO-01"],
-      "nextAction": "Complete and capture acceptance evidence: Complete app-wide lock, Progress unlock, key corruption/read failure, authenticated reset, and no-content-flash behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-03",
-      "status": "not_started",
-      "blockedBy": ["PHOTO-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete post-capture face framing/pose and lighting measurement without identity embeddings",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-04",
-      "status": "not_started",
-      "blockedBy": ["PHOTO-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete time-lapse playback, pause/replay/background/Reduce Motion/accessibility behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-05",
-      "status": "not_started",
-      "blockedBy": ["PHOTO-04"],
-      "nextAction": "Complete and capture acceptance evidence: Build the real trend engine rather than returning simulated insights",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-06",
-      "status": "not_started",
-      "blockedBy": ["PHOTO-05"],
-      "nextAction": "Complete and capture acceptance evidence: Run diverse-condition calibration/fairness evaluation across skin tones, lighting, hair, glasses, devices, and ordinary environments",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PHOTO-07",
-      "status": "not_started",
-      "blockedBy": ["PHOTO-06"],
-      "nextAction": "Complete and capture acceptance evidence: Finalize photo, face-signal, trend, local-only, retention, key-loss, export, and deletion disclosures",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-01",
-      "status": "not_started",
-      "blockedBy": ["ACCT-09", "AUTH-06", "IOS-04"],
-      "nextAction": "Complete and capture acceptance evidence: Model and recommend annual/monthly pricing, trial, introductory offer, win-back, countries, fees, tax, refund, and churn assumptions",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-02",
-      "status": "not_started",
-      "blockedBy": ["PAY-01"],
-      "nextAction": "Complete and capture acceptance evidence: Create one Apple subscription group and final monthly/annual products with localized metadata, price, availability, review image, and notes",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-03",
-      "status": "not_started",
-      "blockedBy": ["PAY-02"],
-      "nextAction": "Complete and capture acceptance evidence: Configure RevenueCat iOS app, Apple IAP key/issuer, imported products, pro entitlement, current offering, packages, SDK key, secret key, and restore behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-04",
-      "status": "not_started",
-      "blockedBy": ["PAY-03"],
-      "nextAction": "Complete and capture acceptance evidence: Fix webhook deployment and cover purchase, renewal, cancellation, billing issue, grace, expiry, refund, refund reversal, extension, transfer/redemption, and idempotency behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-05",
-      "status": "not_started",
-      "blockedBy": ["PAY-04"],
-      "nextAction": "Complete and capture acceptance evidence: Preserve Supabase UUID as RevenueCat App User ID across anonymous upgrade and account switching",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-06",
-      "status": "not_started",
-      "blockedBy": ["PAY-05"],
-      "nextAction": "Complete and capture acceptance evidence: Resolve reverse trial as an atomic Supabase app-granted entitlement, remove the fake store-product requirement, and implement expiry/reconciliation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-07",
-      "status": "not_started",
-      "blockedBy": ["PAY-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete purchase, restore, manage/cancel, Terms/Privacy failure, missing offering, and offline UI",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-08",
-      "status": "not_started",
-      "blockedBy": ["PAY-07"],
-      "nextAction": "Complete and capture acceptance evidence: Configure and test eligible/ineligible iOS win-back behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "PAY-09",
-      "status": "not_started",
-      "blockedBy": ["PAY-08"],
-      "nextAction": "Complete and capture acceptance evidence: Reconcile Apple, RevenueCat, Supabase, refunds, taxes, fees, and payouts",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-01",
-      "status": "not_started",
-      "blockedBy": ["CORE-07", "DB-13", "PAY-09"],
-      "nextAction": "Complete and capture acceptance evidence: Compare and select model/provider architecture using privacy, residency, safety, quality, latency, cost, and deletion criteria",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-02",
-      "status": "not_started",
-      "blockedBy": ["ASK-01"],
-      "nextAction": "Complete and capture acceptance evidence: Build the authenticated server gateway, secret management, quotas, timeouts, cost ceilings, retries, and outage behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-03",
-      "status": "not_started",
-      "blockedBy": ["ASK-02"],
-      "nextAction": "Complete and capture acceptance evidence: Build and review the source-controlled knowledge corpus and retrieval pipeline",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-04",
-      "status": "not_started",
-      "blockedBy": ["ASK-03"],
-      "nextAction": "Complete and capture acceptance evidence: Implement consent, user disclosure, data minimization, retention, export/deletion, vendor deletion, and logging redaction",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-05",
-      "status": "not_started",
-      "blockedBy": ["ASK-04"],
-      "nextAction": "Complete and capture acceptance evidence: Implement medical/diagnostic refusal, pregnancy safety, uncertainty, urgent escalation, prompt-injection defense, and unsupported-claim prevention",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-06",
-      "status": "not_started",
-      "blockedBy": ["ASK-05"],
-      "nextAction": "Complete and capture acceptance evidence: Complete local and cloud Ask UI, loading, cancel, offline, timeout, quota, unsafe, empty, citation, and feedback states",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ASK-07",
-      "status": "not_started",
-      "blockedBy": ["ASK-06"],
-      "nextAction": "Complete and capture acceptance evidence: Build production quality, safety, latency, cost, refusal, feedback, and incident dashboards",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-01",
-      "status": "not_started",
-      "blockedBy": ["CAT-09", "CORE-07", "PAY-09"],
-      "nextAction": "Complete and capture acceptance evidence: Select and obtain ShopMy or approved alternative access",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-02",
-      "status": "not_started",
-      "blockedBy": ["COM-01"],
-      "nextAction": "Complete and capture acceptance evidence: Finalize affiliate, paid-link, creator, retailer, ranking, privacy, and consent posture",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-03",
-      "status": "not_started",
-      "blockedBy": ["COM-02"],
-      "nextAction": "Complete and capture acceptance evidence: Implement secure server credentials, link creation/validation, allowlisting, retailer handoff, failure UI, and broken-link monitoring",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-04",
-      "status": "not_started",
-      "blockedBy": ["COM-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete order-report-poll authentication, scheduling, idempotency, rate limits, and reconciliation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-05",
-      "status": "not_started",
-      "blockedBy": ["COM-04"],
-      "nextAction": "Complete and capture acceptance evidence: Prove commission data is isolated from recommendations and client-readable ranking",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-06",
-      "status": "not_started",
-      "blockedBy": ["COM-05"],
-      "nextAction": "Complete and capture acceptance evidence: Complete PAO/finished/replenishment triggers, explicit default-off opt-in, deep links, opt-out cancellation, and routine-reminder isolation",
-      "evidenceRefs": []
-    },
-    {
-      "id": "COM-07",
-      "status": "not_started",
-      "blockedBy": ["COM-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete creator links, disclosures, attribution, support, and privacy-safe measurement",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-01",
-      "status": "not_started",
-      "blockedBy": ["AUTH-06", "DB-13"],
-      "nextAction": "Complete and capture acceptance evidence: Finalize community EULA, rules, age/audience, privacy, creator/expert, copyright, takedown, appeals, and enforcement policies",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-02",
-      "status": "not_started",
-      "blockedBy": ["UGC-01"],
-      "nextAction": "Complete and capture acceptance evidence: Build production community tables/APIs/RLS for profiles, posts, notes, comments where present, reports, blocks, moderation, and audit logs",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-03",
-      "status": "not_started",
-      "blockedBy": ["UGC-02"],
-      "nextAction": "Complete and capture acceptance evidence: Implement posting, editing, deletion, reporting, blocking, filtering, rate limits, spam prevention, contact, and recovery UI",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-04",
-      "status": "not_started",
-      "blockedBy": ["UGC-03"],
-      "nextAction": "Complete and capture acceptance evidence: Build operator moderation queue, evidence view, actions, audit log, escalation, appeal, and metrics",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-05",
-      "status": "not_started",
-      "blockedBy": ["UGC-04"],
-      "nextAction": "Complete and capture acceptance evidence: Create staffing plan, shifts/SLAs, training, severity policy, crisis escalation, and quality audits",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-06",
-      "status": "not_started",
-      "blockedBy": ["UGC-05"],
-      "nextAction": "Complete and capture acceptance evidence: Build expert/Skin Notes identity, credential, content review, versioning, correction, withdrawal, and disclosure workflow",
-      "evidenceRefs": []
-    },
-    {
-      "id": "UGC-07",
-      "status": "not_started",
-      "blockedBy": ["UGC-06"],
-      "nextAction": "Complete and capture acceptance evidence: Implement community notification delivery, preference control, token cleanup, and deep links",
-      "evidenceRefs": []
-    },
-    {
-      "id": "NATIVE-01",
-      "status": "not_started",
-      "blockedBy": ["IOS-11", "CORE-07"],
-      "nextAction": "Complete and capture acceptance evidence: Build WidgetKit extension targets, App Group sharing, timeline provider, deep links, privacy redaction, and update policy",
-      "evidenceRefs": []
-    },
-    {
-      "id": "NATIVE-02",
-      "status": "not_started",
-      "blockedBy": ["NATIVE-01"],
-      "nextAction": "Complete and capture acceptance evidence: Build Live Activity attributes/extension, lifecycle, stale/end behavior, deep links, and privacy",
-      "evidenceRefs": []
-    },
-    {
-      "id": "NATIVE-03",
-      "status": "not_started",
-      "blockedBy": ["NATIVE-02"],
-      "nextAction": "Complete and capture acceptance evidence: Configure APNs/Expo push, token registration/rotation, local/remote categories, preferences, quiet hours, badges, deep links, and failure cleanup",
-      "evidenceRefs": []
-    },
-    {
-      "id": "SHARE-01",
-      "status": "not_started",
-      "blockedBy": ["CORE-07", "NATIVE-03"],
-      "nextAction": "Complete and capture acceptance evidence: Build share-card rendering, selected-data boundary, watermark, native share sheet, fallback, and failure behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "LINK-01",
-      "status": "not_started",
-      "blockedBy": ["BRAND-06", "IOS-11", "SHARE-01"],
-      "nextAction": "Complete and capture acceptance evidence: Configure domain, HTTPS, AASA, Associated Domains, Universal Links, store fallback, and routing",
-      "evidenceRefs": []
-    },
-    {
-      "id": "GROW-01",
-      "status": "not_started",
-      "blockedBy": ["LINK-01", "PAY-09"],
-      "nextAction": "Complete and capture acceptance evidence: Implement review-prompt timing at genuine satisfaction moments without incentives or pressure",
-      "evidenceRefs": []
-    },
-    {
-      "id": "GROW-02",
-      "status": "not_started",
-      "blockedBy": ["GROW-01"],
-      "nextAction": "Complete and capture acceptance evidence: Implement public/creator links and privacy-approved attribution/paid measurement, including ATT only if legally/technically required",
-      "evidenceRefs": []
-    },
-    {
-      "id": "GROW-03",
-      "status": "not_started",
-      "blockedBy": ["GROW-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete waitlist/growth-event functions, Turnstile, rate limits, validation, public forms, dashboards, and support handoff",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ADMIN-01",
-      "status": "not_started",
-      "blockedBy": ["DB-13", "UGC-07"],
-      "nextAction": "Complete and capture acceptance evidence: Define roles for catalog, clinical review, legal/privacy review, moderation, support, finance, and release",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ADMIN-02",
-      "status": "not_started",
-      "blockedBy": ["ADMIN-01"],
-      "nextAction": "Complete and capture acceptance evidence: Build authenticated operator access and audit logging",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ADMIN-03",
-      "status": "not_started",
-      "blockedBy": ["ADMIN-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete catalog reports/corrections, source provenance, reviewer queues, signoff snapshots, and publish/withdraw actions",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ADMIN-04",
-      "status": "not_started",
-      "blockedBy": ["ADMIN-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete moderation, support, data-rights, payment escalation, and incident queues",
-      "evidenceRefs": []
-    },
-    {
-      "id": "ADMIN-05",
-      "status": "not_started",
-      "blockedBy": ["ADMIN-04"],
-      "nextAction": "Complete and capture acceptance evidence: Build launch dashboards across Supabase, RevenueCat, PostHog, Sentry, AI, catalog, community, commerce, support, and growth",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-01",
-      "status": "not_started",
-      "blockedBy": ["BRAND-10", "BASE-07"],
-      "nextAction": "Complete and capture acceptance evidence: Trademark/name clearance packet and decision",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-02",
-      "status": "not_started",
-      "blockedBy": ["REV-01"],
-      "nextAction": "Complete and capture acceptance evidence: Regulatory positioning, claims vocabulary, store metadata, medical-device posture, and subscription terms",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-03",
-      "status": "not_started",
-      "blockedBy": ["REV-02"],
-      "nextAction": "Complete and capture acceptance evidence: Privacy policy, consumer health policy, data inventory, consent matrix, processor register, analytics/AI/commerce/community/photo posture, deletion/export, and breach response",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-04",
-      "status": "not_started",
-      "blockedBy": ["REV-03"],
-      "nextAction": "Complete and capture acceptance evidence: Conflict, pregnancy, cadence, sequencing, recommendations, Ask, trend, PAO, replacement, and expert-content corpus",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-05",
-      "status": "not_started",
-      "blockedBy": ["REV-04"],
-      "nextAction": "Complete and capture acceptance evidence: Ingredient taxonomy, concentrations, compatibility, PAO, product types, expiry, OCR/catalog interpretation, and replacements",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-06",
-      "status": "not_started",
-      "blockedBy": ["REV-05"],
-      "nextAction": "Complete and capture acceptance evidence: Onboarding quiz, source/content/image rights, share cards, creator content, community IP, and catalog licensing",
-      "evidenceRefs": []
-    },
-    {
-      "id": "REV-07",
-      "status": "not_started",
-      "blockedBy": ["REV-06"],
-      "nextAction": "Complete and capture acceptance evidence: Generate current worklists and detached signoff templates, incorporate decisions, verify credentials out-of-band, and bind signoffs to source hashes",
-      "evidenceRefs": []
-    },
-    {
-      "id": "WEB-01",
-      "status": "not_started",
-      "blockedBy": ["BRAND-06", "REV-07"],
-      "nextAction": "Complete and capture acceptance evidence: Publish production HTTPS home, Privacy, Terms, consumer health privacy, support, deletion, export, community rules, AI disclosure, commerce disclosure, creator disclosure, and catalog attribution pages",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-01",
-      "status": "not_started",
-      "blockedBy": ["ADMIN-05", "ASK-07", "COM-07", "UGC-07"],
-      "nextAction": "Complete and capture acceptance evidence: Finalize consented PostHog event taxonomy, identities, dashboards, deletion, and session-replay prohibition",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-02",
-      "status": "not_started",
-      "blockedBy": ["OPS-01"],
-      "nextAction": "Complete and capture acceptance evidence: Configure Sentry release/dist/source maps, scrubbing, no PII/screenshots/view hierarchy, alerts, and deletion posture",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-03",
-      "status": "not_started",
-      "blockedBy": ["OPS-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete threat model for auth, local encryption, exports, payments, AI, commerce, community, moderation, admin, links, and vendors",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-04",
-      "status": "not_started",
-      "blockedBy": ["OPS-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete data export, deletion, consent withdrawal, processor deletion, provider token revocation, and retention behavior",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-05",
-      "status": "not_started",
-      "blockedBy": ["OPS-04"],
-      "nextAction": "Complete and capture acceptance evidence: Configure backups, recovery, migration rollback, EAS rollback/update, feature kill switches, and incident communications",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-06",
-      "status": "not_started",
-      "blockedBy": ["OPS-05"],
-      "nextAction": "Complete and capture acceptance evidence: Create on-call, escalation, support, moderation, AI safety, payment, privacy, and security runbooks",
-      "evidenceRefs": []
-    },
-    {
-      "id": "OPS-07",
-      "status": "not_started",
-      "blockedBy": ["OPS-06"],
-      "nextAction": "Complete and capture acceptance evidence: Run dependency audit/SBOM, secret scan, binary inspection, privacy report, and supply-chain review",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-01",
-      "status": "not_started",
-      "blockedBy": ["OPS-07", "NATIVE-03", "LINK-01"],
-      "nextAction": "Complete and capture acceptance evidence: Unit/integration/property tests for all deterministic logic, parsers, schedulers, stores, migrations, auth, payments, AI guards, community, commerce, and links",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-02",
-      "status": "not_started",
-      "blockedBy": ["QA-01"],
-      "nextAction": "Complete and capture acceptance evidence: Route/contract tests and complete USER_FLOW_TREE for every feature, error, empty, denied, offline, and recovery branch",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-03",
-      "status": "not_started",
-      "blockedBy": ["QA-02"],
-      "nextAction": "Complete and capture acceptance evidence: Human-simulated E2E on actual app surfaces for every UI-facing slice",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-04",
-      "status": "not_started",
-      "blockedBy": ["QA-03"],
-      "nextAction": "Complete and capture acceptance evidence: Physical iPhone matrix for iOS 17+ support floor and current devices",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-05",
-      "status": "not_started",
-      "blockedBy": ["QA-04"],
-      "nextAction": "Complete and capture acceptance evidence: Accessibility audit with VoiceOver, Dynamic Type, Reduce Motion, contrast, focus, touch targets, keyboard, and safe areas",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-06",
-      "status": "not_started",
-      "blockedBy": ["QA-05"],
-      "nextAction": "Complete and capture acceptance evidence: Privacy/network audit across every vendor and feature",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-07",
-      "status": "not_started",
-      "blockedBy": ["QA-06"],
-      "nextAction": "Complete and capture acceptance evidence: Security/adversarial tests for RLS, account isolation, admin roles, UGC abuse, AI injection, URLs, webhooks, rate limits, and data rights",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-08",
-      "status": "not_started",
-      "blockedBy": ["QA-07"],
-      "nextAction": "Complete and capture acceptance evidence: Predeclare and measure startup, product add, barcode/OCR, routine, photos, trend, Ask, community, commerce, widgets, and memory thresholds",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-09",
-      "status": "not_started",
-      "blockedBy": ["QA-08"],
-      "nextAction": "Complete and capture acceptance evidence: Fresh install, upgrade from legacy data, reinstall, key loss, storage pressure, backgrounding, force-stop, timezone/DST, offline, and vendor outage matrix",
-      "evidenceRefs": []
-    },
-    {
-      "id": "QA-10",
-      "status": "not_started",
-      "blockedBy": ["QA-09"],
-      "nextAction": "Complete and capture acceptance evidence: Run full repository and phase verification after each release candidate",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-01",
-      "status": "not_started",
-      "blockedBy": ["QA-10"],
-      "nextAction": "Complete and capture acceptance evidence: Build and upload internal TestFlight candidate with all launch features enabled against staging",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-02",
-      "status": "not_started",
-      "blockedBy": ["BETA-01"],
-      "nextAction": "Complete and capture acceptance evidence: Prepare Beta App Review metadata, demo account, review notes, privacy/support links, and test instructions",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-03",
-      "status": "not_started",
-      "blockedBy": ["BETA-02"],
-      "nextAction": "Complete and capture acceptance evidence: Recruit and manage representative beta cohort",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-04",
-      "status": "not_started",
-      "blockedBy": ["BETA-03"],
-      "nextAction": "Complete and capture acceptance evidence: Configure feedback/support intake with category, severity, privacy, SLA, and routing",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-05",
-      "status": "not_started",
-      "blockedBy": ["BETA-04"],
-      "nextAction": "Complete and capture acceptance evidence: Measure activation, catalog, routine, adherence, photos, notifications, payments, Ask, commerce, community, trends, widgets, sharing, retention, cost, safety, moderation, and support",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-06",
-      "status": "not_started",
-      "blockedBy": ["BETA-05"],
-      "nextAction": "Complete and capture acceptance evidence: Conduct scripted usability sessions and prepare interview guides; founder/testers provide genuine responses",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-07",
-      "status": "not_started",
-      "blockedBy": ["BETA-06"],
-      "nextAction": "Complete and capture acceptance evidence: Fix every P0/P1 and rerun the exact surface",
-      "evidenceRefs": []
-    },
-    {
-      "id": "BETA-08",
-      "status": "not_started",
-      "blockedBy": ["BETA-07"],
-      "nextAction": "Complete and capture acceptance evidence: Produce go/hold decision packet",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-01",
-      "status": "not_started",
-      "blockedBy": ["BETA-08", "REV-07", "WEB-01"],
-      "nextAction": "Complete and capture acceptance evidence: Produce final name, subtitle, promotional text, description, keywords, categories, copyright, localization, and claims review",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-02",
-      "status": "not_started",
-      "blockedBy": ["STORE-01"],
-      "nextAction": "Complete and capture acceptance evidence: Produce final iPhone screenshots and optional preview showing the actual release build",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-03",
-      "status": "not_started",
-      "blockedBy": ["STORE-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete age rating including UGC/social/medical questions, regulated-device declaration, DSA trader status, content rights, and export compliance",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-04",
-      "status": "not_started",
-      "blockedBy": ["STORE-03"],
-      "nextAction": "Complete and capture acceptance evidence: Complete App Privacy Nutrition Labels for app and every SDK/vendor, plus privacy choices URL",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-05",
-      "status": "not_started",
-      "blockedBy": ["STORE-04"],
-      "nextAction": "Complete and capture acceptance evidence: Complete subscription metadata, localization, price, tax, review screenshots, availability, and first-submission attachment",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-06",
-      "status": "not_started",
-      "blockedBy": ["STORE-05"],
-      "nextAction": "Complete and capture acceptance evidence: Create non-expiring reviewer account and detailed steps for onboarding, every gated feature, purchases, restore, deletion, community moderation, Ask, commerce, widgets, and links",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-07",
-      "status": "not_started",
-      "blockedBy": ["STORE-06"],
-      "nextAction": "Complete and capture acceptance evidence: Build production candidate, inspect binary, select build, resolve processing, export, privacy, entitlement, symbol, and SDK warnings",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-08",
-      "status": "not_started",
-      "blockedBy": ["STORE-07"],
-      "nextAction": "Complete and capture acceptance evidence: Present final submission packet for explicit authorization",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-09",
-      "status": "not_started",
-      "blockedBy": ["STORE-08"],
-      "nextAction": "Complete and capture acceptance evidence: Submit app and subscriptions, monitor review, respond, fix, and resubmit",
-      "evidenceRefs": []
-    },
-    {
-      "id": "STORE-10",
-      "status": "not_started",
-      "blockedBy": ["STORE-09"],
-      "nextAction": "Complete and capture acceptance evidence: Keep release manual until production and operations recheck passes",
-      "evidenceRefs": []
-    },
-    {
-      "id": "LAUNCH-01",
+      "id": "C-09",
       "status": "not_started",
-      "blockedBy": ["STORE-10", "OPS-07"],
-      "nextAction": "Complete and capture acceptance evidence: Reverify production identity, policies, Supabase, auth, RevenueCat, AI, commerce, community, moderation, notifications, links, observability, support, backup, and kill switches",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish local reminders V1 and make remote push non-required.",
       "evidenceRefs": []
     },
     {
-      "id": "LAUNCH-02",
+      "id": "C-10",
       "status": "not_started",
-      "blockedBy": ["LAUNCH-01"],
-      "nextAction": "Complete and capture acceptance evidence: Run Ring 0 internal production smoke",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish subscription source path for normal monthly/annual StoreKit + RevenueCat only.",
       "evidenceRefs": []
     },
     {
-      "id": "LAUNCH-03",
+      "id": "C-11",
       "status": "not_started",
-      "blockedBy": ["LAUNCH-02"],
-      "nextAction": "Complete and capture acceptance evidence: Release a controlled Ring 1/public availability when authorized",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish V1 privacy/data-rights source path for the guest-first model with optional Apple/email accounts.",
       "evidenceRefs": []
     },
     {
-      "id": "LAUNCH-04",
+      "id": "C-12",
       "status": "not_started",
-      "blockedBy": ["LAUNCH-03"],
-      "nextAction": "Complete and capture acceptance evidence: Monitor crashes, auth, catalog, payments, AI safety/cost, commerce, community/moderation, trends, notifications, links, support, privacy requests, refunds, and reviews",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Produce final-brand-ready public web/policy/support source packet with placeholders that fail closed until H-02/H-04 values exist.",
       "evidenceRefs": []
     },
     {
-      "id": "LAUNCH-05",
+      "id": "C-13",
       "status": "not_started",
-      "blockedBy": ["LAUNCH-04"],
-      "nextAction": "Complete and capture acceptance evidence: Produce 24-hour, 72-hour, and week-one reports with go/hold/rollback recommendations",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish production infrastructure scripts/config/runbooks for the minimum stack.",
       "evidenceRefs": []
     },
     {
-      "id": "LAUNCH-06",
+      "id": "C-14",
       "status": "not_started",
-      "blockedBy": ["LAUNCH-05"],
-      "nextAction": "Complete and capture acceptance evidence: Reconcile Apple/RevenueCat/Supabase revenue, taxes, fees, refunds, trials, and payouts",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish release QA/security/performance/TestFlight/App Store packet source work for lean V1.",
       "evidenceRefs": []
     },
     {
-      "id": "LAUNCH-07",
+      "id": "C-15",
       "status": "not_started",
-      "blockedBy": ["LAUNCH-06"],
-      "nextAction": "Complete and capture acceptance evidence: Maintain store responses, support macros, moderation QA, incidents, privacy requests, dependency updates, and release backlog",
+      "blockedBy": [
+        "C-01",
+        "C-02",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-06",
+        "C-07",
+        "C-08",
+        "C-09",
+        "C-10",
+        "C-11",
+        "C-12",
+        "C-13",
+        "C-14"
+      ],
+      "nextAction": "Complete and capture acceptance evidence: Run final source verification after all C changes, incorporate H/V evidence as it arrives, fix regressions, and build the immutable submission/release packet.",
       "evidenceRefs": []
     }
   ]

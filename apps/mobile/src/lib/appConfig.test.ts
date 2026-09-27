@@ -90,6 +90,9 @@ const APP_ENV_KEYS = [
   'EXPO_PUBLIC_APP_ENV',
   'BRAND_LEGAL_CLEARANCE',
   'PHASE3_RELEASE_CLEARANCE',
+  'EXPORT_COMPLIANCE_CLEARANCE',
+  'APP_ENCRYPTION_CLASSIFICATION',
+  'APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE',
   'APP_DISPLAY_NAME',
   'EXPO_PUBLIC_APP_DISPLAY_NAME',
   'APP_SLUG',
@@ -208,6 +211,8 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
         PHASE3_RELEASE_CLEARANCE: 'cleared',
+        EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+        APP_ENCRYPTION_CLASSIFICATION: 'exempt',
         APP_DISPLAY_NAME: 'RoutineKind',
         APP_SLUG: 'routinekind',
         APP_SCHEME: 'routinekind',
@@ -224,6 +229,7 @@ describe('Expo app identity config', () => {
     expect(expo.android.package).toBe('com.routinekind.app');
     expect(expo.extra.appVariant).toBe('production');
     expect(expo.extra.appEnvironment).toBe('production');
+    expect(expo.ios.infoPlist.ITSAppUsesNonExemptEncryption).toBe(false);
   });
 
   it('does not require Android production identity for the iOS-only launch contract', () => {
@@ -233,6 +239,8 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
         PHASE3_RELEASE_CLEARANCE: 'cleared',
+        EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+        APP_ENCRYPTION_CLASSIFICATION: 'exempt',
         APP_DISPLAY_NAME: 'RoutineKind',
         APP_SLUG: 'routinekind',
         APP_SCHEME: 'routinekind',
@@ -252,6 +260,8 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
         BRAND_LEGAL_CLEARANCE: 'cleared',
         PHASE3_RELEASE_CLEARANCE: 'cleared',
+        EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+        APP_ENCRYPTION_CLASSIFICATION: 'exempt',
         APP_DISPLAY_NAME: 'RoutineKind',
         APP_SLUG: 'routinekind',
         APP_SCHEME: 'routinekind',
@@ -369,6 +379,67 @@ describe('Expo app identity config', () => {
     ).toThrow(/review evidence is not release-ready/);
   });
 
+  it('blocks production until export compliance is explicitly reviewed and classified', () => {
+    expect(() =>
+      buildExpoConfig(
+        {
+          APP_VARIANT: 'production',
+          EXPO_PUBLIC_APP_ENV: 'production',
+          BRAND_LEGAL_CLEARANCE: 'cleared',
+          PHASE3_RELEASE_CLEARANCE: 'cleared',
+          APP_DISPLAY_NAME: 'RoutineKind',
+          APP_SLUG: 'routinekind',
+          APP_SCHEME: 'routinekind',
+          APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        },
+        { releaseReadyReviewEvidence: true },
+      ),
+    ).toThrow(/requires EXPORT_COMPLIANCE_CLEARANCE=cleared/);
+  });
+
+  it('writes a reviewed non-exempt declaration and Apple compliance code together', () => {
+    const expo = buildExpoConfig(
+      {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+        APP_ENCRYPTION_CLASSIFICATION: 'non_exempt',
+        APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE: 'APPLE-CODE_1234',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+      },
+      { releaseReadyReviewEvidence: true },
+    );
+
+    expect(expo.ios.infoPlist.ITSAppUsesNonExemptEncryption).toBe(true);
+    expect(expo.ios.infoPlist.ITSEncryptionExportComplianceCode).toBe('APPLE-CODE_1234');
+  });
+
+  it('rejects non-exempt production config without an approved Apple code', () => {
+    expect(() =>
+      buildExpoConfig(
+        {
+          APP_VARIANT: 'production',
+          EXPO_PUBLIC_APP_ENV: 'production',
+          BRAND_LEGAL_CLEARANCE: 'cleared',
+          PHASE3_RELEASE_CLEARANCE: 'cleared',
+          EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+          APP_ENCRYPTION_CLASSIFICATION: 'non_exempt',
+          APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE: 'pending',
+          APP_DISPLAY_NAME: 'RoutineKind',
+          APP_SLUG: 'routinekind',
+          APP_SCHEME: 'routinekind',
+          APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        },
+        { releaseReadyReviewEvidence: true },
+      ),
+    ).toThrow(/requires a valid APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE/);
+  });
+
   it('blocks a production runtime environment even under an internal build variant', () => {
     expect(() =>
       buildExpoConfig({
@@ -385,6 +456,8 @@ describe('Expo app identity config', () => {
         EXPO_PUBLIC_APP_ENV: 'production',
         BRAND_LEGAL_CLEARANCE: 'cleared',
         PHASE3_RELEASE_CLEARANCE: 'cleared',
+        EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+        APP_ENCRYPTION_CLASSIFICATION: 'exempt',
         APP_DISPLAY_NAME: 'OnSkin',
         APP_SLUG: 'onskin',
         APP_SCHEME: 'onskin',

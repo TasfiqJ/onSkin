@@ -1,4 +1,4 @@
-import { router, Stack } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 
 import { ShelfDataAvailabilityBoundary } from '@/features/shelf/ShelfDataAvailabilityGate';
 import {
@@ -32,7 +32,11 @@ export default function ShelfLayout() {
   return (
     <ShelfRouteSourcesProvider>
       <Stack
-        screenLayout={(props) => <ShelfScreenLayout>{props.children}</ShelfScreenLayout>}
+        screenLayout={(props) =>
+          props.route.name === 'scan' || props.route.name === 'search'
+            ? <Redirect href="/shelf/manual" />
+            : <ShelfScreenLayout>{props.children}</ShelfScreenLayout>
+        }
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="scan" />

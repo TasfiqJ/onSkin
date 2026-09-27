@@ -6752,6 +6752,100 @@ and
 Native iOS/Android Dynamic Type, safe-area, keyboard, store-sheet, and
 screen-reader traversal remain device QA follow-up.
 
+### iOS all-features launch foundation checkpoint (2026-07-12/13)
+
+Accepted and implemented the founder-directed iOS-only, all-indexed-features
+launch contract. The source packet, Phase 2-11 validators, device/performance
+audits, launch packets, and CI now consume one machine-readable contract with 20
+features and 14 required surface keys. Android release evidence is explicitly
+`not_applicable`; Google Sign-In remains required on iPhone.
+
+Created the 202-item execution baseline, repository/credential/evidence
+inventories, task DAG, status tracker, legal/Apple primary-source packet, dated
+brand longlist/knockout/recommendation/counsel packet, and founder enrollment
+handoff. `RoutineKind` is still provisional: manual official trademark grids,
+launch-country counsel clearance, founder approval, and authorized reservations
+remain open.
+
+Hardened account-bound photo storage, sensitive image memory/cache behavior,
+app-lock single-flight behavior, export/deletion pagination and cleanup, Edge
+Function deployment inventory/rate-limit indexing, and RevenueCat webhook
+processing. The RevenueCat path now uses one atomic, ordered, replayable RPC and
+has duplicate, reorder, cancellation/pause, unresolved-identity, and failed-row
+retry coverage.
+
+Human-simulated E2E found and fixed two High defects. Direct `/trend/optin` was
+canonicalized to `/trend/fairness`; both direct routes now preserve identity,
+mount no consent controls, and recover to `/progress`. The first-session product
+flow lost goals/quiz answers when explicit opened-date intake left the nested
+onboarding layout; the provider now survives that Shelf detour inside the
+account-boundary gate. The 390 x 844 replay completed three products, the first
+derived insight, Explore first, routine plan, and AM/PM check-offs at `1 of 1`.
+
+Repository verification passed at 205 mobile test files / 2,172 tests, root
+typecheck, lint, formatting, launch/execution contract checks, source/founder/
+device/performance/readiness audits, 29 non-RevenueCat Edge tests, seven atomic
+RevenueCat tests, and five account-deletion photo cleanup tests. Phase 9 code
+smoke passes while correctly retaining warnings for absent live services,
+production URLs, iPhone/TestFlight evidence, operational drills, and named
+signoff.
+
+Checkpoint `aec4afb14` (`feat: harden iOS launch foundation`) and security/
+reliability follow-up `35df6fff4` (`feat: journal plaintext staging and atomize
+private stores`) were pushed to `origin/main` on 2026-07-13. The follow-up adds
+crash-recoverable journaled staging cleanup plus atomic/versioned private-store
+writes. Generated manifest freshness remains a separate checkpoint because it
+records the committed source SHA.
+
+The PAY-01 primary-source pricing decision recommends a US-only first storefront
+wave, US$49.99 annual and US$9.99 monthly plans, no weekly plan, the required
+seven-day no-card/non-renewing preview, and a separate Apple annual introductory
+trial only if eligibility and copy remain unambiguous. The planning model needs
+about US$1.418 million collected gross billings to reach US$1 million
+contribution net before fixed costs and developer tax; it explicitly does not
+promise revenue or profit. Canada moved to a later gate because App Store
+availability is country-level and a Canadian release cannot assume Quebec is
+excluded; French app, contracts, store material, and support plus qualified
+Quebec/national review are required first.
+
+Performance checkpoint `161275df1` (`perf: defer contextual offering lookup`)
+was also pushed to `origin/main`; active Pro users no longer pay the native-store
+offering lookup cost when entering contextual gates. Its focused entitlement and
+mobile-paywall suites passed 29/29 tests.
+
+Subsequent reviewed `main` checkpoints pinned the iOS build alias to the current
+Expo SDK 56 image, declared native Sign in with Apple, aligned the launch matrix
+to the iPhone-only contract, added a fail-closed production export-compliance
+gate, and documented native-versus-OTA rollback boundaries. These are repository
+controls, not proof of an uploaded binary: Apple credentials, signed Xcode 26+
+build logs, physical-iPhone results, export classification by an authorized
+reviewer, and App Store processing remain external gates.
+
+The Edge layer now supports hosted publishable/secret key maps and requires an
+explicit, consistent `APP_ENV`; all 11 function manifests use the shared
+fail-closed resolvers. The staging wrapper validates the project reference,
+checks every CLI exit, sets the hosted staging environment before deploy, and
+replaces generated database types only after shape validation. Credential-free
+Edge, manifest, policy, and deployment-contract checks pass. No live Supabase
+project, deployment, clean 43-migration reset, advisor/restore/load result, or
+two-user RLS proof is claimed; the dated DB gap matrix keeps those gates open.
+
+Private-state follow-ups atomized review/expiry/activation markers and routine,
+conflict, consent, entitlement, notification, Shelf, recommendation, and profile
+stores while preserving malformed/future bytes. Independent review caught and
+fixed a legacy conflict-choice migration regression and a hidden routine-order
+read-error path before treating the checkpoint as release-ready. Clean `main` at
+`02f0b03b3` passes formatting, root typecheck, lint, and all 209 mobile test
+files / 2,244 tests. Native secure-storage/process-death evidence remains open. PAY-06 also
+removes the fake reverse-trial Store/RevenueCat identity, preserves a temporary
+null-enforcing four-argument RPC compatibility shim for zero-downtime rollout,
+and regenerates its clean-SHA payment evidence packet.
+
+The independently source-audited US Wave 1 privacy and consumer-health packet
+remains launch-blocked. It cannot substitute for current, version-specific US
+privacy/consumer-protection, biometric, security, subscription, UGC, and product
+counsel decisions tied to the actual release data flows.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
@@ -6768,6 +6862,7 @@ Highest priority:
    listing, photo, commerce, and AI/Ask review.
 4. Retain a dermatologist and cosmetic chemist for rules, PAO defaults,
    recommendations, Skin Notes, and Ask corpus review.
-5. Decide whether V1 ships with commerce, community, widgets, and trend analysis
-   hidden or preview-only. Default is post-launch.
+5. Approve the researched provider, pricing, country, budget, human moderation,
+   and support decisions needed to make commerce, community, widgets, Trend,
+   and Ask production-real; the current directive does not allow deferring them.
 6. Recruit the 50-100 user closed beta cohort for the frozen V1 loop.

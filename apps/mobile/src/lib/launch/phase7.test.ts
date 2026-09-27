@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -14,6 +16,9 @@ const ENV_KEYS = [
   'EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED',
   'EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED',
   'EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING',
+  'EXPO_PUBLIC_E2E_TREND_ENABLED',
+  'EXPO_PUBLIC_E2E_TREND_CONSENTED',
+  'EXPO_PUBLIC_E2E_TREND_INSIGHT',
 ] as const;
 
 type EnvKey = (typeof ENV_KEYS)[number];
@@ -23,6 +28,7 @@ const ORIGINAL_ENV = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[
   string | undefined
 >;
 const ORIGINAL_DEV = (globalThis as { __DEV__?: boolean }).__DEV__;
+const PHASE7_SOURCE_PATH = fileURLToPath(new URL('./phase7.ts', import.meta.url));
 
 function setEnv(name: EnvKey, value: string | undefined): void {
   if (value === undefined) delete process.env[name];
@@ -53,6 +59,9 @@ function enableAllPhase7Flags(): Partial<Record<EnvKey, string>> {
     EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED: 'true',
     EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED: 'true',
     EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED: 'true',
+    EXPO_PUBLIC_E2E_TREND_ENABLED: 'true',
+    EXPO_PUBLIC_E2E_TREND_CONSENTED: 'true',
+    EXPO_PUBLIC_E2E_TREND_INSIGHT: 'change_observed',
   };
 }
 
@@ -151,14 +160,14 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.communityPosting).toBe(false);
     expect(phase7Flags.communityAggregates).toBe(false);
     expect(phase7Flags.trend).toBe(false);
-    expect(phase7Flags.cloudAsk).toBe(true);
+    expect(phase7Flags.cloudAsk).toBe(false);
     expect(phase7Flags.widgets).toBe(false);
-    expect(phase7Flags.goalActiveRecommendations).toBe(true);
+    expect(phase7Flags.goalActiveRecommendations).toBe(false);
     expect(phase7Flags.commerce).toBe(false);
     expect(phase7Flags.shareCard).toBe(false);
   });
 
-  it('enables implemented production surfaces only when public identity is ready', async () => {
+  it('keeps deferred production surfaces closed even with public identity ready', async () => {
     const { phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
@@ -167,14 +176,38 @@ describe('Phase 7 launch flags', () => {
 
     expect(phase7Flags.finalDomainReady).toBe(true);
     expect(phase7Flags.productionSurfaceReady).toBe(true);
-    expect(phase7Flags.commerce).toBe(true);
+    expect(phase7Flags.commerce).toBe(false);
     expect(phase7Flags.communityPosting).toBe(false);
     expect(phase7Flags.communityAggregates).toBe(false);
     expect(phase7Flags.trend).toBe(false);
-    expect(phase7Flags.cloudAsk).toBe(true);
+    expect(phase7Flags.cloudAsk).toBe(false);
     expect(phase7Flags.widgets).toBe(false);
-    expect(phase7Flags.shareCard).toBe(true);
-    expect(phase7Flags.goalActiveRecommendations).toBe(true);
+    expect(phase7Flags.shareCard).toBe(false);
+    expect(phase7Flags.goalActiveRecommendations).toBe(false);
+  });
+
+  it('keeps Trend issuerless under env, dev, E2E, public-domain, and mutation attempts', async () => {
+    const { phase7Capabilities, phase7Flags, isPhase7SurfaceEnabled } = await loadPhase7With(
+      {
+        EXPO_PUBLIC_APP_ENV: 'development',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+        ...enableAllPhase7Flags(),
+      },
+      { dev: true },
+    );
+
+    expect(phase7Capabilities.trendEngine).toBe(false);
+    expect(phase7Flags.trend).toBe(false);
+    expect(isPhase7SurfaceEnabled('trend')).toBe(false);
+    expect(Object.isFrozen(phase7Capabilities)).toBe(true);
+    expect(Object.isFrozen(phase7Flags)).toBe(true);
+    expect(Reflect.set(phase7Flags as object, 'trend', true)).toBe(false);
+    expect(phase7Flags.trend).toBe(false);
+
+    const source = readFileSync(PHASE7_SOURCE_PATH, 'utf8');
+    expect(source).toMatch(/trendEngine:\s*false/);
+    expect(source).toMatch(/\btrend:\s*false/);
+    expect(source).not.toContain('trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled');
   });
 });
 
@@ -186,7 +219,7 @@ describe('Phase 7 share-card eligibility', () => {
       ...enableAllPhase7Flags(),
     });
 
-    expect(canShareConflictCard(reviewedConflict())).toBe(true);
+    expect(canShareConflictCard(reviewedConflict())).toBe(false);
     expect(
       canShareConflictCard(
         reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: null } }),
@@ -222,7 +255,7 @@ describe('Phase 7 share-card eligibility', () => {
     });
 
     const devModule = await loadPhase7With(flags, { dev: true });
-    expect(devModule.canShareConflictCard(unreviewed)).toBe(true);
+    expect(devModule.canShareConflictCard(unreviewed)).toBe(false);
 
     const productionModule = await loadPhase7With(flags, { dev: false });
     expect(productionModule.canShareConflictCard(unreviewed)).toBe(false);

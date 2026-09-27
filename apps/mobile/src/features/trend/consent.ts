@@ -4,104 +4,38 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import { recordConsent } from '@/lib/consent/consent';
 import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
-import { isSupabaseConfigured } from '@/lib/env';
-import { runRequestWithLease, supabaseRequestFailure } from '@/lib/network/requestPolicy';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
-import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
-import { supabase } from '@/lib/supabase/client';
 
 import { TREND_COPY } from './copy';
-import { deleteTrendState, readTrendInsightsLocal, setTrendInsightsLocal } from './store';
+import { deleteTrendState, setTrendInsightsLocal } from './store';
 
-// The photo_trend_insights consent (docs/12 §8, D-072). A NEW, separate, explicit,
-// revocable, DEFAULT-OFF consent for the on-device within-person trend insight. The
-// derived insight is STILL a health inference (MHMDA / GDPR Art. 9), so it is excluded
-// from cloud backup and DELETED on revocation. NEVER reused from photo_capture /
-// photo_cloud_backup, and never default-on: the installed base (who onboarded under the
-// "no AI grades" refusal) is re-consented here, never silently enrolled. Ledger-
-// authoritative-then-local (the Slice-24 precedence) so a withdrawal re-locks.
+// PHOTO-05A preserves only the cleanup half of the reserved photo_trend_insights
+// consent contract (docs/12 §8, root D-072). No validated engine means no read and no
+// new grant. Explicit revocation still disables the local legacy flag, deletes reserved
+// derived state, and records withdrawal so an installed-base user can clean up data
+// without reopening the unavailable feature.
 
 export async function isTrendInsightsConsentedWithLease(
   lease: AccountGenerationLease,
 ): Promise<boolean> {
   lease.assertCurrent();
-  if (isSupabaseConfigured) {
-    try {
-      const data = await runRequestWithLease(
-        lease,
-        {
-          endpoint: 'trend_consent',
-          deadlineMs: 8_000,
-          idempotent: true,
-          maxAttempts: 2,
-          maxResponseBytes: 64 * 1024,
-        },
-        async ({ signal }) => {
-          const response = await supabase
-            .from('consents')
-            .select('granted')
-            .eq('consent_type', 'photo_trend_insights')
-            .order('granted_at', { ascending: false })
-            .limit(1)
-            .abortSignal(signal)
-            .maybeSingle();
-          if (response.error) {
-            throw supabaseRequestFailure(response.error, response.status);
-          }
-          return response.data;
-        },
-      );
-      lease.assertCurrent();
-      // A reachable ledger is authoritative. Missing is the default-off state;
-      // never reuse a stale local grant for an installed-base user.
-      return data?.granted === true;
-    } catch {
-      // Account-generation cancellation is asserted, not collapsed into the
-      // local fallback. Ordinary offline/server failure remains local-first.
-      lease.assertCurrent();
-      /* offline / no DB. Fall back to the local-first flag */
-    }
-  }
-
-  const local = await awaitAccountGenerationLease(lease, () => readTrendInsightsLocal());
-  lease.assertCurrent();
-  return requirePrivateBoolean(local);
+  // Legacy ledger/local grants cannot issue admission while no validated engine
+  // exists. Do not read either source: even observing stale health-inference consent
+  // would be unnecessary private-data work on the unavailable path.
+  return false;
 }
 
-export function isTrendInsightsConsented(): Promise<boolean> {
-  return runAccountGenerationOperation(isTrendInsightsConsentedWithLease);
+export async function isTrendInsightsConsented(): Promise<boolean> {
+  return false;
 }
+
+export const TREND_ENGINE_UNAVAILABLE = 'TREND_ENGINE_UNAVAILABLE';
 
 export async function grantTrendInsightsConsent(): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
-    await runSerializedConsentWorkflow(lease, async () => {
-      await awaitAccountGenerationLease(lease, () => setTrendInsightsLocal(true));
-      lease.assertCurrent();
-      try {
-        await awaitAccountGenerationLease(lease, () =>
-          recordConsent({
-            type: 'photo_trend_insights',
-            granted: true,
-            version: TREND_COPY.consentVersion,
-            consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
-          }),
-        );
-        lease.assertCurrent();
-        track('trend_insights_opted_in');
-      } catch (error) {
-        lease.assertCurrent();
-        await awaitAccountGenerationLease(lease, () =>
-          setTrendInsightsLocal(false).catch(() => undefined),
-        );
-        lease.assertCurrent();
-        await awaitAccountGenerationLease(lease, () => deleteTrendState().catch(() => undefined));
-        lease.assertCurrent();
-        throw error;
-      }
-    });
-  });
+  // A direct caller is not a second admission authority. Reject before local state,
+  // consent ledger, network, workflow, or analytics work.
+  throw new Error(TREND_ENGINE_UNAVAILABLE);
 }
 
 export async function revokeTrendInsightsConsent(): Promise<void> {

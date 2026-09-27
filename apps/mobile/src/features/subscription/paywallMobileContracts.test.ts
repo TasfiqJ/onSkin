@@ -716,8 +716,8 @@ describe('paywall mobile contracts', () => {
     expect(winback).toContain('if (!decision.trackPresentation) return;');
     expect(reoffer).toContain('if (!decision.trackPresentation) return;');
     expect(onboarding).toContain('if (!decision.trackPresentation) return;');
-    expect(onboarding).toContain('if (!decision.allowReverseTrial');
-    expect(onboarding).toContain('!decision.allowReverseTrial || paidAction.isHeld');
+    expect(onboarding).toContain('label="Continue free"');
+    expect(onboarding).not.toContain('startReverseTrial');
 
     for (const route of [
       readAppRoute('paywall/reoffer.tsx'),
@@ -751,7 +751,6 @@ describe('paywall mobile contracts', () => {
     }
 
     const onboarding = readAppRoute('onboarding/paywall.tsx');
-    expect(onboarding).toContain("kind: 'reverse_trial'");
     const reoffer = readAppRoute('paywall/reoffer.tsx');
     expect(reoffer).toContain("kind: 'decline_expired_reverse_trial'");
 

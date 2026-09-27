@@ -95,23 +95,24 @@ describe('Shelf private-data availability contract', () => {
   });
 
   it('gates every Shelf-derived route before it can render an empty or stale state', () => {
+    for (const route of ['ask', 'recommendations', 'community']) {
+      const layout = read(`app/${route}/_layout.tsx`);
+      expect(layout).toContain('screenLayout={DeferredScreen}');
+      expect(layout).toContain('<DeferredSurface');
+      expect(layout).not.toContain('{children}');
+    }
     const shelfLayout = read('app/shelf/_layout.tsx');
     expect(shelfLayout).toContain('ShelfRouteSourcesProvider');
     expect(shelfLayout).toContain('useShelfRouteSources');
     expect(shelfLayout).toContain('<ShelfDataAvailabilityBoundary');
     expect(shelfLayout).toContain('query={shelf}');
     expect(shelfLayout).toContain(
-      'screenLayout={(props) => <ShelfScreenLayout>{props.children}</ShelfScreenLayout>}',
+      '<ShelfScreenLayout>{props.children}</ShelfScreenLayout>',
     );
     expect(shelfLayout).not.toContain('screenLayout={ShelfScreenLayout}');
     expect(shelfLayout).not.toContain('<ShelfDataAvailabilityGate');
 
-    for (const path of [
-      'app/ask/_layout.tsx',
-      'app/conflict/_layout.tsx',
-      'app/share/_layout.tsx',
-      'app/recommendations/_layout.tsx',
-    ]) {
+    for (const path of ['app/conflict/_layout.tsx', 'app/share/_layout.tsx']) {
       const layout = read(path);
       expect(layout, path).toContain('ShelfDataAvailabilityGate');
       expect(layout, path).toContain('screenLayout=');

@@ -65,29 +65,28 @@ describe('Today route mobile contracts', () => {
   });
 
   it('keeps the streak and adherence pill comfortably tappable on phones', () => {
-    const source = readAppRoute('(tabs)/today.tsx');
-
+    const source = readFileSync(`${APP_DIR}/../components/ui/TodayFocusHeader.tsx`, 'utf8');
     expect(source).toContain('accessibilityLabel="View your streak and adherence"');
     expect(source).toContain("router.push('/routine/streak')");
-    expect(source).toContain('function streakLabel(days: number): string');
-    expect(source).toContain("days === 1 ? 'day' : 'days'");
-    expect(source).toContain('{streakLabel(streak)}');
-    expect(source).not.toContain('{streak} days');
     expect(source).toContain('min-h-[48px]');
-    expect(source).not.toContain('min-h-[44px]');
-    expect(source).toContain('px-4 py-2.5');
-    expect(source).not.toContain('px-3.5 py-1.5');
+    expect(source).toContain('accessibilityRole="progressbar"');
+    expect(source).toContain('Morning routine complete.');
+    expect(source).toContain('Nothing is scheduled tonight.');
   });
 
   it('keeps Today prompt actions clear of the floating tab bar on short phones', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 
-    expect(source).toContain("import { Button, Screen, Text } from '@/components/ui';");
+    expect(source).toContain(
+      "import { Button, Screen, Text, TodayFocusHeader } from '@/components/ui';",
+    );
     expect(source).toContain('useWindowDimensions');
+    expect(source).not.toContain('ReverseTrialBanner');
+    expect(source).not.toContain('RecommendationsTeaser');
+    expect(source).not.toContain('AskTeaser');
+    expect(source).toContain('const TodayHeader = memo(TodayFocusHeader)');
     expect(source).toContain('const compactPhone = height < 700');
-    expect(source).toContain('const compactRecommendationPrompt = height < 860');
     expect(source).toContain('const shortEmptyRoutine = compactPhone && height < 600;');
-    expect(source).toContain('const showRecommendations = hasRealRoutine && height >= 500;');
     expect(source).toContain('const showTonightTeaser =');
     expect(source).toContain('(cadenceWithheldCount === 0 || height >= 932);');
     expect(source).toContain('function EmptyRoutineCard');
@@ -126,9 +125,6 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('Review pregnancy and breastfeeding setting');
     expect(source).toContain("router.push('/settings/skin-profile?returnTo=today')");
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
-    expect(source.match(/<ReverseTrialBannerFromEntitlement/g)).toHaveLength(1);
-    expect(source).toContain("tone={dark ? 'night' : 'light'}");
-    expect(source).toContain("className={compact ? 'mt-3' : 'mt-4'}");
     expect(source).toContain("? 'mt-4 rounded-card bg-paper-raised'");
     expect(source).toContain(": 'mt-6 rounded-card bg-paper-raised'");
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
@@ -156,7 +152,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('lineHeight: compact ? 16 : undefined');
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source.match(/<CheckRow[\s\S]*?compact=\{compactPhone\}/g)).toHaveLength(2);
-    expect(source).toContain('const TodayHeader = memo(function TodayHeader');
+    expect(source).toContain('const TodayHeader = memo(TodayFocusHeader)');
     expect(source).toContain('const CheckRow = memo(function CheckRow');
     expect(source).toContain('}, areCheckRowPropsEqual);');
     expect(source).toContain('actionIdentity={amActionIdentity}');
@@ -166,19 +162,7 @@ describe('Today route mobile contracts', () => {
       2,
     );
     expect(source).toContain('SAVING');
-    expect(source).toContain('<RecommendationsTeaserFromSources');
-    expect(source).toContain(
-      'const [recommendationDismissFailed, setRecommendationDismissFailed] = useState(false);',
-    );
-    expect(source).toContain('dismissFailed={recommendationDismissFailed}');
-    expect(source).toContain('onDismissFailure={markRecommendationDismissFailure}');
-    expect(source).toContain('onDismissSuccess={clearRecommendationDismissFailure}');
-    expect(source).toContain('profile={todayViewModel.recommendationProfile}');
-    expect(source).toContain('shelf={todayViewModel.recommendationShelf}');
-    expect(source).toContain('compact={compactRecommendationPrompt}');
-    expect(source).toContain('{showRecommendations ? (');
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
-    expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
     expect(source).toContain('{showTonightTeaser ? (');
   });
 

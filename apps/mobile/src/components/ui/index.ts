@@ -1,4 +1,5 @@
 export { Text } from './Text';
+export { TodayFocusHeader } from './TodayFocusHeader';
 export type { TextProps } from './Text';
 export { Button } from './Button';
 export type { ButtonProps } from './Button';

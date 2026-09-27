@@ -5,9 +5,6 @@ import { haptics } from '@/theme/haptics';
 
 import { Text } from './Text';
 
-// Single-select segment chip for the Shelf filters (docs/04 §5.1): ink fill +
-// paper text when selected, outlined + muted when not. Distinct from the
-// multi-select Chip (which fills clay-tint).
 export type SegmentChipProps = {
   label: string;
   accessibilityLabel?: string;
@@ -35,13 +32,16 @@ export function SegmentChip({
       }}
       style={{ minHeight: 48 }}
       className={cn(
-        'min-h-[48px] justify-center rounded-pill px-[18px] py-2.5',
-        selected ? 'bg-ink' : 'border border-hairline-strong bg-paper-raised',
+        'min-h-[48px] justify-center rounded-pill border px-[18px] py-2.5',
+        selected ? 'border-ink bg-ink' : 'border-hairline-strong bg-paper-raised',
         className,
       )}
     >
       <Text
-        className={cn('font-sans-semibold text-[13px]', selected ? 'text-paper' : 'text-muted')}
+        className={cn(
+          'font-sans-semibold text-[13px]',
+          selected ? 'text-paper' : 'text-muted-strong',
+        )}
       >
         {label}
       </Text>

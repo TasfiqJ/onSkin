@@ -3,31 +3,27 @@ import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 import { cn } from '@/lib/cn';
 import { pseudoLocalizeNode } from '@/lib/accessibility/pseudoLocalization';
 
-// Editorial-clinical type scale (design spec). `variant` sets family/size/leading;
-// `tone` sets colour (so dark "night" screens just pass tone="inverse"); `italic`
-// swaps to Instrument Serif italic for the clay accent words ("your", "quietly
-// resilient"). Layouts must reflow with Dynamic Type. No fixed text heights.
 type Variant =
-  | 'display' // big serif welcome headline
-  | 'title' // serif screen header
-  | 'titleLg' // larger serif header (Today AM/PM greeting, Progress)
-  | 'titleSm' // smaller serif header
-  | 'body' // sans body
-  | 'bodySm' // smaller sans body
-  | 'eyebrow' // mono, uppercase, tracked label (e.g. "YOUR SKIN PROFILE")
-  | 'label'; // mono small (e.g. "2 of 4", "NEXT", "01 · Welcome")
+  | 'display'
+  | 'title'
+  | 'titleLg'
+  | 'titleSm'
+  | 'body'
+  | 'bodySm'
+  | 'eyebrow'
+  | 'label';
 
 type Tone = 'ink' | 'muted' | 'clay' | 'inverse' | 'inverseMuted';
 
 const VARIANT: Record<Variant, string> = {
-  display: 'font-serif text-[44px] leading-[46px]',
-  title: 'font-serif text-[30px] leading-[34px]',
-  titleLg: 'font-serif text-[38px] leading-[40px]',
-  titleSm: 'font-serif text-[22px] leading-[26px]',
+  display: 'font-serif text-[46px] leading-[48px] tracking-[-0.5px]',
+  title: 'font-serif text-[31px] leading-[35px] tracking-[-0.25px]',
+  titleLg: 'font-serif text-[40px] leading-[42px] tracking-[-0.4px]',
+  titleSm: 'font-serif text-[23px] leading-[27px]',
   body: 'font-sans text-base leading-6',
   bodySm: 'font-sans text-sm leading-5',
-  eyebrow: 'font-mono text-[11px] uppercase tracking-[2px]',
-  label: 'font-mono text-xs tracking-[1px]',
+  eyebrow: 'font-mono text-[11px] uppercase tracking-[1.8px]',
+  label: 'font-mono text-xs tracking-[0.8px]',
 };
 
 const TONE: Record<Tone, string> = {
@@ -54,7 +50,8 @@ export function Text({
   ...rest
 }: TextProps) {
   const family =
-    italic && (variant === 'display' || variant === 'title' || variant === 'titleSm')
+    italic &&
+    (variant === 'display' || variant === 'title' || variant === 'titleLg' || variant === 'titleSm')
       ? 'font-serif-italic'
       : undefined;
   return (
