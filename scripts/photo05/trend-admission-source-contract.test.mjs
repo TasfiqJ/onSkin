@@ -141,6 +141,80 @@ test('simulated delta, lighting, MDC, fairness, score, age, percentage, and redn
   }
 });
 
+test('isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds', () => {
+  const snapshot = loadPhoto05aTrendSourceSnapshot(root);
+  for (const unsafe of [
+    "fetch('/trend')",
+    "supabase.from('server_rows').insert({})",
+    "track('trend_result', { state: 'consistent' })",
+    'const DEFAULT_MDC_THRESHOLD = 0.12;',
+  ]) {
+    assertRejected(
+      mutate(snapshot, PHOTO05A_TREND_SOURCE_PATHS.receipt, (source) => `${source}\n${unsafe}\n`),
+      /isolated Trend prerequisite must not contain|must not define a fabricated threshold/u,
+    );
+  }
+});
+
+test('disabled routes cannot load or invoke a dynamically required positive receipt factory', () => {
+  let snapshot = loadPhoto05aTrendSourceSnapshot(root);
+  snapshot = mutate(
+    snapshot,
+    PHOTO05A_TREND_SOURCE_PATHS.receipt,
+    (source) => `${source}\nexport function issuePositiveResult() { return { kind: 'issued' }; }\n`,
+  );
+  snapshot = mutate(
+    snapshot,
+    PHOTO05A_TREND_SOURCE_PATHS.trendLayout,
+    (source) => `${source}\nrequire('../../features/trend/receipt').issuePositiveResult();\n`,
+  );
+  assertRejected(
+    snapshot,
+    /reviewed prerequisite runtime surface|banned runtime identifier require|must not dynamically load/u,
+  );
+});
+
+test('ordinary production surfaces cannot hide a Trend import behind a computed module specifier', () => {
+  const snapshot = loadPhoto05aTrendSourceSnapshot(root);
+  assertRejected(
+    mutate(
+      snapshot,
+      PHOTO05A_TREND_SOURCE_PATHS.you,
+      (source) =>
+        `${source}\nconst trendModule = '@/features/' + 'trend/receipt'; void require(trendModule).sealTrendResultReceiptV1;\n`,
+    ),
+    /must not use an unresolved dynamic module specifier/u,
+  );
+});
+
+test('ordinary production surfaces cannot re-export the disabled Trend receipt runtime', () => {
+  const snapshot = loadPhoto05aTrendSourceSnapshot(root);
+  for (const declaration of [
+    "export { sealTrendResultReceiptV1 } from '@/features/trend/receipt';",
+    "export * from '@/features/trend/receipt';",
+  ]) {
+    assertRejected(
+      mutate(snapshot, 'apps/mobile/src/app/index.tsx', (source) => `${source}\n${declaration}\n`),
+      /must not import disabled Trend runtime module/u,
+    );
+  }
+});
+
+test('ordinary production surfaces cannot alias CommonJS or executable runtime loaders', () => {
+  const snapshot = loadPhoto05aTrendSourceSnapshot(root);
+  for (const sourceLine of [
+    "const loadTrendRuntime = require; void loadTrendRuntime('@/features/trend/receipt').sealTrendResultReceiptV1;",
+    "const loadTrendRuntime = module.require; void loadTrendRuntime('@/features/trend/receipt').sealTrendResultReceiptV1;",
+    'eval("require(\'@/features/trend/receipt\')");',
+    'Function("return require(\'@/features/trend/receipt\')")();',
+  ]) {
+    assertRejected(
+      mutate(snapshot, 'apps/mobile/src/app/index.tsx', (source) => `${source}\n${sourceLine}\n`),
+      /must not expose an ungoverned runtime loader/u,
+    );
+  }
+});
+
 test('photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected', () => {
   const snapshot = loadPhoto05aTrendSourceSnapshot(root);
   for (const unsafe of [

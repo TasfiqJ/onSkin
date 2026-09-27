@@ -6,8 +6,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
 export const PHOTO05A_TREND_SOURCE_PATHS = Object.freeze({
-  checkpoint:
-    'docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md',
+  checkpoint: 'docs/hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md',
   featurePhotoProgress: 'docs/06-photo-progress.md',
   featureTrendAnalysis: 'docs/12-ai-trend-analysis.md',
   masterPlan: 'docs/MASTER_PLAN.md',
@@ -52,6 +51,8 @@ export const PHOTO05A_TREND_SOURCE_PATHS = Object.freeze({
   storeTest: 'apps/mobile/src/features/trend/store.test.ts',
   candidateClassifier: 'apps/mobile/src/features/trend/trend.ts',
   candidateClassifierTest: 'apps/mobile/src/features/trend/trend.test.ts',
+  receipt: 'apps/mobile/src/features/trend/receipt.ts',
+  receiptTest: 'apps/mobile/src/features/trend/receipt.test.ts',
   trendInsight: 'apps/mobile/src/features/trend/TrendInsight.tsx',
   trendRoutesTest: 'apps/mobile/src/features/trend/trendRoutes.test.ts',
   useTrend: 'apps/mobile/src/features/trend/useTrend.ts',
@@ -113,6 +114,7 @@ const BANNED_DISABLED_IDENTIFIERS = new Set([
   'digestStringAsync',
   'fetch',
   'grantHealthDependentConsent',
+  'require',
   'isTrendInsightsConsented',
   'lightingConsistent',
   'mdcThreshold',
@@ -214,10 +216,7 @@ function objectProperty(source, object, name) {
 function namedFunction(source, name) {
   let match = null;
   const visit = (node) => {
-    if (
-      ts.isFunctionDeclaration(node) &&
-      node.name?.text === name
-    ) {
+    if (ts.isFunctionDeclaration(node) && node.name?.text === name) {
       match = node;
     }
     ts.forEachChild(node, visit);
@@ -263,17 +262,13 @@ function identifiers(node) {
 }
 
 function importedModules(source) {
-  return source.statements
-    .filter(ts.isImportDeclaration)
-    .map((node) => node.moduleSpecifier.text);
+  return source.statements.filter(ts.isImportDeclaration).map((node) => node.moduleSpecifier.text);
 }
 
 function exportedRuntimeNames(source) {
   const names = [];
   for (const statement of source.statements) {
-    if (
-      !statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
-    ) {
+    if (!statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
       continue;
     }
     if (ts.isFunctionDeclaration(statement) && statement.name) names.push(statement.name.text);
@@ -303,24 +298,63 @@ function stringArgumentsForCalls(source, name) {
 }
 
 function runtimeImportedModules(source) {
-  return source.statements
-    .filter(
-      (node) =>
-        ts.isImportDeclaration(node) &&
-        !node.importClause?.isTypeOnly &&
-        !(
-          node.importClause?.namedBindings &&
-          ts.isNamedImports(node.importClause.namedBindings) &&
-          node.importClause.namedBindings.elements.every((element) => element.isTypeOnly)
-        ),
-    )
-    .map((node) => node.moduleSpecifier.text);
+  const modules = [];
+  for (const node of source.statements) {
+    if (
+      ts.isImportDeclaration(node) &&
+      !node.importClause?.isTypeOnly &&
+      !(
+        node.importClause?.namedBindings &&
+        ts.isNamedImports(node.importClause.namedBindings) &&
+        node.importClause.namedBindings.elements.every((element) => element.isTypeOnly)
+      )
+    ) {
+      modules.push(node.moduleSpecifier.text);
+    }
+    if (
+      ts.isExportDeclaration(node) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteralLike(node.moduleSpecifier) &&
+      !node.isTypeOnly &&
+      !(
+        node.exportClause &&
+        ts.isNamedExports(node.exportClause) &&
+        node.exportClause.elements.every((element) => element.isTypeOnly)
+      )
+    ) {
+      modules.push(node.moduleSpecifier.text);
+    }
+    if (
+      ts.isImportEqualsDeclaration(node) &&
+      !node.isTypeOnly &&
+      ts.isExternalModuleReference(node.moduleReference) &&
+      node.moduleReference.expression &&
+      ts.isStringLiteralLike(node.moduleReference.expression)
+    ) {
+      modules.push(node.moduleReference.expression.text);
+    }
+  }
+  return modules;
+}
+
+function dynamicRuntimeImportedModules(source) {
+  const modules = [];
+  const visit = (node) => {
+    if (ts.isCallExpression(node)) {
+      const isRequire = ts.isIdentifier(node.expression) && node.expression.text === 'require';
+      const isDynamicImport = node.expression.kind === ts.SyntaxKind.ImportKeyword;
+      if (isRequire || isDynamicImport) {
+        modules.push(ts.isStringLiteralLike(node.arguments[0]) ? node.arguments[0].text : null);
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(source);
+  return modules;
 }
 
 function withoutComments(text) {
-  return text
-    .replace(/\/\*[\s\S]*?\*\//gu, '')
-    .replace(/\/\/[^\r\n]*/gu, '');
+  return text.replace(/\/\*[\s\S]*?\*\//gu, '').replace(/\/\/[^\r\n]*/gu, '');
 }
 
 function functionReferencesParameter(source, fn) {
@@ -361,10 +395,7 @@ function auditNullRenderer(add, path, source, name) {
 
 export function loadPhoto05aTrendSourceSnapshot(root = scriptRoot) {
   const snapshot = {};
-  const paths = new Set([
-    ...PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
-    ...walkSourceFiles(root),
-  ]);
+  const paths = new Set([...PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS, ...walkSourceFiles(root)]);
   for (const path of [...paths].sort()) {
     const absolute = resolve(root, path);
     if (existsSync(absolute)) snapshot[path] = normalize(readFileSync(absolute, 'utf8'));
@@ -382,16 +413,13 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     add(typeof snapshot[path] === 'string', path, 'required PHOTO-05A authority source is missing');
   }
   if (errors.length > 0) return Object.freeze(errors.sort());
-  for (const prefix of [
-    'apps/mobile/src/features/trend/',
-    'apps/mobile/src/app/trend/',
-  ]) {
+  for (const prefix of ['apps/mobile/src/features/trend/', 'apps/mobile/src/app/trend/']) {
     const actual = Object.keys(snapshot)
       .filter((path) => path.startsWith(prefix) && /\.(?:ts|tsx)$/u.test(path))
       .sort();
-    const inventoried = PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS
-      .filter((path) => path.startsWith(prefix))
-      .sort();
+    const inventoried = PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS.filter((path) =>
+      path.startsWith(prefix),
+    ).sort();
     add(
       JSON.stringify(actual) === JSON.stringify(inventoried),
       PHOTO05A_TREND_SOURCE_PATHS.sourceContract,
@@ -399,11 +427,69 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     );
   }
 
+  const prerequisitePaths = [
+    PHOTO05A_TREND_SOURCE_PATHS.candidateClassifier,
+    PHOTO05A_TREND_SOURCE_PATHS.receipt,
+  ];
+  for (const path of prerequisitePaths) {
+    const text = withoutComments(snapshot[path]);
+    add(
+      !/(?:\bfetch\b|XMLHttpRequest|sendBeacon|supabase|posthog|sentry|\btrack\s*\(|photo_trend)/iu.test(
+        text,
+      ),
+      path,
+      'isolated Trend prerequisite must not contain network, content telemetry, observability, or server-row writes',
+    );
+    add(
+      !/(?:BASE_MDC|DEFAULT_[A-Z_]*(?:THRESHOLD|MDC)|toneAdjustmentFactor|toneAdjustedMdc)/u.test(
+        text,
+      ),
+      path,
+      'isolated Trend prerequisite must not define a fabricated threshold or tone adjustment',
+    );
+  }
+  const candidate = sourceFile(
+    PHOTO05A_TREND_SOURCE_PATHS.candidateClassifier,
+    snapshot[PHOTO05A_TREND_SOURCE_PATHS.candidateClassifier],
+  );
+  add(
+    JSON.stringify(exportedRuntimeNames(candidate)) ===
+      JSON.stringify(['TREND_CANDIDATE_CLASSIFIER_QUARANTINED']),
+    PHOTO05A_TREND_SOURCE_PATHS.candidateClassifier,
+    'legacy Trend classifier must remain quarantined behind one inert marker',
+  );
+  const receipt = sourceFile(
+    PHOTO05A_TREND_SOURCE_PATHS.receipt,
+    snapshot[PHOTO05A_TREND_SOURCE_PATHS.receipt],
+  );
+  add(
+    JSON.stringify(exportedRuntimeNames(receipt)) ===
+      JSON.stringify(
+        [
+          'TREND_ABSTENTION_REASONS',
+          'TREND_ENGINE_INPUT_SCHEMA_VERSION',
+          'TREND_LOCAL_AUTHENTICATION_ALGORITHM',
+          'TREND_RESULT_RECEIPT_SCHEMA_VERSION',
+          'canonicalTrendReceiptPayloadV1',
+          'parseTrendEngineInputV1',
+          'parseTrendResultReceiptV1',
+          'sealTrendResultReceiptV1',
+          'verifyTrendResultReceiptV1',
+        ].sort(),
+      ),
+    PHOTO05A_TREND_SOURCE_PATHS.receipt,
+    'isolated Trend receipt must expose only the reviewed prerequisite runtime surface',
+  );
+
   const parsed = (path) => sourceFile(path, snapshot[path]);
   const phase7 = parsed(PHOTO05A_TREND_SOURCE_PATHS.phase7);
   const capabilities = frozenObject(phase7, 'phase7Capabilities');
   const flags = frozenObject(phase7, 'phase7Flags');
-  add(Boolean(capabilities), PHOTO05A_TREND_SOURCE_PATHS.phase7, 'phase7Capabilities must be frozen');
+  add(
+    Boolean(capabilities),
+    PHOTO05A_TREND_SOURCE_PATHS.phase7,
+    'phase7Capabilities must be frozen',
+  );
   add(
     objectProperty(phase7, capabilities, 'trendEngine')?.kind === ts.SyntaxKind.FalseKeyword,
     PHOTO05A_TREND_SOURCE_PATHS.phase7,
@@ -416,21 +502,20 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     'phase7Flags.trend must remain the literal false',
   );
   add(
-    !/(?:phase7TrendEnabled|EXPO_PUBLIC_PHASE7_TREND_ENABLED)/u.test(snapshot[PHOTO05A_TREND_SOURCE_PATHS.phase7]),
+    !/(?:phase7TrendEnabled|EXPO_PUBLIC_PHASE7_TREND_ENABLED)/u.test(
+      snapshot[PHOTO05A_TREND_SOURCE_PATHS.phase7],
+    ),
     PHOTO05A_TREND_SOURCE_PATHS.phase7,
     'Trend admission must not depend on an environment flag',
   );
 
   let launchAdmission = null;
   try {
-    launchAdmission =
-      JSON.parse(snapshot[PHOTO05A_TREND_SOURCE_PATHS.launchContract]).trendInsightAdmission;
+    launchAdmission = JSON.parse(
+      snapshot[PHOTO05A_TREND_SOURCE_PATHS.launchContract],
+    ).trendInsightAdmission;
   } catch {
-    add(
-      false,
-      PHOTO05A_TREND_SOURCE_PATHS.launchContract,
-      'launch contract must be valid JSON',
-    );
+    add(false, PHOTO05A_TREND_SOURCE_PATHS.launchContract, 'launch contract must be valid JSON');
   }
   add(
     JSON.stringify(launchAdmission) === JSON.stringify(REQUIRED_TREND_INSIGHT_ADMISSION),
@@ -558,7 +643,11 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     'positive consent admission and Trend content analytics must not exist',
   );
   const consentPredicate = namedFunction(consent, 'isTrendInsightsConsented');
-  add(Boolean(consentPredicate), PHOTO05A_TREND_SOURCE_PATHS.consent, 'isTrendInsightsConsented() is missing');
+  add(
+    Boolean(consentPredicate),
+    PHOTO05A_TREND_SOURCE_PATHS.consent,
+    'isTrendInsightsConsented() is missing',
+  );
   add(
     consentPredicate &&
       returnExpressions(consentPredicate).length > 0 &&
@@ -573,7 +662,11 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     'isTrendInsightsConsented() must return only false without reading storage or network state',
   );
   const grant = namedFunction(consent, 'grantTrendInsightsConsent');
-  add(Boolean(grant), PHOTO05A_TREND_SOURCE_PATHS.consent, 'grantTrendInsightsConsent() is missing');
+  add(
+    Boolean(grant),
+    PHOTO05A_TREND_SOURCE_PATHS.consent,
+    'grantTrendInsightsConsent() is missing',
+  );
   add(
     grant &&
       callNames(grant.body).every((name) => name === 'Error') &&
@@ -590,7 +683,10 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     'positive consent choice must fail closed before dependency or invalidation work',
   );
 
-  for (const path of [PHOTO05A_TREND_SOURCE_PATHS.trendOptIn, PHOTO05A_TREND_SOURCE_PATHS.trendFairness]) {
+  for (const path of [
+    PHOTO05A_TREND_SOURCE_PATHS.trendOptIn,
+    PHOTO05A_TREND_SOURCE_PATHS.trendFairness,
+  ]) {
     const text = snapshot[path];
     add(/<DeferredSurface\b/u.test(text), path, 'direct Trend route must render DeferredSurface');
     add(/surface="trend"/u.test(text), path, 'direct Trend route must bind the trend surface');
@@ -629,7 +725,10 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     'DeferredSurface must return before analytics when trackView is false',
   );
 
-  for (const path of [PHOTO05A_TREND_SOURCE_PATHS.progress, PHOTO05A_TREND_SOURCE_PATHS.progressAbout]) {
+  for (const path of [
+    PHOTO05A_TREND_SOURCE_PATHS.progress,
+    PHOTO05A_TREND_SOURCE_PATHS.progressAbout,
+  ]) {
     const text = snapshot[path];
     add(
       !/(?:features\/trend|TrendInsight|useTrendConsent|phase7Flags\.trend)/u.test(text),
@@ -652,9 +751,27 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     const bannedModule = runtimeImportedModules(source).find((module) =>
       BANNED_DISABLED_MODULE.test(module),
     );
-    add(!bannedIdentifier, path, `disabled Trend path contains banned runtime identifier ${bannedIdentifier ?? ''}`.trim());
-    add(!bannedModule, path, `disabled Trend path imports banned runtime module ${bannedModule ?? ''}`.trim());
-    add(!BANNED_TREND_BYPASS.test(withoutComments(text)), path, 'Trend must not have environment, development, E2E, fixture, legacy, or caller bypasses');
+    const dynamicModule = dynamicRuntimeImportedModules(source)[0];
+    add(
+      !bannedIdentifier,
+      path,
+      `disabled Trend path contains banned runtime identifier ${bannedIdentifier ?? ''}`.trim(),
+    );
+    add(
+      !bannedModule,
+      path,
+      `disabled Trend path imports banned runtime module ${bannedModule ?? ''}`.trim(),
+    );
+    add(
+      dynamicModule === undefined,
+      path,
+      `disabled Trend path must not dynamically load runtime modules ${dynamicModule ?? ''}`.trim(),
+    );
+    add(
+      !BANNED_TREND_BYPASS.test(withoutComments(text)),
+      path,
+      'Trend must not have environment, development, E2E, fixture, legacy, or caller bypasses',
+    );
   }
 
   for (const [path, text] of Object.entries(snapshot)) {
@@ -666,9 +783,25 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
       continue;
     }
     const source = sourceFile(path, text);
-    const trendImport = runtimeImportedModules(source).find((module) =>
-      /(?:^|\/)features\/trend(?:\/|$)/u.test(module),
+    const runtimeIdentifiers = identifiers(source);
+    const unsafeLoader = ['require', 'eval', 'Function'].find((name) =>
+      runtimeIdentifiers.has(name),
     );
+    add(
+      !unsafeLoader,
+      path,
+      `production source must not expose an ungoverned runtime loader ${unsafeLoader ?? ''}`.trim(),
+    );
+    const dynamicModules = dynamicRuntimeImportedModules(source);
+    add(
+      !dynamicModules.includes(null),
+      path,
+      'production source must not use an unresolved dynamic module specifier',
+    );
+    const trendImport = [
+      ...runtimeImportedModules(source),
+      ...dynamicModules.filter((module) => module !== null),
+    ].find((module) => /(?:^|\/)features\/trend(?:\/|$)/u.test(module));
     add(
       !trendImport,
       path,
@@ -678,8 +811,7 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
 
   let packageScripts = {};
   try {
-    packageScripts =
-      JSON.parse(snapshot[PHOTO05A_TREND_SOURCE_PATHS.packageJson]).scripts ?? {};
+    packageScripts = JSON.parse(snapshot[PHOTO05A_TREND_SOURCE_PATHS.packageJson]).scripts ?? {};
   } catch {
     add(false, PHOTO05A_TREND_SOURCE_PATHS.packageJson, 'package manifest must be valid JSON');
   }
@@ -690,7 +822,9 @@ export function auditPhoto05aTrendSourceSnapshot(snapshot) {
     'PHOTO-05A adversarial contract command must be exact',
   );
   add(
-    /photo05:trend-admission-source-contract:test/u.test(packageScripts['launch:contract:verify'] ?? ''),
+    /photo05:trend-admission-source-contract:test/u.test(
+      packageScripts['launch:contract:verify'] ?? '',
+    ),
     PHOTO05A_TREND_SOURCE_PATHS.packageJson,
     'launch contract verification must block on PHOTO-05A',
   );
