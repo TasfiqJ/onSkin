@@ -38,6 +38,32 @@ export type Database = {
           },
         ]
       }
+      account_deletion_click_tombstones: {
+        Row: {
+          click_token_hash: string
+          created_at: string
+          request_id: string
+        }
+        Insert: {
+          click_token_hash: string
+          created_at?: string
+          request_id: string
+        }
+        Update: {
+          click_token_hash?: string
+          created_at?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_deletion_click_tombstones_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "account_deletion_requests"
+            referencedColumns: ["request_id"]
+          },
+        ]
+      }
       account_deletion_operations: {
         Row: {
           capability_digest: string
@@ -155,6 +181,102 @@ export type Database = {
           receipt_state?: string
           subject_hmac?: string | null
           subject_hmac_key_version?: number | null
+        }
+        Relationships: []
+      }
+      account_deletion_requests: {
+        Row: {
+          apple_attempt_started_at: string | null
+          apple_completed_at: string | null
+          apple_required: boolean
+          apple_result: string | null
+          attempt_count: number
+          auth_completed_at: string | null
+          completed_at: string | null
+          completion_token_hash: string
+          database_completed_at: string | null
+          initiating_session_id: string | null
+          last_error_code: string | null
+          lease_expires_at: string | null
+          lease_token: string | null
+          next_step: string
+          posthog_completed_at: string | null
+          posthog_result: string | null
+          providers_final_completed_at: string | null
+          providers_final_result: string | null
+          request_id: string
+          requested_at: string
+          revenuecat_completed_at: string | null
+          revenuecat_result: string | null
+          sessions_completed_at: string | null
+          sessions_result: string | null
+          storage_completed_at: string | null
+          updated_at: string
+          user_hash: string
+          user_id: string | null
+          user_lookup_hash: string
+        }
+        Insert: {
+          apple_attempt_started_at?: string | null
+          apple_completed_at?: string | null
+          apple_required?: boolean
+          apple_result?: string | null
+          attempt_count?: number
+          auth_completed_at?: string | null
+          completed_at?: string | null
+          completion_token_hash: string
+          database_completed_at?: string | null
+          initiating_session_id?: string | null
+          last_error_code?: string | null
+          lease_expires_at?: string | null
+          lease_token?: string | null
+          next_step?: string
+          posthog_completed_at?: string | null
+          posthog_result?: string | null
+          providers_final_completed_at?: string | null
+          providers_final_result?: string | null
+          request_id?: string
+          requested_at?: string
+          revenuecat_completed_at?: string | null
+          revenuecat_result?: string | null
+          sessions_completed_at?: string | null
+          sessions_result?: string | null
+          storage_completed_at?: string | null
+          updated_at?: string
+          user_hash: string
+          user_id?: string | null
+          user_lookup_hash: string
+        }
+        Update: {
+          apple_attempt_started_at?: string | null
+          apple_completed_at?: string | null
+          apple_required?: boolean
+          apple_result?: string | null
+          attempt_count?: number
+          auth_completed_at?: string | null
+          completed_at?: string | null
+          completion_token_hash?: string
+          database_completed_at?: string | null
+          initiating_session_id?: string | null
+          last_error_code?: string | null
+          lease_expires_at?: string | null
+          lease_token?: string | null
+          next_step?: string
+          posthog_completed_at?: string | null
+          posthog_result?: string | null
+          providers_final_completed_at?: string | null
+          providers_final_result?: string | null
+          request_id?: string
+          requested_at?: string
+          revenuecat_completed_at?: string | null
+          revenuecat_result?: string | null
+          sessions_completed_at?: string | null
+          sessions_result?: string | null
+          storage_completed_at?: string | null
+          updated_at?: string
+          user_hash?: string
+          user_id?: string | null
+          user_lookup_hash?: string
         }
         Relationships: []
       }
@@ -738,6 +860,39 @@ export type Database = {
           },
         ]
       }
+      catalog_active_imports: {
+        Row: {
+          activated_at: string
+          import_id: string
+          source_id: string
+        }
+        Insert: {
+          activated_at?: string
+          import_id: string
+          source_id: string
+        }
+        Update: {
+          activated_at?: string
+          import_id?: string
+          source_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_active_imports_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: true
+            referencedRelation: "catalog_import_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "catalog_active_imports_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: true
+            referencedRelation: "catalog_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       catalog_corrections: {
         Row: {
           assigned_to: string | null
@@ -835,6 +990,44 @@ export type Database = {
             columns: ["source_id"]
             isOneToOne: false
             referencedRelation: "catalog_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      catalog_import_batch_receipts: {
+        Row: {
+          accepted_count: number
+          batch_sha256: string
+          created_at: string
+          expected_checkpoint: number
+          import_id: string
+          last_line: number
+          rejected_count: number
+        }
+        Insert: {
+          accepted_count: number
+          batch_sha256: string
+          created_at?: string
+          expected_checkpoint: number
+          import_id: string
+          last_line: number
+          rejected_count: number
+        }
+        Update: {
+          accepted_count?: number
+          batch_sha256?: string
+          created_at?: string
+          expected_checkpoint?: number
+          import_id?: string
+          last_line?: number
+          rejected_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_import_batch_receipts_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_import_versions"
             referencedColumns: ["id"]
           },
         ]
@@ -1008,6 +1201,143 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "catalog_import_batches_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      catalog_import_staged_products: {
+        Row: {
+          barcode: string
+          brand: string | null
+          canonical_identity: string
+          category: string | null
+          import_id: string
+          ingredients_text: string | null
+          line_number: number
+          name: string
+          payload_sha256: string
+          quality_grade: string
+          source_ref: string
+          source_snapshot_date: string | null
+          source_url: string | null
+          staged_at: string
+        }
+        Insert: {
+          barcode: string
+          brand?: string | null
+          canonical_identity: string
+          category?: string | null
+          import_id: string
+          ingredients_text?: string | null
+          line_number: number
+          name: string
+          payload_sha256: string
+          quality_grade: string
+          source_ref: string
+          source_snapshot_date?: string | null
+          source_url?: string | null
+          staged_at?: string
+        }
+        Update: {
+          barcode?: string
+          brand?: string | null
+          canonical_identity?: string
+          category?: string | null
+          import_id?: string
+          ingredients_text?: string | null
+          line_number?: number
+          name?: string
+          payload_sha256?: string
+          quality_grade?: string
+          source_ref?: string
+          source_snapshot_date?: string | null
+          source_url?: string | null
+          staged_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_import_staged_products_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_import_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      catalog_import_versions: {
+        Row: {
+          accepted_record_count: number
+          activated_at: string | null
+          artifact_sha256: string
+          artifact_uri: string | null
+          checkpoint_line: number
+          created_at: string
+          finished_at: string | null
+          id: string
+          importer_version: string
+          manifest: Json
+          previous_active_import_id: string | null
+          ready_at: string | null
+          rejected_record_count: number
+          source_id: string
+          source_revision: string
+          staged_product_count: number
+          started_at: string
+          status: string
+        }
+        Insert: {
+          accepted_record_count?: number
+          activated_at?: string | null
+          artifact_sha256: string
+          artifact_uri?: string | null
+          checkpoint_line?: number
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          importer_version: string
+          manifest?: Json
+          previous_active_import_id?: string | null
+          ready_at?: string | null
+          rejected_record_count?: number
+          source_id: string
+          source_revision: string
+          staged_product_count?: number
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          accepted_record_count?: number
+          activated_at?: string | null
+          artifact_sha256?: string
+          artifact_uri?: string | null
+          checkpoint_line?: number
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          importer_version?: string
+          manifest?: Json
+          previous_active_import_id?: string | null
+          ready_at?: string | null
+          rejected_record_count?: number
+          source_id?: string
+          source_revision?: string
+          staged_product_count?: number
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_import_versions_previous_active_import_id_fkey"
+            columns: ["previous_active_import_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_import_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "catalog_import_versions_source_id_fkey"
             columns: ["source_id"]
             isOneToOne: false
             referencedRelation: "catalog_sources"
@@ -1483,6 +1813,50 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      conflict_choice_mirror_versions: {
+        Row: {
+          client_revision: number
+          entity_id: string
+          operation_id: string
+          payload_hash: string
+          product_a_id: string
+          product_b_id: string
+          rule_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_revision: number
+          entity_id: string
+          operation_id: string
+          payload_hash: string
+          product_a_id: string
+          product_b_id: string
+          rule_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_revision?: number
+          entity_id?: string
+          operation_id?: string
+          payload_hash?: string
+          product_a_id?: string
+          product_b_id?: string
+          rule_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_choice_mirror_versions_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "conflict_rules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       conflict_rules: {
         Row: {
@@ -2787,6 +3161,45 @@ export type Database = {
           },
         ]
       }
+      mobile_outbox_receipts: {
+        Row: {
+          applied_at: string
+          client_revision: number
+          entity_id: string
+          entity_type: string
+          idempotency_key: string
+          operation_id: string
+          operation_kind: string
+          payload_hash: string | null
+          result_status: string
+          user_id: string
+        }
+        Insert: {
+          applied_at?: string
+          client_revision: number
+          entity_id: string
+          entity_type: string
+          idempotency_key: string
+          operation_id: string
+          operation_kind: string
+          payload_hash?: string | null
+          result_status: string
+          user_id: string
+        }
+        Update: {
+          applied_at?: string
+          client_revision?: number
+          entity_id?: string
+          entity_type?: string
+          idempotency_key?: string
+          operation_id?: string
+          operation_kind?: string
+          payload_hash?: string | null
+          result_status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_log: {
         Row: {
           id: string
@@ -3315,6 +3728,7 @@ export type Database = {
           import_record_ordinal: number | null
           import_record_sha256: string | null
           import_staged_record_id: string | null
+          import_version_id: string | null
           inactive_section_found: boolean
           locale: string
           may_contain_section_found: boolean
@@ -3339,6 +3753,7 @@ export type Database = {
           import_record_ordinal?: number | null
           import_record_sha256?: string | null
           import_staged_record_id?: string | null
+          import_version_id?: string | null
           inactive_section_found?: boolean
           locale?: string
           may_contain_section_found?: boolean
@@ -3363,6 +3778,7 @@ export type Database = {
           import_record_ordinal?: number | null
           import_record_sha256?: string | null
           import_staged_record_id?: string | null
+          import_version_id?: string | null
           inactive_section_found?: boolean
           locale?: string
           may_contain_section_found?: boolean
@@ -3384,6 +3800,13 @@ export type Database = {
             columns: ["import_batch_id"]
             isOneToOne: false
             referencedRelation: "catalog_import_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_ingredient_lists_import_version_id_fkey"
+            columns: ["import_version_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_import_versions"
             referencedColumns: ["id"]
           },
           {
@@ -4270,6 +4693,33 @@ export type Database = {
         }
         Relationships: []
       }
+      shelf_mirror_versions: {
+        Row: {
+          client_revision: number
+          entity_id: string
+          last_operation_id: string | null
+          tombstone: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_revision?: number
+          entity_id: string
+          last_operation_id?: string | null
+          tombstone?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_revision?: number
+          entity_id?: string
+          last_operation_id?: string | null
+          tombstone?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       shelf_product_identities: {
         Row: {
           created_at: string
@@ -4465,6 +4915,7 @@ export type Database = {
       }
       subscriptions_events: {
         Row: {
+          account_deletion_suppressed: boolean
           aliases: string[] | null
           app_user_id: string | null
           auth_verified: boolean | null
@@ -4493,6 +4944,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          account_deletion_suppressed?: boolean
           aliases?: string[] | null
           app_user_id?: string | null
           auth_verified?: boolean | null
@@ -4521,6 +4973,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          account_deletion_suppressed?: boolean
           aliases?: string[] | null
           app_user_id?: string | null
           auth_verified?: boolean | null
@@ -5126,6 +5579,86 @@ export type Database = {
         Returns: boolean
       }
       account_access_allowed: { Args: never; Returns: boolean }
+      account_deletion_begin_apple_attempt: {
+        Args: { p_lease_token: string; p_request_id: string; p_user_id: string }
+        Returns: {
+          apple_required: boolean
+          apple_result: string
+          next_step: string
+          posthog_result: string
+          request_id: string
+        }[]
+      }
+      account_deletion_checkpoint: {
+        Args: {
+          p_expected_step: string
+          p_lease_token: string
+          p_request_id: string
+          p_result: string
+          p_user_id: string
+        }
+        Returns: {
+          apple_required: boolean
+          apple_result: string
+          next_step: string
+          posthog_result: string
+          request_id: string
+        }[]
+      }
+      account_deletion_claim: {
+        Args: {
+          p_apple_required: boolean
+          p_completion_token_hash: string
+          p_lease_token: string
+          p_session_id: string
+          p_user_hash: string
+          p_user_id: string
+        }
+        Returns: {
+          apple_required: boolean
+          apple_result: string
+          next_step: string
+          posthog_result: string
+          request_id: string
+        }[]
+      }
+      account_deletion_completion_status: {
+        Args: { p_completion_token_hash: string }
+        Returns: {
+          apple_required: boolean
+          apple_result: string
+          next_step: string
+          posthog_result: string
+          request_id: string
+        }[]
+      }
+      account_deletion_erasure_context_allows: {
+        Args: { p_user_id?: string }
+        Returns: boolean
+      }
+      account_deletion_lookup_hash: {
+        Args: { p_user_id: string }
+        Returns: string
+      }
+      account_deletion_preflight: {
+        Args: { p_user_hash: string; p_user_id: string }
+        Returns: {
+          apple_required: boolean
+          next_step: string
+          request_exists: boolean
+        }[]
+      }
+      account_deletion_record_failure: {
+        Args: {
+          p_error_code: string
+          p_expected_step: string
+          p_lease_token: string
+          p_request_id: string
+          p_user_id: string
+        }
+        Returns: boolean
+      }
+      account_deletion_write_allowed: { Args: never; Returns: boolean }
       account_write_allowed:
         | { Args: never; Returns: boolean }
         | { Args: { p_user_id: string }; Returns: boolean }
@@ -5199,6 +5732,31 @@ export type Database = {
           user_id: string
         }[]
       }
+      apply_conflict_choice_outbox_batch: {
+        Args: { p_operations: Json }
+        Returns: Json
+      }
+      apply_notification_delivery_outbox_batch: {
+        Args: { p_operations: Json }
+        Returns: Json
+      }
+      apply_notification_preferences_outbox_batch: {
+        Args: { p_operations: Json }
+        Returns: Json
+      }
+      apply_photo_delete_outbox_batch: {
+        Args: { p_operations: Json }
+        Returns: Json
+      }
+      apply_recommendation_preferences_outbox_batch: {
+        Args: { p_operations: Json }
+        Returns: Json
+      }
+      apply_shelf_outbox_batch: { Args: { p_operations: Json }; Returns: Json }
+      apply_shelf_scan_outbox_batch: {
+        Args: { p_operations: Json }
+        Returns: Json
+      }
       begin_account_deletion: {
         Args: {
           p_apple_encrypted_credential: string
@@ -5230,35 +5788,46 @@ export type Database = {
         }
         Returns: string
       }
-      begin_catalog_import: {
-        Args: {
-          p_artifact_kind: string
-          p_artifact_sha256: string
-          p_artifact_uri: string
-          p_batch_type: string
-          p_expected_record_count: number
-          p_manifest: Json
-          p_manifest_sha256: string
-          p_operation_key: string
-          p_parser_version: string
-          p_qa_blocker_count: number
-          p_qa_report_sha256: string
-          p_qa_report_uri: string
-          p_qa_warning_count: number
-          p_snapshot_date: string
-          p_source_approval_sha256: string
-          p_source_key: string
-          p_source_policy_sha256: string
-          p_territory: string
-          p_transform_sha256: string
-          p_transformed_payload_sha256: string
-        }
-        Returns: {
-          batch_id: string
-          batch_status: string
-          replayed: boolean
-        }[]
-      }
+      begin_catalog_import:
+        | {
+            Args: {
+              p_artifact_kind: string
+              p_artifact_sha256: string
+              p_artifact_uri: string
+              p_batch_type: string
+              p_expected_record_count: number
+              p_manifest: Json
+              p_manifest_sha256: string
+              p_operation_key: string
+              p_parser_version: string
+              p_qa_blocker_count: number
+              p_qa_report_sha256: string
+              p_qa_report_uri: string
+              p_qa_warning_count: number
+              p_snapshot_date: string
+              p_source_approval_sha256: string
+              p_source_key: string
+              p_source_policy_sha256: string
+              p_territory: string
+              p_transform_sha256: string
+              p_transformed_payload_sha256: string
+            }
+            Returns: {
+              batch_id: string
+              batch_status: string
+              replayed: boolean
+            }[]
+          }
+        | {
+            Args: {
+              p_artifact_sha256: string
+              p_artifact_uri: string
+              p_importer_version: string
+              p_source_key: string
+              p_source_revision: string
+            }
+            Returns: Json
+          }
       begin_health_data_consent_withdrawal: {
         Args: {
           p_consent_text_hash: string
@@ -5299,6 +5868,10 @@ export type Database = {
       canonical_subscription_owner_identity: {
         Args: { p_value: string }
         Returns: string
+      }
+      catalog_search_bigram_tokens: {
+        Args: { p_value: string }
+        Returns: string[]
       }
       claim_account_deletion_step: {
         Args: {
@@ -5563,6 +6136,10 @@ export type Database = {
       enqueue_obf_contribution_for_correction: {
         Args: { p_correction_id: string }
         Returns: Json
+      }
+      erase_account_database_state: {
+        Args: { p_lease_token: string; p_request_id: string; p_user_id: string }
+        Returns: undefined
       }
       establish_revenuecat_deletion_identity_barrier: {
         Args: {
@@ -5873,6 +6450,14 @@ export type Database = {
         Args: { p_consent_type: string }
         Returns: boolean
       }
+      has_current_exact_consent: {
+        Args: {
+          p_consent_text_hash: string
+          p_consent_type: string
+          p_version: string
+        }
+        Returns: boolean
+      }
       invalidate_apple_auth_for_session: {
         Args: {
           p_apple_subject: string
@@ -5982,6 +6567,10 @@ export type Database = {
       owns_photo: { Args: { p_photo_id: string }; Returns: boolean }
       owns_routine: { Args: { p_routine_id: string }; Returns: boolean }
       owns_user_product: { Args: { p_product_id: string }; Returns: boolean }
+      photo_outbox_insert_allowed: {
+        Args: { p_entity_id: string }
+        Returns: boolean
+      }
       prepare_health_data_consent_withdrawal: {
         Args: { p_claim_token: string; p_operation_id: string }
         Returns: {
@@ -6163,6 +6752,17 @@ export type Database = {
         Returns: number
       }
       read_entitlement_projections: { Args: never; Returns: Json }
+      ready_catalog_import: {
+        Args: {
+          p_accepted_records: number
+          p_import_id: string
+          p_input_records: number
+          p_input_sha256: string
+          p_manifest: Json
+          p_rejected_records: number
+        }
+        Returns: Json
+      }
       reap_expired_account_publication_leases: {
         Args: { p_limit: number }
         Returns: {
@@ -6503,6 +7103,17 @@ export type Database = {
           reference_day: string
         }[]
       }
+      stage_catalog_import_batch: {
+        Args: {
+          p_batch_sha256: string
+          p_expected_checkpoint: number
+          p_import_id: string
+          p_last_line: number
+          p_rejected_count: number
+          p_rows: Json
+        }
+        Returns: Json
+      }
       stage_catalog_import_chunk: {
         Args: {
           p_batch_id: string
@@ -6653,12 +7264,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -6682,11 +7293,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -6707,11 +7318,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -6732,11 +7343,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -6749,11 +7360,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
