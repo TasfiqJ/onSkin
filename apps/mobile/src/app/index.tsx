@@ -258,8 +258,8 @@ export default function WelcomeScreen() {
                 skin.
               </Text>
               <Text variant="body" tone="muted" className="mt-4">
-                A routine that fits what&apos;s already on your shelf. And photos that never leave
-                your phone.
+                A routine that fits what&apos;s already on your shelf. Photos stay encrypted on your
+                phone unless you choose to share one.
               </Text>
             </>
           )}
