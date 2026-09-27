@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import {
   isFeatureRequired,
@@ -13,6 +15,19 @@ import {
 } from './contract.mjs';
 
 const contract = loadLaunchContract();
+const iosWorkflow = readFileSync(
+  resolve(import.meta.dirname, '../../.github/workflows/ios-launch-contract.yml'),
+  'utf8',
+);
+
+const denoSetup =
+  'uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282';
+assert.match(iosWorkflow, /deno-version: v2\.7\.5/u);
+assert.equal(iosWorkflow.match(new RegExp(denoSetup, 'gu'))?.length, 1);
+assert.ok(
+  iosWorkflow.indexOf(denoSetup) < iosWorkflow.indexOf('run: npm run launch:contract:verify'),
+  'The pinned Deno setup must run before launch:contract:verify.',
+);
 
 assert.deepEqual(contract.release.platforms, ['ios']);
 assert.equal(isReleasePlatformRequired('ios', contract), true);
