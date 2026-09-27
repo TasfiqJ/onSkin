@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-26T23:57:31.995Z",
+  "generatedAt": "2026-09-27T03:44:17.194Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "ea035cd7f2b67682423cad5195ca004b7b9b2171",
-  "gitStatus": "M docs/hugeToDo/AGENT_WORK_LEDGER.md\n M docs/hugeToDo/DB-08-SOURCE-READINESS-2026-09-26.md\n M docs/hugeToDo/README.md\n M scripts/core02/clinical-rule-source-contract.test.mjs\n M scripts/core05/adherence-source-contract.test.mjs\n M scripts/core06/recommendation-admission-source-contract.test.mjs\n M scripts/phase2/database-types-contract-lib.mjs\n M scripts/phase2/database-types-contract.test.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset-source.test.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/prepare-staging-cutover.test.mjs\n M scripts/phase2/staging-deployment-evidence-lib.mjs\n M scripts/phase2/staging-deployment-evidence.test.mjs\n M scripts/phase4/build-source-worklist.mjs\n M scripts/phase4/catalog-operator-authority-contract.mjs\n M scripts/phase4/catalog-operator-authority-contract.test.mjs\n M scripts/phase9/recommendation-zero-admission-smoke.mjs\n M supabase/tests/database/cat07_truthful_freshness.test.sql\n M supabase/tests/database/catalog_operator_authority.test.sql\n M supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql\n M supabase/tests/database/clinical_content_legacy_seal.test.sql\n M supabase/tests/database/commerce_zero_admission.test.sql\n M supabase/tests/database/recommendation_zero_admission.test.sql\n M supabase/tests/database/routine_adherence_authority.test.sql\n M supabase/tests/database/routine_completion_sync_bridge.test.sql\n M supabase/tests/database/schema_contract.test.sql\n M supabase/tests/database/skin_profile_quiz_provenance.test.sql\n?? supabase/migrations/20260926000078_catalog_operator_public_execute_fence.sql",
+  "gitSha": "eda49e736022c1704d8cb8e51493401e05de29d5",
+  "gitStatus": "M apps/mobile/src/lib/applock/accountOperations.test.ts\n M apps/mobile/src/lib/applock/accountOperations.ts\n M package.json\n?? .codex-artifacts/db05-types-36282526727.zip\n?? .codex-artifacts/db05-types-36282526727/db05-generated-public-types.ts\n?? docs/hugeToDo/PHOTO-02-APP-LOCK-SOURCE-CHECKPOINT-2026-09-26.md\n?? scripts/photo02/photo02-source-contract.mjs\n?? scripts/photo02/photo02-source-contract.test.mjs",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -1186,14 +1186,14 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 45140,
-          "sha256": "e9f491a5db36ffca67aa40936099425ccef336513680f192a4048de9aaa2da5c"
+          "bytes": 45773,
+          "sha256": "e462cbadef199e66ebeb99adc2ec419f4a7beafc9db29899ec10e0ffd73cd912"
         },
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 12623,
-          "sha256": "ebad4bc6d926cb49d85c0ff86aa5e641391aa0d43347172a78345548da47a701"
+          "bytes": 12475,
+          "sha256": "bdfb2b76adbcce35de64bd04a3b2e5cec3f5ca925eee2eefb307a6e157a581ea"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
@@ -2212,8 +2212,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 486084,
-          "sha256": "b4d2f882481643f416aeec39a29d19a09a95f5fcbce17c9648df74c226ce7a80"
+          "bytes": 488487,
+          "sha256": "3ae9152d240c4b55d45c3db56d921a453679668e3c6e85feeee6a6ae057a36da"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",

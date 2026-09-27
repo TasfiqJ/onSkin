@@ -454,15 +454,29 @@ describe('account-bound App Lock operations', () => {
     },
   );
 
-  it('disables directly under the current owner lease without opening native auth', async () => {
+  it('authenticates before disabling under the current owner lease', async () => {
     const publish = vi.fn();
 
     await expect(
       setAppLockPreferenceForCurrentAccount({ enabled: false, publish }),
     ).resolves.toEqual({ status: 'saved', enabled: false });
     expect(mocks.canUseAppLock).not.toHaveBeenCalled();
-    expect(mocks.authenticateAppLock).not.toHaveBeenCalled();
+    expect(mocks.authenticateAppLock).toHaveBeenCalledWith('Confirm to disable app lock');
     expect(mocks.setAppLockEnabledStored).toHaveBeenCalledWith(false);
     expect(publish).toHaveBeenCalledWith({ status: 'saved', enabled: false });
   });
+
+  it.each(['not_authenticated', 'unavailable'] as const)(
+    'does not disable after authentication returns %s',
+    async (status) => {
+      const publish = vi.fn();
+      mocks.authenticateAppLock.mockResolvedValueOnce(status);
+
+      await expect(
+        setAppLockPreferenceForCurrentAccount({ enabled: false, publish }),
+      ).resolves.toEqual({ status });
+      expect(mocks.setAppLockEnabledStored).not.toHaveBeenCalled();
+      expect(publish).toHaveBeenCalledWith({ status });
+    },
+  );
 });

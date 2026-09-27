@@ -225,18 +225,19 @@ export function setAppLockPreferenceForCurrentAccount(input: {
         return result;
       }
 
-      const authStatus = await authenticateWithLease(
-        lease,
-        'Confirm to enable app lock',
-        input.authenticationToken,
-        input.isInteractionCurrent,
-      );
-      if (authStatus !== 'success') {
-        const result = { status: authStatus } as const;
-        lease.assertCurrent();
-        if (requestIsCurrent(input.isInteractionCurrent)) input.publish(result);
-        return result;
-      }
+    }
+
+    const authStatus = await authenticateWithLease(
+      lease,
+      input.enabled ? 'Confirm to enable app lock' : 'Confirm to disable app lock',
+      input.authenticationToken,
+      input.isInteractionCurrent,
+    );
+    if (authStatus !== 'success') {
+      const result = { status: authStatus } as const;
+      lease.assertCurrent();
+      if (requestIsCurrent(input.isInteractionCurrent)) input.publish(result);
+      return result;
     }
 
     if (!requestIsCurrent(input.isInteractionCurrent)) {
