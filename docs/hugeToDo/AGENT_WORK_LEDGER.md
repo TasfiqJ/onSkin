@@ -9,7 +9,7 @@ evidence passes.
 - Codex-owned plan items: 131
 - Complete: 17
 - Remaining: 114
-- Active critical path: DB-06 approved empty staging target and ASK-02 source checkpoint
+- Active critical path: DB-06 approved empty staging target and PHOTO-01 encrypted-thumbnail source checkpoint
 
 ## Active assignments
 
@@ -17,7 +17,7 @@ evidence passes.
 | --------------------------- | --------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | Root                        | DB-05 / OPS-07        | Current-chain replay evidence and replacement security/quality workflows                     | DB-05 complete; replacement harness fixes queued                     | Fresh full CI for the local harness repairs                                          |
 | photo04_timelapse           | PHOTO-04 prerequisite | Deterministic time-lapse controller, frame-readiness, privacy, and accessibility source lane | Source checkpoint root-reviewed after independent adversarial repair | Replacement CI, then signed physical-device lifecycle/privacy/accessibility evidence |
-| next_independent_task_audit | ASK-02 prerequisite   | Disabled-by-default authenticated cloud Ask gateway source lane                              | In progress; disjoint from Trend and database files                  | Root review, focused verification, and explicit non-admission documentation          |
+| photo01_thumbnail_source    | PHOTO-01 prerequisite | Encrypted local thumbnail creation, recovery, deletion, and aggregate source contract        | In progress; disjoint from Ask, database, and Phase 9 files          | Root review, full mobile verification, and explicit device-only residual gates        |
 
 ## Reviewed integration queue
 
@@ -42,6 +42,7 @@ evidence passes.
 | Root                     | Quality/security harness repair  | `4ac90ffce`, `64b16a452` | RevenueCat 20/20 permission-scoped command and expanded plaintext-startup privacy audit pass locally                                                                                    | Replacement quality and security workflows after the active DB replay reaches terminal state                                                                     |
 | photo04_timelapse        | PHOTO-04 prerequisite            | `7e6aff964`              | Root-reviewed after six independent race/evidence findings were repaired; 4,836-test mobile suite, typecheck, lint, focused lifecycle/privacy checks, and final read-only review passed | Current signed iPhone encrypted playback, background, VoiceOver, Dynamic Type, traffic, cache/filesystem, memory, and thermal evidence                           |
 | rls_probe_repair         | PHOTO-05 prerequisite            | Working tree             | Legacy fabricated classifier quarantined; strict local receipt/input provenance reviewed after exact-binding, dynamic-import, evidence-digest, and replay-outage repairs                | Real on-device engine, secure issuer/replay store, calibration/fairness, consent/legal, signed archive, physical-device, performance, and accessibility evidence |
+| next_independent_task_audit | ASK-02 prerequisite            | `9eb565044`              | Root-reviewed after repeated independent adversarial repair; disabled admission, exact auth/account/health/consent dominance, request fingerprinting, quota/replay/circuit/runtime adapter validation, canonical output snapshots, and literal durable-commit acknowledgement pass focused checks | ASK-01/ACCT-11 provider and contract approval, authoritative purpose-consent RPC, durable hosted quota/idempotency/circuit/audit adapters, reviewed corpus/safety pipeline, hosted abuse/outage/cost evidence, enabled client, and physical-device evidence |
 
 ## Coordination rules
 
