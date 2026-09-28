@@ -1,0 +1,84 @@
+{
+  "bodyText": "SUNDAY, SEPTEMBER 27 · 7:43 PM 1 day Good morning. Morning routine complete. Morning routine 1 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "View your streak and adherence",
+      "role": "button",
+      "width": 85.41,
+      "x": 320.59,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 98,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "width": 336,
+      "x": 47,
+      "y": 235
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 362
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "width": 107.5,
+      "x": 0,
+      "y": 869
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "width": 107.5,
+      "x": 107.5,
+      "y": 869
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "width": 107.5,
+      "x": 215,
+      "y": 869
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "width": 107.5,
+      "x": 322.5,
+      "y": 869
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8297/today?routine=AM",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

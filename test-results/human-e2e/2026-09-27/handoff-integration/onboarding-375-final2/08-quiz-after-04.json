@@ -1,0 +1,64 @@
+{
+  "bodyText": "SKIN PROFILE 4 OF 12 SENSITIVITY How often do you notice redness, flushing, or a hot-feeling face? Frequently ✓ Sometimes Rarely or never Back Next",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Frequently",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 189
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Sometimes",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 249
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Rarely or never",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 309
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 535
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Next",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 595
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8290/onboarding/quiz",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

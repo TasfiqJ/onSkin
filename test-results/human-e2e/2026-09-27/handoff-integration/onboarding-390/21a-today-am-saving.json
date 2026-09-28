@@ -1,0 +1,74 @@
+{
+  "bodyText": "SUNDAY, SEPTEMBER 27 · 7:35 PM Good morning. 1 step left in your morning routine. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. SAVING Tonight · Cycling night 1 Exfoliation night › ⏷ ⏷ Today ⏷ ⏷ Progress ⏷ ⏷ Shelf ⏷ ⏷ You",
+  "controls": [
+    {
+      "disabled": true,
+      "height": 122,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "width": 296,
+      "x": 47,
+      "y": 203
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 354
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷Today",
+      "role": "tab",
+      "width": 97.5,
+      "x": 0,
+      "y": 781
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷Progress",
+      "role": "tab",
+      "width": 97.5,
+      "x": 97.5,
+      "y": 781
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷Shelf",
+      "role": "tab",
+      "width": 97.5,
+      "x": 195,
+      "y": 781
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷You",
+      "role": "tab",
+      "width": 97.5,
+      "x": 292.5,
+      "y": 781
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8291/today?routine=AM",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

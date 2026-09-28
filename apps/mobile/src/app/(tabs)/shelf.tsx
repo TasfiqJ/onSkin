@@ -1,3 +1,4 @@
+import { reportDockScroll } from '@/components/navigation/DockMotion';
 import { router, useIsFocused } from 'expo-router';
 import {
   createContext,
@@ -117,6 +118,7 @@ function ShelfViewStateProvider({
       if (!focusedRef.current || filterRef.current !== filter || restoringFilter.current !== null) {
         return;
       }
+      reportDockScroll(event);
       scrollOffsets.current[filter] = Math.max(0, event.nativeEvent.contentOffset.y);
     },
     [filter],
@@ -338,10 +340,7 @@ function EmptyShelf({
         {splitShort ? (
           <>Add products you already own.</>
         ) : (
-          <>
-            Add products you already own. We&apos;ll handle freshness and
-            clashes.
-          </>
+          <>Add products you already own. We&apos;ll handle freshness and clashes.</>
         )}
       </Text>
       <View

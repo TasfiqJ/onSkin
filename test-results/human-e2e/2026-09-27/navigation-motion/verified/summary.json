@@ -1,0 +1,212 @@
+{
+  "baseUrl": "http://localhost:8208",
+  "evidenceDir": "test-results/human-e2e/2026-09-27/navigation-motion/verified",
+  "generatedAt": "2026-09-28T03:17:02.197Z",
+  "status": "pass",
+  "viewports": [
+    {
+      "name": "320x568",
+      "width": 320,
+      "height": 568,
+      "steps": [
+        {
+          "selected": "Today",
+          "snapshot": "320x568-today.json",
+          "screenshot": "320x568-today.png"
+        },
+        {
+          "selected": "Progress",
+          "snapshot": "320x568-progress.json",
+          "screenshot": "320x568-progress.png"
+        },
+        {
+          "selected": "Shelf",
+          "snapshot": "320x568-shelf.json",
+          "screenshot": "320x568-shelf.png"
+        },
+        {
+          "selected": "You",
+          "snapshot": "320x568-you.json",
+          "screenshot": "320x568-you.png"
+        }
+      ]
+    },
+    {
+      "name": "360x640",
+      "width": 360,
+      "height": 640,
+      "steps": [
+        {
+          "selected": "Today",
+          "snapshot": "360x640-today.json",
+          "screenshot": "360x640-today.png"
+        },
+        {
+          "selected": "Progress",
+          "snapshot": "360x640-progress.json",
+          "screenshot": "360x640-progress.png"
+        },
+        {
+          "selected": "Shelf",
+          "snapshot": "360x640-shelf.json",
+          "screenshot": "360x640-shelf.png"
+        },
+        {
+          "selected": "You",
+          "snapshot": "360x640-you.json",
+          "screenshot": "360x640-you.png"
+        }
+      ]
+    },
+    {
+      "name": "375x667",
+      "width": 375,
+      "height": 667,
+      "steps": [
+        {
+          "selected": "Today",
+          "snapshot": "375x667-today.json",
+          "screenshot": "375x667-today.png"
+        },
+        {
+          "selected": "Progress",
+          "snapshot": "375x667-progress.json",
+          "screenshot": "375x667-progress.png"
+        },
+        {
+          "selected": "Shelf",
+          "snapshot": "375x667-shelf.json",
+          "screenshot": "375x667-shelf.png"
+        },
+        {
+          "selected": "You",
+          "snapshot": "375x667-you.json",
+          "screenshot": "375x667-you.png"
+        }
+      ]
+    },
+    {
+      "name": "390x844",
+      "width": 390,
+      "height": 844,
+      "steps": [
+        {
+          "selected": "Today",
+          "snapshot": "390x844-today.json",
+          "screenshot": "390x844-today.png"
+        },
+        {
+          "selected": "Progress",
+          "snapshot": "390x844-progress.json",
+          "screenshot": "390x844-progress.png"
+        },
+        {
+          "selected": "Shelf",
+          "snapshot": "390x844-shelf.json",
+          "screenshot": "390x844-shelf.png"
+        },
+        {
+          "selected": "You",
+          "snapshot": "390x844-you.json",
+          "screenshot": "390x844-you.png"
+        }
+      ]
+    },
+    {
+      "name": "412x915",
+      "width": 412,
+      "height": 915,
+      "steps": [
+        {
+          "selected": "Today",
+          "snapshot": "412x915-today.json",
+          "screenshot": "412x915-today.png"
+        },
+        {
+          "selected": "Progress",
+          "snapshot": "412x915-progress.json",
+          "screenshot": "412x915-progress.png"
+        },
+        {
+          "selected": "Shelf",
+          "snapshot": "412x915-shelf.json",
+          "screenshot": "412x915-shelf.png"
+        },
+        {
+          "selected": "You",
+          "snapshot": "412x915-you.json",
+          "screenshot": "412x915-you.png"
+        }
+      ]
+    },
+    {
+      "name": "430x932",
+      "width": 430,
+      "height": 932,
+      "steps": [
+        {
+          "selected": "Today",
+          "snapshot": "430x932-today.json",
+          "screenshot": "430x932-today.png"
+        },
+        {
+          "selected": "Progress",
+          "snapshot": "430x932-progress.json",
+          "screenshot": "430x932-progress.png"
+        },
+        {
+          "selected": "Shelf",
+          "snapshot": "430x932-shelf.json",
+          "screenshot": "430x932-shelf.png"
+        },
+        {
+          "selected": "You",
+          "snapshot": "430x932-you.json",
+          "screenshot": "430x932-you.png"
+        }
+      ]
+    }
+  ],
+  "motion": {
+    "reduced": false,
+    "before": {
+      "dockTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "tabTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "tabBackground": "rgba(0, 0, 0, 0)",
+      "scrollY": 0
+    },
+    "hovered": {
+      "dockTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "tabTransform": "matrix(1.02504, 0, 0, 1.02504, 0, -2.00306)",
+      "tabBackground": "rgb(243, 231, 223)",
+      "scrollY": 0
+    },
+    "scrolling": {
+      "dockTransform": "matrix(0.992847, 0, 0, 0.992847, 0, 2.86105)",
+      "tabTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "tabBackground": "rgba(0, 0, 0, 0)",
+      "scrollY": 480
+    },
+    "settled": {
+      "dockTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "tabTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "tabBackground": "rgba(0, 0, 0, 0)",
+      "scrollY": 480
+    }
+  },
+  "deferredRoutes": [
+    {
+      "route": "ask",
+      "returnsToToday": true
+    },
+    {
+      "route": "community",
+      "returnsToToday": true
+    },
+    {
+      "route": "recommendations",
+      "returnsToToday": true
+    }
+  ],
+  "problemLogCount": 33
+}

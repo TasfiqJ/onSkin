@@ -1,0 +1,178 @@
+{
+  "horizontalOverflow": 0,
+  "innerHeight": 932,
+  "innerWidth": 430,
+  "location": "http://localhost:8208/today",
+  "selectedCount": 1,
+  "tabList": {
+    "rect": {
+      "bottom": 911,
+      "height": 62,
+      "left": 25,
+      "right": 405,
+      "top": 849,
+      "width": 380,
+      "x": 25,
+      "y": 849
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Today",
+      "iconRect": {
+        "bottom": 882.4173583984375,
+        "height": 23.0245361328125,
+        "left": 60.98773193359375,
+        "right": 84.01226806640625,
+        "top": 859.392822265625,
+        "width": 23.0245361328125,
+        "x": 60.98773193359375,
+        "y": 859.392822265625
+      },
+      "labelRect": {
+        "bottom": 904.9413452148438,
+        "height": 16.01708984375,
+        "left": 57.577850341796875,
+        "right": 87.42214965820312,
+        "top": 888.9242553710938,
+        "width": 29.84429931640625,
+        "x": 57.577850341796875,
+        "y": 888.9242553710938
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 910.94775390625,
+        "height": 62.066162109375,
+        "left": 24.949337005615234,
+        "right": 120.05065536499023,
+        "top": 848.881591796875,
+        "width": 95.101318359375,
+        "x": 24.949337005615234,
+        "y": 848.881591796875
+      },
+      "route": "today",
+      "selected": true,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Progress",
+      "iconRect": {
+        "bottom": 882.5,
+        "height": 23,
+        "left": 156,
+        "right": 179,
+        "top": 859.5,
+        "width": 23,
+        "x": 156,
+        "y": 859.5
+      },
+      "labelRect": {
+        "bottom": 905,
+        "height": 16,
+        "left": 145.921875,
+        "right": 189.078125,
+        "top": 889,
+        "width": 43.15625,
+        "x": 145.921875,
+        "y": 889
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 911,
+        "height": 62,
+        "left": 120,
+        "right": 215,
+        "top": 849,
+        "width": 95,
+        "x": 120,
+        "y": 849
+      },
+      "route": "progress",
+      "selected": false,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Shelf",
+      "iconRect": {
+        "bottom": 882.5,
+        "height": 23,
+        "left": 251,
+        "right": 274,
+        "top": 859.5,
+        "width": 23,
+        "x": 251,
+        "y": 859.5
+      },
+      "labelRect": {
+        "bottom": 905,
+        "height": 16,
+        "left": 250.015625,
+        "right": 274.984375,
+        "top": 889,
+        "width": 24.96875,
+        "x": 250.015625,
+        "y": 889
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 911,
+        "height": 62,
+        "left": 215,
+        "right": 310,
+        "top": 849,
+        "width": 95,
+        "x": 215,
+        "y": 849
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "You",
+      "iconRect": {
+        "bottom": 882.5,
+        "height": 23,
+        "left": 346,
+        "right": 369,
+        "top": 859.5,
+        "width": 23,
+        "x": 346,
+        "y": 859.5
+      },
+      "labelRect": {
+        "bottom": 905,
+        "height": 16,
+        "left": 348.328125,
+        "right": 366.671875,
+        "top": 889,
+        "width": 18.34375,
+        "x": 348.328125,
+        "y": 889
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 911,
+        "height": 62,
+        "left": 310,
+        "right": 405,
+        "top": 849,
+        "width": 95,
+        "x": 310,
+        "y": 849
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

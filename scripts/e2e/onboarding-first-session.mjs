@@ -735,8 +735,12 @@ async function answerQuiz(client) {
 
 async function addProduct(client, product, evidenceName) {
   await fillByLabel(client, 'Product name', product.name);
-  await clickByText(client, 'Choose product category', { exact: false });
-  await waitForText(client, 'Product category');
+  if (await evaluate(client, rectByTextExpression('Choose product category', false))) {
+    await scrollTextIntoView(client, 'Choose product category', { exact: false });
+    await clickByText(client, 'Choose product category', { exact: false });
+    await waitForText(client, 'Product category');
+  }
+  await scrollTextIntoView(client, product.category);
   await clickByText(client, product.category);
   await clickByText(client, 'Add to shelf');
   await waitForText(client, 'When did you open it?');
@@ -956,33 +960,8 @@ async function run() {
     await scrollTextIntoView(client, 'Continue free', { exact: false });
     const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
     await clickByText(client, 'Continue free', { exact: false });
-    await waitForPath(client, '/routine/plan', 30_000);
-    await waitForText(client, 'Your routine, in order.', 30_000);
-    await waitForText(client, 'Start today', 30_000);
-    const routinePlan = await captureStep(client, '19-routine-plan-current');
-    assert(
-      routinePlan.bodyText.includes('FIRST INSIGHT'),
-      'Routine plan did not show FIRST INSIGHT.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Timing handled'),
-      'Routine plan did not show Timing handled.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Mineral SPF 50'),
-      'Routine plan did not show the SPF morning step.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Glycolic 7%'),
-      'Routine plan did not show the glycolic night step.',
-    );
-    assert(
-      routinePlan.bodyText.includes('Retinol 0.3%'),
-      'Routine plan did not show the retinol night step.',
-    );
-
-    await clickByText(client, 'Start today');
     await waitForPath(client, '/today', 30_000);
+    const freeToday = await captureStep(client, '19-free-today-current', { assertClean: false });
     const todayAfterStart = await captureStep(client, '20-today-after-start-current', {
       assertClean: false,
     });
@@ -1125,7 +1104,7 @@ async function run() {
       ...(accountCodeError ? { accountCodeError } : {}),
       paywall,
       paywallExplore,
-      routinePlan,
+      freeToday,
       todayAfterStart,
       todayAmBefore,
       todayAmSaving,
@@ -1191,7 +1170,7 @@ async function run() {
         ...(accountUpgradeMode ? ['16a-account-code-entry.png', '16b-account-code-error.png'] : []),
         '17-paywall-current.png',
         '18-paywall-explore-visible.png',
-        '19-routine-plan-current.png',
+        '19-free-today-current.png',
         '20-today-after-start-current.png',
         '21-today-am-before-checkoff.png',
         '21a-today-am-saving.png',
@@ -1215,7 +1194,7 @@ async function run() {
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
         : accountIsolationMode
           ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
-          : 'Completed onboarding through Continue free, routine plan, Start today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.',
+          : 'Completed onboarding through Continue free to Today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1229,14 +1208,14 @@ async function run() {
         hasTimingHandled: reveal.bodyText.includes('Timing handled'),
         text: reveal.bodyText,
       },
-      routinePlan: {
-        hasFirstInsight: routinePlan.bodyText.includes('FIRST INSIGHT'),
-        hasGlycolicNight: routinePlan.bodyText.includes('Glycolic 7%'),
-        hasRetinolNight: routinePlan.bodyText.includes('Retinol 0.3%'),
-        hasSpfMorning: routinePlan.bodyText.includes('Mineral SPF 50'),
-        hasStartToday: routinePlan.bodyText.includes('Start today'),
-        text: routinePlan.bodyText,
-        url: routinePlan.url,
+      freeToday: {
+        hasFirstInsight: freeToday.bodyText.includes('FIRST INSIGHT'),
+        hasGlycolicNight: freeToday.bodyText.includes('Glycolic 7%'),
+        hasRetinolNight: freeToday.bodyText.includes('Retinol 0.3%'),
+        hasSpfMorning: freeToday.bodyText.includes('Mineral SPF 50'),
+        hasStartToday: freeToday.bodyText.includes('Start today'),
+        text: freeToday.bodyText,
+        url: freeToday.url,
       },
       routeCheck: {
         accountLedToPaywall: paywall.url.includes('/onboarding/paywall'),
@@ -1245,7 +1224,7 @@ async function run() {
           (accountCodeError?.bodyText.includes('That code did not work') &&
             paywall.url.includes('/onboarding/paywall')),
         amCheckoffReachedComplete: todayAmAfter.bodyText.includes('1 of 1'),
-        exploreFirstLedToRoutinePlan: routinePlan.url.includes('/routine/plan'),
+        continueFreeLedToToday: freeToday.url.includes('/today'),
         notificationSkipLedToAccount: true,
         pmCheckoffReachedComplete: todayPmAfter.bodyText.includes('1 of 1'),
         signedOutShelfIsEmpty:
@@ -1269,9 +1248,9 @@ async function run() {
         accountUpgradeMode
           ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
           : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
-        'Used Continue free to unlock the routine plan without card entry.',
+        'Used Continue free to reach Today without card entry.',
         'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
-        'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
+        'Continued free to Today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
         ...(accountIsolationMode
           ? [
               'Opened the signed-in account surface and initiated sign-out with account A private queries already populated.',

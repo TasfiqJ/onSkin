@@ -452,11 +452,11 @@ export default function SubscriptionScreen() {
             {!entitlementChecking && !entitlementUncertain && data?.expired ? (
               <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push('/paywall/winback')}
+                onPress={() => router.push('/paywall/upsell')}
                 className="mt-4 min-h-[48px] items-center justify-center py-2"
               >
                 <Text variant="body" tone="clay" className="font-sans-semibold">
-                  See your welcome-back offer →
+                  See subscription plans →
                 </Text>
               </Pressable>
             ) : null}

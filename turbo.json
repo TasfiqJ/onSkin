@@ -73,7 +73,9 @@
   ],
   "tasks": {
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": [
+        "^typecheck"
+      ],
       "outputs": []
     },
     "lint": {
@@ -82,5 +84,12 @@
     "test": {
       "outputs": []
     }
-  }
+  },
+  "globalPassThroughEnv": [
+    "SystemRoot",
+    "SYSTEMROOT",
+    "ComSpec",
+    "COMSPEC",
+    "PATHEXT"
+  ]
 }

@@ -13,11 +13,13 @@ export function DeferredSurface({
   fallbackRoute,
   fallbackLabel,
   trackView = true,
+  replaceFallback = false,
 }: {
   surface: DeferredSurfaceKind;
   fallbackRoute?: AppFallbackRoute;
   fallbackLabel?: string;
   trackView?: boolean;
+  replaceFallback?: boolean;
 }) {
   const copy = deferredSurfaceCopy[surface];
 
@@ -61,7 +63,11 @@ export function DeferredSurface({
           label={fallbackLabel ?? copy.cta}
           variant="ghost"
           className="mb-6"
-          onPress={() => backOrReplace(router, fallbackRoute)}
+          onPress={() =>
+            replaceFallback && fallbackRoute
+              ? router.replace(fallbackRoute)
+              : backOrReplace(router, fallbackRoute)
+          }
         />
       </View>
     </Screen>

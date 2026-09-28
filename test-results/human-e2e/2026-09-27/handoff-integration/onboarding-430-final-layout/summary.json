@@ -1,0 +1,120 @@
+{
+  "accountIsolationMode": false,
+  "accountIsolation": null,
+  "accountUpgradeMode": false,
+  "accountUpgrade": null,
+  "browserProblemLogCount": 12,
+  "date": "2026-09-27",
+  "endUrl": "http://localhost:8297/today?routine=PM",
+  "evidenceFiles": [
+    "01-welcome.png",
+    "03-age-filled.png",
+    "05-goals-selected.png",
+    "09-products-empty.png",
+    "12-products-after-3.png",
+    "14-reveal-insight.png",
+    "15-notifications.png",
+    "16-account.png",
+    "17-paywall-current.png",
+    "18-paywall-explore-visible.png",
+    "19-free-today-current.png",
+    "20-today-after-start-current.png",
+    "21-today-am-before-checkoff.png",
+    "21a-today-am-saving.png",
+    "22-today-am-after-checkoff.png",
+    "22a-today-am-after-repeat-checkoff.png",
+    "22b-today-am-after-reload.png",
+    "23-today-pm-before-checkoff.png",
+    "24-today-pm-after-checkoff.png"
+  ],
+  "flowResult": "Completed onboarding through Continue free to Today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.",
+  "overflowXByStep": {
+    "welcome": 0,
+    "reveal": 0,
+    "account": 0,
+    "paywall": 0,
+    "paywallExplore": 0,
+    "freeToday": 0,
+    "todayAfterStart": 0,
+    "todayAmBefore": 0,
+    "todayAmSaving": 0,
+    "todayAmAfter": 0,
+    "todayAmAfterRepeat": 0,
+    "todayAmAfterReload": 0,
+    "todayPmBefore": 0,
+    "todayPmAfter": 0
+  },
+  "productNames": [
+    "Retinol 0.3% serum",
+    "Glycolic 7% toner",
+    "Mineral SPF 50"
+  ],
+  "reveal": {
+    "hasContinue": true,
+    "hasDerivedInsightBody": true,
+    "hasFirstInsightLabel": true,
+    "hasRoutinePreviewFallback": false,
+    "hasSeeMyRoutine": false,
+    "hasTimingHandled": true,
+    "text": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. Continue"
+  },
+  "freeToday": {
+    "hasFirstInsight": false,
+    "hasGlycolicNight": true,
+    "hasRetinolNight": false,
+    "hasSpfMorning": false,
+    "hasStartToday": false,
+    "text": "SUNDAY, SEPTEMBER 27 · 7:43 PM Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfoliate Recover Retinoid Recover Retinoid Recover Recover Evening routine 0 of 1 Glycolic 7% toner A thin layer. Exfoliation night only. NEXT Today Progress Shelf You",
+    "url": "http://localhost:8297/today"
+  },
+  "routeCheck": {
+    "accountLedToPaywall": true,
+    "accountUpgradeErrorRecovered": true,
+    "amCheckoffReachedComplete": true,
+    "continueFreeLedToToday": true,
+    "notificationSkipLedToAccount": true,
+    "pmCheckoffReachedComplete": true,
+    "signedOutShelfIsEmpty": true,
+    "signedOutTodayIsEmpty": true,
+    "revealContinueLedToNotifications": true,
+    "revealRoute": "http://localhost:8297/onboarding/reveal",
+    "startTodayLedToToday": true
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_COMPLETION_COMMIT_DELAY_MS=1200 EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port 8297 --host localhost",
+  "startUrl": "http://localhost:8297/?e2eReset=local",
+  "steps": [
+    "Reset local private state with dev-only fixture.",
+    "Began onboarding, entered valid adult DOB, selected Clear skin and Barrier repair.",
+    "Granted explicit health-data collection consent.",
+    "Answered 12-question quiz with visible option buttons.",
+    "Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.",
+    "Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.",
+    "Used Continue free to reach Today without card entry.",
+    "Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.",
+    "Continued free to Today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1."
+  ],
+  "surface": "Headless Chrome Expo web",
+  "today": {
+    "am": {
+      "afterText": "SUNDAY, SEPTEMBER 27 · 7:43 PM 1 day Good morning. Morning routine complete. Morning routine 1 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+      "beforeText": "SUNDAY, SEPTEMBER 27 · 7:43 PM Good morning. 1 step left in your morning routine. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+      "completed": true,
+      "product": "Mineral SPF 50",
+      "url": "http://localhost:8297/today?routine=AM"
+    },
+    "afterStartUrl": "http://localhost:8297/today",
+    "pm": {
+      "afterText": "SUNDAY, SEPTEMBER 27 · 7:43 PM 1 day Good evening. Evening routine complete. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfoliate Recover Retinoid Recover Retinoid Recover Recover Evening routine 1 of 1 Glycolic 7% toner A thin layer. Exfoliation night only. Today Progress Shelf You",
+      "beforeText": "SUNDAY, SEPTEMBER 27 · 7:43 PM 1 day Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfoliate Recover Retinoid Recover Retinoid Recover Recover Evening routine 0 of 1 Glycolic 7% toner A thin layer. Exfoliation night only. NEXT Today Progress Shelf You",
+      "completed": true,
+      "product": "Glycolic 7% toner",
+      "url": "http://localhost:8297/today?routine=PM"
+    }
+  },
+  "verdict": "pass",
+  "viewport": {
+    "height": 932,
+    "width": 430,
+    "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+  }
+}

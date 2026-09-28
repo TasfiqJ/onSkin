@@ -86,3 +86,7 @@ The first release should remain manual until the second authorization.
 ## V-01 / V-02 — Apple/vendor outcomes
 
 Apple and vendors control their own approval, review, account and limit decisions. I can prepare, submit through an authorized session, monitor, respond and fix issues, but I cannot fabricate or guarantee their outcome.
+
+## H-08 — Genuine beta users and responses
+
+Recruit 3-5 internal/friendly testers first, then 15-30 total target users before the first limited public-release decision. Codex prepares recruitment, TestFlight instructions, surveys, triage and fixes. Actual people must supply genuine use and feedback.

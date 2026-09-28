@@ -1,0 +1,64 @@
+{
+  "bodyText": "Your plan for oily, sensitive skin is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders and a forgiving streak ANNUAL · BEST VALUE Store pricing Checking price Monthly Checking price Subscribe to Pro The App Store confirms the price and renewal terms before purchase · cancel anytime Continue free Terms · Privacy · Restore Your annual plan starts after App Store confirmation and auto-renews unless cancelled at least 24 hours before the renewal date. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "controls": [
+    {
+      "disabled": true,
+      "height": 54,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 469
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue free",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 585
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "width": 48,
+      "x": 96.89,
+      "y": 641
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "width": 48.03,
+      "x": 170.25,
+      "y": 641
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "width": 49.47,
+      "x": 243.64,
+      "y": 641
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8291/onboarding/paywall",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

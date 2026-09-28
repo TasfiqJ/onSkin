@@ -87,7 +87,7 @@ describe('daysUntil', () => {
 
 describe('contextual reverse-trial eligibility', () => {
   it('offers the no-card value path only before any prior entitlement', () => {
-    expect(canStartContextualReverseTrial(deriveState(null, NOW))).toBe(true);
+    expect(canStartContextualReverseTrial(deriveState(null, NOW))).toBe(false);
     expect(
       canStartContextualReverseTrial(
         deriveState(

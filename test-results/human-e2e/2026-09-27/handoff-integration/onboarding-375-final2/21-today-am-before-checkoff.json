@@ -1,0 +1,64 @@
+{
+  "bodyText": "SUNDAY, SEPTEMBER 27 · 7:33 PM Good morning. 1 step left in your morning routine. Morning routine 0 of 1 Mineral SPF 50 Last step. Reapply later. NEXT ⏷ ⏷ Today ⏷ ⏷ Progress ⏷ ⏷ Shelf ⏷ ⏷ You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "width": 285,
+      "x": 45,
+      "y": 191
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷Today",
+      "role": "tab",
+      "width": 93.75,
+      "x": 0,
+      "y": 604
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷Progress",
+      "role": "tab",
+      "width": 93.75,
+      "x": 93.75,
+      "y": 604
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷Shelf",
+      "role": "tab",
+      "width": 93.75,
+      "x": 187.5,
+      "y": 604
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "⏷⏷You",
+      "role": "tab",
+      "width": 93.75,
+      "x": 281.25,
+      "y": 604
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8290/today?routine=AM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

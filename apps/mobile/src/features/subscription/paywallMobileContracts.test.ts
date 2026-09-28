@@ -487,7 +487,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('startReverseTrial.mutate');
     expect(proGate).toContain('PAYWALL_COPY.offer.exploreTitle');
     expect(proGate).toContain('PAYWALL_COPY.offer.exploreBody');
-    expect(entitlement).toContain('s.priorPeriodType === null');
+    expect(entitlement).toMatch(/canStartContextualReverseTrial[\s\S]*?return false;/);
     expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
   });
 
@@ -750,7 +750,6 @@ describe('paywall mobile contracts', () => {
       expect(source).toContain('paidAction.isHeld');
     }
 
-    const onboarding = readAppRoute('onboarding/paywall.tsx');
     const reoffer = readAppRoute('paywall/reoffer.tsx');
     expect(reoffer).toContain("kind: 'decline_expired_reverse_trial'");
 

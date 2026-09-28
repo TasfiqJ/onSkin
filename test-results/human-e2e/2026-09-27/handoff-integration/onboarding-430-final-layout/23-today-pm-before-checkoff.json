@@ -1,0 +1,84 @@
+{
+  "bodyText": "SUNDAY, SEPTEMBER 27 · 7:43 PM 1 day Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfoliate Recover Retinoid Recover Retinoid Recover Recover Evening routine 0 of 1 Glycolic 7% toner A thin layer. Exfoliation night only. NEXT Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "View your streak and adherence",
+      "role": "button",
+      "width": 85.41,
+      "x": 320.59,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 141,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 172
+    },
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": true,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "width": 342,
+      "x": 44,
+      "y": 381
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "width": 107.5,
+      "x": 0,
+      "y": 869
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "width": 107.5,
+      "x": 107.5,
+      "y": 869
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "width": 107.5,
+      "x": 215,
+      "y": 869
+    },
+    {
+      "disabled": false,
+      "height": 63,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "width": 107.5,
+      "x": 322.5,
+      "y": 869
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8297/today?routine=PM",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

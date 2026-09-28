@@ -1,0 +1,84 @@
+{
+  "bodyText": "SETUP 1 OF 5 What brings you here? Choose up to two. We'll use these to keep your plan focused. Clear skin Breakouts & congestion ✓ Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity ✓ 2 selected · up to 2 Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 69,
+      "hitOk": true,
+      "label": "Clear skin. Breakouts & congestion",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 173
+    },
+    {
+      "disabled": false,
+      "height": 69,
+      "hitOk": true,
+      "label": "Even tone. Dark spots & texture",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 252
+    },
+    {
+      "disabled": false,
+      "height": 69,
+      "hitOk": true,
+      "label": "Hydration. Tightness & dullness",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 331
+    },
+    {
+      "disabled": false,
+      "height": 69,
+      "hitOk": true,
+      "label": "Fine lines. Firmness & elasticity",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 410
+    },
+    {
+      "disabled": false,
+      "height": 69,
+      "hitOk": true,
+      "label": "Sensitivity. Stinging & flushing",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 489
+    },
+    {
+      "disabled": false,
+      "height": 69,
+      "hitOk": true,
+      "label": "Barrier repair. Redness & reactivity",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 568
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 772
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8291/onboarding/goals",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

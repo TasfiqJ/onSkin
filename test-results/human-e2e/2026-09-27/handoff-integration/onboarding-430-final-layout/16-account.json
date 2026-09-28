@@ -1,0 +1,24 @@
+{
+  "bodyText": "Protect your plan, keep it private. Create an account for sign-in, subscription, and privacy controls. Routine checks stay local-first on this device for this beta, and photos still stay on this device. Account sign-in is not available right now. You can continue without an account. Not now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 868
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8297/onboarding/account",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

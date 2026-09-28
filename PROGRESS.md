@@ -4,6 +4,10 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-09-27 — Current-state handoff integration
+
+Ported the UI and lean-V1 contract onto the authoritative dirty optimization state, preserving newer owner/privacy/performance work. See [integration report](docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md) for exact additions, superseded payload, tests, E2E and remaining native/external/clean-commit gates. No push or merge by this task.
+
 ## 2026-07-11
 
 - Closed Shelf freshness and replacement provenance as one normalized lifecycle.

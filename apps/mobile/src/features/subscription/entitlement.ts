@@ -202,9 +202,10 @@ export function isEntitlementEvidenceUncertain(
  * record; lapsed reverse trials and paid expiries should see the paid re-offer.
  */
 export function canStartContextualReverseTrial(
-  s: Pick<SubscriptionState, 'evidenceStatus' | 'expired' | 'isPro' | 'priorPeriodType'>,
+  _s: Pick<SubscriptionState, 'evidenceStatus' | 'expired' | 'isPro' | 'priorPeriodType'>,
 ): boolean {
-  return s.evidenceStatus === 'absent' && !s.isPro && !s.expired && s.priorPeriodType === null;
+  // Lean V1 never offers a custom grant, even with a valid free entitlement.
+  return false;
 }
 
 /**

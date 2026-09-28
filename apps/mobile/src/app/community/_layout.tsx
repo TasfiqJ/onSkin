@@ -9,6 +9,7 @@ function DeferredScreen() {
       fallbackRoute={APP_HOME_ROUTE}
       fallbackLabel="Back to Today"
       trackView={false}
+      replaceFallback
     />
   );
 }

@@ -295,12 +295,16 @@ const snapshotExpression = `(() => {
   const items = tabSpecs.map((spec) => {
     const node = tabNodes.find((candidate) => normalize(candidate.textContent).includes(spec.label)) ?? null;
     const rect = rectOf(node);
+    const labelNode = node ? Array.from(node.querySelectorAll('*')).find(n => n.children.length === 0 && normalize(n.textContent) === spec.label) : null;
     const center = rect ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : null;
     const hit = center ? document.elementFromPoint(center.x, center.y) : null;
     return {
       ariaLabel: node?.getAttribute('aria-label') ?? null,
       centerHitContains: Boolean(node && hit && (node === hit || node.contains(hit))),
       label: spec.label,
+      iconRect: rectOf(node?.querySelector('svg')),
+      labelRect: rectOf(labelNode),
+      labelLineHeight: labelNode ? parseFloat(getComputedStyle(labelNode).lineHeight) : 0,
       rect,
       route: spec.route,
       selected: node?.getAttribute('aria-selected') === 'true',
@@ -349,6 +353,18 @@ function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
     );
     assert(tab.rect.height >= 44, `${viewportName}: ${tab.label} hit target is under 44px tall`);
     assert(tab.rect.width >= 44, `${viewportName}: ${tab.label} hit target is under 44px wide`);
+    assert(
+      tab.labelRect && tab.labelRect.height >= tab.labelLineHeight - 1,
+      `${viewportName}: ${tab.label} label is vertically clipped`,
+    );
+    assert(
+      snapshot.tabList.rect.left >= 16 && snapshot.tabList.rect.right <= snapshot.innerWidth - 16,
+      `${viewportName}: dock must float inside the screen edges`,
+    );
+    assert(
+      tab.iconRect?.width >= 20 && tab.iconRect?.height >= 20,
+      `${viewportName}: ${tab.label} icon is missing or too small`,
+    );
     assert(tab.centerHitContains, `${viewportName}: ${tab.label} center hit-test misses the tab`);
     assert(
       tab.selected === (tab.label === expectedSelectedLabel),
@@ -407,7 +423,20 @@ async function run() {
       });
       const viewportResult = { ...viewport, steps: [] };
       for (const tab of tabs) {
-        await client.send('Page.navigate', { url: `${baseUrl}/${tab.route}` });
+        if (tab.route === 'today') {
+          await client.send('Page.navigate', { url: `${baseUrl}/${tab.route}` });
+        } else {
+          const current = await evaluate(client, snapshotExpression);
+          const target = current.tabs.find((item) => item.label === tab.label).rect;
+          const point = {
+            x: target.x + target.width / 2,
+            y: target.y + target.height / 2,
+            button: 'left',
+            clickCount: 1,
+          };
+          await client.send('Input.dispatchMouseEvent', { ...point, type: 'mousePressed' });
+          await client.send('Input.dispatchMouseEvent', { ...point, type: 'mouseReleased' });
+        }
         await waitForLoad(client);
         await waitForExpression(
           client,
@@ -426,6 +455,98 @@ async function run() {
         });
       }
       summary.viewports.push(viewportResult);
+    }
+
+    if (process.env.TABBAR_E2E_MOTION === '1') {
+      const reduced = process.env.EXPO_PUBLIC_E2E_REDUCE_MOTION === 'enabled';
+      const motionState = `(() => {
+        const dock = document.querySelector('[data-testid="floating-dock"]');
+        const tab = Array.from(document.querySelectorAll('[role="tab"]')).find(n => n.textContent.includes('Shelf'));
+        return { dockTransform: getComputedStyle(dock).transform, tabTransform: getComputedStyle(tab).transform, tabBackground: getComputedStyle(tab).backgroundColor, scrollY: document.getElementById('you-screen').scrollTop };
+      })()`;
+      await client.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 100, y: 200 });
+      await delay(400);
+      const before = await evaluate(client, motionState);
+      const current = await evaluate(client, snapshotExpression);
+      const target = current.tabs.find((t) => t.label === 'Shelf').rect;
+      await client.send('Input.dispatchMouseEvent', {
+        type: 'mouseMoved',
+        x: target.x + target.width / 2,
+        y: target.y + target.height / 2,
+      });
+      await delay(400);
+      const hovered = await evaluate(client, motionState);
+      assert(hovered.tabBackground !== before.tabBackground, 'Hover must provide visible feedback');
+      assert(
+        reduced
+          ? hovered.tabTransform === before.tabTransform
+          : hovered.tabTransform !== before.tabTransform,
+        'Hover motion must honor Reduce Motion',
+      );
+      await screenshot(client, 'hover-shelf');
+      await client.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 150, y: 250 });
+      await delay(400);
+      await client.send('Input.dispatchMouseEvent', {
+        type: 'mouseWheel',
+        x: 150,
+        y: 250,
+        deltaX: 0,
+        deltaY: 480,
+      });
+      await delay(120);
+      const scrolling = await evaluate(client, motionState);
+      assert(scrolling.scrollY > before.scrollY, 'The real settings surface must scroll');
+      assert(
+        reduced
+          ? scrolling.dockTransform === before.dockTransform
+          : scrolling.dockTransform !== before.dockTransform,
+        'Scroll motion must honor Reduce Motion',
+      );
+      await screenshot(client, 'scroll-feedback');
+      await delay(800);
+      const settled = await evaluate(client, motionState);
+      assert(
+        settled.dockTransform === before.dockTransform,
+        'Dock must settle after scrolling stops',
+      );
+      summary.motion = { reduced, before, hovered, scrolling, settled };
+    }
+
+    summary.deferredRoutes = [];
+    for (const route of ['ask', 'community', 'recommendations']) {
+      await client.send('Page.navigate', { url: `${baseUrl}/${route}` });
+      await waitForExpression(client, `document.body.innerText.includes('Back to Today')`);
+      await screenshot(client, `deferred-${route}`);
+      const target = await evaluate(
+        client,
+        `(() => {
+        const node = Array.from(document.querySelectorAll('[role="button"],button')).find(n => n.textContent.includes('Back to Today'));
+        const r = node.getBoundingClientRect(); return { x:r.x+r.width/2, y:r.y+r.height/2 };
+      })()`,
+      );
+      await client.send('Input.dispatchMouseEvent', {
+        ...target,
+        type: 'mousePressed',
+        button: 'left',
+        clickCount: 1,
+      });
+      await client.send('Input.dispatchMouseEvent', {
+        ...target,
+        type: 'mouseReleased',
+        button: 'left',
+        clickCount: 1,
+      });
+      await waitForExpression(client, `location.pathname === '/today'`);
+      summary.deferredRoutes.push({ route, returnsToToday: true });
+    }
+
+    for (const route of ['scan', 'search']) {
+      await client.send('Page.navigate', { url: `${baseUrl}/shelf/${route}` });
+      await waitForExpression(
+        client,
+        `location.pathname === '/shelf/manual' && document.body.innerText.includes('Add by hand')`,
+      );
+      await screenshot(client, `manual-fallback-${route}`);
     }
 
     const problemLogs = collectProblemLogs(client.events);

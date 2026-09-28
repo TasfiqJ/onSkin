@@ -1,3 +1,4 @@
+import { reportDockScroll } from '@/components/navigation/DockMotion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
 import {
@@ -1717,6 +1718,7 @@ const YouMutationSections = memo(function YouMutationSections() {
             showsVerticalScrollIndicator={false}
             contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}
             onScroll={(event) => {
+              reportDockScroll(event);
               scrollY.current = event.nativeEvent.contentOffset.y;
             }}
             scrollEventThrottle={16}

@@ -1,0 +1,178 @@
+{
+  "horizontalOverflow": 0,
+  "innerHeight": 667,
+  "innerWidth": 375,
+  "location": "http://localhost:8208/today",
+  "selectedCount": 1,
+  "tabList": {
+    "rect": {
+      "bottom": 646,
+      "height": 62,
+      "left": 25,
+      "right": 350,
+      "top": 584,
+      "width": 325,
+      "x": 25,
+      "y": 584
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Today",
+      "iconRect": {
+        "bottom": 617.4296264648438,
+        "height": 23.0208740234375,
+        "left": 54.11456298828125,
+        "right": 77.13543701171875,
+        "top": 594.4087524414062,
+        "width": 23.0208740234375,
+        "x": 54.11456298828125,
+        "y": 594.4087524414062
+      },
+      "labelRect": {
+        "bottom": 639.9500732421875,
+        "height": 16.0145263671875,
+        "left": 50.705223083496094,
+        "right": 80.54478454589844,
+        "top": 623.935546875,
+        "width": 29.839561462402344,
+        "x": 50.705223083496094,
+        "y": 623.935546875
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 645.9555053710938,
+        "height": 62.0562744140625,
+        "left": 24.963123321533203,
+        "right": 106.28688430786133,
+        "top": 583.8992309570312,
+        "width": 81.32376098632812,
+        "x": 24.963123321533203,
+        "y": 583.8992309570312
+      },
+      "route": "today",
+      "selected": true,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Progress",
+      "iconRect": {
+        "bottom": 617.5,
+        "height": 23,
+        "left": 135.375,
+        "right": 158.375,
+        "top": 594.5,
+        "width": 23,
+        "x": 135.375,
+        "y": 594.5
+      },
+      "labelRect": {
+        "bottom": 640,
+        "height": 16,
+        "left": 125.296875,
+        "right": 168.453125,
+        "top": 624,
+        "width": 43.15625,
+        "x": 125.296875,
+        "y": 624
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 646,
+        "height": 62,
+        "left": 106.25,
+        "right": 187.5,
+        "top": 584,
+        "width": 81.25,
+        "x": 106.25,
+        "y": 584
+      },
+      "route": "progress",
+      "selected": false,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Shelf",
+      "iconRect": {
+        "bottom": 617.5,
+        "height": 23,
+        "left": 216.625,
+        "right": 239.625,
+        "top": 594.5,
+        "width": 23,
+        "x": 216.625,
+        "y": 594.5
+      },
+      "labelRect": {
+        "bottom": 640,
+        "height": 16,
+        "left": 215.640625,
+        "right": 240.609375,
+        "top": 624,
+        "width": 24.96875,
+        "x": 215.640625,
+        "y": 624
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 646,
+        "height": 62,
+        "left": 187.5,
+        "right": 268.75,
+        "top": 584,
+        "width": 81.25,
+        "x": 187.5,
+        "y": 584
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "You",
+      "iconRect": {
+        "bottom": 617.5,
+        "height": 23,
+        "left": 297.875,
+        "right": 320.875,
+        "top": 594.5,
+        "width": 23,
+        "x": 297.875,
+        "y": 594.5
+      },
+      "labelRect": {
+        "bottom": 640,
+        "height": 16,
+        "left": 300.203125,
+        "right": 318.546875,
+        "top": 624,
+        "width": 18.34375,
+        "x": 300.203125,
+        "y": 624
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 646,
+        "height": 62,
+        "left": 268.75,
+        "right": 350,
+        "top": 584,
+        "width": 81.25,
+        "x": 268.75,
+        "y": 584
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

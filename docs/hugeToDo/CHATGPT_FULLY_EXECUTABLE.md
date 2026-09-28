@@ -7,7 +7,7 @@ This is the complete repository-owned V1 list. The founder should not be asked t
 3. Generate a disposition for all 202 legacy task IDs so no requirement vanishes silently.
 4. Apply and verify the full UI/UX overhaul (Welcome, onboarding, native tabs, Today, Shelf, shared primitives, settings layout polish).
 5. Hard-disable/unlink all deferred Phase 7/8/product-growth surfaces.
-6. Make ordinary V1 onboarding/session flow anonymous/local-first and remove account-upgrade prompts.
+6. Preserve guest-first onboarding, Apple/email account portability and owner isolation; defer Google in ordinary V1 entry.
 7. Make Shelf manual-entry + local label OCR first; keep catalog/search/barcode out of ordinary V1 navigation.
 8. Preserve fail-closed reviewed conflict/routine/cycle admission and prepare exact reviewer packets/hashes.
 9. Finish routine/Today/cycle durability, offline recovery, owner isolation and E2E coverage.

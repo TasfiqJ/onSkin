@@ -307,7 +307,7 @@ export default function PaywallScreen() {
           variant="ghost"
           className="mt-3"
           disabled={paidAction.isHeld}
-          onPress={() => router.replace('/routine/plan')}
+          onPress={() => router.replace('/today')}
         />
 
         <PaywallFeedback

@@ -33,7 +33,7 @@ export const features = [
     'F-03',
     3,
     'shelf_intake',
-    'Shelf intake through manual entry, search, barcode, and real OCR',
+    'Manual Shelf intake and local ingredient parsing, with optional local OCR',
     'needs-device-verification',
   ],
   ['F-04', 4, 'catalog', 'Production product catalog import and quality', 'stubbed'],

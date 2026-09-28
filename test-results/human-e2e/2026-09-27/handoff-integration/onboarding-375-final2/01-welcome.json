@@ -1,0 +1,34 @@
+{
+  "bodyText": "A simpler routine, built around your shelf. Use the products you already own, follow your AM/PM plan, and keep progress photos private on this device. Begin I already have an account No ads · no data sales · photos stay on device",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Begin",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 495
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "I already have an account",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 563
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8290/",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

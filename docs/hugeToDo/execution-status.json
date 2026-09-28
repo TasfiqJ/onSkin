@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
-  "expectedWorkItemCount": 24,
+  "expectedWorkItemCount": 25,
   "allowedStatuses": ["not_started", "in_progress", "blocked", "external_pending", "complete"],
   "items": [
     {
@@ -54,6 +54,13 @@
       "evidenceRefs": []
     },
     {
+      "id": "H-08",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Recruit genuine beta users: 3-5 internal/friendly testers first and 15-30 total target users before the first limited public-release decision.",
+      "evidenceRefs": []
+    },
+    {
       "id": "V-01",
       "status": "external_pending",
       "blockedBy": [],
@@ -69,38 +76,38 @@
     },
     {
       "id": "C-01",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": [],
-      "nextAction": "Complete and capture acceptance evidence: Cut the repository from the superseded all-features launch contract to this lean V1 contract; rebuild validators, feature/task/status artifacts, active docs and legacy-task disposition.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-02",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["C-01"],
-      "nextAction": "Complete and capture acceptance evidence: Apply the full iOS UI/UX overhaul for Welcome, onboarding, native system tabs, Today, Shelf and shared design primitives.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-03",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["C-01"],
-      "nextAction": "Complete and capture acceptance evidence: Hard-close and unlink deferred product/growth surfaces.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-04",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["C-01"],
-      "nextAction": "Complete and capture acceptance evidence: Preserve guest-first onboarding and existing Apple/email account portability; defer Google sign-in in ordinary V1 navigation.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-05",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["C-01"],
-      "nextAction": "Complete and capture acceptance evidence: Make Shelf V1 manual-entry and local ingredient parsing first (optional local-label OCR); remove catalog/search/barcode as launch dependencies and ordinary entry points.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-06",
@@ -132,10 +139,10 @@
     },
     {
       "id": "C-10",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["C-01"],
-      "nextAction": "Complete and capture acceptance evidence: Finish subscription source path for normal monthly/annual StoreKit + RevenueCat only.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-11",
@@ -160,14 +167,14 @@
     },
     {
       "id": "C-14",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["C-01"],
-      "nextAction": "Complete and capture acceptance evidence: Finish release QA/security/performance/TestFlight/App Store packet source work for lean V1.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     },
     {
       "id": "C-15",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": [
         "C-01",
         "C-02",
@@ -184,8 +191,8 @@
         "C-13",
         "C-14"
       ],
-      "nextAction": "Complete and capture acceptance evidence: Run final source verification after all C changes, incorporate H/V evidence as it arrives, fix regressions, and build the immutable submission/release packet.",
-      "evidenceRefs": []
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
     }
   ]
 }

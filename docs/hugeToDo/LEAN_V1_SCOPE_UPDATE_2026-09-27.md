@@ -18,7 +18,7 @@ The release requires these indexed features only:
 
 1. `F-01` — final brand/public identity.
 2. `F-02` — onboarding, age gate, health-data consent, privacy/data-rights foundation.
-3. `F-03` — Shelf intake through manual entry and local label OCR. Barcode/search/catalog-backed intake is deferred.
+3. `F-03` — Shelf intake through manual entry and local ingredient parsing, with optional local label OCR. Barcode/search/catalog-backed intake is deferred.
 4. `F-05` — reviewed conflict guidance for the exact admitted corpus.
 5. `F-06` — routine builder using products the user already owns.
 6. `F-07` — Today check-off and adherence.

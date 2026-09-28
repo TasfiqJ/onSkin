@@ -1,0 +1,54 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 3 OF 3 PRODUCTS Good. That is enough for a stronger first routine, and you can still add more later. PRODUCT NAME 3 ON YOUR SHELF Retinol 0.3% serum × Glycolic 7% toner × Mineral SPF 50 × Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "width": 285,
+      "x": 45,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "width": 48,
+      "x": 286,
+      "y": 446
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Glycolic 7% toner",
+      "role": "button",
+      "width": 48,
+      "x": 286,
+      "y": 528
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "width": 327,
+      "x": 24,
+      "y": 595
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8290/onboarding/products?addedProductId=945907e6-20d7-4385-83c3-6d922789027e",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

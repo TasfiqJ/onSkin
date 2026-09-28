@@ -1,0 +1,178 @@
+{
+  "horizontalOverflow": 0,
+  "innerHeight": 844,
+  "innerWidth": 390,
+  "location": "http://localhost:8209/progress",
+  "selectedCount": 1,
+  "tabList": {
+    "rect": {
+      "bottom": 823,
+      "height": 62,
+      "left": 25,
+      "right": 365,
+      "top": 761,
+      "width": 340,
+      "x": 25,
+      "y": 761
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Today",
+      "iconRect": {
+        "bottom": 794.5,
+        "height": 23,
+        "left": 56,
+        "right": 79,
+        "top": 771.5,
+        "width": 23,
+        "x": 56,
+        "y": 771.5
+      },
+      "labelRect": {
+        "bottom": 817,
+        "height": 16,
+        "left": 52.59375,
+        "right": 82.40625,
+        "top": 801,
+        "width": 29.8125,
+        "x": 52.59375,
+        "y": 801
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 823,
+        "height": 62,
+        "left": 25,
+        "right": 110,
+        "top": 761,
+        "width": 85,
+        "x": 25,
+        "y": 761
+      },
+      "route": "today",
+      "selected": false,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Progress",
+      "iconRect": {
+        "bottom": 794.5,
+        "height": 23,
+        "left": 141,
+        "right": 164,
+        "top": 771.5,
+        "width": 23,
+        "x": 141,
+        "y": 771.5
+      },
+      "labelRect": {
+        "bottom": 817,
+        "height": 16,
+        "left": 130.921875,
+        "right": 174.078125,
+        "top": 801,
+        "width": 43.15625,
+        "x": 130.921875,
+        "y": 801
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 823,
+        "height": 62,
+        "left": 110,
+        "right": 195,
+        "top": 761,
+        "width": 85,
+        "x": 110,
+        "y": 761
+      },
+      "route": "progress",
+      "selected": true,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Shelf",
+      "iconRect": {
+        "bottom": 794.5,
+        "height": 23,
+        "left": 226,
+        "right": 249,
+        "top": 771.5,
+        "width": 23,
+        "x": 226,
+        "y": 771.5
+      },
+      "labelRect": {
+        "bottom": 817,
+        "height": 16,
+        "left": 225.015625,
+        "right": 249.984375,
+        "top": 801,
+        "width": 24.96875,
+        "x": 225.015625,
+        "y": 801
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 823,
+        "height": 62,
+        "left": 195,
+        "right": 280,
+        "top": 761,
+        "width": 85,
+        "x": 195,
+        "y": 761
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "You",
+      "iconRect": {
+        "bottom": 794.5,
+        "height": 23,
+        "left": 311,
+        "right": 334,
+        "top": 771.5,
+        "width": 23,
+        "x": 311,
+        "y": 771.5
+      },
+      "labelRect": {
+        "bottom": 817,
+        "height": 16,
+        "left": 313.328125,
+        "right": 331.671875,
+        "top": 801,
+        "width": 18.34375,
+        "x": 313.328125,
+        "y": 801
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 823,
+        "height": 62,
+        "left": 280,
+        "right": 365,
+        "top": 761,
+        "width": 85,
+        "x": 280,
+        "y": 761
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 3 OF 3 PRODUCTS Good. That is enough for a stronger first routine, and you can still add more later. PRODUCT NAME CATEGORY · OPTIONAL Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm Add to shelf 3 ON YOUR SHELF Retinol 0.3% serum × Glycolic 7% toner × Mineral SPF 50 × Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "width": 340,
+      "x": 45,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cleanser",
+      "role": "button",
+      "width": 98.92,
+      "x": 45,
+      "y": 408
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Toner",
+      "role": "button",
+      "width": 75.45,
+      "x": 151.92,
+      "y": 408
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Serum",
+      "role": "button",
+      "width": 80.89,
+      "x": 235.38,
+      "y": 408
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Treatment",
+      "role": "button",
+      "width": 108.31,
+      "x": 45,
+      "y": 464
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Moisturiser",
+      "role": "button",
+      "width": 116.33,
+      "x": 161.31,
+      "y": 464
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "SPF",
+      "role": "button",
+      "width": 61.06,
+      "x": 285.64,
+      "y": 464
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Oil / balm",
+      "role": "button",
+      "width": 104.95,
+      "x": 45,
+      "y": 520
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add to shelf",
+      "role": "button",
+      "width": 340,
+      "x": 45,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "width": 48,
+      "x": 341,
+      "y": 718
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Glycolic 7% toner",
+      "role": "button",
+      "width": 48,
+      "x": 341,
+      "y": 800
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 860
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8297/onboarding/products?addedProductId=b4f9f4f8-faf0-4bc2-a087-907507381cd7",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

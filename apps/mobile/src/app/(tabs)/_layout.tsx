@@ -1,6 +1,11 @@
-import { router } from 'expo-router';
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { router, Tabs, usePathname } from 'expo-router';
 import { useEffect } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { DockButton, FloatingDock } from '@/components/navigation/DockMotion';
+import { useCurrentRoutineType } from '@/features/today/useToday';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import { FONT_FAMILY_TOKENS as fontFamilies } from '../../../font-assets';
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRouteResult } from '@/features/subscription/lifecycle';
 import { useAuth } from '@/lib/auth/AuthProvider';
@@ -35,47 +40,82 @@ function useExpiryReoffer() {
 
 export default function TabsLayout() {
   useExpiryReoffer();
+  const pathname = usePathname();
+  const boundary = useLocalDateBoundary();
+  const routineType = useCurrentRoutineType(boundary);
+  const dark = pathname.endsWith('/today') && routineType === 'PM';
+  const insets = useSafeAreaInsets();
+  const backgroundColor = dark ? colors.night : colors.paper;
+  const inactiveColor = dark ? colors.mutedLight : colors.mutedStrong;
 
+  // One floating dock on every supported platform. Reserve space for controls
+  // above it so the last row stays reachable without scrolling behind the bar.
   return (
     <>
       <BehaviouralTriggers />
-      <NativeTabs
-        disableTransparentOnScrollEdge
-        minimizeBehavior="onScrollDown"
-        tintColor={colors.clay}
+      <Tabs
+        tabBar={(props) => <FloatingDock {...props} />}
+        safeAreaInsets={{ bottom: 0 }}
+        screenOptions={{
+          headerShown: false,
+          tabBarButton: (props) => <DockButton {...props} dark={dark} />,
+          sceneStyle: { backgroundColor, paddingBottom: 96 + insets.bottom },
+          tabBarActiveTintColor: dark ? colors.cream : colors.ink,
+          tabBarInactiveTintColor: inactiveColor,
+          tabBarStyle: {
+            backgroundColor: dark ? colors.nightSurface : colors.paper,
+            borderRadius: 32,
+            borderColor: dark ? colors.hairlineDark : colors.hairlineStrong,
+            borderWidth: 1,
+            borderTopWidth: 1,
+            height: 72,
+            paddingTop: 4,
+            paddingBottom: 4,
+            paddingHorizontal: 8,
+            boxShadow: dark ? '0 6px 24px rgba(0,0,0,0.3)' : '0 6px 24px rgba(32,27,21,0.12)',
+          },
+          tabBarItemStyle: { minHeight: 48 },
+          tabBarLabelPosition: 'below-icon',
+          tabBarIconStyle: { height: 32 },
+          tabBarLabelStyle: {
+            fontSize: 11,
+            lineHeight: 16,
+            fontFamily: fontFamilies['sans-semibold'],
+            marginTop: 2,
+          },
+        }}
       >
-        <NativeTabs.Trigger name="today">
-          <NativeTabs.Trigger.Icon
-            sf={{ default: 'house', selected: 'house.fill' }}
-            md={{ default: 'home', selected: 'home' }}
-          />
-          <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
-        </NativeTabs.Trigger>
-
-        <NativeTabs.Trigger name="progress">
-          <NativeTabs.Trigger.Icon
-            sf={{ default: 'chart.line.uptrend.xyaxis', selected: 'chart.line.uptrend.xyaxis' }}
-            md={{ default: 'trending_up', selected: 'trending_up' }}
-          />
-          <NativeTabs.Trigger.Label>Progress</NativeTabs.Trigger.Label>
-        </NativeTabs.Trigger>
-
-        <NativeTabs.Trigger name="shelf">
-          <NativeTabs.Trigger.Icon
-            sf={{ default: 'square.grid.2x2', selected: 'square.grid.2x2.fill' }}
-            md={{ default: 'inventory_2', selected: 'inventory_2' }}
-          />
-          <NativeTabs.Trigger.Label>Shelf</NativeTabs.Trigger.Label>
-        </NativeTabs.Trigger>
-
-        <NativeTabs.Trigger name="you">
-          <NativeTabs.Trigger.Icon
-            sf={{ default: 'person.crop.circle', selected: 'person.crop.circle.fill' }}
-            md={{ default: 'person', selected: 'person' }}
-          />
-          <NativeTabs.Trigger.Label>You</NativeTabs.Trigger.Label>
-        </NativeTabs.Trigger>
-      </NativeTabs>
+        <Tabs.Screen
+          name="today"
+          options={{
+            title: 'Today',
+            tabBarIcon: ({ focused }) => <TabBarIcon name="today" focused={focused} dark={dark} />,
+          }}
+        />
+        <Tabs.Screen
+          name="progress"
+          options={{
+            title: 'Progress',
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon name="progress" focused={focused} dark={dark} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="shelf"
+          options={{
+            title: 'Shelf',
+            tabBarIcon: ({ focused }) => <TabBarIcon name="shelf" focused={focused} dark={dark} />,
+          }}
+        />
+        <Tabs.Screen
+          name="you"
+          options={{
+            title: 'You',
+            tabBarIcon: ({ focused }) => <TabBarIcon name="you" focused={focused} dark={dark} />,
+          }}
+        />
+      </Tabs>
     </>
   );
 }

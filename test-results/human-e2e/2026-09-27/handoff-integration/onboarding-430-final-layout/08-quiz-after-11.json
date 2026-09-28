@@ -1,0 +1,74 @@
+{
+  "bodyText": "SKIN PROFILE 11 OF 12 SENSITIVITIES Any known sensitivities or ingredients you try to avoid? Select all that apply. Fragrance Essential oils Drying alcohols None that I know of Back Next",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Fragrance",
+      "role": "button",
+      "width": 107.16,
+      "x": 24,
+      "y": 217
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Essential oils",
+      "role": "button",
+      "width": 127.69,
+      "x": 139.16,
+      "y": 217
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Drying alcohols",
+      "role": "button",
+      "width": 145.89,
+      "x": 24,
+      "y": 273
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "None that I know of",
+      "role": "button",
+      "width": 175.13,
+      "x": 177.89,
+      "y": 273
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 800
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Next",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 860
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8297/onboarding/quiz",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

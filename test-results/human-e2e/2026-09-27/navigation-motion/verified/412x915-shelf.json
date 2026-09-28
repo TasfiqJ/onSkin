@@ -1,0 +1,178 @@
+{
+  "horizontalOverflow": 0,
+  "innerHeight": 915,
+  "innerWidth": 412,
+  "location": "http://localhost:8208/shelf",
+  "selectedCount": 1,
+  "tabList": {
+    "rect": {
+      "bottom": 894,
+      "height": 62,
+      "left": 25,
+      "right": 387,
+      "top": 832,
+      "width": 362,
+      "x": 25,
+      "y": 832
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Today",
+      "iconRect": {
+        "bottom": 865.496826171875,
+        "height": 23.00091552734375,
+        "left": 58.74953079223633,
+        "right": 81.75047302246094,
+        "top": 842.4959106445312,
+        "width": 23.00094223022461,
+        "x": 58.74953079223633,
+        "y": 842.4959106445312
+      },
+      "labelRect": {
+        "bottom": 887.9977416992188,
+        "height": 16.00067138671875,
+        "left": 55.3431396484375,
+        "right": 85.1568603515625,
+        "top": 871.9970703125,
+        "width": 29.813720703125,
+        "x": 55.3431396484375,
+        "y": 871.9970703125
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 893.9979858398438,
+        "height": 62.00250244140625,
+        "left": 24.998149871826172,
+        "right": 115.5018424987793,
+        "top": 831.9954833984375,
+        "width": 90.50369262695312,
+        "x": 24.998149871826172,
+        "y": 831.9954833984375
+      },
+      "route": "today",
+      "selected": false,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Progress",
+      "iconRect": {
+        "bottom": 863.7565307617188,
+        "height": 23.5174560546875,
+        "left": 148.9912872314453,
+        "right": 172.5087127685547,
+        "top": 840.2390747070312,
+        "width": 23.517425537109375,
+        "x": 148.9912872314453,
+        "y": 840.2390747070312
+      },
+      "labelRect": {
+        "bottom": 886.7626953125,
+        "height": 16.3599853515625,
+        "left": 138.68643188476562,
+        "right": 182.8135528564453,
+        "top": 870.4027099609375,
+        "width": 44.12712097167969,
+        "x": 138.68643188476562,
+        "y": 870.4027099609375
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 892.8976440429688,
+        "height": 63.394775390625,
+        "left": 114.48202514648438,
+        "right": 207.01797485351562,
+        "top": 829.5028686523438,
+        "width": 92.53594970703125,
+        "x": 114.48202514648438,
+        "y": 829.5028686523438
+      },
+      "route": "progress",
+      "selected": false,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Shelf",
+      "iconRect": {
+        "bottom": 865.4710693359375,
+        "height": 23.00860595703125,
+        "left": 239.74571228027344,
+        "right": 262.7543029785156,
+        "top": 842.4624633789062,
+        "width": 23.008590698242188,
+        "x": 239.74571228027344,
+        "y": 842.4624633789062
+      },
+      "labelRect": {
+        "bottom": 887.9794921875,
+        "height": 16.0059814453125,
+        "left": 238.76097106933594,
+        "right": 263.7390441894531,
+        "top": 871.9735107421875,
+        "width": 24.978073120117188,
+        "x": 238.76097106933594,
+        "y": 871.9735107421875
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 893.981689453125,
+        "height": 62.02313232421875,
+        "left": 205.9831085205078,
+        "right": 296.51690673828125,
+        "top": 831.9585571289062,
+        "width": 90.53379821777344,
+        "x": 205.9831085205078,
+        "y": 831.9585571289062
+      },
+      "route": "shelf",
+      "selected": true,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "You",
+      "iconRect": {
+        "bottom": 865.5,
+        "height": 23,
+        "left": 330.25,
+        "right": 353.25,
+        "top": 842.5,
+        "width": 23,
+        "x": 330.25,
+        "y": 842.5
+      },
+      "labelRect": {
+        "bottom": 888,
+        "height": 16,
+        "left": 332.578125,
+        "right": 350.921875,
+        "top": 872,
+        "width": 18.34375,
+        "x": 332.578125,
+        "y": 872
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 894,
+        "height": 62,
+        "left": 296.5,
+        "right": 387,
+        "top": 832,
+        "width": 90.5,
+        "x": 296.5,
+        "y": 832
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import {
 const planIds = parsePlanRows().map(({ id }) => id);
 assert.equal(
   planIds.length,
-  24,
+  25,
   'the plan-derived count must include Codex, human, reviewer, Apple, and vendor items',
 );
 assert(

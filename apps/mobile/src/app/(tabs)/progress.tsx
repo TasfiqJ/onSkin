@@ -1,3 +1,4 @@
+import { reportDockScroll } from '@/components/navigation/DockMotion';
 import { router } from 'expo-router';
 import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
@@ -730,6 +731,8 @@ function PhotoProgressContent({
     <Screen edges={['top']}>
       {count === 0 ? (
         <ScrollView
+          onScroll={reportDockScroll}
+          scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
           contentContainerClassName={compactEmptyFirstRun ? 'pb-28' : 'pb-8'}
         >
@@ -745,6 +748,8 @@ function PhotoProgressContent({
         <TimelineView compact={compactFirstRun} data={data} header={populatedHeader} />
       ) : (
         <ScrollView
+          onScroll={reportDockScroll}
+          scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
           contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}
         >

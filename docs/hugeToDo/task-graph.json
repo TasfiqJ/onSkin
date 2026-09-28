@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
-  "nodeCount": 24,
+  "nodeCount": 25,
   "nodes": [
     {
       "id": "H-01",
@@ -28,7 +28,7 @@
       "id": "H-04",
       "owner": "Founder",
       "prerequisites": [],
-      "nextAction": "Codex prepares the surrounding work and records the external outcome: Create/approve/pay the minimum production services and complete any identity/MFA/terms challenge: Expo/EAS, Supabase, RevenueCat, final domain/DNS/hosting.",
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Create/approve/pay the minimum production services and complete any identity/MFA/terms challenge: Expo/EAS, Supabase, RevenueCat, transactional email for retained email OTP, final domain/DNS/hosting.",
       "acceptance": "Authorized accounts exist with least-privilege access and approved budgets/renewals; vendor secrets stay outside chat/repo."
     },
     {
@@ -51,6 +51,13 @@
       "prerequisites": [],
       "nextAction": "Codex prepares the surrounding work and records the external outcome: After reviewing the immutable release packet, explicitly authorize App Review submission and, separately, public availability.",
       "acceptance": "Two dated authorizations exist; release remains manual until the second authorization."
+    },
+    {
+      "id": "H-08",
+      "owner": "Founder/testers",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Recruit genuine beta users: 3-5 internal/friendly testers first and 15-30 total target users before the first limited public-release decision.",
+      "acceptance": "Real feedback and triage outcomes exist; simulated sessions never substitute for user responses."
     },
     {
       "id": "V-01",

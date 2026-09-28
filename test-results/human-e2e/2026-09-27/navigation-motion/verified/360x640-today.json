@@ -1,0 +1,178 @@
+{
+  "horizontalOverflow": 0,
+  "innerHeight": 640,
+  "innerWidth": 360,
+  "location": "http://localhost:8208/today",
+  "selectedCount": 1,
+  "tabList": {
+    "rect": {
+      "bottom": 619,
+      "height": 62,
+      "left": 25,
+      "right": 335,
+      "top": 557,
+      "width": 310,
+      "x": 25,
+      "y": 557
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Today",
+      "iconRect": {
+        "bottom": 590.2040405273438,
+        "height": 23.08782958984375,
+        "left": 52.206077575683594,
+        "right": 75.29391479492188,
+        "top": 567.1162109375,
+        "width": 23.08783721923828,
+        "x": 52.206077575683594,
+        "y": 567.1162109375
+      },
+      "labelRect": {
+        "bottom": 612.7899780273438,
+        "height": 16.06109619140625,
+        "left": 48.78681945800781,
+        "right": 78.71318054199219,
+        "top": 596.7288818359375,
+        "width": 29.926361083984375,
+        "x": 48.78681945800781,
+        "y": 596.7288818359375
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 618.8128662109375,
+        "height": 62.23675537109375,
+        "left": 24.852012634277344,
+        "right": 102.64798736572266,
+        "top": 556.5761108398438,
+        "width": 77.79597473144531,
+        "x": 24.852012634277344,
+        "y": 556.5761108398438
+      },
+      "route": "today",
+      "selected": true,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Progress",
+      "iconRect": {
+        "bottom": 590.5,
+        "height": 23,
+        "left": 129.75,
+        "right": 152.75,
+        "top": 567.5,
+        "width": 23,
+        "x": 129.75,
+        "y": 567.5
+      },
+      "labelRect": {
+        "bottom": 613,
+        "height": 16,
+        "left": 119.671875,
+        "right": 162.828125,
+        "top": 597,
+        "width": 43.15625,
+        "x": 119.671875,
+        "y": 597
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 619,
+        "height": 62,
+        "left": 102.5,
+        "right": 180,
+        "top": 557,
+        "width": 77.5,
+        "x": 102.5,
+        "y": 557
+      },
+      "route": "progress",
+      "selected": false,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "Shelf",
+      "iconRect": {
+        "bottom": 590.5,
+        "height": 23,
+        "left": 207.25,
+        "right": 230.25,
+        "top": 567.5,
+        "width": 23,
+        "x": 207.25,
+        "y": 567.5
+      },
+      "labelRect": {
+        "bottom": 613,
+        "height": 16,
+        "left": 206.265625,
+        "right": 231.234375,
+        "top": 597,
+        "width": 24.96875,
+        "x": 206.265625,
+        "y": 597
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 619,
+        "height": 62,
+        "left": 180,
+        "right": 257.5,
+        "top": 557,
+        "width": 77.5,
+        "x": 180,
+        "y": 557
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": null,
+      "centerHitContains": true,
+      "label": "You",
+      "iconRect": {
+        "bottom": 590.5,
+        "height": 23,
+        "left": 284.75,
+        "right": 307.75,
+        "top": 567.5,
+        "width": 23,
+        "x": 284.75,
+        "y": 567.5
+      },
+      "labelRect": {
+        "bottom": 613,
+        "height": 16,
+        "left": 287.078125,
+        "right": 305.421875,
+        "top": 597,
+        "width": 18.34375,
+        "x": 287.078125,
+        "y": 597
+      },
+      "labelLineHeight": 16,
+      "rect": {
+        "bottom": 619,
+        "height": 62,
+        "left": 257.5,
+        "right": 335,
+        "top": 557,
+        "width": 77.5,
+        "x": 257.5,
+        "y": 557
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

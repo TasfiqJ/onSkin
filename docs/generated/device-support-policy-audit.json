@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-07-13T04:29:38.531Z",
+  "generatedAt": "2026-09-28T03:23:44.542Z",
   "launchContract": {
     "schemaVersion": 1,
-    "programId": "ios-all-features-2026",
-    "effectiveDate": "2026-07-12",
-    "releaseMode": "all-features",
+    "programId": "ios-lean-v1-2026",
+    "effectiveDate": "2026-09-27",
+    "releaseMode": "lean-v1",
     "platforms": [
       "ios"
     ],
@@ -15,14 +15,28 @@
       1,
       2,
       3,
-      4,
       5,
       6,
       7,
       8,
       9,
       10,
-      11,
+      11
+    ],
+    "requiredFeatureKeys": [
+      "brand_identity",
+      "onboarding_consent",
+      "shelf_intake",
+      "conflict_engine",
+      "routine_builder",
+      "today_adherence",
+      "cycle_scheduler",
+      "photo_progress",
+      "reminders",
+      "subscriptions"
+    ],
+    "deferredFeatureIds": [
+      4,
       12,
       13,
       14,
@@ -33,44 +47,106 @@
       19,
       20
     ],
-    "requiredFeatureKeys": [
-      "brand_identity",
-      "onboarding_consent",
-      "shelf_intake",
-      "catalog",
-      "conflict_engine",
-      "routine_builder",
-      "today_adherence",
-      "cycle_scheduler",
-      "photo_progress",
-      "reminders",
-      "subscriptions",
-      "reverse_trial",
-      "recommendations",
-      "ask_advisor",
-      "conflict_share",
-      "commerce",
-      "community",
-      "trend_insights",
-      "widgets_live_activities",
-      "admin_tooling"
-    ],
-    "requiredSurfaces": [
-      "commerce",
-      "community_posting",
-      "community_aggregates",
-      "trend_insights",
-      "cloud_ask",
-      "widgets",
-      "live_activities",
-      "share_cards",
-      "reviewed_conflict_sharing",
-      "goal_active_recommendations",
-      "public_links",
-      "review_prompts",
-      "creator_links",
-      "paid_measurement"
-    ]
+    "requiredSurfaces": [],
+    "featureProfessionalReviewRequirements": {
+      "conflict_engine": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "H-03",
+          "scope": "exact_conflict_clinical_meaning_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "H-03",
+          "scope": "exact_ingredient_compatibility_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-03",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "H-03",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "H-03",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-03",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "H-03",
+          "scope": "cadence_recovery_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "H-03",
+          "scope": "cadence_interaction_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-03",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
+    }
   },
   "platformStatus": {
     "ios": "required",

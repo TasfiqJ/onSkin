@@ -30,7 +30,7 @@
       "id": "F-03",
       "number": 3,
       "key": "shelf_intake",
-      "name": "Shelf intake through manual entry, search, barcode, and real OCR",
+      "name": "Manual Shelf intake and local ingredient parsing, with optional local OCR",
       "readiness": "needs-device-verification",
       "launchRequired": true
     },
@@ -262,7 +262,7 @@
     "edge-function": 11,
     "feature-flag": 17,
     "generated-packet": 30,
-    "native-module": 43,
+    "native-module": 44,
     "route": 93,
     "vendor-call": 14
   },
@@ -1569,6 +1569,13 @@
       "source": "apps/mobile/package.json",
       "featureIds": ["F-01"],
       "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-symbols",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "needs-device-verification"
     },
     {
       "id": "native-module:expo-system-ui",

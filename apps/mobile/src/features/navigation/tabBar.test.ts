@@ -5,14 +5,13 @@ const source = readFileSync(
   fileURLToPath(new URL('../../app/(tabs)/_layout.tsx', import.meta.url)),
   'utf8',
 );
-describe('Native V1 tab navigation', () => {
-  it('uses full platform tab labels without a second floating bar', () => {
-    expect(source).toContain('expo-router/unstable-native-tabs');
+describe('V1 tab navigation', () => {
+  it('uses one floating navigator with full labels', () => {
     for (const label of ['Today', 'Progress', 'Shelf', 'You']) {
-      expect(source).toContain(`<NativeTabs.Trigger.Label>${label}</NativeTabs.Trigger.Label>`);
-      expect(source).toContain(`<NativeTabs.Trigger name="${label.toLowerCase()}">`);
+      expect(source).toContain(`title: '${label}'`);
+      expect(source).toContain(`name="${label.toLowerCase()}"`);
     }
-    expect(source).not.toContain('FloatingTabBar');
+    expect(source).not.toContain('NativeTabs');
     expect(source).not.toContain('Prog.');
   });
   it('preserves owner-bound lifecycle cancellation and local reminders', () => {

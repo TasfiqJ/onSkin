@@ -1,0 +1,114 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm Add to shelf Skip for now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "width": 340,
+      "x": 45,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cleanser",
+      "role": "button",
+      "width": 98.92,
+      "x": 45,
+      "y": 408
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Toner",
+      "role": "button",
+      "width": 75.45,
+      "x": 151.92,
+      "y": 408
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Serum",
+      "role": "button",
+      "width": 80.89,
+      "x": 235.38,
+      "y": 408
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Treatment",
+      "role": "button",
+      "width": 108.31,
+      "x": 45,
+      "y": 464
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Moisturiser",
+      "role": "button",
+      "width": 116.33,
+      "x": 161.31,
+      "y": 464
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "SPF",
+      "role": "button",
+      "width": 61.06,
+      "x": 285.64,
+      "y": 464
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Oil / balm",
+      "role": "button",
+      "width": 104.95,
+      "x": 45,
+      "y": 520
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add to shelf",
+      "role": "button",
+      "width": 340,
+      "x": 45,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Skip for now",
+      "role": "button",
+      "width": 382,
+      "x": 24,
+      "y": 860
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8297/onboarding/products",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

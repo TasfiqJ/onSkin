@@ -1,0 +1,34 @@
+{
+  "bodyText": "A gentle morning and evening nudge? Turning this on uses the morning and evening times in Settings. On a new setup, those start at 7:30 AM and 9:30 PM. Both stay generic on your lock screen. ✓ New setups start at 7:30 AM and 9:30 PM ✓ Discreet on your lock screen ✓ Change or turn off each reminder anytime Yes, remind me Not now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Yes, remind me",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 712
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "width": 342,
+      "x": 24,
+      "y": 780
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8291/onboarding/notifications",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

@@ -1,3 +1,4 @@
+import { reportDockScroll } from '@/components/navigation/DockMotion';
 import type { RoutineType } from '@onskin/types';
 import { router } from 'expo-router';
 import { memo } from 'react';
@@ -476,6 +477,8 @@ function TodayScreenContent({
     return (
       <Screen edges={['top', 'bottom']}>
         <ScrollView
+          onScroll={reportDockScroll}
+          scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
         >
@@ -511,6 +514,8 @@ function TodayScreenContent({
     return (
       <Screen edges={['top']}>
         <ScrollView
+          onScroll={reportDockScroll}
+          scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
           contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
         >
@@ -714,6 +719,8 @@ function TodayScreenContent({
   return (
     <Screen tone="night" edges={['top']}>
       <ScrollView
+        onScroll={reportDockScroll}
+        scrollEventThrottle={32}
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
       >
@@ -833,7 +840,7 @@ function TodayScreenContent({
               router.push('/cycle/week');
             }}
           >
-            <View className="mb-4 flex-row items-center justify-between">
+            <View className="mb-4 flex-row flex-wrap items-center justify-between gap-2">
               <Text
                 className="font-sans-bold text-[13px] uppercase tracking-[1px]"
                 style={{ color: 'rgba(244,239,231,0.5)' }}

@@ -2032,9 +2032,23 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ## Flow: Lean V1 handoff integration (2026-09-27)
 
 - Priority: Critical; Expo web at 375x667, 390x844 and 430x932. Native iOS tabs/VoiceOver/device APIs need separate Apple-host evidence.
-- Entry: fresh local fixture on Welcome. Begin -> age -> goals -> unbundled consent -> quiz -> manual products -> durable profile -> reminders -> optional Apple/email account -> standard paywall -> Continue free -> routine -> Today.
+- Entry: fresh local fixture on Welcome. Begin -> age -> goals -> unbundled consent -> quiz -> manual products -> durable profile -> reminders -> optional Apple/email account -> standard paywall -> Continue free -> Today.
 - Branches: denied/failed consent or storage remains fail-closed; Back retains quiz answers; unsupported notifications retain explicit choice/retry; account skip preserves guest owner; no Google or custom grant promise.
 - Tabs: Today / Progress / Shelf / You have full labels and selected state. Shelf manual Add remains visible with populated lists; filters/scroll restoration and error boundary remain. Manual entry validates input and preserves opened-date/freshness capture. Private Progress remains local/no-score.
 - Deferred direct entries: Ask/recommendations/community render closed boundary; catalog scan/search return to manual entry; win-back/reverse-trial reoffer return to ordinary upsell. No deferred child hooks mount.
 - Persistence: check off routine, refresh/relaunch, verify saved result; errors remain retryable. Inspect supported viewport overflow, 44px targets, keyboard and ordinary You spacing.
 - Evidence: `test-results/human-e2e/2026-09-27/handoff-integration/`; automation must use isolated local browser fixtures, not production credentials.
+
+## Flow: Bottom navigation visual correction (2026-09-27)
+
+- Open Today, then tap Progress, Shelf and You; repeat at 375x667, 390x844 and 430x932 (320/360 stress checks retained).
+- Each item shows a recognizable icon above its full label, a filled selected icon, a subtle clay selection background on web and a minimum 44px target.
+- The dock uses paper on ordinary screens and night on PM Today, matching the rendered routine phase; changing tabs restores the appropriate palette. The dock floats 16px inside the screen edges and at least 12px above the bottom safe area. Device navigation uses native SF symbols inside the same floating layout. Content reserves space above the dock.
+- Verify actual tab clicks, selected accessibility state, zero overflow, no content collision, and no new browser errors. Native visual/VoiceOver evidence requires an Apple host.
+
+## Flow: Floating navigation motion
+
+- Hover an inactive tab: warm highlight and gentle 2px lift; press: restrained compression; selected state stays clear. Keyboard focus receives a visible ring and navigation remains semantic.
+- Scroll Today, Progress, Shelf or You: the dock moves at most 4px and scales to 99%, then settles after scrolling stops or reverses. It never hides; the resting position includes additional clearance so motion cannot enter the bottom safe area. Existing Shelf scroll/filter restoration and You privacy-scroll coordination remain intact.
+- With Reduce Motion enabled or unresolved, transforms stay still; hover/press/focus color feedback remains available.
+- Browser evidence: `test-results/human-e2e/2026-09-27/navigation-motion/verified/` and `reduced-verified/`. Actual wheel scrolling, pointer movement, navigation clicks, transform snapshots, screenshots and logs are retained. Native touch/VoiceOver verification remains pending on an Apple device.

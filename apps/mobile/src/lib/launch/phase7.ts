@@ -70,7 +70,7 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   },
   communityPosting: {
     title: 'Community posting is not in this beta',
-    body: 'Skin Notes stay read-only. This release has no question-submission service or reviewed peer-aggregate dataset.',
+    body: 'Community and Skin Notes are deferred from V1. No questions or posts are collected here.',
     detail:
       'No consent or question is collected until moderation, support, appeals, persistence, and legal review are ready.',
     cta: 'Back',
@@ -101,10 +101,9 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
     cta: 'Back',
   },
   goalActiveRecommendations: {
-    title: 'Goal-active suggestions are not in this beta',
-    body: 'Structural routine gaps can ship. New active-ingredient suggestions need clinical review and source-cleared catalog support.',
-    detail:
-      'The recommendation engine stays useful without pushing medical-adjacent actives early.',
+    title: 'Product recommendations are deferred',
+    body: 'V1 helps you build a routine around the products you already own. Product discovery and new active suggestions are not included.',
+    detail: 'Add your existing products from Shelf to continue with your routine.',
     cta: 'Back',
   },
 };
