@@ -1,108 +1,50 @@
-import type { BudgetBand, ValuesFilter } from '@onskin/types';
-import { VALUES_FILTERS } from '@onskin/types';
-import * as Crypto from 'expo-crypto';
+import type { BudgetBand, ValuesFilter } from '@layerwell/types';
+import { VALUES_FILTERS } from '@layerwell/types';
 
-import { scheduleOutboxFlush } from '@/lib/offline/outbox';
-import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
 import {
-  OUTBOX_STORAGE_KEY,
-  decodeOutboxEnvelope,
-  encodeOutboxEnvelope,
-  enqueueRecommendationPreferencesOutboxOperation,
-  type OutboxPayload,
-} from '@/lib/offline/outbox.pure';
-import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import {
+  getPrivateItem,
   multiRemovePrivateItems,
-  readPrivateItem,
-  type PrivateKVReadFailureReason,
   updatePrivateItem,
-  updatePrivateItemsTransactionally,
 } from '@/lib/storage/privateKV';
-import {
-  decodePrivateStringSet,
-  encodePrivateStringSet,
-  PRIVATE_STRING_SET_UNSUPPORTED_VERSION,
-} from '@/lib/storage/privateStringSet';
+import { decodePrivateStringSet, encodePrivateStringSet } from '@/lib/storage/privateStringSet';
 
-import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
+import {
+  DEFAULT_PREFERENCES,
+  RECOMMENDATION_FORMATS,
+  type RecommendationFormat,
+  type RecPreferences,
+} from './preferences';
 
 // Local-first recommendation state (docs/09 §12, the D-029 pattern). v1 source of
-// truth is encrypted private KV (works offline; the For-you hub + gap prompts must
-// render before the backend exists, B-SUPABASE). Authenticated saves atomically
-// compose their full snapshot with the encrypted transactional outbox.
-// The `recommendations` cache table is NOT used as a source of truth. The pure
-// engine recomputes live (the doc: "never the source of truth"). We persist only
-// the user's PREFERENCES and which suggestions they have DISMISSED ("not for
-// me"), so a dismissed card doesn't reappear.
+// truth is encrypted private storage (works offline; the For-you hub + gap prompts
+// render without the backend), with a best-effort immediate Supabase preference
+// mirror when an exact current session is available. There is no retry queue in
+// this checkpoint, so the local record remains authoritative after a remote
+// failure. The `recommendations` cache table is NOT used as a source of truth.
+// The pure engine recomputes live. We persist only the user's PREFERENCES and
+// which suggestions they have DISMISSED ("not for me").
 
-const PREF_KEY = 'onskin.recPrefs.v1';
-const DISMISSED_KEY = 'onskin.recDismissed.v1';
+const PREF_KEY = 'layerwell.recPrefs.v1';
+const DISMISSED_KEY = 'layerwell.recDismissed.v1';
 const PREF_SCHEMA_VERSION = 1 as const;
-const MAX_PREFERENCE_RECORD_CHARS = 16_384;
-const MAX_FORMAT_PREFERENCES = 16;
-const MAX_FORMAT_PREFERENCE_CHARS = 64;
-const MAX_DISMISSED_RECORD_CHARS = 524_288;
-const MAX_DISMISSED_RECOMMENDATIONS = 1_024;
-const MAX_RECOMMENDATION_ID_CHARS = 256;
-const MAX_E2E_RECOMMENDATION_READ_DELAY_MS = 3_000;
-const EDGE_WHITESPACE = /(^\s)|(\s$)/u;
-const preferenceMutationTails = new Map<number, Promise<void>>();
 
 export const REC_PREFERENCES_INVALID = 'REC_PREFERENCES_INVALID';
-export const REC_PREFERENCES_UNAVAILABLE = 'REC_PREFERENCES_UNAVAILABLE';
 export const REC_PREFERENCES_UNSUPPORTED_VERSION = 'REC_PREFERENCES_UNSUPPORTED_VERSION';
-export const REC_PREFERENCES_WRITE_UNCERTAIN = 'REC_PREFERENCES_WRITE_UNCERTAIN';
-export const REC_DISMISSED_INVALID = 'REC_DISMISSED_INVALID';
-export const REC_DISMISSED_UNAVAILABLE = 'REC_DISMISSED_UNAVAILABLE';
-export const REC_DISMISSED_UNSUPPORTED_VERSION = 'REC_DISMISSED_UNSUPPORTED_VERSION';
 
 type RecPreferencesEnvelope = {
   version: typeof PREF_SCHEMA_VERSION;
   preferences: RecPreferences;
 };
 
-type RecommendationStorageFormat = 'current' | 'legacy';
-type RecommendationReadUnavailableReason = PrivateKVReadFailureReason;
-type RecommendationReadCorruptReason =
-  | 'content_key_invalid'
-  | 'envelope_invalid'
-  | 'decryption_failed'
-  | 'invalid_payload';
-
-export type RecommendationPreferencesRead =
-  | { status: 'absent'; preferences: RecPreferences }
-  | {
-      status: 'available';
-      preferences: RecPreferences;
-      format: RecommendationStorageFormat;
-    }
-  | {
-      status: 'unavailable';
-      preferences: null;
-      reason: RecommendationReadUnavailableReason;
-    }
-  | { status: 'corrupt'; preferences: null; reason: RecommendationReadCorruptReason }
-  | { status: 'unsupported_version'; preferences: null };
-
-export type DismissedRecommendationsRead =
-  | { status: 'absent'; dismissed: string[] }
-  | { status: 'available'; dismissed: string[]; format: RecommendationStorageFormat }
-  | {
-      status: 'unavailable';
-      dismissed: null;
-      reason: RecommendationReadUnavailableReason;
-    }
-  | { status: 'corrupt'; dismissed: null; reason: RecommendationReadCorruptReason }
-  | { status: 'unsupported_version'; dismissed: null };
-
-export type RecommendationInputs = {
-  prefs: RecPreferences;
-  dismissed: string[];
-};
-
 const BUDGET_BANDS = new Set<BudgetBand>(['drugstore', 'mid', 'premium']);
 const VALUES = new Set<ValuesFilter>(VALUES_FILTERS);
+const FORMATS = new Set<RecommendationFormat>(RECOMMENDATION_FORMATS);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -141,94 +83,22 @@ function normalizeBudget(value: unknown): BudgetBand | null {
     : null;
 }
 
+function normalizeFormats(value: unknown): RecommendationFormat[] {
+  return uniqueStrings(value).filter((item): item is RecommendationFormat =>
+    FORMATS.has(item as RecommendationFormat),
+  );
+}
+
 function normalizePreferences(value: unknown): RecPreferences | null {
   if (!isRecord(value)) return null;
-  const normalized = {
+  return {
     values: normalizeValues(value.values),
     budget: normalizeBudget(value.budget),
-    formats: uniqueStrings(value.formats),
-  };
-  return normalized.values.length <= VALUES_FILTERS.length &&
-    normalized.formats.length <= MAX_FORMAT_PREFERENCES &&
-    normalized.formats.every((format) => Array.from(format).length <= MAX_FORMAT_PREFERENCE_CHARS)
-    ? normalized
-    : null;
-}
-
-function validatePreferencesForMutation(value: unknown): RecPreferences {
-  if (!isRecord(value) || !hasExactKeys(value, ['values', 'budget', 'formats'])) {
-    throw new Error(REC_PREFERENCES_INVALID);
-  }
-  if (!Array.isArray(value.values) || !Array.isArray(value.formats)) {
-    throw new Error(REC_PREFERENCES_INVALID);
-  }
-  const values = value.values;
-  const formats = value.formats;
-  const budget = value.budget;
-  if (
-    values.length > VALUES_FILTERS.length ||
-    values.some(
-      (item, index) =>
-        typeof item !== 'string' ||
-        !VALUES.has(item as ValuesFilter) ||
-        values.indexOf(item) !== index,
-    ) ||
-    (budget !== null && (typeof budget !== 'string' || !BUDGET_BANDS.has(budget as BudgetBand))) ||
-    formats.length > MAX_FORMAT_PREFERENCES ||
-    formats.some(
-      (item, index) =>
-        typeof item !== 'string' ||
-        Array.from(item).length === 0 ||
-        EDGE_WHITESPACE.test(item) ||
-        Array.from(item).length > MAX_FORMAT_PREFERENCE_CHARS ||
-        formats.indexOf(item) !== index,
-    )
-  ) {
-    throw new Error(REC_PREFERENCES_INVALID);
-  }
-
-  return {
-    values: [...(values as ValuesFilter[])],
-    budget: budget as BudgetBand | null,
-    formats: [...(formats as string[])],
+    formats: normalizeFormats(value.formats),
   };
 }
 
-function emptyPreferences(): RecPreferences {
-  return {
-    values: [...DEFAULT_PREFERENCES.values],
-    budget: DEFAULT_PREFERENCES.budget,
-    formats: [...DEFAULT_PREFERENCES.formats],
-  };
-}
-
-function samePreferences(left: RecPreferences, right: RecPreferences): boolean {
-  return (
-    left.budget === right.budget &&
-    JSON.stringify(left.values) === JSON.stringify(right.values) &&
-    JSON.stringify(left.formats) === JSON.stringify(right.formats)
-  );
-}
-
-function exactCurrentPreferences(
-  stored: Record<string, unknown>,
-  normalized: RecPreferences,
-): boolean {
-  return (
-    hasExactKeys(stored, ['values', 'budget', 'formats']) &&
-    JSON.stringify(stored.values) === JSON.stringify(normalized.values) &&
-    stored.budget === normalized.budget &&
-    JSON.stringify(stored.formats) === JSON.stringify(normalized.formats)
-  );
-}
-
-function decodePreferences(raw: string): {
-  preferences: RecPreferences;
-  format: RecommendationStorageFormat;
-} {
-  if (raw.length > MAX_PREFERENCE_RECORD_CHARS) {
-    throw new Error(REC_PREFERENCES_INVALID);
-  }
+function decodePreferences(raw: string): RecPreferences {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -252,22 +122,19 @@ function decodePreferences(raw: string): {
       throw new Error(REC_PREFERENCES_INVALID);
     }
     const normalized = normalizePreferences(parsed.preferences);
-    if (!normalized || !exactCurrentPreferences(parsed.preferences, normalized)) {
+    if (
+      !normalized ||
+      !hasExactKeys(parsed.preferences, ['values', 'budget', 'formats']) ||
+      JSON.stringify(normalized) !== JSON.stringify(parsed.preferences)
+    ) {
       throw new Error(REC_PREFERENCES_INVALID);
     }
-    return { preferences: normalized, format: 'current' };
+    return normalized;
   }
 
   const normalized = normalizePreferences(parsed);
-  if (
-    !normalized ||
-    !hasExactKeys(parsed, ['values', 'budget', 'formats']) ||
-    !Array.isArray(parsed.values) ||
-    !Array.isArray(parsed.formats)
-  ) {
-    throw new Error(REC_PREFERENCES_INVALID);
-  }
-  return { preferences: normalized, format: 'legacy' };
+  if (!normalized) throw new Error(REC_PREFERENCES_INVALID);
+  return normalized;
 }
 
 function encodePreferences(preferences: RecPreferences): string {
@@ -277,419 +144,60 @@ function encodePreferences(preferences: RecPreferences): string {
   } satisfies RecPreferencesEnvelope);
 }
 
-function decodeDismissed(raw: string): {
-  dismissed: string[];
-  format: RecommendationStorageFormat;
-} {
-  if (raw.length > MAX_DISMISSED_RECORD_CHARS) throw new Error(REC_DISMISSED_INVALID);
-  let dismissed: string[];
-  try {
-    dismissed = decodePrivateStringSet(raw);
-  } catch (error) {
-    throw new Error(
-      error instanceof Error && error.message === PRIVATE_STRING_SET_UNSUPPORTED_VERSION
-        ? REC_DISMISSED_UNSUPPORTED_VERSION
-        : REC_DISMISSED_INVALID,
-    );
-  }
-  if (
-    dismissed.length > MAX_DISMISSED_RECOMMENDATIONS ||
-    dismissed.some((id) => id.length > MAX_RECOMMENDATION_ID_CHARS)
-  ) {
-    throw new Error(REC_DISMISSED_INVALID);
-  }
-  const parsed = JSON.parse(raw) as unknown;
-  return { dismissed, format: Array.isArray(parsed) ? 'legacy' : 'current' };
-}
-
-type DevRecommendationReadState = 'unavailable' | 'corrupt' | 'unsupported_version';
-type RecommendationStateKind = 'preferences' | 'dismissed';
-
-let e2eReadFixtureSignature: string | null = null;
-let e2eGenericReadFailures = 0;
-let e2ePreferenceReadFailures = 0;
-let e2eDismissedReadFailures = 0;
-let e2eDismissFailureSignature: string | null = null;
-let e2eDismissFailures = 0;
-
-function resetDevRecommendationReadFixture(): void {
-  e2eReadFixtureSignature = null;
-  e2eGenericReadFailures = 0;
-  e2ePreferenceReadFailures = 0;
-  e2eDismissedReadFailures = 0;
-}
-
-function devRecommendationReadState(
-  kind: RecommendationStateKind,
-): DevRecommendationReadState | null {
-  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
-  const fixture = process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_READ_FAILURE?.trim().toLowerCase();
-  if (!fixture) {
-    resetDevRecommendationReadFixture();
-    return null;
-  }
-
-  if (fixture !== e2eReadFixtureSignature) {
-    e2eReadFixtureSignature = fixture;
-    e2eGenericReadFailures = 0;
-    e2ePreferenceReadFailures = 0;
-    e2eDismissedReadFailures = 0;
-  }
-
-  const otherKind = kind === 'preferences' ? 'dismissed' : 'preferences';
-  if (fixture.startsWith(`${otherKind}_`)) return null;
-  const mode = fixture.startsWith(`${kind}_`) ? fixture.slice(kind.length + 1) : fixture;
-
-  if (mode === 'corrupt') return 'corrupt';
-  if (mode === 'future') return 'unsupported_version';
-  if (mode === 'always') return 'unavailable';
-  if (mode !== 'once') return null;
-
-  if (fixture === 'once') {
-    if (e2eGenericReadFailures > 0) return null;
-    e2eGenericReadFailures += 1;
-    return 'unavailable';
-  }
-
-  if (kind === 'preferences') {
-    if (e2ePreferenceReadFailures > 0) return null;
-    e2ePreferenceReadFailures += 1;
-  } else {
-    if (e2eDismissedReadFailures > 0) return null;
-    e2eDismissedReadFailures += 1;
-  }
-  return 'unavailable';
-}
-
-function devRecommendationReadDelayMs(): number {
-  if (typeof __DEV__ === 'undefined' || !__DEV__) return 0;
-  const raw = process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_READ_DELAY_MS;
-  if (!raw) return 0;
-  const value = Number(raw);
-  if (!Number.isFinite(value) || value <= 0) return 0;
-  return Math.min(Math.round(value), MAX_E2E_RECOMMENDATION_READ_DELAY_MS);
-}
-
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function shouldSimulateRecommendationDismissFailure(ownerGeneration: number): boolean {
-  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
-  const fixture = process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_DISMISS_FAILURE?.trim().toLowerCase();
-  if (!fixture) {
-    e2eDismissFailureSignature = null;
-    e2eDismissFailures = 0;
-    return false;
-  }
-  const signature = `${fixture}:${ownerGeneration}`;
-  if (signature !== e2eDismissFailureSignature) {
-    e2eDismissFailureSignature = signature;
-    e2eDismissFailures = 0;
-  }
-  if (fixture === 'always') return true;
-  if (fixture !== 'once' || e2eDismissFailures > 0) return false;
-  e2eDismissFailures += 1;
-  return true;
-}
-
-function fixturePreferencesRead(status: DevRecommendationReadState): RecommendationPreferencesRead {
-  if (status === 'unsupported_version') {
-    return { status, preferences: null };
-  }
-  if (status === 'corrupt') {
-    return { status, preferences: null, reason: 'invalid_payload' };
-  }
-  return { status, preferences: null, reason: 'storage_unavailable' };
-}
-
-function fixtureDismissedRead(status: DevRecommendationReadState): DismissedRecommendationsRead {
-  if (status === 'unsupported_version') {
-    return { status, dismissed: null };
-  }
-  if (status === 'corrupt') {
-    return { status, dismissed: null, reason: 'invalid_payload' };
-  }
-  return { status, dismissed: null, reason: 'storage_unavailable' };
-}
-
-function preferencesFromRead(state: RecommendationPreferencesRead): RecPreferences {
-  if (state.status === 'absent' || state.status === 'available') return state.preferences;
-  if (state.status === 'unsupported_version') {
-    throw new Error(REC_PREFERENCES_UNSUPPORTED_VERSION);
-  }
-  if (state.status === 'corrupt') throw new Error(REC_PREFERENCES_INVALID);
-  throw new Error(REC_PREFERENCES_UNAVAILABLE);
-}
-
-function dismissedFromRead(state: DismissedRecommendationsRead): string[] {
-  if (state.status === 'absent' || state.status === 'available') return state.dismissed;
-  if (state.status === 'unsupported_version') {
-    throw new Error(REC_DISMISSED_UNSUPPORTED_VERSION);
-  }
-  if (state.status === 'corrupt') throw new Error(REC_DISMISSED_INVALID);
-  throw new Error(REC_DISMISSED_UNAVAILABLE);
-}
-
 // --- preferences --------------------------------------------------------------
-/** Classify preference state without repairing, deleting, or migrating bytes. */
-export async function readRecommendationPreferences(): Promise<RecommendationPreferencesRead> {
-  const fixture = devRecommendationReadState('preferences');
-  if (fixture) return fixturePreferencesRead(fixture);
-
-  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
-  try {
-    stored = await readPrivateItem(PREF_KEY);
-  } catch {
-    return { status: 'unavailable', preferences: null, reason: 'storage_unavailable' };
-  }
-
-  if (stored.status === 'absent') {
-    return { status: 'absent', preferences: emptyPreferences() };
-  }
-  if (stored.status === 'unavailable') {
-    return { status: 'unavailable', preferences: null, reason: stored.reason };
-  }
-  if (stored.status === 'corrupt') {
-    return { status: 'corrupt', preferences: null, reason: stored.reason };
-  }
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', preferences: null };
-  }
-
-  try {
-    return { status: 'available', ...decodePreferences(stored.value) };
-  } catch (error) {
-    return error instanceof Error && error.message === REC_PREFERENCES_UNSUPPORTED_VERSION
-      ? { status: 'unsupported_version', preferences: null }
-      : { status: 'corrupt', preferences: null, reason: 'invalid_payload' };
-  }
-}
-
 export async function loadPreferences(): Promise<RecPreferences> {
-  return preferencesFromRead(await readRecommendationPreferences());
+  const raw = await getPrivateItem(PREF_KEY);
+  return raw === null ? DEFAULT_PREFERENCES : decodePreferences(raw);
 }
 
-function runSerializedPreferenceMutation<T>(
-  generation: number,
-  mutation: () => Promise<T>,
-): Promise<T> {
-  const previous = preferenceMutationTails.get(generation) ?? Promise.resolve();
-  const current = previous.catch(() => undefined).then(mutation);
-  const tail = current.then(
-    () => undefined,
-    () => undefined,
-  );
-  preferenceMutationTails.set(generation, tail);
-  void tail.finally(() => {
-    if (preferenceMutationTails.get(generation) === tail) {
-      preferenceMutationTails.delete(generation);
-    }
-  });
-  return current;
-}
-
-export async function savePreferences(
-  ownerScope: OwnerQueryScope,
-  prefs: RecPreferences,
-  ownerId?: string | null,
-): Promise<void> {
-  await runOwnerQueryOperation(ownerScope, async (lease) => {
-    await runSerializedPreferenceMutation(lease.generation, async () => {
-      lease.assertCurrent();
-      const normalized = validatePreferencesForMutation(prefs);
-      const normalizedOwnerId = ownerId?.trim();
-      if (
-        ownerId !== undefined &&
-        ownerId !== null &&
-        (!normalizedOwnerId || ownerId.length > 512)
-      ) {
-        throw new Error(REC_PREFERENCES_INVALID);
-      }
-      let changed = false;
-      let expectedRaw: string | null | undefined;
-      let expectedOutboxRaw: string | null | undefined;
-      const updatePreferences = (current: string | null): string | null => {
-        if (current !== null) {
-          const decoded = decodePreferences(current);
-          if (samePreferences(decoded.preferences, normalized)) {
-            expectedRaw = current;
-            return current;
-          }
-        }
-        changed = true;
-        expectedRaw = encodePreferences(normalized);
-        return expectedRaw;
-      };
-
-      try {
-        if (normalizedOwnerId) {
-          const ownerHash = await hashOutboxOwner(normalizedOwnerId);
-          lease.assertCurrent();
-          const operationId = Crypto.randomUUID();
-          const enqueuedAt = new Date().toISOString();
-          await updatePrivateItemsTransactionally([PREF_KEY, OUTBOX_STORAGE_KEY], (current) => {
-            lease.assertCurrent();
-            const nextRaw = updatePreferences(current.get(PREF_KEY) ?? null);
-            const currentOutboxRaw = current.get(OUTBOX_STORAGE_KEY) ?? null;
-            let nextOutboxRaw = currentOutboxRaw;
-            if (changed) {
-              const payload: OutboxPayload = Object.freeze({
-                values_filters: Object.freeze([...normalized.values]),
-                budget_band: normalized.budget,
-                format_prefs: Object.freeze([...normalized.formats]),
-              });
-              const queued = enqueueRecommendationPreferencesOutboxOperation(
-                decodeOutboxEnvelope(currentOutboxRaw),
-                {
-                  operationId,
-                  ownerHash,
-                  ownerGeneration: lease.generation,
-                  payload,
-                  enqueuedAt,
-                },
-              );
-              nextOutboxRaw = encodeOutboxEnvelope(queued.envelope);
-            }
-            expectedOutboxRaw = nextOutboxRaw;
-            return new Map<string, string | null>([
-              [PREF_KEY, nextRaw],
-              [OUTBOX_STORAGE_KEY, nextOutboxRaw],
-            ]);
-          });
-        } else {
-          await updatePrivateItem(PREF_KEY, updatePreferences);
-        }
-      } catch (error) {
-        if (expectedRaw === undefined) throw error;
-        lease.assertCurrent();
-        let confirmation: Awaited<ReturnType<typeof readPrivateItem>>;
-        try {
-          confirmation = await readPrivateItem(PREF_KEY);
-        } catch {
-          lease.assertCurrent();
-          throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
-        }
-        lease.assertCurrent();
-        const preferenceMatches =
-          expectedRaw === null
-            ? confirmation.status === 'absent'
-            : confirmation.status === 'available' && confirmation.value === expectedRaw;
-        if (!preferenceMatches) throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
-
-        if (normalizedOwnerId && expectedOutboxRaw !== undefined) {
-          let outboxConfirmation: Awaited<ReturnType<typeof readPrivateItem>>;
-          try {
-            outboxConfirmation = await readPrivateItem(OUTBOX_STORAGE_KEY);
-          } catch {
-            lease.assertCurrent();
-            throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
-          }
-          lease.assertCurrent();
-          const outboxMatches =
-            expectedOutboxRaw === null
-              ? outboxConfirmation.status === 'absent'
-              : outboxConfirmation.status === 'available' &&
-                outboxConfirmation.value === expectedOutboxRaw;
-          if (!outboxMatches) throw new Error(REC_PREFERENCES_WRITE_UNCERTAIN);
-        }
-      }
-      lease.assertCurrent();
-      if (changed && normalizedOwnerId) scheduleOutboxFlush();
+export async function savePreferences(prefs: RecPreferences): Promise<void> {
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  await runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const normalized = normalizePreferences(prefs) ?? DEFAULT_PREFERENCES;
+    await updatePrivateItem(PREF_KEY, (current) => {
+      if (current !== null) decodePreferences(current);
+      return encodePreferences(normalized);
     });
+    lease.assertCurrent();
+    // Best-effort mirror (B-SUPABASE). The authenticated scalar RPC owns the row
+    // write and rechecks session, health epoch, and account access. Direct table
+    // DML is intentionally unavailable to mobile.
+    try {
+      const { data } = await getPersistedSupabaseUser();
+      lease.assertCurrent();
+      if (data.user?.id !== lease.ownerUserId) return;
+      await supabase.rpc('set_recommendation_preferences', {
+        p_values_filters: normalized.values,
+        p_budget_band: normalized.budget,
+        p_format_prefs: normalized.formats,
+      });
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* offline / no DB. The encrypted local preference remains authoritative. */
+    }
+    lease.assertCurrent();
   });
 }
 
 // --- dismissed suggestions ("not for me") -------------------------------------
-/** Classify dismissal state without repairing, deleting, or migrating bytes. */
-export async function readDismissedRecommendations(): Promise<DismissedRecommendationsRead> {
-  const fixture = devRecommendationReadState('dismissed');
-  if (fixture) return fixtureDismissedRead(fixture);
-
-  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
-  try {
-    stored = await readPrivateItem(DISMISSED_KEY);
-  } catch {
-    return { status: 'unavailable', dismissed: null, reason: 'storage_unavailable' };
-  }
-
-  if (stored.status === 'absent') return { status: 'absent', dismissed: [] };
-  if (stored.status === 'unavailable') {
-    return { status: 'unavailable', dismissed: null, reason: stored.reason };
-  }
-  if (stored.status === 'corrupt') {
-    return { status: 'corrupt', dismissed: null, reason: stored.reason };
-  }
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', dismissed: null };
-  }
-
-  try {
-    return { status: 'available', ...decodeDismissed(stored.value) };
-  } catch (error) {
-    return error instanceof Error && error.message === REC_DISMISSED_UNSUPPORTED_VERSION
-      ? { status: 'unsupported_version', dismissed: null }
-      : { status: 'corrupt', dismissed: null, reason: 'invalid_payload' };
-  }
-}
-
 export async function loadDismissed(): Promise<string[]> {
-  return dismissedFromRead(await readDismissedRecommendations());
+  return decodePrivateStringSet(await getPrivateItem(DISMISSED_KEY));
 }
 
-/** One strict snapshot for the recommendation engine. Both reads begin together
- * so a one-shot failure recovers with one explicit retry. */
-export async function loadRecommendationInputs(): Promise<RecommendationInputs> {
-  const delayMs = devRecommendationReadDelayMs();
-  if (delayMs > 0) await wait(delayMs);
-  const [preferences, dismissed] = await Promise.all([
-    readRecommendationPreferences(),
-    readDismissedRecommendations(),
-  ]);
-
-  return {
-    prefs: preferencesFromRead(preferences),
-    dismissed: dismissedFromRead(dismissed),
-  };
-}
-
-export async function dismissRecommendation(
-  ownerScope: OwnerQueryScope,
-  id: string,
-): Promise<void> {
+export async function dismissRecommendation(id: string): Promise<void> {
   const normalizedId = id.trim();
-  if (normalizedId.length === 0) throw new Error(REC_DISMISSED_INVALID);
-  if (normalizedId.length > MAX_RECOMMENDATION_ID_CHARS) {
-    throw new Error(REC_DISMISSED_INVALID);
-  }
-  await runOwnerQueryOperation(ownerScope, async (lease) => {
-    lease.assertCurrent();
-    if (shouldSimulateRecommendationDismissFailure(lease.generation)) {
-      throw new Error('E2E_RECOMMENDATION_DISMISS_FAILURE');
-    }
-    await updatePrivateItem(DISMISSED_KEY, (current) => {
-      const dismissed = current === null ? [] : decodeDismissed(current).dismissed;
-      if (dismissed.includes(normalizedId)) return current;
-      if (dismissed.length >= MAX_DISMISSED_RECOMMENDATIONS) {
-        throw new Error(REC_DISMISSED_INVALID);
-      }
-      const next = encodePrivateStringSet([...dismissed, normalizedId]);
-      if (next.length > MAX_DISMISSED_RECORD_CHARS) {
-        throw new Error(REC_DISMISSED_INVALID);
-      }
-      return next;
-    });
-    lease.assertCurrent();
+  if (normalizedId.length === 0) return;
+  await updatePrivateItem(DISMISSED_KEY, (current) => {
+    const dismissed = decodePrivateStringSet(current);
+    return encodePrivateStringSet(
+      dismissed.includes(normalizedId) ? dismissed : [...dismissed, normalizedId],
+    );
   });
 }
 
 /** Test/seed reset. */
 export async function clearRecState(): Promise<void> {
-  const [preferences, dismissed] = await Promise.all([
-    readRecommendationPreferences(),
-    readDismissedRecommendations(),
-  ]);
-  preferencesFromRead(preferences);
-  dismissedFromRead(dismissed);
   await multiRemovePrivateItems([PREF_KEY, DISMISSED_KEY]);
 }

@@ -5,7 +5,27 @@ const errors = [];
 const warnings = [];
 
 const workflowPath = '.github/workflows/security.yml';
+const edgeFunctionsCheckPath = 'scripts/phase9/edge-functions-check.mjs';
+const liveEdgeAuthPath = 'scripts/phase9/live-edge-auth.mjs';
+const liveDataRightsPath = 'scripts/phase9/live-data-rights.mjs';
 block(errors, exists(workflowPath), 'Missing GitHub Actions security workflow.');
+block(errors, exists(edgeFunctionsCheckPath), 'Missing Deno Edge Function check.');
+block(errors, exists(liveEdgeAuthPath), 'Missing live Edge auth harness.');
+block(errors, exists(liveDataRightsPath), 'Missing live data-rights harness.');
+
+if (exists(edgeFunctionsCheckPath)) {
+  const edgeFunctionsCheck = read(edgeFunctionsCheckPath);
+  block(
+    errors,
+    edgeFunctionsCheck.includes("'--node-modules-dir=none'"),
+    'Deno Edge Function checking must resolve npm packages from its global cache.',
+  );
+  block(
+    errors,
+    !/--node-modules-dir=(?:auto|manual)/.test(edgeFunctionsCheck),
+    'Deno Edge Function checking must not create or reuse a local node_modules layout.',
+  );
+}
 
 if (exists(workflowPath)) {
   const workflow = read(workflowPath);
@@ -29,8 +49,17 @@ if (exists(workflowPath)) {
   const artifactUploadSteps = workflowSteps.filter((step) =>
     /uses:\s*actions\/upload-artifact@[^\s#]+/i.test(step),
   );
+  const scannerArtifactUploadSteps = artifactUploadSteps.filter((step) =>
+    /path:\s*docs\/phase-9\/generated\/ci-scanner-evidence\//.test(step),
+  );
+  const accountDeletionArtifactUploadSteps = artifactUploadSteps.filter((step) =>
+    /account-deletion-live-evidence-/.test(step),
+  );
   const trufflehogSteps = workflowSteps.filter((step) =>
     /uses:\s*trufflesecurity\/trufflehog@[^\s#]+/i.test(step),
+  );
+  const gitleaksSteps = workflowSteps.filter((step) =>
+    /uses:\s*gitleaks\/gitleaks-action@[^\s#]+/i.test(step),
   );
   const runSteps = workflowSteps.filter((step) => /^\s*run:\s*/m.test(step));
   const actionUses = [...workflow.matchAll(/uses:\s*([^\s#]+)/g)].map((match) => match[1]);
@@ -103,7 +132,14 @@ if (exists(workflowPath)) {
     /npm-audit-high\.json/.test(workflow),
     'Security workflow must archive high/critical npm audit JSON evidence.',
   );
-  block(errors, /gitleaks\/gitleaks-action/.test(workflow), 'Security workflow must run Gitleaks.');
+  block(
+    errors,
+    gitleaksSteps.length === 1 &&
+      /uses:\s*gitleaks\/gitleaks-action@[a-f0-9]{40}/i.test(gitleaksSteps[0]) &&
+      /GITHUB_TOKEN:\s*\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}/.test(gitleaksSteps[0]) &&
+      /GITLEAKS_ENABLE_COMMENTS:\s*'false'/.test(gitleaksSteps[0]),
+    'Security workflow must run one pinned Gitleaks action with authenticated read-only API access and no PR comments.',
+  );
   block(
     errors,
     /trufflesecurity\/trufflehog@[a-f0-9]{40}/i.test(workflow),
@@ -115,7 +151,16 @@ if (exists(workflowPath)) {
       trufflehogSteps.every((step) => !/^\s+(?:base|head):\s*/m.test(step)),
     'TruffleHog must use event-derived base/head SHAs; hard-coded base/head inputs break pushes to main.',
   );
-  block(errors, /semgrep\/semgrep-action/.test(workflow), 'Security workflow must run Semgrep.');
+  block(
+    errors,
+    /pipx install semgrep==\d+\.\d+\.\d+/.test(workflow) &&
+      /\bsemgrep scan --error\b/.test(workflow) &&
+      ['p/owasp-top-ten', 'p/typescript', 'p/react', 'p/secrets'].every((ruleset) =>
+        workflow.includes(`--config ${ruleset}`),
+      ) &&
+      !/semgrep\/semgrep-action/.test(workflow),
+    'Security workflow must run a pinned Semgrep CLI with the OWASP, TypeScript, React, and secrets rulesets.',
+  );
   block(
     errors,
     /google\/osv-scanner-action/.test(workflow),
@@ -128,13 +173,13 @@ if (exists(workflowPath)) {
   );
   block(
     errors,
-    artifactUploadSteps.length >= 3,
+    scannerArtifactUploadSteps.length >= 3,
     'Security workflow must upload code, secret, and static scanner evidence artifacts.',
   );
   block(
     errors,
-    artifactUploadSteps.length >= 3 &&
-      artifactUploadSteps.every(
+    scannerArtifactUploadSteps.length >= 3 &&
+      scannerArtifactUploadSteps.every(
         (step) =>
           /path:\s*docs\/phase-9\/generated\/ci-scanner-evidence\//.test(step) &&
           /if-no-files-found:\s*error/.test(step) &&
@@ -190,20 +235,22 @@ if (exists(workflowPath)) {
     /if:\s*github\.event_name == 'workflow_dispatch'/.test(workflow) &&
       /npm run phase9:live-data-rights:strict/.test(workflow) &&
       /PHASE9_RUN_LIVE_DATA_RIGHTS/.test(workflow) &&
+      /PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION:\s*'true'/.test(workflow) &&
       /PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX/.test(workflow) &&
       /DATA_EXPORT_PHOTO_URL_TTL_SECONDS/.test(workflow) &&
       /PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK/.test(workflow) &&
       /PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS/.test(workflow) &&
       /STAGING_SUPABASE_SERVICE_ROLE_KEY/.test(workflow),
-    'Live data-rights CI job must be manual-only, strict, use staging Supabase secrets, and include bounded data-export rate-limit and signed-URL expiry probes.',
+    'Live data-rights CI job must be manual-only, strict, explicitly authorize disposable-account deletion, use staging Supabase secrets, and include bounded data-export rate-limit and signed-URL expiry probes.',
   );
   block(
     errors,
     /if:\s*github\.event_name == 'workflow_dispatch'/.test(workflow) &&
       /npm run phase9:live-consent-withdrawal:strict/.test(workflow) &&
       /PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL/.test(workflow) &&
+      /id:\s*live_consent_withdrawal/.test(workflow) &&
       /STAGING_SUPABASE_SERVICE_ROLE_KEY/.test(workflow),
-    'Live consent-withdrawal CI job must be manual-only, strict, and use staging Supabase secrets.',
+    'Live consent-withdrawal CI job must be manual-only, strict, outcome-addressable, and use staging Supabase secrets.',
   );
   block(
     errors,
@@ -228,9 +275,11 @@ if (exists(workflowPath)) {
     /if:\s*github\.event_name == 'workflow_dispatch'/.test(workflow) &&
       /npm run phase9:live-order-report-poll:strict/.test(workflow) &&
       /PHASE9_RUN_LIVE_ORDER_REPORT_POLL/.test(workflow) &&
-      /PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(workflow) &&
-      !/ORDER_REPORT_POLL_SECRET:\s*\$\{\{\s*secrets\./.test(workflow),
-    'Live order-report-poll CI job must be manual-only, strict, expectation-driven, and must not expose the real scheduler secret.',
+      !/PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(workflow) &&
+      !/(?:SHOPMY_BRAND_API_KEY|SHOPMY_BRAND_DOMAIN|ORDER_REPORT_POLL_SECRET):\s*\$\{\{/.test(
+        workflow,
+      ),
+    'Live order-report-poll CI job must be manual-only, strict, and free of commerce activation/provider credentials.',
   );
   block(
     errors,
@@ -245,6 +294,193 @@ if (exists(workflowPath)) {
     errors,
     /STAGING_SUPABASE_SERVICE_ROLE_KEY/.test(workflow) && !/pull_request_target\s*:/.test(workflow),
     'Live Supabase job must use staging service-role secret only outside pull_request_target.',
+  );
+  const liveJob = workflow.match(/\n  live-supabase-adversarial:[\s\S]*$/)?.[0] ?? '';
+  block(
+    errors,
+    /environment:\s*staging-security/.test(liveJob) &&
+      /^\s+APP_ENV:\s*staging\s*$/m.test(liveJob) &&
+      /^\s+EXPO_PUBLIC_APP_ENV:\s*staging\s*$/m.test(liveJob) &&
+      /PHASE9_EXPECTED_SUPABASE_PROJECT_REF:\s*\$\{\{\s*vars\.STAGING_SUPABASE_PROJECT_REF\s*\}\}/.test(
+        liveJob,
+      ) &&
+      !/PHASE9_EXPECTED_SUPABASE_PROJECT_REF:\s*\$\{\{\s*secrets\./.test(liveJob),
+    'Protected live evidence must bind exact staging environment labels to the independently reviewed non-secret STAGING_SUPABASE_PROJECT_REF environment variable.',
+  );
+  block(
+    errors,
+    /confirm_destructive_account_deletion:\s*\n[\s\S]{0,240}default:\s*false[\s\S]{0,120}type:\s*boolean/.test(
+      workflow,
+    ) &&
+      /if:\s*github\.event_name == 'workflow_dispatch' && inputs\.confirm_destructive_account_deletion == true/.test(
+        liveJob,
+      ) &&
+      /environment:\s*staging-security/.test(liveJob),
+    'Destructive deletion must require an explicit false-by-default manual input and protected staging-security review.',
+  );
+  block(
+    errors,
+    (workflow.match(/PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION/g) ?? []).length === 1 &&
+      /PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION:\s*'true'/.test(liveJob),
+    'Destructive deletion authorization must appear only inside the protected manual live job.',
+  );
+  block(
+    errors,
+    /ios_build_id:/.test(workflow) &&
+      /PHASE5_IOS_BUILD_ID:\s*\$\{\{ inputs\.ios_build_id \}\}/.test(liveJob) &&
+      !/android_build_id:|PHASE5_ANDROID_BUILD_ID/.test(liveJob),
+    'The iOS-only launch contract may accept an optional iOS build ID but must not request Android live evidence.',
+  );
+  for (const field of [
+    'PHASE9_EVIDENCE_SOURCE_SHA',
+    'PHASE9_EVIDENCE_WORKFLOW_RUN_ID',
+    'PHASE9_EVIDENCE_WORKFLOW_RUN_ATTEMPT',
+    'PHASE9_EVIDENCE_REF',
+    'PHASE9_EVIDENCE_ACTOR',
+    'PHASE9_EVIDENCE_TRIGGERING_ACTOR',
+    'PHASE9_EVIDENCE_REPOSITORY',
+    'PHASE9_EVIDENCE_WORKFLOW',
+    'PHASE9_EVIDENCE_EVENT',
+  ]) {
+    block(errors, liveJob.includes(field), `Protected live evidence job is missing ${field}.`);
+  }
+  block(
+    errors,
+    /Remove stale protected live evidence/.test(liveJob) &&
+      /live-edge-auth\.json/.test(liveJob) &&
+      /live-data-rights\.json/.test(liveJob) &&
+      /live-consent-withdrawal\.json/.test(liveJob),
+    'Protected live job must remove tracked/stale account-deletion and consent-withdrawal evidence before execution.',
+  );
+  block(
+    errors,
+    accountDeletionArtifactUploadSteps.length === 1 &&
+      accountDeletionArtifactUploadSteps.every(
+        (step) =>
+          /if:\s*always\(\)/.test(step) &&
+          /live-edge-auth\.json/.test(step) &&
+          /live-data-rights\.json/.test(step) &&
+          /live-consent-withdrawal\.json/.test(step) &&
+          /account-deletion-live-outcomes\.json/.test(step) &&
+          /if-no-files-found:\s*error/.test(step) &&
+          /retention-days:\s*30/.test(step),
+      ),
+    'Protected live job must always upload bounded, redacted account-deletion and consent-withdrawal evidence plus its outcome manifest.',
+  );
+  block(
+    errors,
+    /PHASE9_EVIDENCE_ACTOR/.test(liveJob) &&
+      /PHASE9_EVIDENCE_TRIGGERING_ACTOR/.test(liveJob) &&
+      /PHASE9_EVIDENCE_REPOSITORY/.test(liveJob) &&
+      /PHASE9_EVIDENCE_WORKFLOW/.test(liveJob) &&
+      /PHASE9_EVIDENCE_EVENT/.test(liveJob) &&
+      /LIVE_EDGE_AUTH_OUTCOME/.test(liveJob) &&
+      /LIVE_DATA_RIGHTS_OUTCOME/.test(liveJob) &&
+      /LIVE_CONSENT_WITHDRAWAL_OUTCOME/.test(liveJob) &&
+      /liveConsentWithdrawal/.test(liveJob),
+    'Live outcome manifest must bind authorization identity and all three protected live step outcomes.',
+  );
+  block(
+    errors,
+    /Enforce protected live evidence results/.test(liveJob) &&
+      /test "\$LIVE_EDGE_AUTH_OUTCOME" = "success"/.test(liveJob) &&
+      /test "\$LIVE_DATA_RIGHTS_OUTCOME" = "success"/.test(liveJob) &&
+      /test "\$LIVE_CONSENT_WITHDRAWAL_OUTCOME" = "success"/.test(liveJob) &&
+      /live-consent-withdrawal\.json/.test(liveJob) &&
+      /evidence\.schemaVersion !== 2/.test(liveJob) &&
+      /evidence\.sourceTreeClean !== true/.test(liveJob) &&
+      /evidence\.checkManifest\.names\.length !== 8/.test(liveJob) &&
+      /evidence\.status !== 'pass'/.test(liveJob) &&
+      /evidence\.sourceSha !== process\.env\.PHASE9_EVIDENCE_SOURCE_SHA/.test(liveJob) &&
+      /evidence\.triggeringActor !== process\.env\.PHASE9_EVIDENCE_TRIGGERING_ACTOR/.test(
+        liveJob,
+      ) &&
+      /evidence\.expectedSupabaseProjectRef !== process\.env\.PHASE9_EXPECTED_SUPABASE_PROJECT_REF/.test(
+        liveJob,
+      ) &&
+      /evidence\.actualSupabaseProjectRef !== process\.env\.PHASE9_EXPECTED_SUPABASE_PROJECT_REF/.test(
+        liveJob,
+      ) &&
+      /evidence\.supabaseHost !== process\.env\.PHASE9_EXPECTED_SUPABASE_PROJECT_REF \+ '\.supabase\.co'/.test(
+        liveJob,
+      ),
+    'Protected live job must fail unless all three harnesses pass and their uploaded revision, target, and exact consent-check metadata matches the run.',
+  );
+}
+
+if (exists(liveEdgeAuthPath)) {
+  const liveEdgeAuth = read(liveEdgeAuthPath);
+  block(
+    errors,
+    /parseAccountDeletionPreflight/.test(liveEdgeAuth) &&
+      /body: \{ action: 'preflight' \}/.test(liveEdgeAuth) &&
+      /authenticated preflight returns only the exact owner-bound clear response/.test(
+        liveEdgeAuth,
+      ) &&
+      /preflight rejects missing and invalid bearer credentials/.test(liveEdgeAuth) &&
+      /preflight rejects a stale token after its Auth user is deleted/.test(liveEdgeAuth) &&
+      /deleteUser\(stalePreflightUser\.id\)/.test(liveEdgeAuth) &&
+      /exactObjectKeys\(body, \['status'\]\)/.test(liveEdgeAuth) &&
+      /exactObjectKeys\(body, \['status', 'ownerSubject'\]\)/.test(liveEdgeAuth) &&
+      /ACCOUNT_OWNER_SUBJECT_PATTERN\.test\(body\.ownerSubject\)/.test(liveEdgeAuth) &&
+      /ACCOUNT_DELETION_SESSION_REJECTED/.test(liveEdgeAuth) &&
+      /assertExactErrorCode/.test(liveEdgeAuth) &&
+      /accepted clear without its authenticated owner/.test(liveEdgeAuth) &&
+      /validator accepted active without its authenticated owner/.test(liveEdgeAuth),
+    'Live Edge auth must validate exact authenticated owner-attested clear/active preflight schemas plus lane-specific missing, invalid, and stale rejection contracts.',
+  );
+  block(
+    errors,
+    /harnessErrorDetail\(error\)/.test(liveEdgeAuth) &&
+      !/function resultError|error\.message|response\.text\.slice/.test(liveEdgeAuth),
+    'Live Edge auth artifacts must never retain raw error messages or response bodies.',
+  );
+  block(
+    errors,
+    /await admin\.auth\.admin\.deleteUser\(user\.id\)[\s\S]*'catalog_corrections'[\s\S]*errors\.push\(`\$\{table\} cleanup left residual rows\.`\)/.test(
+      liveEdgeAuth,
+    ) &&
+      /errors\.push\(`Edge auth user cleanup failed/.test(liveEdgeAuth) &&
+      /strict && warnings\.length > 0/.test(liveEdgeAuth),
+    'Live Edge auth must verify Auth-cascade cleanup for catalog corrections, and cleanup failures plus strict warnings must block pass artifacts.',
+  );
+}
+
+for (const path of [liveEdgeAuthPath, liveDataRightsPath]) {
+  if (!exists(path)) continue;
+  const source = read(path);
+  const exactAppEnvGate = source.indexOf("env.APP_ENV === 'staging'");
+  const exactTargetGate = source.indexOf('supabaseTarget.valid');
+  const adminClientCreation = source.indexOf('const admin = createClient');
+  block(
+    errors,
+    /const supabaseUrl = env\.SUPABASE_URL;/.test(source) &&
+      !/SUPABASE_URL \?\? env\.EXPO_PUBLIC_SUPABASE_URL/.test(source) &&
+      /resolveHostedSupabaseProjectTarget\(\s*supabaseUrl,\s*env\.PHASE9_EXPECTED_SUPABASE_PROJECT_REF/.test(
+        source,
+      ) &&
+      exactAppEnvGate >= 0 &&
+      exactTargetGate >= 0 &&
+      adminClientCreation >= 0 &&
+      exactAppEnvGate < adminClientCreation &&
+      exactTargetGate < adminClientCreation &&
+      /expectedSupabaseProjectRef:\s*supabaseTarget\.expectedProjectRef/.test(source) &&
+      /actualSupabaseProjectRef:\s*supabaseTarget\.actualProjectRef/.test(source),
+    `${path} must fail on a non-staging or unreviewed canonical Supabase target before creating its admin client and record only safe target provenance.`,
+  );
+  block(
+    errors,
+    /sourceSha: evidenceContext\.sourceSha/.test(source) &&
+      /workflowRunId: evidenceContext\.workflowRunId/.test(source) &&
+      /workflowRunAttempt: evidenceContext\.workflowRunAttempt/.test(source) &&
+      /actor: evidenceContext\.actor/.test(source) &&
+      /triggeringActor: evidenceContext\.triggeringActor/.test(source) &&
+      /repository: evidenceContext\.repository/.test(source) &&
+      /workflow: evidenceContext\.workflow/.test(source) &&
+      /event: evidenceContext\.event/.test(source) &&
+      /PHASE5_IOS_BUILD_ID/.test(source) &&
+      !/PHASE5_ANDROID_BUILD_ID/.test(source),
+    `${path} must bind exact workflow authorization metadata and optional iOS-only build evidence.`,
   );
 }
 

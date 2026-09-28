@@ -1,19 +1,11 @@
 import { router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
-import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import {
-  DirectPaywallLoading,
-  DirectPaywallRecovery,
-  DirectPaywallRedirecting,
-} from '@/features/subscription/DirectPaywallResolution';
-import { directPaywallDecision } from '@/features/subscription/directPaywallPolicy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
 import {
   PAYWALL_FEEDBACK,
@@ -21,103 +13,57 @@ import {
   type PaywallFeedbackState,
 } from '@/features/subscription/PaywallFeedback';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
-import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { usePaidActionHold } from '@/features/subscription/usePaidActionHold';
+import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
-import { winBackOfferingDecision } from '@/features/subscription/winBackOfferingPolicy';
 import { track } from '@/lib/analytics/track';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { env } from '@/lib/env';
 import { colors } from '@/theme/tokens';
 
-// Honest win-back (design 09, docs/08 §6). Value restated, a respectful 30%-off
-// offer, an easy "no". Sparse, ARL-clean, never pressuring. Dark surface.
+// PAY-08 keeps the ordinary current-plan path neutral. Welcome-back copy and
+// pricing are admitted only for an exact SDK offer in an explicitly enabled build.
 const BG = '#1B1813';
 
 export default function WinbackScreen() {
   const insets = useSafeAreaInsets();
   const { fontScale = 1, height, width } = useWindowDimensions();
-  const ownerScope = useOwnerQueryScope();
-  const entitlement = useEntitlement();
-  const decision = directPaywallDecision('winback', {
-    state: entitlement.data,
-    isLoading: entitlement.isLoading,
-    isError: entitlement.isError,
-  });
   const { winback } = useEntitlementActions();
-  const offering = useSubscriptionOffering({ enabled: decision.loadOffering });
+  const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const paidAction = usePaidActionHold(ownerScope.generation);
-  const offer = offering.data?.winBack ?? null;
-  const offeringDecision = winBackOfferingDecision(offering.data);
-  const canWinBack = decision.allowPurchase && offeringDecision === 'purchase';
+  const eligibleOffer =
+    env.iosWinBackEnabled &&
+    offering.data?.status === 'available' &&
+    offering.data.winBack?.canPurchase === true
+      ? offering.data.winBack
+      : null;
+  const canWinBack = eligibleOffer !== null;
+  const winBackCopy = canWinBack ? PAYWALL_COPY.winback.offer : PAYWALL_COPY.winback.currentPlan;
   const annualDisplay = planPriceDisplay('annual', offering.data);
-  const unavailableOfferCopy =
-    'A native welcome-back offer is not available on this account. You can still choose the current Pro plan.';
+  const fallbackActionCopy =
+    'No welcome-back offer is available. You can still review the standard Pro options.';
   const tallTextPressurePaywall =
     width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPaywall = height < 640 || tallTextPressurePaywall;
 
   function onComeBack() {
-    if (!decision.allowPurchase || paidAction.isHeld) return;
-    if (offeringDecision === 'loading') return;
     setActionFeedback(null);
     if (!canWinBack) {
       router.replace('/paywall/upsell?feature=full_routine');
       return;
     }
-    winback.mutate(
-      {
-        kind: 'winback_purchase',
-        expectedEvidenceIdentity: entitlement.data?.evidenceIdentity ?? null,
+    winback.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (result.offerUnavailable) setActionFeedback(PAYWALL_FEEDBACK.offerUnavailable);
+        else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
+        else setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      {
-        onSuccess: (result) => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          const outcome = paidAction.resolve(result);
-          if (outcome.kind === 'success') {
-            router.replace({
-              pathname: '/paywall/success',
-              params: { receipt: outcome.receiptId },
-            });
-          } else if (outcome.kind === 'active_without_receipt') {
-            router.replace('/(tabs)/today');
-          } else if (outcome.kind === 'inactive' && result.offerUnavailable) {
-            setActionFeedback(PAYWALL_FEEDBACK.offerUnavailable);
-          } else if (outcome.kind === 'inactive' && !result.cancelled) {
-            setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
-          }
-        },
-        onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-      },
-    );
+      onError: (error) => setActionFeedback(PAYWALL_FEEDBACK.purchaseError(error)),
+    });
   }
 
   useEffect(() => {
-    if (!decision.trackPresentation) return;
     track('winback_shown');
-  }, [decision.trackPresentation]);
-
-  useEffect(() => {
-    if (decision.phase !== 'redirect' || !isOwnerQueryScopeCurrent(ownerScope)) return;
-    if (decision.redirect === 'upsell') {
-      router.replace('/paywall/upsell?feature=full_routine');
-      return;
-    }
-    router.replace('/(tabs)/today');
-  }, [decision.phase, decision.redirect, ownerScope]);
-
-  if (decision.phase === 'loading') return <DirectPaywallLoading />;
-  if (decision.phase === 'recovery') {
-    return (
-      <DirectPaywallRecovery
-        isRetrying={entitlement.isVerificationRetrying}
-        onClose={() => dismissPaywall(router)}
-        onRetry={() => void entitlement.retryVerification()}
-      />
-    );
-  }
-  if (decision.phase === 'redirect') return <DirectPaywallRedirecting />;
+  }, []);
 
   return (
     <View
@@ -129,7 +75,6 @@ export default function WinbackScreen() {
         paddingHorizontal: 30,
       }}
     >
-      <StatusBar style={statusBarStyleForSurface('night')} />
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -141,7 +86,7 @@ export default function WinbackScreen() {
         }}
       >
         <Text variant="label" style={{ color: 'rgba(244,239,231,0.5)', letterSpacing: 2 }}>
-          {PAYWALL_COPY.winback.eyebrow.toUpperCase()}
+          {winBackCopy.eyebrow.toUpperCase()}
         </Text>
         <Text
           variant="display"
@@ -152,7 +97,7 @@ export default function WinbackScreen() {
             lineHeight: compactPaywall ? 37 : 43,
           }}
         >
-          {PAYWALL_COPY.winback.title}
+          {winBackCopy.title}
         </Text>
         <Text
           variant="body"
@@ -163,7 +108,7 @@ export default function WinbackScreen() {
             fontSize: compactPaywall ? 15 : undefined,
           }}
         >
-          {PAYWALL_COPY.winback.body}
+          {winBackCopy.body}
         </Text>
         <View
           className={compactPaywall ? 'mt-4 rounded-card p-4' : 'mt-6 rounded-card p-5'}
@@ -172,30 +117,30 @@ export default function WinbackScreen() {
           <View className="flex-row items-center justify-between">
             <View>
               <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.55)' }}>
-                {PAYWALL_COPY.winback.offerLabel}
+                {winBackCopy.priceLabel}
               </Text>
               <View className="mt-1 flex-row items-baseline gap-2">
                 <Text variant="title" style={{ color: colors.cream, fontSize: 28 }}>
-                  {offer?.priceLabel ?? annualDisplay.priceLabel}
+                  {eligibleOffer?.priceLabel ?? annualDisplay.priceLabel}
                 </Text>
-                {offer?.originalPriceLabel ? (
+                {eligibleOffer?.originalPriceLabel ? (
                   <Text
                     variant="bodySm"
                     style={{ color: 'rgba(244,239,231,0.45)', textDecorationLine: 'line-through' }}
                   >
-                    {offer.originalPriceLabel}
+                    {eligibleOffer.originalPriceLabel}
                   </Text>
                 ) : null}
                 <Text variant="bodySm" style={{ color: colors.clayBright }}>
-                  {offer?.periodLabel
-                    ? `/ ${offer.periodLabel}`
+                  {eligibleOffer?.periodLabel
+                    ? `/ ${eligibleOffer.periodLabel}`
                     : annualDisplay.periodLabel
                       ? `/ ${annualDisplay.periodLabel}`
                       : ''}
                 </Text>
               </View>
             </View>
-            {offer?.percentOff ? (
+            {eligibleOffer?.percentOff ? (
               <View
                 className="rounded-pill px-3 py-1.5"
                 style={{ backgroundColor: 'rgba(217,161,131,0.2)' }}
@@ -205,30 +150,17 @@ export default function WinbackScreen() {
                   className="font-sans-bold"
                   style={{ color: colors.clayBright, fontSize: 11 }}
                 >
-                  {offer.percentOff}% off
+                  {eligibleOffer.percentOff}% off
                 </Text>
               </View>
             ) : null}
           </View>
-          {offer ? (
-            <Text
-              variant="label"
-              className="mt-2"
-              style={{ color: 'rgba(244,239,231,0.6)', lineHeight: 16 }}
-            >
-              {PAYWALL_COPY.winback.termsFor(
-                offer.offerDurationLabel,
-                offer.renewalPriceLabel,
-                offer.renewalPeriodLabel,
-              )}
-            </Text>
-          ) : null}
         </View>
         {compactPaywall ? null : <ComplianceRow tone="dark" />}
       </ScrollView>
       <View className="gap-2.5" style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}>
         {compactPaywall ? <ComplianceRow tone="dark" /> : null}
-        {offeringDecision === 'fallback' ? (
+        {!canWinBack ? (
           <Text
             variant="label"
             className="px-2 text-center"
@@ -238,38 +170,24 @@ export default function WinbackScreen() {
               lineHeight: compactPaywall ? 15 : 16,
             }}
           >
-            {unavailableOfferCopy}
+            {fallbackActionCopy}
           </Text>
         ) : null}
         <PaywallFeedback
           compact={compactPaywall}
-          feedback={paidAction.feedback ?? actionFeedback}
+          feedback={actionFeedback}
           tone="dark"
           className="rounded-card px-3 py-2"
         />
         <Pressable
           accessibilityRole="button"
-          disabled={
-            !decision.allowPurchase ||
-            offeringDecision === 'loading' ||
-            paidAction.isHeld ||
-            winback.isPending
-          }
+          disabled={winback.isPending}
           onPress={onComeBack}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{
-            backgroundColor:
-              paidAction.isHeld || offeringDecision === 'loading'
-                ? 'rgba(244,239,231,0.35)'
-                : colors.cream,
-          }}
+          style={{ backgroundColor: colors.cream }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.ink, fontSize: 16 }}>
-            {offeringDecision === 'loading'
-              ? 'Checking offer…'
-              : canWinBack
-                ? PAYWALL_COPY.winback.cta
-                : 'See current Pro plan'}
+            {winBackCopy.cta}
           </Text>
         </Pressable>
         <Pressable
@@ -281,7 +199,7 @@ export default function WinbackScreen() {
             className="font-sans-semibold"
             style={{ color: 'rgba(244,239,231,0.5)', fontSize: 15 }}
           >
-            {PAYWALL_COPY.winback.declineCta}
+            {winBackCopy.declineCta}
           </Text>
         </Pressable>
       </View>

@@ -38,7 +38,6 @@ const required = [
   'CATALOG_APP_VERSION',
   'CATALOG_CONTACT_EMAIL',
   'CATALOG_ATTRIBUTION_URL',
-  'OBF_USER_AGENT',
 ];
 
 function valueFor(name) {
@@ -69,27 +68,16 @@ if (attributionUrl && !normalizeProductionUrl(attributionUrl)) {
   errors.push('CATALOG_ATTRIBUTION_URL must be a production HTTPS URL.');
 }
 
-const ua = valueFor('OBF_USER_AGENT');
-const uaMatch = ua.match(/^([^/\s]+)\/([^\s]+)\s+\(([^)]+)\)$/);
-if (ua && !uaMatch) {
-  errors.push('OBF_USER_AGENT must look like AppName/Version (contact@example.com).');
-} else if (uaMatch) {
-  const [, appName, version, contactEmail] = uaMatch;
-  if (!isUsable('OBF_USER_AGENT') || /onskin/i.test(appName) || placeholderEnvValue(version)) {
-    errors.push('OBF_USER_AGENT must use final source identity values.');
-  }
-  if (!normalizeProductionSupportEmail(contactEmail)) {
-    errors.push('OBF_USER_AGENT must include a production contact email address.');
-  }
-}
-
-if (valueFor('OBF_API_ENABLED') === 'true' && !isUsable('OBF_USER_AGENT')) {
-  errors.push('OBF_API_ENABLED=true requires a final, usable OBF_USER_AGENT.');
+const legacyObfApiFlag = valueFor('OBF_API_ENABLED');
+if (legacyObfApiFlag && legacyObfApiFlag.toLowerCase() !== 'false') {
+  errors.push(
+    'OBF_API_ENABLED is retired: request-time Open Beauty Facts lookup must remain disabled.',
+  );
 }
 
 if (valueFor('OBF_CONTRIBUTION_ENABLED') === 'true') {
   warnings.push(
-    'OBF contribution is enabled. Confirm account credentials, moderation, and ODbL review are complete.',
+    'OBF contribution was requested, but catalog-report intentionally suppresses enqueueing until its RPC has an atomic active-consent and expected-epoch guard.',
   );
 }
 

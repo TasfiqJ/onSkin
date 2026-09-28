@@ -1,29 +1,30 @@
-import type { GoalId, SequencingRole } from '@onskin/types';
+import type { GoalId, SequencingRole } from '@layerwell/types';
 
 import {
-  detectConflicts,
+  evaluateConflicts,
+  type ConflictEvaluationStatus,
   type DetectedConflict,
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
-import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
 import { unresolvedConflicts, type ConflictChoices } from '@/features/intelligence/conflictChoices';
 import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler';
-import {
-  pregnancySafetyReasonForProduct,
-  type PregnancySafetyMode,
-  type PregnancySafetyReason,
-  type PregnancySafetyStatus,
+import type {
+  PregnancySafetyMode,
+  PregnancySafetyReason,
+  PregnancySafetyStatus,
 } from '@/features/intelligence/pregnancySafety';
 
 import { initRamp, type RampState } from './ramp';
-import { canUseRoutineCadence } from './reviewGate';
+import { canUseRoutineCadence, canUseRoutineSequencing } from './reviewGate';
 import {
   classifyRole,
   routineCadenceDisposition,
   sequencePhase,
+  shippableSequencingRules,
   type ClassifiableProduct,
   type SequencedStep,
+  type ShippableSequencingRules,
 } from './sequencing';
 
 // The deterministic generation pipeline (docs/03 §2): classify → allocate AM/PM →
@@ -43,9 +44,18 @@ export type GeneratedPlan = {
     reason: PregnancySafetyReason;
   }[];
   cadenceWithheld: { productId: string; name: string }[];
+  sequencingWithheld: {
+    productId: string;
+    name: string;
+    role: SequencingRole;
+    placement: 'withheld';
+    reason: 'review_required';
+  }[];
   unplacedProducts: { productId: string; name: string }[];
   gaps: string[];
   conflicts: DetectedConflict[];
+  conflictCoverageStatus: ConflictEvaluationStatus;
+  unsupportedConflictPairs: string[];
 };
 
 // Roles whose absence is worth a calm, claim-safe gap note (docs/03 §2. Never
@@ -72,13 +82,37 @@ export type RoutineGenerationProfile = EngineProfile & {
 export function generatePlan(
   products: RoutineProduct[],
   profile: RoutineGenerationProfile,
-  rules: ConflictRule[] = shippableRules(),
   conflictChoices: ConflictChoices = {},
+  sequencingRules: ShippableSequencingRules = shippableSequencingRules(),
 ): GeneratedPlan {
-  const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
-  const safetyExclusions = products.flatMap((product) => {
-    const reason = pregnancySafetyReasonForProduct(product, pregnancySafety, rules);
-    return reason ? [{ productId: product.id, name: product.name, reason }] : [];
+  const reproductiveStatus =
+    profile.pregnancyStatus ??
+    profile.reproductiveStatus ??
+    (profile.pregnancy ? 'pregnant' : 'none');
+  const engineProducts: EngineProduct[] = products.map((product) => ({
+    id: product.id,
+    name: product.name,
+    tags: product.tags,
+    concentration: product.concentration,
+  }));
+  const conflictEvaluation = evaluateConflicts(engineProducts, {
+    ...profile,
+    reproductiveStatus,
+  });
+  const productByIdForSafety = new Map(products.map((product) => [product.id, product] as const));
+  const safetyExclusions = conflictEvaluation.conflicts.flatMap((conflict) => {
+    if (conflict.rule.interactionType !== 'safety') return [];
+    const productId = conflict.productAId ?? conflict.productBId;
+    const product = productId ? productByIdForSafety.get(productId) : null;
+    if (!product) return [];
+    const activeTag = conflict.rule.tagA === 'pregnancy' ? conflict.rule.tagB : conflict.rule.tagA;
+    const reason: PregnancySafetyReason =
+      activeTag === 'retinoid'
+        ? 'retinoid'
+        : activeTag === 'hydroquinone'
+          ? 'hydroquinone'
+          : 'bha_not_confirmed_low';
+    return [{ productId: product.id, name: product.name, reason }];
   });
   const excludedIds = new Set(safetyExclusions.map((item) => item.productId));
   const routineProducts = products.filter((product) => !excludedIds.has(product.id));
@@ -104,14 +138,37 @@ export function generatePlan(
     .map(({ product }) => ({ productId: product.id, name: product.name }))
     .sort((a, b) => a.productId.localeCompare(b.productId));
   const cadenceWithheldIds = new Set(cadenceWithheld.map((item) => item.productId));
-  const cadenceEligibleProducts = routineProducts.filter(
-    (product) => !cadenceWithheldIds.has(product.id),
+  const availableSequencingRules = shippableSequencingRules(sequencingRules);
+  const allowSequencing = canUseRoutineSequencing(availableSequencingRules);
+  const sequencingWithheld = classifiedProducts
+    .filter(
+      ({ product, role }) =>
+        role != null &&
+        !cadenceWithheldIds.has(product.id) &&
+        (!allowSequencing || availableSequencingRules[role] == null),
+    )
+    .map(({ product, role }) => ({
+      productId: product.id,
+      name: product.name,
+      role: role!,
+      placement: 'withheld' as const,
+      reason: 'review_required' as const,
+    }))
+    .sort((a, b) => a.productId.localeCompare(b.productId));
+  const sequencingWithheldIds = new Set(sequencingWithheld.map((item) => item.productId));
+  const sequenceEligibleProducts = routineProducts.filter(
+    (product) => !cadenceWithheldIds.has(product.id) && !sequencingWithheldIds.has(product.id),
   );
-  const am = sequencePhase(cadenceEligibleProducts, 'am');
-  const pm = sequencePhase(cadenceEligibleProducts, 'pm') as PlanStep[];
+  const am = sequencePhase(sequenceEligibleProducts, 'am', availableSequencingRules);
+  const pm = sequencePhase(sequenceEligibleProducts, 'pm', availableSequencingRules) as PlanStep[];
   const cycleProductIds = new Set(
     classifiedProducts
-      .filter(({ product, cadence }) => cadence === 'cycle' && !cadenceWithheldIds.has(product.id))
+      .filter(
+        ({ product, cadence }) =>
+          cadence === 'cycle' &&
+          !cadenceWithheldIds.has(product.id) &&
+          !sequencingWithheldIds.has(product.id),
+      )
       .map(({ product }) => product.id),
   );
   const productById = new Map(routineProducts.map((product) => [product.id, product] as const));
@@ -145,23 +202,14 @@ export function generatePlan(
   const ownedRoles = new Set(
     classifiedProducts.flatMap(({ role }) => (role == null ? [] : [role])),
   );
-  const gaps = (Object.keys(GAP_NOTES) as SequencingRole[])
-    .filter((role) => !ownedRoles.has(role))
-    .map((role) => GAP_NOTES[role]!);
+  const gaps = allowSequencing
+    ? (Object.keys(GAP_NOTES) as SequencingRole[])
+        .filter((role) => !ownedRoles.has(role))
+        .map((role) => GAP_NOTES[role]!)
+    : [];
 
   // Conflicts: run the docs/02 engine (launch-gated rules) over the shelf.
-  const engineProducts: EngineProduct[] = products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    tags: p.tags,
-    concentration: p.concentration,
-  }));
-  const detectedConflicts = detectConflicts(
-    engineProducts,
-    { ...profile, pregnancy: profile.pregnancy },
-    rules,
-  );
-  const conflicts = unresolvedConflicts(detectedConflicts, conflictChoices);
+  const conflicts = unresolvedConflicts(conflictEvaluation.conflicts, conflictChoices);
 
   return {
     am,
@@ -170,8 +218,11 @@ export function generatePlan(
     ramp,
     safetyExclusions,
     cadenceWithheld,
+    sequencingWithheld,
     unplacedProducts,
     gaps,
     conflicts,
+    conflictCoverageStatus: conflictEvaluation.status,
+    unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
   };
 }

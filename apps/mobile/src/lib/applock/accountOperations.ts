@@ -1,5 +1,4 @@
 import {
-  awaitAccountGenerationLease,
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
@@ -28,6 +27,64 @@ export type AppLockPreferenceSaveResult =
   | { status: 'saved'; enabled: boolean }
   | { status: 'not_authenticated' | 'unavailable' }
   | { status: 'write_uncertain'; preference: AppLockPreferenceReadResult };
+
+/** Detach an API without AbortSignal support as soon as its account lease is
+ * invalidated. The underlying native/storage promise may settle later, but it
+ * can no longer publish into the next owner generation. */
+function awaitAccountGenerationLease<T>(
+  lease: AccountGenerationLease,
+  operation: () => PromiseLike<T>,
+): Promise<T> {
+  try {
+    lease.assertCurrent();
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  return new Promise<T>((resolve, reject) => {
+    let settled = false;
+    const finish = (callback: () => void) => {
+      if (settled) return;
+      settled = true;
+      lease.signal.removeEventListener('abort', onAbort);
+      callback();
+    };
+    const onAbort = () =>
+      finish(() => {
+        try {
+          lease.assertCurrent();
+          reject(new Error('ACCOUNT_GENERATION_CHANGED'));
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+    lease.signal.addEventListener('abort', onAbort, { once: true });
+    if (lease.signal.aborted) {
+      onAbort();
+      return;
+    }
+
+    let pending: PromiseLike<T>;
+    try {
+      pending = operation();
+    } catch (error) {
+      finish(() => reject(error));
+      return;
+    }
+    void Promise.resolve(pending).then(
+      (value) => {
+        try {
+          lease.assertCurrent();
+          finish(() => resolve(value));
+        } catch (error) {
+          finish(() => reject(error));
+        }
+      },
+      (error: unknown) => finish(() => reject(error)),
+    );
+  });
+}
 
 async function readPreferenceWithLease(
   lease: AccountGenerationLease,
@@ -168,18 +225,19 @@ export function setAppLockPreferenceForCurrentAccount(input: {
         return result;
       }
 
-      const authStatus = await authenticateWithLease(
-        lease,
-        'Confirm to enable app lock',
-        input.authenticationToken,
-        input.isInteractionCurrent,
-      );
-      if (authStatus !== 'success') {
-        const result = { status: authStatus } as const;
-        lease.assertCurrent();
-        if (requestIsCurrent(input.isInteractionCurrent)) input.publish(result);
-        return result;
-      }
+    }
+
+    const authStatus = await authenticateWithLease(
+      lease,
+      input.enabled ? 'Confirm to enable app lock' : 'Confirm to disable app lock',
+      input.authenticationToken,
+      input.isInteractionCurrent,
+    );
+    if (authStatus !== 'success') {
+      const result = { status: authStatus } as const;
+      lease.assertCurrent();
+      if (requestIsCurrent(input.isInteractionCurrent)) input.publish(result);
+      return result;
     }
 
     if (!requestIsCurrent(input.isInteractionCurrent)) {

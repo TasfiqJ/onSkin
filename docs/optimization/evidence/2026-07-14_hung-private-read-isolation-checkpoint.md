@@ -24,9 +24,9 @@ This checkpoint removes a cross-cutting account-isolation liveness defect: pure 
 | --- | --- |
 | Seven-file private/photo/store/share/auth isolation Vitest matrix | Pass, 7 files / 199 tests |
 | `npm test` | Pass, 249 files / 3,173 tests |
-| `npm --workspace @onskin/mobile run typecheck` | Pass |
+| `npm --workspace @layerwell/mobile run typecheck` | Pass |
 | `npm run typecheck` | Pass, 2 workspaces |
-| `npm --workspace @onskin/mobile run lint` | Pass, zero warnings |
+| `npm --workspace @layerwell/mobile run lint` | Pass, zero warnings |
 | `npm run lint` | Pass, 2 workspaces, zero warnings |
 | Scoped `git diff --check` | Pass |
 

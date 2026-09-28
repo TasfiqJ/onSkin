@@ -7,7 +7,7 @@ import {
   type BackOrReplaceRouter,
 } from '@/lib/navigation/safeBack';
 import { track } from '@/lib/analytics/track';
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 export const PAYWALL_DISMISS_FALLBACK_ROUTE = APP_HOME_ROUTE;
 

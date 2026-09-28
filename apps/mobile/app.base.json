@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "RoutineKind",
-    "slug": "routinekind",
+    "name": "Layerwell",
+    "slug": "layerwell",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "routinekind",
-    "userInterfaceStyle": "light",
+    "scheme": "layerwell",
+    "userInterfaceStyle": "automatic",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
@@ -15,21 +15,30 @@
       "checkAutomatically": "NEVER"
     },
     "ios": {
-      "bundleIdentifier": "com.routinekind.app",
+      "bundleIdentifier": "com.layerwell.app",
       "supportsTablet": false,
       "usesAppleSignIn": true,
       "deploymentTarget": "17.0",
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "entitlements": {
         "com.apple.developer.default-data-protection": "NSFileProtectionComplete"
       },
       "infoPlist": {
-        "NSCameraUsageDescription": "RoutineKind uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
-        "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.",
+        "NSFaceIDUsageDescription": "Layerwell uses Face ID to keep your private photo timeline for your eyes only.",
+        "NSSupportsLiveActivities": true
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["1C8F.1"]
+          }
+        ]
       }
     },
     "android": {
-      "package": "com.routinekind.app",
+      "package": "com.layerwell.app",
       "permissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"],
       "adaptiveIcon": {
         "backgroundColor": "#F5F1EA",
@@ -62,14 +71,17 @@
         {
           "backgroundColor": "#F5F1EA",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 120
+          "imageWidth": 120,
+          "dark": {
+            "backgroundColor": "#1C1815"
+          }
         }
       ],
       "expo-font",
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to scan barcodes, capture ingredient labels, and take guided progress photos.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.",
           "recordAudioAndroid": false,
           "barcodeScannerEnabled": true
         }
@@ -88,10 +100,35 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
+          "faceIDPermission": "Layerwell uses Face ID to keep your private photo timeline for your eyes only."
         }
       ],
       "expo-localization",
+      [
+        "expo-widgets",
+        {
+          "enableAndroid": false,
+          "enablePushNotifications": false,
+          "frequentUpdates": false,
+          "widgets": [
+            {
+              "name": "LayerwellToday",
+              "displayName": "Today",
+              "description": "See today’s routine progress and check off the next step.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "systemMedium",
+                  "accessoryRectangular",
+                  "accessoryInline"
+                ]
+              },
+              "android": null
+            }
+          ]
+        }
+      ],
+      "./plugins/withLayerwellWidgetPrivacyManifest",
       "@sentry/react-native",
       "./plugins/withReleaseTransportSecurity"
     ],

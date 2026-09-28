@@ -1,13 +1,9 @@
-import type { ProductStatus } from '@onskin/types';
+import type { ProductStatus } from '@layerwell/types';
 import { describe, expect, it } from 'vitest';
 
 import type { ShelfItem } from '@/features/shelf/useShelf';
 
-import {
-  collectReplenishmentCandidates,
-  hasReplenishmentSignal,
-  hasReplenishmentSignalForProducts,
-} from './replenishment';
+import { collectReplenishmentCandidates, hasReplenishmentSignal } from './replenishment';
 
 type ItemOptions = {
   id: string;
@@ -18,7 +14,12 @@ type ItemOptions = {
   category?: string | null;
   barcode?: string | null;
   catalogProductId?: string | null;
+  replacementRootId?: string;
+  expiryDate?: string | null;
+  expirySource?: ShelfItem['product']['expirySource'];
+  legacyUnverifiedExpiryDate?: string | null;
   isOpened?: boolean;
+  paoSource?: ShelfItem['product']['paoSource'];
 };
 
 function item({
@@ -30,7 +31,12 @@ function item({
   category = 'serum',
   barcode = null,
   catalogProductId = null,
+  replacementRootId,
+  expiryDate = null,
+  expirySource = 'unknown',
+  legacyUnverifiedExpiryDate = null,
   isOpened = true,
+  paoSource = 'unknown',
 }: ItemOptions): ShelfItem {
   return {
     id,
@@ -47,7 +53,12 @@ function item({
       category,
       barcode,
       catalogProductId,
+      replacementRootId,
+      expiryDate,
+      expirySource,
+      legacyUnverifiedExpiryDate,
       isOpened,
+      paoSource,
     } as ShelfItem['product'],
     engineProduct: { id, name, tags: [] },
     paired: false,
@@ -55,21 +66,84 @@ function item({
 }
 
 describe('replenishment signal selection', () => {
-  it('includes only active countdown and expired freshness signals', () => {
-    const countdown = item({ id: 'countdown', badgeKind: 'countdown' });
-    const expired = item({ id: 'expired', badgeKind: 'expired' });
-    const unknown = item({ id: 'unknown', badgeKind: 'unknown' });
+  it('preserves printed-expiry, product-label PAO and reviewed catalog PAO provenance', () => {
+    const printedCountdown = item({
+      id: 'printed-countdown',
+      badgeKind: 'countdown',
+      expiryDate: '2026-08-01',
+      expirySource: 'printed',
+    });
+    const printedExpired = item({
+      id: 'printed-expired',
+      badgeKind: 'expired',
+      expiryDate: '2026-06-01',
+      expirySource: 'printed',
+    });
+    const labelPaoCountdown = item({
+      id: 'label-pao-countdown',
+      badgeKind: 'countdown',
+      expirySource: 'pao_computed',
+      paoSource: 'label',
+    });
+    const catalogPaoExpired = item({
+      id: 'catalog-pao-expired',
+      badgeKind: 'expired',
+      expirySource: 'pao_computed',
+      paoSource: 'catalog',
+    });
     const unopened = item({ id: 'unopened', badgeKind: 'unknown', isOpened: false });
 
     expect(
       collectReplenishmentCandidates({
-        items: [countdown, expired, unknown, unopened],
+        items: [
+          printedCountdown,
+          printedExpired,
+          labelPaoCountdown,
+          catalogPaoExpired,
+          unopened,
+        ],
         archive: [],
       }),
     ).toEqual([
-      { item: countdown, reason: 'countdown' },
-      { item: expired, reason: 'expired' },
+      { item: printedCountdown, reason: 'printed_expiry_countdown' },
+      { item: printedExpired, reason: 'printed_expiry_expired' },
+      { item: labelPaoCountdown, reason: 'label_pao_countdown' },
+      { item: catalogPaoExpired, reason: 'catalog_pao_expired' },
     ]);
+  });
+
+  it('rejects estimated, category-default and unknown freshness even with an actionable badge', () => {
+    const estimated = item({
+      id: 'estimated',
+      badgeKind: 'countdown',
+      expirySource: 'estimated',
+      paoSource: 'category_default',
+    });
+    const categoryDefault = item({
+      id: 'category-default',
+      badgeKind: 'expired',
+      expirySource: 'pao_computed',
+      paoSource: 'category_default',
+    });
+    const unknown = item({
+      id: 'unknown',
+      badgeKind: 'expired',
+      expirySource: 'unknown',
+    });
+    const legacyCatalogDate = item({
+      id: 'legacy-catalog-date',
+      badgeKind: 'expired',
+      expiryDate: '2026-06-01',
+      expirySource: 'printed',
+      legacyUnverifiedExpiryDate: '2026-06-01',
+    });
+
+    expect(
+      collectReplenishmentCandidates({
+        items: [estimated, categoryDefault, unknown, legacyCatalogDate],
+        archive: [],
+      }),
+    ).toEqual([]);
   });
 
   it('includes finished products but never discarded archive rows', () => {
@@ -82,7 +156,7 @@ describe('replenishment signal selection', () => {
     expect(hasReplenishmentSignal({ items: [], archive: [finished] })).toBe(true);
   });
 
-  it('suppresses a finished unit after the same catalog product is re-added', () => {
+  it('falls back to catalog identity when replacement lineage is absent', () => {
     const activeReplacement = item({
       id: 'fresh-unit',
       catalogProductId: 'catalog-1',
@@ -96,6 +170,28 @@ describe('replenishment signal selection', () => {
 
     expect(
       collectReplenishmentCandidates({ items: [activeReplacement], archive: [oldUnit] }),
+    ).toEqual([]);
+  });
+
+  it('uses immutable replacement lineage after the active successor gains catalog identity', () => {
+    const replacementRootId = '00000000-0000-4000-8000-000000000090';
+    const activeReplacement = item({
+      id: 'enriched-successor',
+      replacementRootId,
+      catalogProductId: 'catalog-1',
+      badgeKind: 'date',
+    });
+    const oldManualUnit = item({
+      id: 'manual-ancestor',
+      replacementRootId,
+      status: 'finished',
+      name: 'Barrier cream',
+      brand: 'Example',
+      catalogProductId: null,
+    });
+
+    expect(
+      collectReplenishmentCandidates({ items: [activeReplacement], archive: [oldManualUnit] }),
     ).toEqual([]);
   });
 
@@ -117,41 +213,6 @@ describe('replenishment signal selection', () => {
         ],
         archive: [],
       }),
-    ).toBe(false);
-  });
-
-  it('derives the same lightweight lifecycle signals from raw local Shelf rows', () => {
-    const active = item({
-      id: 'active',
-      catalogProductId: 'catalog-1',
-      badgeKind: 'expired',
-    });
-    active.product.expiryDate = '2026-06-01';
-    active.product.status = 'active';
-    const replaced = item({
-      id: 'old',
-      status: 'finished',
-      catalogProductId: 'catalog-1',
-    });
-
-    expect(
-      hasReplenishmentSignalForProducts(
-        [active.product, replaced.product],
-        '2026-07-18',
-      ),
-    ).toBe(true);
-    expect(
-      hasReplenishmentSignalForProducts(
-        [
-          {
-            ...active.product,
-            expiryDate: null,
-            isOpened: false,
-          },
-          replaced.product,
-        ],
-        '2026-07-18',
-      ),
     ).toBe(false);
   });
 });

@@ -2,7 +2,6 @@ import 'react-native-get-random-values';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
-import * as Crypto from 'expo-crypto';
 import {
   bytesToHex,
   bytesToUtf8,
@@ -12,31 +11,21 @@ import {
 } from '@noble/ciphers/utils.js';
 
 import {
-  PRIVATE_KV_CONTENT_KEY_CONFLICT,
   PRIVATE_KV_CONTENT_KEY_NAME,
-  PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE,
   clearStoredPrivateKVContentKey,
   getStoredPrivateKVContentKey,
-  migrateStoredPrivateKVContentKey,
   setStoredPrivateKVContentKey,
 } from './privateKVContentKey';
 import {
-  LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
-  LOCAL_PRIVATE_READ_ONLY_KEYS,
-} from '@/features/settings/localPrivateDataRegistry';
-import { withOperationTiming } from '@/lib/observability/operationTiming';
+  assertHealthDataWriteLease,
+  captureHealthPurposePrivateDataWriteLease,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import {
-  MAX_PRIVATE_KV_TRANSACTION_TARGETS,
-  PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
-  PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION,
-  PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
-  PrivateKVTransactionJournalError,
-  decodePrivateKVTransactionJournal,
-  encodePrivateKVTransactionJournal,
-  type PrivateKVTransactionLegacyTarget,
-  type PrivateKVTransactionJournal,
-  type PrivateKVTransactionTarget,
-} from './privateKVTransactionCore';
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { withOperationTiming } from '@/lib/observability/operationTiming';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
@@ -51,50 +40,12 @@ export const PRIVATE_KV_ENVELOPE_INVALID = 'PRIVATE_KV_ENVELOPE_INVALID';
 export const PRIVATE_KV_ENVELOPE_UNSUPPORTED = 'PRIVATE_KV_ENVELOPE_UNSUPPORTED';
 export const PRIVATE_KV_ENVELOPE_FOREIGN = 'PRIVATE_KV_ENVELOPE_FOREIGN';
 export const PRIVATE_KV_RESERVED_KEY = 'PRIVATE_KV_RESERVED_KEY';
-export const PRIVATE_KV_READ_ONLY_KEY = 'PRIVATE_KV_READ_ONLY_KEY';
 export const PRIVATE_KV_WRITE_CONFLICT = 'PRIVATE_KV_WRITE_CONFLICT';
 export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
 export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
   'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
-export const PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID =
-  'PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID';
-export const PRIVATE_KV_TRANSACTION_JOURNAL_INVALID = 'PRIVATE_KV_TRANSACTION_JOURNAL_INVALID';
-export const PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED =
-  'PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED';
-export const PRIVATE_KV_TRANSACTION_CONFLICT = 'PRIVATE_KV_TRANSACTION_CONFLICT';
-export { PRIVATE_KV_CONTENT_KEY_CONFLICT, PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE };
-
-export type PrivateKVUnavailableReason =
-  | 'content_key_missing'
-  | 'content_key_conflict'
-  | 'content_key_storage_unavailable'
-  | 'account_boundary'
-  | 'storage_unavailable';
-
-export type PrivateKVCorruptReason =
-  | 'content_key_invalid'
-  | 'envelope_invalid'
-  | 'decryption_failed';
-
-/** Backwards-compatible name for domain unavailable results. Corrupt reasons
- * belong only to the `corrupt` discriminant. */
-export type PrivateKVReadFailureReason = PrivateKVUnavailableReason;
-
-export type PrivateKVReadResult =
-  | { status: 'absent' }
-  | { status: 'available'; value: string }
-  | { status: 'unavailable'; reason: PrivateKVUnavailableReason }
-  | { status: 'corrupt'; reason: PrivateKVCorruptReason }
-  | { status: 'unsupported_version' };
-
-export type PrivateKVAuthorizedResetReason =
-  | 'account_isolation'
-  | 'device_authenticated_app_lock_repair';
-
-const DEVICE_AUTHENTICATED_APP_LOCK_REPAIR_KEY = 'onskin.appLock.enabled';
-const ACCOUNT_ISOLATION_RESET_KEYS = new Set<string>(LOCAL_PRIVATE_BULK_CLEANUP_KEYS);
-const READ_ONLY_PRIVATE_KEYS = new Set<string>(LOCAL_PRIVATE_READ_ONLY_KEYS);
+export const PRIVATE_KV_WRITE_ROLLBACK_FAILED = 'PRIVATE_KV_WRITE_ROLLBACK_FAILED';
 
 type PrivateEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -110,80 +61,25 @@ type EnvelopeClassification =
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const failedReadSnapshots = new Map<string, string>();
-type ActivePrivateRead = Readonly<{
-  generation: number;
-  invalidate: () => void;
-}>;
-
-const activeReadOperations = new Set<ActivePrivateRead>();
-const inFlightMutationOperations = new Set<Promise<unknown>>();
+const inFlightOperations = new Set<Promise<unknown>>();
 const privateMutationTails = new Map<string, Promise<void>>();
 let accountBoundaryWriteBlocked = false;
 let accountBoundaryWriteBlockDepth = 0;
 let accountBoundaryGeneration = 0;
-let privateTransactionTail: Promise<void> = Promise.resolve();
-let privateTransactionRecovery: Promise<void> | null = null;
-let privateTransactionJournalKnownAbsent = false;
 
-function accountBoundaryError(): Error {
-  return new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
-}
-
-function runAccountScopedPrivateRead<T>(operation: (generation: number) => Promise<T>): Promise<T> {
-  if (accountBoundaryWriteBlocked) return Promise.reject(accountBoundaryError());
-  const generation = accountBoundaryGeneration;
-
-  return new Promise<T>((resolve, reject) => {
-    let settled = false;
-    let activeRead!: ActivePrivateRead;
-    const finish = (callback: () => void) => {
-      if (settled) return;
-      settled = true;
-      activeReadOperations.delete(activeRead);
-      callback();
-    };
-    activeRead = Object.freeze({
-      generation,
-      invalidate: () => finish(() => reject(accountBoundaryError())),
-    });
-    activeReadOperations.add(activeRead);
-
-    let pending: Promise<T>;
-    try {
-      pending = operation(generation);
-    } catch (error) {
-      finish(() => reject(error));
-      return;
-    }
-
-    void Promise.resolve(pending).then(
-      (value) => {
-        try {
-          assertAccountScopedPrivateOperationAllowed(generation);
-          finish(() => resolve(value));
-        } catch (error) {
-          finish(() => reject(error));
-        }
-      },
-      (error: unknown) => finish(() => reject(error)),
-    );
-  });
-}
-
-/** Mutation-only coordinator retained by the destructive account-boundary drain. */
-async function runAccountScopedPrivateMutation<T>(
+async function runAccountScopedPrivateOperation<T>(
   operation: (generation: number) => Promise<T>,
 ): Promise<T> {
   if (accountBoundaryWriteBlocked) {
-    throw accountBoundaryError();
+    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
   }
   const generation = accountBoundaryGeneration;
   const pending = operation(generation);
-  inFlightMutationOperations.add(pending);
+  inFlightOperations.add(pending);
   try {
     return await pending;
   } finally {
-    inFlightMutationOperations.delete(pending);
+    inFlightOperations.delete(pending);
   }
 }
 
@@ -221,31 +117,14 @@ async function runSerializedPrivateMutations<T>(
   return acquire(0);
 }
 
-async function runSerializedPrivateTransaction<T>(operation: () => Promise<T>): Promise<T> {
-  const ready = privateTransactionTail.catch(() => undefined);
-  let release!: () => void;
-  const gate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  privateTransactionTail = ready.then(() => gate);
-  await ready;
-  try {
-    return await operation();
-  } finally {
-    release();
-  }
-}
-
 function assertAccountScopedPrivateOperationAllowed(generation: number): void {
   if (accountBoundaryWriteBlocked || generation !== accountBoundaryGeneration) {
-    throw accountBoundaryError();
+    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
   }
 }
 
-async function getExistingContentKey(migrate = false): Promise<Uint8Array | null> {
-  const stored = migrate
-    ? await migrateStoredPrivateKVContentKey()
-    : await getStoredPrivateKVContentKey();
+async function getExistingContentKey(): Promise<Uint8Array | null> {
+  const stored = await getStoredPrivateKVContentKey();
   if (!stored) return null;
   if (!/^[0-9a-f]{64}$/i.test(stored)) {
     throw new Error(PRIVATE_KV_CONTENT_KEY_INVALID);
@@ -277,12 +156,12 @@ async function hasOrphanedPrivateCiphertext(): Promise<boolean> {
 }
 
 async function getOrCreateContentKey(): Promise<Uint8Array> {
-  const existing = await getExistingContentKey(true);
+  const existing = await getExistingContentKey();
   if (existing) return existing;
 
   if (!contentKeyCreation) {
     contentKeyCreation = (async () => {
-      const rechecked = await getExistingContentKey(true);
+      const rechecked = await getExistingContentKey();
       if (rechecked) return rechecked;
       if (await hasOrphanedPrivateCiphertext()) {
         throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
@@ -324,7 +203,7 @@ function rawLooksLikeEncryptedEnvelope(raw: string): boolean {
 }
 
 function isPrivateKVOwnedKey(key: string): boolean {
-  return key.startsWith(LEGACY_PRIVATE_KV_PREFIX) || key.startsWith('routinekind.');
+  return key.startsWith(LEGACY_PRIVATE_KV_PREFIX) || key.startsWith('layerwell.');
 }
 
 function isKnownForeignStorageKey(key: string): boolean {
@@ -334,12 +213,6 @@ function isKnownForeignStorageKey(key: string): boolean {
 function assertPrivateDataKey(key: string): void {
   if (key === PRIVATE_KV_CONTENT_KEY_NAME) throw new Error(PRIVATE_KV_RESERVED_KEY);
   if (isKnownForeignStorageKey(key)) throw new Error(PRIVATE_KV_ENVELOPE_FOREIGN);
-}
-
-function assertPrivateDataKeyWritable(key: string): void {
-  assertPrivateDataKey(key);
-  if (key === PRIVATE_KV_TRANSACTION_JOURNAL_KEY) throw new Error(PRIVATE_KV_RESERVED_KEY);
-  if (READ_ONLY_PRIVATE_KEYS.has(key)) throw new Error(PRIVATE_KV_READ_ONLY_KEY);
 }
 
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
@@ -400,28 +273,25 @@ function envelopeClassificationError(kind: 'malformed' | 'unsupported'): Error {
   return new Error(PRIVATE_KV_ENVELOPE_INVALID);
 }
 
+function decryptEnvelopeBytes(envelope: PrivateEnvelope, contentKey: Uint8Array): Uint8Array {
+  return xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
+    hexToBytes(envelope.ciphertextHex),
+  );
+}
+
 function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): string {
-  const plaintext = xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
-    hexToBytes(envelope.ciphertextHex),
-  );
-  return bytesToUtf8(plaintext);
+  const plaintext = decryptEnvelopeBytes(envelope, contentKey);
+  try {
+    return bytesToUtf8(plaintext);
+  } finally {
+    plaintext.fill(0);
+  }
 }
 
-function authenticateEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): void {
-  void xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
-    hexToBytes(envelope.ciphertextHex),
-  );
-}
-
-function encryptPrivateValue(value: string, contentKey: Uint8Array): string {
-  const nonce = randomBytes(NONCE_BYTES);
-  const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
-  const envelope: PrivateEnvelope = {
-    version: ENCRYPTION_VERSION,
-    nonceHex: bytesToHex(nonce),
-    ciphertextHex: bytesToHex(ciphertext),
-  };
-  return JSON.stringify(envelope);
+/** Authenticate one envelope without materializing a JavaScript string. */
+function validateEnvelopeAuthentication(envelope: PrivateEnvelope, contentKey: Uint8Array): void {
+  const plaintext = decryptEnvelopeBytes(envelope, contentKey);
+  plaintext.fill(0);
 }
 
 function rememberFailedRead(key: string, raw: string): void {
@@ -438,247 +308,81 @@ async function assertNoFailedReadRewrite(key: string): Promise<string | null> {
   return current;
 }
 
-async function writeRawExactly(key: string, raw: string | null, generation: number): Promise<void> {
-  assertAccountScopedPrivateOperationAllowed(generation);
-  try {
-    if (raw === null) await AsyncStorage.removeItem(key);
-    else await AsyncStorage.setItem(key, raw);
-  } catch (error) {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    if ((await AsyncStorage.getItem(key)) === raw) return;
-    throw error;
-  }
-  assertAccountScopedPrivateOperationAllowed(generation);
-  if ((await AsyncStorage.getItem(key)) !== raw) {
-    throw new Error(PRIVATE_KV_WRITE_CONFLICT);
-  }
+function privateKVWriteRollbackFailure(cause: unknown): Error {
+  const error = new Error(PRIVATE_KV_WRITE_ROLLBACK_FAILED) as Error & {
+    cause?: unknown;
+  };
+  error.cause = cause;
+  return error;
 }
 
-async function decodeMutablePrivateRaw(
+/**
+ * Resolve a commit-then-reject or stale-authority mutation without guessing.
+ *
+ * The caller still owns the serialized key slot and remains registered as an
+ * in-flight account-scoped operation. Account cleanup therefore waits for this
+ * compensation even when the authority assertion that prompted it is stale.
+ * A foreign value is never overwritten, and prior preservation is accepted
+ * only after an exact raw-byte read-back.
+ */
+async function restoreExactRawAfterAmbiguousMutation(
   key: string,
-  raw: string | null,
-  existingContentKey: Uint8Array | null = null,
-): Promise<Readonly<{ contentKey: Uint8Array | null; value: string | null; current: boolean }>> {
-  if (raw === null) return { contentKey: existingContentKey, value: null, current: true };
-  const classification = classifyEnvelope(key, raw);
-  if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-    rememberFailedRead(key, raw);
-    throw envelopeClassificationError(classification.kind);
-  }
-  if (classification.kind === 'legacy') {
-    return { contentKey: existingContentKey, value: raw, current: false };
-  }
-
-  let contentKey = existingContentKey;
-  try {
-    contentKey ??= await getExistingContentKey();
-  } catch (error) {
-    rememberFailedRead(key, raw);
-    throw error;
-  }
-  if (!contentKey) {
-    rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-  }
-  try {
-    return {
-      contentKey,
-      value: decryptEnvelope(classification.envelope, contentKey),
-      current: true,
-    };
-  } catch {
-    rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
-  }
-}
-
-async function decodeStoredTransactionJournal(
-  raw: string,
-): Promise<Readonly<{ contentKey: Uint8Array; journal: PrivateKVTransactionJournal }>> {
-  const classification = classifyEnvelope(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, raw);
-  if (classification.kind !== 'current') {
-    rememberFailedRead(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, raw);
-    if (classification.kind === 'unsupported') {
-      throw new Error(PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED);
-    }
-    throw new Error(PRIVATE_KV_TRANSACTION_JOURNAL_INVALID);
-  }
-  let contentKey: Uint8Array | null;
-  try {
-    contentKey = await getExistingContentKey();
-  } catch (error) {
-    rememberFailedRead(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, raw);
-    throw error;
-  }
-  if (!contentKey) {
-    rememberFailedRead(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, raw);
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-  }
-
-  try {
-    const plaintext = decryptEnvelope(classification.envelope, contentKey);
-    const journal = decodePrivateKVTransactionJournal(plaintext);
-    for (const target of journal.targets) {
-      if (
-        target.key === PRIVATE_KV_TRANSACTION_JOURNAL_KEY ||
-        !ACCOUNT_ISOLATION_RESET_KEYS.has(target.key) ||
-        READ_ONLY_PRIVATE_KEYS.has(target.key)
-      ) {
-        throw new PrivateKVTransactionJournalError('invalid');
-      }
-    }
-    failedReadSnapshots.delete(PRIVATE_KV_TRANSACTION_JOURNAL_KEY);
-    return { contentKey, journal };
-  } catch (error) {
-    rememberFailedRead(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, raw);
-    if (error instanceof PrivateKVTransactionJournalError) {
-      throw new Error(
-        error.kind === 'unsupported_version'
-          ? PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED
-          : PRIVATE_KV_TRANSACTION_JOURNAL_INVALID,
-      );
-    }
-    if (
-      error instanceof Error &&
-      (error.message === PRIVATE_KV_TRANSACTION_JOURNAL_INVALID ||
-        error.message === PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED)
-    ) {
-      throw error;
-    }
-    throw new Error(PRIVATE_KV_TRANSACTION_JOURNAL_INVALID);
-  }
-}
-
-async function applyPrivateKVTransactionJournal(
-  journalRaw: string,
-  journal: PrivateKVTransactionJournal,
-  contentKey: Uint8Array,
-  generation: number,
+  attemptedRaw: string | null,
+  existingRaw: string | null,
 ): Promise<void> {
-  const beforeMatches = new Map<string, boolean>();
-  for (const target of journal.targets) {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    const currentRaw = await AsyncStorage.getItem(target.key);
-    const matchesBefore =
-      journal.version === PRIVATE_KV_TRANSACTION_LEGACY_SCHEMA_VERSION
-        ? currentRaw === (target as PrivateKVTransactionLegacyTarget).beforeRaw
-        : (await privateKVTransactionBeforeRawHash(currentRaw)) ===
-          (target as PrivateKVTransactionTarget).beforeRawHash;
-    beforeMatches.set(target.key, matchesBefore);
-    if (matchesBefore) continue;
-    const decoded = await decodeMutablePrivateRaw(target.key, currentRaw, contentKey);
-    if (decoded.value !== target.nextValue) {
-      throw new Error(PRIVATE_KV_TRANSACTION_CONFLICT);
-    }
-  }
-
-  for (const target of journal.targets) {
-    if (!beforeMatches.get(target.key)) {
-      // An earlier attempt already made this exact logical value durable.
-      failedReadSnapshots.delete(target.key);
-      continue;
-    }
-    const nextRaw =
-      target.nextValue === null ? null : encryptPrivateValue(target.nextValue, contentKey);
-    await writeRawExactly(target.key, nextRaw, generation);
-    failedReadSnapshots.delete(target.key);
-  }
-
-  assertAccountScopedPrivateOperationAllowed(generation);
-  if ((await AsyncStorage.getItem(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)) !== journalRaw) {
-    throw new Error(PRIVATE_KV_TRANSACTION_CONFLICT);
-  }
-  await writeRawExactly(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, null, generation);
-  failedReadSnapshots.delete(PRIVATE_KV_TRANSACTION_JOURNAL_KEY);
-  privateTransactionJournalKnownAbsent = true;
-}
-
-async function privateKVTransactionBeforeRawHash(raw: string | null): Promise<string> {
-  return Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    raw === null
-      ? 'onskin:private-kv-transaction-before:v2:null'
-      : `onskin:private-kv-transaction-before:v2:value:${raw}`,
-  );
-}
-
-async function recoverPrivateKVTransactionForGeneration(generation: number): Promise<void> {
-  return runSerializedPrivateTransaction(async () => {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    const initialRaw = await AsyncStorage.getItem(PRIVATE_KV_TRANSACTION_JOURNAL_KEY);
-    if (initialRaw === null) {
-      privateTransactionJournalKnownAbsent = true;
-      return;
-    }
-    const initial = await decodeStoredTransactionJournal(initialRaw);
-    const keys = [
-      PRIVATE_KV_TRANSACTION_JOURNAL_KEY,
-      ...initial.journal.targets.map((target) => target.key),
-    ];
-    await runSerializedPrivateMutations(keys, async () => {
-      assertAccountScopedPrivateOperationAllowed(generation);
-      const journalRaw = await AsyncStorage.getItem(PRIVATE_KV_TRANSACTION_JOURNAL_KEY);
-      if (journalRaw === null) return;
-      const decoded = await decodeStoredTransactionJournal(journalRaw);
-      await applyPrivateKVTransactionJournal(
-        journalRaw,
-        decoded.journal,
-        decoded.contentKey,
-        generation,
-      );
-    });
-  });
-}
-
-async function ensurePrivateKVTransactionRecovered(): Promise<void> {
-  if (privateTransactionJournalKnownAbsent) return;
-  if (privateTransactionRecovery) return privateTransactionRecovery;
-  const pending = runAccountScopedPrivateMutation(recoverPrivateKVTransactionForGeneration);
-  privateTransactionRecovery = pending;
+  let currentRaw: string | null;
   try {
-    await pending;
-  } finally {
-    if (privateTransactionRecovery === pending) privateTransactionRecovery = null;
-  }
-}
-
-async function assertRoutineRemovalReadable(key: string, raw: string | null): Promise<void> {
-  if (raw === null) return;
-
-  const classification = classifyEnvelope(key, raw);
-  if (classification.kind === 'legacy') return;
-  if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-    rememberFailedRead(key, raw);
-    throw envelopeClassificationError(classification.kind);
-  }
-
-  let contentKey: Uint8Array | null;
-  try {
-    contentKey = await getExistingContentKey();
+    currentRaw = await AsyncStorage.getItem(key);
   } catch (error) {
-    rememberFailedRead(key, raw);
-    throw error;
+    throw privateKVWriteRollbackFailure(error);
   }
-  if (!contentKey) {
-    rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+
+  // The storage call rejected before committing, or another compensating
+  // continuation already restored the exact prior state.
+  if (currentRaw === existingRaw) return;
+
+  // Never overwrite bytes that cannot be attributed to this mutation.
+  if (currentRaw !== attemptedRaw) {
+    throw privateKVWriteRollbackFailure(new Error(PRIVATE_KV_WRITE_CONFLICT));
   }
+
+  let restoreError: unknown;
   try {
-    decryptEnvelope(classification.envelope, contentKey);
-  } catch {
-    rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+    if (existingRaw === null) {
+      await AsyncStorage.removeItem(key);
+    } else {
+      await AsyncStorage.setItem(key, existingRaw);
+    }
+  } catch (error) {
+    // AsyncStorage restoration can itself commit and then reject. Read back
+    // below before deciding whether preservation actually failed.
+    restoreError = error;
+  }
+
+  let restoredRaw: string | null;
+  try {
+    restoredRaw = await AsyncStorage.getItem(key);
+  } catch (error) {
+    throw privateKVWriteRollbackFailure(error);
+  }
+  if (restoredRaw !== existingRaw) {
+    throw privateKVWriteRollbackFailure(restoreError ?? new Error(PRIVATE_KV_WRITE_CONFLICT));
   }
 }
 
 export async function getPrivateItem(key: string): Promise<string | null> {
-  return withOperationTiming('private_kv_read', async () => {
-    await ensurePrivateKVTransactionRecovered();
-    return runAccountScopedPrivateRead(async (generation) => {
+  // Capture before the first await. Classified health-purpose bytes may be
+  // returned only to the exact processing lease that began the read.
+  const healthReadLease = captureHealthPurposePrivateDataWriteLease(key);
+  const assertHealthReadCurrent = () => {
+    if (healthReadLease !== null) assertHealthDataWriteLease(healthReadLease);
+  };
+  return withOperationTiming('private_kv_read', () =>
+    runAccountScopedPrivateOperation(async () => {
       assertPrivateDataKey(key);
       const raw = await AsyncStorage.getItem(key);
-      assertAccountScopedPrivateOperationAllowed(generation);
-      if (raw === null) {
+      assertHealthReadCurrent();
+      if (!raw) {
         failedReadSnapshots.delete(key);
         return null;
       }
@@ -686,6 +390,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       const classification = classifyEnvelope(key, raw);
       if (classification.kind === 'legacy') {
         failedReadSnapshots.delete(key);
+        assertHealthReadCurrent();
         return raw;
       }
       if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
@@ -697,226 +402,203 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       try {
         contentKey = await getExistingContentKey();
       } catch (error) {
-        assertAccountScopedPrivateOperationAllowed(generation);
         rememberFailedRead(key, raw);
         throw error;
       }
-      assertAccountScopedPrivateOperationAllowed(generation);
+      assertHealthReadCurrent();
       if (!contentKey) {
         rememberFailedRead(key, raw);
         throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
       }
+      let value: string;
       try {
-        const value = decryptEnvelope(classification.envelope, contentKey);
-        failedReadSnapshots.delete(key);
-        return value;
+        value = decryptEnvelope(classification.envelope, contentKey);
       } catch {
         rememberFailedRead(key, raw);
         throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
       }
-    });
-  });
+      failedReadSnapshots.delete(key);
+      assertHealthReadCurrent();
+      return value;
+    }),
+  );
 }
 
-function classifyPrivateKVReadFailure(
-  error: unknown,
-): Exclude<PrivateKVReadResult, { status: 'absent' } | { status: 'available'; value: string }> {
-  const message = error instanceof Error ? error.message : '';
-  if (message === PRIVATE_KV_ENVELOPE_UNSUPPORTED) return { status: 'unsupported_version' };
-  if (message === PRIVATE_KV_CONTENT_KEY_INVALID) {
-    return { status: 'corrupt', reason: 'content_key_invalid' };
-  }
-  if (message === PRIVATE_KV_ENVELOPE_INVALID) {
-    return { status: 'corrupt', reason: 'envelope_invalid' };
-  }
-  if (message === PRIVATE_KV_DECRYPTION_FAILED) {
-    return { status: 'corrupt', reason: 'decryption_failed' };
-  }
-  if (message === PRIVATE_KV_TRANSACTION_JOURNAL_INVALID) {
-    return { status: 'corrupt', reason: 'envelope_invalid' };
-  }
-  if (message === PRIVATE_KV_TRANSACTION_JOURNAL_UNSUPPORTED) {
-    return { status: 'unsupported_version' };
-  }
-  if (message === PRIVATE_KV_CONTENT_KEY_MISSING) {
-    return { status: 'unavailable', reason: 'content_key_missing' };
-  }
-  if (message === PRIVATE_KV_CONTENT_KEY_CONFLICT) {
-    return { status: 'unavailable', reason: 'content_key_conflict' };
-  }
-  if (message === PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE) {
-    return { status: 'unavailable', reason: 'content_key_storage_unavailable' };
-  }
-  if (message === PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY) {
-    return { status: 'unavailable', reason: 'account_boundary' };
-  }
-  return { status: 'unavailable', reason: 'storage_unavailable' };
+async function readPrivateItems(
+  keys: readonly string[],
+  enforceHealthPurposeLease: boolean,
+  assertPurposeCurrent: () => void = () => undefined,
+): Promise<Map<string, string | null>> {
+  const healthReadLeases = enforceHealthPurposeLease
+    ? keys
+        .map((key) => captureHealthPurposePrivateDataWriteLease(key))
+        .filter((lease): lease is HealthDataWriteLease => lease !== null)
+    : [];
+  const assertHealthReadsCurrent = () => {
+    assertPurposeCurrent();
+    for (const lease of healthReadLeases) assertHealthDataWriteLease(lease);
+  };
+  assertHealthReadsCurrent();
+  return withOperationTiming('private_kv_batch_read', () =>
+    runAccountScopedPrivateOperation(async () => {
+      assertHealthReadsCurrent();
+      for (const key of keys) assertPrivateDataKey(key);
+      const entries = await AsyncStorage.multiGet([...keys]);
+      assertHealthReadsCurrent();
+      const result = new Map<string, string | null>();
+      const encryptedEntries: [string, PrivateEnvelope, string][] = [];
+
+      for (const [key, raw] of entries) {
+        if (!raw) {
+          failedReadSnapshots.delete(key);
+          result.set(key, null);
+          continue;
+        }
+        const classification = classifyEnvelope(key, raw);
+        if (classification.kind === 'current') {
+          encryptedEntries.push([key, classification.envelope, raw]);
+        } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+          rememberFailedRead(key, raw);
+          throw envelopeClassificationError(classification.kind);
+        } else {
+          failedReadSnapshots.delete(key);
+          result.set(key, raw);
+        }
+      }
+
+      if (encryptedEntries.length === 0) {
+        assertHealthReadsCurrent();
+        return result;
+      }
+      let contentKey: Uint8Array | null;
+      try {
+        contentKey = await getExistingContentKey();
+      } catch (error) {
+        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+        throw error;
+      }
+      assertHealthReadsCurrent();
+      if (!contentKey) {
+        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+        throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+      }
+      for (const [key, envelope, raw] of encryptedEntries) {
+        try {
+          result.set(key, decryptEnvelope(envelope, contentKey));
+          failedReadSnapshots.delete(key);
+        } catch {
+          rememberFailedRead(key, raw);
+          throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+        }
+      }
+      assertHealthReadsCurrent();
+      return result;
+    }),
+  );
+}
+
+export function getPrivateItems(keys: readonly string[]): Promise<Map<string, string | null>> {
+  return readPrivateItems(keys, true);
 }
 
 /**
- * Typed read boundary for domain stores. Unlike boolean/default convenience
- * APIs, this never turns unavailable, corrupt, or future private state into an
- * ordinary absence or valid empty value.
+ * Data-rights-only read lane. The caller must already have verified the local
+ * data owner inside this exact account-generation operation. It intentionally
+ * does not require an active health-processing lease, so export remains
+ * available while processing is paused or withdrawn. No feature or cache may
+ * use this API for personalization or ordinary reads.
  */
-export async function readPrivateItem(key: string): Promise<PrivateKVReadResult> {
-  try {
-    const value = await getPrivateItem(key);
-    return value === null ? { status: 'absent' } : { status: 'available', value };
-  } catch (error) {
-    return classifyPrivateKVReadFailure(error);
-  }
-}
-
-async function getPrivateItemsForGeneration(
+export function getPrivateItemsForPurposeLimitedExport(
   keys: readonly string[],
-  generation: number,
+  accountLease: AccountGenerationLease,
 ): Promise<Map<string, string | null>> {
-  for (const key of keys) assertPrivateDataKey(key);
-  const entries = await AsyncStorage.multiGet([...keys]);
-  assertAccountScopedPrivateOperationAllowed(generation);
-  const result = new Map<string, string | null>();
-  const encryptedEntries: [string, PrivateEnvelope, string][] = [];
-
-  for (const [key, raw] of entries) {
-    if (raw === null) {
-      failedReadSnapshots.delete(key);
-      result.set(key, null);
-      continue;
-    }
-    const classification = classifyEnvelope(key, raw);
-    if (classification.kind === 'current') {
-      encryptedEntries.push([key, classification.envelope, raw]);
-    } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-      rememberFailedRead(key, raw);
-      throw envelopeClassificationError(classification.kind);
-    } else {
-      failedReadSnapshots.delete(key);
-      result.set(key, raw);
-    }
-  }
-
-  if (encryptedEntries.length === 0) return result;
-  let contentKey: Uint8Array | null;
-  try {
-    contentKey = await getExistingContentKey();
-  } catch (error) {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-    throw error;
-  }
-  assertAccountScopedPrivateOperationAllowed(generation);
-  if (!contentKey) {
-    for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-  }
-  for (const [key, envelope, raw] of encryptedEntries) {
-    try {
-      result.set(key, decryptEnvelope(envelope, contentKey));
-      failedReadSnapshots.delete(key);
-    } catch {
-      rememberFailedRead(key, raw);
-      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
-    }
-  }
-  return result;
+  accountLease.assertCurrent();
+  return readPrivateItems(keys, false, accountLease.assertCurrent);
 }
 
-async function verifyPrivateItemsForGeneration(
+async function validatePrivateItemsWithoutRetainingPlaintext(
   keys: readonly string[],
-  generation: number,
+  assertCurrent: () => void,
 ): Promise<void> {
-  for (const key of keys) assertPrivateDataKey(key);
-  const entries = await AsyncStorage.multiGet([...keys]);
-  assertAccountScopedPrivateOperationAllowed(generation);
-  let hasEncryptedEntries = false;
+  assertCurrent();
+  await withOperationTiming('private_kv_batch_read', () =>
+    runAccountScopedPrivateOperation(async () => {
+      assertCurrent();
+      for (const key of keys) assertPrivateDataKey(key);
+      const entries = await AsyncStorage.multiGet([...keys]);
+      assertCurrent();
+      const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
-  // Classify the complete snapshot before consulting the content key. This
-  // preserves the batch reader's fail-closed malformed/future-envelope
-  // precedence without collecting decrypted values in a result Map.
-  for (const [key, raw] of entries) {
-    if (raw === null) {
-      failedReadSnapshots.delete(key);
-      continue;
-    }
-    const classification = classifyEnvelope(key, raw);
-    if (classification.kind === 'current') {
-      hasEncryptedEntries = true;
-    } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-      rememberFailedRead(key, raw);
-      throw envelopeClassificationError(classification.kind);
-    } else {
-      failedReadSnapshots.delete(key);
-    }
-  }
-
-  if (!hasEncryptedEntries) return;
-  let contentKey: Uint8Array | null;
-  try {
-    contentKey = await getExistingContentKey();
-  } catch (error) {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    for (const [key, raw] of entries) {
-      if (raw !== null && classifyEnvelope(key, raw).kind === 'current') {
-        rememberFailedRead(key, raw);
+      for (const [key, raw] of entries) {
+        assertCurrent();
+        if (!raw) {
+          failedReadSnapshots.delete(key);
+          continue;
+        }
+        const classification = classifyEnvelope(key, raw);
+        if (classification.kind === 'current') {
+          encryptedEntries.push([key, classification.envelope, raw]);
+        } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+          rememberFailedRead(key, raw);
+          throw envelopeClassificationError(classification.kind);
+        } else {
+          // Legacy plaintext needs only structural availability. Do not copy it
+          // into a result map or decode/transform it during this startup gate.
+          failedReadSnapshots.delete(key);
+        }
       }
-    }
-    throw error;
-  }
-  assertAccountScopedPrivateOperationAllowed(generation);
-  if (!contentKey) {
-    for (const [key, raw] of entries) {
-      if (raw !== null && classifyEnvelope(key, raw).kind === 'current') {
-        rememberFailedRead(key, raw);
-      }
-    }
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-  }
 
-  for (const [key, raw] of entries) {
-    if (raw === null) continue;
-    const classification = classifyEnvelope(key, raw);
-    if (classification.kind !== 'current') continue;
-    try {
-      // Authentication is the only required result. Avoiding UTF-8 conversion
-      // prevents the startup verifier from retaining plaintext strings.
-      authenticateEnvelope(classification.envelope, contentKey);
-      failedReadSnapshots.delete(key);
-    } catch {
-      rememberFailedRead(key, raw);
-      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
-    }
-  }
+      if (encryptedEntries.length === 0) return;
+      let contentKey: Uint8Array | null;
+      try {
+        contentKey = await getExistingContentKey();
+      } catch (error) {
+        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+        throw error;
+      }
+      if (!contentKey) {
+        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+        throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+      }
+
+      try {
+        assertCurrent();
+        for (const [key, envelope, raw] of encryptedEntries) {
+          assertCurrent();
+          try {
+            validateEnvelopeAuthentication(envelope, contentKey);
+            failedReadSnapshots.delete(key);
+          } catch {
+            rememberFailedRead(key, raw);
+            throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+          }
+        }
+        assertCurrent();
+      } finally {
+        contentKey.fill(0);
+      }
+    }),
+  );
+  assertCurrent();
 }
 
-export async function getPrivateItems(
-  keys: readonly string[],
-): Promise<Map<string, string | null>> {
-  return withOperationTiming('private_kv_batch_read', async () => {
-    await ensurePrivateKVTransactionRecovered();
-    return runAccountScopedPrivateRead((generation) =>
-      getPrivateItemsForGeneration(keys, generation),
+/** Verify every private-KV envelope without creating or retaining plaintext. */
+export function assertPrivateKVReadable(): Promise<void> {
+  return runAccountGenerationOperation(async (accountLease) => {
+    accountLease.assertCurrent();
+    const keys = (await AsyncStorage.getAllKeys()).filter(
+      (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
     );
+    accountLease.assertCurrent();
+    if (keys.length === 0) return;
+    // This purpose-limited bypass stays private to the availability gate. It
+    // authenticates bytes before lifecycle reconciliation opens health reads,
+    // never UTF-8 decodes them, and remains account-generation-bound.
+    await validatePrivateItemsWithoutRetainingPlaintext(keys, accountLease.assertCurrent);
   });
 }
 
-/** Verify every private-KV envelope without creating key material or retaining plaintext. */
-export async function assertPrivateKVReadable(): Promise<void> {
-  return withOperationTiming('private_kv_batch_read', async () => {
-    await ensurePrivateKVTransactionRecovered();
-    return runAccountScopedPrivateRead(async (generation) => {
-      const allKeys = await AsyncStorage.getAllKeys();
-      assertAccountScopedPrivateOperationAllowed(generation);
-      const keys = allKeys.filter(
-        (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
-      );
-      if (keys.length === 0) return;
-      await verifyPrivateItemsForGeneration(keys, generation);
-      assertAccountScopedPrivateOperationAllowed(generation);
-    });
-  });
-}
-
-const CONFLICT_CHOICE_STORAGE_KEY = 'onskin.conflict.overrides';
+const CONFLICT_CHOICE_STORAGE_KEY = 'layerwell.conflict.overrides';
 let devConflictChoiceWriteFailureUsed = false;
 
 async function maybeRejectConflictChoiceWrite(key: string): Promise<void> {
@@ -934,20 +616,18 @@ export async function setPrivateItem(key: string, value: string): Promise<void> 
   return updatePrivateItem(key, () => value);
 }
 
-/** Atomically read, transform, and persist one private value under the same
- * account-generation guard and per-key mutation lock. The updater is
- * synchronous so no untracked work can cross an account boundary. */
-export async function updatePrivateItem(
+async function updatePrivateItemWithGuard(
   key: string,
   updater: (current: string | null) => string | null,
+  assertMutationCurrent: () => void,
 ): Promise<void> {
-  return withOperationTiming('private_kv_write', async () => {
-    await ensurePrivateKVTransactionRecovered();
-    return runAccountScopedPrivateMutation((generation) =>
+  return withOperationTiming('private_kv_write', () =>
+    runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
-        assertPrivateDataKeyWritable(key);
+        assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         const existingRaw = await assertNoFailedReadRewrite(key);
+        assertMutationCurrent();
         const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;
         if (
           existingRaw &&
@@ -967,6 +647,7 @@ export async function updatePrivateItem(
             rememberFailedRead(key, existingRaw);
             throw error;
           }
+          assertMutationCurrent();
           if (!contentKey) {
             rememberFailedRead(key, existingRaw);
             throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
@@ -981,7 +662,9 @@ export async function updatePrivateItem(
           currentValue = existingRaw;
         }
 
+        assertMutationCurrent();
         const nextValue = updater(currentValue);
+        assertMutationCurrent();
         if (
           nextValue === currentValue &&
           (nextValue === null || existingClassification?.kind === 'current')
@@ -990,6 +673,7 @@ export async function updatePrivateItem(
         }
 
         const latestRaw = await AsyncStorage.getItem(key);
+        assertMutationCurrent();
         if (latestRaw !== existingRaw) {
           if (latestRaw !== null) rememberFailedRead(key, latestRaw);
           throw new Error(PRIVATE_KV_WRITE_CONFLICT);
@@ -997,12 +681,26 @@ export async function updatePrivateItem(
         assertAccountScopedPrivateOperationAllowed(generation);
 
         if (nextValue === null) {
-          await AsyncStorage.removeItem(key);
+          assertMutationCurrent();
+          try {
+            await AsyncStorage.removeItem(key);
+          } catch (error) {
+            await restoreExactRawAfterAmbiguousMutation(key, null, existingRaw);
+            throw error;
+          }
+          try {
+            assertAccountScopedPrivateOperationAllowed(generation);
+            assertMutationCurrent();
+          } catch (error) {
+            await restoreExactRawAfterAmbiguousMutation(key, null, existingRaw);
+            throw error;
+          }
           failedReadSnapshots.delete(key);
           return;
         }
 
         contentKey ??= await getOrCreateContentKey();
+        assertMutationCurrent();
         const nonce = randomBytes(NONCE_BYTES);
         const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
         const envelope: PrivateEnvelope = {
@@ -1011,136 +709,77 @@ export async function updatePrivateItem(
           ciphertextHex: bytesToHex(ciphertext),
         };
         await maybeRejectConflictChoiceWrite(key);
-        await AsyncStorage.setItem(key, JSON.stringify(envelope));
+        assertMutationCurrent();
+        const committedRaw = JSON.stringify(envelope);
+        assertMutationCurrent();
+        try {
+          await AsyncStorage.setItem(key, committedRaw);
+        } catch (error) {
+          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          throw error;
+        }
+        try {
+          assertMutationCurrent();
+        } catch (error) {
+          // The write crossed a withdrawal, expiry, owner change, re-grant, or
+          // purpose-limited account boundary. The shared rollback helper
+          // verifies exact prior preservation and surfaces ambiguity.
+          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          throw error;
+        }
         failedReadSnapshots.delete(key);
       }),
-    );
-  });
-}
-
-export type PrivateKVTransactionValues = ReadonlyMap<string, string | null>;
-
-/**
- * Crash-recoverable multi-key private mutation. The synchronous updater sees
- * one locked snapshot and returns every requested next value. An encrypted
- * intent journal becomes the commit point before target writes; every ordinary
- * private read/write rolls that journal forward first after interruption.
- */
-export async function updatePrivateItemsTransactionally(
-  keys: readonly string[],
-  updater: (current: PrivateKVTransactionValues) => PrivateKVTransactionValues,
-): Promise<void> {
-  const uniqueKeys = [...new Set(keys)].sort();
-  if (
-    uniqueKeys.length < 1 ||
-    uniqueKeys.length > MAX_PRIVATE_KV_TRANSACTION_TARGETS ||
-    uniqueKeys.some((key) => !ACCOUNT_ISOLATION_RESET_KEYS.has(key))
-  ) {
-    throw new Error(PRIVATE_KV_TRANSACTION_JOURNAL_INVALID);
-  }
-  for (const key of uniqueKeys) assertPrivateDataKeyWritable(key);
-
-  await ensurePrivateKVTransactionRecovered();
-  return withOperationTiming('private_kv_write', () =>
-    runAccountScopedPrivateMutation((generation) =>
-      runSerializedPrivateTransaction(() =>
-        runSerializedPrivateMutations(
-          [PRIVATE_KV_TRANSACTION_JOURNAL_KEY, ...uniqueKeys],
-          async () => {
-            assertAccountScopedPrivateOperationAllowed(generation);
-            if ((await AsyncStorage.getItem(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)) !== null) {
-              throw new Error(PRIVATE_KV_TRANSACTION_CONFLICT);
-            }
-
-            const beforeRaw = new Map<string, string | null>();
-            const currentValues = new Map<string, string | null>();
-            const currentEncoding = new Map<string, boolean>();
-            let contentKey: Uint8Array | null = null;
-            for (const key of uniqueKeys) {
-              const raw = await assertNoFailedReadRewrite(key);
-              beforeRaw.set(key, raw);
-              const decoded = await decodeMutablePrivateRaw(key, raw, contentKey);
-              contentKey = decoded.contentKey;
-              currentValues.set(key, decoded.value);
-              currentEncoding.set(key, decoded.current);
-            }
-
-            const requested = updater(new Map(currentValues));
-            if (
-              !(requested instanceof Map) ||
-              requested.size !== uniqueKeys.length ||
-              uniqueKeys.some(
-                (key) =>
-                  !requested.has(key) ||
-                  (requested.get(key) !== null && typeof requested.get(key) !== 'string'),
-              )
-            ) {
-              throw new Error(PRIVATE_KV_TRANSACTION_JOURNAL_INVALID);
-            }
-
-            const targetInputs = uniqueKeys.flatMap((key) => {
-              const nextValue = requested.get(key)!;
-              if (nextValue === currentValues.get(key) && currentEncoding.get(key)) return [];
-              return [{ key, beforeRaw: beforeRaw.get(key) ?? null, nextValue }];
-            });
-            const targets: PrivateKVTransactionTarget[] = [];
-            for (const target of targetInputs) {
-              targets.push({
-                key: target.key,
-                beforeRawHash: await privateKVTransactionBeforeRawHash(target.beforeRaw),
-                nextValue: target.nextValue,
-              });
-            }
-            if (targets.length === 0) return;
-
-            assertAccountScopedPrivateOperationAllowed(generation);
-            const latest = await AsyncStorage.multiGet(uniqueKeys);
-            if (latest.some(([key, raw]) => raw !== beforeRaw.get(key))) {
-              throw new Error(PRIVATE_KV_WRITE_CONFLICT);
-            }
-            contentKey ??= await getOrCreateContentKey();
-            const candidate: PrivateKVTransactionJournal = {
-              version: PRIVATE_KV_TRANSACTION_SCHEMA_VERSION,
-              transactionId: bytesToHex(randomBytes(32)),
-              targets,
-            };
-            // Round-trip through the strict decoder before the commit marker is
-            // written, including aggregate target/value bounds.
-            const journal = decodePrivateKVTransactionJournal(
-              encodePrivateKVTransactionJournal(candidate),
-            );
-            const journalRaw = encryptPrivateValue(
-              encodePrivateKVTransactionJournal(journal),
-              contentKey,
-            );
-            privateTransactionJournalKnownAbsent = false;
-            await writeRawExactly(PRIVATE_KV_TRANSACTION_JOURNAL_KEY, journalRaw, generation);
-            await applyPrivateKVTransactionJournal(journalRaw, journal, contentKey, generation);
-          },
-        ),
-      ),
     ),
   );
 }
 
-/** Explicit startup/test entry; normal private operations invoke the same
- * single-flight recovery automatically before touching domain state. */
-export async function recoverPendingPrivateKVTransaction(): Promise<void> {
-  await ensurePrivateKVTransactionRecovered();
+/** Atomically read, transform, and persist one private value under the same
+ * account-generation guard and per-key mutation lock. The updater is
+ * synchronous so no untracked work can cross an account boundary. */
+export async function updatePrivateItem(
+  key: string,
+  updater: (current: string | null) => string | null,
+): Promise<void> {
+  // Generic read/transform/update may expose plaintext to its callback, so a
+  // classified key requires exact health authority up front even if the
+  // callback later returns null. Privacy-reducing callers use the explicit
+  // remove APIs, which never decrypt or expose the prior value.
+  const healthWriteLease = captureHealthPurposePrivateDataWriteLease(key);
+  const assertHealthMutationCurrent = () => {
+    if (healthWriteLease !== null) assertHealthDataWriteLease(healthWriteLease);
+  };
+  return updatePrivateItemWithGuard(key, updater, assertHealthMutationCurrent);
+}
+
+const CATALOG_LOOKUP_QUEUE_STORAGE_KEY = 'layerwell.catalog.lookupQueue.v1';
+
+/**
+ * Narrow data-rights maintenance lane for physically removing expired or
+ * foreign-owner catalog retry bytes before export. It cannot write any other
+ * private-data key and is fenced by the export's exact account-generation
+ * lease; the queue layer supplies the separately verified owner filter.
+ */
+export function updateCatalogLookupQueueForPurposeLimitedExport(
+  accountLease: AccountGenerationLease,
+  updater: (current: string | null) => string | null,
+): Promise<void> {
+  accountLease.assertCurrent();
+  return updatePrivateItemWithGuard(
+    CATALOG_LOOKUP_QUEUE_STORAGE_KEY,
+    updater,
+    accountLease.assertCurrent,
+  );
 }
 
 export function beginPrivateKVAccountBoundary(): void {
-  if (accountBoundaryWriteBlockDepth === 0) {
-    accountBoundaryGeneration += 1;
-    for (const read of [...activeReadOperations]) read.invalidate();
-  }
+  if (accountBoundaryWriteBlockDepth === 0) accountBoundaryGeneration += 1;
   accountBoundaryWriteBlockDepth += 1;
   accountBoundaryWriteBlocked = true;
 }
 
 export async function waitForPrivateKVWritesToSettle(): Promise<void> {
-  while (inFlightMutationOperations.size > 0) {
-    await Promise.allSettled([...inFlightMutationOperations]);
+  while (inFlightOperations.size > 0) {
+    await Promise.allSettled([...inFlightOperations]);
   }
 }
 
@@ -1150,103 +789,32 @@ export function endPrivateKVAccountBoundary(): void {
 }
 
 export async function removePrivateItem(key: string): Promise<void> {
-  return withOperationTiming('private_kv_remove', async () => {
-    await ensurePrivateKVTransactionRecovered();
-    return runAccountScopedPrivateMutation((generation) =>
+  return withOperationTiming('private_kv_remove', () =>
+    runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
         assertPrivateDataKey(key);
-        assertAccountScopedPrivateOperationAllowed(generation);
-        const snapshot = await assertNoFailedReadRewrite(key);
-        await assertRoutineRemovalReadable(key, snapshot);
-        assertAccountScopedPrivateOperationAllowed(generation);
-        const current = await AsyncStorage.getItem(key);
-        if (current !== snapshot) throw new Error(PRIVATE_KV_WRITE_CONFLICT);
-        if (snapshot === null) return;
         assertAccountScopedPrivateOperationAllowed(generation);
         await AsyncStorage.removeItem(key);
         failedReadSnapshots.delete(key);
       }),
-    );
-  });
-}
-
-export async function multiRemovePrivateItems(keys: readonly string[]): Promise<void> {
-  await ensurePrivateKVTransactionRecovered();
-  return runAccountScopedPrivateMutation((generation) =>
-    runSerializedPrivateMutations(keys, async () => {
-      const uniqueKeys = [...new Set(keys)];
-      for (const key of uniqueKeys) assertPrivateDataKey(key);
-      assertAccountScopedPrivateOperationAllowed(generation);
-      const snapshots = new Map<string, string | null>();
-      for (const key of uniqueKeys) {
-        const snapshot = await assertNoFailedReadRewrite(key);
-        await assertRoutineRemovalReadable(key, snapshot);
-        snapshots.set(key, snapshot);
-      }
-      assertAccountScopedPrivateOperationAllowed(generation);
-      const currentEntries = await AsyncStorage.multiGet(uniqueKeys);
-      if (currentEntries.some(([key, current]) => current !== snapshots.get(key))) {
-        throw new Error(PRIVATE_KV_WRITE_CONFLICT);
-      }
-      const presentKeys = uniqueKeys.filter((key) => snapshots.get(key) !== null);
-      if (presentKeys.length === 0) return;
-      assertAccountScopedPrivateOperationAllowed(generation);
-      await AsyncStorage.multiRemove(presentKeys);
-      for (const key of presentKeys) failedReadSnapshots.delete(key);
-    }),
+    ),
   );
 }
 
-/**
- * Bypasses ciphertext authentication only for a caller that has already
- * established destructive authority, such as drained account isolation or a
- * device-authenticated, user-approved recovery. Routine feature deletion must
- * use removePrivateItem/multiRemovePrivateItems instead.
- */
-export async function removePrivateItemsForAuthorizedReset(
-  keys: readonly string[],
-  reason: PrivateKVAuthorizedResetReason,
-): Promise<void> {
-  return withOperationTiming('private_kv_remove', async () => {
-    if (reason !== 'account_isolation' && reason !== 'device_authenticated_app_lock_repair') {
-      throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
-    }
-    if (
-      (reason === 'account_isolation' && !accountBoundaryWriteBlocked) ||
-      (reason === 'device_authenticated_app_lock_repair' && accountBoundaryWriteBlocked)
-    ) {
-      throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
-    }
-    const uniqueKeys = [...new Set(keys)];
-    if (
-      (reason === 'account_isolation' &&
-        uniqueKeys.some((key) => !ACCOUNT_ISOLATION_RESET_KEYS.has(key))) ||
-      (reason === 'device_authenticated_app_lock_repair' &&
-        (uniqueKeys.length !== 1 || uniqueKeys[0] !== DEVICE_AUTHENTICATED_APP_LOCK_REPAIR_KEY))
-    ) {
-      throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
-    }
-    const pending = runSerializedPrivateMutations(uniqueKeys, async () => {
-      for (const key of uniqueKeys) assertPrivateDataKey(key);
-      await AsyncStorage.multiRemove(uniqueKeys);
-      for (const key of uniqueKeys) failedReadSnapshots.delete(key);
-      if (uniqueKeys.includes(PRIVATE_KV_TRANSACTION_JOURNAL_KEY)) {
-        privateTransactionJournalKnownAbsent = true;
-      }
-    });
-    inFlightMutationOperations.add(pending);
-    try {
-      await pending;
-    } finally {
-      inFlightMutationOperations.delete(pending);
-    }
-  });
+export async function multiRemovePrivateItems(keys: readonly string[]): Promise<void> {
+  return runAccountScopedPrivateOperation((generation) =>
+    runSerializedPrivateMutations(keys, async () => {
+      for (const key of keys) assertPrivateDataKey(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
+      await AsyncStorage.multiRemove([...keys]);
+      for (const key of keys) failedReadSnapshots.delete(key);
+    }),
+  );
 }
 
 export async function clearPrivateKVContentKey(): Promise<void> {
   await clearStoredPrivateKVContentKey();
   failedReadSnapshots.clear();
-  privateTransactionJournalKnownAbsent = false;
 }
 
 export const privateKVEncryptionInfo = {

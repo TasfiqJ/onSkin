@@ -1,5 +1,3 @@
-import type { ResolutionType } from '@onskin/types';
-
 import { BRAND } from '@/lib/brand';
 
 // Centralised, claim-safe Ask copy (docs/13, the Slice-11..26 guard pattern).
@@ -17,9 +15,10 @@ import { BRAND } from '@/lib/brand';
 export const ASK_COPY = {
   home: {
     title: BRAND.askName,
-    pills: ['knows your shelf', 'evidence-grounded', 'private'] as const,
-    intro: `Ask about your own shelf, routine and conflicts. I answer from ${BRAND.appName}'s evidence base, and I'll tell you when I don't know.`,
-    groundedEyebrow: 'Grounded in your shelf right now',
+    pills: ['uses your shelf', 'shows its limits', 'on-device routine tools'] as const,
+    intro:
+      'Ask about your saved shelf and routine. Interaction guidance stays unavailable unless exact reviewed coverage exists.',
+    groundedEyebrow: 'Uses your saved shelf context',
     prompts: {
       conflict: 'Is there a conflict on my shelf?',
       tonight: 'What should I do tonight?',
@@ -29,29 +28,34 @@ export const ASK_COPY = {
     inputA11y: 'Ask a question about your shelf',
     // DISCLOSURE (EU AI Act Art. 50 / CA SB 243): names the AI honestly. Exempt from the
     // AI-marketing term-scan only. The marketing leads with independent/grounded/private.
-    disclosureFooter: 'AI advisor · disclosed honestly · your context stays on this device',
+    disclosureFooter: 'Cloud Ask is unavailable in this release',
   },
   // DISCLOSURE (Art. 50 / SB 243), verbatim & counsel-gated (B-AI-ASSISTANT-LEGAL). Names
   // the AI without implying medical authority, and without the empty "not medical advice"
   // disclaimer that does NOT downgrade risk (docs/13 §9/§10). AI-marketing-scan exempt.
-  firstRunDisclosure: `${BRAND.askName} is an AI advisor. It answers from ${BRAND.appName}'s evidence-graded guidance and your own shelf. It isn't a medical service, and it points you to a clinician for anything beyond skincare.`,
+  firstRunDisclosure: `${BRAND.askName} uses deterministic on-device shelf and routine tools in this release. Cloud Ask is unavailable. It is not a medical service and will not answer medical questions.`,
   badges: {
-    deterministic: 'answered by your conflict engine · $0',
-    fitEngine: 'from your profile + the fit engine · $0',
+    deterministic: 'shelf interaction status · $0',
+    fitEngine: 'from your saved profile + shelf · $0',
     escalate: 'out of scope · escalate',
   },
   triad: {
     whyLabel: 'why',
     howLabel: 'how',
     whyShelf: 'Personalised to your shelf. Your own products, your own profile.',
-    howConflict: 'From your conflict engine + the evidence card. Not a guess.',
-    howFit: 'From your goal and shelf, scored by fit and evidence, never by commission.',
+    howConflict:
+      'From exact admitted rules for the resolved product pair. Otherwise, guidance stays unavailable.',
+    howFit: 'From your saved goal and shelf, never by commission.',
     howPlan: 'From your generated plan. Your products, in your sequence.',
   },
   recommendationNote: 'This is a recommendation, not a rule. Your routine, your call.',
   claimSafeNote:
     'Worded for how skin looks, never a medical claim, never influenced by commission.',
   noConflicts: 'Nothing on your shelf clashes right now. You’re set.',
+  conflictCoverageUnavailable:
+    'Interaction guidance requires completed independent professional review for these shelf pairs, so I cannot call them compatible.',
+  noConflictPair:
+    'There is not a product pair on your shelf to check yet. Add another product and I will check the pair.',
   emptyShelfConflict:
     'I do not see products on your shelf yet. Add them and I will check real pairs instead of guessing.',
   tonight: {
@@ -69,21 +73,20 @@ export const ASK_COPY = {
   },
   fit: {
     leadGoal: (concern: string, what: string): string =>
-      `For your goal of ${concern}, an evidence-backed option to consider is ${what}.`,
-    leadGeneric: (what: string): string =>
-      `An evidence-backed option worth considering for you is ${what}.`,
+      `For your goal of ${concern}, a routine option to consider is ${what}.`,
+    leadGeneric: (what: string): string => `A routine option worth considering for you is ${what}.`,
     youreSet:
       'Your routine looks complete. Most new products would be optional. Add one to your shelf and I’ll check it against your conflicts and fit.',
-    deeperNote:
-      'Want a deeper read in your own words? The fuller, evidence-grounded advisor is a Pro feature being set up.',
+    deeperNote: 'Cloud Ask is not included in this release.',
   },
   refuse: {
     unsupported:
       'I don’t have sourced information on that specific product yet, but I can tell you about its key ingredient if you add it to your shelf.',
     outOfScope: 'I don’t have sourced information on that yet.',
-    groundedLocked: `I can answer about your own shelf, routine and conflicts today, for free. A deeper, evidence-grounded advisor that answers in your own words is part of ${BRAND.proName}.`,
+    groundedLocked:
+      'Cloud Ask is unavailable in this release. I can only use the deterministic on-device shelf and routine tools that are currently available.',
     groundedSetup:
-      'I can answer about your own shelf, routine and conflicts today. The deeper, evidence-grounded advisor that answers broader questions in your own words is being set up.',
+      'Cloud Ask is unavailable in this release. No shelf summary is sent to a language model.',
   },
   escalate: {
     eyebrow: 'out of scope · escalate',
@@ -96,47 +99,34 @@ export const ASK_COPY = {
   },
   privacy: {
     header: 'Before you start',
-    title: 'Your context stays on your phone.',
-    body: 'To answer in your own words, an abstracted summary of your question reaches a private language model. Here’s exactly what does and doesn’t leave.',
+    title: 'Cloud Ask is unavailable.',
+    body:
+      'No shelf summary is sent to a cloud model in this release. An approved provider, exact disclosures, explicit permission, deletion controls, safety validation, and professional review are required first.',
     keep: [
-      'Your shelf, routine and all conflict logic run on-device.',
-      'The cloud model is zero-retention and no-training, and no transcript is kept beyond a short, encrypted safety window you consent to.',
+      'Available shelf and routine tools run on-device.',
+      'No cloud language provider is configured for this release.',
     ] as const,
-    never: 'Never a raw photo, never a faceprint, never sold or shared.',
-    consentLine: 'A separate advisor consent. Distinct and revocable.',
-    toggleLabel: `Enable ${BRAND.askName}`,
-    toggleHint: 'Off by default',
+    never: 'No shelf summary or question is transmitted to a cloud model.',
+    consentLine: 'The cloud feature cannot be enabled in this release.',
+    toggleLabel: `${BRAND.askName} unavailable`,
+    toggleHint: 'Unavailable',
     saveFailedTitle: 'Choice not saved',
     saveFailedBody: `We could not save that ${BRAND.askName} choice. Please try again.`,
-    footer: 'Pro-gated · hard trial cap · the answers about your own shelf are always free',
+    footer: 'Cloud Ask is not included in this release',
   },
-  // The consent-ledger body (placeholder copy. B-PRIVACY-COPY). The honest, stress-tested
-  // posture (docs/13 §7): NOT "no transcript ever" but a short, consented safety window.
+  // The consent-ledger body is a placeholder until a provider and exact privacy contract exist.
   consentLedgerBody:
-    'On-device context · a minimised summary only, to a zero-retention, no-training cloud language layer · no transcript beyond a short, consented, encrypted safety window · never a photo, never sold, never used to train a model · revocable, and the safety window is deleted when you turn it off.',
+    'Cloud Ask is unavailable in this release. No shelf summary is sent to a cloud model until an approved provider, exact transmitted-field and retention disclosures, explicit permission, deletion controls, safety validation, and professional review are in place.',
   consentVersion: 'ask-advisor-2026-06-14-placeholder', // BLOCKED: B-PRIVACY-COPY
   // The wrong-answer feedback control (docs/13 §9. Content-free).
   feedback: {
     prompt: 'Was this helpful?',
     report: 'Report a problem',
-    thanks: 'Thanks. That helps us improve the evidence behind this.',
+    thanks: 'Thanks. That helps us improve this feature.',
   },
   // A calm Today entry (docs/13 §9. The first-session moat taste), never "AI" hype.
   todayCard: {
     title: BRAND.askName,
-    body: 'Evidence-grounded answers about your own shelf, and an honest “I don’t know.”',
+    body: 'On-device shelf and routine tools that show when guidance is unavailable.',
   },
 } as const;
-
-/** Claim-safe resolution lead per resolution type (docs/02 §7.3, the appearance-only
- *  voice). The substantive interaction claim is the deterministic engine's; this only
- *  frames it. No drug/disease verb, no condition named, no dose. */
-export const RESOLUTION_LEAD: Record<ResolutionType, string> = {
-  alternate_nights: 'On the same night these can feel like a lot together on the skin',
-  separate_am_pm: 'Used at the same time these can feel like a lot together on the skin',
-  buffer: 'Back-to-back these can feel like a lot together on the skin',
-  lower_frequency: 'Used too often together these can feel like a lot on the skin',
-  no_change: 'These sit comfortably together',
-  reassure: 'Good news. These sit comfortably together',
-  avoid_refer: 'This one’s worth a word with your clinician',
-};

@@ -9,69 +9,44 @@ import {
   randomBytes,
   utf8ToBytes,
 } from '@noble/ciphers/utils.js';
-import * as Crypto from 'expo-crypto';
 import * as FileSystem from 'expo-file-system/legacy';
+import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 import {
-  ACCOUNT_GENERATION_CHANGED,
-  AccountGenerationLeaseError,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import { startOperationTiming } from '@/lib/observability/operationTiming';
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import {
   cleanupPlaintextStaging,
   cleanupPlaintextStagingUri,
   markPlaintextStagingState,
   reservePlaintextStaging,
 } from '@/lib/storage/plaintextStaging';
-import {
-  deletePrivateSecureStoreItemAsync,
-  getPrivateSecureStoreItemAsync,
-  setPrivateSecureStoreItemAsync,
-} from '@/lib/storage/privateSecureStore';
 
 import { stripImageMetadataFromBase64 } from './metadata';
-import {
-  assertPhotoWriteAllowed,
-  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-  runAccountScopedPhotoMutation,
-  runAccountScopedPhotoRead,
-  runDestructiveAccountScopedPhotoOperation,
-} from './photoAccountBoundary';
-
-export {
-  beginEncryptedPhotoAccountBoundary,
-  endEncryptedPhotoAccountBoundary,
-  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-  waitForEncryptedPhotoWritesToSettle,
-} from './photoAccountBoundary';
 
 const PHOTO_DIR = `${FileSystem.documentDirectory ?? ''}photos/v1/`;
 const KEY_ID = 'photo-content-key-v1';
-const KEY_STORE_NAME = 'onskin.photo.content_key.v1';
-const KEY_CREATION_MARKER = 'onskin.photo.content_key_created.v1';
-const KEY_CREATION_MARKER_CURRENT_PREFIX = 'v1:created:';
-const KEY_CREATION_MARKER_UNBOUND_LEGACY = 'v1:created';
-const KEY_CREATION_MARKER_LEGACY = '1';
-const KEY_CREATION_PENDING_PREFIX = 'v1:pending:';
-const KEY_FINGERPRINT_DOMAIN = 'onskin:photo-content-key:v1:';
-const KEY_CREATION_MARKER_MAX_LENGTH = 96;
-const SHA256_HEX = /^[0-9a-f]{64}$/;
+const KEY_STORE_NAME = 'layerwell.photo.content_key.v1';
+const KEY_CREATION_MARKER = 'layerwell.photo.content_key_created.v1';
+const PUBLICATION_JOURNAL_KEY = 'layerwell.photo.publication_journal.v1';
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
+const PHOTO_RENDITION_ENCRYPTION_VERSION = 'xchacha20poly1305:photo-rendition:v1';
 const NONCE_BYTES = 24;
+const SAFE_RENDITION_PHOTO_ID = /^(?!.*-thumbnail$)[A-Za-z0-9_-]{1,128}$/u;
+const CANONICAL_CAPTURE_SESSION_ID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u;
 export const PHOTO_CONTENT_KEY_MISSING = 'PHOTO_CONTENT_KEY_MISSING';
 export const PHOTO_CONTENT_KEY_INVALID = 'PHOTO_CONTENT_KEY_INVALID';
-export const PHOTO_CONTENT_KEY_MARKER_INVALID = 'PHOTO_CONTENT_KEY_MARKER_INVALID';
-export const PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION =
-  'PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION';
-export const PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH = 'PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH';
 export const PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE = 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE';
 export const PHOTO_DECRYPTION_FAILED = 'PHOTO_DECRYPTION_FAILED';
-export const PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED = 'PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED';
-export const PHOTO_RECOVERY_CANDIDATE_READ_FAILED = 'PHOTO_RECOVERY_CANDIDATE_READ_FAILED';
-export const PHOTO_RECOVERY_CANDIDATE_CHANGED = 'PHOTO_RECOVERY_CANDIDATE_CHANGED';
-export const PHOTO_RECOVERY_CONFLICT = 'PHOTO_RECOVERY_CONFLICT';
-export const PHOTO_RECOVERY_KEY_CHANGED = 'PHOTO_RECOVERY_KEY_CHANGED';
+export const PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY = 'PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
 
 type EncryptedPhotoEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -79,6 +54,17 @@ type EncryptedPhotoEnvelope = {
   mimeType: 'image/jpeg' | 'image/png';
   nonceHex: string;
   ciphertextHex: string;
+};
+
+type EncryptedPhotoRenditionEnvelope = {
+  version: typeof PHOTO_RENDITION_ENCRYPTION_VERSION;
+  keyId: typeof KEY_ID;
+  mimeType: 'image/jpeg' | 'image/png';
+  nonceHex: string;
+  ciphertextHex: string;
+  photoId: string;
+  captureSessionId: string | null;
+  rendition: 'original' | 'thumbnail';
 };
 
 type EncryptedTextEnvelope = {
@@ -91,8 +77,176 @@ type EncryptedTextEnvelope = {
 export type EncryptedPhotoWrite = {
   encryptedLocalUri: string;
   keyId: typeof KEY_ID;
-  encryptionVersion: typeof ENCRYPTION_VERSION;
+  encryptionVersion: typeof ENCRYPTION_VERSION | typeof PHOTO_RENDITION_ENCRYPTION_VERSION;
 };
+
+export type PhotoRenditionIdentity = Readonly<{
+  photoId: string;
+  captureSessionId: string | null;
+  rendition: 'original' | 'thumbnail';
+}>;
+
+export type PhotoRenditionReadExpectation = PhotoRenditionIdentity &
+  Readonly<{ allowLegacyEnvelope?: boolean }>;
+
+type PublicationStage =
+  | 'prepared'
+  | 'original_adopted'
+  | 'pair_adopted'
+  | 'metadata_committed'
+  | 'raw_cleaned';
+
+type PhotoPublicationJournal = Readonly<{
+  version: 1;
+  photoId: string;
+  captureSessionId: string | null;
+  originalUri: string;
+  thumbnailUri: string;
+  rawSourceUri: string;
+  stage: PublicationStage;
+  ownerUserId: string;
+  healthGeneration: number;
+  healthEpoch: number;
+  accountGeneration: number;
+}>;
+
+function publicationJournalFor(
+  identity: Omit<PhotoRenditionIdentity, 'rendition'>,
+  lease: HealthDataWriteLease,
+  rawSourceUri: string,
+): PhotoPublicationJournal {
+  return {
+    version: 1,
+    photoId: identity.photoId,
+    captureSessionId: identity.captureSessionId,
+    originalUri: canonicalPhotoRenditionUri({ ...identity, rendition: 'original' }),
+    thumbnailUri: canonicalPhotoRenditionUri({ ...identity, rendition: 'thumbnail' }),
+    rawSourceUri,
+    stage: 'prepared',
+    ownerUserId: lease.ownerUserId,
+    healthGeneration: lease.generation,
+    healthEpoch: lease.epoch,
+    accountGeneration: lease.accountGeneration,
+  };
+}
+
+function parsePublicationJournal(raw: string | null): PhotoPublicationJournal | null {
+  if (raw === null) return null;
+  const value = parseJsonRecord(raw);
+  if (
+    !value ||
+    !hasExactKeys(value, [
+      'version', 'photoId', 'captureSessionId', 'originalUri', 'thumbnailUri', 'rawSourceUri', 'stage',
+      'ownerUserId', 'healthGeneration', 'healthEpoch', 'accountGeneration',
+    ]) ||
+    value.version !== 1 ||
+    typeof value.photoId !== 'string' ||
+    !SAFE_RENDITION_PHOTO_ID.test(value.photoId) ||
+    (value.captureSessionId !== null &&
+      (typeof value.captureSessionId !== 'string' ||
+        !CANONICAL_CAPTURE_SESSION_ID.test(value.captureSessionId))) ||
+    typeof value.ownerUserId !== 'string' ||
+    !isOwnedCaptureSourceUri(value.rawSourceUri) ||
+    typeof value.healthGeneration !== 'number' ||
+    typeof value.healthEpoch !== 'number' ||
+    typeof value.accountGeneration !== 'number' ||
+    !['prepared', 'original_adopted', 'pair_adopted', 'metadata_committed', 'raw_cleaned'].includes(
+      String(value.stage),
+    )
+  ) return null;
+  const identity = { photoId: value.photoId, captureSessionId: value.captureSessionId };
+  const originalUri = canonicalPhotoRenditionUri({ ...identity, rendition: 'original' });
+  const thumbnailUri = canonicalPhotoRenditionUri({ ...identity, rendition: 'thumbnail' });
+  if (value.originalUri !== originalUri || value.thumbnailUri !== thumbnailUri) return null;
+  return value as PhotoPublicationJournal;
+}
+
+export async function beginPhotoRenditionPublication(
+  identity: Omit<PhotoRenditionIdentity, 'rendition'>,
+  rawSourceUri: string,
+): Promise<void> {
+  if (!isOwnedCaptureSourceUri(rawSourceUri)) throw new Error('PHOTO_CAPTURE_SOURCE_URI_UNTRUSTED');
+  const lease = captureHealthDataWriteLease();
+  const existing = await AsyncStorage.getItem(PUBLICATION_JOURNAL_KEY);
+  assertHealthDataWriteLease(lease);
+  if (existing !== null) throw new Error('PHOTO_PUBLICATION_RECOVERY_REQUIRED');
+  await AsyncStorage.setItem(PUBLICATION_JOURNAL_KEY, JSON.stringify(publicationJournalFor(identity, lease, rawSourceUri)));
+  assertHealthDataWriteLease(lease);
+}
+
+export async function markPhotoRenditionPublication(
+  identity: Omit<PhotoRenditionIdentity, 'rendition'>,
+  stage: Exclude<PublicationStage, 'prepared'>,
+): Promise<void> {
+  const lease = captureHealthDataWriteLease();
+  const current = parsePublicationJournal(await AsyncStorage.getItem(PUBLICATION_JOURNAL_KEY));
+  assertHealthDataWriteLease(lease);
+  if (
+    !current || current.photoId !== identity.photoId ||
+    current.captureSessionId !== identity.captureSessionId ||
+    current.ownerUserId !== lease.ownerUserId || current.healthGeneration !== lease.generation ||
+    current.healthEpoch !== lease.epoch || current.accountGeneration !== lease.accountGeneration
+  ) throw new Error('PHOTO_PUBLICATION_RECOVERY_REQUIRED');
+  await AsyncStorage.setItem(PUBLICATION_JOURNAL_KEY, JSON.stringify({ ...current, stage }));
+  assertHealthDataWriteLease(lease);
+}
+
+export async function settlePhotoRenditionPublication(
+  identity: Omit<PhotoRenditionIdentity, 'rendition'>,
+): Promise<void> {
+  const lease = captureHealthDataWriteLease();
+  const current = parsePublicationJournal(await AsyncStorage.getItem(PUBLICATION_JOURNAL_KEY));
+  assertHealthDataWriteLease(lease);
+  if (!current || current.photoId !== identity.photoId || current.captureSessionId !== identity.captureSessionId ||
+      current.stage !== 'raw_cleaned' || current.ownerUserId !== lease.ownerUserId ||
+      current.healthGeneration !== lease.generation || current.healthEpoch !== lease.epoch ||
+      current.accountGeneration !== lease.accountGeneration) {
+    throw new Error('PHOTO_PUBLICATION_RECOVERY_REQUIRED');
+  }
+  await AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY);
+  assertHealthDataWriteLease(lease);
+}
+
+export async function recoverPhotoRenditionPublication(
+  committedPhotoIds: ReadonlySet<string> | null,
+): Promise<void> {
+  const lease = captureHealthDataWriteLease();
+  const raw = await AsyncStorage.getItem(PUBLICATION_JOURNAL_KEY);
+  assertHealthDataWriteLease(lease);
+  if (raw === null) return;
+  const current = parsePublicationJournal(raw);
+  if (!current) throw new Error('PHOTO_PUBLICATION_JOURNAL_INVALID');
+  if (current.ownerUserId !== lease.ownerUserId || current.healthGeneration !== lease.generation ||
+      current.healthEpoch !== lease.epoch || current.accountGeneration !== lease.accountGeneration) {
+    throw new Error('PHOTO_PUBLICATION_AUTHORITY_MISMATCH');
+  }
+  if (committedPhotoIds === null) return; // corrupt/unknown metadata: preserve, never guess.
+  if (!committedPhotoIds.has(current.photoId)) {
+    await FileSystem.deleteAsync(current.originalUri, { idempotent: true });
+    assertHealthDataWriteLease(lease);
+    await FileSystem.deleteAsync(current.thumbnailUri, { idempotent: true });
+    assertHealthDataWriteLease(lease);
+    await AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY);
+    return;
+  }
+  const [originalInfo, thumbnailInfo] = await Promise.all([
+    FileSystem.getInfoAsync(current.originalUri),
+    FileSystem.getInfoAsync(current.thumbnailUri),
+  ]);
+  assertHealthDataWriteLease(lease);
+  if (!originalInfo.exists || !thumbnailInfo.exists) {
+    throw new Error('PHOTO_PUBLICATION_COMMITTED_PAIR_INCOMPLETE');
+  }
+  // A valid committed row proves the pair is live even if process death occurred
+  // immediately after metadata persistence. Leave cleanup state durable until the
+  // caller has successfully removed its exact raw source.
+  if (current.stage !== 'metadata_committed' && current.stage !== 'raw_cleaned') {
+    await AsyncStorage.setItem(PUBLICATION_JOURNAL_KEY, JSON.stringify({ ...current, stage: 'metadata_committed' }));
+  }
+  await FileSystem.deleteAsync(current.rawSourceUri, { idempotent: true });
+  assertHealthDataWriteLease(lease);
+  await AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY);
+}
 
 export type QuarantinedPhotoFile = {
   originalUri: string;
@@ -100,11 +254,79 @@ export type QuarantinedPhotoFile = {
 };
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
-let contentKeyMarkerMutationTail: Promise<void> = Promise.resolve();
+const inFlightPhotoOperations = new Set<Promise<unknown>>();
+let accountBoundaryWriteBlockDepth = 0;
+let accountBoundaryWriteGeneration = 0;
 
-function e2eWebPhotoContentKeyEnabled(): boolean {
-  if (typeof __DEV__ === 'undefined' || !__DEV__ || Platform.OS !== 'web') return false;
-  return process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1';
+function photoWritesBlocked(): boolean {
+  return accountBoundaryWriteBlockDepth > 0;
+}
+
+function assertPhotoWriteAllowed(generation: number): void {
+  if (photoWritesBlocked() || generation !== accountBoundaryWriteGeneration) {
+    throw new Error(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  }
+}
+
+async function runAccountScopedPhotoOperation<T>(
+  operation: (generation: number) => Promise<T>,
+): Promise<T> {
+  if (photoWritesBlocked()) throw new Error(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  const generation = accountBoundaryWriteGeneration;
+  const pending = operation(generation);
+  inFlightPhotoOperations.add(pending);
+  try {
+    return await pending;
+  } finally {
+    inFlightPhotoOperations.delete(pending);
+  }
+}
+
+function assertHealthPhotoOperationCurrent(
+  generation: number,
+  healthLease: HealthDataWriteLease,
+): void {
+  assertPhotoWriteAllowed(generation);
+  assertHealthDataWriteLease(healthLease);
+}
+
+/**
+ * Destructive filesystem work must be owned by both the photo-storage boundary
+ * and the app-wide account generation. The outer lease is captured when the
+ * public API is called, so an account switch can abort and drain the exact
+ * operation even when it is waiting on the filesystem.
+ */
+function runDestructiveAccountScopedPhotoOperation<T>(
+  operation: (assertCurrent: () => void) => Promise<T>,
+): Promise<T> {
+  return runAccountGenerationOperation((lease) =>
+    runAccountScopedPhotoOperation(async (generation) => {
+      const assertCurrent = () => {
+        lease.assertCurrent();
+        assertPhotoWriteAllowed(generation);
+      };
+
+      assertCurrent();
+      const result = await operation(assertCurrent);
+      assertCurrent();
+      return result;
+    }),
+  );
+}
+
+export function beginEncryptedPhotoAccountBoundary(): void {
+  if (accountBoundaryWriteBlockDepth === 0) accountBoundaryWriteGeneration += 1;
+  accountBoundaryWriteBlockDepth += 1;
+}
+
+export async function waitForEncryptedPhotoWritesToSettle(): Promise<void> {
+  while (inFlightPhotoOperations.size > 0) {
+    await Promise.allSettled([...inFlightPhotoOperations]);
+  }
+}
+
+export function endEncryptedPhotoAccountBoundary(): void {
+  accountBoundaryWriteBlockDepth = Math.max(0, accountBoundaryWriteBlockDepth - 1);
 }
 
 async function ensureDir(): Promise<void> {
@@ -113,273 +335,79 @@ async function ensureDir(): Promise<void> {
 
 async function readStoredContentKey(): Promise<string | null> {
   try {
-    if (e2eWebPhotoContentKeyEnabled()) return await AsyncStorage.getItem(KEY_STORE_NAME);
-    return await getPrivateSecureStoreItemAsync(KEY_STORE_NAME);
+    return await SecureStore.getItemAsync(KEY_STORE_NAME);
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
 }
 
-async function writeStoredContentKey(value: string): Promise<void> {
-  if (e2eWebPhotoContentKeyEnabled()) {
-    await AsyncStorage.setItem(KEY_STORE_NAME, value);
-    return;
-  }
-  await setPrivateSecureStoreItemAsync(KEY_STORE_NAME, value);
+async function markContentKeyCreated(): Promise<void> {
+  await AsyncStorage.setItem(KEY_CREATION_MARKER, '1');
 }
 
-async function deleteStoredContentKey(): Promise<void> {
-  if (e2eWebPhotoContentKeyEnabled()) {
-    await AsyncStorage.removeItem(KEY_STORE_NAME);
-    return;
-  }
-  await deletePrivateSecureStoreItemAsync(KEY_STORE_NAME);
-}
-
-type ContentKeyMarkerState =
-  | 'absent'
-  | 'legacy'
-  | 'legacy_unbound'
-  | 'invalid'
-  | 'unsupported_version'
-  | `current:${string}`
-  | `pending:${string}`;
-
-async function readContentKeyMarkerState(): Promise<ContentKeyMarkerState> {
-  let stored: string | null;
+async function requireContentKeyMarker(): Promise<void> {
   try {
-    stored = await AsyncStorage.getItem(KEY_CREATION_MARKER);
+    await markContentKeyCreated();
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
-
-  if (stored === null) return 'absent';
-  if (stored.length > KEY_CREATION_MARKER_MAX_LENGTH) return 'invalid';
-  if (stored === KEY_CREATION_MARKER_UNBOUND_LEGACY) return 'legacy_unbound';
-  if (stored === KEY_CREATION_MARKER_LEGACY) return 'legacy';
-  if (stored.startsWith(KEY_CREATION_MARKER_CURRENT_PREFIX)) {
-    const fingerprint = stored.slice(KEY_CREATION_MARKER_CURRENT_PREFIX.length);
-    if (SHA256_HEX.test(fingerprint)) return `current:${fingerprint}`;
-    return 'invalid';
-  }
-  if (stored.startsWith(KEY_CREATION_PENDING_PREFIX)) {
-    const fingerprint = stored.slice(KEY_CREATION_PENDING_PREFIX.length);
-    if (SHA256_HEX.test(fingerprint)) return `pending:${fingerprint}`;
-    return 'invalid';
-  }
-  const version = /^v([1-9]\d*):/.exec(stored)?.[1];
-  if (version && Number(version) > 1) return 'unsupported_version';
-  return 'invalid';
 }
 
-function rejectBlockedContentKeyMarker(state: ContentKeyMarkerState): void {
-  if (state === 'unsupported_version') {
-    throw new Error(PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION);
-  }
-  if (state === 'invalid') throw new Error(PHOTO_CONTENT_KEY_MARKER_INVALID);
-}
-
-function pendingContentKeyFingerprint(state: ContentKeyMarkerState): string | null {
-  return state.startsWith('pending:') ? state.slice('pending:'.length) : null;
-}
-
-function currentContentKeyFingerprint(state: ContentKeyMarkerState): string | null {
-  return state.startsWith('current:') ? state.slice('current:'.length) : null;
-}
-
-async function contentKeyFingerprint(keyHex: string): Promise<string> {
+async function hasPriorEncryptedPhotoData(): Promise<boolean> {
   try {
-    const fingerprint = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      `${KEY_FINGERPRINT_DOMAIN}${keyHex}`,
-    );
-    if (SHA256_HEX.test(fingerprint)) return fingerprint;
-  } catch {
-    // Normalize native hashing failures to the storage recovery contract.
-  }
-  throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-}
-
-function runSerializedContentKeyMarkerMutation<T>(operation: () => Promise<T>): Promise<T> {
-  const result = contentKeyMarkerMutationTail.catch(() => {}).then(operation);
-  contentKeyMarkerMutationTail = result.then(
-    () => undefined,
-    () => undefined,
-  );
-  return result;
-}
-
-async function writeAndVerifyCurrentContentKeyMarker(fingerprint: string): Promise<void> {
-  const marker = `${KEY_CREATION_MARKER_CURRENT_PREFIX}${fingerprint}`;
-  try {
-    await AsyncStorage.setItem(KEY_CREATION_MARKER, marker);
-  } catch {
-    // AsyncStorage can reject after committing. The exact readback below is authoritative.
-  }
-
-  const stored = await readContentKeyMarkerState();
-  if (stored === `current:${fingerprint}`) return;
-  rejectBlockedContentKeyMarker(stored);
-  throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-}
-
-async function writeAndVerifyPendingContentKeyMarker(fingerprint: string): Promise<void> {
-  const marker = `${KEY_CREATION_PENDING_PREFIX}${fingerprint}`;
-  try {
-    await AsyncStorage.setItem(KEY_CREATION_MARKER, marker);
-  } catch {
-    // AsyncStorage can reject after committing. Exact readback remains authoritative.
-  }
-
-  const stored = await readContentKeyMarkerState();
-  if (stored === `pending:${fingerprint}`) return;
-  rejectBlockedContentKeyMarker(stored);
-  throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-}
-
-async function requireContentKeyMarkerWithinMutation(keyHex: string): Promise<void> {
-  const marker = await readContentKeyMarkerState();
-  rejectBlockedContentKeyMarker(marker);
-  const fingerprint = await contentKeyFingerprint(keyHex);
-  const currentFingerprint = currentContentKeyFingerprint(marker);
-  if (currentFingerprint) {
-    if (currentFingerprint !== fingerprint) {
-      throw new Error(PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH);
-    }
-    return;
-  }
-  const pendingFingerprint = pendingContentKeyFingerprint(marker);
-  if (pendingFingerprint) {
-    if (fingerprint !== pendingFingerprint) {
-      throw new Error(PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH);
-    }
-  }
-  await writeAndVerifyCurrentContentKeyMarker(fingerprint);
-}
-
-async function requireContentKeyMarker(keyHex: string): Promise<void> {
-  await runSerializedContentKeyMarkerMutation(() => requireContentKeyMarkerWithinMutation(keyHex));
-}
-
-async function hasPriorEncryptedPhotoFiles(): Promise<boolean> {
-  try {
+    if ((await AsyncStorage.getItem(KEY_CREATION_MARKER)) === '1') return true;
     const info = await FileSystem.getInfoAsync(PHOTO_DIR);
     if (!info.exists) return false;
     const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
     return entries.some(
       (name) =>
-        name.endsWith('.onskinphoto') ||
-        name.includes('.onskinphoto.pending-delete-') ||
-        name.includes('.onskinphoto.pending-add-') ||
-        name.includes('.onskinphoto.tmp-'),
+        name.endsWith('.layerwellphoto') ||
+        name.includes('.layerwellphoto.pending-delete-') ||
+        name.includes('.layerwellphoto.tmp-'),
     );
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
 }
 
-type ContentKeySnapshot = {
-  stored: string;
-  key: Uint8Array;
-};
-
-async function getExistingContentKeySnapshot(
-  assertCurrent?: () => void,
-): Promise<ContentKeySnapshot> {
+async function getExistingContentKey(generation: number): Promise<Uint8Array> {
   const existing = await readStoredContentKey();
-  assertCurrent?.();
   if (!existing) throw new Error(PHOTO_CONTENT_KEY_MISSING);
   const existingKey = contentKeyFromHex(existing);
   if (!existingKey) throw new Error(PHOTO_CONTENT_KEY_INVALID);
-  return { stored: existing, key: existingKey };
-}
-
-async function getExistingContentKey(assertCurrent?: () => void): Promise<Uint8Array> {
-  return (await getExistingContentKeySnapshot(assertCurrent)).key;
-}
-
-async function getOrCreateE2EWebContentKey(): Promise<Uint8Array> {
-  let existing: string | null;
-  try {
-    existing = await AsyncStorage.getItem(KEY_STORE_NAME);
-  } catch {
-    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-  }
-  const existingKey = contentKeyFromHex(existing);
-  if (existingKey) return existingKey;
-  if (existing) throw new Error(PHOTO_CONTENT_KEY_INVALID);
-
-  const key = randomBytes(32);
-  const keyHex = bytesToHex(key);
-  try {
-    await AsyncStorage.setItem(KEY_STORE_NAME, keyHex);
-  } catch {
-    // Exact readback below resolves a commit whose acknowledgement was lost.
-  }
-  let verified: string | null;
-  try {
-    verified = await AsyncStorage.getItem(KEY_STORE_NAME);
-  } catch {
-    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-  }
-  if (verified !== keyHex) throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-  return key;
+  assertPhotoWriteAllowed(generation);
+  return existingKey;
 }
 
 async function getOrCreateContentKey(): Promise<Uint8Array> {
-  if (e2eWebPhotoContentKeyEnabled()) {
-    contentKeyCreation ??= getOrCreateE2EWebContentKey();
-    try {
-      return await contentKeyCreation;
-    } finally {
-      contentKeyCreation = null;
-    }
-  }
-
   const existing = await readStoredContentKey();
   const existingKey = contentKeyFromHex(existing);
   if (existingKey) {
-    await requireContentKeyMarker(existing!);
+    await requireContentKeyMarker();
     return existingKey;
   }
   if (existing) throw new Error(PHOTO_CONTENT_KEY_INVALID);
 
   if (!contentKeyCreation) {
-    contentKeyCreation = runSerializedContentKeyMarkerMutation(async () => {
+    contentKeyCreation = (async () => {
       const rechecked = await readStoredContentKey();
       const recheckedKey = contentKeyFromHex(rechecked);
       if (recheckedKey) {
-        await requireContentKeyMarkerWithinMutation(rechecked!);
+        await requireContentKeyMarker();
         return recheckedKey;
       }
       if (rechecked) throw new Error(PHOTO_CONTENT_KEY_INVALID);
-
-      const marker = await readContentKeyMarkerState();
-      rejectBlockedContentKeyMarker(marker);
-      if (marker !== 'absent' || (await hasPriorEncryptedPhotoFiles())) {
-        throw new Error(PHOTO_CONTENT_KEY_MISSING);
-      }
+      if (await hasPriorEncryptedPhotoData()) throw new Error(PHOTO_CONTENT_KEY_MISSING);
 
       const key = randomBytes(32);
-      const keyHex = bytesToHex(key);
-      const fingerprint = await contentKeyFingerprint(keyHex);
-      await writeAndVerifyPendingContentKeyMarker(fingerprint);
       try {
-        await writeStoredContentKey(keyHex);
+        await SecureStore.setItemAsync(KEY_STORE_NAME, bytesToHex(key));
+        await markContentKeyCreated();
       } catch {
-        // SecureStore can commit and lose only the acknowledgement. Exact
-        // readback below, not the native return value, is authoritative.
-      }
-      const verifiedKey = await readStoredContentKey();
-      if (verifiedKey !== keyHex) throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
-      const markerBeforeWrite = await readContentKeyMarkerState();
-      rejectBlockedContentKeyMarker(markerBeforeWrite);
-      if (markerBeforeWrite !== `pending:${fingerprint}`) {
         throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
       }
-      await writeAndVerifyCurrentContentKeyMarker(fingerprint);
       return key;
-    });
+    })();
   }
 
   const pending = contentKeyCreation;
@@ -428,28 +456,6 @@ function safePhotoShareId(photoId: string): string {
   return photoId.replace(/[^A-Za-z0-9_-]/g, '') || 'photo';
 }
 
-export function encryptedPhotoUriForId(photoId: string): string {
-  return `${PHOTO_DIR}${safePhotoShareId(photoId)}.onskinphoto`;
-}
-
-export function encryptedPhotoThumbnailUriForId(photoId: string): string {
-  return `${PHOTO_DIR}${safePhotoShareId(photoId)}-thumbnail.onskinphoto`;
-}
-
-export function isOwnedEncryptedPhotoUri(uri?: string | null): uri is string {
-  if (!uri || !uri.startsWith(PHOTO_DIR) || !uri.endsWith('.onskinphoto')) return false;
-  const fileName = uri.slice(PHOTO_DIR.length);
-  return /^[A-Za-z0-9_-]+\.onskinphoto$/.test(fileName);
-}
-
-function pendingAddPhotoUri(encryptedLocalUri: string, operationId: string): string {
-  return `${encryptedLocalUri}.pending-add-${safePhotoShareId(operationId)}`;
-}
-
-function quarantinedPhotoUri(encryptedLocalUri: string, operationId: string): string {
-  return `${encryptedLocalUri}.pending-delete-${safePhotoShareId(operationId)}`;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -461,6 +467,33 @@ function parseJsonRecord(raw: string): Record<string, unknown> | null {
   } catch {
     return null;
   }
+}
+
+function hasExactKeys(record: Record<string, unknown>, keys: readonly string[]): boolean {
+  const actual = Object.keys(record).sort();
+  const expected = [...keys].sort();
+  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+function isOwnedCaptureSourceUri(value: unknown): value is string {
+  if (typeof value !== 'string' || !FileSystem.cacheDirectory) return false;
+  return value.startsWith(FileSystem.cacheDirectory) && !value.includes('/../') && !value.includes('\\');
+}
+
+export function canonicalPhotoRenditionUri(identity: PhotoRenditionIdentity): string {
+  if (!SAFE_RENDITION_PHOTO_ID.test(identity.photoId)) {
+    throw new Error('PHOTO_RENDITION_IDENTITY_INVALID');
+  }
+  const suffix = identity.rendition === 'thumbnail' ? '-thumbnail' : '';
+  return `${PHOTO_DIR}${identity.photoId}${suffix}.layerwellphoto`;
+}
+
+export function ownedEncryptedPhotoUri(uri: unknown): string | null {
+  if (typeof uri !== 'string' || !uri.startsWith(PHOTO_DIR)) return null;
+  const name = uri.slice(PHOTO_DIR.length);
+  if (name.includes('/') || name.includes('\\')) return null;
+  const match = /^((?!.*-thumbnail$)[A-Za-z0-9_-]{1,128})(-thumbnail)?\.layerwellphoto$/u.exec(name);
+  return match ? uri : null;
 }
 
 function isHex(value: unknown, expectedBytes?: number): value is string {
@@ -481,13 +514,77 @@ function textEnvelopeFromRecord(record: Record<string, unknown>): EncryptedTextE
   };
 }
 
-function photoEnvelopeFromRaw(raw: string): EncryptedPhotoEnvelope | null {
+function renditionAssociatedData(
+  value: Pick<
+    EncryptedPhotoRenditionEnvelope,
+    'version' | 'keyId' | 'mimeType' | 'photoId' | 'captureSessionId' | 'rendition'
+  >,
+): Uint8Array {
+  return utf8ToBytes(
+    JSON.stringify({
+      version: value.version,
+      keyId: value.keyId,
+      mimeType: value.mimeType,
+      photoId: value.photoId,
+      captureSessionId: value.captureSessionId,
+      rendition: value.rendition,
+    }),
+  );
+}
+
+function photoEnvelopeFromRaw(
+  raw: string,
+): EncryptedPhotoEnvelope | EncryptedPhotoRenditionEnvelope | null {
   const record = parseJsonRecord(raw);
   if (!record) return null;
+  if (record.version === PHOTO_RENDITION_ENCRYPTION_VERSION) {
+    if (
+      !hasExactKeys(record, [
+        'version', 'keyId', 'mimeType', 'nonceHex', 'ciphertextHex', 'photoId',
+        'captureSessionId', 'rendition',
+      ]) ||
+      record.keyId !== KEY_ID ||
+      (record.mimeType !== 'image/jpeg' && record.mimeType !== 'image/png') ||
+      !isHex(record.nonceHex, NONCE_BYTES) ||
+      !isHex(record.ciphertextHex) ||
+      typeof record.photoId !== 'string' || !SAFE_RENDITION_PHOTO_ID.test(record.photoId) ||
+      (record.captureSessionId !== null &&
+        (typeof record.captureSessionId !== 'string' ||
+          !CANONICAL_CAPTURE_SESSION_ID.test(record.captureSessionId))) ||
+      (record.rendition !== 'original' && record.rendition !== 'thumbnail')
+    ) {
+      return null;
+    }
+    return {
+      version: PHOTO_RENDITION_ENCRYPTION_VERSION,
+      keyId: KEY_ID,
+      mimeType: record.mimeType,
+      nonceHex: record.nonceHex,
+      ciphertextHex: record.ciphertextHex,
+      photoId: record.photoId,
+      captureSessionId: record.captureSessionId,
+      rendition: record.rendition,
+    };
+  }
   const textEnvelope = textEnvelopeFromRecord(record);
   if (!textEnvelope) return null;
   if (record.mimeType !== 'image/jpeg' && record.mimeType !== 'image/png') return null;
   return { ...textEnvelope, mimeType: record.mimeType };
+}
+
+function decryptPhotoEnvelopeToUtf8(
+  envelope: EncryptedPhotoEnvelope | EncryptedPhotoRenditionEnvelope,
+  key: Uint8Array,
+): string | null {
+  try {
+    const cipher =
+      envelope.version === PHOTO_RENDITION_ENCRYPTION_VERSION
+        ? xchacha20poly1305(key, hexToBytes(envelope.nonceHex), renditionAssociatedData(envelope))
+        : xchacha20poly1305(key, hexToBytes(envelope.nonceHex));
+    return bytesToUtf8(cipher.decrypt(hexToBytes(envelope.ciphertextHex)));
+  } catch {
+    return null;
+  }
 }
 
 function encryptedTextEnvelopeFromRaw(raw: string): EncryptedTextEnvelope | null {
@@ -495,7 +592,11 @@ function encryptedTextEnvelopeFromRaw(raw: string): EncryptedTextEnvelope | null
   return record ? textEnvelopeFromRecord(record) : null;
 }
 
-function decryptEnvelopeToUtf8(envelope: EncryptedTextEnvelope, key: Uint8Array): string | null {
+function decryptEnvelopeToUtf8(
+  envelope: EncryptedTextEnvelope | EncryptedPhotoEnvelope | EncryptedPhotoRenditionEnvelope,
+  key: Uint8Array,
+): string | null {
+  if ('mimeType' in envelope) return decryptPhotoEnvelopeToUtf8(envelope, key);
   try {
     return bytesToUtf8(decryptBytesWithKey(envelope, key));
   } catch {
@@ -503,129 +604,227 @@ function decryptEnvelopeToUtf8(envelope: EncryptedTextEnvelope, key: Uint8Array)
   }
 }
 
-async function runTimedPhotoOperation<T>(
-  name: 'photo_encrypt' | 'photo_decrypt',
-  operation: () => Promise<T>,
-): Promise<T> {
-  const finish = startOperationTiming(name);
-  try {
-    const result = await operation();
-    finish('ok');
-    return result;
-  } catch (error) {
-    const cancelled =
-      error instanceof AccountGenerationLeaseError ||
-      (error instanceof Error &&
-        (error.message === ACCOUNT_GENERATION_CHANGED ||
-          error.message === PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY));
-    finish(cancelled ? 'cancelled' : 'error');
-    throw error;
-  }
-}
-
 export function isEncryptedPhotoUri(uri?: string | null): boolean {
-  return Boolean(uri?.endsWith('.onskinphoto'));
+  return ownedEncryptedPhotoUri(uri) !== null;
 }
 
 export async function encryptCapturedPhoto(
   sourceUri: string,
   photoId: string,
-  operationId = photoId,
 ): Promise<EncryptedPhotoWrite> {
   if (!sourceUri) throw new Error('Missing captured photo URI.');
-  return runTimedPhotoOperation('photo_encrypt', () =>
-    runAccountScopedPhotoMutation(async (generation) => {
-      await ensureDir();
-      const key = await getOrCreateContentKey();
-      const mimeType = mimeForUri(sourceUri);
-      const base64 = await FileSystem.readAsStringAsync(sourceUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      assertPhotoWriteAllowed(generation);
-      const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
-      const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
-      const envelope: EncryptedPhotoEnvelope = {
-        ...encrypted,
-        mimeType,
-      };
-      const encryptedLocalUri = encryptedPhotoUriForId(photoId);
-      const temporaryUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
-      assertPhotoWriteAllowed(generation);
-      try {
-        if (
-          (await recoveryPathExists(encryptedLocalUri)) ||
-          (await recoveryPathExists(temporaryUri))
-        ) {
-          throw new Error(PHOTO_RECOVERY_CONFLICT);
-        }
-        await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
-          encoding: FileSystem.EncodingType.UTF8,
-        });
-        await FileSystem.moveAsync({ from: temporaryUri, to: encryptedLocalUri });
-      } catch (error) {
-        await FileSystem.deleteAsync(temporaryUri, { idempotent: true }).catch(() => undefined);
-        throw error;
-      }
-      return {
-        encryptedLocalUri,
-        keyId: KEY_ID,
-        encryptionVersion: ENCRYPTION_VERSION,
-      };
-    }),
-  );
-}
-
-export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<string> {
-  const read = () =>
-    runAccountScopedPhotoRead(async (assertCurrent) => {
-      if (!isEncryptedPhotoUri(encryptedLocalUri)) {
-        assertCurrent();
-        return encryptedLocalUri;
-      }
-      const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const healthLease = captureHealthDataWriteLease();
+    await ensureDir();
+    const key = await getOrCreateContentKey();
+    assertHealthDataWriteLease(healthLease);
+    const mimeType = mimeForUri(sourceUri);
+    const base64 = await FileSystem.readAsStringAsync(sourceUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    assertHealthDataWriteLease(healthLease);
+    const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
+    const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
+    const envelope: EncryptedPhotoEnvelope = {
+      ...encrypted,
+      mimeType,
+    };
+    const encryptedLocalUri = `${PHOTO_DIR}${photoId}.layerwellphoto`;
+    const temporaryUri = `${encryptedLocalUri}.tmp-${Date.now()}`;
+    let finalMoveCompleted = false;
+    try {
+      assertHealthPhotoOperationCurrent(generation, healthLease);
+      await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
         encoding: FileSystem.EncodingType.UTF8,
       });
-      assertCurrent();
-      const envelope = photoEnvelopeFromRaw(raw);
-      if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-      const key = await getExistingContentKey(assertCurrent);
-      assertCurrent();
-      const base64 = decryptEnvelopeToUtf8(envelope, key);
-      if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-      return `data:${envelope.mimeType};base64,${base64}`;
-    });
-  return isEncryptedPhotoUri(encryptedLocalUri)
-    ? runTimedPhotoOperation('photo_decrypt', read)
-    : read();
+      assertHealthDataWriteLease(healthLease);
+      await FileSystem.moveAsync({ from: temporaryUri, to: encryptedLocalUri });
+      finalMoveCompleted = true;
+      assertHealthDataWriteLease(healthLease);
+    } catch (error) {
+      const cleanup = [FileSystem.deleteAsync(temporaryUri, { idempotent: true })];
+      if (finalMoveCompleted) {
+        cleanup.push(FileSystem.deleteAsync(encryptedLocalUri, { idempotent: true }));
+      }
+      await Promise.allSettled(cleanup);
+      throw error;
+    }
+    assertHealthDataWriteLease(healthLease);
+    return {
+      encryptedLocalUri,
+      keyId: KEY_ID,
+      encryptionVersion: ENCRYPTION_VERSION,
+    };
+  });
 }
 
-export async function createPhotoShareFile(encryptedLocalUri: string): Promise<string> {
-  return runAccountScopedPhotoMutation(async (generation) => {
-    if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
+/**
+ * Encrypts one rendition with authenticated publication identity. The full-size
+ * and thumbnail files use different final paths and their clear envelope
+ * identities are authenticated as AEAD associated data.
+ */
+export async function encryptPhotoRendition(
+  sourceUri: string,
+  identity: PhotoRenditionIdentity,
+): Promise<EncryptedPhotoWrite> {
+  if (!sourceUri) throw new Error('Missing captured photo URI.');
+  if (
+    !SAFE_RENDITION_PHOTO_ID.test(identity.photoId) ||
+    (identity.captureSessionId !== null &&
+      !CANONICAL_CAPTURE_SESSION_ID.test(identity.captureSessionId))
+  ) {
+    throw new Error('PHOTO_RENDITION_IDENTITY_INVALID');
+  }
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const healthLease = captureHealthDataWriteLease();
+    await ensureDir();
+    const key = await getOrCreateContentKey();
+    assertHealthDataWriteLease(healthLease);
+    const mimeType = mimeForUri(sourceUri);
+    const base64 = await FileSystem.readAsStringAsync(sourceUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    assertHealthDataWriteLease(healthLease);
+    const plaintext = utf8ToBytes(stripImageMetadataFromBase64(base64, mimeType));
+    const nonce = randomBytes(NONCE_BYTES);
+    const envelopeIdentity = {
+      version: PHOTO_RENDITION_ENCRYPTION_VERSION,
+      keyId: KEY_ID,
+      mimeType,
+      photoId: identity.photoId,
+      captureSessionId: identity.captureSessionId,
+      rendition: identity.rendition,
+    } as const;
+    let ciphertext: Uint8Array;
+    try {
+      ciphertext = xchacha20poly1305(key, nonce, renditionAssociatedData(envelopeIdentity)).encrypt(
+        plaintext,
+      );
+    } finally {
+      plaintext.fill(0);
+    }
+    const envelope: EncryptedPhotoRenditionEnvelope = {
+      ...envelopeIdentity,
+      nonceHex: bytesToHex(nonce),
+      ciphertextHex: bytesToHex(ciphertext),
+    };
+    const encryptedLocalUri = canonicalPhotoRenditionUri(identity);
+    const temporaryUri = `${encryptedLocalUri}.tmp-${Date.now()}`;
+    let finalMoveCompleted = false;
+    try {
+      assertHealthPhotoOperationCurrent(generation, healthLease);
+      await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+      assertHealthPhotoOperationCurrent(generation, healthLease);
+      await FileSystem.moveAsync({ from: temporaryUri, to: encryptedLocalUri });
+      finalMoveCompleted = true;
+      assertHealthPhotoOperationCurrent(generation, healthLease);
+    } catch (error) {
+      const cleanup = [FileSystem.deleteAsync(temporaryUri, { idempotent: true })];
+      if (finalMoveCompleted) {
+        cleanup.push(FileSystem.deleteAsync(encryptedLocalUri, { idempotent: true }));
+      }
+      await Promise.allSettled(cleanup);
+      throw error;
+    }
+    return {
+      encryptedLocalUri,
+      keyId: KEY_ID,
+      encryptionVersion: PHOTO_RENDITION_ENCRYPTION_VERSION,
+    };
+  });
+}
+
+function assertExpectedRendition(
+  encryptedLocalUri: string,
+  envelope: EncryptedPhotoEnvelope | EncryptedPhotoRenditionEnvelope,
+  expected?: PhotoRenditionReadExpectation,
+): void {
+  if (envelope.version === ENCRYPTION_VERSION) {
+    if (expected && !expected.allowLegacyEnvelope) throw new Error('PHOTO_RENDITION_IDENTITY_MISMATCH');
+    return;
+  }
+  if (!expected) throw new Error('PHOTO_RENDITION_IDENTITY_REQUIRED');
+  if (
+    envelope.photoId !== expected.photoId ||
+    envelope.captureSessionId !== expected.captureSessionId ||
+    envelope.rendition !== expected.rendition ||
+    encryptedLocalUri !== canonicalPhotoRenditionUri(expected)
+  ) {
+    throw new Error('PHOTO_RENDITION_IDENTITY_MISMATCH');
+  }
+}
+
+export async function decryptPhotoToDataUri(
+  encryptedLocalUri: string,
+  expected?: PhotoRenditionReadExpectation,
+): Promise<string> {
+  if (!isEncryptedPhotoUri(encryptedLocalUri)) {
+    const healthLease = captureHealthDataWriteLease();
+    assertHealthDataWriteLease(healthLease);
+    return encryptedLocalUri;
+  }
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const healthLease = captureHealthDataWriteLease();
     const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
       encoding: FileSystem.EncodingType.UTF8,
     });
+    assertHealthDataWriteLease(healthLease);
     const envelope = photoEnvelopeFromRaw(raw);
     if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-    const key = await getExistingContentKey();
-    assertPhotoWriteAllowed(generation);
+    assertExpectedRendition(encryptedLocalUri, envelope, expected);
+    const key = await getExistingContentKey(generation);
+    assertHealthDataWriteLease(healthLease);
+    const base64 = decryptPhotoEnvelopeToUtf8(envelope, key);
+    if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    assertHealthDataWriteLease(healthLease);
+    return `data:${envelope.mimeType};base64,${base64}`;
+  });
+}
+
+export async function createPhotoShareFile(
+  encryptedLocalUri: string,
+  expected?: PhotoRenditionReadExpectation,
+): Promise<string> {
+  if (!isEncryptedPhotoUri(encryptedLocalUri)) {
+    const healthLease = captureHealthDataWriteLease();
+    assertHealthDataWriteLease(healthLease);
+    return encryptedLocalUri;
+  }
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const healthLease = captureHealthDataWriteLease();
+    const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    assertHealthDataWriteLease(healthLease);
+    const envelope = photoEnvelopeFromRaw(raw);
+    if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    assertExpectedRendition(encryptedLocalUri, envelope, expected);
+    const key = await getExistingContentKey(generation);
+    assertHealthPhotoOperationCurrent(generation, healthLease);
     const staging = await reservePlaintextStaging(
       envelope.mimeType === 'image/png' ? 'photo_share_png' : 'photo_share_jpeg',
     );
     try {
-      assertPhotoWriteAllowed(generation);
+      assertHealthDataWriteLease(healthLease);
       const base64 = decryptEnvelopeToUtf8(envelope, key);
       if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
       const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
-      assertPhotoWriteAllowed(generation);
+      assertHealthPhotoOperationCurrent(generation, healthLease);
       await FileSystem.writeAsStringAsync(staging.uri, strippedBase64, {
         encoding: FileSystem.EncodingType.Base64,
       });
-      assertPhotoWriteAllowed(generation);
+      assertHealthPhotoOperationCurrent(generation, healthLease);
       await markPlaintextStagingState(staging, 'plaintext_written');
+      assertHealthDataWriteLease(healthLease);
       return staging.uri;
     } catch (error) {
       await cleanupPlaintextStaging(staging).catch(() => undefined);
+      // The reservation is an ownership proof for this exact opaque path. If
+      // journal cleanup is unavailable, still erase the known plaintext file;
+      // the retained journal entry then supports a later idempotent retry.
+      await FileSystem.deleteAsync(staging.uri, { idempotent: true }).catch(() => undefined);
       throw error;
     }
   });
@@ -636,345 +835,72 @@ export async function deletePhotoShareFile(
   sourceUri?: string | null,
 ): Promise<void> {
   if (!uri || uri === sourceUri) return;
-  await runAccountScopedPhotoMutation(async (generation) => {
-    await cleanupPlaintextStagingUri(uri).catch(() => undefined);
-    assertPhotoWriteAllowed(generation);
-  });
+  await cleanupPlaintextStagingUri(uri).catch(() => undefined);
 }
 
 export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
   if (!uri || !isEncryptedPhotoUri(uri)) return;
-  if (!isOwnedEncryptedPhotoUri(uri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
-  await runAccountScopedPhotoMutation(async (generation) => {
-    await FileSystem.deleteAsync(uri, { idempotent: true });
-    assertPhotoWriteAllowed(generation);
-  });
+  await FileSystem.deleteAsync(uri, { idempotent: true });
 }
 
 /** Removes the camera cache source only after both encrypted file and metadata commit. */
 export async function deleteCapturedPhotoSource(uri?: string | null): Promise<void> {
   if (!uri || isEncryptedPhotoUri(uri)) return;
-  await runAccountScopedPhotoMutation(async (generation) => {
-    await cleanupPlaintextStagingUri(uri);
-    assertPhotoWriteAllowed(generation);
-    await FileSystem.deleteAsync(uri, { idempotent: true });
-    assertPhotoWriteAllowed(generation);
-  });
+  await FileSystem.deleteAsync(uri, { idempotent: true });
 }
 
 /**
  * Moves an encrypted photo out of its live path before metadata is changed. If
  * the move fails, callers know the live file is untouched and must keep the
  * metadata row. The quarantine suffix is reconciled against metadata on the
- * next explicit mutation recovery after a crash or interrupted delete.
+ * next successful store read after a crash or interrupted delete.
  */
 export async function quarantineEncryptedPhoto(
   uri: string | null | undefined,
   operationId: string,
 ): Promise<QuarantinedPhotoFile | null> {
   if (!uri || !isEncryptedPhotoUri(uri)) return null;
-  if (!isOwnedEncryptedPhotoUri(uri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
-  const quarantinedUri = quarantinedPhotoUri(uri, operationId);
+  const quarantinedUri = `${uri}.pending-delete-${safePhotoShareId(operationId)}`;
   return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    assertCurrent();
-    if (await recoveryPathExists(quarantinedUri)) {
-      throw new Error(PHOTO_RECOVERY_CONFLICT);
-    }
     assertCurrent();
     await FileSystem.moveAsync({ from: uri, to: quarantinedUri });
     return { originalUri: uri, quarantinedUri };
   });
 }
 
-function assertOwnedQuarantinedPhotoFile(file: QuarantinedPhotoFile): void {
-  if (
-    !isOwnedEncryptedPhotoUri(file.originalUri) ||
-    !file.quarantinedUri.startsWith(`${file.originalUri}.pending-delete-`) ||
-    !/^[A-Za-z0-9_-]+$/.test(
-      file.quarantinedUri.slice(`${file.originalUri}.pending-delete-`.length),
-    )
-  ) {
-    throw new Error(PHOTO_RECOVERY_CONFLICT);
-  }
-}
-
 export async function restoreQuarantinedPhoto(file: QuarantinedPhotoFile): Promise<void> {
-  assertOwnedQuarantinedPhotoFile(file);
   await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    assertCurrent();
-    await FileSystem.moveAsync({ from: file.quarantinedUri, to: file.originalUri });
+    const healthLease = captureHealthDataWriteLease();
+    const assertAuthorized = () => {
+      assertCurrent();
+      assertHealthDataWriteLease(healthLease);
+    };
+    assertAuthorized();
+    let restoreCompleted = false;
+    try {
+      await FileSystem.moveAsync({ from: file.quarantinedUri, to: file.originalUri });
+      restoreCompleted = true;
+      assertAuthorized();
+    } catch (error) {
+      try {
+        assertHealthDataWriteLease(healthLease);
+      } catch (healthError) {
+        if (restoreCompleted) {
+          await FileSystem.deleteAsync(file.originalUri, { idempotent: true }).catch(
+            () => undefined,
+          );
+        }
+        throw healthError;
+      }
+      throw error;
+    }
   });
 }
 
 export async function deleteQuarantinedPhoto(file: QuarantinedPhotoFile): Promise<void> {
-  assertOwnedQuarantinedPhotoFile(file);
   await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
     assertCurrent();
     await FileSystem.deleteAsync(file.quarantinedUri, { idempotent: true });
-  });
-}
-
-type RecoveryAction = { type: 'delete'; uri: string } | { type: 'move'; from: string; to: string };
-
-async function readRecoveryCandidate(uri: string): Promise<string> {
-  try {
-    return await FileSystem.readAsStringAsync(uri, {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
-  } catch {
-    throw new Error(PHOTO_RECOVERY_CANDIDATE_READ_FAILED);
-  }
-}
-
-function assertRecoveryCandidateAuthenticates(raw: string, key: Uint8Array): void {
-  const envelope = photoEnvelopeFromRaw(raw);
-  if (!envelope || decryptEnvelopeToUtf8(envelope, key) === null) {
-    throw new Error(PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED);
-  }
-}
-
-async function recoveryPathExists(uri: string): Promise<boolean> {
-  try {
-    return (await FileSystem.getInfoAsync(uri)).exists;
-  } catch {
-    throw new Error(PHOTO_RECOVERY_CANDIDATE_READ_FAILED);
-  }
-}
-
-type AuthenticatedRecoverySnapshots = {
-  key: ContentKeySnapshot;
-  paths: Map<string, string>;
-};
-
-async function authenticateRecoveryPaths(
-  uris: readonly string[],
-): Promise<AuthenticatedRecoverySnapshots | null> {
-  const uniqueUris = [...new Set(uris)];
-  if (uniqueUris.length === 0) return null;
-  const key = await getExistingContentKeySnapshot();
-  const paths = new Map<string, string>();
-  for (const uri of uniqueUris) {
-    const raw = await readRecoveryCandidate(uri);
-    assertRecoveryCandidateAuthenticates(raw, key.key);
-    paths.set(uri, raw);
-  }
-  return { key, paths };
-}
-
-async function assertRecoverySnapshotsCurrent(
-  snapshots: AuthenticatedRecoverySnapshots,
-  absentPaths: ReadonlySet<string> = new Set(),
-): Promise<void> {
-  const recheckedKey = await getExistingContentKeySnapshot();
-  if (recheckedKey.stored !== snapshots.key.stored) {
-    throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
-  }
-  for (const [uri, expectedRaw] of snapshots.paths) {
-    if ((await readRecoveryCandidate(uri)) !== expectedRaw) {
-      throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
-    }
-  }
-  for (const uri of absentPaths) {
-    if (await recoveryPathExists(uri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
-  }
-}
-
-/**
- * Authenticates and publishes only the deterministic add artifact named by the
- * co-persisted mutation journal. Unknown files are never scanned or removed.
- */
-export async function recoverPreparedEncryptedPhoto(
-  encryptedLocalUri: string,
-  operationId: string,
-): Promise<boolean> {
-  if (!isOwnedEncryptedPhotoUri(encryptedLocalUri)) {
-    throw new Error(PHOTO_RECOVERY_CONFLICT);
-  }
-  const pendingUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
-  return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    const finalExists = await recoveryPathExists(encryptedLocalUri);
-    assertCurrent();
-    const pendingExists = await recoveryPathExists(pendingUri);
-    assertCurrent();
-    if (!finalExists && !pendingExists) return false;
-
-    if (finalExists) {
-      const snapshots = await authenticateRecoveryPaths([encryptedLocalUri]);
-      if (!snapshots) return false;
-      assertCurrent();
-      if (pendingExists) {
-        const pendingRaw = await readRecoveryCandidate(pendingUri);
-        assertCurrent();
-        let pendingAuthenticates = false;
-        if (photoEnvelopeFromRaw(pendingRaw)) {
-          try {
-            assertRecoveryCandidateAuthenticates(pendingRaw, snapshots.key.key);
-            pendingAuthenticates = true;
-          } catch {
-            // The authenticated final is authoritative. An interrupted sibling
-            // remains exact-journal-owned and cannot be the only photo copy.
-          }
-        }
-        if (pendingAuthenticates && snapshots.paths.get(encryptedLocalUri) !== pendingRaw) {
-          throw new Error(PHOTO_RECOVERY_CONFLICT);
-        }
-        snapshots.paths.set(pendingUri, pendingRaw);
-        await assertRecoverySnapshotsCurrent(snapshots);
-        assertCurrent();
-        await FileSystem.deleteAsync(pendingUri, { idempotent: true });
-      } else {
-        await assertRecoverySnapshotsCurrent(snapshots);
-        assertCurrent();
-      }
-      return true;
-    }
-
-    const snapshots = await authenticateRecoveryPaths([pendingUri]);
-    if (!snapshots) return false;
-    assertCurrent();
-    await assertRecoverySnapshotsCurrent(snapshots, new Set([encryptedLocalUri]));
-    assertCurrent();
-    await FileSystem.moveAsync({ from: pendingUri, to: encryptedLocalUri });
-    return true;
-  });
-}
-
-/**
- * A process may die halfway through writing the exact pending-add file. When
- * the matching protected plaintext source still exists, callers may discard
- * the exact journal-owned pending artifact and retry encryption. Callers MUST
- * prove that exact source handle before invoking this function.
- */
-export async function discardPendingEncryptedPhotoForRetry(
-  encryptedLocalUri: string,
-  operationId: string,
-): Promise<boolean> {
-  if (!isOwnedEncryptedPhotoUri(encryptedLocalUri)) {
-    throw new Error(PHOTO_RECOVERY_CONFLICT);
-  }
-  const pendingUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
-  return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    if (await recoveryPathExists(encryptedLocalUri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
-    assertCurrent();
-    if (!(await recoveryPathExists(pendingUri))) return false;
-    assertCurrent();
-    const raw = await readRecoveryCandidate(pendingUri);
-    assertCurrent();
-    if ((await readRecoveryCandidate(pendingUri)) !== raw) {
-      throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
-    }
-    assertCurrent();
-    await FileSystem.deleteAsync(pendingUri, { idempotent: true });
-    return true;
-  });
-}
-
-function exactDeletionTargets(uris: readonly string[], operationId: string) {
-  const originals = [...new Set(uris)];
-  if (originals.some((uri) => !isOwnedEncryptedPhotoUri(uri))) {
-    throw new Error(PHOTO_RECOVERY_CONFLICT);
-  }
-  return originals.map((originalUri) => ({
-    originalUri,
-    quarantinedUri: quarantinedPhotoUri(originalUri, operationId),
-  }));
-}
-
-/** Preflight before the atomic prepared journal is written. */
-export async function verifyEncryptedPhotoDeletionSources(uris: readonly string[]): Promise<void> {
-  const targets = exactDeletionTargets(uris, 'preflight');
-  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    if (targets.length === 0) return;
-    const key = await getExistingContentKeySnapshot();
-    assertCurrent();
-    for (const target of targets) {
-      if (!(await recoveryPathExists(target.originalUri))) {
-        throw new Error(PHOTO_RECOVERY_CONFLICT);
-      }
-      assertCurrent();
-      const raw = await readRecoveryCandidate(target.originalUri);
-      assertRecoveryCandidateAuthenticates(raw, key.key);
-      assertCurrent();
-      const recheckedKey = await getExistingContentKeySnapshot();
-      if (recheckedKey.stored !== key.stored) throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
-      if ((await readRecoveryCandidate(target.originalUri)) !== raw) {
-        throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
-      }
-      assertCurrent();
-    }
-  });
-}
-
-/** Moves only journal-authorized, authenticated files out of their live paths. */
-export async function stageEncryptedPhotoDeletions(
-  uris: readonly string[],
-  operationId: string,
-): Promise<void> {
-  const targets = exactDeletionTargets(uris, operationId);
-  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    if (targets.length === 0) return;
-    const key = await getExistingContentKeySnapshot();
-    assertCurrent();
-    for (const target of targets) {
-      const originalExists = await recoveryPathExists(target.originalUri);
-      assertCurrent();
-      const quarantinedExists = await recoveryPathExists(target.quarantinedUri);
-      assertCurrent();
-      if (originalExists && quarantinedExists) throw new Error(PHOTO_RECOVERY_CONFLICT);
-      if (!originalExists && !quarantinedExists) throw new Error(PHOTO_RECOVERY_CONFLICT);
-      const candidateUri = originalExists ? target.originalUri : target.quarantinedUri;
-      const raw = await readRecoveryCandidate(candidateUri);
-      assertRecoveryCandidateAuthenticates(raw, key.key);
-      assertCurrent();
-      const recheckedKey = await getExistingContentKeySnapshot();
-      if (recheckedKey.stored !== key.stored) throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
-      if ((await readRecoveryCandidate(candidateUri)) !== raw) {
-        throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
-      }
-      if (originalExists) {
-        if (await recoveryPathExists(target.quarantinedUri)) {
-          throw new Error(PHOTO_RECOVERY_CONFLICT);
-        }
-        assertCurrent();
-        await FileSystem.moveAsync({ from: target.originalUri, to: target.quarantinedUri });
-      } else if (await recoveryPathExists(target.originalUri)) {
-        throw new Error(PHOTO_RECOVERY_CONFLICT);
-      }
-      assertCurrent();
-    }
-  });
-}
-
-/** Deletes only exact, authenticated quarantines after metadata reached commit. */
-export async function finalizeEncryptedPhotoDeletions(
-  uris: readonly string[],
-  operationId: string,
-): Promise<void> {
-  const targets = exactDeletionTargets(uris, operationId);
-  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    let key: ContentKeySnapshot | null = null;
-    for (const target of targets) {
-      if (await recoveryPathExists(target.originalUri)) {
-        throw new Error(PHOTO_RECOVERY_CONFLICT);
-      }
-      assertCurrent();
-      if (!(await recoveryPathExists(target.quarantinedUri))) continue;
-      assertCurrent();
-      key ??= await getExistingContentKeySnapshot();
-      assertCurrent();
-      const raw = await readRecoveryCandidate(target.quarantinedUri);
-      assertRecoveryCandidateAuthenticates(raw, key.key);
-      const recheckedKey = await getExistingContentKeySnapshot();
-      if (recheckedKey.stored !== key.stored) throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
-      if ((await readRecoveryCandidate(target.quarantinedUri)) !== raw) {
-        throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
-      }
-      if (await recoveryPathExists(target.originalUri)) {
-        throw new Error(PHOTO_RECOVERY_CONFLICT);
-      }
-      assertCurrent();
-      await FileSystem.deleteAsync(target.quarantinedUri, { idempotent: true });
-    }
   });
 }
 
@@ -982,113 +908,83 @@ export async function finalizeEncryptedPhotoDeletions(
  * Reconciles files left by process death. A quarantined file whose metadata row
  * still exists is restored; one whose row committed as deleted is removed.
  * Incomplete temp writes and unreferenced final envelopes are safe to remove
- * only after metadata parsed successfully and every candidate authenticates
- * under one stable, definitively readable content key.
+ * only after metadata parsed successfully.
  */
 export async function reconcileEncryptedPhotoStorage(
   referencedUris: readonly string[],
   options: { removeUnreferencedFinals?: boolean } = {},
 ): Promise<void> {
   await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    const referenced = new Set(referencedUris.filter(isEncryptedPhotoUri));
-    const info = await FileSystem.getInfoAsync(PHOTO_DIR);
-    assertCurrent();
-    if (!info.exists) return;
-    const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
-    assertCurrent();
-
-    const candidates = entries.filter((entry) => {
-      if (/^(.+\.onskinphoto)\.pending-delete-.+$/.test(entry)) return true;
-      if (/\.onskinphoto\.tmp-.+$/.test(entry)) return true;
-      return (
-        options.removeUnreferencedFinals !== false &&
-        entry.endsWith('.onskinphoto') &&
-        !referenced.has(`${PHOTO_DIR}${entry}`)
-      );
-    });
-    if (candidates.length === 0) return;
-
-    // Recovery is deliberately two-phase. Authenticate and snapshot every path
-    // before the first destructive operation so one malformed/wrong-key/read-
-    // uncertain candidate preserves the complete directory byte-for-byte.
-    const keySnapshot = await getExistingContentKeySnapshot();
-    assertCurrent();
-    const pathSnapshots = new Map<string, string>();
-    const absentMoveTargets = new Set<string>();
-    const actions: RecoveryAction[] = [];
-
-    for (const entry of candidates) {
+    // Reconciliation may restore a quarantined live photo, so it is not a
+    // deletion-only bypass and must remain closed after withdrawal.
+    const healthLease = captureHealthDataWriteLease();
+    const restorationCandidates = new Set<string>();
+    const assertAuthorized = () => {
       assertCurrent();
-      const uri = `${PHOTO_DIR}${entry}`;
-      const raw = await readRecoveryCandidate(uri);
-      assertCurrent();
-      assertRecoveryCandidateAuthenticates(raw, keySnapshot.key);
-      pathSnapshots.set(uri, raw);
-      const quarantined = /^(.+\.onskinphoto)\.pending-delete-.+$/.exec(entry);
-      if (quarantined) {
-        const originalUri = `${PHOTO_DIR}${quarantined[1]}`;
-        if (referenced.has(originalUri)) {
-          const originalExists = await recoveryPathExists(originalUri);
-          assertCurrent();
-          if (originalExists) {
-            const originalRaw = await readRecoveryCandidate(originalUri);
-            assertCurrent();
-            if (originalRaw !== raw) throw new Error(PHOTO_RECOVERY_CONFLICT);
-            pathSnapshots.set(originalUri, originalRaw);
-            actions.push({ type: 'delete', uri });
-          } else {
-            if (absentMoveTargets.has(originalUri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
-            absentMoveTargets.add(originalUri);
-            actions.push({ type: 'move', from: uri, to: originalUri });
-          }
-        } else {
-          actions.push({ type: 'delete', uri });
-        }
-        continue;
-      }
-
-      if (/\.onskinphoto\.tmp-.+$/.test(entry)) {
-        actions.push({ type: 'delete', uri });
-        continue;
-      }
-
-      actions.push({ type: 'delete', uri });
-    }
-
-    const assertSnapshotsCurrent = async () => {
-      const recheckedKey = await getExistingContentKeySnapshot();
-      assertCurrent();
-      if (recheckedKey.stored !== keySnapshot.stored) {
-        throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
-      }
-      for (const [uri, expectedRaw] of pathSnapshots) {
-        const currentRaw = await readRecoveryCandidate(uri);
-        assertCurrent();
-        if (currentRaw !== expectedRaw) throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
-      }
-      for (const target of absentMoveTargets) {
-        if (await recoveryPathExists(target)) throw new Error(PHOTO_RECOVERY_CONFLICT);
-        assertCurrent();
-      }
+      assertHealthDataWriteLease(healthLease);
     };
+    const referenced = new Set(referencedUris.filter(isEncryptedPhotoUri));
+    try {
+      assertAuthorized();
+      const info = await FileSystem.getInfoAsync(PHOTO_DIR);
+      assertAuthorized();
+      if (!info.exists) return;
+      const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
+      assertAuthorized();
 
-    for (const action of actions) {
-      // A preceding awaited filesystem action gives later candidates time to
-      // change. Recheck the stable key and every still-authoritative path
-      // immediately before each action; remove only snapshots this action has
-      // successfully consumed.
-      await assertSnapshotsCurrent();
-      assertCurrent();
-      if (action.type === 'move') {
-        const expectedRaw = pathSnapshots.get(action.from)!;
-        await FileSystem.moveAsync({ from: action.from, to: action.to });
-        pathSnapshots.delete(action.from);
-        absentMoveTargets.delete(action.to);
-        pathSnapshots.set(action.to, expectedRaw);
-      } else {
-        await FileSystem.deleteAsync(action.uri, { idempotent: true });
-        pathSnapshots.delete(action.uri);
+      for (const entry of entries) {
+        assertAuthorized();
+        const uri = `${PHOTO_DIR}${entry}`;
+        const quarantined = /^(.+\.layerwellphoto)\.pending-delete-.+$/.exec(entry);
+        if (quarantined) {
+          const originalUri = `${PHOTO_DIR}${quarantined[1]}`;
+          if (referenced.has(originalUri)) {
+            const originalInfo = await FileSystem.getInfoAsync(originalUri);
+            assertAuthorized();
+            if (originalInfo.exists) {
+              await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+              assertAuthorized();
+            } else {
+              assertAuthorized();
+              await FileSystem.moveAsync({ from: uri, to: originalUri });
+              restorationCandidates.add(originalUri);
+              assertAuthorized();
+            }
+          } else {
+            await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+            assertAuthorized();
+          }
+          continue;
+        }
+
+        if (/\.layerwellphoto\.tmp-.+$/.test(entry)) {
+          await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+          assertAuthorized();
+          continue;
+        }
+
+        if (
+          options.removeUnreferencedFinals !== false &&
+          entry.endsWith('.layerwellphoto') &&
+          !referenced.has(uri)
+        ) {
+          await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+          assertAuthorized();
+        }
       }
+      assertAuthorized();
+    } catch (error) {
+      try {
+        assertAuthorized();
+      } catch (healthError) {
+        await Promise.allSettled(
+          [...restorationCandidates].map((uri) =>
+            FileSystem.deleteAsync(uri, { idempotent: true }),
+          ),
+        );
+        throw healthError;
+      }
+      throw error;
     }
   });
 }
@@ -1105,10 +1001,9 @@ export async function clearEncryptedPhotoStorage(): Promise<void> {
   const operations: Promise<unknown>[] = [
     clearPhotoDirectory(),
     AsyncStorage.removeItem(KEY_CREATION_MARKER),
+    AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY),
   ];
-  if (Platform.OS !== 'web' || e2eWebPhotoContentKeyEnabled()) {
-    operations.push(deleteStoredContentKey());
-  }
+  if (Platform.OS !== 'web') operations.push(SecureStore.deleteItemAsync(KEY_STORE_NAME));
   const results = await Promise.allSettled(operations);
   const failures = results.filter((result) => result.status === 'rejected');
   if (failures.length > 0) {
@@ -1118,28 +1013,73 @@ export async function clearEncryptedPhotoStorage(): Promise<void> {
 
 export async function encryptPhotoNote(note: string | null | undefined): Promise<string | null> {
   if (!note) return null;
-  return runAccountScopedPhotoMutation(async (generation) => {
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const healthLease = captureHealthDataWriteLease();
     const key = await getOrCreateContentKey();
-    assertPhotoWriteAllowed(generation);
-    return JSON.stringify(encryptBytesWithKey(utf8ToBytes(note), key));
+    assertHealthPhotoOperationCurrent(generation, healthLease);
+    const encrypted = JSON.stringify(encryptBytesWithKey(utf8ToBytes(note), key));
+    assertHealthDataWriteLease(healthLease);
+    return encrypted;
   });
 }
 
 export async function decryptPhotoNote(
   ciphertext: string | null | undefined,
 ): Promise<string | null> {
-  return runAccountScopedPhotoRead(async (assertCurrent) => {
-    if (!ciphertext) {
-      assertCurrent();
-      return null;
-    }
+  if (!ciphertext) return null;
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const healthLease = captureHealthDataWriteLease();
     const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
     if (!envelope) throw new Error(PHOTO_DECRYPTION_FAILED);
-    const key = await getExistingContentKey(assertCurrent);
-    assertCurrent();
+    const key = await getExistingContentKey(generation);
+    assertHealthDataWriteLease(healthLease);
     const plaintext = decryptEnvelopeToUtf8(envelope, key);
     if (plaintext === null) throw new Error(PHOTO_DECRYPTION_FAILED);
+    assertHealthDataWriteLease(healthLease);
     return plaintext;
+  });
+}
+
+/**
+ * Data-rights-only note decryption. This named lane intentionally works while
+ * health processing is closed, but only under the exact account-generation
+ * lease whose caller verified the export owner. It must never back an app
+ * screen, personalization, cache, or background task.
+ */
+export async function decryptPhotoNoteForPurposeLimitedExport(
+  ciphertext: string | null | undefined,
+  accountLease: AccountGenerationLease,
+): Promise<string | null> {
+  accountLease.assertCurrent();
+  if (!ciphertext) return null;
+
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const assertCurrent = () => {
+      accountLease.assertCurrent();
+      assertPhotoWriteAllowed(generation);
+    };
+    assertCurrent();
+    const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
+    if (!envelope) throw new Error(PHOTO_DECRYPTION_FAILED);
+    const key = await getExistingContentKey(generation);
+    try {
+      assertCurrent();
+      let plaintextBytes: Uint8Array;
+      try {
+        plaintextBytes = decryptBytesWithKey(envelope, key);
+      } catch {
+        throw new Error(PHOTO_DECRYPTION_FAILED);
+      }
+      try {
+        const plaintext = bytesToUtf8(plaintextBytes);
+        assertCurrent();
+        return plaintext;
+      } finally {
+        plaintextBytes.fill(0);
+      }
+    } finally {
+      key.fill(0);
+    }
   });
 }
 

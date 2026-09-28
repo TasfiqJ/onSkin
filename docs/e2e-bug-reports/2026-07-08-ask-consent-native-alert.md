@@ -3,7 +3,7 @@
 Severity: High
 Surface: Expo web static export
 Environment: Expo web static export at 320 x 568, `APP_VARIANT=development`, `EXPO_PUBLIC_APP_ENV=development`, `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`
-Feature: Ask RoutineKind cloud consent gate
+Feature: Ask Layerwell cloud consent gate
 Date: 2026-07-08
 Tester: Codex
 
@@ -11,7 +11,7 @@ Tester: Codex
 
 1. Start Expo web with Cloud Ask enabled and a forced Ask consent save failure.
 2. Open `/ask/consent` on a compact phone viewport.
-3. Toggle `Enable Ask RoutineKind`.
+3. Toggle `Enable Ask Layerwell`.
 
 ## Expected Result
 
@@ -25,7 +25,7 @@ Before the fix, the failure handler called `Alert.alert`, so failure recovery de
 
 - Screenshot: `test-results/human-e2e/2026-07-08/main-branch-merge/ask-consent-inline-failure.png`
 - Logs: `test-results/human-e2e/2026-07-08/main-branch-merge/state.json`
-- UI snapshot: at 320 x 568 the route showed the Back button, `Enable Ask RoutineKind` switch, and `Open Ask RoutineKind` CTA without horizontal overflow.
+- UI snapshot: at 320 x 568 the route showed the Back button, `Enable Ask Layerwell` switch, and `Open Ask Layerwell` CTA without horizontal overflow.
 
 ## Frequency
 

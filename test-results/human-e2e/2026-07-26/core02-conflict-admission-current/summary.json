@@ -1,0 +1,39 @@
+{
+  "browserProblemLogCount": 96,
+  "browserErrorLogCount": 0,
+  "browserLogCoverage": {
+    "capturedThrough": "2026-07-26T13:11:31.816Z",
+    "scope": "pre_final_screenshots_only",
+    "limitation": "No post-flow console export is retained; these counts are not a run-wide diagnostic result."
+  },
+  "date": "2026-07-26",
+  "endUrl": "http://localhost:19222/onboarding/paywall",
+  "evidenceFiles": [
+    "13-committed-shelf-zero-admission-390x844.jpg",
+    "14-committed-ask-conflict-hidden-390x844.jpg",
+    "15-committed-ask-exact-pair-refusal-390x844.jpg",
+    "16-committed-ask-fit-neutral-source-status-390x844.jpg",
+    "17-committed-stale-conflict-dialog-390x844.jpg",
+    "18-committed-invalid-public-share-generic-390x844.jpg",
+    "19-committed-paywall-zero-admission-390x844.jpg",
+    "20-committed-paywall-professional-review-disclosure-390x844.jpg",
+    "browser-console-committed.json",
+    "report.md"
+  ],
+  "flowResult": "The retained screenshots record zero-admission Shelf and Ask states that withhold compatibility guidance, an exact typed shelf-pair refusal, fit copy without an unbound evidence grade, generic stale detail, a product-free invalid public share, and a paywall that does not sell unavailable clinical guidance. The tester observed stale-detail recovery to Shelf, but no post-click screenshot or trace is retained.",
+  "manifestGate": {
+    "status": "not_manifest_registered",
+    "core02Contract": "No CORE-02 packet contract is registered in e2e:human:manifest.",
+    "repositoryGateBlocker": "Pre-existing test-results/human-e2e/2026-07-22/cat07-shelf-freshness-current evidence is absent; the governed CAT07 runner cannot truthfully recreate a 2026-07-22 timestamped packet on 2026-07-26."
+  },
+  "sourceCommit": "c78208ef1da9dd4b3c5f385d421541f8741dba3c",
+  "startCommand": "EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner EXPO_PUBLIC_E2E_LOCAL_RESET=1 EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed npm --workspace apps/mobile run web -- --port 19222 --host localhost",
+  "startUrl": "http://localhost:19222/",
+  "surface": "Codex in-app browser Expo web",
+  "verdict": "pass_with_issues",
+  "viewport": {
+    "height": 844,
+    "width": 390,
+    "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+  }
+}

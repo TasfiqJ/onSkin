@@ -1,304 +1,254 @@
-import type { PostHog } from 'posthog-react-native';
+import type { OnboardingEvent } from '@layerwell/types';
 
+import { isAccountActivityBlockedForDeletion } from '@/features/settings/accountDeletionBarrier';
 import {
-  analyticsSchemaForEvent,
-  type AnalyticsAllowedEventName,
-  type AnalyticsEventWithoutProps,
-  type AnalyticsEventWithProps,
-  type AnalyticsEventProps,
-  type ExactAnalyticsEventProps,
-  isAllowedAnalyticsPayloadShape,
-  isAllowedAnalyticsPropValue,
+  ANALYTICS_BARCODE_TYPES,
+  ANALYTICS_CATALOG_CORRECTION_TYPES,
+  ANALYTICS_CATALOG_LOOKUP_RESULTS,
+  ANALYTICS_CATALOG_RETRY_RESULTS,
+  ANALYTICS_INGREDIENT_PARSE_RESULTS,
+  ANALYTICS_INGREDIENT_PARSE_SOURCES,
+  ANALYTICS_LABEL_RECOGNITION_RESULTS,
+  ANALYTICS_LATENCY_BUCKETS,
+  ANALYTICS_RESTRICTED_EXACT_PROP_EVENTS,
+  ANALYTICS_SCAN_RESULTS,
+  ANALYTICS_UNKNOWN_INGREDIENT_COUNT_BUCKETS,
   isAllowedAnalyticsEventName,
   isAllowedAnalyticsPropKey,
+  type AnalyticsAllowedEventName,
 } from '@/lib/analytics/eventRegistry';
 import {
-  discardPostHogTelemetryForAccountDeletion,
-  withPostHogDeletionFreezeTimeout,
-} from '@/lib/analytics/posthogDeletionFreeze';
-import {
-  createDeletionAwarePostHogStorage,
-  type DeletionAwarePostHogStorage,
-} from '@/lib/analytics/posthogDurableStorage';
-import {
-  createPostHogRuntimeOptions,
-  installPostHogQueueRetention,
-} from '@/lib/analytics/posthogRuntimePolicy';
-import {
-  AccountGenerationLeaseError,
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
-import { accountDeletionVendorWritesBlocked } from '@/lib/auth/accountDeletionVendorFreezeRuntime';
-import { env } from '@/lib/env';
-import { devWarn } from '@/lib/observability/safeLog';
+  GROWTH_ATTRIBUTION_KEYS,
+  sanitizeAttribution,
+  type GrowthAttributionKey,
+} from '@/lib/growth/attribution';
+import { purgeLegacyPostHogPersistence } from '@/lib/analytics/postHogPersistenceCleanup';
+import { closeAnalyticsPublication, publishAnalyticsEvent } from '@/lib/analytics/publicationGate';
 
-interface PostHogHandle {
-  disabledForLocalCleanup: boolean;
-  persistedProperties: typeof import('posthog-react-native').PostHogPersistedProperty;
-  posthog: PostHog;
-  storage: DeletionAwarePostHogStorage;
+// Direct mobile vendor capture is intentionally disabled. Production source
+// cannot open the receipt-bound publication gate or install a vendor transport.
+type AnalyticsProps = Record<string, string | number | boolean | null> | undefined;
+
+export const SENSITIVE_ANALYTICS_KEY =
+  /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
+export const SENSITIVE_ANALYTICS_VALUE =
+  /(@|https?:\/\/|file:\/\/|content:\/\/|\/data\/|\/var\/mobile\/|\/cache\/|\?.*=|token|jwt|secret|signed_url|barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|(?:^|[_\W])spf(?:$|[_\W])|peptide|dspt|fitzpatrick|monk|axis|step|score|slug|acne|rosacea|eczema|psoriasis|dermatitis|melasma|hyperpigmentation|irritation|procedure|medical|concern|conflict|product_fit|replenish|routine_q|conflict_q)/i;
+const APPROVED_BUCKET_KEYS = new Set([
+  'barcode_type',
+  'native_ocr_enabled',
+  'screen_name',
+  'share_id',
+]);
+const GROWTH_BUCKET_KEYS = new Set<string>(GROWTH_ATTRIBUTION_KEYS);
+const PHOTO_QUALITY_RESULT_VALUES = new Set([
+  'matched',
+  'lighting_varies',
+  'misaligned',
+  'low',
+  'unmeasured',
+  'darker',
+]);
+const LABEL_RECOGNITION_RESULT_VALUES = new Set<string>(ANALYTICS_LABEL_RECOGNITION_RESULTS);
+const LATENCY_BUCKET_VALUES = new Set<string>(ANALYTICS_LATENCY_BUCKETS);
+const CATALOG_LOOKUP_RESULT_VALUES = new Set<string>(ANALYTICS_CATALOG_LOOKUP_RESULTS);
+const CATALOG_CORRECTION_TYPE_VALUES = new Set<string>(ANALYTICS_CATALOG_CORRECTION_TYPES);
+const CATALOG_RETRY_RESULT_VALUES = new Set<string>(ANALYTICS_CATALOG_RETRY_RESULTS);
+const SCAN_RESULT_VALUES = new Set<string>(ANALYTICS_SCAN_RESULTS);
+const BARCODE_TYPE_VALUES = new Set<string>(ANALYTICS_BARCODE_TYPES);
+const INGREDIENT_PARSE_RESULT_VALUES = new Set<string>(ANALYTICS_INGREDIENT_PARSE_RESULTS);
+const INGREDIENT_PARSE_SOURCE_VALUES = new Set<string>(ANALYTICS_INGREDIENT_PARSE_SOURCES);
+const UNKNOWN_INGREDIENT_COUNT_VALUES = new Set<string>(ANALYTICS_UNKNOWN_INGREDIENT_COUNT_BUCKETS);
+const EVENTS_REQUIRING_EXACT_PROPS = new Set<AnalyticsAllowedEventName>(
+  ANALYTICS_RESTRICTED_EXACT_PROP_EVENTS,
+);
+const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
+const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
+
+function sanitizeAnalyticsNumber(value: number): number | undefined {
+  if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_ANALYTICS_INTEGER)
+    return undefined;
+  return value;
 }
 
-const ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS = 1_500;
-const LOCAL_DELETION_CLEANUP_API_KEY = 'onskin-local-deletion-cleanup';
-let posthogPromise: Promise<PostHogHandle | null> | null = null;
-let accountDeletionFreezeTail: Promise<void> = Promise.resolve();
-type AnalyticsProps = Parameters<PostHog['capture']>[1];
-
-function bytesToHex(bytes: ArrayBuffer): string {
-  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
-}
-
-export async function pseudonymousUserId(userId: string): Promise<string> {
-  const input = `onskin:user:${userId}`;
-  let digest: string;
-  if (globalThis.crypto?.subtle) {
-    const bytes = new TextEncoder().encode(input);
-    digest = bytesToHex(await globalThis.crypto.subtle.digest('SHA-256', bytes));
-  } else {
-    const Crypto = await import('expo-crypto');
-    digest = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, input);
-  }
-  return `u_${digest.slice(0, 32)}`;
-}
-
-function canUsePostHog(): boolean {
-  return env.posthogKey.length > 0 && env.posthogHost.length > 0;
-}
-
-function safeOwnDataEntries(value: unknown): [string, unknown][] | null {
-  if (!value || typeof value !== 'object') return null;
-
-  try {
-    const keys = Reflect.ownKeys(value);
-    if (keys.some((key) => typeof key !== 'string')) return null;
-
-    const entries: [string, unknown][] = [];
-    for (const key of keys as string[]) {
-      const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (!descriptor || !descriptor.enumerable || !('value' in descriptor)) return null;
-      entries.push([key, descriptor.value]);
-    }
-    return entries;
-  } catch {
-    return null;
-  }
-}
-
-async function getPostHogHandle(forAccountDeletion = false): Promise<PostHogHandle | null> {
-  const configured = canUsePostHog();
-  if (!configured && !forAccountDeletion) return null;
-  let resumeAfterCompletedDeletion = false;
-
-  if (posthogPromise) {
-    const observedPromise = posthogPromise;
-    const existing = await observedPromise;
-    if (posthogPromise !== observedPromise) return posthogPromise;
-    if (
-      existing &&
-      !forAccountDeletion &&
-      !accountDeletionVendorWritesBlocked() &&
-      (existing.disabledForLocalCleanup || existing.storage.isSealed())
-    ) {
-      // A successfully deleted owner leaves its client sealed. Once the durable
-      // receipt is gone, a later owner gets a fresh client backed by the now-
-      // clean persistence files instead of inheriting a permanently inert SDK.
-      posthogPromise = null;
-      resumeAfterCompletedDeletion = true;
-    } else {
-      return existing;
-    }
-  }
-
-  posthogPromise = import('posthog-react-native')
-    .then(({ default: PostHogClient, PostHogPersistedProperty }) => {
-      const disabledForLocalCleanup = !configured;
-      const storage = createDeletionAwarePostHogStorage();
-      if (accountDeletionVendorWritesBlocked()) storage.beginDeletionFreeze();
-
-      const posthog = new PostHogClient(
-        configured ? env.posthogKey : LOCAL_DELETION_CLEANUP_API_KEY,
-        {
-          ...createPostHogRuntimeOptions(storage, disabledForLocalCleanup),
-          captureAppLifecycleEvents: false,
-          enableSessionReplay: false,
-        },
-      );
-      installPostHogQueueRetention(posthog, PostHogPersistedProperty.Queue);
-
-      if (resumeAfterCompletedDeletion) {
-        // The persisted opt-out belongs to the deleted owner. Register these
-        // callbacks before returning the new client so a later owner's first
-        // capture is ordered after identity reset and opt-in. The deletion
-        // barrier already verified both persisted queues are empty.
-        posthog.reset();
-        void posthog.optIn();
-      }
-
-      return {
-        disabledForLocalCleanup,
-        persistedProperties: PostHogPersistedProperty,
-        posthog,
-        storage,
-      };
-    })
-    .catch((error: unknown) => {
-      devWarn('[analytics] PostHog initialization failed', error);
-      return null;
-    });
-
-  return posthogPromise;
-}
-
-async function getPostHog(): Promise<PostHog | null> {
-  return (await getPostHogHandle())?.posthog ?? null;
-}
-
-export function sanitizeAnalyticsProps(
-  event: AnalyticsAllowedEventName,
-  props?: unknown,
-): AnalyticsProps {
-  return sanitizeAnalyticsPayload(event, props).props;
-}
-
-type SanitizedAnalyticsPayload = {
-  accepted: boolean;
-  props: AnalyticsProps;
-};
-
-function sanitizeAnalyticsPayload(
-  event: AnalyticsAllowedEventName,
-  props?: unknown,
-): SanitizedAnalyticsPayload {
-  const schema = analyticsSchemaForEvent(event);
-  if (Object.keys(schema).length === 0) {
-    return props === undefined
-      ? { accepted: true, props: undefined }
-      : { accepted: false, props: undefined };
-  }
-
-  const entries = props === undefined ? [] : safeOwnDataEntries(props);
-  if (!entries) return { accepted: false, props: undefined };
+export function sanitizeAnalyticsProps(props?: Record<string, unknown>): AnalyticsProps {
+  if (!props) return undefined;
 
   const clean: Record<string, string | number | boolean | null> = {};
-  for (const [key, value] of entries) {
-    if (!isAllowedAnalyticsPropKey(key)) return { accepted: false, props: undefined };
-    const rule = schema[key];
-    if (!rule) return { accepted: false, props: undefined };
+  for (const [key, value] of Object.entries(props)) {
+    if (!isAllowedAnalyticsPropKey(key)) continue;
+    if (!APPROVED_BUCKET_KEYS.has(key) && SENSITIVE_ANALYTICS_KEY.test(key)) continue;
     if (value === undefined) continue;
-    if (!isAllowedAnalyticsPropValue(rule, value)) {
-      return { accepted: false, props: undefined };
+    if (value === null || typeof value === 'boolean') {
+      clean[key] = value;
+    } else if (typeof value === 'number') {
+      const safeNumber = sanitizeAnalyticsNumber(value);
+      if (safeNumber !== undefined) clean[key] = safeNumber;
+    } else if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (!trimmed || trimmed.includes('@')) continue;
+      if (GROWTH_BUCKET_KEYS.has(key)) {
+        const growthValue = sanitizeAttribution({ [key]: trimmed })[key as GrowthAttributionKey];
+        if (!growthValue) continue;
+        clean[key] = growthValue;
+        continue;
+      }
+      if (SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
+      if (!SAFE_ANALYTICS_STRING_VALUE.test(trimmed)) continue;
+      if (key === 'result' && PHOTO_QUALITY_RESULT_VALUES.has(trimmed)) continue;
+      clean[key] = trimmed;
     }
-    clean[key] = value as string | number | boolean | null;
   }
-
-  if (!isAllowedAnalyticsPayloadShape(event, clean)) {
-    return { accepted: false, props: undefined };
-  }
-  return {
-    accepted: true,
-    props: Object.keys(clean).length ? clean : undefined,
-  };
+  return clean;
 }
 
-export function sanitizeAnalyticsEventName(event: string): AnalyticsAllowedEventName | null {
+export function sanitizeAnalyticsEventName(
+  event: OnboardingEvent | string,
+): AnalyticsAllowedEventName | null {
   const normalized = event.trim();
   return isAllowedAnalyticsEventName(normalized) ? normalized : null;
 }
 
-export function prepareAnalyticsEvent(
-  event: string,
-  props?: unknown,
-): Readonly<{ event: AnalyticsAllowedEventName; props: AnalyticsProps }> | null {
-  const safeEvent = sanitizeAnalyticsEventName(event);
-  if (!safeEvent) return null;
-  const payload = sanitizeAnalyticsPayload(safeEvent, props);
-  return payload.accepted ? { event: safeEvent, props: payload.props } : null;
-}
-
-export function track<Event extends AnalyticsEventWithoutProps>(event: Event): void;
-export function track<
-  Event extends AnalyticsEventWithProps,
-  const Actual extends AnalyticsEventProps<NoInfer<Event>>,
->(event: Event, props: ExactAnalyticsEventProps<NoInfer<Event>, Actual>): void;
-export function track(event: AnalyticsAllowedEventName, props?: unknown): void {
-  if (accountDeletionVendorWritesBlocked()) return;
-  const prepared = prepareAnalyticsEvent(event, props);
-  if (!prepared) return;
-
-  void runAccountGenerationOperation(async (lease) => {
-    const posthog = await awaitAccountGenerationLease(lease, getPostHog);
-    lease.assertCurrent();
-    if (accountDeletionVendorWritesBlocked()) return;
-    posthog?.capture(prepared.event, prepared.props);
-  }).catch((error: unknown) => {
-    devWarn('[analytics] capture failed', error);
-  });
-}
-
-// Call at the anonymous-to-permanent conversion (account creation) per docs/01 section 7.
-export async function identify(lease: AccountGenerationLease, userId: string): Promise<void> {
-  if (accountDeletionVendorWritesBlocked()) return;
-
-  try {
-    lease.assertCurrent();
-    const [posthog, pseudonymousId] = await awaitAccountGenerationLease(lease, () =>
-      Promise.all([getPostHog(), pseudonymousUserId(userId)]),
-    );
-    lease.assertCurrent();
-    if (accountDeletionVendorWritesBlocked()) return;
-    posthog?.identify(pseudonymousId);
-    lease.assertCurrent();
-  } catch (error) {
-    if (error instanceof AccountGenerationLeaseError) throw error;
-    devWarn('[analytics] identify failed', error);
+/** Apply the narrowest event-specific schema after the global privacy filter. */
+export function sanitizeAnalyticsEventProps(
+  event: AnalyticsAllowedEventName,
+  props?: Record<string, unknown>,
+): AnalyticsProps {
+  const clean = sanitizeAnalyticsProps(props);
+  if (event === 'label_recognition_completed') {
+    if (
+      clean === undefined ||
+      typeof clean.result !== 'string' ||
+      !LABEL_RECOGNITION_RESULT_VALUES.has(clean.result) ||
+      typeof clean.latency_bucket !== 'string' ||
+      !LATENCY_BUCKET_VALUES.has(clean.latency_bucket) ||
+      clean.on_device !== true
+    ) {
+      return undefined;
+    }
+    return {
+      result: clean.result,
+      latency_bucket: clean.latency_bucket,
+      on_device: true,
+    };
   }
+  if (event === 'catalog_barcode_lookup' || event === 'catalog_search') {
+    const result = props?.result;
+    const latencyBucket = props?.latency_bucket;
+    if (
+      typeof result !== 'string' ||
+      !CATALOG_LOOKUP_RESULT_VALUES.has(result) ||
+      typeof latencyBucket !== 'string' ||
+      !LATENCY_BUCKET_VALUES.has(latencyBucket)
+    ) {
+      return undefined;
+    }
+    return {
+      result,
+      latency_bucket: latencyBucket,
+    };
+  }
+  if (event === 'catalog_lookup_no_match') {
+    return props?.lookup_type === 'search' ? { lookup_type: 'search' } : undefined;
+  }
+  if (event === 'catalog_correction_reported') {
+    const correctionType = props?.correction_type;
+    return typeof correctionType === 'string' && CATALOG_CORRECTION_TYPE_VALUES.has(correctionType)
+      ? { correction_type: correctionType }
+      : undefined;
+  }
+  if (event === 'catalog_lookup_retry_saved') {
+    const result = props?.result;
+    return typeof result === 'string' && CATALOG_RETRY_RESULT_VALUES.has(result)
+      ? { result }
+      : undefined;
+  }
+  if (event === 'barcode_decode_rejected') {
+    const barcodeType = props?.barcode_type;
+    return props?.reason === 'checksum' &&
+      typeof barcodeType === 'string' &&
+      BARCODE_TYPE_VALUES.has(barcodeType)
+      ? { reason: 'checksum', barcode_type: barcodeType }
+      : undefined;
+  }
+  if (event === 'barcode_decode_success') {
+    const barcodeType = props?.barcode_type;
+    return typeof barcodeType === 'string' && BARCODE_TYPE_VALUES.has(barcodeType)
+      ? { barcode_type: barcodeType }
+      : undefined;
+  }
+  if (event === 'barcode_scanned') {
+    const result = props?.result;
+    const matched = props?.matched;
+    if (
+      props?.source !== 'scan' ||
+      typeof result !== 'string' ||
+      !SCAN_RESULT_VALUES.has(result) ||
+      typeof matched !== 'boolean' ||
+      matched !== (result === 'matched')
+    ) {
+      return undefined;
+    }
+    return { source: 'scan', matched, result };
+  }
+  if (event === 'scan_matched') {
+    return props?.source === 'scan' && props.result === 'matched'
+      ? { source: 'scan', result: 'matched' }
+      : undefined;
+  }
+  if (event === 'scan_no_match') {
+    return props?.source === 'scan' && props.result === 'no_match'
+      ? { source: 'scan', result: 'no_match' }
+      : undefined;
+  }
+  if (event === 'product_scanned') {
+    return props?.source === 'scan' && typeof props.matched === 'boolean'
+      ? { source: 'scan', matched: props.matched }
+      : undefined;
+  }
+  if (event === 'label_capture_photo_taken') {
+    return typeof props?.native_ocr_enabled === 'boolean'
+      ? { native_ocr_enabled: props.native_ocr_enabled }
+      : undefined;
+  }
+  if (event === 'ingredient_parse_completed') {
+    if (
+      clean === undefined ||
+      typeof clean.source !== 'string' ||
+      !INGREDIENT_PARSE_SOURCE_VALUES.has(clean.source) ||
+      typeof clean.result !== 'string' ||
+      !INGREDIENT_PARSE_RESULT_VALUES.has(clean.result) ||
+      typeof clean.unknown_count_bucket !== 'string' ||
+      !UNKNOWN_INGREDIENT_COUNT_VALUES.has(clean.unknown_count_bucket) ||
+      (clean.native_ocr_enabled !== undefined && typeof clean.native_ocr_enabled !== 'boolean')
+    ) {
+      return undefined;
+    }
+    return {
+      source: clean.source,
+      result: clean.result,
+      unknown_count_bucket: clean.unknown_count_bucket,
+      ...(clean.native_ocr_enabled === undefined
+        ? {}
+        : { native_ocr_enabled: clean.native_ocr_enabled }),
+    };
+  }
+  return clean;
 }
 
-async function resetPostHogIdentity(): Promise<void> {
-  const posthog = await getPostHog();
-  posthog?.reset();
-}
+export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
+  const safeEvent = sanitizeAnalyticsEventName(event);
+  if (!safeEvent) return;
+  const safeProps = sanitizeAnalyticsEventProps(safeEvent, props);
+  if (EVENTS_REQUIRING_EXACT_PROPS.has(safeEvent) && safeProps === undefined) return;
 
-export async function freezeAnalyticsIdentityForAccountDeletion(): Promise<void> {
-  // Serializing the underlying operations (not their timeout races) prevents a
-  // quick retry from overtaking a slow first drain and letting an older disk
-  // write land after a newer clear.
-  const operation = accountDeletionFreezeTail
-    .catch(() => undefined)
-    .then(async () => {
-      const handle = await getPostHogHandle(true);
-      if (!handle) throw new Error('ACCOUNT_DELETION_ANALYTICS_FREEZE_UNAVAILABLE');
-
-      const { persistedProperties: properties } = handle;
-      await discardPostHogTelemetryForAccountDeletion(
-        handle.posthog,
-        handle.storage,
-        {
-          all: Object.values(properties),
-          anonymousId: properties.AnonymousId,
-          distinctId: properties.DistinctId,
-          logsQueue: properties.LogsQueue,
-          optedOut: properties.OptedOut,
-          queue: properties.Queue,
-        },
-        ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS,
-      );
-    });
-  accountDeletionFreezeTail = operation;
-
-  await withPostHogDeletionFreezeTimeout(operation, ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS);
+  if (isAccountActivityBlockedForDeletion()) {
+    closeAnalyticsPublication();
+    return;
+  }
+  publishAnalyticsEvent(safeEvent, safeProps);
 }
 
 export async function resetAnalyticsIdentity(): Promise<void> {
-  await resetPostHogIdentity();
-}
-
-export async function flushAnalytics(): Promise<void> {
-  if (accountDeletionVendorWritesBlocked()) return;
-  const posthog = await getPostHog();
-  if (accountDeletionVendorWritesBlocked()) return;
-  await posthog?.flush();
+  closeAnalyticsPublication();
+  await purgeLegacyPostHogPersistence();
 }

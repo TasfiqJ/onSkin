@@ -1,32 +1,41 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+
 import type { GeneratedPlan, PlanStep } from './generate';
 import {
   applyRoutineOrderOverrides,
   loadRoutineOrderOverrides,
-  readRoutineOrderState,
   reconcileRoutineSteps,
   ROUTINE_ORDER_INVALID,
-  ROUTINE_ORDER_UNAVAILABLE,
   ROUTINE_ORDER_UNSUPPORTED_VERSION,
+  type RoutineOrderOverrides,
+  type RoutineOrderSaveTransaction,
   routineOrderOverrideForPhase,
-  saveRoutineOrderOverridePatch,
+  saveRoutineOrderOverrides,
 } from './orderStore';
 
 const mocks = vi.hoisted(() => ({
-  readPrivateItem: vi.fn(),
+  getPrivateItem: vi.fn(),
   updatePrivateItem: vi.fn(),
   storage: new Map<string, string>(),
   updateFailure: null as Error | null,
-  persistedWrites: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  readPrivateItem: mocks.readPrivateItem,
+  getPrivateItem: mocks.getPrivateItem,
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
-const KEY = 'routinekind.routineOrder.v1';
+const KEY = 'layerwell.routineOrder.v1';
+const EMPTY_OVERRIDES: RoutineOrderOverrides = { schemaVersion: 1, am: [], pm: [] };
+
+function saveOverrides(
+  next: RoutineOrderOverrides,
+  previous: RoutineOrderOverrides = EMPTY_OVERRIDES,
+) {
+  return saveRoutineOrderOverrides({ previous, next });
+}
 
 function step(productId: string, name = productId, order = 10): PlanStep {
   return {
@@ -47,41 +56,61 @@ function plan(am: PlanStep[], pm: PlanStep[]): GeneratedPlan {
     ramp: [],
     safetyExclusions: [],
     cadenceWithheld: [],
+    sequencingWithheld: [],
     unplacedProducts: [],
     gaps: [],
     conflicts: [],
+    conflictCoverageStatus: 'compatible',
+    unsupportedConflictPairs: [],
   };
 }
 
+const malformedWriteCases: { name: string; value: unknown }[] = [
+  { name: 'null record', value: null },
+  { name: 'array record', value: [] },
+  { name: 'missing AM phase', value: { schemaVersion: 1, pm: [] } },
+  { name: 'missing PM phase', value: { schemaVersion: 1, am: [] } },
+  { name: 'missing schema version', value: { am: [], pm: [] } },
+  { name: 'string schema version', value: { schemaVersion: '1', am: [], pm: [] } },
+  {
+    name: 'unexpected phase',
+    value: { schemaVersion: 1, am: [], pm: [], evening: [] },
+  },
+  { name: 'non-array AM phase', value: { schemaVersion: 1, am: 'cleanser', pm: [] } },
+  { name: 'non-array PM phase', value: { schemaVersion: 1, am: [], pm: {} } },
+  { name: 'non-string product ID', value: { schemaVersion: 1, am: [42], pm: [] } },
+  { name: 'empty product ID', value: { schemaVersion: 1, am: [''], pm: [] } },
+  { name: 'whitespace product ID', value: { schemaVersion: 1, am: ['   '], pm: [] } },
+  { name: 'untrimmed product ID', value: { schemaVersion: 1, am: [' cleanser '], pm: [] } },
+  {
+    name: 'duplicate AM product ID',
+    value: { schemaVersion: 1, am: ['cleanser', 'cleanser'], pm: [] },
+  },
+  {
+    name: 'duplicate PM product ID',
+    value: { schemaVersion: 1, am: [], pm: ['retinol', 'retinol'] },
+  },
+];
+
 describe('routine order persistence', () => {
   beforeEach(() => {
-    mocks.readPrivateItem.mockReset();
+    mocks.getPrivateItem.mockReset();
     mocks.updatePrivateItem.mockReset();
     mocks.storage.clear();
     mocks.updateFailure = null;
-    mocks.persistedWrites = 0;
-    mocks.readPrivateItem.mockImplementation(async (key: string) => {
-      const value = mocks.storage.get(key);
-      return value === undefined ? { status: 'absent' } : { status: 'available', value };
-    });
+    mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
     mocks.updatePrivateItem.mockImplementation(
       async (key: string, updater: (current: string | null) => string | null) => {
         if (mocks.updateFailure) throw mocks.updateFailure;
-        const current = mocks.storage.get(key) ?? null;
-        const next = updater(current);
-        if (next === current) return;
-        mocks.persistedWrites += 1;
+        const next = updater(mocks.storage.get(key) ?? null);
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
       },
     );
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('returns an empty versioned record when no preference exists', async () => {
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'absent',
-      overrides: { schemaVersion: 1, am: [], pm: [] },
-    });
     await expect(loadRoutineOrderOverrides()).resolves.toEqual({
       schemaVersion: 1,
       am: [],
@@ -92,47 +121,19 @@ describe('routine order persistence', () => {
   it('preserves malformed or future-version state instead of applying it', async () => {
     const malformed = '{bad json';
     mocks.storage.set(KEY, malformed);
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'corrupt',
-      overrides: null,
-    });
     await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_INVALID);
-    await expect(
-      saveRoutineOrderOverridePatch({ am: ['cleanser'] }),
-    ).rejects.toThrow(ROUTINE_ORDER_INVALID);
+    await expect(saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] })).rejects.toThrow(
+      ROUTINE_ORDER_INVALID,
+    );
     expect(mocks.storage.get(KEY)).toBe(malformed);
 
     const future = JSON.stringify({ schemaVersion: 2, am: ['cleanser'], pm: [] });
     mocks.storage.set(KEY, future);
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'unsupported_version',
-      overrides: null,
-    });
     await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
-    await expect(
-      saveRoutineOrderOverridePatch({ am: ['cleanser'] }),
-    ).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+    await expect(saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] })).rejects.toThrow(
+      ROUTINE_ORDER_UNSUPPORTED_VERSION,
+    );
     expect(mocks.storage.get(KEY)).toBe(future);
-
-    const fractionalVersion = JSON.stringify({ schemaVersion: 1.5, am: [], pm: [] });
-    mocks.storage.set(KEY, fractionalVersion);
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'corrupt',
-      overrides: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(fractionalVersion);
-  });
-
-  it('accepts current fields in any JSON property order without rewriting storage', async () => {
-    const current = JSON.stringify({ pm: ['retinol'], am: ['cleanser'], schemaVersion: 1 });
-    mocks.storage.set(KEY, current);
-
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'available',
-      format: 'current',
-      overrides: { schemaVersion: 1, am: ['cleanser'], pm: ['retinol'] },
-    });
-    expect(mocks.storage.get(KEY)).toBe(current);
   });
 
   it('normalizes legacy ids in memory without rewriting storage during a read', async () => {
@@ -142,15 +143,6 @@ describe('routine order persistence', () => {
     });
     mocks.storage.set(KEY, legacy);
 
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'available',
-      format: 'legacy',
-      overrides: {
-        schemaVersion: 1,
-        am: ['moisturizer', 'cleanser'],
-        pm: ['retinol'],
-      },
-    });
     await expect(loadRoutineOrderOverrides()).resolves.toEqual({
       schemaVersion: 1,
       am: ['moisturizer', 'cleanser'],
@@ -159,44 +151,102 @@ describe('routine order persistence', () => {
     expect(mocks.storage.get(KEY)).toBe(legacy);
   });
 
-  it('classifies low-level private read failures without treating them as empty overrides', async () => {
-    for (const stored of [
-      { status: 'unavailable', reason: 'storage_unavailable' },
-      { status: 'corrupt', reason: 'decryption_failed' },
-      { status: 'unsupported_version' },
-    ] as const) {
-      mocks.readPrivateItem.mockResolvedValueOnce(stored);
-      const state = await readRoutineOrderState();
-      expect(state.overrides).toBeNull();
-      expect(state.status).toBe(stored.status);
-    }
+  it.each(malformedWriteCases)(
+    'preserves prior bytes and refuses storage for malformed caller input: $name',
+    async ({ value }) => {
+      const previous = '{"schemaVersion":1,"am":["cleanser","serum"],"pm":["retinol"]}';
+      mocks.storage.set(KEY, previous);
 
-    mocks.readPrivateItem.mockRejectedValueOnce(new Error('storage unavailable'));
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'unavailable',
-      overrides: null,
-    });
-    mocks.readPrivateItem.mockResolvedValueOnce({
-      status: 'unavailable',
-      reason: 'storage_unavailable',
-    });
-    await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_UNAVAILABLE);
+      await expect(
+        saveRoutineOrderOverrides({
+          previous: EMPTY_OVERRIDES,
+          next: value as RoutineOrderOverrides,
+        }),
+      ).rejects.toThrow(ROUTINE_ORDER_INVALID);
+
+      expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+      expect(mocks.storage.get(KEY)).toBe(previous);
+    },
+  );
+
+  it('preserves prior bytes when a future-version caller attempts a save', async () => {
+    const previous = '{"schemaVersion":1,"am":["cleanser","serum"],"pm":["retinol"]}';
+    mocks.storage.set(KEY, previous);
+
+    await expect(
+      saveRoutineOrderOverrides({
+        previous: EMPTY_OVERRIDES,
+        next: {
+          schemaVersion: 2,
+          am: [],
+          pm: [],
+        } as unknown as RoutineOrderOverrides,
+      }),
+    ).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(previous);
   });
 
-  it('accepts schema-zero routine order as legacy without rewriting it during a read', async () => {
-    const legacy = JSON.stringify({ schemaVersion: 0, am: ['cleanser'], pm: ['retinol'] });
-    mocks.storage.set(KEY, legacy);
+  it('preserves prior bytes when the caller prior snapshot is malformed', async () => {
+    const previousRaw = '{"schemaVersion":1,"am":["cleanser","serum"],"pm":["retinol"]}';
+    mocks.storage.set(KEY, previousRaw);
 
-    await expect(readRoutineOrderState()).resolves.toEqual({
-      status: 'available',
-      format: 'legacy',
-      overrides: { schemaVersion: 1, am: ['cleanser'], pm: ['retinol'] },
-    });
-    expect(mocks.storage.get(KEY)).toBe(legacy);
+    await expect(
+      saveRoutineOrderOverrides({
+        previous: { schemaVersion: 1, am: ['cleanser', 'cleanser'], pm: [] },
+        next: { schemaVersion: 1, am: ['serum', 'cleanser'], pm: [] },
+      }),
+    ).rejects.toThrow(ROUTINE_ORDER_INVALID);
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(previousRaw);
   });
 
-  it('removes storage when both phases return to canonical order', async () => {
-    await expect(saveRoutineOrderOverridePatch({ am: [], pm: [] })).resolves.toEqual({
+  it.each([
+    { name: 'null transaction', transaction: null },
+    { name: 'missing prior snapshot', transaction: { next: EMPTY_OVERRIDES } },
+    { name: 'missing next snapshot', transaction: { previous: EMPTY_OVERRIDES } },
+    {
+      name: 'unexpected transaction field',
+      transaction: { previous: EMPTY_OVERRIDES, next: EMPTY_OVERRIDES, overwrite: true },
+    },
+  ])('rejects a malformed save transaction before storage: $name', async ({ transaction }) => {
+    const previousRaw = '{"schemaVersion":1,"am":["cleanser"],"pm":["retinol"]}';
+    mocks.storage.set(KEY, previousRaw);
+
+    await expect(
+      saveRoutineOrderOverrides(transaction as RoutineOrderSaveTransaction),
+    ).rejects.toThrow(ROUTINE_ORDER_INVALID);
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(previousRaw);
+  });
+
+  it('rejects a future-version prior snapshot before storage', async () => {
+    const previousRaw = '{"schemaVersion":1,"am":["cleanser"],"pm":["retinol"]}';
+    mocks.storage.set(KEY, previousRaw);
+
+    await expect(
+      saveRoutineOrderOverrides({
+        previous: { schemaVersion: 2, am: [], pm: [] } as unknown as RoutineOrderOverrides,
+        next: EMPTY_OVERRIDES,
+      }),
+    ).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(previousRaw);
+  });
+
+  it('removes an existing valid record when both phases explicitly return to canonical order', async () => {
+    const previous: RoutineOrderOverrides = {
+      schemaVersion: 1,
+      am: ['cleanser', 'serum'],
+      pm: ['retinol'],
+    };
+    mocks.storage.set(KEY, JSON.stringify(previous));
+
+    await expect(saveOverrides(EMPTY_OVERRIDES, previous)).resolves.toEqual({
       schemaVersion: 1,
       am: [],
       pm: [],
@@ -204,53 +254,93 @@ describe('routine order persistence', () => {
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 
-  it('propagates private-storage failures instead of claiming a save succeeded', async () => {
-    mocks.updateFailure = new Error('storage unavailable');
-
-    await expect(saveRoutineOrderOverridePatch({ am: ['b', 'a'] })).rejects.toThrow(
-      'storage unavailable',
-    );
-  });
-
-  it('rejects a malformed write patch before touching prior bytes', async () => {
-    const prior = JSON.stringify({ schemaVersion: 1, am: ['cleanser'], pm: ['retinol'] });
-    mocks.storage.set(KEY, prior);
+  it('clears one phase while preserving a valid override in the other phase', async () => {
+    const previous: RoutineOrderOverrides = {
+      schemaVersion: 1,
+      am: ['cleanser', 'serum'],
+      pm: ['retinol', 'oil'],
+    };
+    mocks.storage.set(KEY, JSON.stringify(previous));
 
     await expect(
-      saveRoutineOrderOverridePatch({ am: [' cleanser '] }),
-    ).rejects.toThrow(ROUTINE_ORDER_INVALID);
-    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.storage.get(KEY)).toBe(prior);
+      saveOverrides({ schemaVersion: 1, am: [], pm: ['oil', 'retinol'] }, previous),
+    ).resolves.toEqual({
+      schemaVersion: 1,
+      am: [],
+      pm: ['oil', 'retinol'],
+    });
+    expect(mocks.storage.get(KEY)).toBe('{"schemaVersion":1,"am":[],"pm":["oil","retinol"]}');
   });
 
-  it('does zero persisted writes for an identical current phase patch', async () => {
-    const prior = JSON.stringify({ pm: ['retinol'], am: ['cleanser'], schemaVersion: 1 });
-    mocks.storage.set(KEY, prior);
+  it('allows the same product once in each independent phase', async () => {
+    await expect(
+      saveOverrides({
+        schemaVersion: 1,
+        am: ['cleanser'],
+        pm: ['cleanser'],
+      }),
+    ).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['cleanser'],
+      pm: ['cleanser'],
+    });
+  });
 
-    await expect(saveRoutineOrderOverridePatch({ am: ['cleanser'] })).resolves.toEqual({
+  it('merges concurrent independent AM and PM edits against the latest serialized value', async () => {
+    const previous = { ...EMPTY_OVERRIDES };
+
+    const [, secondCommit] = await Promise.all([
+      saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }, previous),
+      saveOverrides({ schemaVersion: 1, am: [], pm: ['retinol'] }, previous),
+    ]);
+
+    expect(secondCommit).toEqual({
       schemaVersion: 1,
       am: ['cleanser'],
       pm: ['retinol'],
     });
-    expect(mocks.persistedWrites).toBe(0);
-    expect(mocks.storage.get(KEY)).toBe(prior);
+    expect(mocks.storage.get(KEY)).toBe('{"schemaVersion":1,"am":["cleanser"],"pm":["retinol"]}');
   });
 
-  it('preserves the latest AM and PM state across 100 simultaneous phase patches', async () => {
-    await Promise.all(
-      Array.from({ length: 100 }, (_, index) =>
-        saveRoutineOrderOverridePatch(
-          index % 2 === 0 ? { am: [`am-${index}`] } : { pm: [`pm-${index}`] },
-        ),
-      ),
-    );
-
-    await expect(loadRoutineOrderOverrides()).resolves.toEqual({
+  it('does not resurrect a concurrently cleared phase while another phase is reordered', async () => {
+    const previous: RoutineOrderOverrides = {
       schemaVersion: 1,
-      am: ['am-98'],
-      pm: ['pm-99'],
+      am: ['cleanser', 'serum'],
+      pm: ['retinol', 'oil'],
+    };
+    mocks.storage.set(KEY, JSON.stringify(previous));
+
+    await Promise.all([
+      saveOverrides({ ...previous, am: [] }, previous),
+      saveOverrides({ ...previous, pm: ['oil', 'retinol'] }, previous),
+    ]);
+
+    expect(mocks.storage.get(KEY)).toBe('{"schemaVersion":1,"am":[],"pm":["oil","retinol"]}');
+  });
+
+  it('treats a stale no-op snapshot as a no-op instead of erasing a concurrent edit', async () => {
+    await saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] });
+
+    await expect(saveOverrides(EMPTY_OVERRIDES)).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['cleanser'],
+      pm: [],
     });
-    expect(mocks.persistedWrites).toBe(100);
+    expect(mocks.storage.get(KEY)).toBe('{"schemaVersion":1,"am":["cleanser"],"pm":[]}');
+  });
+
+  it('propagates private-storage failures instead of claiming a save succeeded', async () => {
+    mocks.updateFailure = new Error('storage unavailable');
+
+    await expect(saveOverrides({ schemaVersion: 1, am: ['b', 'a'], pm: [] })).rejects.toThrow(
+      'storage unavailable',
+    );
+  });
+
+  it('propagates private-storage read failures so the plan exposes its unavailable state', async () => {
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('storage unavailable'));
+
+    await expect(loadRoutineOrderOverrides()).rejects.toThrow('storage unavailable');
   });
 });
 

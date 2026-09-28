@@ -116,7 +116,7 @@ function persistDevelopmentFixtureState(): void {
   if (!fixtureSignature || typeof globalThis.sessionStorage === 'undefined') return;
   try {
     globalThis.sessionStorage.setItem(
-      `onskin-e2e-notification-permission:${fixtureSignature}`,
+      `layerwell-e2e-notification-permission:${fixtureSignature}`,
       JSON.stringify({ reads: fixtureReads, requested: fixtureRequested }),
     );
   } catch {
@@ -147,7 +147,7 @@ function developmentFixture(): DevelopmentPermissionFixture | null {
     fixtureRequested = false;
     try {
       const stored = globalThis.sessionStorage?.getItem(
-        `onskin-e2e-notification-permission:${value}`,
+        `layerwell-e2e-notification-permission:${value}`,
       );
       if (stored) {
         const parsed = JSON.parse(stored) as { reads?: unknown; requested?: unknown };

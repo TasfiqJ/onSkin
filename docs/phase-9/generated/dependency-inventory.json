@@ -1,9 +1,21 @@
 {
-  "generatedAt": "2026-07-10T11:19:00.335Z",
+  "generatedAt": "2026-09-26T23:04:09.988Z",
+  "auditProvenance": {
+    "requested": true,
+    "mode": "registry",
+    "completed": true
+  },
   "packageManager": null,
   "lockfileVersion": 3,
-  "packageCount": 1082,
-  "vulnerabilities": null,
+  "packageCount": 1146,
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
   "auditFindings": [],
   "installScriptPackages": [
     {
@@ -42,6 +54,13 @@
   ],
   "packages": [
     {
+      "path": "apps/catalog-operator-console",
+      "name": "apps/catalog-operator-console",
+      "version": "0.1.0",
+      "license": null,
+      "resolved": null
+    },
+    {
       "path": "apps/mobile",
       "name": "apps/mobile",
       "version": "0.1.0",
@@ -49,11 +68,25 @@
       "resolved": null
     },
     {
-      "path": "apps/mobile/node_modules/expo-store-review",
-      "name": "expo-store-review",
-      "version": "56.0.3",
+      "path": "apps/mobile/node_modules/@expo/plist",
+      "name": "@expo/plist",
+      "version": "0.8.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/babel-preset-expo",
+      "name": "babel-preset-expo",
+      "version": "57.0.6",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-57.0.6.tgz"
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-widgets",
+      "name": "expo-widgets",
+      "version": "57.0.9",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz"
     },
     {
       "path": "node_modules/@adobe/css-tools",
@@ -476,11 +509,32 @@
       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-development/-/plugin-transform-react-jsx-development-7.29.7.tgz"
     },
     {
+      "path": "node_modules/@babel/plugin-transform-react-jsx-self",
+      "name": "@babel/plugin-transform-react-jsx-self",
+      "version": "7.29.7",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-self/-/plugin-transform-react-jsx-self-7.29.7.tgz"
+    },
+    {
+      "path": "node_modules/@babel/plugin-transform-react-jsx-source",
+      "name": "@babel/plugin-transform-react-jsx-source",
+      "version": "7.29.7",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-source/-/plugin-transform-react-jsx-source-7.29.7.tgz"
+    },
+    {
       "path": "node_modules/@babel/plugin-transform-react-pure-annotations",
       "name": "@babel/plugin-transform-react-pure-annotations",
       "version": "7.29.7",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-pure-annotations/-/plugin-transform-react-pure-annotations-7.29.7.tgz"
+    },
+    {
+      "path": "node_modules/@babel/plugin-transform-regenerator",
+      "name": "@babel/plugin-transform-regenerator",
+      "version": "7.29.8",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-regenerator/-/plugin-transform-regenerator-7.29.8.tgz"
     },
     {
       "path": "node_modules/@babel/plugin-transform-runtime",
@@ -674,9 +728,9 @@
     {
       "path": "node_modules/@expo-google-fonts/material-symbols",
       "name": "@expo-google-fonts/material-symbols",
-      "version": "0.4.38",
+      "version": "0.4.43",
       "license": "MIT AND Apache-2.0",
-      "resolved": "https://registry.npmjs.org/@expo-google-fonts/material-symbols/-/material-symbols-0.4.38.tgz"
+      "resolved": "https://registry.npmjs.org/@expo-google-fonts/material-symbols/-/material-symbols-0.4.43.tgz"
     },
     {
       "path": "node_modules/@expo/code-signing-certificates",
@@ -688,30 +742,37 @@
     {
       "path": "node_modules/@expo/config",
       "name": "@expo/config",
-      "version": "56.0.11",
+      "version": "57.0.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/config/-/config-56.0.11.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/config/-/config-57.0.7.tgz"
     },
     {
       "path": "node_modules/@expo/config-plugins",
       "name": "@expo/config-plugins",
-      "version": "56.0.12",
+      "version": "57.0.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-56.0.12.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-57.0.7.tgz"
+    },
+    {
+      "path": "node_modules/@expo/config-plugins/node_modules/@expo/plist",
+      "name": "@expo/config-plugins/node_modules/@expo/plist",
+      "version": "0.8.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
     },
     {
       "path": "node_modules/@expo/config-plugins/node_modules/semver",
       "name": "@expo/config-plugins/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/@expo/config-types",
       "name": "@expo/config-types",
-      "version": "56.0.7",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/config-types/-/config-types-56.0.7.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/config-types/-/config-types-57.0.2.tgz"
     },
     {
       "path": "node_modules/@expo/config/node_modules/semver",
@@ -737,37 +798,37 @@
     {
       "path": "node_modules/@expo/devtools",
       "name": "@expo/devtools",
-      "version": "56.0.2",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/devtools/-/devtools-56.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/devtools/-/devtools-57.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/dom-webview",
       "name": "@expo/dom-webview",
-      "version": "56.0.6",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/dom-webview/-/dom-webview-56.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/dom-webview/-/dom-webview-57.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/env",
       "name": "@expo/env",
-      "version": "2.4.1",
+      "version": "2.4.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.4.1.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.4.2.tgz"
     },
     {
       "path": "node_modules/@expo/expo-modules-macros-plugin",
       "name": "@expo/expo-modules-macros-plugin",
-      "version": "0.2.2",
+      "version": "0.6.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/expo-modules-macros-plugin/-/expo-modules-macros-plugin-0.2.2.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/expo-modules-macros-plugin/-/expo-modules-macros-plugin-0.6.1.tgz"
     },
     {
       "path": "node_modules/@expo/fingerprint",
       "name": "@expo/fingerprint",
-      "version": "0.19.7",
+      "version": "0.20.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/fingerprint/-/fingerprint-0.19.7.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/fingerprint/-/fingerprint-0.20.7.tgz"
     },
     {
       "path": "node_modules/@expo/fingerprint/node_modules/balanced-match",
@@ -779,16 +840,16 @@
     {
       "path": "node_modules/@expo/fingerprint/node_modules/brace-expansion",
       "name": "@expo/fingerprint/node_modules/brace-expansion",
-      "version": "5.0.7",
+      "version": "5.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.7.tgz"
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.9.tgz"
     },
     {
       "path": "node_modules/@expo/fingerprint/node_modules/minimatch",
       "name": "@expo/fingerprint/node_modules/minimatch",
-      "version": "10.2.5",
+      "version": "10.2.6",
       "license": "BlueOak-1.0.0",
-      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.6.tgz"
     },
     {
       "path": "node_modules/@expo/fingerprint/node_modules/semver",
@@ -800,100 +861,128 @@
     {
       "path": "node_modules/@expo/image-utils",
       "name": "@expo/image-utils",
-      "version": "0.10.2",
+      "version": "0.11.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/image-utils/-/image-utils-0.10.2.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/image-utils/-/image-utils-0.11.4.tgz"
     },
     {
       "path": "node_modules/@expo/image-utils/node_modules/semver",
       "name": "@expo/image-utils/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/@expo/inline-modules",
       "name": "@expo/inline-modules",
-      "version": "0.0.13",
+      "version": "0.1.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/inline-modules/-/inline-modules-0.0.13.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/inline-modules/-/inline-modules-0.1.5.tgz"
     },
     {
       "path": "node_modules/@expo/json-file",
       "name": "@expo/json-file",
-      "version": "10.2.0",
+      "version": "11.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/json-file/-/json-file-10.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/json-file/-/json-file-11.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/local-build-cache-provider",
       "name": "@expo/local-build-cache-provider",
-      "version": "56.0.9",
+      "version": "57.0.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/local-build-cache-provider/-/local-build-cache-provider-56.0.9.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/local-build-cache-provider/-/local-build-cache-provider-57.0.6.tgz"
     },
     {
       "path": "node_modules/@expo/log-box",
       "name": "@expo/log-box",
-      "version": "56.0.14",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-56.0.14.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/log-box/-/log-box-57.0.2.tgz"
     },
     {
       "path": "node_modules/@expo/metro",
       "name": "@expo/metro",
-      "version": "56.0.0",
+      "version": "56.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro/-/metro-56.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/metro/-/metro-56.0.2.tgz"
     },
     {
       "path": "node_modules/@expo/metro-config",
       "name": "@expo/metro-config",
-      "version": "56.0.16",
+      "version": "57.0.8",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro-config/-/metro-config-56.0.16.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/metro-config/-/metro-config-57.0.8.tgz"
     },
     {
-      "path": "node_modules/@expo/metro-config/node_modules/@expo/env",
-      "name": "@expo/metro-config/node_modules/@expo/env",
-      "version": "2.3.1",
+      "path": "node_modules/@expo/metro-config/node_modules/hermes-estree",
+      "name": "@expo/metro-config/node_modules/hermes-estree",
+      "version": "0.36.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.1.tgz"
+    },
+    {
+      "path": "node_modules/@expo/metro-config/node_modules/hermes-parser",
+      "name": "@expo/metro-config/node_modules/hermes-parser",
+      "version": "0.36.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.1.tgz"
     },
     {
       "path": "node_modules/@expo/metro-file-map",
       "name": "@expo/metro-file-map",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro-file-map/-/metro-file-map-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/metro-file-map/-/metro-file-map-57.0.1.tgz"
     },
     {
       "path": "node_modules/@expo/metro-runtime",
       "name": "@expo/metro-runtime",
-      "version": "56.0.16",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/metro-runtime/-/metro-runtime-56.0.16.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/metro-runtime/-/metro-runtime-57.0.9.tgz"
+    },
+    {
+      "path": "node_modules/@expo/metro/node_modules/metro-runtime",
+      "name": "@expo/metro/node_modules/metro-runtime",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/@expo/metro/node_modules/metro-source-map",
+      "name": "@expo/metro/node_modules/metro-source-map",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-source-map/-/metro-source-map-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/@expo/metro/node_modules/metro-symbolicate",
+      "name": "@expo/metro/node_modules/metro-symbolicate",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-symbolicate/-/metro-symbolicate-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/@expo/metro/node_modules/ob1",
+      "name": "@expo/metro/node_modules/ob1",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/ob1/-/ob1-0.84.5.tgz"
     },
     {
       "path": "node_modules/@expo/osascript",
       "name": "@expo/osascript",
-      "version": "2.7.0",
+      "version": "2.7.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/osascript/-/osascript-2.7.0.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/osascript/-/osascript-2.7.1.tgz"
     },
     {
       "path": "node_modules/@expo/package-manager",
       "name": "@expo/package-manager",
-      "version": "1.13.0",
+      "version": "1.13.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/package-manager/-/package-manager-1.13.0.tgz"
-    },
-    {
-      "path": "node_modules/@expo/package-manager/node_modules/@expo/json-file",
-      "name": "@expo/package-manager/node_modules/@expo/json-file",
-      "version": "11.0.0",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/json-file/-/json-file-11.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/package-manager/-/package-manager-1.13.1.tgz"
     },
     {
       "path": "node_modules/@expo/plist",
@@ -905,9 +994,9 @@
     {
       "path": "node_modules/@expo/prebuild-config",
       "name": "@expo/prebuild-config",
-      "version": "56.0.19",
+      "version": "57.0.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/prebuild-config/-/prebuild-config-57.0.11.tgz"
     },
     {
       "path": "node_modules/@expo/prebuild-config/node_modules/semver",
@@ -919,16 +1008,16 @@
     {
       "path": "node_modules/@expo/require-utils",
       "name": "@expo/require-utils",
-      "version": "56.1.4",
+      "version": "57.0.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/require-utils/-/require-utils-56.1.4.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/require-utils/-/require-utils-57.0.4.tgz"
     },
     {
       "path": "node_modules/@expo/schema-utils",
       "name": "@expo/schema-utils",
-      "version": "56.0.2",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-56.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/schema-utils/-/schema-utils-57.0.2.tgz"
     },
     {
       "path": "node_modules/@expo/sdk-runtime-versions",
@@ -954,9 +1043,9 @@
     {
       "path": "node_modules/@expo/ui",
       "name": "@expo/ui",
-      "version": "56.0.21",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-56.0.21.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.10.tgz"
     },
     {
       "path": "node_modules/@expo/ws-tunnel",
@@ -1085,6 +1174,27 @@
       "resolved": "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz"
     },
     {
+      "path": "node_modules/@layerwell/catalog-operator-console",
+      "name": "@layerwell/catalog-operator-console",
+      "version": null,
+      "license": null,
+      "resolved": "apps/catalog-operator-console"
+    },
+    {
+      "path": "node_modules/@layerwell/mobile",
+      "name": "@layerwell/mobile",
+      "version": null,
+      "license": null,
+      "resolved": "apps/mobile"
+    },
+    {
+      "path": "node_modules/@layerwell/types",
+      "name": "@layerwell/types",
+      "version": null,
+      "license": null,
+      "resolved": "packages/types"
+    },
+    {
       "path": "node_modules/@napi-rs/wasm-runtime",
       "name": "@napi-rs/wasm-runtime",
       "version": "1.1.6",
@@ -1094,9 +1204,23 @@
     {
       "path": "node_modules/@noble/ciphers",
       "name": "@noble/ciphers",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@noble/ciphers/-/ciphers-2.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/@noble/ciphers/-/ciphers-2.3.0.tgz"
+    },
+    {
+      "path": "node_modules/@noble/curves",
+      "name": "@noble/curves",
+      "version": "1.9.7",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@noble/curves/-/curves-1.9.7.tgz"
+    },
+    {
+      "path": "node_modules/@noble/hashes",
+      "name": "@noble/hashes",
+      "version": "1.8.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@noble/hashes/-/hashes-1.8.0.tgz"
     },
     {
       "path": "node_modules/@nodelib/fs.scandir",
@@ -1127,20 +1251,6 @@
       "resolved": "https://registry.npmjs.org/@nolyfill/is-core-module/-/is-core-module-1.0.39.tgz"
     },
     {
-      "path": "node_modules/@onskin/mobile",
-      "name": "@onskin/mobile",
-      "version": null,
-      "license": null,
-      "resolved": "apps/mobile"
-    },
-    {
-      "path": "node_modules/@onskin/types",
-      "name": "@onskin/types",
-      "version": null,
-      "license": null,
-      "resolved": "packages/types"
-    },
-    {
       "path": "node_modules/@oxc-project/types",
       "name": "@oxc-project/types",
       "version": "0.138.0",
@@ -1164,16 +1274,23 @@
     {
       "path": "node_modules/@radix-ui/primitive",
       "name": "@radix-ui/primitive",
-      "version": "1.1.4",
+      "version": "1.1.7",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/primitive/-/primitive-1.1.4.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/primitive/-/primitive-1.1.7.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-collection",
       "name": "@radix-ui/react-collection",
-      "version": "1.1.9",
+      "version": "1.1.15",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-collection/-/react-collection-1.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-collection/-/react-collection-1.1.15.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-collection/node_modules/@radix-ui/react-compose-refs",
+      "name": "@radix-ui/react-collection/node_modules/@radix-ui/react-compose-refs",
+      "version": "1.1.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.5.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-compose-refs",
@@ -1185,9 +1302,9 @@
     {
       "path": "node_modules/@radix-ui/react-context",
       "name": "@radix-ui/react-context",
-      "version": "1.1.4",
+      "version": "1.2.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-context/-/react-context-1.1.4.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-context/-/react-context-1.2.2.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-dialog",
@@ -1234,9 +1351,9 @@
     {
       "path": "node_modules/@radix-ui/react-direction",
       "name": "@radix-ui/react-direction",
-      "version": "1.1.2",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-direction/-/react-direction-1.1.2.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-direction/-/react-direction-1.1.4.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-dismissable-layer",
@@ -1325,37 +1442,121 @@
     {
       "path": "node_modules/@radix-ui/react-presence",
       "name": "@radix-ui/react-presence",
-      "version": "1.1.6",
+      "version": "1.1.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-presence/-/react-presence-1.1.6.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-presence/-/react-presence-1.1.10.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-presence/node_modules/@radix-ui/react-use-layout-effect",
+      "name": "@radix-ui/react-presence/node_modules/@radix-ui/react-use-layout-effect",
+      "version": "1.1.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.4.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-primitive",
       "name": "@radix-ui/react-primitive",
-      "version": "2.1.5",
+      "version": "2.1.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-primitive/-/react-primitive-2.1.5.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-primitive/-/react-primitive-2.1.10.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-roving-focus",
       "name": "@radix-ui/react-roving-focus",
-      "version": "1.1.12",
+      "version": "1.1.19",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.12.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.19.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-roving-focus/node_modules/@radix-ui/react-compose-refs",
+      "name": "@radix-ui/react-roving-focus/node_modules/@radix-ui/react-compose-refs",
+      "version": "1.1.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.5.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-roving-focus/node_modules/@radix-ui/react-id",
+      "name": "@radix-ui/react-roving-focus/node_modules/@radix-ui/react-id",
+      "version": "1.1.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-id/-/react-id-1.1.4.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-callback-ref",
+      "name": "@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-callback-ref",
+      "version": "1.1.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-callback-ref/-/react-use-callback-ref-1.1.4.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-controllable-state",
+      "name": "@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-controllable-state",
+      "version": "1.2.6",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.2.6.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-effect-event",
+      "name": "@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-effect-event",
+      "version": "0.0.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-effect-event/-/react-use-effect-event-0.0.5.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-layout-effect",
+      "name": "@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-layout-effect",
+      "version": "1.1.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.4.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-slot",
       "name": "@radix-ui/react-slot",
-      "version": "1.2.5",
+      "version": "1.3.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-1.3.3.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-slot/node_modules/@radix-ui/react-compose-refs",
+      "name": "@radix-ui/react-slot/node_modules/@radix-ui/react-compose-refs",
+      "version": "1.1.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.5.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-tabs",
       "name": "@radix-ui/react-tabs",
-      "version": "1.1.14",
+      "version": "1.1.21",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@radix-ui/react-tabs/-/react-tabs-1.1.14.tgz"
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-tabs/-/react-tabs-1.1.21.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-tabs/node_modules/@radix-ui/react-id",
+      "name": "@radix-ui/react-tabs/node_modules/@radix-ui/react-id",
+      "version": "1.1.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-id/-/react-id-1.1.4.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-tabs/node_modules/@radix-ui/react-use-controllable-state",
+      "name": "@radix-ui/react-tabs/node_modules/@radix-ui/react-use-controllable-state",
+      "version": "1.2.6",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.2.6.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-tabs/node_modules/@radix-ui/react-use-effect-event",
+      "name": "@radix-ui/react-tabs/node_modules/@radix-ui/react-use-effect-event",
+      "version": "0.0.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-effect-event/-/react-use-effect-event-0.0.5.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-tabs/node_modules/@radix-ui/react-use-layout-effect",
+      "name": "@radix-ui/react-tabs/node_modules/@radix-ui/react-use-layout-effect",
+      "version": "1.1.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.4.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-use-callback-ref",
@@ -1377,6 +1578,13 @@
       "version": "0.0.3",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@radix-ui/react-use-effect-event/-/react-use-effect-event-0.0.3.tgz"
+    },
+    {
+      "path": "node_modules/@radix-ui/react-use-is-hydrated",
+      "name": "@radix-ui/react-use-is-hydrated",
+      "version": "0.1.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@radix-ui/react-use-is-hydrated/-/react-use-is-hydrated-0.1.3.tgz"
     },
     {
       "path": "node_modules/@radix-ui/react-use-layout-effect",
@@ -1409,93 +1617,128 @@
     {
       "path": "node_modules/@react-native/assets-registry",
       "name": "@react-native/assets-registry",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/babel-plugin-codegen",
       "name": "@react-native/babel-plugin-codegen",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-plugin-codegen/node_modules/@react-native/codegen",
+      "name": "@react-native/babel-plugin-codegen/node_modules/@react-native/codegen",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/codegen/-/codegen-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/babel-preset",
+      "name": "@react-native/babel-preset",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/babel-preset/-/babel-preset-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/codegen",
       "name": "@react-native/codegen",
-      "version": "0.85.3",
+      "version": "0.86.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/codegen/-/codegen-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/codegen/-/codegen-0.86.3.tgz"
     },
     {
       "path": "node_modules/@react-native/community-cli-plugin",
       "name": "@react-native/community-cli-plugin",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/community-cli-plugin/-/community-cli-plugin-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/community-cli-plugin/-/community-cli-plugin-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/community-cli-plugin/node_modules/semver",
       "name": "@react-native/community-cli-plugin/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/@react-native/debugger-frontend",
       "name": "@react-native/debugger-frontend",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "BSD-3-Clause",
-      "resolved": "https://registry.npmjs.org/@react-native/debugger-frontend/-/debugger-frontend-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/debugger-frontend/-/debugger-frontend-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/debugger-shell",
       "name": "@react-native/debugger-shell",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/debugger-shell/-/debugger-shell-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/debugger-shell/-/debugger-shell-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/dev-middleware",
       "name": "@react-native/dev-middleware",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/dev-middleware/-/dev-middleware-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/dev-middleware/-/dev-middleware-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/dev-middleware/node_modules/ws",
       "name": "@react-native/dev-middleware/node_modules/ws",
-      "version": "7.5.11",
+      "version": "7.5.13",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.11.tgz"
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz"
     },
     {
       "path": "node_modules/@react-native/gradle-plugin",
       "name": "@react-native/gradle-plugin",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/gradle-plugin/-/gradle-plugin-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/gradle-plugin/-/gradle-plugin-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/js-polyfills",
       "name": "@react-native/js-polyfills",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/js-polyfills/-/js-polyfills-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/js-polyfills/-/js-polyfills-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-babel-transformer",
+      "name": "@react-native/metro-babel-transformer",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/metro-babel-transformer/-/metro-babel-transformer-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-config",
+      "name": "@react-native/metro-config",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/metro-config/-/metro-config-0.86.2.tgz"
+    },
+    {
+      "path": "node_modules/@react-native/metro-config/node_modules/metro-runtime",
+      "name": "@react-native/metro-config/node_modules/metro-runtime",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.84.5.tgz"
     },
     {
       "path": "node_modules/@react-native/normalize-colors",
       "name": "@react-native/normalize-colors",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.86.2.tgz"
     },
     {
       "path": "node_modules/@react-native/virtualized-lists",
       "name": "@react-native/virtualized-lists",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/virtualized-lists/-/virtualized-lists-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/@react-native/virtualized-lists/-/virtualized-lists-0.86.2.tgz"
     },
     {
       "path": "node_modules/@revenuecat/purchases-js",
@@ -1827,6 +2070,62 @@
       "resolved": "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.108.1.tgz"
     },
     {
+      "path": "node_modules/@supabase/cli-darwin-arm64",
+      "name": "@supabase/cli-darwin-arm64",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-darwin-arm64/-/cli-darwin-arm64-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-darwin-x64",
+      "name": "@supabase/cli-darwin-x64",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-darwin-x64/-/cli-darwin-x64-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-linux-arm64",
+      "name": "@supabase/cli-linux-arm64",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-linux-arm64/-/cli-linux-arm64-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-linux-arm64-musl",
+      "name": "@supabase/cli-linux-arm64-musl",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-linux-x64",
+      "name": "@supabase/cli-linux-x64",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-linux-x64/-/cli-linux-x64-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-linux-x64-musl",
+      "name": "@supabase/cli-linux-x64-musl",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-linux-x64-musl/-/cli-linux-x64-musl-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-windows-arm64",
+      "name": "@supabase/cli-windows-arm64",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-windows-arm64/-/cli-windows-arm64-2.117.0.tgz"
+    },
+    {
+      "path": "node_modules/@supabase/cli-windows-x64",
+      "name": "@supabase/cli-windows-x64",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@supabase/cli-windows-x64/-/cli-windows-x64-2.117.0.tgz"
+    },
+    {
       "path": "node_modules/@supabase/functions-js",
       "name": "@supabase/functions-js",
       "version": "2.108.1",
@@ -1883,6 +2182,34 @@
       "resolved": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.0.tgz"
     },
     {
+      "path": "node_modules/@testing-library/dom",
+      "name": "@testing-library/dom",
+      "version": "10.4.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@testing-library/dom/-/dom-10.4.1.tgz"
+    },
+    {
+      "path": "node_modules/@testing-library/dom/node_modules/ansi-styles",
+      "name": "@testing-library/dom/node_modules/ansi-styles",
+      "version": "5.2.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-5.2.0.tgz"
+    },
+    {
+      "path": "node_modules/@testing-library/dom/node_modules/pretty-format",
+      "name": "@testing-library/dom/node_modules/pretty-format",
+      "version": "27.5.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/pretty-format/-/pretty-format-27.5.1.tgz"
+    },
+    {
+      "path": "node_modules/@testing-library/dom/node_modules/react-is",
+      "name": "@testing-library/dom/node_modules/react-is",
+      "version": "17.0.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
+    },
+    {
       "path": "node_modules/@testing-library/jest-dom",
       "name": "@testing-library/jest-dom",
       "version": "6.9.1",
@@ -1899,9 +2226,9 @@
     {
       "path": "node_modules/@testing-library/user-event",
       "name": "@testing-library/user-event",
-      "version": "14.6.1",
+      "version": "14.6.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@testing-library/user-event/-/user-event-14.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/@testing-library/user-event/-/user-event-14.6.3.tgz"
     },
     {
       "path": "node_modules/@turbo/darwin-64",
@@ -1958,6 +2285,13 @@
       "version": "3.1.4",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@types/aes-js/-/aes-js-3.1.4.tgz"
+    },
+    {
+      "path": "node_modules/@types/aria-query",
+      "name": "@types/aria-query",
+      "version": "5.0.4",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@types/aria-query/-/aria-query-5.0.4.tgz"
     },
     {
       "path": "node_modules/@types/chai",
@@ -2074,9 +2408,9 @@
     {
       "path": "node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore",
       "name": "@typescript-eslint/eslint-plugin/node_modules/ignore",
-      "version": "7.0.5",
+      "version": "7.0.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ignore/-/ignore-7.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/ignore/-/ignore-7.0.6.tgz"
     },
     {
       "path": "node_modules/@typescript-eslint/parser",
@@ -2137,23 +2471,23 @@
     {
       "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion",
       "name": "@typescript-eslint/typescript-estree/node_modules/brace-expansion",
-      "version": "5.0.6",
+      "version": "5.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.9.tgz"
     },
     {
       "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch",
       "name": "@typescript-eslint/typescript-estree/node_modules/minimatch",
-      "version": "10.2.5",
+      "version": "10.2.6",
       "license": "BlueOak-1.0.0",
-      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.6.tgz"
     },
     {
       "path": "node_modules/@typescript-eslint/typescript-estree/node_modules/semver",
       "name": "@typescript-eslint/typescript-estree/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/@typescript-eslint/utils",
@@ -2340,58 +2674,58 @@
     {
       "path": "node_modules/@vitest/expect",
       "name": "@vitest/expect",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/expect/-/expect-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/expect/-/expect-4.1.11.tgz"
     },
     {
       "path": "node_modules/@vitest/mocker",
       "name": "@vitest/mocker",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.11.tgz"
     },
     {
       "path": "node_modules/@vitest/pretty-format",
       "name": "@vitest/pretty-format",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/pretty-format/-/pretty-format-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/pretty-format/-/pretty-format-4.1.11.tgz"
     },
     {
       "path": "node_modules/@vitest/runner",
       "name": "@vitest/runner",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/runner/-/runner-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/runner/-/runner-4.1.11.tgz"
     },
     {
       "path": "node_modules/@vitest/snapshot",
       "name": "@vitest/snapshot",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-4.1.11.tgz"
     },
     {
       "path": "node_modules/@vitest/spy",
       "name": "@vitest/spy",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/spy/-/spy-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/spy/-/spy-4.1.11.tgz"
     },
     {
       "path": "node_modules/@vitest/utils",
       "name": "@vitest/utils",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/utils/-/utils-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/utils/-/utils-4.1.11.tgz"
     },
     {
       "path": "node_modules/@xmldom/xmldom",
       "name": "@xmldom/xmldom",
-      "version": "0.8.13",
+      "version": "0.8.15",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.13.tgz"
+      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.15.tgz"
     },
     {
       "path": "node_modules/abort-controller",
@@ -2438,9 +2772,9 @@
     {
       "path": "node_modules/agent-cli-detector",
       "name": "agent-cli-detector",
-      "version": "0.1.2",
+      "version": "0.1.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/agent-cli-detector/-/agent-cli-detector-0.1.2.tgz"
+      "resolved": "https://registry.npmjs.org/agent-cli-detector/-/agent-cli-detector-0.1.5.tgz"
     },
     {
       "path": "node_modules/ajv",
@@ -2662,9 +2996,9 @@
     {
       "path": "node_modules/babel-plugin-syntax-hermes-parser",
       "name": "babel-plugin-syntax-hermes-parser",
-      "version": "0.33.3",
+      "version": "0.36.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/babel-plugin-syntax-hermes-parser/-/babel-plugin-syntax-hermes-parser-0.33.3.tgz"
+      "resolved": "https://registry.npmjs.org/babel-plugin-syntax-hermes-parser/-/babel-plugin-syntax-hermes-parser-0.36.0.tgz"
     },
     {
       "path": "node_modules/babel-plugin-transform-flow-enums",
@@ -2676,9 +3010,16 @@
     {
       "path": "node_modules/babel-preset-expo",
       "name": "babel-preset-expo",
-      "version": "56.0.17",
+      "version": "57.0.12",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-56.0.17.tgz"
+      "resolved": "https://registry.npmjs.org/babel-preset-expo/-/babel-preset-expo-57.0.12.tgz"
+    },
+    {
+      "path": "node_modules/babel-preset-expo/node_modules/@react-native/babel-plugin-codegen",
+      "name": "babel-preset-expo/node_modules/@react-native/babel-plugin-codegen",
+      "version": "0.86.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.86.3.tgz"
     },
     {
       "path": "node_modules/badgin",
@@ -2718,9 +3059,9 @@
     {
       "path": "node_modules/baseline-browser-mapping",
       "name": "baseline-browser-mapping",
-      "version": "2.10.37",
+      "version": "2.11.13",
       "license": "Apache-2.0",
-      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.37.tgz"
+      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.13.tgz"
     },
     {
       "path": "node_modules/big-integer",
@@ -2753,9 +3094,9 @@
     {
       "path": "node_modules/brace-expansion",
       "name": "brace-expansion",
-      "version": "1.1.15",
+      "version": "1.1.18",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.15.tgz"
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.18.tgz"
     },
     {
       "path": "node_modules/braces",
@@ -2767,9 +3108,9 @@
     {
       "path": "node_modules/browserslist",
       "name": "browserslist",
-      "version": "4.28.2",
+      "version": "4.28.8",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-4.28.2.tgz"
+      "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-4.28.8.tgz"
     },
     {
       "path": "node_modules/bser",
@@ -2844,9 +3185,9 @@
     {
       "path": "node_modules/caniuse-lite",
       "name": "caniuse-lite",
-      "version": "1.0.30001799",
+      "version": "1.0.30001809",
       "license": "CC-BY-4.0",
-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001799.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001809.tgz"
     },
     {
       "path": "node_modules/chai",
@@ -3045,6 +3386,13 @@
       "resolved": "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
     },
     {
+      "path": "node_modules/content-type",
+      "name": "content-type",
+      "version": "2.1.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-2.1.0.tgz"
+    },
+    {
       "path": "node_modules/convert-source-map",
       "name": "convert-source-map",
       "version": "2.0.0",
@@ -3054,9 +3402,9 @@
     {
       "path": "node_modules/core-js-compat",
       "name": "core-js-compat",
-      "version": "3.49.0",
+      "version": "3.50.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/core-js-compat/-/core-js-compat-3.49.0.tgz"
+      "resolved": "https://registry.npmjs.org/core-js-compat/-/core-js-compat-3.50.0.tgz"
     },
     {
       "path": "node_modules/cross-fetch",
@@ -3138,9 +3486,9 @@
     {
       "path": "node_modules/decode-uri-component",
       "name": "decode-uri-component",
-      "version": "0.2.2",
+      "version": "0.5.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.2.tgz"
+      "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.5.0.tgz"
     },
     {
       "path": "node_modules/deep-is",
@@ -3241,11 +3589,39 @@
       "resolved": "https://registry.npmjs.org/doctrine/-/doctrine-2.1.0.tgz"
     },
     {
+      "path": "node_modules/dom-accessibility-api",
+      "name": "dom-accessibility-api",
+      "version": "0.5.16",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.5.16.tgz"
+    },
+    {
       "path": "node_modules/dunder-proto",
       "name": "dunder-proto",
       "version": "1.0.1",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz"
+    },
+    {
+      "path": "node_modules/eciesjs",
+      "name": "eciesjs",
+      "version": "0.5.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/eciesjs/-/eciesjs-0.5.0.tgz"
+    },
+    {
+      "path": "node_modules/eciesjs/node_modules/@ecies/ciphers",
+      "name": "eciesjs/node_modules/@ecies/ciphers",
+      "version": "0.2.6",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@ecies/ciphers/-/ciphers-0.2.6.tgz"
+    },
+    {
+      "path": "node_modules/eciesjs/node_modules/@noble/ciphers",
+      "name": "eciesjs/node_modules/@noble/ciphers",
+      "version": "1.3.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@noble/ciphers/-/ciphers-1.3.0.tgz"
     },
     {
       "path": "node_modules/ee-first",
@@ -3257,9 +3633,9 @@
     {
       "path": "node_modules/electron-to-chromium",
       "name": "electron-to-chromium",
-      "version": "1.5.372",
+      "version": "1.5.402",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.372.tgz"
+      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.402.tgz"
     },
     {
       "path": "node_modules/emoji-regex",
@@ -3376,9 +3752,9 @@
     {
       "path": "node_modules/eslint-config-expo",
       "name": "eslint-config-expo",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/eslint-config-expo/-/eslint-config-expo-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/eslint-config-expo/-/eslint-config-expo-57.0.1.tgz"
     },
     {
       "path": "node_modules/eslint-config-expo/node_modules/globals",
@@ -3439,9 +3815,9 @@
     {
       "path": "node_modules/eslint-plugin-expo",
       "name": "eslint-plugin-expo",
-      "version": "1.0.3",
+      "version": "1.1.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-expo/-/eslint-plugin-expo-1.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/eslint-plugin-expo/-/eslint-plugin-expo-1.1.0.tgz"
     },
     {
       "path": "node_modules/eslint-plugin-import",
@@ -3579,37 +3955,37 @@
     {
       "path": "node_modules/expo",
       "name": "expo",
-      "version": "56.0.15",
+      "version": "57.0.12",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo/-/expo-56.0.15.tgz"
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.12.tgz"
     },
     {
       "path": "node_modules/expo-apple-authentication",
       "name": "expo-apple-authentication",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-application",
       "name": "expo-application",
-      "version": "56.0.3",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-application/-/expo-application-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-application/-/expo-application-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-asset",
       "name": "expo-asset",
-      "version": "56.0.19",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-build-properties",
       "name": "expo-build-properties",
-      "version": "56.0.22",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-56.0.22.tgz"
+      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-build-properties/node_modules/semver",
@@ -3621,275 +3997,289 @@
     {
       "path": "node_modules/expo-camera",
       "name": "expo-camera",
-      "version": "56.0.8",
+      "version": "57.0.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-camera/-/expo-camera-56.0.8.tgz"
+      "resolved": "https://registry.npmjs.org/expo-camera/-/expo-camera-57.0.3.tgz"
     },
     {
       "path": "node_modules/expo-constants",
       "name": "expo-constants",
-      "version": "56.0.20",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-56.0.20.tgz"
-    },
-    {
-      "path": "node_modules/expo-constants/node_modules/@expo/env",
-      "name": "expo-constants/node_modules/@expo/env",
-      "version": "2.3.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/expo-constants/-/expo-constants-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-crypto",
       "name": "expo-crypto",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-dev-client",
       "name": "expo-dev-client",
-      "version": "56.0.22",
+      "version": "57.0.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-56.0.22.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-57.0.11.tgz"
     },
     {
       "path": "node_modules/expo-dev-launcher",
       "name": "expo-dev-launcher",
-      "version": "56.0.23",
+      "version": "57.0.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-56.0.23.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-57.0.11.tgz"
     },
     {
       "path": "node_modules/expo-dev-menu",
       "name": "expo-dev-menu",
-      "version": "56.0.19",
+      "version": "57.0.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-57.0.11.tgz"
     },
     {
       "path": "node_modules/expo-dev-menu-interface",
       "name": "expo-dev-menu-interface",
-      "version": "56.0.1",
+      "version": "57.0.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-dev-menu-interface/-/expo-dev-menu-interface-56.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/expo-dev-menu-interface/-/expo-dev-menu-interface-57.0.0.tgz"
     },
     {
       "path": "node_modules/expo-device",
       "name": "expo-device",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-device/-/expo-device-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-device/-/expo-device-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-file-system",
       "name": "expo-file-system",
-      "version": "56.0.8",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-file-system/-/expo-file-system-56.0.8.tgz"
+      "resolved": "https://registry.npmjs.org/expo-file-system/-/expo-file-system-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-font",
       "name": "expo-font",
-      "version": "56.0.7",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-56.0.7.tgz"
+      "resolved": "https://registry.npmjs.org/expo-font/-/expo-font-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-glass-effect",
       "name": "expo-glass-effect",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-glass-effect/-/expo-glass-effect-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-haptics",
       "name": "expo-haptics",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-haptics/-/expo-haptics-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-haptics/-/expo-haptics-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-image",
       "name": "expo-image",
-      "version": "56.0.11",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-56.0.11.tgz"
+      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-image-loader",
       "name": "expo-image-loader",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-image-manipulator",
       "name": "expo-image-manipulator",
-      "version": "56.0.21",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-image-manipulator/-/expo-image-manipulator-56.0.21.tgz"
+      "resolved": "https://registry.npmjs.org/expo-image-manipulator/-/expo-image-manipulator-57.0.9.tgz"
     },
     {
       "path": "node_modules/expo-json-utils",
       "name": "expo-json-utils",
-      "version": "56.0.0",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-56.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-keep-awake",
       "name": "expo-keep-awake",
-      "version": "56.0.3",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-56.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-linking",
       "name": "expo-linking",
-      "version": "56.0.15",
+      "version": "57.0.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-linking/-/expo-linking-56.0.15.tgz"
+      "resolved": "https://registry.npmjs.org/expo-linking/-/expo-linking-57.0.5.tgz"
     },
     {
       "path": "node_modules/expo-local-authentication",
       "name": "expo-local-authentication",
-      "version": "56.0.4",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-local-authentication/-/expo-local-authentication-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-localization",
       "name": "expo-localization",
-      "version": "56.0.6",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-localization/-/expo-localization-56.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/expo-localization/-/expo-localization-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-manifests",
       "name": "expo-manifests",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-manifests/-/expo-manifests-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-manifests/-/expo-manifests-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-modules-autolinking",
       "name": "expo-modules-autolinking",
-      "version": "56.0.19",
+      "version": "57.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-56.0.19.tgz"
+      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-57.0.9.tgz"
     },
     {
       "path": "node_modules/expo-modules-core",
       "name": "expo-modules-core",
-      "version": "56.0.20",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-56.0.20.tgz"
+      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-modules-jsi",
       "name": "expo-modules-jsi",
-      "version": "56.0.12",
+      "version": "57.0.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-56.0.12.tgz"
+      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.0.4.tgz"
+    },
+    {
+      "path": "node_modules/expo-network",
+      "name": "expo-network",
+      "version": "57.0.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-network/-/expo-network-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-notifications",
       "name": "expo-notifications",
-      "version": "56.0.20",
+      "version": "57.0.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-56.0.20.tgz"
+      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.10.tgz"
     },
     {
       "path": "node_modules/expo-router",
       "name": "expo-router",
-      "version": "56.2.14",
+      "version": "57.0.12",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-56.2.14.tgz"
+      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.12.tgz"
     },
     {
       "path": "node_modules/expo-secure-store",
       "name": "expo-secure-store",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-server",
       "name": "expo-server",
-      "version": "56.0.5",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-server/-/expo-server-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-server/-/expo-server-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-sharing",
       "name": "expo-sharing",
-      "version": "56.0.21",
+      "version": "57.0.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-56.0.21.tgz"
+      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.11.tgz"
+    },
+    {
+      "path": "node_modules/expo-sharing/node_modules/@expo/plist",
+      "name": "expo-sharing/node_modules/@expo/plist",
+      "version": "0.8.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
     },
     {
       "path": "node_modules/expo-splash-screen",
       "name": "expo-splash-screen",
-      "version": "56.0.12",
+      "version": "57.0.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-56.0.12.tgz"
+      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-57.0.6.tgz"
     },
     {
       "path": "node_modules/expo-status-bar",
       "name": "expo-status-bar",
-      "version": "56.0.4",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-56.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-57.0.1.tgz"
+    },
+    {
+      "path": "node_modules/expo-store-review",
+      "name": "expo-store-review",
+      "version": "57.0.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-symbols",
       "name": "expo-symbols",
-      "version": "56.0.6",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-symbols/-/expo-symbols-56.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/expo-symbols/-/expo-symbols-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-system-ui",
       "name": "expo-system-ui",
-      "version": "56.0.5",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo-updates-interface",
       "name": "expo-updates-interface",
-      "version": "56.0.2",
+      "version": "57.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-56.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-57.0.1.tgz"
     },
     {
       "path": "node_modules/expo-web-browser",
       "name": "expo-web-browser",
-      "version": "56.0.5",
+      "version": "57.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-56.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-57.0.2.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/@expo/cli",
       "name": "expo/node_modules/@expo/cli",
-      "version": "56.1.19",
+      "version": "57.0.14",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-56.1.19.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-57.0.14.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/@expo/cli/node_modules/@expo/router-server",
       "name": "expo/node_modules/@expo/cli/node_modules/@expo/router-server",
-      "version": "56.0.16",
+      "version": "57.0.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/router-server/-/router-server-56.0.16.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/router-server/-/router-server-57.0.5.tgz"
     },
     {
-      "path": "node_modules/expo/node_modules/@expo/env",
-      "name": "expo/node_modules/@expo/env",
-      "version": "2.3.1",
+      "path": "node_modules/expo/node_modules/@expo/plist",
+      "name": "expo/node_modules/@expo/plist",
+      "version": "0.8.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/@expo/plist/-/plist-0.8.1.tgz"
     },
     {
       "path": "node_modules/expo/node_modules/semver",
@@ -3897,13 +4287,6 @@
       "version": "7.8.5",
       "license": "ISC",
       "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
-    },
-    {
-      "path": "node_modules/expo/node_modules/zod",
-      "name": "expo/node_modules/zod",
-      "version": "3.25.76",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz"
     },
     {
       "path": "node_modules/exponential-backoff",
@@ -4223,16 +4606,16 @@
     {
       "path": "node_modules/glob/node_modules/brace-expansion",
       "name": "glob/node_modules/brace-expansion",
-      "version": "5.0.6",
+      "version": "5.0.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.6.tgz"
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.9.tgz"
     },
     {
       "path": "node_modules/glob/node_modules/minimatch",
       "name": "glob/node_modules/minimatch",
-      "version": "10.2.5",
+      "version": "10.2.6",
       "license": "BlueOak-1.0.0",
-      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.6.tgz"
     },
     {
       "path": "node_modules/globals",
@@ -4314,23 +4697,23 @@
     {
       "path": "node_modules/hermes-compiler",
       "name": "hermes-compiler",
-      "version": "250829098.0.10",
+      "version": "250829098.0.16",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/hermes-compiler/-/hermes-compiler-250829098.0.10.tgz"
+      "resolved": "https://registry.npmjs.org/hermes-compiler/-/hermes-compiler-250829098.0.16.tgz"
     },
     {
       "path": "node_modules/hermes-estree",
       "name": "hermes-estree",
-      "version": "0.33.3",
+      "version": "0.36.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.33.3.tgz"
+      "resolved": "https://registry.npmjs.org/hermes-estree/-/hermes-estree-0.36.0.tgz"
     },
     {
       "path": "node_modules/hermes-parser",
       "name": "hermes-parser",
-      "version": "0.33.3",
+      "version": "0.36.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.33.3.tgz"
+      "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.36.0.tgz"
     },
     {
       "path": "node_modules/hoist-non-react-statics",
@@ -4415,13 +4798,6 @@
       "version": "5.3.2",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/ignore/-/ignore-5.3.2.tgz"
-    },
-    {
-      "path": "node_modules/image-size",
-      "name": "image-size",
-      "version": "1.2.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/image-size/-/image-size-1.2.1.tgz"
     },
     {
       "path": "node_modules/import-fresh",
@@ -4531,9 +4907,9 @@
     {
       "path": "node_modules/is-bun-module/node_modules/semver",
       "name": "is-bun-module/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/is-callable",
@@ -4795,6 +5171,13 @@
       "resolved": "https://registry.npmjs.org/jiti/-/jiti-1.21.7.tgz"
     },
     {
+      "path": "node_modules/jose",
+      "name": "jose",
+      "version": "6.2.12",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/jose/-/jose-6.2.12.tgz"
+    },
+    {
       "path": "node_modules/jpeg-js",
       "name": "jpeg-js",
       "version": "0.4.4",
@@ -4811,9 +5194,9 @@
     {
       "path": "node_modules/js-yaml",
       "name": "js-yaml",
-      "version": "4.2.0",
+      "version": "4.3.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-4.3.2.tgz"
     },
     {
       "path": "node_modules/jsc-safe-url",
@@ -4923,86 +5306,86 @@
     {
       "path": "node_modules/lightningcss",
       "name": "lightningcss",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-android-arm64",
       "name": "lightningcss-android-arm64",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-darwin-arm64",
       "name": "lightningcss-darwin-arm64",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-darwin-x64",
       "name": "lightningcss-darwin-x64",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-freebsd-x64",
       "name": "lightningcss-freebsd-x64",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-linux-arm-gnueabihf",
       "name": "lightningcss-linux-arm-gnueabihf",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-linux-arm64-gnu",
       "name": "lightningcss-linux-arm64-gnu",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-linux-arm64-musl",
       "name": "lightningcss-linux-arm64-musl",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-linux-x64-gnu",
       "name": "lightningcss-linux-x64-gnu",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-linux-x64-musl",
       "name": "lightningcss-linux-x64-musl",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-win32-arm64-msvc",
       "name": "lightningcss-win32-arm64-msvc",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.33.0.tgz"
     },
     {
       "path": "node_modules/lightningcss-win32-x64-msvc",
       "name": "lightningcss-win32-x64-msvc",
-      "version": "1.32.0",
+      "version": "1.33.0",
       "license": "MPL-2.0",
-      "resolved": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.32.0.tgz"
+      "resolved": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.33.0.tgz"
     },
     {
       "path": "node_modules/lilconfig",
@@ -5117,6 +5500,13 @@
       "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-5.1.1.tgz"
     },
     {
+      "path": "node_modules/lz-string",
+      "name": "lz-string",
+      "version": "1.5.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/lz-string/-/lz-string-1.5.0.tgz"
+    },
+    {
       "path": "node_modules/magic-string",
       "name": "magic-string",
       "version": "0.30.21",
@@ -5175,16 +5565,16 @@
     {
       "path": "node_modules/metro",
       "name": "metro",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro/-/metro-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro/-/metro-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-babel-transformer",
       "name": "metro-babel-transformer",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-babel-transformer/-/metro-babel-transformer-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-babel-transformer/-/metro-babel-transformer-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-babel-transformer/node_modules/hermes-estree",
@@ -5203,51 +5593,58 @@
     {
       "path": "node_modules/metro-cache",
       "name": "metro-cache",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-cache/-/metro-cache-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-cache/-/metro-cache-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-cache-key",
       "name": "metro-cache-key",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-cache-key/-/metro-cache-key-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-cache-key/-/metro-cache-key-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-config",
       "name": "metro-config",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-config/-/metro-config-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-config/-/metro-config-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/metro-config/node_modules/metro-runtime",
+      "name": "metro-config/node_modules/metro-runtime",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-core",
       "name": "metro-core",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-core/-/metro-core-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-core/-/metro-core-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-file-map",
       "name": "metro-file-map",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-file-map/-/metro-file-map-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-file-map/-/metro-file-map-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-minify-terser",
       "name": "metro-minify-terser",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-minify-terser/-/metro-minify-terser-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-minify-terser/-/metro-minify-terser-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-resolver",
       "name": "metro-resolver",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-runtime",
@@ -5273,16 +5670,37 @@
     {
       "path": "node_modules/metro-transform-plugins",
       "name": "metro-transform-plugins",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-transform-plugins/-/metro-transform-plugins-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-transform-plugins/-/metro-transform-plugins-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro-transform-worker",
       "name": "metro-transform-worker",
-      "version": "0.84.4",
+      "version": "0.84.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/metro-transform-worker/-/metro-transform-worker-0.84.4.tgz"
+      "resolved": "https://registry.npmjs.org/metro-transform-worker/-/metro-transform-worker-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/metro-transform-worker/node_modules/metro-source-map",
+      "name": "metro-transform-worker/node_modules/metro-source-map",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-source-map/-/metro-source-map-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/metro-transform-worker/node_modules/metro-symbolicate",
+      "name": "metro-transform-worker/node_modules/metro-symbolicate",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-symbolicate/-/metro-symbolicate-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/metro-transform-worker/node_modules/ob1",
+      "name": "metro-transform-worker/node_modules/ob1",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/ob1/-/ob1-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro/node_modules/accepts",
@@ -5313,6 +5731,27 @@
       "resolved": "https://registry.npmjs.org/hermes-parser/-/hermes-parser-0.35.0.tgz"
     },
     {
+      "path": "node_modules/metro/node_modules/metro-runtime",
+      "name": "metro/node_modules/metro-runtime",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/metro/node_modules/metro-source-map",
+      "name": "metro/node_modules/metro-source-map",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-source-map/-/metro-source-map-0.84.5.tgz"
+    },
+    {
+      "path": "node_modules/metro/node_modules/metro-symbolicate",
+      "name": "metro/node_modules/metro-symbolicate",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/metro-symbolicate/-/metro-symbolicate-0.84.5.tgz"
+    },
+    {
       "path": "node_modules/metro/node_modules/mime-types",
       "name": "metro/node_modules/mime-types",
       "version": "3.0.2",
@@ -5322,16 +5761,23 @@
     {
       "path": "node_modules/metro/node_modules/negotiator",
       "name": "metro/node_modules/negotiator",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-1.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-1.1.0.tgz"
+    },
+    {
+      "path": "node_modules/metro/node_modules/ob1",
+      "name": "metro/node_modules/ob1",
+      "version": "0.84.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/ob1/-/ob1-0.84.5.tgz"
     },
     {
       "path": "node_modules/metro/node_modules/ws",
       "name": "metro/node_modules/ws",
-      "version": "7.5.11",
+      "version": "7.5.13",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.11.tgz"
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz"
     },
     {
       "path": "node_modules/micromatch",
@@ -5427,9 +5873,9 @@
     {
       "path": "node_modules/multitars",
       "name": "multitars",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/multitars/-/multitars-1.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/multitars/-/multitars-1.0.2.tgz"
     },
     {
       "path": "node_modules/mz",
@@ -5441,9 +5887,9 @@
     {
       "path": "node_modules/nanoid",
       "name": "nanoid",
-      "version": "3.3.12",
+      "version": "3.3.18",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.12.tgz"
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.18.tgz"
     },
     {
       "path": "node_modules/napi-postinstall",
@@ -5455,9 +5901,9 @@
     {
       "path": "node_modules/nativewind",
       "name": "nativewind",
-      "version": "4.2.5",
+      "version": "4.2.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/nativewind/-/nativewind-4.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/nativewind/-/nativewind-4.2.6.tgz"
     },
     {
       "path": "node_modules/natural-compare",
@@ -5504,9 +5950,9 @@
     {
       "path": "node_modules/node-releases",
       "name": "node-releases",
-      "version": "2.0.47",
+      "version": "2.0.53",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/node-releases/-/node-releases-2.0.47.tgz"
+      "resolved": "https://registry.npmjs.org/node-releases/-/node-releases-2.0.53.tgz"
     },
     {
       "path": "node_modules/normalize-path",
@@ -5777,9 +6223,9 @@
     {
       "path": "node_modules/path-scurry/node_modules/lru-cache",
       "name": "path-scurry/node_modules/lru-cache",
-      "version": "11.5.1",
+      "version": "11.5.2",
       "license": "BlueOak-1.0.0",
-      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.1.tgz"
+      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.2.tgz"
     },
     {
       "path": "node_modules/pathe",
@@ -5798,9 +6244,9 @@
     {
       "path": "node_modules/picomatch",
       "name": "picomatch",
-      "version": "4.0.4",
+      "version": "4.0.5",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.5.tgz"
     },
     {
       "path": "node_modules/pify",
@@ -5826,9 +6272,9 @@
     {
       "path": "node_modules/plist/node_modules/@xmldom/xmldom",
       "name": "plist/node_modules/@xmldom/xmldom",
-      "version": "0.9.10",
+      "version": "0.9.12",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.9.10.tgz"
+      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.9.12.tgz"
     },
     {
       "path": "node_modules/pngjs",
@@ -5847,9 +6293,9 @@
     {
       "path": "node_modules/postcss",
       "name": "postcss",
-      "version": "8.5.16",
+      "version": "8.5.26",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.16.tgz"
+      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.26.tgz"
     },
     {
       "path": "node_modules/postcss-import",
@@ -5999,13 +6445,6 @@
       "resolved": "https://registry.npmjs.org/query-string/-/query-string-7.1.3.tgz"
     },
     {
-      "path": "node_modules/queue",
-      "name": "queue",
-      "version": "6.0.2",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/queue/-/queue-6.0.2.tgz"
-    },
-    {
       "path": "node_modules/queue-microtask",
       "name": "queue-microtask",
       "version": "1.2.3",
@@ -6036,9 +6475,9 @@
     {
       "path": "node_modules/react-devtools-core/node_modules/ws",
       "name": "react-devtools-core/node_modules/ws",
-      "version": "7.5.11",
+      "version": "7.5.13",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.11.tgz"
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz"
     },
     {
       "path": "node_modules/react-dom",
@@ -6064,23 +6503,23 @@
     {
       "path": "node_modules/react-is",
       "name": "react-is",
-      "version": "19.2.7",
+      "version": "19.2.8",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-is/-/react-is-19.2.7.tgz"
+      "resolved": "https://registry.npmjs.org/react-is/-/react-is-19.2.8.tgz"
     },
     {
       "path": "node_modules/react-native",
       "name": "react-native",
-      "version": "0.85.3",
+      "version": "0.86.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.85.3.tgz"
+      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.86.2.tgz"
     },
     {
       "path": "node_modules/react-native-css-interop",
       "name": "react-native-css-interop",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-css-interop/-/react-native-css-interop-0.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-css-interop/-/react-native-css-interop-0.2.6.tgz"
     },
     {
       "path": "node_modules/react-native-css-interop/node_modules/detect-libc",
@@ -6169,23 +6608,23 @@
     {
       "path": "node_modules/react-native-css-interop/node_modules/semver",
       "name": "react-native-css-interop/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/react-native-drawer-layout",
       "name": "react-native-drawer-layout",
-      "version": "4.2.5",
+      "version": "4.2.10",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-drawer-layout/-/react-native-drawer-layout-4.2.5.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-drawer-layout/-/react-native-drawer-layout-4.2.10.tgz"
     },
     {
       "path": "node_modules/react-native-gesture-handler",
       "name": "react-native-gesture-handler",
-      "version": "2.31.2",
+      "version": "2.32.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.31.2.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.32.0.tgz"
     },
     {
       "path": "node_modules/react-native-get-random-values",
@@ -6211,16 +6650,16 @@
     {
       "path": "node_modules/react-native-reanimated",
       "name": "react-native-reanimated",
-      "version": "4.3.1",
+      "version": "4.5.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-4.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-4.5.1.tgz"
     },
     {
       "path": "node_modules/react-native-reanimated/node_modules/semver",
       "name": "react-native-reanimated/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/react-native-safe-area-context",
@@ -6232,9 +6671,9 @@
     {
       "path": "node_modules/react-native-screens",
       "name": "react-native-screens",
-      "version": "4.25.2",
+      "version": "4.26.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-screens/-/react-native-screens-4.25.2.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-screens/-/react-native-screens-4.26.2.tgz"
     },
     {
       "path": "node_modules/react-native-url-polyfill",
@@ -6274,16 +6713,23 @@
     {
       "path": "node_modules/react-native-worklets",
       "name": "react-native-worklets",
-      "version": "0.8.3",
+      "version": "0.10.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-native-worklets/-/react-native-worklets-0.8.3.tgz"
+      "resolved": "https://registry.npmjs.org/react-native-worklets/-/react-native-worklets-0.10.1.tgz"
     },
     {
       "path": "node_modules/react-native-worklets/node_modules/semver",
       "name": "react-native-worklets/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
+    },
+    {
+      "path": "node_modules/react-native/node_modules/@react-native/codegen",
+      "name": "react-native/node_modules/@react-native/codegen",
+      "version": "0.86.2",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@react-native/codegen/-/codegen-0.86.2.tgz"
     },
     {
       "path": "node_modules/react-native/node_modules/commander",
@@ -6295,16 +6741,16 @@
     {
       "path": "node_modules/react-native/node_modules/semver",
       "name": "react-native/node_modules/semver",
-      "version": "7.8.4",
+      "version": "7.8.5",
       "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/react-native/node_modules/ws",
       "name": "react-native/node_modules/ws",
-      "version": "7.5.11",
+      "version": "7.5.13",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.11.tgz"
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz"
     },
     {
       "path": "node_modules/react-refresh",
@@ -6333,6 +6779,13 @@
       "version": "2.2.3",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/react-style-singleton/-/react-style-singleton-2.2.3.tgz"
+    },
+    {
+      "path": "node_modules/react-test-renderer",
+      "name": "react-test-renderer",
+      "version": "19.2.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/react-test-renderer/-/react-test-renderer-19.2.3.tgz"
     },
     {
       "path": "node_modules/read-cache",
@@ -6519,9 +6972,9 @@
     {
       "path": "node_modules/sax",
       "name": "sax",
-      "version": "1.6.0",
+      "version": "1.6.1",
       "license": "BlueOak-1.0.0",
-      "resolved": "https://registry.npmjs.org/sax/-/sax-1.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/sax/-/sax-1.6.1.tgz"
     },
     {
       "path": "node_modules/scheduler",
@@ -6673,9 +7126,9 @@
     {
       "path": "node_modules/shell-quote",
       "name": "shell-quote",
-      "version": "1.8.4",
+      "version": "1.10.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/shell-quote/-/shell-quote-1.8.4.tgz"
+      "resolved": "https://registry.npmjs.org/shell-quote/-/shell-quote-1.10.0.tgz"
     },
     {
       "path": "node_modules/side-channel",
@@ -6972,6 +7425,13 @@
       "resolved": "https://registry.npmjs.org/commander/-/commander-4.1.1.tgz"
     },
     {
+      "path": "node_modules/supabase",
+      "name": "supabase",
+      "version": "2.117.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/supabase/-/supabase-2.117.0.tgz"
+    },
+    {
       "path": "node_modules/supports-color",
       "name": "supports-color",
       "version": "7.2.0",
@@ -7079,9 +7539,9 @@
     {
       "path": "node_modules/tinyrainbow",
       "name": "tinyrainbow",
-      "version": "3.1.0",
+      "version": "3.1.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.1.0.tgz"
+      "resolved": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.1.1.tgz"
     },
     {
       "path": "node_modules/tmpl",
@@ -7275,9 +7735,9 @@
     {
       "path": "node_modules/update-browserslist-db",
       "name": "update-browserslist-db",
-      "version": "1.2.3",
+      "version": "1.3.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz"
+      "resolved": "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.3.0.tgz"
     },
     {
       "path": "node_modules/uri-js",
@@ -7366,9 +7826,9 @@
     {
       "path": "node_modules/vitest",
       "name": "vitest",
-      "version": "4.1.9",
+      "version": "4.1.11",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/vitest/-/vitest-4.1.9.tgz"
+      "resolved": "https://registry.npmjs.org/vitest/-/vitest-4.1.11.tgz"
     },
     {
       "path": "node_modules/vlq",
@@ -7506,9 +7966,9 @@
     {
       "path": "node_modules/ws",
       "name": "ws",
-      "version": "8.21.0",
+      "version": "8.21.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-8.21.0.tgz"
+      "resolved": "https://registry.npmjs.org/ws/-/ws-8.21.3.tgz"
     },
     {
       "path": "node_modules/xcode",
@@ -7583,9 +8043,9 @@
     {
       "path": "node_modules/zod",
       "name": "zod",
-      "version": "4.4.3",
+      "version": "3.25.76",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/zod/-/zod-4.4.3.tgz"
+      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz"
     },
     {
       "path": "node_modules/zod-validation-error",
@@ -7604,9 +8064,9 @@
     {
       "path": "node_modules/zxing-wasm/node_modules/type-fest",
       "name": "zxing-wasm/node_modules/type-fest",
-      "version": "5.7.0",
+      "version": "5.8.0",
       "license": "(MIT OR CC0-1.0)",
-      "resolved": "https://registry.npmjs.org/type-fest/-/type-fest-5.7.0.tgz"
+      "resolved": "https://registry.npmjs.org/type-fest/-/type-fest-5.8.0.tgz"
     },
     {
       "path": "packages/types",
@@ -7618,7 +8078,6 @@
   ],
   "blockers": [],
   "warnings": [
-    "npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.",
-    "Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true."
+    "Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts."
   ]
 }

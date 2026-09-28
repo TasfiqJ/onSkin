@@ -21,7 +21,7 @@ metadata to the runtime codec.
 
 ## Invariant
 
-The registry descriptor for `onskin.outbox.v1` must import the runtime writer
+The registry descriptor for `layerwell.outbox.v1` must import the runtime writer
 version and complete supported-legacy tuple. Adding or removing a runtime
 compatibility version must therefore update the same exported contract or fail
 the cross-contract test.

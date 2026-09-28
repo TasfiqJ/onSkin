@@ -1,198 +1,29 @@
-import type { PregnancyStatus, SkinAxis } from '@onskin/types';
+import type { PregnancyStatus, SkinAxis } from '@layerwell/types';
+
+import {
+  ONBOARDING_QUIZ,
+  QUIZ_AXIS_ORDER,
+  QUIZ_AXIS_POLES,
+  QUIZ_SCORING_PROVENANCE,
+  type QuizQuestion,
+  type QuizScoringProvenance,
+} from './quizContract';
+
+export {
+  ONBOARDING_QUIZ,
+  QUIZ_CONTRACT_ID,
+  QUIZ_CONTRACT_REVIEW_STATUS,
+  QUIZ_CONTENT_VERSION,
+  QUIZ_SCORING_VERSION,
+} from './quizContract';
+export type { QuizOption, QuizOptionScore, QuizQuestion } from './quizContract';
 
 /**
- * Skin-quiz engine + original draft content.
+ * Skin-quiz scoring over the exact immutable draft contract.
  *
- * BLOCKED: B-QUIZ-COPY. The validated Baumann BSTI questionnaire is patented
- * and copyrighted (docs/01 section 2). The 4-axis concept is implementable, but
- * the exact questions and scoring still need patent/trademark attorney review.
- * The copy below is original app draft wording, not final legally reviewed
- * quiz copy.
+ * BLOCKED: B-QUIZ-COPY. The pinned draft content, scoring, and labels still
+ * require professional IP/legal review and are not cleared for launch.
  */
-
-// Per axis: a positive option score leans toward the first pole letter.
-const AXIS_POLES: Record<
-  SkinAxis,
-  { positive: string; negative: string; posLabel: string; negLabel: string }
-> = {
-  oily_dry: { positive: 'O', negative: 'D', posLabel: 'Oily', negLabel: 'Dry' },
-  sensitive_resistant: {
-    positive: 'S',
-    negative: 'R',
-    posLabel: 'Sensitive',
-    negLabel: 'Resistant',
-  },
-  pigmented_non: { positive: 'P', negative: 'N', posLabel: 'Uneven tone', negLabel: 'Even' },
-  wrinkled_tight: { positive: 'W', negative: 'T', posLabel: 'Lined', negLabel: 'Firm' },
-};
-
-export type QuizOptionScore = Partial<Record<SkinAxis, number>>;
-
-export type QuizOption = {
-  id: string;
-  label: string;
-  subtitle?: string;
-  /** Axis contribution(s) in the range roughly -2..+2 (axis questions). */
-  score?: QuizOptionScore;
-  /** Discrete value for phototype (1-6) / monk tone (1-10). */
-  value?: number;
-};
-
-export type QuizQuestion = {
-  id: string;
-  /** Which axis/dimension this question informs. */
-  kind: SkinAxis | 'phototype' | 'monk' | 'sensitivities' | 'pregnancy';
-  eyebrow: string;
-  prompt: string;
-  options: QuizOption[];
-  multiSelect?: boolean;
-};
-
-export const ONBOARDING_QUIZ: QuizQuestion[] = [
-  {
-    id: 'q_oil',
-    kind: 'oily_dry',
-    eyebrow: 'OIL + MOISTURE',
-    prompt: 'A few hours after cleansing, how does your skin usually feel?',
-    options: [
-      { id: 'a', label: 'Tight or flaky', score: { oily_dry: -2 } },
-      { id: 'b', label: 'Comfortable', score: { oily_dry: 0 } },
-      { id: 'c', label: 'Shiny in places', score: { oily_dry: 1 } },
-      { id: 'd', label: 'Oily all over', score: { oily_dry: 2 } },
-    ],
-  },
-  {
-    id: 'q_hydration',
-    kind: 'oily_dry',
-    eyebrow: 'OIL + MOISTURE',
-    prompt: 'How often does your skin ask for more moisture during the day?',
-    options: [
-      { id: 'a', label: 'Most days', score: { oily_dry: -2 } },
-      { id: 'b', label: 'Some days', score: { oily_dry: 0 } },
-      { id: 'c', label: 'Rarely', score: { oily_dry: 1 } },
-    ],
-  },
-  {
-    id: 'q_react',
-    kind: 'sensitive_resistant',
-    eyebrow: 'SENSITIVITY',
-    prompt: 'When you try a new product, how often does your skin react?',
-    options: [
-      { id: 'a', label: 'Often stings, burns, or reddens', score: { sensitive_resistant: 2 } },
-      { id: 'b', label: 'Occasionally reacts', score: { sensitive_resistant: 1 } },
-      { id: 'c', label: 'Almost never reacts', score: { sensitive_resistant: -2 } },
-    ],
-  },
-  {
-    id: 'q_redness',
-    kind: 'sensitive_resistant',
-    eyebrow: 'SENSITIVITY',
-    prompt: 'How often do you notice redness, flushing, or a hot-feeling face?',
-    options: [
-      { id: 'a', label: 'Frequently', score: { sensitive_resistant: 2 } },
-      { id: 'b', label: 'Sometimes', score: { sensitive_resistant: 0 } },
-      { id: 'c', label: 'Rarely or never', score: { sensitive_resistant: -2 } },
-    ],
-  },
-  {
-    id: 'q_tone',
-    kind: 'pigmented_non',
-    eyebrow: 'TONE',
-    prompt: 'Do you notice dark spots, uneven tone, or areas that look more pigmented?',
-    options: [
-      { id: 'a', label: 'Yes, noticeably', score: { pigmented_non: 2 } },
-      { id: 'b', label: 'A little', score: { pigmented_non: 1 } },
-      { id: 'c', label: 'Not really', score: { pigmented_non: -2 } },
-    ],
-  },
-  {
-    id: 'q_marks',
-    kind: 'pigmented_non',
-    eyebrow: 'TONE',
-    prompt: 'After a breakout or irritation, how long do marks tend to linger?',
-    options: [
-      { id: 'a', label: 'Weeks or longer', score: { pigmented_non: 2 } },
-      { id: 'b', label: 'A short while', score: { pigmented_non: 0 } },
-      { id: 'c', label: 'Rarely leaves a mark', score: { pigmented_non: -2 } },
-    ],
-  },
-  {
-    id: 'q_lines',
-    kind: 'wrinkled_tight',
-    eyebrow: 'FIRMNESS',
-    prompt: 'Which best describes fine lines or firmness right now?',
-    options: [
-      {
-        id: 'a',
-        label: 'Fine lines or firmness changes are visible',
-        score: { wrinkled_tight: 2 },
-      },
-      { id: 'b', label: 'I am starting to notice small changes', score: { wrinkled_tight: 1 } },
-      { id: 'c', label: 'Not something I notice right now', score: { wrinkled_tight: -2 } },
-    ],
-  },
-  {
-    id: 'q_sun',
-    kind: 'wrinkled_tight',
-    eyebrow: 'FIRMNESS',
-    prompt: 'Thinking about your usual outdoor time, how much sun exposure has your skin had?',
-    options: [
-      { id: 'a', label: 'A lot over time', score: { wrinkled_tight: 2 } },
-      { id: 'b', label: 'A moderate amount', score: { wrinkled_tight: 0 } },
-      { id: 'c', label: 'Not much', score: { wrinkled_tight: -2 } },
-    ],
-  },
-  {
-    id: 'q_phototype',
-    kind: 'phototype',
-    eyebrow: 'SUN RESPONSE',
-    prompt: 'Without sunscreen, how does your skin usually respond to strong sun?',
-    options: [
-      { id: '1', label: 'Always burns', value: 1 },
-      { id: '2', label: 'Usually burns', value: 2 },
-      { id: '3', label: 'Sometimes burns', value: 3 },
-      { id: '4', label: 'Rarely burns', value: 4 },
-      { id: '5', label: 'Very rarely burns', value: 5 },
-      { id: '6', label: 'Does not burn', value: 6 },
-    ],
-  },
-  {
-    id: 'q_monk',
-    kind: 'monk',
-    eyebrow: 'SKIN TONE',
-    prompt: 'Choose the skin tone range closest to yours.',
-    options: Array.from({ length: 10 }, (_, i) => ({
-      id: String(i + 1),
-      label: `Tone ${i + 1}`,
-      value: i + 1,
-    })),
-  },
-  {
-    id: 'q_sensitivities',
-    kind: 'sensitivities',
-    eyebrow: 'SENSITIVITIES',
-    prompt: 'Any known sensitivities or ingredients you try to avoid? Select all that apply.',
-    multiSelect: true,
-    options: [
-      { id: 'fragrance', label: 'Fragrance' },
-      { id: 'essential_oils', label: 'Essential oils' },
-      { id: 'alcohol', label: 'Drying alcohols' },
-      { id: 'none', label: 'None that I know of' },
-    ],
-  },
-  {
-    id: 'q_pregnancy',
-    kind: 'pregnancy',
-    eyebrow: 'SAFETY',
-    prompt: 'Are you pregnant, trying to become pregnant, or breastfeeding?',
-    options: [
-      { id: 'none', label: 'No' },
-      { id: 'pregnant', label: 'Pregnant or trying' },
-      { id: 'breastfeeding', label: 'Breastfeeding' },
-      { id: 'prefer_not', label: 'Prefer not to say' },
-    ],
-  },
-];
 
 export type QuizAnswers = Record<string, string | string[]>; // questionId -> optionId(s)
 
@@ -209,18 +40,22 @@ export function isQuizQuestionAnswered(
 ): boolean {
   const optionIds = new Set(question.options.map((option) => option.id));
   if (question.multiSelect === true) {
-    return (
-      Array.isArray(answer) &&
-      answer.length > 0 &&
-      answer.every((optionId) => optionIds.has(optionId))
-    );
+    if (
+      !Array.isArray(answer) ||
+      answer.length === 0 ||
+      new Set(answer).size !== answer.length ||
+      !answer.every((optionId) => optionIds.has(optionId))
+    ) {
+      return false;
+    }
+    return !(answer.includes('none') && answer.length > 1);
   }
   return typeof answer === 'string' && optionIds.has(answer);
 }
 
 export function getQuizCompletionState(
   answers: QuizAnswers,
-  quiz: QuizQuestion[] = ONBOARDING_QUIZ,
+  quiz: readonly QuizQuestion[] = ONBOARDING_QUIZ,
 ): QuizCompletionState {
   const missingQuestionIds: string[] = [];
   for (const question of quiz) {
@@ -247,84 +82,209 @@ export function toggleExclusiveNoneSelection(
 }
 
 export type SkinProfileResult = {
-  axes: Record<SkinAxis, number>; // normalized 0..1 (0 = negative pole, 1 = positive pole)
-  axisScores: Record<SkinAxis, number>; // raw signed sums
-  dspt: string; // 4-letter type, e.g. "DSNT"
+  /** Compatibility projection derived only from integer basis points. */
+  axes: Record<SkinAxis, number>;
+  axisScores: Record<SkinAxis, number>;
+  dspt: string;
   fitzpatrick: number | null;
   monkTone: number | null;
   sensitivities: string[];
   pregnancyStatus: PregnancyStatus;
 };
 
-const AXES: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
+export type ScoredQuizProfileResult = SkinProfileResult & {
+  /** Authoritative normalized axis positions: integers in [0, 10_000]. */
+  axesBasisPoints: Record<SkinAxis, number>;
+  provenance: QuizScoringProvenance;
+};
 
-/** Pure scoring. Sum signed axis contributions, derive poles + a 0..1 slider position. */
+type CanonicalQuizAnswers = Record<string, string | readonly string[]>;
+
+function invalidAnswers(reason: string): never {
+  throw new Error(`QUIZ_ANSWERS_INVALID:${reason}`);
+}
+
+/**
+ * Validate the entire answer set before scoring and canonicalize multiselect
+ * values to contract option order. Nothing is defaulted, skipped, or repaired.
+ */
+export function canonicalizeCurrentQuizAnswers(answers: QuizAnswers): CanonicalQuizAnswers {
+  const actualKeys = Object.keys(answers).sort();
+  const expectedKeys = ONBOARDING_QUIZ.map((question) => question.id).sort();
+  if (
+    actualKeys.length !== expectedKeys.length ||
+    actualKeys.some((key, index) => key !== expectedKeys[index])
+  ) {
+    return invalidAnswers('question_key_set');
+  }
+
+  const canonical: CanonicalQuizAnswers = {};
+  for (const question of ONBOARDING_QUIZ) {
+    const answer = answers[question.id];
+    const optionIds = new Set(question.options.map((option) => option.id));
+    if (question.multiSelect === true) {
+      if (!Array.isArray(answer) || answer.length === 0) {
+        return invalidAnswers(`${question.id}:selection_required`);
+      }
+      if (new Set(answer).size !== answer.length) {
+        return invalidAnswers(`${question.id}:duplicate_selection`);
+      }
+      if (!answer.every((optionId) => optionIds.has(optionId))) {
+        return invalidAnswers(`${question.id}:unknown_option`);
+      }
+      if (answer.includes('none') && answer.length > 1) {
+        return invalidAnswers(`${question.id}:none_not_exclusive`);
+      }
+      const selected = new Set(answer);
+      canonical[question.id] = Object.freeze(
+        question.options.filter((option) => selected.has(option.id)).map((option) => option.id),
+      );
+      continue;
+    }
+
+    if (typeof answer !== 'string') {
+      return invalidAnswers(`${question.id}:single_selection_required`);
+    }
+    if (!optionIds.has(answer)) return invalidAnswers(`${question.id}:unknown_option`);
+    canonical[question.id] = answer;
+  }
+  return Object.freeze(canonical);
+}
+
+function emptyAxisRecord(): Record<SkinAxis, number> {
+  return {
+    oily_dry: 0,
+    sensitive_resistant: 0,
+    pigmented_non: 0,
+    wrinkled_tight: 0,
+  };
+}
+
+function isSkinAxis(value: QuizQuestion['kind']): value is SkinAxis {
+  return QUIZ_AXIS_ORDER.some((axis) => axis === value);
+}
+
+function contractError(reason: string): never {
+  throw new Error(`QUIZ_CONTRACT_INVALID:${reason}`);
+}
+
+function exactBasisPoints(rawScore: number, axisMaximum: number, axis: SkinAxis): number {
+  if (!Number.isSafeInteger(rawScore) || !Number.isSafeInteger(axisMaximum) || axisMaximum <= 0) {
+    return contractError(`${axis}:axis_domain`);
+  }
+  const numerator = (rawScore + axisMaximum) * 10_000;
+  const denominator = 2 * axisMaximum;
+  if (!Number.isSafeInteger(numerator) || numerator % denominator !== 0) {
+    return contractError(`${axis}:non_integral_basis_points`);
+  }
+  const basisPoints = numerator / denominator;
+  if (basisPoints < 0 || basisPoints > 10_000) {
+    return contractError(`${axis}:basis_points_range`);
+  }
+  return basisPoints;
+}
+
+/**
+ * Score only the exact current immutable quiz.
+ *
+ * The optional identity parameter is a narrow compatibility bridge for the
+ * existing onboarding context. A clone or any caller-supplied quiz is rejected
+ * by identity and never influences scoring.
+ */
 export function scoreQuiz(
   answers: QuizAnswers,
-  quiz: QuizQuestion[] = ONBOARDING_QUIZ,
-): SkinProfileResult {
-  const axisScores: Record<SkinAxis, number> = {
-    oily_dry: 0,
-    sensitive_resistant: 0,
-    pigmented_non: 0,
-    wrinkled_tight: 0,
-  };
-  const axisMax: Record<SkinAxis, number> = {
-    oily_dry: 0,
-    sensitive_resistant: 0,
-    pigmented_non: 0,
-    wrinkled_tight: 0,
-  };
+  currentQuizIdentity: typeof ONBOARDING_QUIZ = ONBOARDING_QUIZ,
+): ScoredQuizProfileResult {
+  if (currentQuizIdentity !== ONBOARDING_QUIZ) {
+    throw new Error('QUIZ_CONTRACT_IDENTITY_MISMATCH');
+  }
+
+  const canonicalAnswers = canonicalizeCurrentQuizAnswers(answers);
+  const axisScores = emptyAxisRecord();
+  const axisMaximums = emptyAxisRecord();
   let fitzpatrick: number | null = null;
   let monkTone: number | null = null;
   let sensitivities: string[] = [];
-  let pregnancyStatus: PregnancyStatus = 'prefer_not';
+  let pregnancyStatus: PregnancyStatus | null = null;
 
-  for (const q of quiz) {
-    const answer = answers[q.id];
-    if (q.kind === 'sensitivities') {
-      sensitivities = Array.isArray(answer) ? answer.filter((a) => a !== 'none') : [];
+  for (const question of ONBOARDING_QUIZ) {
+    const answer = canonicalAnswers[question.id];
+    if (question.kind === 'sensitivities') {
+      if (!Array.isArray(answer)) return contractError(`${question.id}:answer_shape`);
+      sensitivities = answer.filter((optionId) => optionId !== 'none');
       continue;
     }
-    if (q.kind === 'pregnancy') {
-      const v = typeof answer === 'string' ? answer : 'prefer_not';
-      pregnancyStatus = (['none', 'pregnant', 'breastfeeding', 'prefer_not'] as const).includes(
-        v as PregnancyStatus,
-      )
-        ? (v as PregnancyStatus)
-        : 'prefer_not';
+    if (Array.isArray(answer)) return contractError(`${question.id}:answer_shape`);
+    const chosen = question.options.find((option) => option.id === answer);
+    if (!chosen) return contractError(`${question.id}:missing_canonical_option`);
+
+    if (question.kind === 'pregnancy') {
+      if (
+        !(['none', 'pregnant', 'breastfeeding', 'prefer_not'] as const).includes(
+          chosen.id as PregnancyStatus,
+        )
+      ) {
+        return contractError(`${question.id}:pregnancy_mapping`);
+      }
+      pregnancyStatus = chosen.id as PregnancyStatus;
       continue;
     }
-    const chosen = q.options.find((o) => o.id === answer);
-    if (!chosen) continue;
-    if (q.kind === 'phototype') {
-      fitzpatrick = chosen.value ?? null;
+    if (question.kind === 'phototype' || question.kind === 'monk') {
+      if (!Number.isSafeInteger(chosen.value)) {
+        return contractError(`${question.id}:discrete_value`);
+      }
+      if (question.kind === 'phototype') fitzpatrick = chosen.value!;
+      else monkTone = chosen.value!;
       continue;
     }
-    if (q.kind === 'monk') {
-      monkTone = chosen.value ?? null;
-      continue;
+    if (!isSkinAxis(question.kind)) return contractError(`${question.id}:unknown_kind`);
+
+    const axis = question.kind;
+    const maxForQuestion = Math.max(
+      ...question.options.map((option) => Math.abs(option.score?.[axis] ?? 0)),
+    );
+    const contribution = chosen.score?.[axis];
+    if (
+      !Number.isSafeInteger(maxForQuestion) ||
+      maxForQuestion <= 0 ||
+      !Number.isSafeInteger(contribution)
+    ) {
+      return contractError(`${question.id}:axis_score`);
     }
-    // Axis question. Accumulate score and track the max possible magnitude.
-    for (const axis of AXES) {
-      const contribution = chosen.score?.[axis];
-      if (contribution !== undefined) axisScores[axis] += contribution;
-      const maxForOption = Math.max(...q.options.map((o) => Math.abs(o.score?.[axis] ?? 0)));
-      if (q.kind === axis) axisMax[axis] += maxForOption;
+    for (const otherAxis of QUIZ_AXIS_ORDER) {
+      if (otherAxis !== axis && chosen.score?.[otherAxis] !== undefined) {
+        return contractError(`${question.id}:cross_axis_score`);
+      }
     }
+    axisMaximums[axis] += maxForQuestion;
+    axisScores[axis] += contribution!;
   }
 
-  const axes = {} as Record<SkinAxis, number>;
+  if (fitzpatrick === null || monkTone === null || pregnancyStatus === null) {
+    return contractError('required_output_missing');
+  }
+
+  const axesBasisPoints = emptyAxisRecord();
+  const axes = emptyAxisRecord();
   let dspt = '';
-  for (const axis of AXES) {
-    const max = axisMax[axis] || 1;
-    // Map signed [-max, +max] to [0,1].
-    const normalized = Math.min(1, Math.max(0, (axisScores[axis] + max) / (2 * max)));
-    axes[axis] = normalized;
-    dspt += normalized >= 0.5 ? AXIS_POLES[axis].positive : AXIS_POLES[axis].negative;
+  for (const axis of QUIZ_AXIS_ORDER) {
+    const basisPoints = exactBasisPoints(axisScores[axis], axisMaximums[axis], axis);
+    axesBasisPoints[axis] = basisPoints;
+    axes[axis] = basisPoints / 10_000;
+    dspt += axisScores[axis] >= 0 ? QUIZ_AXIS_POLES[axis].positive : QUIZ_AXIS_POLES[axis].negative;
   }
 
-  return { axes, axisScores, dspt, fitzpatrick, monkTone, sensitivities, pregnancyStatus };
+  return {
+    axes,
+    axesBasisPoints,
+    axisScores,
+    dspt,
+    fitzpatrick,
+    monkTone,
+    sensitivities,
+    pregnancyStatus,
+    provenance: QUIZ_SCORING_PROVENANCE,
+  };
 }
 
-export const AXIS_LABELS = AXIS_POLES;
+export const AXIS_LABELS = QUIZ_AXIS_POLES;

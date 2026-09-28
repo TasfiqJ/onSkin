@@ -4,8 +4,8 @@ import { resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const IMAGE = process.env.SKIN_PROFILE_CONSENT_POSTGRES_IMAGE ?? 'postgres:15-alpine';
-const CONTAINER = `onskin-consent-${process.pid}`;
-const DATABASE = 'onskin_consent';
+const CONTAINER = `layerwell-consent-${process.pid}`;
+const DATABASE = 'layerwell_consent';
 const OWNER_A = '00000000-0000-4000-8000-000000000001';
 const OWNER_B = '00000000-0000-4000-8000-000000000002';
 const VERSION = 'draft-v1-2026-07-10';

@@ -1,5 +1,11 @@
 # Generated evidence is governed by schema, freshness, and hash audits.
 docs/**/generated/**
 
+# Generated from the native OCR evidence schema and governed by its exact template check.
+docs/phase-5/native-ocr-evidence.template.json
+
 # Regenerated from the live Supabase schema.
 packages/types/src/database.types.ts
+
+# The standalone CAT-08 Deno boundary is formatted and checked with deno fmt.
+supabase/functions/catalog-operator/**

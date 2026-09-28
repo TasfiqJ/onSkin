@@ -42,6 +42,13 @@ evidence artifacts cannot drift apart. The packet Markdown must also show
 whether it was generated from a clean or dirty Git worktree so reviewers can
 reject stale or mixed-worktree public-launch evidence.
 
+`npm run phase11:verify` is source-safe and non-writing; it reruns the Phase 10
+readiness prerequisites before the Phase 11 readiness and ring gates. After the
+required Phase 10 units are committed, publish `npm run
+phase11:launch-packet:strict` as its own post-E DAG unit. The public-launch
+builder excludes only its own exact output pair from Git status; dirty upstream
+or sibling governed outputs remain visible.
+
 ## Launch Rings
 
 | Ring   | Audience                  | Traffic control                                               | Expansion rule                         |

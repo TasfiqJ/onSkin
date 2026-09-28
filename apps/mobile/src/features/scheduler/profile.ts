@@ -1,4 +1,4 @@
-import type { GoalId, PregnancyStatus } from '@onskin/types';
+import type { GoalId, PregnancyStatus } from '@layerwell/types';
 import { useQuery } from '@tanstack/react-query';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
@@ -12,23 +12,23 @@ import {
   updateStoredPregnancyStatus,
   type StoredSkinProfile,
 } from '@/features/onboarding/skinProfileStore';
+import {
+  currentGoalRecommendationProvenance,
+  type GoalRecommendationProvenance,
+} from '@/features/recommendations/goalProvenance';
+import {
+  applyCurrentServerSkinProfileFilters,
+  CURRENT_SERVER_SKIN_PROFILE_SELECT,
+  isServerSkinProfileFallbackPermitted,
+  parseCurrentServerSkinProfile,
+} from '@/features/onboarding/serverSkinProfile';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import {
-  ACCOUNT_GENERATION_CHANGED,
-  AccountGenerationLeaseError,
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { isSupabaseConfigured } from '@/lib/env';
-import {
-  isRequestCancellation,
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
-import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
-import { stableErrorQueryPolicy } from '@/lib/query/queryPolicies';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import { moistureFromAxis, sensitivityFromAxis, type MoistureBalance } from './profileMapping';
@@ -47,6 +47,8 @@ export type ProfileBits = {
   pregnancy: boolean;
   consentCurrent: boolean;
   goals: GoalId[];
+  /** Exact current quiz/profile tuple that authorized these runtime-validated goals. */
+  goalProvenance?: GoalRecommendationProvenance | null;
 };
 
 const UNKNOWN_PROFILE: ProfileBits = {
@@ -58,36 +60,8 @@ const UNKNOWN_PROFILE: ProfileBits = {
   pregnancy: false,
   consentCurrent: false,
   goals: [],
+  goalProvenance: null,
 };
-
-const profileBitsThatNeedLifecycleRefresh = new WeakSet<object>();
-
-function markProfileBitsForLifecycleRefresh(bits: ProfileBits): ProfileBits {
-  profileBitsThatNeedLifecycleRefresh.add(bits);
-  return bits;
-}
-
-export function shouldAutomaticallyRefetchProfileQuery(query: {
-  state: Readonly<{ data?: unknown; status: string }>;
-}): boolean {
-  return (
-    query.state.status !== 'error' &&
-    typeof query.state.data === 'object' &&
-    query.state.data !== null &&
-    profileBitsThatNeedLifecycleRefresh.has(query.state.data)
-  );
-}
-
-let pregnancyStatusMutationTail: Promise<void> = Promise.resolve();
-
-function runPregnancyStatusMutation<T>(operation: () => Promise<T>): Promise<T> {
-  const result = pregnancyStatusMutationTail.then(operation, operation);
-  pregnancyStatusMutationTail = result.then(
-    () => undefined,
-    () => undefined,
-  );
-  return result;
-}
 
 function normalizePregnancyStatus(value: unknown): PregnancySafetyStatus {
   return value === 'none' ||
@@ -96,20 +70,6 @@ function normalizePregnancyStatus(value: unknown): PregnancySafetyStatus {
     value === 'prefer_not'
     ? value
     : 'unknown';
-}
-
-function isAbortOrAccountGenerationError(error: unknown): boolean {
-  if (error === ACCOUNT_GENERATION_CHANGED || error instanceof AccountGenerationLeaseError) {
-    return true;
-  }
-  if (!error || typeof error !== 'object') return false;
-  const candidate = error as { code?: unknown; message?: unknown; name?: unknown };
-  return (
-    candidate.name === 'AbortError' ||
-    candidate.code === 'ABORT_ERR' ||
-    candidate.code === ACCOUNT_GENERATION_CHANGED ||
-    candidate.message === ACCOUNT_GENERATION_CHANGED
-  );
 }
 
 function pregnancyBits(status: PregnancySafetyStatus) {
@@ -129,115 +89,86 @@ function profileBitsFromStoredProfile(profile: StoredSkinProfile): ProfileBits {
     ...pregnancyBits(status),
     consentCurrent: true,
     goals: profile.goals,
+    goalProvenance: currentGoalRecommendationProvenance({
+      source: 'local_current_quiz',
+      profileCompletedAt: profile.completedAt,
+      goals: profile.goals,
+    }),
   };
 }
 
-export async function readProfileBitsWithLease(
-  lease: AccountGenerationLease,
-): Promise<ProfileBits> {
-  lease.assertCurrent();
-  const consentCurrent = await awaitAccountGenerationLease(lease, () =>
-    hasCurrentHealthDataCollectionConsent(),
-  );
-  lease.assertCurrent();
-  if (!consentCurrent) return UNKNOWN_PROFILE;
-
-  const local = await awaitAccountGenerationLease(lease, () => readStoredSkinProfile());
-  lease.assertCurrent();
-  if (local.status === 'available') return profileBitsFromStoredProfile(local.profile);
-
-  // A private read/validation failure is not absence. Never consult a stale
-  // server mirror after an authoritative local record becomes unreadable.
-  if (local.status !== 'missing') return { ...UNKNOWN_PROFILE, consentCurrent: true };
-
-  if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
-
-  try {
+export async function readProfileBits(): Promise<ProfileBits> {
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) return UNKNOWN_PROFILE;
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const consentCurrent = await hasCurrentHealthDataCollectionConsent();
     lease.assertCurrent();
-    const data = await runRequestWithLease(
-      lease,
-      {
-        endpoint: 'profile_server',
-        deadlineMs: 8_000,
-        idempotent: true,
-        maxAttempts: 2,
-        maxResponseBytes: 256 * 1024,
-      },
-      async ({ signal }) => {
-        const response = await supabase
-          .from('skin_profiles')
-          .select('oily_dry, sensitive_resistant, goals')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .abortSignal(signal)
-          .maybeSingle();
-        if (response.error) {
-          throw supabaseRequestFailure(response.error, response.status);
-        }
-        return response.data;
-      },
-    );
+    if (!consentCurrent) return UNKNOWN_PROFILE;
+
+    const local = await readStoredSkinProfile();
     lease.assertCurrent();
-    if (data) {
-      return markProfileBitsForLifecycleRefresh({
-        source: 'server',
-        sensitivity: sensitivityFromAxis(data.sensitive_resistant ?? null),
-        moisture: moistureFromAxis(data.oily_dry ?? null),
-        // V1 status edits are local-only. A server-only row may be stale, so it
-        // can provide non-safety profile bits but can never clear caution.
-        ...pregnancyBits('unknown'),
-        consentCurrent: true,
-        goals: (data.goals ?? []) as GoalId[],
-      });
+    if (local.status === 'available') return profileBitsFromStoredProfile(local.profile);
+
+    // A private read/validation failure is not absence. Never consult a stale
+    // server mirror after an authoritative local record becomes unreadable.
+    if (!isServerSkinProfileFallbackPermitted(local.status)) {
+      return { ...UNKNOWN_PROFILE, consentCurrent: true };
     }
-  } catch (error) {
-    // Preserve the existing offline/server fallback only while this exact
-    // owner generation remains current. An account boundary must reject.
+
+    if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
+
+    try {
+      lease.assertCurrent();
+      const { data, error } = await applyCurrentServerSkinProfileFilters(
+        supabase.from('skin_profiles').select(CURRENT_SERVER_SKIN_PROFILE_SELECT),
+      )
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      lease.assertCurrent();
+      if (!error) {
+        const profile = parseCurrentServerSkinProfile(data);
+        if (!profile) return { ...UNKNOWN_PROFILE, consentCurrent: true };
+        return {
+          source: 'server',
+          sensitivity: sensitivityFromAxis(profile.sensitive_resistant),
+          moisture: moistureFromAxis(profile.oily_dry),
+          // Pregnancy edits remain device-authoritative. A server-only row may
+          // be stale, so even an otherwise exact v2 profile cannot clear the
+          // scheduler's conservative safety posture.
+          ...pregnancyBits('unknown'),
+          consentCurrent: true,
+          goals: profile.goals,
+          goalProvenance: currentGoalRecommendationProvenance({
+            source: 'server_current_quiz',
+            profileCompletedAt: profile.completed_at,
+            goals: profile.goals,
+          }),
+        };
+      }
+    } catch {
+      lease.assertCurrent();
+    }
     lease.assertCurrent();
-    if (isAbortOrAccountGenerationError(error) || isRequestCancellation(error)) throw error;
-    /* offline / no DB */
-  }
-  lease.assertCurrent();
-  return markProfileBitsForLifecycleRefresh({ ...UNKNOWN_PROFILE, consentCurrent: true });
+    return { ...UNKNOWN_PROFILE, consentCurrent: true };
+  });
 }
 
-export function readProfileBits(): Promise<ProfileBits> {
-  return runAccountGenerationOperation(readProfileBitsWithLease);
-}
-
-/** V1 profile updates are local-first; the server profile remains a fallback mirror. */
+/** Current profile updates are local-first; the server profile remains a fallback mirror. */
 export async function savePregnancyStatus(status: PregnancyStatus): Promise<ProfileBits> {
-  return runAccountGenerationOperation(async (lease) => {
-    return runPregnancyStatusMutation(async () => {
-      lease.assertCurrent();
-      const consentCurrent = await awaitAccountGenerationLease(lease, () =>
-        hasCurrentHealthDataCollectionConsent(),
-      );
-      lease.assertCurrent();
-      if (!consentCurrent) throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
-
-      const stored = await updateStoredPregnancyStatus(status);
-      lease.assertCurrent();
-      return profileBitsFromStoredProfile(stored);
-    });
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    if (!(await hasCurrentHealthDataCollectionConsent())) {
+      throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
+    }
+    lease.assertCurrent();
+    const stored = await updateStoredPregnancyStatus(status);
+    lease.assertCurrent();
+    return profileBitsFromStoredProfile(stored);
   });
 }
 
 export function useProfileBits() {
-  const ownerScope = useOwnerQueryScope();
-  return useQuery({
-    ...stableErrorQueryPolicy,
-    queryKey: queryKeys.skinProfile(ownerScope),
-    queryFn: () => runOwnerQueryOperation(ownerScope, readProfileBitsWithLease),
-    // Consent and the authoritative profile are encrypted local reads. Let
-    // them resolve offline; readProfileBits already contains the optional,
-    // failure-tolerant server fallback for a genuinely missing local profile.
-    networkMode: 'always',
-    refetchOnMount: shouldAutomaticallyRefetchProfileQuery,
-    refetchOnReconnect: shouldAutomaticallyRefetchProfileQuery,
-    refetchOnWindowFocus: shouldAutomaticallyRefetchProfileQuery,
-    // Lifecycle eligibility is attached to the exact result identity. Do not
-    // structurally reuse a deep-equal result from a different source path.
-    structuralSharing: false,
-  });
+  return useQuery({ queryKey: ['skinProfileBits'], queryFn: readProfileBits });
 }

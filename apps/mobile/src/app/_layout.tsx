@@ -3,75 +3,41 @@ import '../global.css';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/startup';
-import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
+import { NotificationResponseHost } from '@/features/notifications/NotificationResponseHost';
+import { startLabelPhotoStartupScavenge } from '@/features/native/camera/labelPhotoStartup';
+import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLifecycleGate';
+import { AgePolicyGate } from '@/features/onboarding/AgePolicyGate';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
+import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { prepareSensitiveImageDiskCacheMigration } from '@/features/photos/sensitiveImageDiskCache';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
+import { AccountDeletionRecoveryGate } from '@/features/settings/AccountDeletionRecoveryGate';
+import { StoreTransactionNoticeHost } from '@/features/subscription/StoreTransactionNoticeHost';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
 import { initSentry } from '@/lib/observability/sentry';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
-import { StartupNavigationObserver } from '@/lib/observability/StartupNavigationObserver';
-import { QueryDateBoundaryObserver } from '@/lib/query/QueryDateBoundaryObserver';
 import { queryClient } from '@/lib/query/queryClient';
-import { PlaintextStagingStartupGate } from '@/lib/storage/PlaintextStagingStartupGate';
 import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
+import { startPlaintextStagingRecovery } from '@/lib/storage/plaintextStaging';
 import { useFontDecision } from '@/theme/fontLoader';
 
 initSentry();
 markStartupPhase('javascript_started');
-// Privacy migration only: older builds could have inherited expo-image's disk
-// cache default. PhotoImage also gates decrypt until this scrub proves complete.
+// Scrub any sensitive image residue created by older cache defaults. PhotoImage
+// independently fails closed until this retry-safe per-process migration passes.
 void prepareSensitiveImageDiskCacheMigration();
 void SplashScreen.preventAutoHideAsync();
-
-// Keep root notification handler startup minimal. Business-store/scheduling
-// code is evaluated as a deferred module after the private-data boundary mounts.
-const NotificationPreferenceScheduleReconciler = lazy(
-  () => import('@/features/notifications/NotificationPreferenceScheduleReconciler'),
-);
-
-function RootContent() {
-  // Set the local-notification handler + Android channel once at startup (docs/07 §9).
-  useEffect(() => {
-    void configureNotifications();
-  }, []);
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <QueryDateBoundaryObserver />
-      <AuthProvider>
-        <SessionBoundaryGate>
-          <PlaintextStagingStartupGate>
-            <AppLockProvider>
-              <PrivateDataAvailabilityGate>
-                <StartupNavigationObserver />
-                <Suspense fallback={null}>
-                  <NotificationPreferenceScheduleReconciler />
-                </Suspense>
-                <OnboardingProvider>
-                  <IntakeProvider>
-                    <OfflineSync />
-                    <StatusBar style={statusBarStyleForSurface('paper')} />
-                    <Stack screenOptions={{ headerShown: false }} />
-                  </IntakeProvider>
-                </OnboardingProvider>
-              </PrivateDataAvailabilityGate>
-            </AppLockProvider>
-          </PlaintextStagingStartupGate>
-        </SessionBoundaryGate>
-      </AuthProvider>
-    </QueryClientProvider>
-  );
-}
+void startPlaintextStagingRecovery().catch(() => undefined);
+void startLabelPhotoStartupScavenge().catch(() => undefined);
 
 export default function RootLayout() {
   const fontDecisionComplete = useFontDecision();
@@ -87,10 +53,50 @@ export default function RootLayout() {
     }
   }, [fontDecisionComplete]);
 
+  // Set the local-notification handler + Android channel once at startup (docs/07 §9).
+  useEffect(() => {
+    void configureNotifications();
+  }, []);
+
+  useEffect(() => {
+    void clearUnavailableCloudBackupPreference();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <RootContent />
+        <QueryClientProvider client={queryClient}>
+          <AccountDeletionRecoveryGate>
+            <AuthProvider>
+              <SessionBoundaryGate>
+                <AppLockProvider>
+                  <StoreTransactionNoticeHost />
+                  <PrivateDataAvailabilityGate>
+                    <AgePolicyGate
+                      bootstrap={
+                        <>
+                          <StatusBar style="dark" />
+                          <Stack screenOptions={{ headerShown: false }} />
+                        </>
+                      }
+                    >
+                      <HealthDataLifecycleGate>
+                        <OnboardingProvider>
+                          <IntakeProvider>
+                            <NotificationResponseHost />
+                            <OfflineSync />
+                            <StatusBar style="dark" />
+                            <Stack screenOptions={{ headerShown: false }} />
+                          </IntakeProvider>
+                        </OnboardingProvider>
+                      </HealthDataLifecycleGate>
+                    </AgePolicyGate>
+                  </PrivateDataAvailabilityGate>
+                </AppLockProvider>
+              </SessionBoundaryGate>
+            </AuthProvider>
+          </AccountDeletionRecoveryGate>
+        </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

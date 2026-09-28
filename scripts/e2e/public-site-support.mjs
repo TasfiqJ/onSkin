@@ -311,7 +311,7 @@ async function run() {
   let server = null;
   let browser = null;
   let client = null;
-  const userDataDir = path.join(tmpdir(), `routinekind-public-support-cdp-${process.pid}`);
+  const userDataDir = path.join(tmpdir(), `layerwell-public-support-cdp-${process.pid}`);
   const summary = {
     baseUrl,
     evidenceDir,

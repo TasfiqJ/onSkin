@@ -44,7 +44,7 @@ second physical unit even though the atomic store itself was working correctly.
 Focused matrix:
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/features/shelf/store.test.ts \
   src/features/shelf/mutations.addIdempotency.test.ts \
   src/features/shelf/mutations.test.ts \

@@ -1,0 +1,158 @@
+{
+  "date": "2026-07-13",
+  "surface": "Expo web",
+  "requestedViewport": {
+    "width": 375,
+    "height": 667
+  },
+  "observedViewport": {
+    "height": 668,
+    "width": 376
+  },
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8267 --clear",
+  "visualStartCommand": "npm --workspace apps/mobile run web -- --port 8270 --clear",
+  "environment": {
+    "trendCapability": "hard-disabled",
+    "supabase": "placeholder/missing by design",
+    "externalServicesUsed": false
+  },
+  "routes": {
+    "optin": {
+      "button": {
+        "height": 55.99211502075195,
+        "text": "Back to Progress",
+        "width": 327.7305908203125
+      },
+      "horizontalOverflowPx": 0,
+      "inputCount": 0,
+      "switchCount": 0,
+      "url": "http://localhost:8267/trend/optin",
+      "viewport": {
+        "height": 668,
+        "width": 376
+      },
+      "deferredHeadingCountAfterReload": 1,
+      "reloadUrl": "http://localhost:8267/trend/optin",
+      "recoveryUrl": "http://localhost:8267/progress"
+    },
+    "fairness": {
+      "button": {
+        "height": 55.99211502075195,
+        "text": "Back to Progress",
+        "width": 327.7305908203125
+      },
+      "enabledFairnessMarkers": 0,
+      "horizontalOverflowPx": 0,
+      "inputCount": 0,
+      "switchCount": 0,
+      "url": "http://localhost:8267/trend/fairness",
+      "viewport": {
+        "height": 668,
+        "width": 376
+      },
+      "deferredHeadingCountAfterReload": 1,
+      "reloadUrl": "http://localhost:8267/trend/fairness",
+      "recoveryUrl": "http://localhost:8267/progress"
+    }
+  },
+  "chromeVisualVerification": {
+    "date": "2026-07-13",
+    "captureMethod": "Human-driven Google Chrome 149 device emulation and DevTools Capture screenshot",
+    "cssViewport": {
+      "width": 375,
+      "height": 667
+    },
+    "devicePixelRatio": 2,
+    "screenshotPixels": {
+      "width": 750,
+      "height": 1334
+    },
+    "screenshots": {
+      "optin": {
+        "file": "post-fix-trend-optin.png",
+        "sha256": "8cb7830829c44df9640ba77a0688c295a83a3cad31a219cc820c51dfc63d8964"
+      },
+      "fairness": {
+        "file": "post-fix-trend-fairness.png",
+        "sha256": "8cb7830829c44df9640ba77a0688c295a83a3cad31a219cc820c51dfc63d8964"
+      }
+    },
+    "visibleInkPixelBounds": {
+      "badgeText": { "x": 65, "y": 272, "width": 61, "height": 17 },
+      "headingText": { "x": 49, "y": 387, "width": 639, "height": 125 },
+      "bodyText": { "x": 49, "y": 565, "width": 651, "height": 120 },
+      "detailText": { "x": 84, "y": 784, "width": 550, "height": 65 },
+      "recoveryLabel": { "x": 257, "y": 1197, "width": 239, "height": 29 }
+    },
+    "historyRecovery": {
+      "historyRoute": "http://localhost:8270/trend/fairness",
+      "activeRouteBeforeAction": "http://localhost:8270/trend/optin",
+      "action": "Back to Progress",
+      "observedFinalUrl": "http://localhost:8270/progress",
+      "result": "pass"
+    },
+    "sharedPixelsExpected": true,
+    "sharedPixelsReason": "Both exact routes deliberately render the same hard-disabled Trend refusal; route identity and recovery are recorded separately in URL evidence."
+  },
+  "dialogs": {
+    "optin": false,
+    "fairness": false
+  },
+  "warnErrorLogs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:46:42.100Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:46:42.100Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-13T15:46:42.117Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:50:48.705Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:50:48.706Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-13T15:50:48.723Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:51:22.902Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:51:22.903Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-13T15:51:22.906Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "unexpectedWarnErrorCount": 0
+}

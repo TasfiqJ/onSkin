@@ -9,7 +9,7 @@ Parent implementation checkpoint:
 
 Source: section 19 of `docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md`.
 
-Conclusion: OnSkin cannot yet be described as "maximized." The decision-free
+Conclusion: Layerwell cannot yet be described as "maximized." The decision-free
 repository implementation is exhausted at this checkpoint, but section 19
 explicitly rejects test-only, simulator, Expo Go, and web-only completion
 claims. The terminal-status audit surfaced two genuine local deployment gaps:

@@ -13,15 +13,97 @@
 - `[Needs Research]`: more external research required.
 - `[Open Question]`: unanswered blocker.
 
+## 0.1 COM-01A Commerce Admission Checkpoint
+
+[Decision] COM-01A is a source checkpoint for **literal zero admission**, not a
+commerce implementation or release approval. Current commerce authority,
+affiliate/retailer rail availability, publication authority, reviewed catalog
+and Stack availability, positive commerce-consent grant, provider/order polling,
+catalog or attribution reads, click/order recording, external purchase
+navigation, and commerce analytics are all unconditionally `false` or inert.
+Explicit refusal, withdrawal, cleanup, and deletion may remain so legacy state
+can be removed without creating admission. COM-01 through COM-07 are incomplete
+and launch-blocked. Any older positive commerce, demo, preview, creator-Stack,
+Where-to-buy, or partner-polling language is a future requirement only.
+
+[Researched] A positive successor needs an exact reviewed rail and publication
+authority, provider terms and data-flow approval, independent ranking, current
+App Privacy answers, and an ATT determination. Apple's
+[App Review Guideline 5.1.2(vi)](https://developer.apple.com/app-store/review/guidelines/)
+says data gathered from depth/facial-mapping tools, including Camera and Photo
+APIs, may not be used for marketing, advertising, or use-based data mining,
+including by third parties. A photo-derived product choice, Stack,
+replenishment prompt, affiliate link, or attribution event is therefore a
+high-risk path that must remain closed unless qualified counsel and Apple review
+the exact release; consent or replacing the input with an opaque token does not
+cure prohibited upstream use. Guideline 2.5.18 separately bars targeted or
+behavioral display advertising based on sensitive health/medical data.
+
+[Researched] The
+[FTC Endorsement Guides Q&A](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking)
+requires clear, conspicuous disclosure close to an affiliate recommendation and
+explains that “affiliate link” or “buy now” alone may be inadequate. The FTC's
+[native-advertising guidance](https://www.ftc.gov/business-guidance/resources/native-advertising-guide-businesses)
+also requires commercial content to be identifiable, while product/ranking and
+health-related claims still require substantiation. Exact data flows must be
+reviewed for the
+[FTC Health Breach Notification Rule](https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0),
+[Washington RCW 19.373](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true),
+[Nevada NRS 603A.400-.550](https://www.leg.state.nv.us/nrs/nrs-603a.html),
+and, when applicable,
+[California Civil Code § 1798.140](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.140.).
+Those laws can reach inferred/derived health data, sharing, sale, commercial
+interactions, or profiles and may require distinct consent, authorization,
+rights, contracts, or disclosures. These source controls and reviews cannot
+guarantee App Store acceptance, legal compliance, safety, product-market fit,
+or revenue.
+
+## 0.2 PAY-07 Entitlement Admission Source Checkpoint
+
+[Decision] The default and safest iOS release path uses an Apple-managed
+introductory offer configured in App Store Connect. The custom server-issued
+full-Pro no-card reverse trial is a conditional future mechanism, not an
+approved launch decision, and must remain disabled in the release candidate
+unless qualified counsel review, Apple correspondence if obtainable, reviewed
+anti-abuse controls, and exact hosted-authority evidence exist, and Apple accepts
+the exact submitted build for App Store distribution with the mechanism
+present. Counsel, correspondence, controls, evidence, and any prior review do
+not guarantee that acceptance.
+
+[Confirmed] PAY-07 is a source-hardening checkpoint, not live payment or release
+approval. Client-created reverse-trial grants are removed, positive entitlement
+fixtures are confined to Expo web development, unverified RevenueCat positives
+are rejected, and purchase-success claims fail closed without fresh exact
+authority. The Edge grant endpoint also refuses hosted, production, and staging
+projects before authentication, admitting only an explicit development runtime
+on an exact HTTP loopback Supabase origin. PAY-06 and PAY-07 remain incomplete
+pending production RevenueCat
+Trusted Entitlements, real StoreKit products and offering, hosted authority,
+sandbox/TestFlight and physical-iPhone lifecycle evidence, professional review,
+and Apple's independent App Review.
+
 ## 1. Executive Summary
 
 ### Final Project Name Recommendation
 
-[Decision] Rebrand before launch. Use `RoutineKind` as the working name until trademark/domain/social clearance is complete.
+[Decision] Rebrand before launch. Use `Layerwell` only as the working
+engineering identity and first counsel candidate. The current sequence for
+counsel review is `Layerwell`, `Ritunera`, then lower-confidence `Ritualoom`;
+`Rituvia` is suspended. No candidate is final until founder-approved, covered
+by qualified counsel's written decision, and supported by authenticated
+reservation evidence.
 
-[Confirmed] The current code and docs use `OnSkin`, `onskin`, `onskin://`, and `com.onskin.app`. Existing public competitors use the exact `OnSkin` name in the same skincare/cosmetic scanner category.
+[Confirmed] Current launch-facing local/native defaults use `Layerwell`.
+Remaining `Layerwell`, `layerwell`, `layerwell://`, and `com.layerwell.app` references are
+classified internal namespaces, fail-closed compatibility guards, or historical
+records; `npm run brand:audit:strict` enforces that boundary. Existing public
+competitors still use the exact `Layerwell` name in the same skincare/cosmetic
+scanner category, so the legacy identity remains launch-blocked.
 
-[Researched] The public OnSkin listing describes a beauty product scanner with over 8M users and a 2M product database. Source: [OnSkin App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985), [OnSkin website](https://onskin.com/).
+[Researched] A same-name incumbent tied to the rejected prior working identity
+described a beauty product scanner with large user and product-database claims.
+Exact sources remain in the immutable brand evidence; this does not describe or
+assess Layerwell.
 
 ### One-Sentence Product Description
 
@@ -78,7 +160,7 @@ Users add products by barcode, OCR/search, or manual entry. The app turns those 
 ### Adjacent Categories
 
 - AI skin analysis apps: Thea, Nolla Skin, Skin Bliss.
-- Ingredient scanners: OnSkin, Yuka, Think Dirty, INCI Beauty, EWG Skin Deep.
+- Ingredient scanners: Layerwell, Yuka, Think Dirty, INCI Beauty, EWG Skin Deep.
 - Routine builders: SkinSort, HadaBuddy, Skin Bliss.
 - Commerce/deal apps: Thea, affiliate beauty tools.
 - Medical skincare/telehealth: Nolla Skin and prescription acne/rosacea services.
@@ -99,11 +181,17 @@ owned products -> shelf intelligence -> reviewed conflicts -> routine plan -> da
 
 **Project name ideas**
 
-- [Decision] RoutineKind
-- [Needs Research] ShelfWise
-- [Needs Research] LayerWise
-- [Needs Research] RoutineCabinet
-- [Needs Research] SkinCycle Journal
+- [Decision under uncertainty] `Layerwell` — first counsel candidate and
+  working engineering identity; exact YouTube handle is occupied and the
+  `Routine` field is crowded.
+- [Decision under uncertainty] `Ritunera` — backup 1; current UK and public
+  handle leads require counsel review.
+- [Decision under uncertainty] `Ritualoom` — lower-confidence backup 2; the
+  `RITUAL` beauty/wellness field is crowded.
+- [Decision] `Rituvia` — suspended and retained only as an adverse comparator.
+
+The governed current research record is
+[`BRAND-03-knockout-search-record-2026-07-12.md`](./hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md).
 
 **One-sentence description**
 
@@ -148,7 +236,7 @@ People buy skincare products faster than they learn how to use them. This app he
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | Exact problem         | [Decision] Users do not know how to use owned skincare products together consistently and safely.                                       |
 | Why it matters        | [Assumption] Wrong timing and overuse cause irritation, waste, and inconsistent behavior.                                               |
-| Current solutions     | [Researched] OnSkin, Yuka, Think Dirty, SkinSort, HadaBuddy, Skin Bliss, Thea, Nolla Skin, Reddit, TikTok, Google.                      |
+| Current solutions     | [Researched] Layerwell, Yuka, Think Dirty, SkinSort, HadaBuddy, Skin Bliss, Thea, Nolla Skin, Reddit, TikTok, Google.                      |
 | Why painful           | Existing tools often score or scan products but do not always convert owned products into a daily plan.                                 |
 | Cost of doing nothing | More unused products, avoidable irritation, continued confusion, subscription churn.                                                    |
 | Trigger events        | Retinol purchase, acid irritation, new product haul, pregnancy/sensitivity concern, expiry concern, TikTok trend, dermatologist advice. |
@@ -255,7 +343,7 @@ Test $29.99, $49.99, and $59.99 annual. Use actual checkout or paid-beta deposit
 | Paid tier       | Full routine, full conflict checks, progress, reminders, Ask depth                   |
 | Usage-based     | Avoid for consumer V1                                                                |
 | Team/enterprise | Later: esthetician/client routine planner                                            |
-| Best hypothesis | [Decision] $49.99/year annual-first, $8.99-$9.99 monthly anchor, 7-day reverse trial |
+| Best hypothesis | [Decision under uncertainty] $49.99/year annual-first, $8.99-$9.99 monthly anchor, Apple-managed introductory offer by default; no-card reverse trial only as a gated future exception |
 
 ### 3.10 Go / Narrow / Pivot / Stop
 
@@ -281,7 +369,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 
 | Name               | Source                                                                                                                                                            | What it does                                                                                 | Pricing public?                   | Strengths                                                 | Weaknesses / gaps                                                                  | Risk              |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------- |
-| OnSkin             | [App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985), [site](https://onskin.com/)                                                | Cosmetic scanner, ingredient safety, product database                                        | IAP visible; exact pricing varies | Exact name, scanner SEO, claimed 8M users and 2M products | Scanner/safety-score positioning, not obviously a private routine operating system | Critical          |
+| Legacy same-name scanner | See immutable brand evidence | Cosmetic scanner, ingredient safety, product database | IAP visible; exact pricing varies | Conflict applied to the rejected prior working identity, not Layerwell | Scanner/safety-score positioning, not obviously a private routine operating system | Historical |
 | HadaBuddy          | [site](https://www.hadabuddy.com/), [FAQ](https://www.hadabuddy.com/faq)                                                                                          | Scans shelf, builds 7-day AM/PM routine, AI advisor, conflict detection                      | $3.99/mo or $29.99/yr Pro         | Closest direct workflow competitor                        | AI framing, lower price anchors market, unclear review rigor from public pages     | Critical          |
 | Thea               | [App Store](https://apps.apple.com/us/app/thea-1-beauty-app/id6523434295)                                                                                         | AI beauty expert, face scan, routine analysis, product/deal finding                          | IAP                               | Strong AI/beauty/deal positioning                         | More shopping/AI, less privacy-first shelf habit                                   | High              |
 | Nolla Skin         | [App Store](https://apps.apple.com/us/app/nolla-skin/id6741805934), [site](https://www.nollahealth.com/)                                                          | Clinician-backed medical skincare, treatment and medication                                  | Needs research                    | Medical care credibility                                  | Different category; higher regulatory burden                                       | Medium            |
@@ -293,7 +381,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 
 ### 4.3 Differentiation Map
 
-| Capability                               | This Product Target | OnSkin                           | HadaBuddy | SkinSort          | Skin Bliss   | Yuka/Think Dirty    |
+| Capability                               | This Product Target | Layerwell                           | HadaBuddy | SkinSort          | Skin Bliss   | Yuka/Think Dirty    |
 | ---------------------------------------- | ------------------- | -------------------------------- | --------- | ----------------- | ------------ | ------------------- |
 | Barcode/product scan                     | Yes                 | Yes                              | Yes       | Yes               | Yes          | Yes                 |
 | Manual shelf as core object              | Yes                 | Some                             | Yes       | Some              | Some         | Lists/saves         |
@@ -363,7 +451,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 | Competitor pricing | [Researched] HadaBuddy Pro is publicly listed at $3.99/month or $29.99/year. Think Dirty premium has been reported at $59.99/year. App Store competitors show IAP ranges. |
 | Likely model       | [Decision] Annual-first subscription                                                                                                                                      |
 | Free tier          | [Decision] Useful but limited shelf/routine preview                                                                                                                       |
-| Trial              | [Decision] 7-day reverse trial, then annual carded trial tests as needed                                                                                                  |
+| Trial              | [Decision] Apple-managed introductory offer by default; no-card reverse trial is a conditional future exception subject to the PAY-07 gates                                                                                                  |
 | Upgrade triggers   | First useful conflict, full routine unlock, unlimited checks, photo timeline, reminders                                                                                   |
 | Pricing risk       | HadaBuddy anchors low at $29.99/year; premium pricing must prove trust and retention                                                                                      |
 
@@ -377,7 +465,7 @@ Sources: [HadaBuddy](https://www.hadabuddy.com/), [HadaBuddy FAQ](https://www.ha
 | Medical claims       | App review/legal risk          | Cosmetic language, clinical review, disclaimers          |
 | Unreviewed rules     | Safety/trust risk              | Reviewer metadata before production exposure             |
 | Catalog licensing    | ODbL/source obligations        | Attribution, source memos, contribution posture          |
-| Commerce             | Trust/privacy risk             | Separate consent, disclosure, independence               |
+| Commerce             | Trust/privacy/App Review risk  | COM-01A literal-zero gate; reviewed rail/authority, dataflow, ATT/privacy labels, disclosure, independent ranking, counsel |
 | Community            | UGC moderation risk            | Human moderation before posting                          |
 
 ### 4.8 MVP Reality Check
@@ -503,7 +591,7 @@ and remain useful only for product detail.
 
 Feature 1: Rebrand And Identity Migration
 
-- Feature summary: Replace public `OnSkin` identity with cleared brand.
+- Feature summary: Replace public `Layerwell` identity with cleared brand.
 - User problem solved: Avoid confusion with incumbent app.
 - Business reason: Prevent legal, ASO, support, and store-review risk.
 - Priority: Must-have.
@@ -517,9 +605,9 @@ Feature 1: Rebrand And Identity Migration
 - Frontend/UI needs: copy/branding replacement.
 - Security/privacy concerns: policy links must match final legal entity.
 - Analytics events: brand migration QA only.
-- Acceptance criteria: no public `OnSkin` references in launch assets.
+- Acceptance criteria: no public `Layerwell` references in launch assets.
 - Edge cases: internal package names may remain temporarily if not user-facing.
-- Codex implementation notes: search for `OnSkin`, `onskin`, `com.onskin.app`.
+- Codex implementation notes: search for `Layerwell`, `layerwell`, `com.layerwell.app`.
 - Open questions: final cleared mark.
 
 Feature 2: Shelf Intake
@@ -571,7 +659,8 @@ Feature 6: Photo Progress
 
 Feature 7: Paywall And Entitlements
 
-- Feature summary: RevenueCat annual-first Pro with reverse trial.
+- Feature summary: RevenueCat annual-first Pro with an Apple-managed introductory
+  offer by default; the no-card reverse trial is a conditional future exception.
 - Priority: Must-have.
 - MVP inclusion: Yes.
 - Complexity: High.
@@ -611,6 +700,24 @@ Feature 11: Commerce
   disclosure, reconciliation, and device gates pass.
 - Complexity: High.
 - Dependencies: consent, FTC disclosure, partner, attribution.
+- Current state: COM-01A is a **literal zero admission** source checkpoint.
+  Commerce authority, rail/publication authority, catalog/Stack reads, positive
+  consent, provider poll, click/order recording, external navigation, and
+  analytics are unconditionally closed; only refusal, withdrawal, cleanup, and
+  deletion may remain. COM-01 through COM-07 are incomplete and launch-blocked.
+  All positive behavior described here or in older commerce specs is a future
+  requirement, not current runtime authority.
+- Positive successor gates: executed provider terms; exact first/third-party
+  data-flow and recipient inventory; ATT and App Privacy decisions; adjacent
+  affiliate/native-ad disclosure; commission-independent product, retailer, and
+  Stack ranking; claims and HBNR review; Washington and Nevada consumer-health
+  review; applicable California review; live reconciliation; accessibility,
+  network, archive, and supported-iPhone evidence. Apple Guideline 5.1.2(vi)
+  requires photo/camera-derived commerce to remain excluded unless the exact
+  design receives qualified legal and Apple review; consent or an opaque token
+  alone is insufficient.
+- Assurance boundary: source refusal is not COM-01 completion and supplies no
+  App Store, legal, safety, demand, or revenue guarantee.
 
 Feature 12: Community/Skin Notes
 
@@ -629,6 +736,20 @@ Feature 13: Trend Insights
   privacy, device, and professional-review gates pass.
 - Complexity: High.
 - Dependencies: fairness/device/legal review.
+- Current state: `in_progress` zero-admission source checkpoint. No current
+  engine or result issuer exists, so environment, development, E2E, consent,
+  positive-delta, tone, legacy-state, fixture, domain, or QA inputs can produce
+  a Trend result. The private photo timeline and no-score explanation remain;
+  Trend consent grant, processing, result copy, and content analytics stay
+  closed. See
+  [`PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`](./hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+- Decision crosswalk: feature-document `D-046` through `D-050` map to root
+  `D-068` through `D-072`. The former root `D-069` implementation note that a
+  stub could render `consistent` is superseded; its on-device-only rule remains.
+- Open blockers: `B-AI-ONDEVICE`, `B-AI-FAIRNESS`, and `B-AI-LEGAL` are
+  independent. Source refusal does not close PHOTO-05, PHOTO-06, PHOTO-07,
+  professional review, archive/local-only proof, supported-iPhone evidence, or
+  App Review.
 
 Feature 14: Widgets/Live Activities
 
@@ -690,7 +811,7 @@ Secondary routes:
 6. Analyzing/reveal.
 7. First useful shelf/routine insight.
 8. Today routine.
-9. Paywall after value or reverse trial.
+9. Paywall after value, with the Apple-managed introductory offer when eligible.
 
 ### Empty States
 
@@ -718,9 +839,12 @@ No dead ends. Every scan/catalog/camera failure must offer manual add or safe ex
 ```text
 Expo mobile app
   -> local private storage for shelf, photos, completions
-  -> Supabase Auth/Postgres/RLS for account, profiles, catalog, entitlements
-  -> Supabase Edge Functions for catalog, deletion/export, RevenueCat webhook
-  -> RevenueCat SDK for IAP/subscriptions
+  -> central exact-session admission for authenticated Supabase requests
+  -> Supabase Auth/Postgres/RLS for account, catalog, publication fences
+  -> RevenueCat entitlement projection plus a dormant, separately gated
+     no-card reverse-trial projection for any future approved exception
+  -> Supabase Edge Functions for deletion/export, webhook, grants, reconciliation
+  -> RevenueCat SDK for IAP/subscriptions behind a durable transaction journal
   -> PostHog for consented analytics
   -> Sentry for scrubbed crash reporting
   -> Open Beauty Facts/CosIng import pipelines for catalog data
@@ -750,6 +874,46 @@ Expo mobile app
 - RevenueCat speeds billing, but store setup still blocks launch.
 - Local-first privacy is strong, but multi-device sync is deferred.
 
+### 2026-07-15 Integrated Source Checkpoint
+
+[Confirmed] The prior fully verified source checkpoint has 53 migrations through
+`20260715000054_health_consent_withdrawal_lifecycle.sql`. The combined local verification
+passed two clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle),
+database lint, an empty shadow diff, 77/77 public tables with RLS, and an exact
+54-private-table classification (40 directly queryable + 14 sealed). Phase 9 health-consent verification passed 104 Deno tests
+plus 7 evidence tests. The authority-lane rehearsals
+pass on PostgreSQL 15 and 17. Focused server suites pass 20/20 subscription reconciliation,
+8/8 subscription grants, 20/20 atomic RevenueCat webhook, and 215/215 durable deletion;
+the focused mobile server contract passes 2/2. The mobile workspace passes 266 test files /
+3,026 tests plus typecheck and lint.
+
+[Confirmed] This checkpoint centralizes exact-session remote admission and controlled
+refresh, synchronously closes Supabase and RevenueCat publication during account
+replacement/deletion, separates the RevenueCat and no-card grant authorities, projects
+both through an owner-derived RPC, reconciles only against a fresh provider
+`request_date`, and durably journals native purchase/restore admission.
+
+[Open Question] This is source-only evidence. Hosted migrations, live Supabase/RevenueCat
+and App Store sandbox behavior, physical-iPhone QA, professional review, final privacy/
+legal approval, and App Review remain open. The subsequent migration-0055 source
+candidate implements Apple authorization-code plus state/nonce capture, a versioned
+encrypted token vault, daily token validation, canonical signed server notifications,
+native credential invalidation, terminal event-before-identity reconciliation before code
+exchange, and an authoritative exact-session access fence.
+Hosted cutover, primary-App-ID delivery, Vault/Cron continuity, existing-account
+recapture, key rotation/rollback, stale-JWT denial, and physical-iPhone/TestFlight proof
+remain open. Successful daily validation advances the subject digest and freshly seals
+the refresh token under the current keys, but dormant or failing rows still require
+zero-row evidence, recapture/reauthorization, or lifecycle retirement. `TRANSFERRED`
+fails closed as `credential_transferred`, but no transfer/migration policy is approved.
+
+[Confirmed] The migration-0055 candidate subsequently passed two clean resets,
+exact 54-migration history through 0055, the full structural pgTAP suite plus
+114/114 Apple lifecycle assertions, schema lint, an empty shadow diff, temporary
+type generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
+Apple auth work lane. This closes the local source replay gate only; every hosted,
+Apple-provider, device, professional-review, and App Review gate above remains open.
+
 ## 11. Data Model Summary
 
 Main entities:
@@ -769,13 +933,17 @@ Main entities:
 - `photos`
 - `notification_preferences`
 - `entitlements`
+- `reverse_trial_grants`
 - `subscription_events`
+- `account_publication_leases`
 - `catalog_reports`
 - `analytics_events`
 
 Data retention:
 
-- User-owned data deleted on account deletion.
+- The source deletion lifecycle covers registered user-owned data and advertises an
+  honest provider-verification window of up to 29 days; live end-to-end erasure proof
+  remains a launch gate.
 - Photos local-only by default.
 - Catalog provenance retained.
 - Subscription events retained for finance/legal reconciliation.
@@ -787,11 +955,18 @@ Rules:
 
 - Owner-scoped RLS on all user tables.
 - Service-role only for trusted backend jobs.
+- All authenticated mobile Supabase traffic uses one exact-session admission gate and
+  controlled refresh path; account deletion, owner replacement, invalid credential
+  state, or lease failure closes new remote/provider publication synchronously.
 - No sensitive health/photo data in analytics or logs.
 - Granular consent for health data, photos, analytics, commerce, cloud Ask, community.
+- Health-consent withdrawal must have a reviewed non-destructive design; deleting the
+  entire account is not an acceptable substitute for withdrawing one consent purpose.
 - Data export and deletion must work against live backend.
 - Do not expose unreviewed rules in production.
 - Do not store faceprints, embeddings, identity vectors, or cloud photo analysis by default.
+- Exact privacy-report, privacy-policy, support, and other App Store URLs plus stable
+  non-expiring review/demo access must be verified in the submitted candidate.
 
 Compliance areas:
 
@@ -816,7 +991,7 @@ Compliance areas:
 
 ### Paid Tier
 
-RoutineKind Pro:
+Layerwell Pro:
 
 - Unlimited conflict checks.
 - Full routine builder.
@@ -835,8 +1010,20 @@ RoutineKind Pro:
 
 ### Trial Strategy
 
-- 7-day reverse trial with no card after onboarding value.
-- Optional store-backed 14-day trial test after RevenueCat live.
+- Default the iOS release candidate to an Apple-managed introductory offer
+  configured in App Store Connect after RevenueCat and the real Store products
+  are live.
+- Treat the 7-day no-card reverse trial as a conditional future exception, not
+  an approved launch mechanism. Keep it disabled unless the PAY-07 legal,
+  Apple-input, anti-abuse, hosted-authority, exact-build, and App Review gates
+  are satisfied.
+- If a future approved release retains the no-card grant, keep it in
+  `reverse_trial_grants`; never write it into or revoke the ordered RevenueCat
+  `entitlements` projection. Read both through the owner-derived no-argument
+  projection RPC.
+- On iOS, billing and cancellation copy names the App Store only. Purchase and restore
+  admission is durably journaled so an unresolved native transaction blocks a repeat
+  purchase and directs the user to restore instead.
 
 ### Upgrade Triggers
 
@@ -870,8 +1057,6 @@ RoutineKind Pro:
 - `scan_matched`
 - `scan_no_match`
 - `first_useful_insight`
-- `conflict_detected`
-- `conflict_detail_viewed`
 - `routine_created`
 - `first_checkoff_completed`
 - `routine_checkoff_completed`
@@ -882,7 +1067,13 @@ RoutineKind Pro:
 - `trial_started`
 - `purchase_completed`
 - `subscription_cancel_intent`
-- `share_card_exported`
+
+Conflict existence, conflict-detail access, and conflict-resolution choices are
+not analytics events. Even a property-free event from a conflict-only surface
+reveals health-adjacent shelf state. Keep those interactions on device and use
+only the generic, non-clinical first-value and routine events above. The current
+conflict-card exporter and its conflict-only public-link route are analytics-free
+for the same reason.
 
 ### Dashboards
 
@@ -903,8 +1094,11 @@ Goal: remove existential brand risk.
 
 Done criteria:
 
-- final name selected
-- counsel/domain/social checks recorded
+- final name is founder-approved and covered by qualified counsel's written
+  decision for the exact use, countries, classes, and conditions
+- authenticated domain, store-name, package, scheme, and public-handle
+  reservations are recorded; each receipt proves only its specific reservation
+  and not trademark availability or Apple acceptance
 - public code/config/copy migration plan
 
 ### Phase 1: Launch Gates
@@ -916,8 +1110,10 @@ Done criteria:
 - reviewer signoff path
 - live Supabase staging
 - RevenueCat sandbox
-- final policy URLs
+- exact final policy/support/privacy-report URLs and non-expiring review/demo access
 - device QA plan
+- reviewed non-destructive health-consent withdrawal and complete Sign in with Apple
+  server credential lifecycle
 
 ### Phase 2: Core Workflow
 
@@ -937,8 +1133,10 @@ Goal: test willingness to pay.
 Done criteria:
 
 - paywall after value
-- reverse trial works
-- RevenueCat webhook reconciles
+- Apple-managed introductory-offer admission works; any future approved no-card
+  reverse-trial exception remains independent from RevenueCat entitlements
+- RevenueCat webhook ordering and bounded provider reconciliation work
+- durable purchase/restore journal prevents unsafe repeat transactions
 - PostHog funnel dashboard works
 
 ### Phase 4: Closed Beta
@@ -997,7 +1195,7 @@ Done criteria:
 
 ### Market Risks
 
-- Existing OnSkin owns the scanner/name lane.
+- Existing Layerwell owns the scanner/name lane.
 - HadaBuddy attacks the same shelf-to-routine workflow at lower price.
 - AI beauty apps may capture attention with bolder claims.
 
@@ -1007,11 +1205,14 @@ Done criteria:
 - Camera/OCR unreliable on devices.
 - Supabase RLS mistakes.
 - RevenueCat entitlement bugs.
+- Old clients bypassing the publication/authority-lane rollout.
+- Incomplete Sign in with Apple token and server-notification lifecycle.
 - Local photo storage edge cases.
 
 ### Legal/Privacy Risks
 
 - Consumer health data handling.
+- Destructive or ambiguous health-consent withdrawal.
 - Face/photo data trust.
 - Unreviewed medical-adjacent claims.
 - ODbL/source obligations.
@@ -1026,6 +1227,8 @@ Done criteria:
 - What exact free tier creates word-of-mouth without killing conversion?
 - What catalog coverage threshold is acceptable?
 - Which beta metrics kill or greenlight public launch?
+- What approved Apple account-transfer policy applies after fail-closed
+  `credential_transferred`?
 
 ## 18. Final Build Order
 
@@ -1063,8 +1266,8 @@ No major strategy, architecture, pricing, privacy, or launch claim change should
 - [Apple App Store Small Business Program](https://developer.apple.com/app-store/small-business-program/)
 - [Google Play service fees](https://support.google.com/googleplay/android-developer/answer/112622?hl=en)
 - [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
-- [OnSkin App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985)
-- [OnSkin website](https://onskin.com/)
+- [Layerwell App Store](https://apps.apple.com/kz/app/layerwell-beauty-product-scanner/id1630768985)
+- Immutable prior-name competitor sources in `docs/brand-evidence.md`
 - [HadaBuddy](https://www.hadabuddy.com/)
 - [HadaBuddy FAQ](https://www.hadabuddy.com/faq)
 - [Thea App Store](https://apps.apple.com/us/app/thea-1-beauty-app/id6523434295)

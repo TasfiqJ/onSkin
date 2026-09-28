@@ -4,15 +4,39 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import {
   command,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
   normalizeNamedSignoff,
   normalizeProductionUrl,
 } from '../phase9/lib.mjs';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
+import {
+  atomicWriteReleaseQaOutputs,
+  canonicalReleaseRepoPath,
+  captureReleaseQaSnapshot,
+  runTrustedGit,
+  verifyReleaseQaSnapshot,
+} from '../phase9/release-qa-integrity.mjs';
+import {
+  auditGovernedEvidenceChain,
+  captureGovernedEvidenceWorkingBindings,
+  renderGovernedEvidenceLedger,
+  validateGovernedEvidenceChainBinding,
+  verifyGovernedEvidenceWorkingBindings,
+} from '../launch/governed-evidence-chain.mjs';
+import { parseCatalogControlJson } from './source-policy.mjs';
+import {
+  BETA_COVERAGE_EVIDENCE_KEYS,
+  validateBetaCoverageEvidenceInventory,
+} from './beta-coverage-packet-contract.mjs';
+import {
+  parsePinnedBetaLaunchContract,
+  validateCommittedBetaCoverageReplay,
+} from './beta-coverage-committed-check.mjs';
 
 const root = process.cwd();
-const launchContract = loadLaunchContract(root);
-const strict = process.argv.includes('--strict');
+const check = process.argv.includes('--check');
+const strict = process.argv.includes('--strict') || check;
+let launchContract = null;
 const positional = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 const inputPath = resolve(
   root,
@@ -30,13 +54,16 @@ const mdOutputPath = jsonOutputPath.replace(/\.json$/i, '.md');
 const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
   relative(root, path).replace(/\\/g, '/'),
 );
-const generatedOutputPaths = [
-  ...reportOutputPaths,
-  'docs/phase-4/generated/catalog-qa-report.json',
-  'docs/phase-4/generated/catalog-qa-report.md',
+const defaultReportOutputPaths = [
+  'docs/phase-4/generated/beta-coverage-report.json',
+  'docs/phase-4/generated/beta-coverage-report.md',
 ];
-
+const canonicalReportOutputs =
+  reportOutputPaths.length === defaultReportOutputPaths.length &&
+  reportOutputPaths.every((path, index) => path === defaultReportOutputPaths[index]);
+const pinnedSemantics = check || (strict && canonicalReportOutputs);
 const sourceHashPaths = [
+  '.gitignore',
   'package.json',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
@@ -44,6 +71,17 @@ const sourceHashPaths = [
   'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
   'scripts/phase4/beta-coverage-report-smoke.mjs',
+  'scripts/phase4/beta-coverage-packet-contract.mjs',
+  'scripts/phase4/beta-coverage-packet-contract.test.mjs',
+  'scripts/phase4/beta-coverage-committed-check.mjs',
+  'scripts/phase4/beta-coverage-committed-check.test.mjs',
+  'scripts/phase4/source-policy.mjs',
+  'scripts/phase4/source-policy.test.mjs',
+  'scripts/phase4/catalog-curation-contract.mjs',
+  'scripts/phase4/catalog-curation-contract.test.mjs',
+  'scripts/phase4/build-catalog-curation-envelope.mjs',
+  'scripts/phase4/catalog-coverage-quality-report.mjs',
+  'scripts/phase4/catalog-coverage-quality-report.test.mjs',
   'scripts/phase4/catalog-qa-report.mjs',
   'scripts/phase4/catalog-qa-report-smoke.mjs',
   'supabase/functions/catalog-report/index.ts',
@@ -51,13 +89,36 @@ const sourceHashPaths = [
   'supabase/functions/catalog-report/privacy.test.ts',
   'supabase/functions/deno.lock',
   'scripts/phase9/lib.mjs',
+  'scripts/phase9/release-qa-integrity.mjs',
+  'scripts/phase9/release-qa-integrity.test.mjs',
+  'scripts/launch/governed-evidence-chain.mjs',
+  'scripts/launch/governed-evidence-chain.test.mjs',
   'docs/FOR_TAS_TO_DO.md',
+  'docs/phase-3/consent-matrix.md',
+  'docs/phase-3/data-inventory.md',
+  'docs/store-privacy-inventory.md',
   'docs/phase-4/beta-coverage-input.template.json',
+  'docs/phase-4/beta-shelf-corpus.template.json',
   'docs/phase-4/beta-coverage-report.md',
+  'docs/phase-4/catalog-coverage-quality-targets.template.json',
+  'docs/phase-4/catalog-curation-review.template.json',
+  'docs/phase-4/catalog-cat02-membership-proof.template.json',
+  'docs/phase-4/catalog-curation-database-readback.template.json',
+  'docs/phase-4/catalog-curation-release-runbook.md',
   'docs/phase-4/generated/source-worklist.json',
   'docs/phase-4/generated/source-worklist.md',
   'docs/phase-4/observability-dashboard.md',
   'docs/phase-4/phase-4-exit-review.md',
+  'supabase/migrations/20260717000058_catalog_launch_curation.sql',
+  'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
+  'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+  'supabase/tests/database/catalog_launch_curation.test.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
+  'supabase/tests/database/cat07_truthful_freshness.test.sql',
   'docs/phase-4/generated/catalog-qa-report.json',
   'docs/phase-4/generated/catalog-qa-report.md',
   'docs/phase-10/beta-event-schema.md',
@@ -91,7 +152,7 @@ function hashRepoFile(path) {
 }
 
 function gitStatusExcludingGeneratedReport() {
-  return gitStatusExcludingGeneratedEvidence(generatedOutputPaths);
+  return gitStatusExcludingPaths(reportOutputPaths);
 }
 
 function asObject(value) {
@@ -99,18 +160,13 @@ function asObject(value) {
 }
 
 function numberValue(value) {
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : null;
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
-function booleanValue(value) {
-  if (typeof value === 'boolean') return value;
-  const normalized = String(value ?? '')
-    .trim()
-    .toLowerCase();
-  if (normalized === 'true') return true;
-  if (normalized === 'false') return false;
-  return null;
+function proportionValue(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
+    ? value
+    : null;
 }
 
 function textValue(value) {
@@ -149,21 +205,88 @@ function isRealUrl(value) {
   return Boolean(normalizeProductionUrl(value));
 }
 
+let sourceSnapshot = null;
+let checkInputRepoPath = null;
+const initialPinnedSnapshotErrors = [];
+if (pinnedSemantics) {
+  try {
+    if (check && !canonicalReportOutputs) {
+      throw new Error('beta coverage check is restricted to the canonical committed output pair');
+    }
+    checkInputRepoPath = canonicalReleaseRepoPath(root, repoRelative(inputPath));
+    sourceSnapshot = captureReleaseQaSnapshot({
+      root,
+      inputPaths: check ? [...sourceHashPaths, ...reportOutputPaths] : sourceHashPaths,
+      workingInputPaths: [checkInputRepoPath],
+      outputPaths: check ? [] : reportOutputPaths,
+      maxInputBytes: 64 * 1024 * 1024,
+      maxAggregateInputBytes: 512 * 1024 * 1024,
+      optionalWorkingInputMaxBytes: 1_048_576,
+    });
+    initialPinnedSnapshotErrors.push(...sourceSnapshot.integrityIssues);
+    if (sourceSnapshot.gitStatus !== '') {
+      initialPinnedSnapshotErrors.push(
+        check
+          ? 'beta coverage check requires a clean worktree and index'
+          : 'strict beta coverage publication requires a clean non-output worktree and index',
+      );
+    }
+  } catch (error) {
+    console.error(
+      `FAIL Beta coverage pinned source snapshot could not be captured: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+}
+if (pinnedSemantics) {
+  try {
+    launchContract = parsePinnedBetaLaunchContract(
+      sourceSnapshot.records['docs/hugeToDo/launch-contract.json'],
+    );
+  } catch (error) {
+    console.error(
+      `FAIL Pinned launch contract could not be loaded: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+} else {
+  launchContract = loadLaunchContract(root);
+}
+
 const codeErrors = [];
 const evidenceBlockers = [];
 const warnings = [];
+const authorityLimitations = [
+  'This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires the signed catalog-curation contract and privacy-minimized holdout report.',
+];
+if (pinnedSemantics && !check) {
+  for (const error of initialPinnedSnapshotErrors) {
+    codeErrors.push(`Pinned beta source snapshot: ${error}.`);
+  }
+}
 let input = null;
 let parseError = null;
+const mountedInputRecord = pinnedSemantics
+  ? sourceSnapshot.workingRecords[checkInputRepoPath]
+  : null;
+const inputExists = pinnedSemantics ? mountedInputRecord?.kind === 'file' : existsSync(inputPath);
 
-if (existsSync(inputPath)) {
+if (inputExists) {
   try {
-    input = JSON.parse(readFileSync(inputPath, 'utf8'));
+    input = parseCatalogControlJson(
+      pinnedSemantics ? mountedInputRecord.bytes : readFileSync(inputPath),
+      'Legacy beta coverage input',
+    );
   } catch (error) {
     parseError = error instanceof Error ? error.message : String(error);
   }
 }
 
-if (!existsSync(inputPath)) {
+if (!inputExists) {
   evidenceBlockers.push(
     'Missing beta coverage input artifact. Set PHASE4_BETA_COVERAGE_INPUT or copy docs/phase-4/beta-coverage-input.template.json to docs/phase-4/beta-coverage-input.json and replace it with real beta exports.',
   );
@@ -210,7 +333,7 @@ const wrongMatchMatchedScans =
   numberValue(wrongMatch.matchedScans) ?? (barcodeMatched ?? 0) + (searchMatched ?? 0);
 const wrongMatchRate = rate(wrongMatchTotal, wrongMatchMatchedScans);
 const unknownTokenRate =
-  numberValue(parser.unknownTokenRate) ?? numberValue(catalog.parserUnknownTokenRate);
+  proportionValue(parser.unknownTokenRate) ?? proportionValue(catalog.parserUnknownTokenRate);
 const lowerThanUsableUsed =
   numberValue(recommendations.lowerThanUsableUsedInRecommendations) ??
   numberValue(catalog.lowerThanUsableUsedInRecommendations);
@@ -231,15 +354,17 @@ const topWrongMatches = arrayValue(catalog.topWrongMatches);
 const topUnknownTokens = arrayValue(parser.topUnknownTokens ?? catalog.topUnknownTokens);
 const categoryCoverage = arrayValue(catalog.categoryCoverage);
 const expectedRecommendationProducts = arrayValue(catalog.expectedRecommendationProducts);
-const realBetaData = booleanValue(evidence.realBetaData);
+const realBetaData = evidence.realBetaData === true;
 const signedOffBy = normalizeNamedSignoff(evidence.signedOffBy);
 const dashboardUrl = normalizeProductionUrl(evidence.dashboardUrl ?? evidence.catalogDashboardUrl);
 const supportDashboardUrl = normalizeProductionUrl(evidence.supportDashboardUrl);
 const analyticsDashboardUrl = normalizeProductionUrl(evidence.analyticsDashboardUrl);
-const sourceExportHash = cleanText(evidence.sourceExportHash);
+const sourceExportHash = /^[0-9a-f]{64}$/i.test(String(evidence.sourceExportHash ?? ''))
+  ? String(evidence.sourceExportHash).toLowerCase()
+  : null;
 
 if (input) {
-  if (realBetaData !== true) {
+  if (!realBetaData) {
     evidenceBlockers.push(
       'Evidence must explicitly set evidence.realBetaData=true for real beta exports.',
     );
@@ -295,11 +420,17 @@ if (input) {
     if (!Number.isFinite(total) || total <= 0)
       evidenceBlockers.push(`Beta must exercise ${label}.`);
     if (!Number.isFinite(matched)) evidenceBlockers.push(`Missing matched count for ${label}.`);
+    if (Number.isFinite(total) && Number.isFinite(matched) && matched > total) {
+      evidenceBlockers.push(`${label} matched count cannot exceed its total.`);
+    }
   }
 
   if (!Number.isFinite(ocrAttempts) || ocrAttempts <= 0)
     evidenceBlockers.push('Beta must exercise OCR/label parsing.');
   if (!Number.isFinite(ocrParsed)) evidenceBlockers.push('Missing OCR parsed count.');
+  if (Number.isFinite(ocrAttempts) && Number.isFinite(ocrParsed) && ocrParsed > ocrAttempts) {
+    evidenceBlockers.push('OCR parsed count cannot exceed attempts.');
+  }
   if (!Number.isFinite(manualStarted) || manualStarted <= 0) {
     evidenceBlockers.push('Beta must exercise manual fallback start.');
   }
@@ -315,6 +446,13 @@ if (input) {
   }
 
   if (!Number.isFinite(wrongMatchTotal)) evidenceBlockers.push('Missing wrong-match report total.');
+  if (
+    Number.isFinite(wrongMatchTotal) &&
+    Number.isFinite(wrongMatchMatchedScans) &&
+    wrongMatchTotal > wrongMatchMatchedScans
+  ) {
+    evidenceBlockers.push('Wrong-match total cannot exceed the matched-scan denominator.');
+  }
   if (wrongMatchRate !== null && wrongMatchRate > 0.02) {
     evidenceBlockers.push('Wrong-match report rate exceeds the 2% Phase 4 alert threshold.');
   }
@@ -352,17 +490,25 @@ if (input) {
 
   if (categoryCoverage.length === 0)
     evidenceBlockers.push('Missing catalog.categoryCoverage rows.');
+  const seenCategories = new Set();
   for (const row of categoryCoverage) {
     const category = cleanText(row?.category) ?? 'unknown';
     const added = numberValue(row?.added);
     const matched = numberValue(row?.matched);
     if (!Number.isFinite(added) || !Number.isFinite(matched)) {
       evidenceBlockers.push(`Category ${category} is missing added/matched counts.`);
+    } else if (matched > added) {
+      evidenceBlockers.push(`Category ${category} matched count cannot exceed added count.`);
     } else if (added >= 5 && matched === 0) {
       evidenceBlockers.push(
         `Category ${category} has a beta catalog dead zone: 0 matches for ${added} added products.`,
       );
     }
+    const categoryKey = category.toLocaleLowerCase('en-US');
+    if (seenCategories.has(categoryKey)) {
+      evidenceBlockers.push(`Category ${category} appears more than once.`);
+    }
+    seenCategories.add(categoryKey);
   }
 
   if (topNoMatches.length === 0)
@@ -381,7 +527,17 @@ if (input) {
     evidenceBlockers.push('Open P0/P1 support tickets block beta coverage.');
 }
 
-const sourceHashes = sourceHashPaths.map(hashRepoFile);
+const sourceHashes = sourceHashPaths.map((path) => {
+  if (!pinnedSemantics) return hashRepoFile(path);
+  const record = sourceSnapshot.records[path];
+  if (!Buffer.isBuffer(record?.headBytes)) return { path, exists: false };
+  return {
+    path,
+    exists: true,
+    bytes: record.headBytes.length,
+    sha256: record.headSha256,
+  };
+});
 for (const sourceHash of sourceHashes) {
   if (!sourceHash.exists) codeErrors.push(`Missing source hash input ${sourceHash.path}.`);
 }
@@ -389,8 +545,8 @@ for (const sourceHash of sourceHashes) {
 let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
-  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = gitStatusExcludingGeneratedReport();
+  gitSha = pinnedSemantics ? sourceSnapshot.headSha : command('git', ['rev-parse', 'HEAD']).trim();
+  gitStatus = pinnedSemantics ? sourceSnapshot.gitStatus : gitStatusExcludingGeneratedReport();
 } catch {
   warnings.push('Git SHA/status could not be captured.');
 }
@@ -400,7 +556,95 @@ if (gitStatus.length > 0) {
   );
 }
 
-const inputArtifact = hashAbsolute(inputPath);
+function activeConfiguredValue(value) {
+  return typeof value === 'string' && value.length > 0 ? value : null;
+}
+const canonicalSourceGitSha = activeConfiguredValue(process.env.PHASE9_IOS_SOURCE_GIT_SHA);
+const aliasSourceGitSha = activeConfiguredValue(process.env.GOVERNED_EVIDENCE_SOURCE_GIT_SHA);
+const canonicalReleaseCandidateDir = activeConfiguredValue(
+  process.env.PHASE9_RELEASE_CANDIDATE_DIR,
+);
+const aliasReleaseCandidateDir = activeConfiguredValue(process.env.GOVERNED_EVIDENCE_RC_DIR);
+const governedSelectionErrors = [];
+if (
+  canonicalSourceGitSha !== null &&
+  aliasSourceGitSha !== null &&
+  canonicalSourceGitSha !== aliasSourceGitSha
+) {
+  governedSelectionErrors.push('canonical and alias governed source commits conflict');
+}
+if (
+  canonicalReleaseCandidateDir !== null &&
+  aliasReleaseCandidateDir !== null &&
+  canonicalReleaseCandidateDir !== aliasReleaseCandidateDir
+) {
+  governedSelectionErrors.push('canonical and alias governed release candidates conflict');
+}
+const governedSourceGitSha = canonicalSourceGitSha ?? aliasSourceGitSha;
+const governedReleaseCandidateDir = canonicalReleaseCandidateDir ?? aliasReleaseCandidateDir;
+if (!/^[0-9a-f]{40}$/u.test(String(governedSourceGitSha ?? ''))) {
+  governedSelectionErrors.push('governed beta evidence requires one lowercase source commit S');
+}
+if (
+  !/^docs\/phase-9\/release-candidates\/rc-[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(
+    String(governedReleaseCandidateDir ?? ''),
+  )
+) {
+  governedSelectionErrors.push('governed beta evidence requires one immutable selected RC');
+}
+let governedAudit = null;
+let governedWorkingBindings = null;
+if (governedSelectionErrors.length === 0) {
+  try {
+    governedAudit = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: governedSourceGitSha,
+      releaseCandidateDir: governedReleaseCandidateDir,
+      expectedHeadSha: gitSha,
+    });
+  } catch (error) {
+    governedSelectionErrors.push(error instanceof Error ? error.message : String(error));
+  }
+}
+if (check && governedAudit?.status === 'pass') {
+  try {
+    governedWorkingBindings = captureGovernedEvidenceWorkingBindings(governedAudit, root);
+  } catch (error) {
+    governedSelectionErrors.push(error instanceof Error ? error.message : String(error));
+  }
+}
+const governedErrors = [...governedSelectionErrors, ...(governedAudit?.errors ?? [])];
+const governedLedgerBytes = governedAudit?.ledger
+  ? renderGovernedEvidenceLedger(governedAudit.ledger)
+  : null;
+const governedEvidenceChain = {
+  status: governedAudit?.status === 'pass' && governedErrors.length === 0 ? 'pass' : 'blocked',
+  sourceGitSha: governedAudit?.sourceGitSha ?? governedSourceGitSha ?? null,
+  evidenceCommitSha: governedAudit?.evidenceCommitSha ?? null,
+  currentGitSha: governedAudit?.headGitSha ?? (/^[0-9a-f]{40}$/u.test(gitSha) ? gitSha : null),
+  releaseCandidateDir: governedAudit?.releaseCandidateDir ?? governedReleaseCandidateDir ?? null,
+  ledgerPath: governedAudit?.ledgerPath ?? null,
+  ledgerSha256: governedLedgerBytes
+    ? createHash('sha256').update(governedLedgerBytes).digest('hex')
+    : null,
+  ledgerEntryCount: governedAudit?.ledger?.entries.length ?? 0,
+  downstreamCommitCount: governedAudit?.downstreamCommits.length ?? 0,
+  errors: governedErrors,
+};
+for (const error of governedErrors) {
+  evidenceBlockers.push(`Governed evidence chain: ${error}`);
+}
+
+const inputArtifact = pinnedSemantics
+  ? mountedInputRecord?.kind === 'file' && Buffer.isBuffer(mountedInputRecord.bytes)
+    ? {
+        path: checkInputRepoPath,
+        exists: true,
+        bytes: mountedInputRecord.bytes.length,
+        sha256: mountedInputRecord.sha256,
+      }
+    : { path: checkInputRepoPath, exists: false }
+  : hashAbsolute(inputPath);
 const metrics = {
   invitedUsers,
   targetUsers,
@@ -431,43 +675,58 @@ const metrics = {
   trustAccuracyTickets,
   openP0P1SupportTickets,
 };
+const betaEvidenceValues = {
+  realBetaDataClaimed: realBetaData,
+  dashboardEvidencePresent: Boolean(dashboardUrl),
+  supportDashboardEvidencePresent: Boolean(supportDashboardUrl),
+  analyticsDashboardEvidencePresent: Boolean(analyticsDashboardUrl),
+  sourceExportDigestPresent: Boolean(sourceExportHash),
+  namedSignoffPresent: Boolean(signedOffBy),
+};
+const betaEvidence = Object.fromEntries(
+  BETA_COVERAGE_EVIDENCE_KEYS.map((key) => [key, betaEvidenceValues[key]]),
+);
+if (Object.values(betaEvidence).every((value) => value === true)) {
+  for (const error of validateBetaCoverageEvidenceInventory(betaEvidence).errors) {
+    codeErrors.push(`Beta evidence contract: ${error}.`);
+  }
+}
 
 const report = {
   generatedAt: new Date().toISOString(),
   launchContract: launchContractSnapshot(launchContract),
-  inputPath,
+  inputPath: pinnedSemantics ? checkInputRepoPath : repoRelative(inputPath),
   gitSha,
   gitStatus,
   inputArtifact,
   sourceHashes,
+  governedEvidenceChain,
   status:
     codeErrors.length === 0 && evidenceBlockers.length === 0 && warnings.length === 0
       ? 'ready'
       : 'blocked',
   strict,
   metrics,
-  evidence: {
-    realBetaData: realBetaData === true,
-    dashboardUrl: dashboardUrl ?? null,
-    supportDashboardUrl: supportDashboardUrl ?? null,
-    analyticsDashboardUrl: analyticsDashboardUrl ?? null,
-    sourceExportHash: sourceExportHash ?? null,
-    signedOffBy: signedOffBy ?? null,
+  evidence: betaEvidence,
+  privacy: {
+    classification: 'minimized-aggregate-only',
+    rawShelfLabelsCommitted: false,
+    dashboardUrlsCommitted: false,
   },
-  categoryCoverage,
-  topNoMatches,
-  topWrongMatches,
-  topUnknownTokens,
-  expectedRecommendationProducts,
+  aggregateDetailCounts: {
+    categoryRows: categoryCoverage.length,
+    noMatchRows: topNoMatches.length,
+    wrongMatchRows: topWrongMatches.length,
+    unknownTokenRows: topUnknownTokens.length,
+    expectedRecommendationRows: expectedRecommendationProducts.length,
+  },
   codeErrors,
   evidenceBlockers,
   warnings,
-  localBetaCoverageClear:
-    codeErrors.length === 0 && evidenceBlockers.length === 0 && warnings.length === 0,
+  authorityLimitations,
+  localBetaCoverageClear: false,
 };
-
-mkdirSync(dirname(jsonOutputPath), { recursive: true });
-writeFileSync(jsonOutputPath, `${JSON.stringify(report, null, 2)}\n`);
+const jsonBytes = Buffer.from(`${JSON.stringify(report, null, 2)}\n`, 'utf8');
 
 const metricRows = [
   metricRow(
@@ -547,8 +806,7 @@ const sourceRows = sourceHashes
   .join('\n');
 const dirtyDetails = gitStatus.length ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n` : '\n';
 
-writeFileSync(
-  mdOutputPath,
+const markdownBytes = Buffer.from(
   [
     '# Phase 4 Beta Coverage Report',
     '',
@@ -558,22 +816,31 @@ writeFileSync(
     `Git status: ${report.gitStatus.length ? 'DIRTY' : 'clean'}`,
     dirtyDetails.trimEnd(),
     '',
+    '## Governed Evidence Chain',
+    '',
+    `- Status: ${report.governedEvidenceChain.status}`,
+    `- Source S: ${report.governedEvidenceChain.sourceGitSha ?? 'BLOCKED'}`,
+    `- Evidence E: ${report.governedEvidenceChain.evidenceCommitSha ?? 'BLOCKED'}`,
+    `- Current R/F HEAD: ${report.governedEvidenceChain.currentGitSha ?? 'BLOCKED'}`,
+    `- Selected RC: ${report.governedEvidenceChain.releaseCandidateDir ?? 'BLOCKED'}`,
+    `- Ledger SHA-256: ${report.governedEvidenceChain.ledgerSha256 ?? 'BLOCKED'}`,
+    `- Ledger entries: ${report.governedEvidenceChain.ledgerEntryCount}`,
+    `- Downstream generated commits: ${report.governedEvidenceChain.downstreamCommitCount}`,
+    '',
     '## Verdict',
     '',
     `Local beta coverage clear: ${report.localBetaCoverageClear ? 'yes' : 'no'}`,
     '',
-    'This report is launch-clear only when it is generated from real closed-beta',
-    'exports, the worktree is clean, every evidence URL/signoff is real, and all',
-    'Phase 4 coverage thresholds below are satisfied.',
+    ...report.authorityLimitations,
     '',
     '## Evidence',
     '',
-    `- Real beta data: ${report.evidence.realBetaData ? 'yes' : 'BLOCKED'}`,
-    `- Catalog/beta dashboard: ${report.evidence.dashboardUrl ?? 'BLOCKED'}`,
-    `- Analytics dashboard: ${report.evidence.analyticsDashboardUrl ?? 'BLOCKED'}`,
-    `- Support dashboard: ${report.evidence.supportDashboardUrl ?? 'BLOCKED'}`,
-    `- Source export hash: ${report.evidence.sourceExportHash ?? 'BLOCKED'}`,
-    `- Signed off by: ${report.evidence.signedOffBy ?? 'BLOCKED'}`,
+    `- Real beta data claimed: ${report.evidence.realBetaDataClaimed ? 'yes' : 'BLOCKED'}`,
+    `- Catalog/beta dashboard evidence present: ${report.evidence.dashboardEvidencePresent ? 'yes' : 'BLOCKED'}`,
+    `- Analytics dashboard evidence present: ${report.evidence.analyticsDashboardEvidencePresent ? 'yes' : 'BLOCKED'}`,
+    `- Support dashboard evidence present: ${report.evidence.supportDashboardEvidencePresent ? 'yes' : 'BLOCKED'}`,
+    `- Exact source export digest present: ${report.evidence.sourceExportDigestPresent ? 'yes' : 'BLOCKED'}`,
+    `- Named signoff present: ${report.evidence.namedSignoffPresent ? 'yes' : 'BLOCKED'}`,
     '',
     '## Metrics',
     '',
@@ -609,9 +876,213 @@ writeFileSync(
     sourceRows,
     '',
   ].join('\n'),
+  'utf8',
 );
 
+function readReplaySourceBytes(commitSha) {
+  const records = new Map();
+  if (!/^[0-9a-f]{40}$/u.test(String(commitSha ?? ''))) return records;
+  for (const path of sourceHashPaths) {
+    try {
+      records.set(
+        path,
+        runTrustedGit(root, ['show', `${commitSha}:${path}`], {
+          maxBuffer: 64 * 1024 * 1024,
+        }),
+      );
+    } catch {
+      records.set(path, null);
+    }
+  }
+  return records;
+}
+
+async function waitForCheckDriftTestWindow() {
+  if (!process.argv.includes('--test-check-drift-window')) return [];
+  const rawMilliseconds = String(process.env.PHASE4_BETA_CHECK_TEST_PAUSE_MS ?? '');
+  const milliseconds = Number(rawMilliseconds);
+  if (
+    process.env.NODE_ENV !== 'test' ||
+    !/^[1-9][0-9]{2,4}$/u.test(rawMilliseconds) ||
+    !Number.isSafeInteger(milliseconds) ||
+    milliseconds < 100 ||
+    milliseconds > 10_000
+  ) {
+    return ['beta coverage check drift window is restricted to one bounded test-only pause'];
+  }
+  console.log('PHASE4_BETA_CHECK_COMPARISON_COMPLETE');
+  await new Promise((resolvePause) => setTimeout(resolvePause, milliseconds));
+  return [];
+}
+
+if (check) {
+  const jsonRecord = sourceSnapshot.records[reportOutputPaths[0]];
+  const markdownRecord = sourceSnapshot.records[reportOutputPaths[1]];
+  const recordedJsonBytes = Buffer.isBuffer(jsonRecord?.workingBytes)
+    ? jsonRecord.workingBytes
+    : Buffer.alloc(0);
+  const recordedMarkdownBytes = Buffer.isBuffer(markdownRecord?.workingBytes)
+    ? markdownRecord.workingBytes
+    : Buffer.alloc(0);
+  let recordedCurrentGitSha = null;
+  try {
+    recordedCurrentGitSha = parseCatalogControlJson(
+      recordedJsonBytes,
+      'Committed beta coverage report',
+    )?.governedEvidenceChain?.currentGitSha;
+  } catch {
+    // The shared committed validator reports the exact parse failure below.
+  }
+  const prefixSourceBytes = readReplaySourceBytes(recordedCurrentGitSha);
+  const currentHeadSourceBytes = new Map(
+    sourceHashPaths.map((path) => [path, sourceSnapshot.records[path]?.headBytes ?? null]),
+  );
+  const driftWindowErrors = await waitForCheckDriftTestWindow();
+  let finalAudit = null;
+  const finalAuditErrors = [];
+  if (governedSelectionErrors.length === 0) {
+    try {
+      finalAudit = auditGovernedEvidenceChain({
+        root,
+        sourceGitSha: governedSourceGitSha,
+        releaseCandidateDir: governedReleaseCandidateDir,
+        expectedHeadSha: sourceSnapshot.headSha,
+      });
+    } catch (error) {
+      finalAuditErrors.push(
+        `final governed beta audit failed: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+  } else {
+    finalAuditErrors.push(...governedSelectionErrors);
+  }
+  const finalSnapshot = verifyReleaseQaSnapshot(sourceSnapshot);
+  const governedBindingErrors = governedWorkingBindings
+    ? verifyGovernedEvidenceWorkingBindings(governedWorkingBindings, root, {
+        context: 'Phase 4 beta committed check',
+      })
+    : finalAudit?.status === 'pass'
+      ? ['Phase 4 beta committed check has no retained governed working bindings']
+      : [];
+  const validation = validateCommittedBetaCoverageReplay({
+    recordedJsonBytes,
+    recordedMarkdownBytes,
+    freshReport: report,
+    freshMarkdownBytes: markdownBytes,
+    audit: finalAudit,
+    outputPaths: reportOutputPaths,
+    sourceHashPaths,
+    prefixSourceBytes,
+    currentHeadSourceBytes,
+    mountedInput: {
+      path: checkInputRepoPath,
+      kind: mountedInputRecord?.kind,
+      bytes: mountedInputRecord?.bytes,
+    },
+    initialSnapshotErrors: [...initialPinnedSnapshotErrors, ...driftWindowErrors],
+    finalSnapshotErrors: [...finalAuditErrors, ...finalSnapshot.errors],
+    governedBindingErrors,
+  });
+  if (validation.status !== 'pass') {
+    for (const error of validation.errors) console.error(`FAIL ${error}`);
+    console.error(
+      `Beta coverage committed check has ${validation.errors.length} failure${
+        validation.errors.length === 1 ? '' : 's'
+      }.`,
+    );
+    process.exit(1);
+  }
+  console.log(
+    `PASS committed Phase 4 beta coverage pair matches its governed publication and exact replay inputs at ${reportOutputPaths[0]}.`,
+  );
+  process.exit(0);
+}
+
+let publishedAtomically = false;
+if (
+  strict &&
+  report.status === 'ready' &&
+  governedAudit?.status === 'pass' &&
+  canonicalReportOutputs
+) {
+  try {
+    const publicationSnapshot = sourceSnapshot;
+    const inputRepoPath = checkInputRepoPath;
+    const publicationErrors = [...initialPinnedSnapshotErrors];
+    if (publicationSnapshot?.gitStatus !== '') {
+      publicationErrors.push('strict beta publication requires a clean non-output worktree');
+    }
+    for (let index = 0; index < sourceHashPaths.length; index += 1) {
+      const path = sourceHashPaths[index];
+      const record = publicationSnapshot.records[path];
+      if (
+        !Buffer.isBuffer(record?.headBytes) ||
+        sourceHashes[index]?.path !== path ||
+        sourceHashes[index]?.bytes !== record.headBytes.length ||
+        sourceHashes[index]?.sha256 !== record.headSha256
+      ) {
+        publicationErrors.push(`${path} changed after beta report assembly`);
+      }
+    }
+    const publicationInput = publicationSnapshot.workingRecords[inputRepoPath];
+    if (
+      publicationInput?.kind !== 'file' ||
+      inputArtifact.path !== inputRepoPath ||
+      inputArtifact.bytes !== publicationInput.bytes?.length ||
+      inputArtifact.sha256 !== publicationInput.sha256
+    ) {
+      publicationErrors.push('mounted beta aggregate input changed after report assembly');
+    }
+    if (publicationErrors.length > 0) {
+      throw new Error([...new Set(publicationErrors)].join('; '));
+    }
+    const freshAudit = auditGovernedEvidenceChain({
+      root,
+      sourceGitSha: governedSourceGitSha,
+      releaseCandidateDir: governedReleaseCandidateDir,
+      expectedHeadSha: gitSha,
+    });
+    publicationErrors.push(
+      ...validateGovernedEvidenceChainBinding(governedEvidenceChain, freshAudit).errors,
+    );
+    if (publicationErrors.length > 0) {
+      throw new Error([...new Set(publicationErrors)].join('; '));
+    }
+    const publicationBindings = captureGovernedEvidenceWorkingBindings(freshAudit, root);
+    atomicWriteReleaseQaOutputs({
+      root,
+      snapshot: publicationSnapshot,
+      outputs: [
+        { path: reportOutputPaths[0], bytes: jsonBytes },
+        { path: reportOutputPaths[1], bytes: markdownBytes },
+      ],
+      verifyAdditional() {
+        return verifyGovernedEvidenceWorkingBindings(publicationBindings, root, {
+          context: 'Phase 4 beta publication',
+        });
+      },
+    });
+    publishedAtomically = true;
+  } catch (error) {
+    console.error(
+      `FAIL strict beta coverage publication was rejected: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+}
+if (!publishedAtomically) {
+  mkdirSync(dirname(jsonOutputPath), { recursive: true });
+  mkdirSync(dirname(mdOutputPath), { recursive: true });
+  writeFileSync(jsonOutputPath, jsonBytes);
+  writeFileSync(mdOutputPath, markdownBytes);
+}
+
 console.log(`Wrote ${repoRelative(jsonOutputPath)}`);
+console.log(`Wrote ${repoRelative(mdOutputPath)}`);
 console.log(
   `Status ${report.status}; blockers ${codeErrors.length + evidenceBlockers.length}; warnings ${warnings.length}.`,
 );

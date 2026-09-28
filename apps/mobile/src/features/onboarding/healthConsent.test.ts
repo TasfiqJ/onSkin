@@ -1,168 +1,93 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createOwnerQueryScope, queryKeys, type OwnerQueryScope } from '@/lib/query/queryKeys';
-
-import { HEALTH_DATA_CONSENT } from './consentCopy';
 import {
   declineHealthDataCollectionConsent,
   grantHealthDataCollectionConsent,
   resetHealthProfileConsumers,
 } from './healthConsent';
 
+const OWNER = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const mocks = vi.hoisted(() => ({
-  recordConsent: vi.fn(async () => {}),
-  setHealthDataCollectionConsentLocal: vi.fn(async () => {}),
+  declineAuthoritative: vi.fn(async () => ({})),
+  grantAuthoritative: vi.fn(async () => ({})),
+  reconcile: vi.fn(async () => ({
+    state: 'unconsented',
+    processingEpoch: 0,
+    localCleanupComplete: true,
+  })),
 }));
 
-vi.mock('@/lib/consent/consent', () => ({
-  recordConsent: mocks.recordConsent,
-}));
-
-vi.mock('./healthConsentStore', () => ({
-  setHealthDataCollectionConsentLocal: mocks.setHealthDataCollectionConsentLocal,
+vi.mock('@/features/healthConsent/lifecycle', () => ({
+  declineAuthoritativeInitialHealthDataConsent: mocks.declineAuthoritative,
+  grantAuthoritativeHealthDataConsent: mocks.grantAuthoritative,
+  reconcileHealthDataLifecycle: mocks.reconcile,
 }));
 
 describe('health-data onboarding consent', () => {
   beforeEach(() => {
-    mocks.recordConsent.mockClear();
-    mocks.recordConsent.mockResolvedValue(undefined);
-    mocks.setHealthDataCollectionConsentLocal.mockClear();
-    mocks.setHealthDataCollectionConsentLocal.mockResolvedValue(undefined);
+    vi.clearAllMocks();
+    mocks.reconcile.mockResolvedValue({
+      state: 'unconsented',
+      processingEpoch: 0,
+      localCleanupComplete: true,
+    });
   });
 
-  it('records an explicit local grant before mirroring the ledger', async () => {
-    await grantHealthDataCollectionConsent();
+  it('uses the authoritative lifecycle before quiz access', async () => {
+    await grantHealthDataCollectionConsent(OWNER);
 
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
-      granted: true,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.fullText,
+    expect(mocks.reconcile).toHaveBeenCalledWith(OWNER);
+    expect(mocks.grantAuthoritative).toHaveBeenCalledWith({
+      ownerUserId: OWNER,
+      expectedProcessingEpoch: 0,
     });
-    expect(mocks.recordConsent).toHaveBeenCalledWith({
-      type: 'health_data_collection',
-      granted: true,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.fullText,
-    });
-    expect(mocks.setHealthDataCollectionConsentLocal.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.recordConsent.mock.invocationCallOrder[0],
-    );
   });
 
-  it('records an explicit local decline without granting quiz access', async () => {
-    await declineHealthDataCollectionConsent();
+  it('records an initial decline through the authoritative lifecycle', async () => {
+    await declineHealthDataCollectionConsent(OWNER);
 
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
-      granted: false,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.declineText,
-    });
-    expect(mocks.recordConsent).toHaveBeenCalledWith({
-      type: 'health_data_collection',
-      granted: false,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.declineText,
-    });
-    expect(mocks.setHealthDataCollectionConsentLocal.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.recordConsent.mock.invocationCallOrder[0],
-    );
+    expect(mocks.reconcile).toHaveBeenCalledWith(OWNER);
+    expect(mocks.declineAuthoritative).toHaveBeenCalledWith(OWNER);
   });
 
-  it('orders a later decline after an earlier delayed grant for local and ledger state', async () => {
-    let releaseGrant!: () => void;
-    mocks.setHealthDataCollectionConsentLocal.mockImplementationOnce(
-      () =>
-        new Promise<void>((resolve) => {
-          releaseGrant = resolve;
-        }),
-    );
+  it('refreshes the exact authoritative proof when the server already reports active', async () => {
+    mocks.reconcile.mockResolvedValueOnce({
+      state: 'active',
+      processingEpoch: 4,
+      localCleanupComplete: true,
+    });
 
-    const grant = grantHealthDataCollectionConsent();
-    await vi.waitFor(() =>
-      expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledOnce(),
-    );
-    const decline = declineHealthDataCollectionConsent();
+    await grantHealthDataCollectionConsent(OWNER);
 
-    await Promise.resolve();
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledTimes(1);
-    expect(mocks.recordConsent).not.toHaveBeenCalled();
+    expect(mocks.grantAuthoritative).toHaveBeenCalledWith({
+      ownerUserId: OWNER,
+      expectedProcessingEpoch: 4,
+    });
+  });
 
-    releaseGrant();
-    await expect(Promise.all([grant, decline])).resolves.toEqual([undefined, undefined]);
+  it('fails closed while withdrawal is not terminal', async () => {
+    mocks.reconcile.mockResolvedValueOnce({
+      state: 'withdrawing',
+      processingEpoch: 2,
+      localCleanupComplete: true,
+    });
 
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({ granted: true }),
-    );
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenNthCalledWith(
-      2,
-      expect.objectContaining({ granted: false }),
-    );
-    expect(mocks.recordConsent).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({ granted: true }),
-    );
-    expect(mocks.recordConsent).toHaveBeenNthCalledWith(
-      2,
-      expect.objectContaining({ granted: false }),
+    await expect(grantHealthDataCollectionConsent(OWNER)).rejects.toThrow(
+      'HEALTH_DATA_CONSENT_NOT_GRANTABLE',
     );
   });
 
   it('clears cached profile consumers immediately after consent is declined', async () => {
     const queryClient = new QueryClient();
-    const ownerScope = createOwnerQueryScope();
-    const otherScope: OwnerQueryScope = { generation: ownerScope.generation + 1 };
-    const boundary = {
-      localDate: '2026-07-13',
-      timeZone: 'America/Toronto|offset:240',
-    };
-    const currentKeys = [
-      queryKeys.skinProfile(ownerScope),
-      queryKeys.shelf(ownerScope, boundary),
-      queryKeys.ramp(ownerScope, boundary, 'retinoid'),
-    ];
-    const otherKeys = [
-      queryKeys.skinProfile(otherScope),
-      queryKeys.shelf(otherScope, boundary),
-      queryKeys.ramp(otherScope, boundary, 'retinoid'),
-    ];
-    for (const key of currentKeys) queryClient.setQueryData(key, { owner: 'current' });
-    for (const key of otherKeys) queryClient.setQueryData(key, { owner: 'other' });
+    queryClient.setQueryData(['skinProfileBits'], { pregnancySafety: 'clear' });
+    queryClient.setQueryData(['shelf'], { items: ['retinoid'] });
+    queryClient.setQueryData(['ramp'], { items: ['retinoid'] });
 
-    await resetHealthProfileConsumers(queryClient, ownerScope);
+    await resetHealthProfileConsumers(queryClient);
 
-    for (const key of currentKeys) expect(queryClient.getQueryData(key)).toBeUndefined();
-    for (const key of otherKeys) expect(queryClient.getQueryData(key)).toEqual({ owner: 'other' });
-    queryClient.clear();
-  });
-
-  it('keeps pre-account quiz entry local-first when the ledger is unavailable', async () => {
-    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
-
-    await expect(grantHealthDataCollectionConsent()).resolves.toBeUndefined();
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
-      granted: true,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.fullText,
-    });
-  });
-
-  it('keeps the decline branch best-effort when the ledger is unavailable', async () => {
-    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
-
-    await expect(declineHealthDataCollectionConsent()).resolves.toBeUndefined();
-    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
-      granted: false,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.declineText,
-    });
-  });
-
-  it('propagates local grant persistence failure so the quiz can stay locked', async () => {
-    mocks.setHealthDataCollectionConsentLocal.mockRejectedValueOnce(new Error('local unavailable'));
-
-    await expect(grantHealthDataCollectionConsent()).rejects.toThrow('local unavailable');
-    expect(mocks.recordConsent).not.toHaveBeenCalled();
+    expect(queryClient.getQueryData(['skinProfileBits'])).toBeUndefined();
+    expect(queryClient.getQueryData(['shelf'])).toBeUndefined();
+    expect(queryClient.getQueryData(['ramp'])).toBeUndefined();
   });
 });

@@ -498,7 +498,7 @@ export function inspectIosArtifactIdentities({ iosArtifactPath, dsymArchivePath,
     if (!path || !existsSync(path)) throw new Error(`${label} is missing.`);
   }
 
-  const workRoot = mkdtempSync(join(tmpdir(), 'onskin-ios-symbols-'));
+  const workRoot = mkdtempSync(join(tmpdir(), 'layerwell-ios-symbols-'));
   try {
     const appRoot = materializeArchive(iosArtifactPath, workRoot, 'ipa');
     const dsymRoot = materializeArchive(dsymArchivePath, workRoot, 'dsym');

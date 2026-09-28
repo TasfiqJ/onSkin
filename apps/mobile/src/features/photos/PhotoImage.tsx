@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { View, type StyleProp } from 'react-native';
 
 import { Text } from '@/components/ui';
-import { getAccountGeneration } from '@/lib/auth/accountGeneration';
+import { captureAccountIdentityGeneration } from '@/lib/auth/accountGeneration';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { colors } from '@/theme/tokens';
 
@@ -36,8 +36,12 @@ type PhotoImageProps = {
   accessibilityLabel?: string;
   active?: boolean;
   photoId?: string;
+  captureSessionId?: string | null;
+  fallbackOriginalUri?: string | null;
   rendition?: 'thumbnail' | 'display';
   requestPriority?: SensitiveImageRequestPriority;
+  onDisplayReady?: () => void;
+  onDisplayError?: () => void;
 };
 
 type PhotoStorageRendition = 'thumbnail:v1' | 'legacy-full:v1';
@@ -46,14 +50,14 @@ type ActivePhotoImageProps = Omit<PhotoImageProps, 'active'> & {
   storageRendition: PhotoStorageRendition;
 };
 
-function photoStorageRendition(uri: string | null | undefined): PhotoStorageRendition {
-  return uri?.endsWith('-thumbnail.onskinphoto') ? 'thumbnail:v1' : 'legacy-full:v1';
+function photoStorageRendition(rendition: PhotoImageProps['rendition']): PhotoStorageRendition {
+  return rendition === 'thumbnail' ? 'thumbnail:v1' : 'legacy-full:v1';
 }
 
 function photoOwnerGeneration(photoId: string | undefined): number | null {
   if (!photoId) return null;
   try {
-    return getAccountGeneration();
+    return captureAccountIdentityGeneration();
   } catch {
     return null;
   }
@@ -65,9 +69,17 @@ function PhotoFallback({
   accessible,
   accessibilityLabel,
   failed = false,
+  reportDisplayError = false,
+  onDisplayError,
 }: Pick<PhotoImageProps, 'style' | 'fallbackTone' | 'accessible' | 'accessibilityLabel'> & {
   failed?: boolean;
+  reportDisplayError?: boolean;
+  onDisplayError?: () => void;
 }) {
+  useEffect(() => {
+    if (reportDisplayError) onDisplayError?.();
+  }, [onDisplayError, reportDisplayError]);
+
   return (
     <View
       accessible={accessible}
@@ -84,9 +96,6 @@ function PhotoFallback({
   );
 }
 
-/** Owns every data URI. The outer component unmounts this subtree whenever a
- * cell leaves viewability or a privacy gate closes, releasing React state and
- * the native image view rather than merely hiding retained plaintext. */
 function ActivePhotoImage({
   uri,
   style,
@@ -95,10 +104,14 @@ function ActivePhotoImage({
   accessible,
   accessibilityLabel,
   photoId,
+  captureSessionId = null,
+  fallbackOriginalUri = null,
   rendition = 'display',
   requestPriority = 'interactive',
   ownerGeneration,
   storageRendition,
+  onDisplayReady,
+  onDisplayError,
 }: ActivePhotoImageProps) {
   const encrypted = isEncryptedPhotoUri(uri);
   const recyclingKey =
@@ -107,9 +120,8 @@ function ActivePhotoImage({
       : `${ownerGeneration}:${photoId}:${storageRendition}:${rendition}`;
   const [lifecycleRevision, setLifecycleRevision] = useState(0);
   const [lifecycleActive, setLifecycleActive] = useState(isSensitiveImageLifecycleActive);
-  const [diskCacheReady, setDiskCacheReady] = useState(
-    isSensitiveImageDiskCacheMigrationComplete,
-  );
+  const [diskCacheReady, setDiskCacheReady] = useState(isSensitiveImageDiskCacheMigrationComplete);
+  const [diskCacheFailed, setDiskCacheFailed] = useState(false);
   const [resolved, setResolved] = useState<{
     source: string;
     uri: string | null;
@@ -134,7 +146,13 @@ function ActivePhotoImage({
     if (diskCacheReady || !encrypted) return;
     let alive = true;
     void prepareSensitiveImageDiskCacheMigration().then((ready) => {
-      if (alive && ready) setDiskCacheReady(true);
+      if (!alive) return;
+      if (ready) {
+        setDiskCacheFailed(false);
+        setDiskCacheReady(true);
+        return;
+      }
+      setDiskCacheFailed(true);
     });
     return () => {
       alive = false;
@@ -154,41 +172,60 @@ function ActivePhotoImage({
     ) {
       return;
     }
-    // Until v2 thumbnails exist, a logical thumbnail and display both resolve
-    // the same v1 original. Deduplicate that authority under one opaque key.
     const requestKey = `${photoId}:${storageRendition}`;
-    const request = requestSensitiveImage(requestKey, uri, ownerGeneration, requestPriority);
+    const request = requestSensitiveImage(requestKey, uri, ownerGeneration, {
+      photoId,
+      captureSessionId,
+      rendition: storageRendition === 'thumbnail:v1' ? 'thumbnail' : 'original',
+      allowLegacyEnvelope: storageRendition === 'legacy-full:v1',
+    }, requestPriority);
+    let fallbackRequest: ReturnType<typeof requestSensitiveImage> | null = null;
     void request.promise
       .then((next) => {
         if (alive) setResolved({ source: uri, uri: next, failed: false });
       })
       .catch((error: unknown) => {
-        if (alive && !isSensitiveImageRequestCancelled(error)) {
-          setResolved({ source: uri, uri: null, failed: true });
+        if (!alive || isSensitiveImageRequestCancelled(error)) return;
+        if (storageRendition === 'thumbnail:v1' && fallbackOriginalUri && isEncryptedPhotoUri(fallbackOriginalUri)) {
+          fallbackRequest = requestSensitiveImage(`${photoId}:legacy-full:v1`, fallbackOriginalUri, ownerGeneration, {
+            photoId,
+            captureSessionId,
+            rendition: 'original',
+            allowLegacyEnvelope: true,
+          }, requestPriority);
+          void fallbackRequest.promise.then((next) => {
+            if (alive) setResolved({ source: uri, uri: next, failed: false });
+          }).catch((fallbackError: unknown) => {
+            if (alive && !isSensitiveImageRequestCancelled(fallbackError)) {
+              setResolved({ source: uri, uri: null, failed: true });
+            }
+          });
+          return;
         }
+        setResolved({ source: uri, uri: null, failed: true });
       });
     return () => {
       alive = false;
       request.cancel();
+      fallbackRequest?.cancel();
     };
   }, [
-    encrypted,
     diskCacheReady,
+    encrypted,
     lifecycleActive,
     lifecycleRevision,
     ownerGeneration,
     photoId,
+    captureSessionId,
+    fallbackOriginalUri,
     requestPriority,
     storageRendition,
     uri,
   ]);
 
   const resolvedForUri = resolved && resolved.source === uri ? resolved : null;
-  const failed = encrypted && Boolean(resolvedForUri?.failed);
+  const failed = encrypted && (diskCacheFailed || Boolean(resolvedForUri?.failed));
 
-  // Staging/capture URIs are plaintext even though they are not encrypted yet.
-  // Close the native image view for every source at lifecycle privacy bounds,
-  // not only for decrypted storage records.
   if (!lifecycleActive) {
     return (
       <PhotoFallback
@@ -196,6 +233,9 @@ function ActivePhotoImage({
         fallbackTone={fallbackTone}
         accessible={accessible}
         accessibilityLabel={accessibilityLabel}
+        failed={encrypted}
+        reportDisplayError={encrypted}
+        onDisplayError={onDisplayError}
       />
     );
   }
@@ -213,6 +253,8 @@ function ActivePhotoImage({
         recyclingKey={recyclingKey ?? undefined}
         accessible={accessible}
         accessibilityLabel={accessibilityLabel}
+        onLoad={onDisplayReady}
+        onError={onDisplayError}
       />
     );
   }
@@ -224,6 +266,8 @@ function ActivePhotoImage({
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       failed={failed}
+      reportDisplayError={failed}
+      onDisplayError={onDisplayError}
     />
   );
 }
@@ -232,8 +276,9 @@ export function PhotoImage({ active = true, ...props }: PhotoImageProps) {
   const { appUnlocked, enabled, photoTimelineUnlocked } = useAppLock();
   const canDisplaySensitivePhoto = appUnlocked && (!enabled || photoTimelineUnlocked);
   const encrypted = isEncryptedPhotoUri(props.uri);
+  const rejectedEncryptedLikeUri = Boolean(props.uri?.endsWith('.layerwellphoto') && !encrypted);
   const ownerGeneration = photoOwnerGeneration(props.photoId);
-  const storageRendition = photoStorageRendition(props.uri);
+  const storageRendition = photoStorageRendition(props.rendition);
   const identityUnavailable = encrypted && (!props.photoId || ownerGeneration === null);
 
   useEffect(() => {
@@ -241,14 +286,27 @@ export function PhotoImage({ active = true, ...props }: PhotoImageProps) {
     void purgeSensitiveImageMemory();
   }, [canDisplaySensitivePhoto]);
 
-  if (!active || !canDisplaySensitivePhoto || identityUnavailable) {
+  if (!active) {
     return (
       <PhotoFallback
         style={props.style}
         fallbackTone={props.fallbackTone}
         accessible={props.accessible}
         accessibilityLabel={props.accessibilityLabel}
-        failed={identityUnavailable}
+      />
+    );
+  }
+
+  if (!canDisplaySensitivePhoto || identityUnavailable || rejectedEncryptedLikeUri) {
+    return (
+      <PhotoFallback
+        style={props.style}
+        fallbackTone={props.fallbackTone}
+        accessible={props.accessible}
+        accessibilityLabel={props.accessibilityLabel}
+        failed
+        reportDisplayError
+        onDisplayError={props.onDisplayError}
       />
     );
   }

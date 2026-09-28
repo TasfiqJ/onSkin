@@ -17,6 +17,9 @@ describe('user-facing error copy', () => {
     expect(authUserMessage(new Error('Email rate limit exceeded for this address'))).toBe(
       'Too many attempts. Wait a moment, then try again.',
     );
+    expect(authUserMessage(new Error('network request failed while offline'))).toBe(
+      'Connection problem. Check your network and try again.',
+    );
     expect(authUserMessage(new Error(AUTH_UNAVAILABLE_MESSAGE))).toBe(AUTH_UNAVAILABLE_MESSAGE);
     expect(authUserMessage(new Error('Identity is already linked to another user'))).toBe(
       'That sign-in is already connected to another account. Use another method or continue without an account.',

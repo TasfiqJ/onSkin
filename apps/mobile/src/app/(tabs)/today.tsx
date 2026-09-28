@@ -1,30 +1,38 @@
 import { reportDockScroll } from '@/components/navigation/DockMotion';
-import type { RoutineType } from '@onskin/types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { memo } from 'react';
+import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text, TodayFocusHeader } from '@/components/ui';
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
+import { AskTeaser } from '@/features/ask/AskTeaser';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
-import { hasUseTogetherChoiceBetween } from '@/features/scheduler/useCycle';
+import { useCycle } from '@/features/scheduler/useCycle';
+import { usePlan } from '@/features/routine/usePlan';
+import { useProgress } from '@/features/routine/useProgress';
+import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
+import { requestReviewAfterValue } from '@/features/review/prompt';
+import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import {
-  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
-  ShelfDataAvailabilityBoundary,
-  ShelfDataUnavailableNotice,
-} from '@/features/shelf/ShelfDataAvailabilityGate';
-import { useShelfFromBoundary } from '@/features/shelf/useShelf';
-import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
-import { stepKey } from '@/features/today/completionsStore';
-import { useTodayViewModel } from '@/features/today/useTodayViewModel';
-import { localClockLabel, useCurrentRoutineType } from '@/features/today/useToday';
+  getCompletedSteps,
+  getCompletionSyncUnsynced,
+  recoverCompletionSyncUnsynced,
+  stepKey,
+  toggleCompletion,
+  type CompletionRemoteSyncContext,
+} from '@/features/today/completionsStore';
+import {
+  completionSyncStepIdentity,
+  currentCompletionSyncTimezone,
+} from '@/features/today/completionSync';
+import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
+import { projectTodayRoutine } from '@/features/today/routineProjection';
+import { useRoutineClock } from '@/features/today/useRoutineClock';
+import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
-import {
-  useLocalDateBoundary,
-  type LocalDateBoundaryIdentity,
-} from '@/lib/query/localDateBoundaryStore';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -45,53 +53,6 @@ const ROUTINE_CARD_SHADOW =
         shadowOffset: { width: 0, height: 1 },
       };
 
-function slotInstruction(slot: SchedulerSlot): string {
-  if (slot === 'retinoid') return 'Apply to dry skin · pea-sized · avoid the eye area.';
-  if (slot === 'exfoliate') return 'A thin layer. Exfoliation night only.';
-  return 'Barrier support. Keep it simple.';
-}
-
-// PM display sub overrides for the known retinoid-night roles (design 05). Display
-// only, the toggle key (stepKey) is unchanged. Falls back to the step's instruction.
-function pmDisplaySub(
-  step: { role?: string; instruction?: string },
-  hasScheduledRetinoid: boolean,
-): string | undefined {
-  if (step.role === 'cleanser' && hasScheduledRetinoid) {
-    return 'Dry skin fully before the retinoid';
-  }
-  if (step.role === 'treatment' && hasScheduledRetinoid) return 'Pea-sized · avoid eye area';
-  if (step.role === 'moisturiser') return 'Generous layer tonight';
-  return step.instruction;
-}
-
-function compactRoutineInstruction(instruction: string): string {
-  switch (instruction) {
-    case 'Start with a clean base.':
-      return 'Clean base first.';
-    case 'Vitamin C in the morning, under your SPF.':
-      return 'Under your SPF.';
-    case 'Always the last morning step. Reapply through the day.':
-      return 'Last step. Reapply later.';
-    case 'Use in the morning. Follow the product label directions.':
-      return 'Morning. Follow the label.';
-    case 'Seal everything in.':
-      return 'Seal it in.';
-    case 'Apply to dry skin · pea-sized · avoid the eye area.':
-      return 'Dry skin. Pea-sized.';
-    case 'Pea-sized · avoid eye area':
-      return 'Pea-sized. Avoid eyes.';
-    case 'A thin layer. Exfoliation night only.':
-      return 'Thin layer tonight.';
-    case 'Barrier support. Keep it simple.':
-      return 'Barrier support.';
-    case 'Dry skin fully before the retinoid':
-      return 'Dry skin first.';
-    default:
-      return instruction;
-  }
-}
-
 function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   if (!compact) return slotLabel(slot);
   if (slot === 'exfoliate') return 'Exfol\niate';
@@ -99,8 +60,6 @@ function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   if (slot === 'recover') return 'Reco\nver';
   return 'Active';
 }
-
-const TodayHeader = memo(TodayFocusHeader);
 
 function EmptyRoutineCard({
   compact = false,
@@ -218,6 +177,53 @@ function CadenceWithheldNotice({
   );
 }
 
+function SequencingWithheldNotice({
+  compact,
+  count,
+  dark,
+}: {
+  compact: boolean;
+  count: number;
+  dark: boolean;
+}) {
+  const productLabel = count === 1 ? 'product' : 'products';
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Review ${count} ${productLabel} without reviewed application order`}
+      className={cn(
+        'min-h-[48px] flex-row items-center gap-3 rounded-card px-5',
+        compact ? 'mt-3 py-3' : 'mt-4 py-3.5',
+      )}
+      style={{ backgroundColor: dark ? colors.nightSurface : colors.greigeChip }}
+      onPress={() => {
+        haptics.select();
+        router.push('/routine/plan');
+      }}
+    >
+      <View
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: dark ? colors.clayBright : colors.clayDeep }}
+      />
+      <Text
+        className="flex-1 text-[13.5px]"
+        style={{
+          color: dark ? 'rgba(244,239,231,0.8)' : colors.muted,
+          lineHeight: 19,
+        }}
+      >
+        {`Application order is not reviewed for ${count} ${productLabel}. ${
+          count === 1 ? 'It stays' : 'They stay'
+        } on your shelf and off Today for now.`}
+      </Text>
+      <Text aria-hidden style={{ color: dark ? colors.clayBright : colors.clayDeep }}>
+        ›
+      </Text>
+    </Pressable>
+  );
+}
+
 // Geometric checkmark (two rotated bars). No react-native-svg, per house rule.
 function Check({ color = colors.paper }: { color?: string }) {
   return (
@@ -250,48 +256,45 @@ function Check({ color = colors.paper }: { color?: string }) {
   );
 }
 
-type CheckRowProps = {
-  actionIdentity: string;
-  compact?: boolean;
-  committing: boolean;
-  name: string;
-  sub?: string;
-  state: 'done' | 'next' | 'pending';
-  dark: boolean;
-  first?: boolean;
-  onPress: () => void;
-};
-
-const CheckRow = memo(function CheckRow({
+function CheckRow({
   compact = false,
-  committing,
+  disabled = false,
   name,
   sub,
   state,
   dark,
   first,
   onPress,
-}: CheckRowProps) {
+}: {
+  compact?: boolean;
+  disabled?: boolean;
+  name: string;
+  sub?: string;
+  state: 'done' | 'next' | 'pending';
+  dark: boolean;
+  first?: boolean;
+  onPress: () => void;
+}) {
   const accent = dark ? colors.clayBright : colors.clay;
-  const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;
   const nameLineCount = compact ? 2 : undefined;
-  const subLineCount = compact ? 1 : undefined;
+  const subLineCount = compact ? 2 : undefined;
 
   return (
     <Pressable
       accessibilityRole="checkbox"
-      accessibilityState={{ busy: committing, checked: state === 'done', disabled: committing }}
+      accessibilityState={{ checked: state === 'done', disabled }}
       accessibilityLabel={name}
       aria-checked={state === 'done'}
-      disabled={committing}
+      disabled={disabled}
       onPress={() => {
-        if (state === 'done' || committing) return;
+        if (disabled || state === 'done') return;
         onPress();
       }}
       className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}
       style={{
         borderTopWidth: first ? 0 : 1,
         borderTopColor: dark ? colors.hairlineDark : colors.hairline,
+        opacity: disabled ? 0.58 : 1,
       }}
     >
       <View
@@ -331,7 +334,7 @@ const CheckRow = memo(function CheckRow({
         >
           {name}
         </Text>
-        {displaySub ? (
+        {sub ? (
           <Text
             numberOfLines={subLineCount}
             className="mt-0.5 text-[12.5px]"
@@ -340,188 +343,303 @@ const CheckRow = memo(function CheckRow({
               lineHeight: compact ? 16 : undefined,
             }}
           >
-            {displaySub}
+            {sub}
           </Text>
         ) : null}
       </View>
-      {committing ? (
-        <Text className="font-mono text-[11px]" style={{ color: accent }}>
-          SAVING
-        </Text>
-      ) : state === 'next' ? (
+      {state === 'next' ? (
         <Text className="font-mono text-[11px]" style={{ color: accent }}>
           NEXT
         </Text>
       ) : null}
     </Pressable>
   );
-}, areCheckRowPropsEqual);
+}
 
-function areCheckRowPropsEqual(previous: CheckRowProps, next: CheckRowProps): boolean {
+function CompletionStatusNotice({
+  dark,
+  loading,
+  onRetry,
+}: {
+  dark: boolean;
+  loading: boolean;
+  onRetry: () => void;
+}) {
   return (
-    previous.actionIdentity === next.actionIdentity &&
-    previous.compact === next.compact &&
-    previous.committing === next.committing &&
-    previous.name === next.name &&
-    previous.sub === next.sub &&
-    previous.state === next.state &&
-    previous.dark === next.dark &&
-    previous.first === next.first
+    <View
+      accessibilityRole="alert"
+      className="mt-4 rounded-card px-4 py-3.5"
+      style={{
+        backgroundColor: dark ? colors.nightSurface : colors.greige,
+        borderColor: dark ? colors.hairlineDark : colors.hairline,
+        borderWidth: 1,
+      }}
+    >
+      <Text variant="bodySm" style={{ color: dark ? 'rgba(244,239,231,0.78)' : colors.ink }}>
+        {loading
+          ? 'Loading your saved check-offs…'
+          : "Check-offs aren't available right now. Reload to confirm your saved progress, then try again."}
+      </Text>
+      {!loading ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Try loading saved check-offs again"
+          className="mt-2 min-h-[48px] self-start justify-center rounded-pill px-4"
+          style={{ backgroundColor: dark ? colors.clayBright : colors.clay }}
+          onPress={onRetry}
+        >
+          <Text
+            variant="label"
+            className="font-sans-bold"
+            style={{ color: dark ? colors.night : colors.paper }}
+          >
+            Try again
+          </Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+function CompletionSyncUnavailableNotice({
+  dark,
+  hasIdentityRepair,
+  count,
+  onRetry,
+}: {
+  dark: boolean;
+  hasIdentityRepair: boolean;
+  count: number;
+  onRetry: () => void;
+}) {
+  return (
+    <View
+      accessibilityRole="alert"
+      className="mt-4 rounded-card px-4 py-3.5"
+      style={{
+        backgroundColor: dark ? colors.nightSurface : colors.greige,
+        borderColor: dark ? colors.clayBright : colors.clay,
+        borderWidth: 1,
+      }}
+    >
+      <Text variant="bodySm" style={{ color: dark ? 'rgba(244,239,231,0.78)' : colors.ink }}>
+        {hasIdentityRepair
+          ? `${count} older check-off${count === 1 ? ' cannot' : 's cannot'} be safely rebound to a different product identity. Remove and add the affected Shelf product so future check-offs can sync; your local export keeps the original evidence.`
+          : `${count} saved check-off${count === 1 ? ' is' : 's are'} only on this device until a valid timezone is available. Your local export keeps this evidence.`}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={
+          hasIdentityRepair
+            ? 'Review Shelf products that need identity repair'
+            : 'Try preparing saved check-offs for sync again'
+        }
+        className="mt-2 min-h-[48px] self-start justify-center rounded-pill px-4"
+        style={{ backgroundColor: dark ? colors.clayBright : colors.clay }}
+        onPress={onRetry}
+      >
+        <Text
+          variant="label"
+          className="font-sans-bold"
+          style={{ color: dark ? colors.night : colors.paper }}
+        >
+          {hasIdentityRepair ? 'Review Shelf' : 'Try again'}
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 
 export default function TodayScreen() {
-  const boundary = useLocalDateBoundary();
-  const shelf = useShelfFromBoundary(boundary);
-  const routineType = useCurrentRoutineType(boundary);
+  const { height, width } = useWindowDimensions();
+  const clock = useRoutineClock({ includeMinuteUpdates: true });
+  const type = clock.phase;
+  const dark = type === 'PM';
+  const { data: planData } = usePlan();
+  const { data: progress } = useProgress();
+  const { data: cycleData } = useCycle();
+  const qc = useQueryClient();
+  const today = clock.localDate;
+  const completionQuery = useQuery({
+    queryKey: ['completions', today],
+    queryFn: () => getCompletedSteps(today),
+  });
+  const completionSyncUnsyncedQuery = useQuery({
+    queryKey: ['completion-sync-unsynced'],
+    queryFn: getCompletionSyncUnsynced,
+  });
+  const { data: doneData } = completionQuery;
+  const [completionActionFailed, setCompletionActionFailed] = useState(false);
+  const [completionPendingKey, setCompletionPendingKey] = useState<string | null>(null);
+  const completionLoading = completionQuery.isPending;
+  const completionUnavailable = completionLoading || completionQuery.isError;
+  const done = doneData ?? new Set<string>();
+  const completionSyncUnsynced = completionSyncUnsyncedQuery.data ?? [];
+  const hasCompletionIdentityRepair = completionSyncUnsynced.some(
+    ({ reason }) => reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED',
+  );
+  // One pure, fail-closed projection now drives Today and native glance surfaces.
+  // It never exposes the design-only example plan and applies the orchestrated
+  // pause/skip/recovery/staging/profile-safety rules before publishing steps.
+  const routine = projectTodayRoutine({ planData, cycleData, completedStepKeys: done });
+  const {
+    hasExamplePlan,
+    hasRealRoutine,
+    safetyExclusionCount,
+    cadenceWithheldCount,
+    sequencingWithheldCount,
+    cycle,
+    tonight: cTonight,
+    skippedTonight,
+    recoveryActive,
+    paused,
+    tonightSlot,
+    cycleStripNights,
+  } = routine;
 
-  if (routineType === null) {
-    return (
-      <Screen edges={['top', 'bottom']}>
-        <View
-          accessibilityLabel="Updating your local routine"
-          accessibilityLiveRegion="polite"
-          className="flex-1 items-center justify-center"
-        >
-          <Text variant="bodySm" tone="muted">
-            Updating your local routine…
-          </Text>
-        </View>
-      </Screen>
-    );
+  // Persist first. Cache, haptic success, analytics, review, and derived progress
+  // publication are all downstream of the confirmed owner-current mutation.
+  async function handleCompletion(
+    key: string,
+    context: {
+      phase: 'AM' | 'PM';
+      cycleActive: boolean;
+      stepKeys: readonly string[];
+      stepOrder: number;
+    },
+  ) {
+    if (completionUnavailable || completionPendingKey !== null) return;
+    setCompletionActionFailed(false);
+    setCompletionPendingKey(key);
+    let persistenceConfirmed = false;
+    let reviewMomentEarned = false;
+    try {
+      await runCurrentHealthDataOperation(async (lease) => {
+        lease.assertCurrent();
+        const scheduled =
+          context.phase === 'PM'
+            ? ({ phase: 'PM', stepKeys: context.stepKeys } as const)
+            : undefined;
+        const timezone = currentCompletionSyncTimezone();
+        let remoteSync: CompletionRemoteSyncContext | undefined;
+        if (routine.source === 'real') {
+          const unavailableReason =
+            completionSyncStepIdentity(key) === null
+              ? ('COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' as const)
+              : timezone === null
+                ? ('COMPLETION_TIMEZONE_UNAVAILABLE' as const)
+                : undefined;
+          remoteSync = {
+            source: 'real_plan',
+            timezone,
+            stepOrder: context.stepOrder,
+            ...(unavailableReason === undefined ? {} : { unavailableReason }),
+          };
+        }
+        const result = await toggleCompletion(key, today, scheduled, remoteSync);
+        lease.assertCurrent();
+        persistenceConfirmed = true;
+        qc.setQueryData(['completions', today], new Set(result.completedStepKeysAfter));
+        haptics.success();
+        if (result.inserted) {
+          const moment = type.toLowerCase();
+          track('routine_checkoff_completed', { moment });
+          if (result.firstEver) track('first_checkoff_completed', { moment });
+          const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
+          if (
+            shouldTrackCycleNightCompleted({
+              completedStepKeysAfter: result.completedStepKeysAfter,
+              completedKey: key,
+              cycleActive: context?.cycleActive === true,
+              phase: checkoffPhase,
+              stepKeys: context?.stepKeys ?? [],
+              completionInserted: result.inserted,
+            })
+          ) {
+            track('cycle_night_completed', { moment: 'pm', source: 'today' });
+          }
+        }
+        lease.assertCurrent();
+        if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {
+          reviewMomentEarned = true;
+        }
+        await qc.invalidateQueries({ queryKey: ['completions', today] });
+        lease.assertCurrent();
+        await qc.invalidateQueries({ queryKey: ['progress'] });
+        lease.assertCurrent();
+        await qc.invalidateQueries({ queryKey: ['completion-sync-unsynced'] });
+        lease.assertCurrent();
+      });
+    } catch {
+      if (!persistenceConfirmed) {
+        setCompletionActionFailed(true);
+      } else {
+        // The step is already durable and visibly cached. Retry only downstream
+        // refreshes; never relabel a confirmed check-off as a storage failure.
+        void Promise.allSettled([
+          qc.invalidateQueries({ queryKey: ['completions', today] }),
+          qc.invalidateQueries({ queryKey: ['progress'] }),
+          qc.invalidateQueries({ queryKey: ['completion-sync-unsynced'] }),
+        ]);
+      }
+    } finally {
+      setCompletionPendingKey(null);
+      // The native request owns a two-second settled-state delay. Do not keep
+      // the completed check-off pending or make progress depend on StoreKit.
+      if (reviewMomentEarned) {
+        void requestReviewAfterValue('seven_checkoff_days').catch(() => undefined);
+      }
+    }
   }
 
-  return (
-    <ShelfDataAvailabilityBoundary query={shelf}>
-      <TodayScreenContent boundary={boundary} routineType={routineType} shelf={shelf} />
-    </ShelfDataAvailabilityBoundary>
-  );
-}
+  function retryCompletions() {
+    setCompletionActionFailed(false);
+    void completionQuery.refetch();
+  }
 
-function TodayScreenContent({
-  boundary,
-  routineType,
-  shelf,
-}: {
-  boundary: LocalDateBoundaryIdentity;
-  routineType: Extract<RoutineType, 'AM' | 'PM'>;
-  shelf: ReturnType<typeof useShelfFromBoundary>;
-}) {
-  const { height, width } = useWindowDimensions();
-  const type = routineType;
-  const dark = type === 'PM';
-  const todayViewModel = useTodayViewModel({ boundary, routineType, shelf });
-  const planQuery = todayViewModel.plan;
-  const { data: planData } = planQuery;
-  const { data: progress } = todayViewModel.progress;
-  const cycleQuery = todayViewModel.cycle;
-  const { data: cycleData } = cycleQuery;
-  const completionQuery = todayViewModel.completion;
-  const { completionMutationFailed, done } = todayViewModel;
-  const hasExamplePlan = planData?.isExample === true;
-  const hasRealRoutine = Boolean(planData && !planData.isExample);
-  const plan = hasRealRoutine ? planData?.plan : undefined;
-  const scheduleUnavailable =
-    hasRealRoutine && plan?.cycle != null && canUseRoutineCadence() && cycleQuery.isError;
-  const safetyExclusionCount = plan?.safetyExclusions.length ?? 0;
-  const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;
-  const safetyExcludedIds = new Set(
-    plan?.safetyExclusions.map((exclusion) => exclusion.productId) ?? [],
-  );
-
-  // The orchestrated, profile-aware cycle drives tonight everywhere (so pregnancy
-  // suppression etc. is never contradicted by a hardcoded surface. Review fix).
-  const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;
-  const cTonight = cycleData?.tonight ?? null;
-  const skippedTonight = cycleData?.skippedTonight ?? false;
-  const recoveryActive = cycleData?.recovery.active ?? false;
-  const paused = cycleData?.paused ?? false;
-  const tonightSlot = cTonight?.night.slot ?? null;
-  const cycleStripNights = cycleData?.weekAhead.map((projected) => projected.night) ?? [];
+  function handleCompletionSyncUnavailable() {
+    if (hasCompletionIdentityRepair) {
+      router.push('/(tabs)/shelf');
+      return;
+    }
+    void recoverCompletionSyncUnsynced(currentCompletionSyncTimezone()).then(
+      () => completionSyncUnsyncedQuery.refetch(),
+      () => completionSyncUnsyncedQuery.refetch(),
+    );
+  }
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
     done.has(key) ? 'done' : key === firstUndoneKey ? 'next' : 'pending';
 
-  const dateLabel = new Date().toLocaleDateString('en-US', {
+  const dateLabel = clock.now.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
   });
-  const clockLabel = localClockLabel();
+  const clockLabel = clock.clockLabel;
   const compactPhone = height < 700;
   const compactCycleStrip = compactPhone || width < 430;
+  const compactRecommendationPrompt = height < 860;
   const shortEmptyRoutine = compactPhone && height < 600;
+  const showRecommendations = hasRealRoutine && height >= 500;
   const showTonightTeaser =
     hasRealRoutine &&
     !compactPhone &&
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
 
-  if (planQuery.isLoading) {
-    return (
-      <Screen edges={['top', 'bottom']}>
-        <View
-          accessibilityLabel="Opening your routine"
-          accessibilityLiveRegion="polite"
-          className="flex-1 items-center justify-center"
-        >
-          <Text variant="bodySm" tone="muted">
-            Opening your routine…
-          </Text>
-        </View>
-      </Screen>
-    );
-  }
-
-  if (planQuery.isError) {
-    return (
-      <Screen edges={['top', 'bottom']}>
-        <ScrollView
-          onScroll={reportDockScroll}
-          scrollEventThrottle={32}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
-        >
-          <ShelfDataUnavailableNotice
-            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
-            onRetry={todayViewModel.retryPrivateGuidance}
-            retrying={planQuery.isFetching}
-          />
-        </ScrollView>
-      </Screen>
-    );
-  }
-
-  if (completionQuery.isPending || completionQuery.isError || completionMutationFailed) {
-    return (
-      <Screen edges={['top', 'bottom']}>
-        <CompletionHistoryState
-          failed={completionQuery.isError || completionMutationFailed}
-          retrying={completionQuery.isFetching}
-          onRetry={() => void todayViewModel.retryCompletionHistory()}
-        />
-      </Screen>
-    );
-  }
-
   // ---- AM ----
   if (!dark) {
-    const steps = plan?.am ?? [];
-    const amStepKeys = steps.map((step) => stepKey('AM', step.productId));
-    const amActionIdentity = `${todayViewModel.completionActionScope}:AM:${amStepKeys.join('|')}`;
-    const firstUndone = amStepKeys.find((key) => !done.has(key)) ?? null;
-    const doneCount = steps.filter((s) => done.has(stepKey('AM', s.productId))).length;
+    const { steps, firstUndoneKey: firstUndone, completedCount: doneCount } = routine.am;
     return (
       <Screen edges={['top']}>
-        <ScrollView
-          onScroll={reportDockScroll}
-          scrollEventThrottle={32}
+        <ScrollView onScroll={reportDockScroll} scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
           contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
         >
-          <TodayHeader
+          <ReverseTrialBanner compact={compactPhone} />
+          <TodayFocusHeader
             phase="AM"
-            clockLabel={clockLabel}
             dateLabel={dateLabel}
             total={steps.length}
             completed={doneCount}
@@ -537,11 +655,28 @@ function TodayScreenContent({
             />
           ) : null}
 
-          {scheduleUnavailable ? (
-            <ActiveScheduleUnavailableNotice
-              className="mt-4"
-              onRetry={() => void todayViewModel.retrySchedule()}
-              retrying={cycleQuery.isFetching}
+          {sequencingWithheldCount > 0 ? (
+            <SequencingWithheldNotice
+              compact={compactPhone}
+              count={sequencingWithheldCount}
+              dark={false}
+            />
+          ) : null}
+
+          {completionUnavailable || completionActionFailed ? (
+            <CompletionStatusNotice
+              dark={false}
+              loading={completionLoading}
+              onRetry={retryCompletions}
+            />
+          ) : null}
+
+          {completionSyncUnsynced.length > 0 ? (
+            <CompletionSyncUnavailableNotice
+              dark={false}
+              count={completionSyncUnsynced.length}
+              hasIdentityRepair={hasCompletionIdentityRepair}
+              onRetry={handleCompletionSyncUnavailable}
             />
           ) : null}
 
@@ -575,20 +710,20 @@ function TodayScreenContent({
                 const k = stepKey('AM', s.productId);
                 return (
                   <CheckRow
-                    actionIdentity={amActionIdentity}
-                    committing={todayViewModel.isCompletionPending(k)}
                     key={k}
                     name={s.name}
                     sub={s.instruction}
                     state={rowState(k, firstUndone)}
                     dark={false}
                     compact={compactPhone}
+                    disabled={completionUnavailable || completionPendingKey !== null}
                     first={i === 0}
                     onPress={() =>
-                      void todayViewModel.completeStep(k, {
+                      void handleCompletion(k, {
                         phase: 'AM',
                         cycleActive: false,
-                        stepKeys: amStepKeys,
+                        stepKeys: routine.am.stepKeys,
+                        stepOrder: i + 1,
                       })
                     }
                   />
@@ -596,6 +731,14 @@ function TodayScreenContent({
               })}
             </View>
           )}
+
+          {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
+          {showRecommendations ? (
+            <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
+          ) : null}
+
+          {/* Ask. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
+          {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
           {showTonightTeaser ? (
@@ -663,71 +806,25 @@ function TodayScreenContent({
   }
 
   // ---- PM (dark). Driven by the orchestrated, profile-aware cycle ----
-  const nightNumber = cTonight ? cTonight.index + 1 : 0;
-  const nightTotal = cycle?.lengthNights ?? 0;
-  // Tonight's cycled active comes from the engine (suppressed correctly for
-  // pregnancy etc.). Not from a hardcoded literal. Skipped, recovery, AND
-  // paused/travel nights all drop the potent active so the evening trims to the
-  // stable barrier basics the pause/travel banners promise (docs/05 §6.4).
-  const scheduledCyclePlanStep = cTonight?.night.productId
-    ? plan?.pm.find((step) => step.productId === cTonight.night.productId)
-    : undefined;
-  const cycledStep =
-    !skippedTonight &&
-    !recoveryActive &&
-    !paused &&
-    cTonight?.night.productId &&
-    !safetyExcludedIds.has(cTonight.night.productId)
-      ? {
-          productId: cTonight.night.productId,
-          name: cTonight.night.productName ?? 'Tonight’s active',
-          instruction: slotInstruction(cTonight.night.slot),
-          order: scheduledCyclePlanStep?.order ?? 40,
-          role:
-            scheduledCyclePlanStep?.role ??
-            (cTonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined),
-        }
-      : null;
-  const dailyPm = (plan?.pm ?? []).filter(
-    (step) => step.cadence !== 'cycle' && !safetyExcludedIds.has(step.productId),
-  );
-  const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
-    (a, b) => a.order - b.order,
-  );
-  const hasScheduledRetinoid = cycledStep?.role === 'treatment';
-  const pmStepKeys = pmSteps.map((s) => stepKey('PM', s.productId));
-  const pmCycleActive = Boolean(
-    cycle && cTonight?.night.productId && !paused && !skippedTonight && !recoveryActive,
-  );
-  const pmActionIdentity = `${todayViewModel.completionActionScope}:PM:${pmCycleActive}:${pmStepKeys.join('|')}`;
-  const firstUndonePm = pmStepKeys.find((k) => !done.has(k)) ?? null;
-  const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
-  const suppressedAcidName =
-    tonightSlot === 'retinoid' && cycle
-      ? (cycle.nights.find(
-          (night) =>
-            night.slot === 'exfoliate' &&
-            !hasUseTogetherChoiceBetween(
-              cycleData?.conflictChoices ?? [],
-              cTonight?.night.productId,
-              night.productId,
-            ),
-        )?.productName ?? null)
-      : null;
-  const nextAcidISO = cycleData?.nextAcidNight ?? null;
+  const { nightNumber, nightTotal, suppressedAcidName, nextAcidISO } = routine;
+  const {
+    steps: pmSteps,
+    stepKeys: pmStepKeys,
+    firstUndoneKey: firstUndonePm,
+    completedCount: donePm,
+  } = routine.pm;
 
   return (
     <Screen tone="night" edges={['top']}>
-      <ScrollView
-        onScroll={reportDockScroll}
-        scrollEventThrottle={32}
+      <ScrollView onScroll={reportDockScroll} scrollEventThrottle={32}
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
       >
-        <TodayHeader
+        <ReverseTrialBanner compact={compactPhone} tone="night" />
+        <TodayFocusHeader
           phase="PM"
-          clockLabel={clockLabel}
           dateLabel={dateLabel}
+          clockLabel={clockLabel}
           total={pmSteps.length}
           completed={donePm}
           hasRoutine={hasRealRoutine}
@@ -819,13 +916,8 @@ function TodayScreenContent({
           <CadenceWithheldNotice compact={compactPhone} count={cadenceWithheldCount} dark />
         ) : null}
 
-        {scheduleUnavailable ? (
-          <ActiveScheduleUnavailableNotice
-            className="mt-4"
-            onRetry={() => void todayViewModel.retrySchedule()}
-            retrying={cycleQuery.isFetching}
-            tone="night"
-          />
+        {sequencingWithheldCount > 0 ? (
+          <SequencingWithheldNotice compact={compactPhone} count={sequencingWithheldCount} dark />
         ) : null}
 
         {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}
@@ -840,7 +932,7 @@ function TodayScreenContent({
               router.push('/cycle/week');
             }}
           >
-            <View className="mb-4 flex-row flex-wrap items-center justify-between gap-2">
+            <View className="mb-4 flex-row items-center justify-between">
               <Text
                 className="font-sans-bold text-[13px] uppercase tracking-[1px]"
                 style={{ color: 'rgba(244,239,231,0.5)' }}
@@ -890,52 +982,73 @@ function TodayScreenContent({
         {hasExamplePlan ? (
           <EmptyRoutineCard compact={compactPhone} dark short={shortEmptyRoutine} />
         ) : (
-          <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
-            <View className="mb-2 flex-row items-center justify-between">
-              <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
-                Evening routine
-              </Text>
-              {pmSteps.length ? (
-                <Text className="font-mono text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
-                  {donePm} of {pmSteps.length}
+          <>
+            {completionUnavailable || completionActionFailed ? (
+              <CompletionStatusNotice dark loading={completionLoading} onRetry={retryCompletions} />
+            ) : null}
+            {completionSyncUnsynced.length > 0 ? (
+              <CompletionSyncUnavailableNotice
+                dark
+                count={completionSyncUnsynced.length}
+                hasIdentityRepair={hasCompletionIdentityRepair}
+                onRetry={handleCompletionSyncUnavailable}
+              />
+            ) : null}
+            <View
+              className="mt-4 rounded-card p-5"
+              style={{ backgroundColor: colors.nightSurface }}
+            >
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
+                  Evening routine
                 </Text>
-              ) : null}
-            </View>
-            {pmSteps.length ? (
-              pmSteps.map((s, i) => {
-                const k = stepKey('PM', s.productId);
-                return (
-                  <CheckRow
-                    actionIdentity={pmActionIdentity}
-                    committing={todayViewModel.isCompletionPending(k)}
-                    key={k}
-                    name={s.name}
-                    sub={pmDisplaySub(s, hasScheduledRetinoid)}
-                    state={rowState(k, firstUndonePm)}
-                    dark
-                    compact={compactPhone}
-                    first={i === 0}
-                    onPress={() =>
-                      void todayViewModel.completeStep(k, {
-                        phase: 'PM',
-                        cycleActive: pmCycleActive,
-                        stepKeys: pmStepKeys,
-                      })
-                    }
-                  />
-                );
-              })
-            ) : (
-              <View className={compactPhone ? 'py-2.5' : 'py-3'}>
-                <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
-                  No evening steps yet.
-                </Text>
-                <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-                  Add a cleanser, moisturiser, or night product to build this out.
-                </Text>
+                {pmSteps.length ? (
+                  <Text
+                    className="font-mono text-[12px]"
+                    style={{ color: 'rgba(244,239,231,0.45)' }}
+                  >
+                    {donePm} of {pmSteps.length}
+                  </Text>
+                ) : null}
               </View>
-            )}
-          </View>
+              {pmSteps.length ? (
+                pmSteps.map((s, i) => {
+                  const k = stepKey('PM', s.productId);
+                  return (
+                    <CheckRow
+                      key={k}
+                      name={s.name}
+                      sub={s.instruction}
+                      state={rowState(k, firstUndonePm)}
+                      dark
+                      compact={compactPhone}
+                      disabled={completionUnavailable || completionPendingKey !== null}
+                      first={i === 0}
+                      onPress={() =>
+                        void handleCompletion(k, {
+                          phase: 'PM',
+                          cycleActive: routine.cycleActive,
+                          stepKeys: pmStepKeys,
+                          stepOrder: i + 1,
+                        })
+                      }
+                    />
+                  );
+                })
+              ) : (
+                <View className={compactPhone ? 'py-2.5' : 'py-3'}>
+                  <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
+                    No evening steps yet.
+                  </Text>
+                  <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
+                    {sequencingWithheldCount > 0 || cadenceWithheldCount > 0
+                      ? 'Products awaiting reviewed order or timing stay off Today for now.'
+                      : 'Add a cleanser, moisturiser, or night product to build this out.'}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </>
         )}
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}

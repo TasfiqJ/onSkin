@@ -6,13 +6,20 @@ export type ReviewValueMoment =
 
 export type ReviewPromptState = {
   attemptedAt: string[];
+  lastVersionPrompted: string | null;
 };
 
 export type ReviewPromptDecision =
   | { ok: true }
   | {
       ok: false;
-      reason: 'disabled' | 'not_value_moment' | 'annual_cap' | 'cooldown';
+      reason:
+        | 'disabled'
+        | 'not_value_moment'
+        | 'version_unavailable'
+        | 'already_prompted_for_version'
+        | 'annual_cap'
+        | 'cooldown';
     };
 
 // Privacy controls and payment completion are tracked as moments, but they are
@@ -29,7 +36,7 @@ export const REVIEW_PROMPT_POLICY = {
 } as const;
 
 function daysBetween(a: Date, b: Date): number {
-  return Math.abs(a.getTime() - b.getTime()) / 86_400_000;
+  return (b.getTime() - a.getTime()) / 86_400_000;
 }
 
 function validDates(state: ReviewPromptState): Date[] {
@@ -42,23 +49,35 @@ function validDates(state: ReviewPromptState): Date[] {
 export function canRequestReviewPrompt(input: {
   enabled: boolean;
   moment: ReviewValueMoment;
+  appVersion: string | null;
   state: ReviewPromptState;
   now?: Date;
 }): ReviewPromptDecision {
   if (!input.enabled) return { ok: false, reason: 'disabled' };
   if (!VALUE_MOMENTS.has(input.moment)) return { ok: false, reason: 'not_value_moment' };
+  if (!input.appVersion) return { ok: false, reason: 'version_unavailable' };
+  if (input.state.lastVersionPrompted === input.appVersion) {
+    return { ok: false, reason: 'already_prompted_for_version' };
+  }
 
   const now = input.now ?? new Date();
   const attempts = validDates(input.state);
   const attemptsInWindow = attempts.filter(
-    (date) => daysBetween(date, now) <= REVIEW_PROMPT_POLICY.annualWindowDays,
+    (date) => {
+      const ageInDays = daysBetween(date, now);
+      return ageInDays >= 0 && ageInDays <= REVIEW_PROMPT_POLICY.annualWindowDays;
+    },
   );
   if (attemptsInWindow.length >= REVIEW_PROMPT_POLICY.maxAttemptsPer365Days) {
     return { ok: false, reason: 'annual_cap' };
   }
 
   const last = attempts.at(-1);
-  if (last && daysBetween(last, now) < REVIEW_PROMPT_POLICY.minDaysBetweenAttempts) {
+  if (
+    last &&
+    daysBetween(last, now) >= 0 &&
+    daysBetween(last, now) < REVIEW_PROMPT_POLICY.minDaysBetweenAttempts
+  ) {
     return { ok: false, reason: 'cooldown' };
   }
 
@@ -67,6 +86,7 @@ export function canRequestReviewPrompt(input: {
 
 export function recordReviewAttempt(
   state: ReviewPromptState,
+  appVersion: string,
   now: Date = new Date(),
 ): ReviewPromptState {
   const cutoff = now.getTime() - REVIEW_PROMPT_POLICY.annualWindowDays * 86_400_000;
@@ -74,5 +94,5 @@ export function recordReviewAttempt(
     .filter((date) => date.getTime() >= cutoff)
     .map((date) => date.toISOString());
   attemptedAt.push(now.toISOString());
-  return { attemptedAt };
+  return { attemptedAt, lastVersionPrompted: appVersion };
 }

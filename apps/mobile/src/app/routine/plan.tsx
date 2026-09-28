@@ -10,18 +10,16 @@ import {
   routineFirstInsightCopy,
   type RoutineFirstInsightCopy,
 } from '@/features/routine/firstInsight';
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { useRoutinePlanViewModel } from '@/features/routine/useRoutinePlanViewModel';
-import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
+import {
+  canUseRoutineCadence,
+  canUseRoutineRecovery,
+  canUseRoutineSequencing,
+} from '@/features/routine/reviewGate';
+import { usePlan } from '@/features/routine/usePlan';
 import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
-import { useCycleMutations } from '@/features/scheduler/useCycle';
-import {
-  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
-  ShelfDataUnavailableNotice,
-} from '@/features/shelf/ShelfDataAvailabilityGate';
-import { track } from '@/lib/analytics/track';
+import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -182,9 +180,8 @@ function FirstInsightCard({
 
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
-  const { planQuery, cycleQuery } = useRoutinePlanViewModel();
-  const { data } = planQuery;
-  const { data: cycleData } = cycleQuery;
+  const { data } = usePlan();
+  const { data: cycleData } = useCycle();
   const cycleMutations = useCycleMutations();
   const [starting, setStarting] = useState(false);
   const [startFailed, setStartFailed] = useState(false);
@@ -198,7 +195,9 @@ export default function PlanScreen() {
     setStarting(true);
     setStartFailed(false);
     try {
-      await cycleMutations.start();
+      if (canUseRoutineCadence() && canUseRoutineRecovery() && cycleData?.cycle) {
+        await cycleMutations.start();
+      }
       router.replace('/today');
     } catch {
       setStartFailed(true);
@@ -217,19 +216,11 @@ export default function PlanScreen() {
     (item) => item.productId === exampleRetinoid?.productId,
   );
   const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;
-  const scheduleUnavailable =
-    data?.isExample === false &&
-    plan?.cycle != null &&
-    canUseRoutineCadence() &&
-    cycleQuery.isError;
   const cycleSummaries = canonicalCycle ? cycleActiveSummaries(canonicalCycle) : [];
   const recoveryNightNumbers = canonicalCycle ? cycleRecoveryNightNumbers(canonicalCycle) : [];
   const hasCycle = data?.isExample ? plan?.cycle != null : canonicalCycle != null;
   const awaitingCanonicalCycle =
-    data?.isExample === false &&
-    plan?.cycle != null &&
-    cycleData === undefined &&
-    !scheduleUnavailable;
+    data?.isExample === false && plan?.cycle != null && cycleData === undefined;
   const hasSafetyExclusions = Boolean(plan?.safetyExclusions.length);
   const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser') ?? false;
   const hasVitCSynergy = plan?.conflicts.some(
@@ -256,32 +247,12 @@ export default function PlanScreen() {
       isExample: data.isExample,
       source,
     });
-
-    if (data.plan.conflicts.length > 0) {
-      track('conflict_detected', { count: data.plan.conflicts.length });
-    }
   }, [data]);
 
-  if (planQuery.isError) {
-    return (
-      <Screen edges={['top', 'bottom']}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
-        >
-          <ShelfDataUnavailableNotice
-            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
-            onRetry={planQuery.retry}
-            retrying={planQuery.isFetching}
-            onExit={() => backOrReplace(router, APP_YOU_ROUTE)}
-            exitLabel="Back to You"
-          />
-        </ScrollView>
-      </Screen>
-    );
-  }
-
-  const planNote = plan ? (plan.unplacedProducts.length > 0 ? null : (plan.gaps[0] ?? null)) : null;
+  const planNote =
+    canUseRoutineSequencing() && plan && plan.unplacedProducts.length === 0
+      ? (plan.gaps[0] ?? null)
+      : null;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -447,14 +418,7 @@ export default function PlanScreen() {
                   </Pressable>
                 ) : null}
               </View>
-              {scheduleUnavailable ? (
-                <ActiveScheduleUnavailableNotice
-                  className={compactPlan ? 'my-1' : 'my-1.5'}
-                  onRetry={() => void cycleQuery.retry()}
-                  retrying={cycleQuery.isFetching}
-                  tone="night"
-                />
-              ) : hasCycle ? (
+              {hasCycle ? (
                 data?.isExample ? (
                   <>
                     {exampleExfoliant ? (
@@ -537,7 +501,10 @@ export default function PlanScreen() {
                     No night steps yet.
                   </Text>
                   <Text className="mt-1 text-[12px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-                    Add a cleanser, moisturiser, or night product to build this out.
+                    {(plan?.sequencingWithheld.length ?? 0) > 0 ||
+                    (plan?.cadenceWithheld.length ?? 0) > 0
+                      ? 'Products awaiting reviewed order or timing stay on your shelf and out of this routine for now.'
+                      : 'Add a cleanser, moisturiser, or night product to build this out.'}
                   </Text>
                 </View>
               )}
@@ -576,18 +543,8 @@ export default function PlanScreen() {
       >
         {startFailed ? <CycleMutationError className="mb-2 mt-0" /> : null}
         <Button
-          disabled={starting || scheduleUnavailable || !planQuery.isSuccess}
-          label={
-            planQuery.isLoading
-              ? 'Building routine...'
-              : scheduleUnavailable
-                ? 'Schedule unavailable'
-                : starting
-                  ? 'Starting...'
-                  : startFailed
-                    ? 'Try again'
-                    : 'Start today'
-          }
+          disabled={starting}
+          label={starting ? 'Starting...' : startFailed ? 'Try again' : 'Start today'}
           variant="accent"
           onPress={() => void startToday()}
         />

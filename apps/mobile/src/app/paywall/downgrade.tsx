@@ -1,134 +1,47 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router } from 'expo-router';
+import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import {
-  DirectPaywallLoading,
-  DirectPaywallRecovery,
-  DirectPaywallRedirecting,
-} from '@/features/subscription/DirectPaywallResolution';
-import { directPaywallDecision } from '@/features/subscription/directPaywallPolicy';
-import {
-  acknowledgeLifecyclePromptPresented,
-  supersedeLifecyclePrompt,
-} from '@/features/subscription/lifecycle';
-import {
   PAYWALL_FEEDBACK,
   PaywallFeedback,
   type PaywallFeedbackState,
 } from '@/features/subscription/PaywallFeedback';
-import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { usePaidActionHold } from '@/features/subscription/usePaidActionHold';
+import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // Graceful downgrade after a PAID expiry (design 08, docs/08 §6). Never a
 // data-deleting hard lock; data preserved, Pro re-offered calmly.
 export default function DowngradeScreen() {
-  const params = useLocalSearchParams<{ lifecyclePromptId?: string | string[] }>();
-  const lifecyclePromptId = Array.isArray(params.lifecyclePromptId)
-    ? params.lifecyclePromptId[0]
-    : params.lifecyclePromptId;
   const { fontScale = 1, height, width } = useWindowDimensions();
-  const ownerScope = useOwnerQueryScope();
-  const entitlement = useEntitlement();
-  const decision = directPaywallDecision('downgrade', {
-    state: entitlement.data,
-    isLoading: entitlement.isLoading,
-    isError: entitlement.isError,
-  });
-  const { purchase } = useEntitlementActions();
-  const offering = useSubscriptionOffering({ enabled: decision.loadOffering });
+  const { startTrial } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const paidAction = usePaidActionHold(ownerScope.generation);
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const supportFloorTextPressurePaywall =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPaywall = height < 640 || supportFloorTextPressurePaywall;
 
-  useEffect(() => {
-    // The downgrade copy is the mounted target surface; settle only a delivery
-    // carrying the exact opaque prompt ID routed by the startup coordinator.
-    if (decision.lifecycleDisposition !== 'present' || !lifecyclePromptId) return;
-    void acknowledgeLifecyclePromptPresented({
-      promptId: lifecyclePromptId,
-      route: '/paywall/downgrade',
-    });
-  }, [decision.lifecycleDisposition, lifecyclePromptId]);
-
-  useEffect(() => {
-    if (decision.phase !== 'redirect') return;
-    if (decision.lifecycleDisposition === 'supersede' && lifecyclePromptId) {
-      // Journal settlement remains owner-fenced and drain-held, but a native
-      // storage stall must not strand this deep link on a blank route.
-      void supersedeLifecyclePrompt({
-        promptId: lifecyclePromptId,
-        route: '/paywall/downgrade',
-      });
-    }
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    if (decision.redirect === 'reoffer') {
-      router.replace('/paywall/reoffer');
-      return;
-    }
-    router.replace('/(tabs)/today');
-  }, [
-    decision.lifecycleDisposition,
-    decision.phase,
-    decision.redirect,
-    lifecyclePromptId,
-    ownerScope,
-  ]);
-
   function onRenew() {
-    if (!decision.allowPurchase || paidAction.isHeld) return;
     setActionFeedback(null);
     if (!canPurchase) {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    purchase.mutate(
-      {
-        kind: 'downgrade_purchase',
-        expectedEvidenceIdentity: entitlement.data?.evidenceIdentity ?? null,
+    startTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
+        else setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      {
-        onSuccess: (result) => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          const outcome = paidAction.resolve(result);
-          if (outcome.kind === 'success') {
-            router.replace({
-              pathname: '/paywall/success',
-              params: { receipt: outcome.receiptId },
-            });
-          } else if (outcome.kind === 'active_without_receipt') {
-            router.replace('/(tabs)/today');
-          } else if (outcome.kind === 'inactive' && !result.cancelled) {
-            setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
-          }
-        },
-        onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-      },
-    );
+      onError: (error) => setActionFeedback(PAYWALL_FEEDBACK.purchaseError(error)),
+    });
   }
-
-  if (decision.phase === 'loading') return <DirectPaywallLoading />;
-  if (decision.phase === 'recovery') {
-    return (
-      <DirectPaywallRecovery
-        isRetrying={entitlement.isVerificationRetrying}
-        onClose={() => router.replace('/(tabs)/today')}
-        onRetry={() => void entitlement.retryVerification()}
-      />
-    );
-  }
-  if (decision.phase === 'redirect') return <DirectPaywallRedirecting />;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -195,20 +108,13 @@ export default function DowngradeScreen() {
             {offering.data.reason}
           </Text>
         ) : null}
-        <PaywallFeedback
-          compact={compactPaywall}
-          feedback={paidAction.feedback ?? actionFeedback}
-        />
+        <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
         <Pressable
           accessibilityRole="button"
-          disabled={
-            !decision.allowPurchase || !canPurchase || paidAction.isHeld || purchase.isPending
-          }
+          disabled={!canPurchase || startTrial.isPending}
           onPress={onRenew}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{
-            backgroundColor: canPurchase && !paidAction.isHeld ? colors.clay : colors.mutedLight,
-          }}
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
             {PAYWALL_COPY.downgrade.renewCta}

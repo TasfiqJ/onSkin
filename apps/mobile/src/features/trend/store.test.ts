@@ -1,9 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
   clearTrendStore,
   deleteTrendState,
-  readTrendInsightsLocal,
+  getTrendInsightsLocal,
   setTrendInsightsLocal,
 } from './store';
 
@@ -13,20 +18,9 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
-  readPrivateItem: vi.fn(async (key: string) => {
-    const value = mocks.storage.get(key);
-    return value === undefined ? { status: 'absent' } : { status: 'available', value };
-  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
-  updatePrivateItem: vi.fn(
-    async (key: string, updater: (current: string | null) => string | null) => {
-      const next = updater(mocks.storage.get(key) ?? null);
-      if (next === null) mocks.storage.delete(key);
-      else mocks.storage.set(key, next);
-    },
-  ),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -35,35 +29,29 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const CONSENT_KEY = 'onskin.trendInsights.v1';
-const STATE_KEY = 'onskin.trendState.v1';
+const CONSENT_KEY = 'layerwell.trendInsights.v1';
+const STATE_KEY = 'layerwell.trendState.v1';
 
 describe('trend insight store', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('reads legacy trend grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, 'TRUE');
 
-    await expect(readTrendInsightsLocal()).resolves.toEqual({
-      status: 'available',
-      value: true,
-      format: 'legacy',
-    });
+    await expect(getTrendInsightsLocal()).resolves.toBe(true);
     expect(mocks.storage.get(CONSENT_KEY)).toBe('TRUE');
 
     await setTrendInsightsLocal(false);
     expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('classifies and preserves malformed trend consent values', async () => {
+  it('fails closed and preserves malformed trend consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'enabled');
 
-    await expect(readTrendInsightsLocal()).resolves.toEqual({
-      status: 'corrupt',
-      reason: 'invalid_value',
-    });
+    await expect(getTrendInsightsLocal()).resolves.toBe(false);
 
     expect(mocks.storage.get(CONSENT_KEY)).toBe('enabled');
   });
@@ -72,6 +60,7 @@ describe('trend insight store', () => {
     mocks.storage.set(CONSENT_KEY, '1');
     mocks.storage.set(STATE_KEY, 'derived-state');
 
+    clearActiveHealthProcessingEpoch();
     await deleteTrendState();
 
     expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
@@ -82,6 +71,7 @@ describe('trend insight store', () => {
     mocks.storage.set(CONSENT_KEY, '1');
     mocks.storage.set(STATE_KEY, 'derived-state');
 
+    clearActiveHealthProcessingEpoch();
     await clearTrendStore();
 
     expect(mocks.storage.has(CONSENT_KEY)).toBe(false);

@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Card, RouteIconButton, Screen, Text } from '@/components/ui';
+import { canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { currentMilestone } from '@/features/streak/milestones';
 import { markMilestoneSeen } from '@/features/streak/milestoneStore';
-import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { track } from '@/lib/analytics/track';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -43,49 +43,59 @@ function weekDaySquare(state: DayState): {
 }
 
 export default function StreakScreen() {
-  const progressQuery = useProgress();
-  const { data } = progressQuery;
-  const cycleQuery = useCycle();
-  const { data: cycleData } = cycleQuery;
+  const { data, isError, refetch } = useProgress();
+  const { data: cycleData } = useCycle();
+  const recoveryReady = canUseRoutineRecovery();
   const week = data?.week ?? [];
   const heat = data?.heat ?? [];
 
-  // Highest calm milestone the current streak has reached (docs/07 §4.5). The
-  // "one cycle" marker uses the real cycle length when available.
-  // Do not manufacture a four-night "one cycle" milestone while the user's
-  // actual cadence is unreadable. Week/day milestones remain available.
-  const cycleLength = cycleQuery.isSuccess
-    ? (cycleData?.cycle?.lengthNights ?? 4)
-    : Number.POSITIVE_INFINITY;
+  // Highest calm milestone the current streak has reached (docs/07 §4.5). A
+  // cycle milestone exists only when the admitted scheduler supplies a cycle.
+  const cycleLength = cycleData?.cycle?.lengthNights ?? null;
   const milestone = currentMilestone(data?.streak ?? 0, cycleLength);
 
   // Fire the analytics event once per milestone (first crossing only).
   useEffect(() => {
     if (!milestone) return;
-    void markMilestoneSeen(milestone.key)
-      .then((result) => {
-        if (result.status === 'recorded') {
-          track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
-        }
-      })
-      .catch(() => undefined);
+    void markMilestoneSeen(milestone.key).then((fresh) => {
+      if (fresh)
+        track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
+    });
   }, [milestone?.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (progressQuery.isPending || progressQuery.isError) {
+  if (!data) {
     return (
-      <Screen edges={['top', 'bottom']}>
-        <View className="flex-row items-center justify-between pt-1">
-          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
-          <Text variant="label" tone="muted">
-            STREAK & ADHERENCE
-          </Text>
-          <View style={{ width: 44 }} />
-        </View>
-        <CompletionHistoryState
-          failed={progressQuery.isError}
-          retrying={progressQuery.isFetching}
-          onRetry={() => void progressQuery.refetch()}
-        />
+      <Screen edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+          <View className="flex-row items-center justify-between pt-1">
+            <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+            <Text variant="label" tone="muted">
+              STREAK & ADHERENCE
+            </Text>
+            <View style={{ width: 44 }} />
+          </View>
+          <Card className="mt-5">
+            <Text variant="body" className="font-sans-bold">
+              {isError ? 'Progress is unavailable' : 'Loading your progress…'}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1.5">
+              {isError
+                ? "We couldn't safely read your saved check-offs. No streak or adherence total is being guessed."
+                : 'Your saved check-offs are being read securely.'}
+            </Text>
+            {isError ? (
+              <Pressable
+                accessibilityRole="button"
+                className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-clay px-5"
+                onPress={() => void refetch()}
+              >
+                <Text variant="bodySm" className="font-sans-bold" style={{ color: colors.paper }}>
+                  Try again
+                </Text>
+              </Pressable>
+            ) : null}
+          </Card>
+        </ScrollView>
       </Screen>
     );
   }
@@ -109,6 +119,19 @@ export default function StreakScreen() {
             ? `${data?.streak}-day streak · best ${data?.longest ?? 0}`
             : 'Your nights, no pressure.'}
         </Text>
+
+        {data.serverStatus === 'unavailable' ? (
+          <View
+            accessibilityLiveRegion="polite"
+            className="mt-4 rounded-card px-4 py-3.5"
+            style={{ backgroundColor: colors.greige }}
+          >
+            <Text variant="bodySm" tone="muted">
+              Showing check-offs saved on this device. Cross-device sync will retry when its secure
+              connection is available.
+            </Text>
+          </View>
+        ) : null}
 
         {/* Calm milestone marker (docs/07 §4.5). A gentle acknowledgement, no confetti. */}
         {milestone ? (
@@ -211,8 +234,9 @@ export default function StreakScreen() {
                 Welcome back
               </Text>
               <Text variant="bodySm" tone="muted" className="mt-0.5">
-                It&apos;s been a few days. That&apos;s okay. Pick up tonight; consistency over time
-                is what counts.
+                {recoveryReady
+                  ? "It's been a few days. That's okay. Pick up tonight; consistency over time is what counts."
+                  : 'Your routine remains available from Today. Recovery guidance is still under review.'}
               </Text>
             </View>
           </Pressable>

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "environment": "staging",
+  "mode": "closed-ingress-zero-cohort",
+  "projectRefFingerprint": null,
+  "sourceGitCommit": null,
+  "migrationPlanSha256": null,
+  "rollbackRef": null,
+  "operatorRole": null,
+  "changeLockRef": null,
+  "activatedAt": null,
+  "observedAt": null,
+  "holdUntil": null,
+  "releaseCondition": "db06-pass-and-separately-recorded-downstream-live-gate-release",
+  "assertion": "operator-attests-all-listed-ingress-remains-closed-through-hold-until",
+  "controls": {
+    "mobileClientsTargetingStaging": false,
+    "webClientsTargetingStaging": false,
+    "otaChannelsTargetingStaging": false,
+    "projectApiKeysExternallyDistributed": false,
+    "authSignupEnabled": false,
+    "authAnonymousSignupEnabled": false,
+    "authExternalProviderCount": 0,
+    "authAdminCreationAutomationEnabled": false,
+    "edgeTrafficAdmission": "frozen",
+    "signInWithAppleNotificationsTargetingStaging": false,
+    "appStoreServerNotificationsTargetingStaging": false,
+    "revenueCatWebhooksTargetingStaging": false,
+    "revenueCatPendingRetriesTargetingStaging": false,
+    "otherProviderCallbacksTargetingStaging": false,
+    "scheduledIngressConfigured": false
+  },
+  "evidenceRefs": {
+    "releaseChannels": null,
+    "supabaseAuth": null,
+    "supabaseEdge": null,
+    "apple": null,
+    "revenueCat": null,
+    "scheduledIngress": null
+  }
+}

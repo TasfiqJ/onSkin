@@ -1,0 +1,39 @@
+{
+  "alerts": [],
+  "bodyText": "? x Not the right product. S Search catalog Try name or brand instead I Add ingredients + Add it by hand Always works, even offline Report wrong match Confirm catalog report Report details to send Selected issue : wrong_match Catalog product ID : 00000000-0000-4000-8000-000000000044 Barcode : 012345678905 Report reason : wrong_match reported from barcode lookup result Intake method : barcode Intake route : shelf_no_match Your current RoutineKind account ID links this report to you. It is stored in RoutineKind's Supabase backend and is available to RoutineKind's catalog-review team and authorized operators. It is included in your RoutineKind data export. Account deletion or health-data consent withdrawal starts deletion from active RoutineKind systems; backup or legally required retention may not be immediate. Nothing is sent to Open Beauty Facts or any other third-party catalog provider. The list above is the sanitized product and report detail. A separate random retry ID with no product or account content prevents duplicate submissions. Your signed-in session and current health-data consent are checked separately to authorize it. Send report Cancel",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Send report",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 153.5,
+      "x": 45,
+      "y": 588
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 123.5,
+      "x": 206.5,
+      "y": 588
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8460/shelf/no-match?barcode=012345678905&wrongProductId=00000000-0000-4000-8000-000000000044",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

@@ -2,17 +2,38 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   catalogIntakeProvenance,
+  lookupBarcode,
   reportCatalogIssue,
   searchCatalog,
   type CatalogProductSummary,
+  type CatalogReportInput,
 } from './client';
 
 const mocks = vi.hoisted(() => ({
-  getSession: vi.fn(),
-  getUser: vi.fn(),
   isSupabaseConfigured: false,
   invoke: vi.fn(),
+  leaseOpen: true,
+  ownerUserId: 'user-1' as string | null,
   track: vi.fn(),
+}));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => mocks.ownerUserId,
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runHealthDataWriteOperation: async (
+    ownerUserId: string,
+    operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
+  ) => {
+    const assertCurrent = () => {
+      if (!mocks.leaseOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    };
+    assertCurrent();
+    const result = await operation({ ownerUserId, assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/lib/env', () => ({
@@ -27,10 +48,6 @@ vi.mock('@/lib/analytics/track', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
-    auth: {
-      getSession: mocks.getSession,
-      getUser: mocks.getUser,
-    },
     functions: {
       invoke: mocks.invoke,
     },
@@ -39,6 +56,16 @@ vi.mock('@/lib/supabase/client', () => ({
 
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
 const originalDev = runtime.__DEV__;
+const CATALOG_SOURCE_ID = '00000000-0000-4000-8000-000000000042';
+const OTHER_CATALOG_SOURCE_ID = '00000000-0000-4000-8000-000000000041';
+
+beforeEach(() => {
+  vi.spyOn(performance, 'now').mockReturnValue(1_000);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 function catalogProduct(overrides: Partial<CatalogProductSummary> = {}): CatalogProductSummary {
   return {
@@ -50,15 +77,49 @@ function catalogProduct(overrides: Partial<CatalogProductSummary> = {}): Catalog
     region: 'US',
     default_pao_months: 24,
     source: 'open_beauty_facts',
+    catalog_source_id: CATALOG_SOURCE_ID,
     source_ref: 'obf:012345678905',
+    quality_grade: 'usable',
+    review_status: 'reviewed',
+    ...overrides,
+  };
+}
+
+function networkCatalogProduct(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    id: '00000000-0000-4000-8000-000000000100',
+    barcode: '012345678905',
+    name: 'Catalog serum',
+    brand: 'Evidence Lab',
+    category: 'serum',
+    region: 'US',
+    default_pao_months: 12,
+    source: 'open_beauty_facts',
+    catalog_source_id: '00000000-0000-4000-8000-000000000042',
+    source_ref: 'obf:012345678905',
+    source_url: 'https://catalog.example/products/012345678905',
+    source_snapshot_date: '2026-07-09',
+    quality_grade: 'usable',
+    review_status: 'reviewed',
+    data_quality_score: 92,
+    ingredient_parse_status: 'complete',
+    ingredient_parse_confidence: 0.98,
+    catalog_sources: {
+      id: '00000000-0000-4000-8000-000000000042',
+      display_name: 'Reviewed offline catalog',
+      source_key: 'open_beauty_facts',
+      attribution_text: 'Source attribution',
+      attribution_url: 'https://catalog.example/attribution',
+    },
+    product_pao_expiry: [],
     ...overrides,
   };
 }
 
 describe('catalog intake provenance', () => {
-  it('keeps the catalog source UUID separate from its upstream reference', () => {
+  it('keeps the catalog source UUID separate and never imports a product-level printed date', () => {
     const product = catalogProduct({
-      catalog_source_id: '00000000-0000-4000-8000-000000000042',
+      catalog_source_id: CATALOG_SOURCE_ID,
       source_ref: 'obf:012345678905',
       product_pao_expiry: [
         {
@@ -67,22 +128,23 @@ describe('catalog intake provenance', () => {
           expiry_date: '2028-04-30',
           expiry_source: 'printed',
           region: 'US',
+          source_id: CATALOG_SOURCE_ID,
           review_status: 'reviewed',
         },
       ],
     });
 
     expect(catalogIntakeProvenance(product)).toEqual({
-      catalogSourceId: '00000000-0000-4000-8000-000000000042',
+      catalogSourceId: CATALOG_SOURCE_ID,
       paoMonths: 12,
       paoSource: 'catalog',
-      expiryDate: '2028-04-30',
+      expiryDate: null,
     });
   });
 
   it('uses only explicit reviewed PAO evidence and never relabels a legacy default', () => {
     expect(catalogIntakeProvenance(catalogProduct())).toEqual({
-      catalogSourceId: null,
+      catalogSourceId: CATALOG_SOURCE_ID,
       paoMonths: null,
       paoSource: 'unknown',
       expiryDate: null,
@@ -96,6 +158,7 @@ describe('catalog intake provenance', () => {
               pao_months: 9,
               pao_source: 'label',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'unreviewed',
             },
           ],
@@ -104,22 +167,53 @@ describe('catalog intake provenance', () => {
     ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
   });
 
-  it('preserves explicit label evidence but rejects region-mismatched evidence', () => {
+  it.each([
+    ['unreviewed product', { review_status: 'unreviewed' }],
+    ['limited-quality product', { quality_grade: 'limited' }],
+    ['missing product region', { region: null }],
+  ] as const)('fails freshness closed for a %s', (_label, overrides) => {
     expect(
       catalogIntakeProvenance(
         catalogProduct({
+          ...overrides,
           product_pao_expiry: [
             {
-              pao_months: 6,
-              pao_source: 'brand_label',
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: '2028-04-30',
+              expiry_source: 'printed',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
           ],
         }),
       ),
-    ).toMatchObject({ paoMonths: 6, paoSource: 'label' });
+    ).toMatchObject({ paoMonths: null, paoSource: 'unknown', expiryDate: null });
+  });
 
+  it.each(['label', 'brand_label', 'catalog'] as const)(
+    'persists one reviewed catalog-delivered %s PAO as Shelf catalog provenance',
+    (paoSource) => {
+      expect(
+        catalogIntakeProvenance(
+          catalogProduct({
+            product_pao_expiry: [
+              {
+                pao_months: 6,
+                pao_source: paoSource,
+                region: 'US',
+                source_id: CATALOG_SOURCE_ID,
+                review_status: 'reviewed',
+              },
+            ],
+          }),
+        ),
+      ).toMatchObject({ paoMonths: 6, paoSource: 'catalog' });
+    },
+  );
+
+  it('fails closed for multiple matching product-specific rows even when months agree', () => {
     expect(
       catalogIntakeProvenance(
         catalogProduct({
@@ -127,7 +221,22 @@ describe('catalog intake provenance', () => {
             {
               pao_months: 6,
               pao_source: 'label',
-              region: 'CA',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+            {
+              pao_months: 6,
+              pao_source: 'brand_label',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+            {
+              pao_months: 6,
+              pao_source: 'catalog',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
           ],
@@ -136,15 +245,105 @@ describe('catalog intake provenance', () => {
     ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
   });
 
-  it('does not turn computed, manufacturer, or unknown expiry evidence into a printed date', () => {
+  it('accepts the 120-month engineering ceiling and rejects values above it', () => {
+    const provenanceFor = (paoMonths: number) =>
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: paoMonths,
+              pao_source: 'brand_label',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      );
+
+    expect(provenanceFor(120)).toMatchObject({ paoMonths: 120, paoSource: 'catalog' });
+    expect(provenanceFor(121)).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
+  });
+
+  it('rejects region-mismatched catalog freshness evidence', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 6,
+              pao_source: 'label',
+              region: 'CA',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
+  });
+
+  it('prefers matching product-specific evidence over a matching category estimate', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 6,
+              pao_source: 'brand_label',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+            {
+              pao_months: 6,
+              pao_source: 'category_default',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: 6, paoSource: 'catalog' });
+  });
+
+  it('fails category-only evidence closed because the payload cannot prove category authority', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          default_pao_months: 6,
+          product_pao_expiry: [
+            {
+              pao_months: 6,
+              pao_source: 'category_default',
+              region: 'US',
+              source_id: CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: null, paoSource: 'unknown' });
+  });
+
+  it('does not turn any catalog expiry evidence into this physical package\'s printed date', () => {
     const common = {
       pao_months: 12,
       pao_source: 'catalog' as const,
       expiry_date: '2028-04-30',
       region: 'US',
+      source_id: CATALOG_SOURCE_ID,
       review_status: 'reviewed',
     };
 
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [{ ...common, expiry_source: 'printed' }],
+        }),
+      ),
+    ).toMatchObject({ paoMonths: 12, paoSource: 'catalog', expiryDate: null });
     expect(
       catalogIntakeProvenance(
         catalogProduct({
@@ -179,6 +378,7 @@ describe('catalog intake provenance', () => {
               expiry_date: '2027-06-01',
               expiry_source: 'printed',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
             {
@@ -187,6 +387,7 @@ describe('catalog intake provenance', () => {
               expiry_date: '2028-06-01',
               expiry_source: 'printed',
               region: 'US',
+              source_id: CATALOG_SOURCE_ID,
               review_status: 'reviewed',
             },
           ],
@@ -205,21 +406,65 @@ describe('catalog intake provenance', () => {
       ).catalogSourceId,
     ).toBeNull();
   });
+
+  it('rejects reviewed PAO when freshness source_id is null', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: '2028-04-30',
+              expiry_source: 'printed',
+              region: 'US',
+              source_id: null,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toEqual({
+      catalogSourceId: CATALOG_SOURCE_ID,
+      paoMonths: null,
+      paoSource: 'unknown',
+      expiryDate: null,
+    });
+  });
+
+  it('rejects reviewed PAO from a different catalog source', () => {
+    expect(
+      catalogIntakeProvenance(
+        catalogProduct({
+          product_pao_expiry: [
+            {
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: '2028-04-30',
+              expiry_source: 'printed',
+              region: 'US',
+              source_id: OTHER_CATALOG_SOURCE_ID,
+              review_status: 'reviewed',
+            },
+          ],
+        }),
+      ),
+    ).toEqual({
+      catalogSourceId: CATALOG_SOURCE_ID,
+      paoMonths: null,
+      paoSource: 'unknown',
+      expiryDate: null,
+    });
+  });
 });
 
 describe('catalog client E2E fixtures', () => {
   beforeEach(() => {
     runtime.__DEV__ = true;
     mocks.isSupabaseConfigured = false;
+    mocks.leaseOpen = true;
     mocks.invoke.mockClear();
     mocks.track.mockClear();
-    mocks.getUser.mockReset();
-    mocks.getSession.mockReset();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'account-a' } }, error: null });
-    mocks.getSession.mockResolvedValue({
-      data: { session: { access_token: 'token-a', user: { id: 'account-a' } } },
-      error: null,
-    });
     delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
   });
 
@@ -227,7 +472,6 @@ describe('catalog client E2E fixtures', () => {
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
-    delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_DELAY_MS;
   });
 
   it('supports a dev-only catalog search no-match fixture', async () => {
@@ -239,7 +483,38 @@ describe('catalog client E2E fixtures', () => {
       manualFallback: true,
     });
 
-    expect(mocks.track).not.toHaveBeenCalled();
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'no_match',
+      latency_bucket: 'lt_1s',
+    });
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('supports a dev-only eligible reviewed catalog match fixture', async () => {
+    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'matched';
+
+    await expect(searchCatalog('barrier serum')).resolves.toMatchObject({
+      result: 'matched',
+      manualFallback: false,
+      product: {
+        id: '00000000-0000-4000-8000-000000000044',
+        name: 'Reviewed Barrier Serum',
+        quality_grade: 'usable',
+        review_status: 'reviewed',
+      },
+      products: [
+        {
+          id: '00000000-0000-4000-8000-000000000044',
+          barcode: '036000291452',
+          catalog_source_id: '00000000-0000-4000-8000-000000000043',
+        },
+      ],
+    });
+
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
@@ -249,14 +524,14 @@ describe('catalog client E2E fixtures', () => {
     await expect(searchCatalog('ceramide cleanser')).resolves.toMatchObject({
       result: 'matched',
       product: {
-        id: 'e2e-wrong-match-product',
+        id: '00000000-0000-4000-8000-000000000045',
         name: 'Wrong Catalog Serum',
         source: 'open_beauty_facts',
         catalog_source_id: '00000000-0000-4000-8000-000000000042',
       },
       products: [
         {
-          id: 'e2e-wrong-match-product',
+          id: '00000000-0000-4000-8000-000000000045',
           barcode: '012345678905',
           name: 'Wrong Catalog Serum',
           quality_grade: 'limited',
@@ -271,56 +546,11 @@ describe('catalog client E2E fixtures', () => {
       ],
     });
 
-    expect(mocks.track).not.toHaveBeenCalled();
-    expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('supports a bounded dev-only catalog render-stress fixture', async () => {
-    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'stress';
-
-    const response = await searchCatalog('render fixture');
-
-    expect(response).toMatchObject({ result: 'matched' });
-    expect(response.products).toHaveLength(12);
-    expect(response.products?.map((product) => product.id)).toEqual(
-      Array.from(
-        { length: 12 },
-        (_, index) => `e2e-catalog-stress-${String(index + 1).padStart(2, '0')}`,
-      ),
-    );
-    expect(mocks.track).not.toHaveBeenCalled();
-    expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('rejects short sanitized queries locally without transport or analytics', async () => {
-    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'stress';
-
-    await expect(searchCatalog('a%')).resolves.toEqual({
-      result: 'too_short',
-      products: [],
-      manualFallback: true,
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
     });
-
-    expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('normalizes and bounds the query before invoking catalog-search', async () => {
-    mocks.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({
-      data: { result: 'no_match', products: [] },
-      error: null,
-    });
-    const query = `  ${'a'.repeat(90)}   cleanser  `;
-
-    await expect(searchCatalog(query)).resolves.toEqual({ result: 'no_match', products: [] });
-
-    expect(mocks.invoke).toHaveBeenCalledWith('catalog-search', {
-      body: { query: 'a'.repeat(80), limit: 12 },
-      headers: { Authorization: 'Bearer token-a' },
-      signal: expect.any(AbortSignal),
-    });
-    expect(mocks.track).not.toHaveBeenCalled();
   });
 
   it('ignores catalog search fixtures outside development runtime', async () => {
@@ -336,111 +566,260 @@ describe('catalog client E2E fixtures', () => {
     expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
+});
 
-  it('lets a route cancellation stop a delayed dev search without publishing a result', async () => {
-    vi.useFakeTimers();
-    try {
-      process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'no_match';
-      process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_DELAY_MS = '1500';
-      const controller = new AbortController();
-      const request = searchCatalog('ceramide', { signal: controller.signal });
+describe('catalog network response validation', () => {
+  beforeEach(() => {
+    runtime.__DEV__ = false;
+    mocks.isSupabaseConfigured = true;
+    mocks.leaseOpen = true;
+    mocks.invoke.mockReset();
+    mocks.track.mockClear();
+    delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
+  });
 
-      controller.abort();
-      await vi.runAllTimersAsync();
+  afterEach(() => {
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+  });
 
-      await expect(request).resolves.toEqual({
+  it('accepts only an exact reviewed and servable barcode response', async () => {
+    const product = networkCatalogProduct();
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'matched', product },
+      error: null,
+    });
+
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'matched',
+      product,
+    });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
+  });
+
+  it('coarsens a measured barcode lookup duration before tracking', async () => {
+    vi.mocked(performance.now).mockReturnValueOnce(1_000).mockReturnValueOnce(4_000);
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'no_match', manualFallback: true },
+      error: null,
+    });
+
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'no_match',
+      manualFallback: true,
+    });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', {
+      result: 'no_match',
+      latency_bucket: '3s_to_lt_6s',
+    });
+  });
+
+  it('accepts 120 and rejects 121 months at the catalog network boundary', async () => {
+    const freshnessRow = (paoMonths: number) => ({
+      pao_months: paoMonths,
+      pao_source: 'catalog',
+      expiry_date: null,
+      expiry_source: 'unknown',
+      region: 'US',
+      source_id: CATALOG_SOURCE_ID,
+      review_status: 'reviewed',
+      created_at: '2026-07-19T00:00:00.000Z',
+    });
+
+    const accepted = networkCatalogProduct({
+      default_pao_months: 120,
+      product_pao_expiry: [freshnessRow(120)],
+    });
+    mocks.invoke.mockResolvedValueOnce({ data: { result: 'matched', product: accepted }, error: null });
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'matched',
+      product: accepted,
+    });
+
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        result: 'matched',
+        product: networkCatalogProduct({
+          default_pao_months: 120,
+          product_pao_expiry: [freshnessRow(121)],
+        }),
+      },
+      error: null,
+    });
+    await expect(lookupBarcode('012345678905')).resolves.toEqual({
+      result: 'error',
+      manualFallback: true,
+    });
+  });
+
+  it('fails closed for external, unreviewed, mismatched, and malformed barcode responses', async () => {
+    const invalidResponses = [
+      { result: 'external_candidate', product: networkCatalogProduct() },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ review_status: 'unreviewed' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ barcode: '4006381333931' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ barcode: '012345678906' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct({ barcode: '0012345678905' }),
+      },
+      {
+        result: 'matched',
+        product: networkCatalogProduct(),
+        unexpected: true,
+      },
+    ];
+
+    for (const data of invalidResponses) {
+      mocks.invoke.mockResolvedValueOnce({ data, error: null });
+      await expect(lookupBarcode('012345678905')).resolves.toEqual({
+        result: 'error',
+        manualFallback: true,
+      });
+    }
+
+    expect(mocks.track).toHaveBeenCalledTimes(invalidResponses.length);
+    expect(mocks.track).toHaveBeenCalledWith('catalog_barcode_lookup', {
+      result: 'error',
+      latency_bucket: 'lt_1s',
+    });
+  });
+
+  it('accepts an exact reviewed search response and rejects unsafe response shapes', async () => {
+    const product = networkCatalogProduct();
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'matched', products: [product], manualFallback: false },
+      error: null,
+    });
+    await expect(searchCatalog('catalog serum')).resolves.toEqual({
+      result: 'matched',
+      products: [product],
+      manualFallback: false,
+    });
+
+    const invalidResponses = [
+      { result: 'external_candidate', products: [product], manualFallback: false },
+      {
+        result: 'matched',
+        products: [networkCatalogProduct({ quality_grade: 'limited' })],
+        manualFallback: false,
+      },
+      {
+        result: 'matched',
+        products: [networkCatalogProduct({ barcode: '012345678906' })],
+        manualFallback: false,
+      },
+      {
+        result: 'matched',
+        products: [networkCatalogProduct({ barcode: '0012345678905' })],
+        manualFallback: false,
+      },
+      {
+        result: 'matched',
+        products: [product],
+        manualFallback: false,
+        unexpected: true,
+      },
+    ];
+    for (const data of invalidResponses) {
+      mocks.invoke.mockResolvedValueOnce({ data, error: null });
+      await expect(searchCatalog('catalog serum')).resolves.toEqual({
         result: 'error',
         products: [],
         manualFallback: true,
       });
-      expect(mocks.track).not.toHaveBeenCalled();
-      expect(mocks.invoke).not.toHaveBeenCalled();
-    } finally {
-      vi.useRealTimers();
     }
+
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'matched',
+      latency_bucket: 'lt_1s',
+    });
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', {
+      result: 'error',
+      latency_bucket: 'lt_1s',
+    });
   });
 });
 
 describe('catalog issue reporting', () => {
+  const reportRequestId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  const reported = {
+    result: 'reported',
+    correction: {
+      id: '00000000-0000-4000-8000-000000000901',
+      status: 'open',
+      created_at: '2026-07-18T12:00:00.000Z',
+      created: true,
+    },
+  };
+
   beforeEach(() => {
+    mocks.leaseOpen = true;
+    mocks.ownerUserId = 'user-1';
     mocks.isSupabaseConfigured = false;
     mocks.invoke.mockReset();
     mocks.track.mockClear();
-    mocks.getUser.mockReset();
-    mocks.getSession.mockReset();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'account-a' } }, error: null });
-    mocks.getSession.mockResolvedValue({
-      data: { session: { access_token: 'token-a', user: { id: 'account-a' } } },
-      error: null,
-    });
   });
 
-  it('tracks only correction type and falls back safely while offline', async () => {
+  it('distinguishes an unconfigured build without claiming or tracking a report', async () => {
     await expect(
       reportCatalogIssue({
+        reportRequestId,
         correctionType: 'wrong_match',
-        productId: 'catalog-123',
+        productId: '00000000-0000-4000-8000-000000000123',
         barcode: '012345678905',
         description: 'wrong_match reported from product detail',
-        proposedPayload: {
-          productName: 'Private shelf product',
-          ingredientsText: 'Do not leak this into analytics',
-        },
-        clientContext: { route: 'shelf_detail' },
       }),
-    ).resolves.toEqual({ ok: false, offline: true });
+    ).resolves.toEqual({ result: 'not_configured' });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
-      correction_type: 'wrong_match',
-    });
-    expect(mocks.track).toHaveBeenCalledTimes(1);
+    expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
-  it('submits correction reports only to the catalog-report Edge Function when configured', async () => {
-    mocks.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({ error: null });
+  it('distinguishes closed or withdrawn health authority before transport', async () => {
+    mocks.ownerUserId = null;
 
     await expect(
       reportCatalogIssue({
-        correctionType: 'ingredient_issue',
-        productId: 'catalog-456',
-        barcode: null,
-        description: 'ingredient_issue reported from product detail',
-        clientContext: {
-          addedVia: 'search',
-          quality: 'usable',
-          route: 'shelf_detail',
-        },
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
       }),
-    ).resolves.toEqual({ ok: true });
+    ).resolves.toEqual({ result: 'offline_or_withdrawn' });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
-      correction_type: 'ingredient_issue',
-    });
-    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
-      body: {
-        correctionType: 'ingredient_issue',
-        productId: 'catalog-456',
-        barcode: null,
-        description: 'ingredient_issue reported from product detail',
-        clientContext: {
-          addedVia: 'search',
-          quality: 'usable',
-          route: 'shelf_detail',
-        },
-      },
-      headers: { Authorization: 'Bearer token-a' },
-      signal: expect.any(AbortSignal),
-    });
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 
-  it('submits missing-product reports with product-only context when configured', async () => {
+  it('fails closed before transport when the UI did not supply a random request identity', async () => {
     mocks.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({ error: null });
+
+    await expect(
+      reportCatalogIssue({ correctionType: 'missing_product', barcode: '012345678905' }),
+    ).resolves.toEqual({ result: 'invalid_request' });
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('validates success, removes a duplicated payload barcode, then tracks only correction type', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ data: reported, error: null });
 
     await expect(
       reportCatalogIssue({
+        reportRequestId,
         correctionType: 'missing_product',
         barcode: '012345678905',
         description: 'missing_product reported from barcode no-match',
@@ -452,8 +831,16 @@ describe('catalog issue reporting', () => {
           addedVia: 'barcode',
           route: 'shelf_no_match',
         },
-      }),
-    ).resolves.toEqual({ ok: true });
+      } as unknown as CatalogReportInput),
+    ).resolves.toEqual({
+      result: 'success',
+      correction: {
+        id: '00000000-0000-4000-8000-000000000901',
+        status: 'open',
+        createdAt: '2026-07-18T12:00:00.000Z',
+        created: true,
+      },
+    });
 
     expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
       correction_type: 'missing_product',
@@ -461,20 +848,206 @@ describe('catalog issue reporting', () => {
     expect(mocks.track).toHaveBeenCalledTimes(1);
     expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
       body: {
+        reportRequestId,
         correctionType: 'missing_product',
         barcode: '012345678905',
         description: 'missing_product reported from barcode no-match',
-        proposedPayload: {
-          barcode: '012345678905',
-          productName: 'Unknown sunscreen',
-        },
+        proposedPayload: { productName: 'Unknown sunscreen' },
         clientContext: {
           addedVia: 'barcode',
           route: 'shelf_no_match',
         },
       },
-      headers: { Authorization: 'Bearer token-a' },
-      signal: expect.any(AbortSignal),
     });
+  });
+
+  it('always strips a legacy nested barcode even without a top-level barcode', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ data: reported, error: null });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        proposedPayload: {
+          barcode: '012345678905',
+          productName: 'Unknown sunscreen',
+        },
+      } as unknown as CatalogReportInput),
+    ).resolves.toMatchObject({ result: 'success' });
+
+    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
+      body: {
+        reportRequestId,
+        correctionType: 'missing_product',
+        proposedPayload: { productName: 'Unknown sunscreen' },
+      },
+    });
+  });
+
+  it('sends the same sanitized catalog fields shown by confirmation', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ data: reported, error: null });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        description: 'missing_product reported from catalog search',
+        proposedPayload: {
+          productName: '  Photoderm   Aquafluide  ',
+          brand: 'Image Skincare',
+          sourceUrl: 'https://catalog.example/products/123?token=private#review',
+        },
+        clientContext: { addedVia: 'search', route: 'shelf_search' },
+      }),
+    ).resolves.toMatchObject({ result: 'success' });
+
+    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
+      body: {
+        reportRequestId,
+        correctionType: 'missing_product',
+        description: 'missing_product reported from catalog search',
+        proposedPayload: {
+          productName: 'Photoderm Aquafluide',
+          brand: 'Image Skincare',
+          sourceUrl: 'https://catalog.example/products/123',
+        },
+        clientContext: { addedVia: 'search', route: 'shelf_search' },
+      },
+    });
+  });
+
+  it('does not track an unvalidated success envelope', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'reported', correction: { status: 'open' } },
+      error: null,
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result: 'error' });
+
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('returns a truthful current receipt on replay without duplicating success analytics', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        result: 'already_received',
+        correction: {
+          id: '00000000-0000-4000-8000-000000000901',
+          status: 'triaged',
+          created_at: '2026-07-18T12:00:00.000Z',
+          created: false,
+        },
+      },
+      error: null,
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({
+      result: 'success',
+      correction: {
+        id: '00000000-0000-4000-8000-000000000901',
+        status: 'triaged',
+        createdAt: '2026-07-18T12:00:00.000Z',
+        created: false,
+      },
+    });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('detects backend rate limiting without emitting success analytics', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { error: 'rate_limited' },
+      error: { name: 'FunctionsHttpError', context: { status: 429 } },
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result: 'rate_limited' });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('keeps a busy owner transaction explicitly retryable without success analytics', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { error: 'report_busy' },
+      error: { name: 'FunctionsHttpError', context: { status: 423 } },
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result: 'retryable' });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [new Error('FunctionsFetchError: Failed to send a request'), 'offline_or_withdrawn'],
+    [new Error('unexpected invoke failure'), 'error'],
+  ] as const)('converts ordinary invoke rejection %s into %s', async (failure, result) => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockRejectedValueOnce(failure);
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).resolves.toEqual({ result });
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('does not swallow a stale health lease behind an ordinary invoke failure', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockImplementationOnce(async () => {
+      mocks.leaseOpen = false;
+      throw new Error('network unavailable');
+    });
+
+    await expect(
+      reportCatalogIssue({
+        reportRequestId,
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+      }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.track).not.toHaveBeenCalled();
+  });
+
+  it('rejects a stale lookup response before analytics or result publication', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockImplementationOnce(async () => {
+      mocks.leaseOpen = false;
+      return { data: { result: 'matched' }, error: null };
+    });
+
+    await expect(lookupBarcode('012345678905')).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+
+    expect(mocks.track).not.toHaveBeenCalledWith('catalog_barcode_lookup', expect.anything());
   });
 });

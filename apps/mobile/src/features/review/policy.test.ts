@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { canRequestReviewPrompt, recordReviewAttempt, type ReviewPromptState } from './policy';
 
 const now = new Date('2026-07-04T12:00:00.000Z');
+const appVersion = '1.4.0';
+const emptyState: ReviewPromptState = { attemptedAt: [], lastVersionPrompted: null };
 
 describe('Phase 8 review prompt policy', () => {
   it('does nothing while the launch gate is disabled', () => {
@@ -10,7 +12,8 @@ describe('Phase 8 review prompt policy', () => {
       canRequestReviewPrompt({
         enabled: false,
         moment: 'seven_checkoff_days',
-        state: { attemptedAt: [] },
+        appVersion,
+        state: emptyState,
         now,
       }),
     ).toEqual({ ok: false, reason: 'disabled' });
@@ -21,7 +24,8 @@ describe('Phase 8 review prompt policy', () => {
       canRequestReviewPrompt({
         enabled: true,
         moment: 'first_reviewed_conflict',
-        state: { attemptedAt: [] },
+        appVersion,
+        state: emptyState,
         now,
       }),
     ).toEqual({ ok: true });
@@ -33,7 +37,8 @@ describe('Phase 8 review prompt policy', () => {
         canRequestReviewPrompt({
           enabled: true,
           moment,
-          state: { attemptedAt: [] },
+          appVersion,
+          state: emptyState,
           now,
         }),
       ).toEqual({ ok: false, reason: 'not_value_moment' });
@@ -43,12 +48,14 @@ describe('Phase 8 review prompt policy', () => {
   it('enforces a 30-day cooldown', () => {
     const state: ReviewPromptState = {
       attemptedAt: ['2026-06-20T12:00:00.000Z'],
+      lastVersionPrompted: '1.3.0',
     };
 
     expect(
       canRequestReviewPrompt({
         enabled: true,
         moment: 'seven_checkoff_days',
+        appVersion,
         state,
         now,
       }),
@@ -62,16 +69,42 @@ describe('Phase 8 review prompt policy', () => {
         '2025-10-01T12:00:00.000Z',
         '2026-01-01T12:00:00.000Z',
       ],
+      lastVersionPrompted: '1.3.0',
     };
 
     expect(
       canRequestReviewPrompt({
         enabled: true,
         moment: 'first_reviewed_conflict',
+        appVersion,
         state,
         now,
       }),
     ).toEqual({ ok: false, reason: 'annual_cap' });
+  });
+
+  it('fails closed without an exact installed app version', () => {
+    expect(
+      canRequestReviewPrompt({
+        enabled: true,
+        moment: 'seven_checkoff_days',
+        appVersion: null,
+        state: emptyState,
+        now,
+      }),
+    ).toEqual({ ok: false, reason: 'version_unavailable' });
+  });
+
+  it('never asks twice for the same installed app version', () => {
+    expect(
+      canRequestReviewPrompt({
+        enabled: true,
+        moment: 'seven_checkoff_days',
+        appVersion,
+        state: { attemptedAt: ['2026-05-01T12:00:00.000Z'], lastVersionPrompted: appVersion },
+        now,
+      }),
+    ).toEqual({ ok: false, reason: 'already_prompted_for_version' });
   });
 
   it('records attempts while trimming stale annual-window history', () => {
@@ -79,11 +112,14 @@ describe('Phase 8 review prompt policy', () => {
       recordReviewAttempt(
         {
           attemptedAt: ['2024-01-01T00:00:00.000Z', '2026-06-01T00:00:00.000Z'],
+          lastVersionPrompted: '1.3.0',
         },
+        appVersion,
         now,
       ),
     ).toEqual({
       attemptedAt: ['2026-06-01T00:00:00.000Z', '2026-07-04T12:00:00.000Z'],
+      lastVersionPrompted: appVersion,
     });
   });
 });

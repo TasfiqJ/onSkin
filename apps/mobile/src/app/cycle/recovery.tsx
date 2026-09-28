@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { shippableRoutineGuidanceCopy } from '@/features/routine/sequencing';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { backOrReplace } from '@/lib/navigation/safeBack';
@@ -11,6 +13,25 @@ import { backOrReplace } from '@/lib/navigation/safeBack';
 // a procedure → actives paused, barrier repair for ~7-10 days, ease back in. Calm,
 // framed as strengthening, never a setback. Non-diagnostic.
 export default function RecoveryScreen() {
+  const guidanceCopy = shippableRoutineGuidanceCopy();
+  if (!canUseRoutineCadence() || !canUseRoutineRecovery() || !guidanceCopy) {
+    return <CadenceReviewGate />;
+  }
+  return (
+    <RecoveryScreenContent
+      irritationExplanation={guidanceCopy.recoveryIrritationExplanation}
+      procedureExplanation={guidanceCopy.recoveryProcedureExplanation}
+    />
+  );
+}
+
+function RecoveryScreenContent({
+  irritationExplanation,
+  procedureExplanation,
+}: {
+  irritationExplanation: string;
+  procedureExplanation: string;
+}) {
   const { height } = useWindowDimensions();
   const { data } = useCycle();
   const m = useCycleMutations();
@@ -95,16 +116,14 @@ export default function RecoveryScreen() {
           }
           accessibilityRole="header"
         >
-          We&apos;ve eased off for now.
+          Recovery is active.
         </Text>
         <Text
           variant="body"
           tone="muted"
           className={compactScreen ? 'mt-1.5 text-[14px] leading-[20px]' : 'mt-2'}
         >
-          {fromIrritation
-            ? 'You told us your skin felt irritated, so we paused your actives and switched to barrier repair. This isn’t a setback. It’s how skin gets stronger.'
-            : 'After your treatment, we paused your actives and switched to barrier repair. We’ll ease back in gently.'}
+          {fromIrritation ? irritationExplanation : procedureExplanation}
         </Text>
 
         {/* Progress */}
@@ -148,7 +167,7 @@ export default function RecoveryScreen() {
               Paused actives
             </Text>
             <Text variant="bodySm" tone="muted">
-              Reintroduce gradually →
+              Recovery active
             </Text>
           </View>
         </View>
@@ -160,7 +179,7 @@ export default function RecoveryScreen() {
             style={{ backgroundColor: '#F1ECE3' }}
           >
             <Text variant="bodySm" tone="muted" className="mb-2.5 font-sans-bold">
-              Paused until you&apos;re comfortable
+              Paused products
             </Text>
             <View className="flex-row flex-wrap gap-2">
               {uniquePaused.map((name) => (
@@ -174,28 +193,34 @@ export default function RecoveryScreen() {
           </View>
         ) : null}
 
-        <View
-          className={
-            compactScreen
-              ? 'mt-2.5 flex-row gap-3 rounded-2xl border border-hairline bg-paper-raised px-3.5 py-3'
-              : 'mt-3.5 flex-row gap-3 rounded-2xl border border-hairline bg-paper-raised px-4 py-3.5'
-          }
-        >
-          <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
-          <Text variant="bodySm" tone="muted" className="flex-1">
-            Feeling better already? You can ease back in early. We&apos;ll start with one active.
-          </Text>
-        </View>
-
         {saveFailed ? <CycleMutationError /> : null}
 
         <Button
           className={compactScreen ? 'mt-4' : 'mt-6'}
           disabled={saving}
-          label={saving ? 'Resuming cycle...' : saveFailed ? 'Try again' : 'Ease back in'}
+          label={saving ? 'Ending recovery...' : saveFailed ? 'Try again' : 'End recovery'}
           onPress={() => void finishRecovery()}
         />
       </ScrollView>
+    </Screen>
+  );
+}
+
+function CadenceReviewGate() {
+  return (
+    <Screen edges={['top', 'bottom']}>
+      <View className="mt-2">
+        <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+      </View>
+      <View className="mt-6 rounded-[8px] bg-paper-raised p-5">
+        <Text variant="body" className="font-sans-semibold">
+          Cycle recovery guidance is unavailable.
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-2">
+          This guidance stays unavailable until its exact rules and copy complete required
+          professional review.
+        </Text>
+      </View>
     </Screen>
   );
 }

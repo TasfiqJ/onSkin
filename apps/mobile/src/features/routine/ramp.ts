@@ -1,6 +1,7 @@
-import type { RampClass, ToleranceState } from '@onskin/types';
+import type { RampClass, ToleranceState } from '@layerwell/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import { shippableRoutineCadencePolicy } from './sequencing';
 
 // Retinoid/active ramp-up (docs/03 §4): "start low and slow." Offer-only step-ups,
 // automatic de-escalation on self-reported irritation. Numbers are starting
@@ -22,14 +23,28 @@ function daysBetween(fromISO: string, toISO: string): number {
 
 /** Initialise the ramp (docs/03 §4): sensitive/barrier start gentler than resistant. */
 export function initRamp(rampClass: RampClass, sensitivity: SensitivityLevel): RampState {
+  const rampPolicy = shippableRoutineCadencePolicy()?.ramp;
+  if (!rampPolicy) throw new Error('ROUTINE_CADENCE_NOT_ADMITTED');
   // Only exfoliating/retinoid actives ramp; everything else is daily/steady.
   if (rampClass === 'other_active') {
-    return { freqPerWeek: 7, targetPerWeek: 7, toleranceState: 'steady' };
+    return {
+      freqPerWeek: rampPolicy.otherActivePerWeek,
+      targetPerWeek: rampPolicy.otherActivePerWeek,
+      toleranceState: 'steady',
+    };
   }
   if (sensitivity === 'resistant') {
-    return { freqPerWeek: 3, targetPerWeek: 4, toleranceState: 'building' };
+    return {
+      freqPerWeek: rampPolicy.resistantStartPerWeek,
+      targetPerWeek: rampPolicy.resistantTargetPerWeek,
+      toleranceState: 'building',
+    };
   }
-  return { freqPerWeek: 2, targetPerWeek: 3, toleranceState: 'building' };
+  return {
+    freqPerWeek: rampPolicy.sensitiveOrNormalStartPerWeek,
+    targetPerWeek: rampPolicy.sensitiveOrNormalTargetPerWeek,
+    toleranceState: 'building',
+  };
 }
 
 /** Offer a step-up only on a positive signal. Never silently escalate (docs/03 §4).
@@ -42,17 +57,24 @@ export function shouldOfferStepUp(opts: {
   toleranceState: ToleranceState;
   today: string;
 }): boolean {
+  const rampPolicy = shippableRoutineCadencePolicy()?.ramp;
+  if (!rampPolicy) return false;
   if (opts.toleranceState === 'paused_irritation') return false;
   if (opts.freqPerWeek >= opts.targetPerWeek) return false;
   const anchor = opts.lastStepUp ?? opts.startedAt;
-  return daysBetween(anchor, opts.today) >= 21;
+  return daysBetween(anchor, opts.today) >= rampPolicy.minimumStableDaysBeforeOffer;
 }
 
 /** De-escalate on reported irritation: pause + drop a night (claim-safe, §4). */
 export function deEscalate(state: RampState): RampState {
+  const rampPolicy = shippableRoutineCadencePolicy()?.ramp;
+  if (!rampPolicy) return state;
   if (state.toleranceState === 'paused_irritation') return state;
   return {
-    freqPerWeek: Math.max(1, state.freqPerWeek - 1),
+    freqPerWeek: Math.max(
+      rampPolicy.minimumPerWeek,
+      state.freqPerWeek - rampPolicy.irritationStepDownPerWeek,
+    ),
     targetPerWeek: state.targetPerWeek,
     toleranceState: 'paused_irritation',
   };

@@ -1,24 +1,34 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-} from '@/lib/auth/accountGeneration';
-
-import {
-  clearRoutineActivationAnalytics,
-  MAX_ROUTINE_ACTIVATION_RECORD_CHARS,
-  readRoutineActivationState,
   recordFirstUsefulInsightAnalytics,
   recordRoutinePlanAnalytics,
 } from './activationAnalytics';
 
 const mocks = vi.hoisted(() => ({
-  readPrivateItem: vi.fn(),
-  removePrivateItem: vi.fn(),
+  closeAfterUpdate: false,
+  healthGeneration: 1,
+  healthOpen: true,
   storage: new Map<string, string>(),
   track: vi.fn(),
   updateFailure: null as Error | null,
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runCurrentHealthDataOperation: async (
+    operation: (lease: { assertCurrent: () => void }) => unknown,
+  ) => {
+    if (!mocks.healthOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    const generation = mocks.healthGeneration;
+    const assertCurrent = () => {
+      if (!mocks.healthOpen || generation !== mocks.healthGeneration) {
+        throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      }
+    };
+    const result = await operation({ assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/lib/analytics/track', () => ({
@@ -26,233 +36,30 @@ vi.mock('@/lib/analytics/track', () => ({
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  readPrivateItem: mocks.readPrivateItem,
-  removePrivateItem: mocks.removePrivateItem,
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.storage.delete(key);
+  }),
   updatePrivateItem: vi.fn(
     async (key: string, updater: (current: string | null) => string | null) => {
       if (mocks.updateFailure) throw mocks.updateFailure;
       const next = updater(mocks.storage.get(key) ?? null);
       if (next === null) mocks.storage.delete(key);
       else mocks.storage.set(key, next);
+      if (mocks.closeAfterUpdate) mocks.healthGeneration += 1;
     },
   ),
 }));
 
-const KEY = 'routinekind.routineActivation.v1';
+const KEY = 'layerwell.routineActivation.v1';
 
 describe('routine activation analytics', () => {
-  let boundaryActive = false;
-
   beforeEach(() => {
+    mocks.closeAfterUpdate = false;
+    mocks.healthGeneration = 1;
+    mocks.healthOpen = true;
     mocks.storage.clear();
     mocks.track.mockClear();
     mocks.updateFailure = null;
-    mocks.readPrivateItem.mockReset();
-    mocks.readPrivateItem.mockImplementation(async (key: string) => {
-      const value = mocks.storage.get(key);
-      return value === undefined ? { status: 'absent' } : { status: 'available', value };
-    });
-    mocks.removePrivateItem.mockReset();
-    mocks.removePrivateItem.mockImplementation(async (key: string) => {
-      mocks.storage.delete(key);
-    });
-  });
-
-  afterEach(() => {
-    if (!boundaryActive) return;
-    endAccountGenerationBoundary();
-    boundaryActive = false;
-  });
-
-  it('returns typed absent, legacy, and current reads without rewriting bytes', async () => {
-    await expect(readRoutineActivationState()).resolves.toEqual({
-      status: 'absent',
-      flags: { firstRoutineCreated: false, firstUsefulInsight: false },
-    });
-
-    const legacy = JSON.stringify({
-      firstRoutineCreated: true,
-      firstUsefulInsight: false,
-    });
-    mocks.storage.set(KEY, legacy);
-
-    await expect(readRoutineActivationState()).resolves.toEqual({
-      status: 'available',
-      format: 'legacy',
-      flags: { firstRoutineCreated: true, firstUsefulInsight: false },
-    });
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-
-    const current = JSON.stringify({
-      version: 1,
-      flags: { firstRoutineCreated: true, firstUsefulInsight: true },
-    });
-    mocks.storage.set(KEY, current);
-
-    await expect(readRoutineActivationState()).resolves.toEqual({
-      status: 'available',
-      format: 'current',
-      flags: { firstRoutineCreated: true, firstUsefulInsight: true },
-    });
-    expect(mocks.storage.get(KEY)).toBe(current);
-  });
-
-  it.each([
-    [
-      { status: 'unavailable', reason: 'content_key_missing' },
-      { status: 'unavailable', flags: null, reason: 'content_key_missing' },
-    ],
-    [
-      { status: 'corrupt', reason: 'decryption_failed' },
-      { status: 'corrupt', flags: null, reason: 'decryption_failed' },
-    ],
-    [{ status: 'unsupported_version' }, { status: 'unsupported_version', flags: null }],
-  ])('preserves the private-KV failure taxonomy for %#', async (stored, expected) => {
-    mocks.readPrivateItem.mockResolvedValueOnce(stored);
-
-    await expect(readRoutineActivationState()).resolves.toEqual(expected);
-  });
-
-  it('classifies an unexpected private read rejection as unavailable', async () => {
-    mocks.readPrivateItem.mockRejectedValueOnce(new Error('storage unavailable'));
-
-    await expect(readRoutineActivationState()).resolves.toEqual({
-      status: 'unavailable',
-      flags: null,
-      reason: 'storage_unavailable',
-    });
-  });
-
-  it('cancels a delayed activation read at an account-generation boundary', async () => {
-    let releaseRead!: (result: { status: 'absent' }) => void;
-    mocks.readPrivateItem.mockImplementationOnce(
-      () =>
-        new Promise<{ status: 'absent' }>((resolve) => {
-          releaseRead = resolve;
-        }),
-    );
-
-    const read = readRoutineActivationState();
-    await vi.waitFor(() => expect(mocks.readPrivateItem).toHaveBeenCalledOnce());
-
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-
-    await expect(read).resolves.toEqual({
-      status: 'unavailable',
-      flags: null,
-      reason: 'account_boundary',
-    });
-
-    endAccountGenerationBoundary();
-    boundaryActive = false;
-    releaseRead({ status: 'absent' });
-    await Promise.resolve();
-  });
-
-  it('publishes a delayed activation read while its generation remains current', async () => {
-    let releaseRead!: (result: { status: 'absent' }) => void;
-    mocks.readPrivateItem.mockImplementationOnce(
-      () =>
-        new Promise<{ status: 'absent' }>((resolve) => {
-          releaseRead = resolve;
-        }),
-    );
-
-    const read = readRoutineActivationState();
-    await vi.waitFor(() => expect(mocks.readPrivateItem).toHaveBeenCalledOnce());
-    releaseRead({ status: 'absent' });
-
-    await expect(read).resolves.toEqual({
-      status: 'absent',
-      flags: { firstRoutineCreated: false, firstUsefulInsight: false },
-    });
-  });
-
-  it.each([
-    '{',
-    '[]',
-    JSON.stringify({ firstRoutineCreated: true }),
-    JSON.stringify({ firstRoutineCreated: true, firstUsefulInsight: false, extra: true }),
-    JSON.stringify({ firstRoutineCreated: true, firstUsefulInsight: 'yes' }),
-    JSON.stringify({ version: 1, flags: { firstRoutineCreated: true } }),
-    JSON.stringify({ version: 0, flags: { firstRoutineCreated: true, firstUsefulInsight: true } }),
-    'x'.repeat(MAX_ROUTINE_ACTIVATION_RECORD_CHARS + 1),
-  ])('classifies invalid or oversized application bytes without replacing them', async (stored) => {
-    mocks.storage.set(KEY, stored);
-
-    await expect(readRoutineActivationState()).resolves.toEqual({
-      status: 'corrupt',
-      flags: null,
-      reason: 'invalid_payload',
-    });
-    expect(mocks.storage.get(KEY)).toBe(stored);
-  });
-
-  it('classifies and preserves a future application envelope', async () => {
-    const stored = JSON.stringify({ version: 2, flags: { future: true } });
-    mocks.storage.set(KEY, stored);
-
-    await expect(readRoutineActivationState()).resolves.toEqual({
-      status: 'unsupported_version',
-      flags: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(stored);
-  });
-
-  it('upgrades valid legacy bytes only when an explicit reservation changes them', async () => {
-    const legacy = JSON.stringify({
-      firstRoutineCreated: false,
-      firstUsefulInsight: false,
-    });
-    mocks.storage.set(KEY, legacy);
-
-    await recordFirstUsefulInsightAnalytics({
-      insightCount: 1,
-      isExample: false,
-      source: 'reveal',
-    });
-
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      version: 1,
-      flags: { firstRoutineCreated: false, firstUsefulInsight: true },
-    });
-  });
-
-  it('preserves current bytes when no first-event reservation changes state', async () => {
-    const stored = JSON.stringify({
-      version: 1,
-      flags: { firstRoutineCreated: true, firstUsefulInsight: true },
-    });
-    mocks.storage.set(KEY, stored);
-
-    await recordRoutinePlanAnalytics({
-      routineStepCount: 1,
-      insightCount: 1,
-      isExample: false,
-      source: 'routine_plan',
-    });
-
-    expect(mocks.storage.get(KEY)).toBe(stored);
-    expect(mocks.track.mock.calls).toEqual([
-      ['routine_plan_viewed', { source: 'routine_plan' }],
-      ['routine_created', { source: 'routine_plan' }],
-    ]);
-  });
-
-  it('clears the activation marker explicitly', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify({
-        version: 1,
-        flags: { firstRoutineCreated: true, firstUsefulInsight: true },
-      }),
-    );
-
-    await clearRoutineActivationAnalytics();
-
-    expect(mocks.removePrivateItem).toHaveBeenCalledWith(KEY);
-    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
   it('records routine plan views every time but reserves first activation events only once', async () => {
@@ -302,7 +109,6 @@ describe('routine activation analytics', () => {
     for (const stored of [
       JSON.stringify({ firstRoutineCreated: 'yes' }),
       JSON.stringify({ version: 2, flags: { future: true } }),
-      'x'.repeat(MAX_ROUTINE_ACTIVATION_RECORD_CHARS + 1),
     ]) {
       mocks.storage.set(KEY, stored);
       mocks.track.mockClear();
@@ -399,5 +205,19 @@ describe('routine activation analytics', () => {
 
     expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('does not emit a reserved first event after withdrawal and re-grant', async () => {
+    mocks.closeAfterUpdate = true;
+
+    await expect(
+      recordFirstUsefulInsightAnalytics({
+        insightCount: 1,
+        isExample: false,
+        source: 'reveal',
+      }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 });

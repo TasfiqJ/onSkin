@@ -1,131 +1,101 @@
 import { randomUUID } from 'expo-crypto';
 
-import type { PhotoSeries, TimeOfDay } from '@onskin/types';
-import { PHOTO_SERIES } from '@onskin/types';
+import type { PhotoSeries, TimeOfDay } from '@layerwell/types';
+import { PHOTO_SERIES } from '@layerwell/types';
 
+import { supabase } from '@/lib/supabase/client';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import {
-  AccountGenerationLeaseError,
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
-import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
-import {
-  OUTBOX_STORAGE_KEY,
-  decodeOutboxEnvelope,
-  encodeOutboxEnvelope,
-  enqueuePhotoDeleteOutboxOperation,
-} from '@/lib/offline/outbox.pure';
-import {
-  cleanupPlaintextStagingOperation,
-  lookupPlaintextStaging,
-} from '@/lib/storage/plaintextStaging';
-import {
-  getPrivateItem,
-  PRIVATE_KV_CONTENT_KEY_CONFLICT,
-  PRIVATE_KV_CONTENT_KEY_INVALID,
-  PRIVATE_KV_CONTENT_KEY_MISSING,
-  PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE,
-  PRIVATE_KV_DECRYPTION_FAILED,
-  PRIVATE_KV_ENVELOPE_INVALID,
-  PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-  readPrivateItem,
-  setPrivateItem,
-  updatePrivateItemsTransactionally,
-  type PrivateKVReadFailureReason,
-} from '@/lib/storage/privateKV';
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+
+import { trustedProgressCaptureSessionId } from './progressCapturePrivacy';
 
 import {
   decryptPhotoNote,
-  discardPendingEncryptedPhotoForRetry,
-  encryptedPhotoThumbnailUriForId,
-  encryptedPhotoUriForId,
-  encryptCapturedPhoto,
+  beginPhotoRenditionPublication,
+  canonicalPhotoRenditionUri,
+  clearEncryptedPhotoStorage,
+  deleteCapturedPhotoSource,
+  deleteQuarantinedPhoto,
+  encryptPhotoRendition,
   encryptPhotoNote,
-  finalizeEncryptedPhotoDeletions,
   isEncryptedPhotoUri,
-  isOwnedEncryptedPhotoUri,
-  PHOTO_CONTENT_KEY_INVALID,
-  PHOTO_CONTENT_KEY_MISSING,
-  PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
-  PHOTO_DECRYPTION_FAILED,
+  markPhotoRenditionPublication,
   photoEncryptionInfo,
-  PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
-  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-  recoverPreparedEncryptedPhoto,
-  stageEncryptedPhotoDeletions,
-  verifyEncryptedPhotoDeletionSources,
+  quarantineEncryptedPhoto,
+  reconcileEncryptedPhotoStorage,
+  recoverPhotoRenditionPublication,
+  restoreQuarantinedPhoto,
+  settlePhotoRenditionPublication,
+  type QuarantinedPhotoFile,
 } from './encryptedStorage';
-import {
-  decodePhotoStore,
-  encodePhotoStore,
-  PHOTO_METADATA_INVALID,
-  PHOTO_METADATA_UNSUPPORTED,
-  PHOTO_MUTATION_JOURNAL_INCONSISTENT,
-  PHOTO_MUTATION_RECOVERY_REQUIRED,
-  type DecodedPhotoStore,
-  type PhotoMutationJournal,
-} from './photoStoreEnvelope';
+import { createEncryptedPhotoThumbnail } from './photoThumbnail';
 import type { PhotoMeta, PhotoQualitySource } from './timeline';
 
-export {
-  PHOTO_METADATA_INVALID,
-  PHOTO_METADATA_UNSUPPORTED,
-  PHOTO_MUTATION_JOURNAL_INCONSISTENT,
-  PHOTO_MUTATION_RECOVERY_REQUIRED,
-} from './photoStoreEnvelope';
-
 /**
- * Local-first photo store. V2 atomically co-persists intended metadata and one
- * content-free mutation journal in the same encrypted private-KV value. While
- * a journal exists, ordinary reads fail closed and explicit recovery owns every
- * file transition before the staged metadata can become visible.
+ * Local-first photo store. Metadata is encrypted before it enters AsyncStorage;
+ * image bytes are encrypted into app-private `.layerwellphoto` envelopes and never
+ * uploaded or mirrored by local save. Notes are encrypted separately inside the
+ * encrypted metadata envelope for legacy migration safety.
  */
-const KEY = 'onskin.photos.v1';
+const KEY = 'layerwell.photos.v1';
 const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
 const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
-const CAPTURE_OPERATION_ID = /^[0-9a-f]{32}$/;
-const CANONICAL_PHOTO_FILE_ID = /^[A-Za-z0-9_-]{1,128}$/;
-const SERVER_PHOTO_ID =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const MAX_PHOTO_FIELD_CHARS = 1_024;
-export const MAX_PHOTO_NOTE_PLAINTEXT_CHARS = 262_144;
-const MAX_PHOTO_NOTE_CIPHERTEXT_CHARS = 1_048_576;
-const STORED_PHOTO_RECORD_KEYS = [
-  'alignmentScore',
-  'captureSessionId',
-  'encryptedLocalUri',
-  'encryptionVersion',
-  'faceRegionRedacted',
-  'headPitch',
-  'headRoll',
-  'headYaw',
-  'id',
-  'isEncrypted',
-  'isReference',
-  'keyId',
-  'lightingScore',
-  'localOnly',
-  'localUri',
-  'notes',
-  'notesCiphertext',
-  'qualitySource',
-  'referencePhotoId',
-  'series',
-  'storagePath',
-  'takenAt',
-  'takenLocalDate',
-  'thumbnailLocalUri',
-  'timeOfDay',
-] as const;
-const PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED = 'PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED';
-const PHOTO_MUTATION_SOURCE_MISSING = 'PHOTO_MUTATION_SOURCE_MISSING';
-const PHOTO_METADATA_COMMIT_UNCERTAIN = 'PHOTO_METADATA_COMMIT_UNCERTAIN';
+export const PHOTO_METADATA_INVALID = 'PHOTO_METADATA_INVALID';
+export const PHOTO_CAPTURE_SESSION_INVALID = 'PHOTO_CAPTURE_SESSION_INVALID';
+export const PHOTO_CAPTURE_SESSION_CONFLICT = 'PHOTO_CAPTURE_SESSION_CONFLICT';
+export const PHOTO_CAPTURE_SESSION_DUPLICATE = 'PHOTO_CAPTURE_SESSION_DUPLICATE';
 
 let photoStoreMutationTail: Promise<void> = Promise.resolve();
 
+type PhotoOperationGuard = Readonly<{ assertCurrent: () => void }>;
+
+function runCurrentHealthDataOperation<T>(
+  operation: (lease: HealthDataWriteOperationLease) => T | Promise<T>,
+): Promise<T> {
+  const ownerUserId = activeHealthProcessingOwnerUserId();
+  if (!ownerUserId) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
+  return runHealthDataWriteOperation(ownerUserId, operation);
+}
+
+function queuePhotoStoreMutation<T, Guard extends PhotoOperationGuard>(
+  guard: Guard,
+  operation: (guard: Guard) => Promise<T>,
+): Promise<T> {
+  const guardedOperation = async () => {
+    guard.assertCurrent();
+    try {
+      const result = await operation(guard);
+      guard.assertCurrent();
+      return result;
+    } catch (error) {
+      // Never collapse withdrawal/re-grant or an account transition into a
+      // feature/storage error from the authority window that just ended.
+      guard.assertCurrent();
+      throw error;
+    }
+  };
+  const pending = photoStoreMutationTail.then(guardedOperation, guardedOperation);
+  photoStoreMutationTail = pending.then(
+    () => undefined,
+    () => undefined,
+  );
+  return pending;
+}
+
 function runPhotoStoreMutation<T>(
-  operation: (lease: AccountGenerationLease) => Promise<T>,
+  operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
+): Promise<T> {
+  return runCurrentHealthDataOperation((lease) => queuePhotoStoreMutation(lease, operation));
+}
+
+function runPhotoStoreCleanup<T>(
+  operation: (guard: PhotoOperationGuard) => Promise<T>,
 ): Promise<T> {
   return runAccountGenerationOperation(async (lease) => {
     const guardedOperation = async () => {
@@ -134,12 +104,12 @@ function runPhotoStoreMutation<T>(
       lease.assertCurrent();
       return result;
     };
-    const pending = photoStoreMutationTail.then(guardedOperation, guardedOperation);
-    photoStoreMutationTail = pending.then(
-      () => undefined,
-      () => undefined,
-    );
-    return pending;
+    try {
+      return await queuePhotoStoreMutation(lease, () => guardedOperation());
+    } catch (error) {
+      lease.assertCurrent();
+      throw error;
+    }
   });
 }
 
@@ -160,48 +130,9 @@ export type PhotoRecord = PhotoMeta & {
   keyId: string | null;
 };
 
-/**
- * The exact owner-local snapshot that was durably committed by a mutation.
- * Query consumers use this to publish cache state without decrypting the
- * private photo store a second time.
- */
-export type PhotoMutationCommit<TResult> = Readonly<{
-  result: TResult;
-  photos: PhotoRecord[];
-}>;
-
-function photoMutationCommit<TResult>(
-  result: TResult,
-  photos: PhotoRecord[],
-): PhotoMutationCommit<TResult> {
-  return { result, photos };
-}
-
-type PhotoStoreFormat = 'legacy' | 'v2';
-type PhotoStoreUnavailableReason =
-  | PrivateKVReadFailureReason
-  | 'photo_content_key_missing'
-  | 'photo_content_key_storage_unavailable';
-type PhotoStoreCorruptReason =
-  | 'content_key_invalid'
-  | 'envelope_invalid'
-  | 'decryption_failed'
-  | 'photo_content_key_invalid'
-  | 'photo_decryption_failed'
-  | 'journal_inconsistent'
-  | 'invalid_payload';
-
-export type PhotoStoreReadResult =
-  | { status: 'absent'; photos: PhotoRecord[] }
-  | { status: 'available'; photos: PhotoRecord[]; format: PhotoStoreFormat }
-  | { status: 'unavailable'; photos: null; reason: PhotoStoreUnavailableReason }
-  | { status: 'corrupt'; photos: null; reason: PhotoStoreCorruptReason }
-  | { status: 'unsupported_version'; photos: null }
-  | { status: 'recovery_required'; photos: null };
-
 type StoredPhotoRecord = Omit<PhotoRecord, 'notes'> & {
   notes: null;
-  notesCiphertext: string | null;
+  notesCiphertext?: string | null;
 };
 
 export type NewPhoto = {
@@ -220,143 +151,13 @@ export type NewPhoto = {
   notes?: string | null;
 };
 
-export type PhotoDeleteOwner = Readonly<{
-  ownerId?: string;
-  ownerGeneration: number;
+export type AddPhotoOutcome = Readonly<{
+  photo: PhotoRecord;
+  createdNow: boolean;
 }>;
-
-function photoDeleteOwnerId(
-  owner: PhotoDeleteOwner | undefined,
-  lease: AccountGenerationLease,
-): string | null {
-  lease.assertCurrent();
-  if (!owner) return null;
-  if (owner.ownerGeneration !== lease.generation) throw new AccountGenerationLeaseError();
-  const ownerId = owner.ownerId?.trim();
-  if (owner.ownerId !== undefined && (!ownerId || owner.ownerId.length > 512)) {
-    throw new Error(PHOTO_METADATA_INVALID);
-  }
-  return ownerId ?? null;
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function hasExactKeys(record: Record<string, unknown>, expected: readonly string[]): boolean {
-  const actual = Object.keys(record).sort();
-  const sortedExpected = [...expected].sort();
-  return (
-    actual.length === sortedExpected.length &&
-    actual.every((key, index) => key === sortedExpected[index])
-  );
-}
-
-function isBoundedString(value: unknown, maxChars = MAX_PHOTO_FIELD_CHARS): value is string {
-  return (
-    typeof value === 'string' &&
-    value.length > 0 &&
-    value.length <= maxChars &&
-    value.trim() === value
-  );
-}
-
-function isBoundedStringOrNull(value: unknown, maxChars = MAX_PHOTO_FIELD_CHARS): boolean {
-  return value === null || isBoundedString(value, maxChars);
-}
-
-function isFiniteNumberOrNull(value: unknown): boolean {
-  return value === null || (typeof value === 'number' && Number.isFinite(value));
-}
-
-function isScoreOrNull(value: unknown): boolean {
-  return (
-    value === null ||
-    (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1)
-  );
-}
-
-function isCanonicalLocalDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const [year, month, day] = value.split('-').map(Number);
-  const date = new Date(Date.UTC(year!, month! - 1, day!));
-  return (
-    date.getUTCFullYear() === year && date.getUTCMonth() === month! - 1 && date.getUTCDate() === day
-  );
-}
-
-function isCanonicalInstant(value: unknown): value is string {
-  if (typeof value !== 'string' || value.length !== 24) return false;
-  const timestamp = Date.parse(value);
-  return !Number.isNaN(timestamp) && new Date(timestamp).toISOString() === value;
-}
-
-function assertStrictStoredRecord(value: unknown): asserts value is Record<string, unknown> {
-  if (
-    !isRecord(value) ||
-    !hasExactKeys(value, STORED_PHOTO_RECORD_KEYS) ||
-    !isBoundedString(value.id, 128) ||
-    !CANONICAL_PHOTO_FILE_ID.test(value.id) ||
-    !PHOTO_SERIES_SET.has(value.series as PhotoSeries) ||
-    !isCanonicalLocalDate(value.takenLocalDate) ||
-    !isCanonicalInstant(value.takenAt) ||
-    !(value.timeOfDay === null || TIME_OF_DAY.has(value.timeOfDay as TimeOfDay)) ||
-    !isScoreOrNull(value.alignmentScore) ||
-    !isScoreOrNull(value.lightingScore) ||
-    typeof value.isReference !== 'boolean' ||
-    !isBoundedStringOrNull(value.referencePhotoId, 128) ||
-    (typeof value.referencePhotoId === 'string' &&
-      !CANONICAL_PHOTO_FILE_ID.test(value.referencePhotoId)) ||
-    !isBoundedStringOrNull(value.localUri) ||
-    value.notes !== null ||
-    !isBoundedStringOrNull(value.notesCiphertext, MAX_PHOTO_NOTE_CIPHERTEXT_CHARS) ||
-    !isBoundedStringOrNull(value.captureSessionId, 32) ||
-    (typeof value.captureSessionId === 'string' &&
-      !CAPTURE_OPERATION_ID.test(value.captureSessionId)) ||
-    !isFiniteNumberOrNull(value.headRoll) ||
-    !isFiniteNumberOrNull(value.headYaw) ||
-    !isFiniteNumberOrNull(value.headPitch) ||
-    !(value.qualitySource === null || value.qualitySource === 'post_capture_measurement') ||
-    value.localOnly !== true ||
-    value.storagePath !== null ||
-    typeof value.faceRegionRedacted !== 'boolean' ||
-    typeof value.isEncrypted !== 'boolean' ||
-    !isBoundedStringOrNull(value.encryptedLocalUri) ||
-    !isBoundedStringOrNull(value.thumbnailLocalUri) ||
-    !isBoundedString(value.encryptionVersion, 64) ||
-    !isBoundedStringOrNull(value.keyId, 128)
-  ) {
-    throw new Error(PHOTO_METADATA_INVALID);
-  }
-
-  const expectedPrimary = encryptedPhotoUriForId(value.id);
-  const primary = value.encryptedLocalUri;
-  if (primary === null) {
-    if (
-      value.localUri !== null ||
-      value.thumbnailLocalUri !== null ||
-      value.captureSessionId !== null ||
-      value.isEncrypted ||
-      value.encryptionVersion !== 'none' ||
-      value.keyId !== null
-    ) {
-      throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-    }
-    return;
-  }
-  if (
-    value.localUri !== primary ||
-    primary !== expectedPrimary ||
-    !isEncryptedPhotoUri(primary) ||
-    !value.isEncrypted ||
-    value.encryptionVersion !== photoEncryptionInfo.version ||
-    value.keyId !== photoEncryptionInfo.keyId ||
-    (value.thumbnailLocalUri !== null &&
-      (value.thumbnailLocalUri !== encryptedPhotoThumbnailUriForId(value.id) ||
-        !isOwnedEncryptedPhotoUri(value.thumbnailLocalUri)))
-  ) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
 }
 
 function stringOrNull(value: unknown): string | null {
@@ -372,7 +173,7 @@ function localDateOrNull(value: unknown): string | null {
 
 function isoOrFallback(value: unknown, fallback: string): string {
   const text = stringOrNull(value);
-  return text && !Number.isNaN(Date.parse(text)) ? new Date(text).toISOString() : fallback;
+  return text && !Number.isNaN(Date.parse(text)) ? text : fallback;
 }
 
 function finiteNumberOrNull(value: unknown): number | null {
@@ -399,21 +200,51 @@ function timeOfDayOrNull(value: unknown): TimeOfDay | null {
   return text && TIME_OF_DAY.has(text as TimeOfDay) ? (text as TimeOfDay) : null;
 }
 
-async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null> {
+function captureSessionIdOrNull(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  const captureSessionId = trustedProgressCaptureSessionId(value);
+  if (captureSessionId === null) throw new Error(PHOTO_METADATA_INVALID);
+  return captureSessionId;
+}
+
+async function normalizeStoredRecord(
+  value: unknown,
+  guard: PhotoOperationGuard,
+): Promise<PhotoRecord | null> {
   if (!isRecord(value)) return null;
   const id = stringOrNull(value.id);
   const takenLocalDate = localDateOrNull(value.takenLocalDate);
   if (!id || !takenLocalDate) return null;
+  const captureSessionId = captureSessionIdOrNull(value.captureSessionId);
 
   const localUri = stringOrNull(value.localUri);
   const explicitEncryptedUri = stringOrNull(value.encryptedLocalUri);
   const encryptedLocalUri =
     explicitEncryptedUri ?? (localUri && isEncryptedPhotoUri(localUri) ? localUri : null);
+  const encryptionVersion = stringOrNull(value.encryptionVersion);
+  const thumbnailLocalUri = stringOrNull(value.thumbnailLocalUri);
+  if (encryptionVersion === 'xchacha20poly1305:photo-rendition:v1') {
+    let expectedOriginal: string;
+    let expectedThumbnail: string;
+    try {
+      expectedOriginal = canonicalPhotoRenditionUri({ photoId: id, captureSessionId, rendition: 'original' });
+      expectedThumbnail = canonicalPhotoRenditionUri({ photoId: id, captureSessionId, rendition: 'thumbnail' });
+    } catch {
+      throw new Error(PHOTO_METADATA_INVALID);
+    }
+    if (encryptedLocalUri !== expectedOriginal || localUri !== expectedOriginal ||
+        thumbnailLocalUri !== expectedThumbnail) {
+      throw new Error(PHOTO_METADATA_INVALID);
+    }
+  }
   const notesCiphertext = stringOrNull(value.notesCiphertext);
+  guard.assertCurrent();
   const notes = notesCiphertext
     ? await decryptPhotoNote(notesCiphertext)
     : stringOrNull(value.notes);
+  guard.assertCurrent();
   const encrypted = encryptedLocalUri != null;
+  const isEncrypted = encrypted || booleanOr(value.isEncrypted, false);
 
   return {
     id,
@@ -427,559 +258,236 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
     referencePhotoId: stringOrNull(value.referencePhotoId),
     localUri: localUri ?? encryptedLocalUri,
     notes,
-    captureSessionId: stringOrNull(value.captureSessionId),
+    captureSessionId,
     headRoll: finiteNumberOrNull(value.headRoll),
     headYaw: finiteNumberOrNull(value.headYaw),
     headPitch: finiteNumberOrNull(value.headPitch),
     qualitySource:
       value.qualitySource === 'post_capture_measurement' ? 'post_capture_measurement' : null,
-    // V1 placeholders claimed encryption even when no file existed. Derive
-    // these storage facts from recognized local authority during migration.
-    localOnly: true,
-    storagePath: null,
+    localOnly: booleanOr(value.localOnly, true),
+    storagePath: stringOrNull(value.storagePath),
     faceRegionRedacted: booleanOr(value.faceRegionRedacted, false),
-    isEncrypted: encrypted,
+    isEncrypted,
     encryptedLocalUri,
-    thumbnailLocalUri: stringOrNull(value.thumbnailLocalUri),
+    thumbnailLocalUri,
     encryptionVersion:
-      stringOrNull(value.encryptionVersion) ?? (encrypted ? photoEncryptionInfo.version : 'none'),
+      encryptionVersion ?? (encrypted ? photoEncryptionInfo.version : 'none'),
     keyId: stringOrNull(value.keyId) ?? (encrypted ? photoEncryptionInfo.keyId : null),
   };
 }
 
 async function normalizeStoredRecords(
-  value: readonly unknown[],
-  strictCurrentFormat = false,
-): Promise<PhotoRecord[]> {
+  value: unknown,
+  guard: PhotoOperationGuard,
+): Promise<PhotoRecord[] | null> {
+  if (!Array.isArray(value)) return null;
   const items: PhotoRecord[] = [];
+  const captureSessionIds = new Set<string>();
   for (const row of value) {
-    if (strictCurrentFormat) assertStrictStoredRecord(row);
-    const photo = await normalizeStoredRecord(row);
-    if (!photo) throw new Error(PHOTO_METADATA_INVALID);
+    guard.assertCurrent();
+    const photo = await normalizeStoredRecord(row, guard);
+    guard.assertCurrent();
+    if (!photo) return null;
+    if (photo.captureSessionId !== null) {
+      if (captureSessionIds.has(photo.captureSessionId)) {
+        throw new Error(PHOTO_CAPTURE_SESSION_DUPLICATE);
+      }
+      captureSessionIds.add(photo.captureSessionId);
+    }
     items.push(photo);
   }
   return items;
 }
 
-function encryptedUrisForRecord(photo: PhotoRecord): string[] {
-  return [...new Set([photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri])].filter(
-    (uri): uri is string => Boolean(uri && isEncryptedPhotoUri(uri)),
-  );
-}
-
-function assertUniqueNormalizedAuthority(items: readonly PhotoRecord[]): void {
-  const ids = new Set<string>();
-  const uris = new Set<string>();
-  for (const item of items) {
-    if (ids.has(item.id)) throw new Error(PHOTO_METADATA_INVALID);
-    ids.add(item.id);
-    for (const uri of encryptedUrisForRecord(item)) {
-      if (uris.has(uri)) throw new Error(PHOTO_METADATA_INVALID);
-      uris.add(uri);
-    }
+async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoRecord[]> {
+  guard.assertCurrent();
+  const raw = await getPrivateItem(KEY);
+  guard.assertCurrent();
+  if (raw === null) {
+    await recoverPhotoRenditionPublication(new Set());
+    guard.assertCurrent();
+    guard.assertCurrent();
+    await reconcileEncryptedPhotoStorage([], { removeUnreferencedFinals: false });
+    guard.assertCurrent();
+    return [];
   }
-}
-
-function assertCanonicalRecordUris(photo: PhotoRecord): void {
-  if (!CANONICAL_PHOTO_FILE_ID.test(photo.id)) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  if (photo.localUri !== null && !isEncryptedPhotoUri(photo.localUri)) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  const primary =
-    photo.encryptedLocalUri ??
-    (photo.localUri && isEncryptedPhotoUri(photo.localUri) ? photo.localUri : null);
-  if (photo.isEncrypted && primary === null) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  if (
-    primary === null &&
-    (photo.localUri !== null ||
-      photo.encryptedLocalUri !== null ||
-      photo.thumbnailLocalUri !== null ||
-      photo.encryptionVersion !== 'none' ||
-      photo.keyId !== null)
-  ) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  if (
-    primary !== null &&
-    (!photo.isEncrypted ||
-      photo.localUri !== primary ||
-      photo.encryptedLocalUri !== primary ||
-      photo.encryptionVersion !== photoEncryptionInfo.version ||
-      photo.keyId !== photoEncryptionInfo.keyId)
-  ) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  if (primary !== null && primary !== encryptedPhotoUriForId(photo.id)) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  if (photo.localUri && isEncryptedPhotoUri(photo.localUri) && photo.localUri !== primary) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  if (
-    photo.thumbnailLocalUri !== null &&
-    (photo.thumbnailLocalUri !== encryptedPhotoThumbnailUriForId(photo.id) ||
-      !isOwnedEncryptedPhotoUri(photo.thumbnailLocalUri))
-  ) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-}
-
-type PhotoStoreSnapshot = {
-  items: PhotoRecord[];
-  mutation: PhotoMutationJournal | null;
-  retainedItems: PhotoRecord[];
-  storedItems: unknown[];
-  storedRetainedItems: unknown[];
-};
-
-function assertMutationConsistency(snapshot: PhotoStoreSnapshot): void {
-  const { items, mutation, retainedItems } = snapshot;
-  assertUniqueNormalizedAuthority([...items, ...retainedItems]);
-  if (!mutation) return;
-
-  if (mutation.kind === 'add') {
-    if (
-      retainedItems.length !== 0 ||
-      items.filter((item) => item.id === mutation.operationId).length !== 1
-    ) {
-      throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-    }
-    const staged = items.find((item) => item.id === mutation.operationId)!;
-    assertCanonicalRecordUris(staged);
-    const ownsEncryptedFile = staged.encryptedLocalUri !== null;
-    if (
-      ownsEncryptedFile !== Boolean(staged.captureSessionId) ||
-      (staged.captureSessionId !== null && !CAPTURE_OPERATION_ID.test(staged.captureSessionId))
-    ) {
-      throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-    }
-    return;
-  }
-  if (mutation.kind === 'delete') {
-    if (retainedItems.length !== 1 || items.some((item) => item.id === retainedItems[0]!.id)) {
-      throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-    }
-    assertCanonicalRecordUris(retainedItems[0]!);
-    return;
-  }
-  if (items.length !== 0 || retainedItems.length === 0) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  retainedItems.forEach(assertCanonicalRecordUris);
-}
-
-async function normalizeDecodedPhotoStore(decoded: DecodedPhotoStore): Promise<PhotoStoreSnapshot> {
-  const strictCurrentFormat = decoded.format === 'v2';
-  const items = await normalizeStoredRecords(decoded.items, strictCurrentFormat);
-  const retainedItems = await normalizeStoredRecords(decoded.retainedItems, strictCurrentFormat);
-  const snapshot: PhotoStoreSnapshot = {
-    items,
-    mutation: decoded.mutation,
-    retainedItems,
-    storedItems: decoded.items,
-    storedRetainedItems: decoded.retainedItems,
-  };
-  if (strictCurrentFormat) [...items, ...retainedItems].forEach(assertCanonicalRecordUris);
-  assertMutationConsistency(snapshot);
-  return snapshot;
-}
-
-async function readPhotosUnlocked(): Promise<PhotoStoreSnapshot> {
-  return normalizeDecodedPhotoStore(decodePhotoStore(await getPrivateItem(KEY)));
-}
-
-function classifyPhotoStoreReadError(
-  error: unknown,
-): Exclude<PhotoStoreReadResult, { status: 'absent' | 'available' }> {
-  const message = error instanceof Error ? error.message : '';
-  if (
-    error instanceof AccountGenerationLeaseError ||
-    message === PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY
-  ) {
-    return { status: 'unavailable', photos: null, reason: 'account_boundary' };
-  }
-  if (message === PHOTO_CONTENT_KEY_MISSING) {
-    return { status: 'unavailable', photos: null, reason: 'photo_content_key_missing' };
-  }
-  if (message === PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE) {
-    return {
-      status: 'unavailable',
-      photos: null,
-      reason: 'photo_content_key_storage_unavailable',
-    };
-  }
-  if (message === PHOTO_CONTENT_KEY_INVALID) {
-    return { status: 'corrupt', photos: null, reason: 'photo_content_key_invalid' };
-  }
-  if (message === PHOTO_DECRYPTION_FAILED) {
-    return { status: 'corrupt', photos: null, reason: 'photo_decryption_failed' };
-  }
-  if (message === PHOTO_METADATA_UNSUPPORTED) {
-    return { status: 'unsupported_version', photos: null };
-  }
-  if (message === PHOTO_MUTATION_RECOVERY_REQUIRED) {
-    return { status: 'recovery_required', photos: null };
-  }
-  if (message === PHOTO_MUTATION_JOURNAL_INCONSISTENT) {
-    return { status: 'corrupt', photos: null, reason: 'journal_inconsistent' };
-  }
-  return { status: 'corrupt', photos: null, reason: 'invalid_payload' };
-}
-
-async function readPhotoStoreResultUnlocked(
-  lease: AccountGenerationLease,
-): Promise<PhotoStoreReadResult> {
-  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+  let parsed: unknown;
   try {
-    stored = await awaitAccountGenerationLease(lease, () => readPrivateItem(KEY));
-    lease.assertCurrent();
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    return { status: 'unavailable', photos: null, reason: 'storage_unavailable' };
+    await recoverPhotoRenditionPublication(null);
+    throw new Error(PHOTO_METADATA_INVALID);
   }
-
-  if (stored.status === 'absent') return { status: 'absent', photos: [] };
-  if (stored.status === 'unavailable') {
-    return { status: 'unavailable', photos: null, reason: stored.reason };
-  }
-  if (stored.status === 'corrupt') {
-    return { status: 'corrupt', photos: null, reason: stored.reason };
-  }
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', photos: null };
-  }
-
-  try {
-    const decoded = decodePhotoStore(stored.value);
-    const snapshot = await normalizeDecodedPhotoStore(decoded);
-    if (snapshot.mutation) return { status: 'recovery_required', photos: null };
-    return {
-      status: 'available',
-      photos: snapshot.items,
-      format: decoded.format as PhotoStoreFormat,
-    };
-  } catch (error) {
-    return classifyPhotoStoreReadError(error);
-  }
+  const normalized = await normalizeStoredRecords(parsed, guard);
+  guard.assertCurrent();
+  if (!normalized) throw new Error(PHOTO_METADATA_INVALID);
+  await reconcileEncryptedPhotoStorage(
+    normalized.flatMap((photo) =>
+      [photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri].filter(
+        (uri): uri is string => Boolean(uri && isEncryptedPhotoUri(uri)),
+      ),
+    ),
+  );
+  guard.assertCurrent();
+  await recoverPhotoRenditionPublication(new Set(normalized.map((photo) => photo.id)));
+  guard.assertCurrent();
+  return normalized;
 }
 
-function photoStoreReadError(
-  result: Exclude<PhotoStoreReadResult, { status: 'absent' | 'available' }>,
-): Error {
-  if (result.status === 'unsupported_version') return new Error(PHOTO_METADATA_UNSUPPORTED);
-  if (result.status === 'recovery_required') return new Error(PHOTO_MUTATION_RECOVERY_REQUIRED);
-  if (result.status === 'unavailable') {
-    const code: Record<PhotoStoreUnavailableReason, string> = {
-      account_boundary: PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
-      content_key_conflict: PRIVATE_KV_CONTENT_KEY_CONFLICT,
-      content_key_missing: PRIVATE_KV_CONTENT_KEY_MISSING,
-      content_key_storage_unavailable: PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE,
-      photo_content_key_missing: PHOTO_CONTENT_KEY_MISSING,
-      photo_content_key_storage_unavailable: PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
-      storage_unavailable: 'PHOTO_STORE_UNAVAILABLE',
-    };
-    return new Error(code[result.reason]);
-  }
-
-  const code: Record<PhotoStoreCorruptReason, string> = {
-    content_key_invalid: PRIVATE_KV_CONTENT_KEY_INVALID,
-    decryption_failed: PRIVATE_KV_DECRYPTION_FAILED,
-    envelope_invalid: PRIVATE_KV_ENVELOPE_INVALID,
-    invalid_payload: PHOTO_METADATA_INVALID,
-    journal_inconsistent: PHOTO_MUTATION_JOURNAL_INCONSISTENT,
-    photo_content_key_invalid: PHOTO_CONTENT_KEY_INVALID,
-    photo_decryption_failed: PHOTO_DECRYPTION_FAILED,
-  };
-  return new Error(code[result.reason]);
+export async function loadPhotos(): Promise<PhotoRecord[]> {
+  return runPhotoStoreMutation(loadPhotosUnlocked);
 }
 
-async function encodeStoredRecords(items: readonly PhotoRecord[]): Promise<StoredPhotoRecord[]> {
-  for (const item of items) {
-    if (
-      item.notes !== null &&
-      (typeof item.notes !== 'string' || item.notes.length > MAX_PHOTO_NOTE_PLAINTEXT_CHARS)
-    ) {
-      throw new Error(PHOTO_METADATA_INVALID);
-    }
-    // Validate every non-note field before encryption can create key material.
-    assertStrictStoredRecord({ ...item, notes: null, notesCiphertext: null });
-  }
-  const stored = await Promise.all(
+async function persist(items: PhotoRecord[], guard: PhotoOperationGuard): Promise<void> {
+  guard.assertCurrent();
+  const stored: StoredPhotoRecord[] = await Promise.all(
     items.map(async (item) => ({
       ...item,
       notes: null,
       notesCiphertext: await encryptPhotoNote(item.notes),
     })),
   );
-  stored.forEach(assertStrictStoredRecord);
-  return stored;
+  guard.assertCurrent();
+  await setPrivateItem(KEY, JSON.stringify(stored));
+  guard.assertCurrent();
 }
 
-async function writeExactPhotoStore(raw: string): Promise<void> {
-  let writeError: unknown = null;
+async function quarantinePhotoFiles(
+  uris: (string | null | undefined)[],
+  operationId: string,
+  guard: PhotoOperationGuard,
+): Promise<QuarantinedPhotoFile[]> {
+  const quarantined: QuarantinedPhotoFile[] = [];
   try {
-    await setPrivateItem(KEY, raw);
+    for (const uri of new Set(uris.filter((value): value is string => Boolean(value)))) {
+      guard.assertCurrent();
+      const file = await quarantineEncryptedPhoto(uri, operationId);
+      guard.assertCurrent();
+      if (file) quarantined.push(file);
+    }
+    return quarantined;
   } catch (error) {
-    writeError = error;
+    try {
+      guard.assertCurrent();
+    } catch (authorityError) {
+      // Withdrawal/account cleanup owns the bytes now. Finish deleting any
+      // already-quarantined envelopes; never restore health data into a new lease.
+      await finishQuarantinedFiles(quarantined);
+      throw authorityError;
+    }
+    const restored = await Promise.allSettled(
+      [...quarantined].reverse().map((file) => restoreQuarantinedPhoto(file)),
+    );
+    try {
+      guard.assertCurrent();
+    } catch (authorityError) {
+      await finishQuarantinedFiles(quarantined);
+      throw authorityError;
+    }
+    if (restored.some((result) => result.status === 'rejected')) {
+      throw new Error('PHOTO_DELETE_ROLLBACK_FAILED');
+    }
+    throw error;
   }
-
-  let stored: string | null;
-  try {
-    stored = await getPrivateItem(KEY);
-  } catch (readError) {
-    throw writeError ?? readError;
-  }
-  if (stored === raw) return;
-  if (writeError) throw writeError;
-  throw new Error(PHOTO_METADATA_COMMIT_UNCERTAIN);
 }
 
-async function writeStoredEnvelope(params: {
-  items: readonly unknown[];
-  mutation: PhotoMutationJournal | null;
-  retainedItems?: readonly unknown[];
-}): Promise<void> {
-  const raw =
-    params.mutation === null
-      ? encodePhotoStore({ items: params.items, mutation: null })
-      : encodePhotoStore({
-          items: params.items,
-          mutation: params.mutation,
-          retainedItems: params.retainedItems ?? [],
+async function restoreQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<void> {
+  const restored = await Promise.allSettled(
+    [...files].reverse().map((file) => restoreQuarantinedPhoto(file)),
+  );
+  if (restored.some((result) => result.status === 'rejected')) {
+    throw new Error('PHOTO_DELETE_ROLLBACK_FAILED');
+  }
+}
+
+async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<void> {
+  const results = await Promise.allSettled(files.map((file) => deleteQuarantinedPhoto(file)));
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length > 0) throw new Error(`PHOTO_DELETE_SETTLEMENT_REQUIRED:${failures.length}`);
+}
+
+function captureReplayMatches(existing: PhotoRecord, input: NewPhoto): boolean {
+  return (
+    existing.series === (input.series ?? 'front') &&
+    existing.takenLocalDate === input.takenLocalDate &&
+    existing.timeOfDay === (input.timeOfDay ?? null)
+  );
+}
+
+export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutcome> {
+  return runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
+    lease.assertCurrent();
+    const requestedCaptureSessionId = input.captureSessionId;
+    const captureSessionId =
+      requestedCaptureSessionId == null
+        ? null
+        : trustedProgressCaptureSessionId(requestedCaptureSessionId);
+    if (requestedCaptureSessionId != null && captureSessionId === null) {
+      throw new Error(PHOTO_CAPTURE_SESSION_INVALID);
+    }
+    const sourceNeedsCleanup = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
+
+    if (captureSessionId !== null) {
+      const replays = items.filter((photo) => photo.captureSessionId === captureSessionId);
+      if (replays.length > 1) throw new Error(PHOTO_CAPTURE_SESSION_DUPLICATE);
+      const replay = replays[0];
+      if (replay !== undefined) {
+        if (!captureReplayMatches(replay, input)) {
+          throw new Error(PHOTO_CAPTURE_SESSION_CONFLICT);
+        }
+        if (sourceNeedsCleanup) {
+          lease.assertCurrent();
+          await deleteCapturedPhotoSource(input.localUri);
+          lease.assertCurrent();
+        }
+        return { photo: replay, createdNow: false };
+      }
+    }
+
+    const series = input.series ?? 'front';
+    const hasReference = items.some((p) => p.series === series);
+    const id = randomUUID();
+    lease.assertCurrent();
+    let thumbnail: Awaited<ReturnType<typeof createEncryptedPhotoThumbnail>> | null = null;
+    let encrypted: Awaited<ReturnType<typeof encryptPhotoRendition>> | null = null;
+    const publicationIdentity = { photoId: id, captureSessionId };
+    if (sourceNeedsCleanup) {
+      await beginPhotoRenditionPublication(publicationIdentity, input.localUri!);
+      lease.assertCurrent();
+    }
+    try {
+      encrypted =
+        input.localUri && !isEncryptedPhotoUri(input.localUri)
+          ? await encryptPhotoRendition(input.localUri, {
+              photoId: id,
+              captureSessionId,
+              rendition: 'original',
+            })
+          : input.localUri && isEncryptedPhotoUri(input.localUri)
+            ? {
+                encryptedLocalUri: input.localUri,
+                keyId: photoEncryptionInfo.keyId,
+                encryptionVersion: photoEncryptionInfo.version,
+              }
+            : null;
+      if (sourceNeedsCleanup) {
+        await markPhotoRenditionPublication(publicationIdentity, 'original_adopted');
+      }
+      if (input.localUri && !isEncryptedPhotoUri(input.localUri)) {
+        thumbnail = await createEncryptedPhotoThumbnail({
+          sourceUri: input.localUri,
+          photoId: id,
+          captureSessionId,
         });
-  await writeExactPhotoStore(raw);
-}
-
-async function writeSettledItems(items: readonly PhotoRecord[]): Promise<void> {
-  await writeStoredEnvelope({ items: await encodeStoredRecords(items), mutation: null });
-}
-
-async function finishCommittedAdd(snapshot: PhotoStoreSnapshot): Promise<void> {
-  const mutation = snapshot.mutation;
-  if (!mutation || mutation.kind !== 'add') {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  const staged = snapshot.items.find((item) => item.id === mutation.operationId)!;
-  if (staged.captureSessionId) {
-    await cleanupPlaintextStagingOperation(staged.captureSessionId, 'photo_capture_jpeg');
-  }
-  await writeStoredEnvelope({ items: snapshot.storedItems, mutation: null });
-}
-
-async function ensurePreparedAddFile(snapshot: PhotoStoreSnapshot): Promise<boolean> {
-  const mutation = snapshot.mutation!;
-  const staged = snapshot.items.find((item) => item.id === mutation.operationId)!;
-  const encryptedUri = staged.encryptedLocalUri;
-  if (!encryptedUri) return true;
-
-  try {
-    if (await recoverPreparedEncryptedPhoto(encryptedUri, mutation.operationId)) return true;
-  } catch (error) {
-    if (
-      !(error instanceof Error) ||
-      error.message !== PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED ||
-      !staged.captureSessionId
-    ) {
+        await markPhotoRenditionPublication(publicationIdentity, 'pair_adopted');
+      }
+    } catch (error) {
+      if (sourceNeedsCleanup) await recoverPhotoRenditionPublication(new Set());
       throw error;
     }
-    const source = await lookupPlaintextStaging(staged.captureSessionId, 'photo_capture_jpeg');
-    if (!source) throw error;
-    await discardPendingEncryptedPhotoForRetry(encryptedUri, mutation.operationId);
-  }
+    lease.assertCurrent();
 
-  if (!staged.captureSessionId) return false;
-  const source = await lookupPlaintextStaging(staged.captureSessionId, 'photo_capture_jpeg');
-  if (!source) return false;
-  const encrypted = await encryptCapturedPhoto(source.uri, staged.id, mutation.operationId);
-  if (encrypted.encryptedLocalUri !== encryptedUri) {
-    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-  }
-  return recoverPreparedEncryptedPhoto(encryptedUri, mutation.operationId);
-}
-
-async function recoverPendingPhotoStoreUnlocked(
-  initial: PhotoStoreSnapshot,
-): Promise<PhotoStoreSnapshot> {
-  if (!initial.mutation) return initial;
-  const mutation = initial.mutation;
-
-  if (mutation.kind === 'add') {
-    const finalReady = await ensurePreparedAddFile(initial);
-    if (!finalReady) {
-      if (mutation.phase === 'metadata_committed') {
-        throw new Error(PHOTO_MUTATION_SOURCE_MISSING);
-      }
-      // No final, pending artifact, or owned plaintext source exists. The add
-      // never reached commit and can be rolled back without touching prior rows.
-      const stagedIndex = initial.items.findIndex((item) => item.id === mutation.operationId);
-      const storedItems = initial.storedItems.filter((_item, index) => index !== stagedIndex);
-      await writeStoredEnvelope({ items: storedItems, mutation: null });
-      return {
-        items: initial.items.filter((item) => item.id !== mutation.operationId),
-        mutation: null,
-        retainedItems: [],
-        storedItems,
-        storedRetainedItems: [],
-      };
-    }
-
-    let committed = initial;
-    if (mutation.phase === 'prepared') {
-      const committedMutation: PhotoMutationJournal = {
-        ...mutation,
-        phase: 'metadata_committed',
-      };
-      await writeStoredEnvelope({
-        items: initial.storedItems,
-        mutation: committedMutation,
-        retainedItems: [],
-      });
-      committed = { ...initial, mutation: committedMutation };
-    }
-    await finishCommittedAdd(committed);
-    return { ...committed, mutation: null };
-  }
-
-  const affectedUris = initial.retainedItems.flatMap(encryptedUrisForRecord);
-  if (mutation.phase === 'prepared') {
-    await stageEncryptedPhotoDeletions(affectedUris, mutation.operationId);
-    const committedMutation: PhotoMutationJournal = {
-      ...mutation,
-      phase: 'metadata_committed',
-    };
-    await writeStoredEnvelope({
-      items: initial.storedItems,
-      mutation: committedMutation,
-      retainedItems: initial.storedRetainedItems,
-    });
-  }
-  await finalizeEncryptedPhotoDeletions(affectedUris, mutation.operationId);
-  await writeStoredEnvelope({ items: initial.storedItems, mutation: null });
-  return {
-    items: initial.items,
-    mutation: null,
-    retainedItems: [],
-    storedItems: initial.storedItems,
-    storedRetainedItems: [],
-  };
-}
-
-async function loadPhotosForMutationUnlocked(): Promise<PhotoRecord[]> {
-  return (await recoverPendingPhotoStoreUnlocked(await readPhotosUnlocked())).items;
-}
-
-/** Explicit owner-bound recovery; callers must run this before plaintext scavenging. */
-export async function recoverPhotoStoreMutations(): Promise<void> {
-  await runPhotoStoreMutation(async () => {
-    const decoded = decodePhotoStore(await getPrivateItem(KEY));
-    if (!decoded.mutation) return;
-    await recoverPendingPhotoStoreUnlocked(await normalizeDecodedPhotoStore(decoded));
-  });
-}
-
-/** Classify photo metadata without repairing, migrating, deleting, or
- * rewriting bytes. Absence alone is a valid empty timeline. */
-export async function readPhotos(): Promise<PhotoStoreReadResult> {
-  // Queue behind mutations but never recover, rewrite, move, or delete. A V2
-  // journal means metadata is intentionally staged and must not be published.
-  try {
-    return await runPhotoStoreMutation(readPhotoStoreResultUnlocked);
-  } catch (error) {
-    return classifyPhotoStoreReadError(error);
-  }
-}
-
-export type PhotoMutationJournalDiagnostics = Readonly<{
-  status: 'absent' | 'available' | 'corrupt' | 'unavailable' | 'unsupported_version';
-  count: number;
-}>;
-
-/** Development diagnostics boundary. It returns only a 0/1 journal count and
- * typed availability; photo records, operation identifiers, and paths never
- * cross this boundary. This read never repairs or rewrites the store. */
-export async function readPhotoMutationJournalDiagnostics(): Promise<PhotoMutationJournalDiagnostics> {
-  try {
-    return await runPhotoStoreMutation(async (lease) => {
-      let stored: Awaited<ReturnType<typeof readPrivateItem>>;
-      try {
-        stored = await awaitAccountGenerationLease(lease, () => readPrivateItem(KEY));
-        lease.assertCurrent();
-      } catch {
-        return { status: 'unavailable', count: 0 };
-      }
-
-      if (stored.status === 'absent') return { status: 'absent', count: 0 };
-      if (stored.status !== 'available') return { status: stored.status, count: 0 };
-
-      try {
-        const decoded = decodePhotoStore(stored.value);
-        return { status: 'available', count: decoded.mutation === null ? 0 : 1 };
-      } catch (error) {
-        return {
-          status:
-            error instanceof Error && error.message === PHOTO_METADATA_UNSUPPORTED
-              ? 'unsupported_version'
-              : 'corrupt',
-          count: 0,
-        };
-      }
-    });
-  } catch {
-    return { status: 'unavailable', count: 0 };
-  }
-}
-
-/** Compatibility boundary for query consumers that use rejection as their
- * recovery signal. New storage-aware consumers should use `readPhotos`. */
-export async function loadPhotos(): Promise<PhotoRecord[]> {
-  const result = await readPhotos();
-  if (result.status === 'absent' || result.status === 'available') return result.photos;
-  throw photoStoreReadError(result);
-}
-
-export async function addPhoto(input: NewPhoto): Promise<PhotoMutationCommit<PhotoRecord>> {
-  return runPhotoStoreMutation(async () => {
-    const items = await loadPhotosForMutationUnlocked();
-    const committedCapture = input.captureSessionId
-      ? items.find((photo) => photo.captureSessionId === input.captureSessionId)
-      : undefined;
-    if (committedCapture) {
-      if (input.captureSessionId) {
-        await cleanupPlaintextStagingOperation(input.captureSessionId, 'photo_capture_jpeg');
-      }
-      return photoMutationCommit(committedCapture, items);
-    }
-
-    const sourceNeedsEncryption = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
-    if (sourceNeedsEncryption !== Boolean(input.captureSessionId)) {
-      throw new Error(PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED);
-    }
-    let capturedSourceUri: string | null = null;
-    if (sourceNeedsEncryption) {
-      if (!CAPTURE_OPERATION_ID.test(input.captureSessionId!)) {
-        throw new Error(PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED);
-      }
-      const source = await lookupPlaintextStaging(input.captureSessionId!, 'photo_capture_jpeg');
-      if (!source || source.uri !== input.localUri) {
-        throw new Error(PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED);
-      }
-      capturedSourceUri = source.uri;
-    }
-
-    const id = randomUUID().toLowerCase();
-    if (items.some((item) => item.id === id)) throw new Error(PHOTO_METADATA_INVALID);
-    const encryptedLocalUri = sourceNeedsEncryption
-      ? encryptedPhotoUriForId(id)
-      : input.localUri && isEncryptedPhotoUri(input.localUri)
-        ? input.localUri
-        : null;
-    if (encryptedLocalUri && encryptedLocalUri !== encryptedPhotoUriForId(id)) {
-      throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-    }
-    const series = input.series ?? 'front';
     const rec: PhotoRecord = {
       id,
       series,
@@ -992,193 +500,143 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoMutationCommit<Pho
       headYaw: input.headYaw ?? null,
       headPitch: input.headPitch ?? null,
       qualitySource: input.qualitySource ?? null,
-      isReference: !items.some((item) => item.series === series),
+      isReference: !hasReference,
       referencePhotoId: input.referencePhotoId ?? null,
-      captureSessionId: input.captureSessionId ?? null,
-      localUri: encryptedLocalUri,
+      captureSessionId,
+      localUri: encrypted?.encryptedLocalUri ?? null,
       notes: input.notes ?? null,
       localOnly: true,
       storagePath: null,
       faceRegionRedacted: false,
-      isEncrypted: encryptedLocalUri !== null,
-      encryptedLocalUri,
-      thumbnailLocalUri: null,
-      encryptionVersion: encryptedLocalUri ? photoEncryptionInfo.version : 'none',
-      keyId: encryptedLocalUri ? photoEncryptionInfo.keyId : null,
+      isEncrypted: Boolean(encrypted),
+      encryptedLocalUri: encrypted?.encryptedLocalUri ?? null,
+      thumbnailLocalUri: thumbnail?.encryptedLocalUri ?? null,
+      encryptionVersion: encrypted?.encryptionVersion ?? 'none',
+      keyId: encrypted?.keyId ?? null,
     };
-    const storedItems = await encodeStoredRecords([rec, ...items]);
-    const prepared: PhotoMutationJournal = { kind: 'add', operationId: id, phase: 'prepared' };
-    await writeStoredEnvelope({ items: storedItems, mutation: prepared, retainedItems: [] });
-
-    if (sourceNeedsEncryption) {
-      try {
-        const encrypted = await encryptCapturedPhoto(capturedSourceUri!, id, id);
-        if (encrypted.encryptedLocalUri !== encryptedLocalUri) {
-          throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-        }
-      } catch (error) {
-        if (!(await recoverPreparedEncryptedPhoto(encryptedLocalUri!, id))) throw error;
+    try {
+      await persist([rec, ...items], lease);
+      if (sourceNeedsCleanup) {
+        await markPhotoRenditionPublication(publicationIdentity, 'metadata_committed');
       }
+    } catch (error) {
+      try {
+        lease.assertCurrent();
+      } catch (authorityError) {
+        // A capture cannot remain retryable into a later consent/account lease.
+        // Delete the unencrypted camera-cache source without reading it.
+        if (sourceNeedsCleanup) {
+          await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+        }
+        throw authorityError;
+      }
+      throw error;
     }
-    if (encryptedLocalUri && !(await recoverPreparedEncryptedPhoto(encryptedLocalUri, id))) {
-      throw new Error(PHOTO_MUTATION_SOURCE_MISSING);
+    if (sourceNeedsCleanup) {
+      await deleteCapturedPhotoSource(input.localUri);
+      await markPhotoRenditionPublication(publicationIdentity, 'raw_cleaned');
+      await settlePhotoRenditionPublication(publicationIdentity);
     }
-
-    const committed: PhotoMutationJournal = { ...prepared, phase: 'metadata_committed' };
-    await writeStoredEnvelope({ items: storedItems, mutation: committed, retainedItems: [] });
-    if (rec.captureSessionId) {
-      await cleanupPlaintextStagingOperation(rec.captureSessionId, 'photo_capture_jpeg');
-    }
-    await writeStoredEnvelope({ items: storedItems, mutation: null });
-    return photoMutationCommit(rec, [rec, ...items]);
+    lease.assertCurrent();
+    return { photo: rec, createdNow: true };
   });
+}
+
+export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
+  return (await addPhotoWithOutcome(input)).photo;
 }
 
 export async function updatePhoto(
   id: string,
   patch: Partial<Pick<PhotoRecord, 'notes' | 'timeOfDay' | 'faceRegionRedacted'>>,
-): Promise<PhotoMutationCommit<void>> {
-  return runPhotoStoreMutation(async () => {
-    const items = await loadPhotosForMutationUnlocked();
-    const index = items.findIndex((item) => item.id === id);
-    if (index < 0) return photoMutationCommit(undefined, items);
-    const current = items[index]!;
-    const next = { ...current, ...patch };
-    if (
-      current.notes === next.notes &&
-      current.timeOfDay === next.timeOfDay &&
-      current.faceRegionRedacted === next.faceRegionRedacted
-    ) {
-      return photoMutationCommit(undefined, items);
-    }
-    const nextItems = items.map((item, itemIndex) => (itemIndex === index ? next : item));
-    await writeSettledItems(nextItems);
-    return photoMutationCommit(undefined, nextItems);
+): Promise<void> {
+  await runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
+    lease.assertCurrent();
+    await persist(
+      items.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+      lease,
+    );
   });
 }
 
-export async function removePhoto(
-  id: string,
-  owner?: PhotoDeleteOwner,
-): Promise<PhotoMutationCommit<void>> {
-  return runAccountGenerationOperation(async (lease) => {
-    const ownerId = photoDeleteOwnerId(owner, lease);
-    const ownerHash = ownerId ? await hashOutboxOwner(ownerId) : null;
+export async function removePhoto(id: string): Promise<void> {
+  await runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
+    const target = items.find((p) => p.id === id);
+    if (!target) return;
     lease.assertCurrent();
-
-    return runPhotoStoreMutation(async (storeLease) => {
-      if (storeLease.generation !== lease.generation) throw new AccountGenerationLeaseError();
-      lease.assertCurrent();
-      const items = await loadPhotosForMutationUnlocked();
-      const targetIndex = items.findIndex((item) => item.id === id);
-      if (targetIndex < 0) return photoMutationCommit(undefined, items);
-      const target = items[targetIndex]!;
-      const affectedUris = encryptedUrisForRecord(target);
-      target && assertCanonicalRecordUris(target);
-      await verifyEncryptedPhotoDeletionSources(affectedUris);
-
-      const expectedPhotoRaw = await getPrivateItem(KEY);
-      const storedItems = await encodeStoredRecords(items);
-      const nextStoredItems = storedItems.filter((_item, index) => index !== targetIndex);
-      const retainedItems = [storedItems[targetIndex]!];
-      const operationId = randomUUID().toLowerCase();
-      const enqueuedAt = new Date().toISOString();
-      const prepared: PhotoMutationJournal = {
-        kind: 'delete',
-        operationId,
-        phase: 'prepared',
-      };
-      const preparedPhotoRaw = encodePhotoStore({
-        items: nextStoredItems,
-        mutation: prepared,
-        retainedItems,
-      });
-      if (ownerHash && SERVER_PHOTO_ID.test(id)) {
-        await updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY], (current) => {
-          lease.assertCurrent();
-          storeLease.assertCurrent();
-          if ((current.get(KEY) ?? null) !== expectedPhotoRaw) {
-            throw new Error(PHOTO_METADATA_COMMIT_UNCERTAIN);
-          }
-          const queued = enqueuePhotoDeleteOutboxOperation(
-            decodeOutboxEnvelope(current.get(OUTBOX_STORAGE_KEY) ?? null),
-            {
-              operationId,
-              ownerHash,
-              ownerGeneration: lease.generation,
-              entityId: id,
-              enqueuedAt,
-            },
-          );
-          return new Map<string, string | null>([
-            [KEY, preparedPhotoRaw],
-            [OUTBOX_STORAGE_KEY, encodeOutboxEnvelope(queued.envelope)],
-          ]);
-        });
-      } else {
-        await writeExactPhotoStore(preparedPhotoRaw);
-      }
-      lease.assertCurrent();
-      storeLease.assertCurrent();
-      await stageEncryptedPhotoDeletions(affectedUris, operationId);
-      await writeStoredEnvelope({
-        items: nextStoredItems,
-        mutation: { ...prepared, phase: 'metadata_committed' },
-        retainedItems,
-      });
-      await finalizeEncryptedPhotoDeletions(affectedUris, operationId);
-      await writeStoredEnvelope({ items: nextStoredItems, mutation: null });
-      return photoMutationCommit(
-        undefined,
-        items.filter((_item, index) => index !== targetIndex),
+    const quarantined = await quarantinePhotoFiles(
+      [target.encryptedLocalUri ?? target.localUri, target.thumbnailLocalUri],
+      `delete-${id}-${randomUUID()}`,
+      lease,
+    );
+    try {
+      await persist(
+        items.filter((p) => p.id !== id),
+        lease,
       );
-    });
+    } catch (error) {
+      try {
+        lease.assertCurrent();
+      } catch (authorityError) {
+        await finishQuarantinedFiles(quarantined);
+        throw authorityError;
+      }
+      try {
+        await restoreQuarantinedFiles(quarantined);
+        lease.assertCurrent();
+      } catch (restoreError) {
+        try {
+          lease.assertCurrent();
+        } catch (authorityError) {
+          await finishQuarantinedFiles(quarantined);
+          throw authorityError;
+        }
+        throw restoreError;
+      }
+      throw error;
+    }
+    lease.assertCurrent();
+    await finishQuarantinedFiles(quarantined);
+    lease.assertCurrent();
+    try {
+      await supabase.from('photos').delete().eq('id', id).abortSignal(lease.signal);
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* best-effort while the exact owner/epoch remains current */
+    }
   });
 }
 
 /** Make `id` the reference for its series. */
-export async function setReference(id: string): Promise<PhotoMutationCommit<void>> {
-  return runPhotoStoreMutation(async () => {
-    const items = await loadPhotosForMutationUnlocked();
-    const target = items.find((item) => item.id === id);
-    if (!target) return photoMutationCommit(undefined, items);
-    if (
-      target.isReference &&
-      items.every((item) => item.series !== target.series || item.isReference === (item.id === id))
-    ) {
-      return photoMutationCommit(undefined, items);
-    }
-    const nextItems = items.map((item) =>
-      item.series === target.series ? { ...item, isReference: item.id === id } : item,
+export async function setReference(id: string): Promise<void> {
+  await runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
+    const target = items.find((p) => p.id === id);
+    if (!target) return;
+    lease.assertCurrent();
+    await persist(
+      items.map((p) => (p.series === target.series ? { ...p, isReference: p.id === id } : p)),
+      lease,
     );
-    await writeSettledItems(nextItems);
-    return photoMutationCommit(undefined, nextItems);
   });
 }
 
-/** Test/seed reset. */
+/**
+ * Explicit privacy-reducing reset. It never decrypts photo metadata and remains
+ * available after consent closes so lifecycle/account cleanup can only delete.
+ */
 export async function clearPhotos(): Promise<void> {
-  await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosForMutationUnlocked();
-    if (items.length === 0) return;
-    items.forEach(assertCanonicalRecordUris);
-    const affectedUris = items.flatMap(encryptedUrisForRecord);
-    await verifyEncryptedPhotoDeletionSources(affectedUris);
-    const retainedItems = await encodeStoredRecords(items);
-    const operationId = randomUUID().toLowerCase();
-    const prepared: PhotoMutationJournal = {
-      kind: 'clear',
-      operationId,
-      phase: 'prepared',
-    };
-    await writeStoredEnvelope({ items: [], mutation: prepared, retainedItems });
-    await stageEncryptedPhotoDeletions(affectedUris, operationId);
-    await writeStoredEnvelope({
-      items: [],
-      mutation: { ...prepared, phase: 'metadata_committed' },
-      retainedItems,
-    });
-    await finalizeEncryptedPhotoDeletions(affectedUris, operationId);
-    await writeStoredEnvelope({ items: [], mutation: null });
+  await runPhotoStoreCleanup(async (guard) => {
+    guard.assertCurrent();
+    const results = await Promise.allSettled([
+      removePrivateItem(KEY),
+      clearEncryptedPhotoStorage(),
+    ]);
+    guard.assertCurrent();
+    const failures = results.filter((result) => result.status === 'rejected');
+    if (failures.length > 0) throw new Error(`PHOTO_CLEAR_FAILED:${failures.length}`);
   });
 }

@@ -1,9 +1,21 @@
-import { expiryBadge } from '@/features/intelligence/pao';
-import { surfacedExpiry } from '@/features/shelf/expiry';
-import type { ShelfProduct } from '@/features/shelf/store';
 import type { ShelfData, ShelfItem } from '@/features/shelf/useShelf';
 
-export type ReplenishmentReason = 'countdown' | 'expired' | 'finished';
+export const REPLENISHMENT_REASONS = [
+  'printed_expiry_countdown',
+  'printed_expiry_expired',
+  'label_pao_countdown',
+  'label_pao_expired',
+  'catalog_pao_countdown',
+  'catalog_pao_expired',
+  'finished',
+] as const;
+
+/**
+ * A replacement reason carries both lifecycle state and the provenance that
+ * makes the freshness signal safe to surface. Category-default estimates and
+ * unknown dates deliberately have no representable reason.
+ */
+export type ReplenishmentReason = (typeof REPLENISHMENT_REASONS)[number];
 
 export type ShelfReplenishmentCandidate = {
   item: ShelfItem;
@@ -14,11 +26,42 @@ function normalized(value: string | null): string {
   return value?.trim().replace(/\s+/g, ' ').toLowerCase() ?? '';
 }
 
+type FreshnessBadgeKind = 'countdown' | 'expired';
+type FreshnessReplenishmentReason = Exclude<ReplenishmentReason, 'finished'>;
+
+function freshnessReason(
+  product: Pick<
+    ShelfItem['product'],
+    'expiryDate' | 'expirySource' | 'legacyUnverifiedExpiryDate' | 'paoSource'
+  >,
+  badgeKind: FreshnessBadgeKind,
+): FreshnessReplenishmentReason | null {
+  if (
+    product.expirySource === 'printed' &&
+    product.expiryDate !== null &&
+    product.legacyUnverifiedExpiryDate === null
+  ) {
+    return badgeKind === 'countdown'
+      ? 'printed_expiry_countdown'
+      : 'printed_expiry_expired';
+  }
+
+  if (product.expirySource === 'pao_computed' && product.paoSource === 'label') {
+    return badgeKind === 'countdown' ? 'label_pao_countdown' : 'label_pao_expired';
+  }
+
+  if (product.expirySource === 'pao_computed' && product.paoSource === 'catalog') {
+    return badgeKind === 'countdown' ? 'catalog_pao_countdown' : 'catalog_pao_expired';
+  }
+
+  return null;
+}
+
 /** Stable enough to suppress an archived unit after the same product is re-added. */
-function productIdentity(product: Pick<
-  ShelfProduct,
-  'barcode' | 'brand' | 'catalogProductId' | 'category' | 'name'
->): string {
+function productIdentity(item: ShelfItem): string {
+  const product = item.product;
+  const replacementRootId = normalized(product.replacementRootId ?? null);
+  if (replacementRootId) return `replacement:${replacementRootId}`;
   const catalogProductId = normalized(product.catalogProductId);
   if (catalogProductId) return `catalog:${catalogProductId}`;
   const barcode = normalized(product.barcode);
@@ -42,17 +85,18 @@ export function collectReplenishmentCandidates(
   if (!data) return [];
 
   const active = data.items.filter((item) => item.status === 'active');
-  const activeIdentities = new Set(active.map((item) => productIdentity(item.product)));
+  const activeIdentities = new Set(active.map(productIdentity));
   const candidates: ShelfReplenishmentCandidate[] = [];
   for (const item of active) {
-    if (item.badge.kind === 'countdown') candidates.push({ item, reason: 'countdown' });
-    if (item.badge.kind === 'expired') candidates.push({ item, reason: 'expired' });
+    if (item.badge.kind !== 'countdown' && item.badge.kind !== 'expired') continue;
+    const reason = freshnessReason(item.product, item.badge.kind);
+    if (reason) candidates.push({ item, reason });
   }
 
   const seenFinished = new Set<string>();
   for (const item of data.archive) {
     if (item.status !== 'finished') continue;
-    const identity = productIdentity(item.product);
+    const identity = productIdentity(item);
     if (activeIdentities.has(identity) || seenFinished.has(identity)) continue;
     seenFinished.add(identity);
     candidates.push({ item, reason: 'finished' });
@@ -65,29 +109,4 @@ export function hasReplenishmentSignal(
   data: Pick<ShelfData, 'items' | 'archive'> | null | undefined,
 ): boolean {
   return collectReplenishmentCandidates(data).length > 0;
-}
-
-/** Lightweight lifecycle evaluator over the exact local Shelf rows. It avoids
- * mounting the complete Shelf/profile/conflict query graph solely for a
- * background notification decision. */
-export function hasReplenishmentSignalForProducts(
-  products: readonly ShelfProduct[],
-  today: string,
-): boolean {
-  const active = products.filter((product) => product.status === 'active');
-  const activeIdentities = new Set(active.map(productIdentity));
-
-  if (
-    active.some((product) => {
-      const kind = expiryBadge(surfacedExpiry(product), today).kind;
-      return kind === 'countdown' || kind === 'expired';
-    })
-  ) {
-    return true;
-  }
-
-  return products.some(
-    (product) =>
-      product.status === 'finished' && !activeIdentities.has(productIdentity(product)),
-  );
 }

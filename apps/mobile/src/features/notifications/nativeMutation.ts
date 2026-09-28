@@ -56,9 +56,11 @@ export class NotificationNativeCleanupTimeoutError extends Error {
 export type NotificationNativeMutationBackend = Readonly<{
   cancelAllScheduledNotificationsAsync: () => Promise<void>;
   cancelScheduledNotificationAsync: (identifier: string) => Promise<void>;
+  clearLastNotificationResponseAsync: () => Promise<void>;
   dismissAllNotificationsAsync: () => Promise<void>;
   dismissNotificationAsync: (identifier: string) => Promise<void>;
   scheduleNotificationAsync: (request: Notifications.NotificationRequestInput) => Promise<string>;
+  setBadgeCountAsync: (badgeCount: number) => Promise<boolean>;
 }>;
 
 type MutationTerminalOutcome = Readonly<{ safe: boolean }>;
@@ -317,7 +319,13 @@ export class NotificationNativeMutationCoordinator {
     // owner-B work quarantined until the native outcome is truly terminal.
     const nativeCleanup = Promise.allSettled([
       invokeNative(() => this.backend.cancelAllScheduledNotificationsAsync()),
+      invokeNative(() => this.backend.clearLastNotificationResponseAsync()),
       invokeNative(() => this.backend.dismissAllNotificationsAsync()),
+      invokeNative(async () => {
+        if (!(await this.backend.setBadgeCountAsync(0))) {
+          throw new Error('NOTIFICATION_NATIVE_BADGE_CLEAR_FAILED');
+        }
+      }),
     ]);
     const mutationCleanup = Promise.all(priorMutations.map(({ terminal: wait }) => wait));
 

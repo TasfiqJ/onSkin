@@ -11,7 +11,7 @@ Item: `OPT-204`
 ## Invariant
 
 When the platform Reduce Motion preference is enabled or cannot yet be read,
-OnSkin must not start continuous animation, automatic photo playback, animated
+Layerwell must not start continuous animation, automatic photo playback, animated
 programmatic scrolling, or slide/fade presentation. Durable work must never wait
 for decorative theater. Direct user manipulation and deliberate manual stepping
 remain available, with a non-gesture alternative where a gesture is used.
@@ -56,7 +56,7 @@ still unresolved.
 ## Deterministic Evidence
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/lib/accessibility/useReduceMotionPreference.test.ts \
   src/lib/accessibility/reduceMotionInventory.test.ts \
   src/features/onboarding/onboardingRoutes.test.ts \
@@ -67,10 +67,10 @@ npm.cmd --workspace @onskin/mobile test -- --run \
   src/features/shelf/shelfRoutes.test.ts
 8 files / 123 tests PASS
 
-npm.cmd --workspace @onskin/mobile run typecheck
+npm.cmd --workspace @layerwell/mobile run typecheck
 PASS
 
-npm.cmd --workspace @onskin/mobile run lint
+npm.cmd --workspace @layerwell/mobile run lint
 PASS, zero warnings
 
 npm.cmd test

@@ -1,67 +1,30 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { ScrollView, View } from 'react-native';
+import { useEffect, type ReactNode } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, StateLoading, StateNotice, Text } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
 
 import { useAuth } from './AuthProvider';
-import {
-  getAccountIsolationE2EFixture,
-  readAccountIsolationE2EStorageProof,
-  type AccountIsolationE2EStorageProof,
-} from './accountIsolationE2E';
 
 const COPY = {
   loading: 'Securing account data...',
-  eyebrow: 'Account change paused',
-  title: 'Your private data could not be secured.',
-  body: 'App content remains locked while OnSkin verifies or finishes clearing local private data. Try again to continue safely.',
+  eyebrow: 'Account access paused',
+  title: "We couldn't finish securing this account.",
+  body: 'Your account data is still locked. Try again to continue safely.',
   retry: 'Try again',
 } as const;
 
 export function SessionBoundaryGate({ children }: { children: ReactNode }) {
   const insets = useSafeAreaInsets();
   const { initializing, sessionBoundaryError, retrySessionBoundary } = useAuth();
-  const e2eFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
-  const [e2eStorageProof, setE2EStorageProof] =
-    useState<AccountIsolationE2EStorageProof | null>(null);
-  const [e2eStorageProofReadFailed, setE2EStorageProofReadFailed] = useState(false);
 
   useEffect(() => {
     if (initializing || sessionBoundaryError) return;
     markStartupPhase('authentication_hydration_complete');
     markStartupPhase('account_generation_complete');
   }, [initializing, sessionBoundaryError]);
-
-  useEffect(() => {
-    if (!sessionBoundaryError || e2eFixture?.mode !== 'owner_marker_future') return;
-    let active = true;
-    void readAccountIsolationE2EStorageProof(e2eFixture).then(
-      (proof) => {
-        if (active) {
-          setE2EStorageProof(proof);
-          setE2EStorageProofReadFailed(false);
-        }
-      },
-      () => {
-        if (active) {
-          setE2EStorageProof(null);
-          setE2EStorageProofReadFailed(true);
-        }
-      },
-    );
-    return () => {
-      active = false;
-    };
-  }, [e2eFixture, sessionBoundaryError]);
-
-  const retryBoundary = async () => {
-    setE2EStorageProof(null);
-    setE2EStorageProofReadFailed(false);
-    await retrySessionBoundary();
-  };
 
   if (!initializing && !sessionBoundaryError) return children;
 
@@ -73,7 +36,9 @@ export function SessionBoundaryGate({ children }: { children: ReactNode }) {
         className="flex-1 items-center justify-center px-7"
         style={{ backgroundColor: colors.paper }}
       >
-        <StateLoading label={COPY.loading} />
+        <Text variant="bodySm" tone="muted" className="text-center">
+          {COPY.loading}
+        </Text>
       </View>
     );
   }
@@ -90,38 +55,32 @@ export function SessionBoundaryGate({ children }: { children: ReactNode }) {
       }}
       showsVerticalScrollIndicator={false}
     >
-      <StateNotice
-        kind="unavailable"
-        presentation="plain"
-        align="center"
-        title={COPY.title}
-        body={COPY.body}
-        accessibilityLabel={`${COPY.eyebrow}. ${COPY.title}`}
+      <View accessibilityLiveRegion="polite" accessibilityRole="alert">
+        <Text variant="label" style={{ color: colors.clayDeep, textAlign: 'center' }}>
+          {COPY.eyebrow}
+        </Text>
+        <Text
+          variant="title"
+          className="mt-3"
+          style={{ color: colors.ink, fontSize: 30, lineHeight: 34, textAlign: 'center' }}
+        >
+          {COPY.title}
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-3 text-center" style={{ lineHeight: 22 }}>
+          {COPY.body}
+        </Text>
+      </View>
+
+      <Pressable
+        accessibilityRole="button"
+        className="mt-7 min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
+        onPress={() => void retrySessionBoundary()}
+        style={{ backgroundColor: colors.ink }}
       >
-        {e2eFixture?.mode === 'owner_marker_future' ? (
-          <Text
-            variant="label"
-            className="mt-4 text-center"
-            style={{ color: colors.clayDeep }}
-          >
-            {e2eStorageProofReadFailed
-              ? 'Recovery fixture could not verify local storage; no change or cleanup is inferred.'
-              : !e2eStorageProof
-                ? 'Checking recovery fixture storage...'
-                : e2eStorageProof.ownerMarkerPreserved &&
-                  e2eStorageProof.privateRecordPreserved &&
-                  e2eStorageProof.cleanupMarkerAbsent
-                  ? 'Recovery fixture verified: unknown owner bytes and a representative private sentinel are unchanged; cleanup did not start.'
-                  : 'Recovery fixture failed: local bytes changed or cleanup started.'}
-          </Text>
-        ) : null}
-        <Button
-          accessibilityLabel="Retry securing account data"
-          className="mt-7"
-          label={COPY.retry}
-          onPress={() => void retryBoundary()}
-        />
-      </StateNotice>
+        <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
+          {COPY.retry}
+        </Text>
+      </Pressable>
     </ScrollView>
   );
 }

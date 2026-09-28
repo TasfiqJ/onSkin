@@ -42,7 +42,7 @@ domain had no 100-writer last-writer ordering proof.
 Focused matrix:
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/features/recommendations/store.test.ts \
   src/features/recommendations/dismissalMutation.test.ts \
   src/lib/storage/privateKV.test.ts \

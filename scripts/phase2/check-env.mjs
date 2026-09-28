@@ -7,6 +7,7 @@ import {
   placeholderEnvValue,
   productionHostname,
   productionUrl,
+  resolveHostedSupabaseProjectTarget,
 } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
@@ -66,6 +67,7 @@ const groups = [
     name: 'Supabase server secrets',
     required: [
       'SUPABASE_SECRET_KEY',
+      'APP_ENV',
       'USER_EDGE_BODY_MAX_BYTES',
       'EDGE_EXTERNAL_FETCH_TIMEOUT_MS',
       'EDGE_EXTERNAL_RESPONSE_MAX_BYTES',
@@ -79,9 +81,28 @@ const groups = [
       'EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID',
       'EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID',
       'EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID',
-      'EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID',
       'REVENUECAT_WEBHOOK_AUTH',
     ],
+  },
+  {
+    name: 'RevenueCat V2 customer deletion',
+    required: ['REVENUECAT_V2_SECRET_API_KEY'],
+  },
+  {
+    name: 'Durable account deletion',
+    required: [
+      'ACCOUNT_DELETION_PAYLOAD_KEY_HEX',
+      'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX',
+      'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION',
+      'ACCOUNT_DELETION_WORKER_SECRET',
+      'REVENUECAT_PROJECT_ID',
+      'REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION',
+      'REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS',
+    ],
+  },
+  {
+    name: 'Durable health-consent withdrawal',
+    required: ['HEALTH_CONSENT_WORKER_SECRET'],
   },
   {
     name: 'Google Sign-In',
@@ -95,6 +116,7 @@ const groups = [
     name: 'Apple Sign-In server secrets',
     required: [
       'APPLE_TEAM_ID',
+      'APPLE_SIWA_CLIENT_ID',
       'APPLE_SIWA_SERVICE_ID',
       'APPLE_SIWA_KEY_ID',
       'APPLE_SIWA_PRIVATE_KEY',
@@ -102,7 +124,13 @@ const groups = [
   },
   {
     name: 'PostHog',
-    required: ['EXPO_PUBLIC_POSTHOG_KEY', 'EXPO_PUBLIC_POSTHOG_HOST', 'POSTHOG_PERSONAL_API_KEY'],
+    required: [
+      'EXPO_PUBLIC_POSTHOG_KEY',
+      'EXPO_PUBLIC_POSTHOG_HOST',
+      'POSTHOG_PERSONAL_API_KEY',
+      'POSTHOG_PROJECT_ID',
+      'POSTHOG_API_HOST',
+    ],
   },
   {
     name: 'Sentry',
@@ -131,9 +159,18 @@ const policyUrlKeys = [
   'EXPO_PUBLIC_DATA_EXPORT_URL',
   'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
 ];
+const POSTHOG_MOBILE_INGEST_HOST = 'https://eu.i.posthog.com';
+const POSTHOG_SERVER_API_HOST = 'https://eu.posthog.com';
+const LOWERCASE_256_BIT_HEX = /^[a-f0-9]{64}$/;
+const POSITIVE_SMALLINT_TEXT = /^[1-9][0-9]{0,4}$/;
+const POSTHOG_NO_RECORDINGS_EVIDENCE = 'production_capture_disabled_and_storage_audited';
 
 function valueFor(name) {
   return process.env[name]?.trim() ?? '';
+}
+
+function rawValueFor(name) {
+  return typeof process.env[name] === 'string' ? process.env[name] : '';
 }
 
 function normalizedAppStage(name) {
@@ -155,13 +192,81 @@ function isIntegerInRange(name, min, max) {
   return Number.isInteger(parsed) && parsed >= min && parsed <= max;
 }
 
+function canonicalIsoTimestamp(name) {
+  const value = rawValueFor(name);
+  const milliseconds = Date.parse(value);
+  if (!value || !Number.isFinite(milliseconds)) return null;
+  try {
+    return new Date(milliseconds).toISOString() === value ? milliseconds : null;
+  } catch {
+    return null;
+  }
+}
+
+function validateRevenueCatTombstoneKeyring() {
+  const encodedKeys = rawValueFor('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS');
+  const encodedCurrentVersion = rawValueFor('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION');
+  if (!encodedKeys || !encodedCurrentVersion) return;
+
+  const entries = encodedKeys.split(';');
+  const seenKeyMaterial = new Set();
+  const versions = [];
+  let priorVersion = 0;
+  let valid = entries.length >= 1 && entries.length <= 4;
+  for (const entry of entries) {
+    const separator = entry.indexOf('=');
+    if (separator <= 0 || separator !== entry.lastIndexOf('=')) {
+      valid = false;
+      continue;
+    }
+    const versionText = entry.slice(0, separator);
+    const keyHex = entry.slice(separator + 1);
+    const version = Number(versionText);
+    if (
+      !POSITIVE_SMALLINT_TEXT.test(versionText) ||
+      !Number.isSafeInteger(version) ||
+      version < 1 ||
+      version > 32767 ||
+      version <= priorVersion ||
+      !LOWERCASE_256_BIT_HEX.test(keyHex) ||
+      seenKeyMaterial.has(keyHex)
+    ) {
+      valid = false;
+      continue;
+    }
+    priorVersion = version;
+    versions.push(version);
+    seenKeyMaterial.add(keyHex);
+  }
+  const currentVersion = Number(encodedCurrentVersion);
+  if (
+    !POSITIVE_SMALLINT_TEXT.test(encodedCurrentVersion) ||
+    !Number.isSafeInteger(currentVersion) ||
+    currentVersion < 1 ||
+    currentVersion > 32767 ||
+    !versions.includes(currentVersion)
+  ) {
+    valid = false;
+  }
+  if (!valid) {
+    errors.push(
+      'RevenueCat tombstone keyring must be 1-4 strictly increasing `version=<64 lowercase hex>` entries with unique key material, and the current version must be present.',
+    );
+  }
+}
+
 const errors = [];
 const warnings = [];
 
 for (const group of groups) {
-  const missing = group.required.filter((name) => !isUsable(name));
+  const missing = (group.required ?? []).filter((name) => !isUsable(name));
   if (missing.length > 0)
     errors.push(`${group.name}: missing or placeholder values: ${missing.join(', ')}`);
+  if (group.anyOf && !isAnyUsable(group.anyOf)) {
+    errors.push(
+      `${group.name}: missing or placeholder value; configure one of: ${group.anyOf.join(', ')}`,
+    );
+  }
 }
 
 for (const key of policyUrlKeys) {
@@ -186,6 +291,14 @@ if (supabaseUrl) {
 const posthogHost = valueFor('EXPO_PUBLIC_POSTHOG_HOST');
 if (posthogHost && !productionUrl(posthogHost)) {
   errors.push('EXPO_PUBLIC_POSTHOG_HOST must be a real production HTTPS URL.');
+}
+if (posthogHost && posthogHost !== POSTHOG_MOBILE_INGEST_HOST) {
+  errors.push(`EXPO_PUBLIC_POSTHOG_HOST must equal ${POSTHOG_MOBILE_INGEST_HOST}.`);
+}
+
+const posthogApiHost = valueFor('POSTHOG_API_HOST');
+if (posthogApiHost && posthogApiHost !== POSTHOG_SERVER_API_HOST) {
+  errors.push(`POSTHOG_API_HOST must equal ${POSTHOG_SERVER_API_HOST}.`);
 }
 
 const sentryDsn = valueFor('EXPO_PUBLIC_SENTRY_DSN');
@@ -222,6 +335,37 @@ if (appEnv && !['development', 'staging', 'production'].includes(appEnv)) {
   );
 }
 
+const edgeAppEnv = normalizedAppStage('APP_ENV');
+if (edgeAppEnv && !['development', 'staging', 'production'].includes(edgeAppEnv)) {
+  errors.push(`APP_ENV must be development, staging, or production; got ${valueFor('APP_ENV')}`);
+}
+if (edgeAppEnv && appEnv && edgeAppEnv !== appEnv) {
+  errors.push('APP_ENV must exactly match EXPO_PUBLIC_APP_ENV.');
+}
+
+const protectedDestructiveHarnessRequested =
+  rawValueFor('PHASE9_RUN_LIVE_EDGE_AUTH') === 'true' ||
+  rawValueFor('PHASE9_RUN_LIVE_DATA_RIGHTS') === 'true';
+if (protectedDestructiveHarnessRequested) {
+  const reviewedTarget = resolveHostedSupabaseProjectTarget(
+    rawValueFor('SUPABASE_URL'),
+    rawValueFor('PHASE9_EXPECTED_SUPABASE_PROJECT_REF'),
+  );
+  if (rawValueFor('APP_ENV') !== 'staging') {
+    errors.push('Protected Phase 9 live evidence requires exact APP_ENV=staging.');
+  }
+  if (!reviewedTarget.expectedProjectRef) {
+    errors.push(
+      'Protected Phase 9 live evidence requires a canonical 20-character lowercase alphanumeric PHASE9_EXPECTED_SUPABASE_PROJECT_REF.',
+    );
+  }
+  if (!reviewedTarget.valid) {
+    errors.push(
+      'Protected Phase 9 live evidence requires SUPABASE_URL to exactly equal the reviewed canonical staging project origin.',
+    );
+  }
+}
+
 const finalIdentityEnv = [
   {
     label: 'APP_DISPLAY_NAME or EXPO_PUBLIC_APP_DISPLAY_NAME',
@@ -253,6 +397,12 @@ if (needsFinalNativeIdentity) {
   }
 }
 
+const appleSiwaClientId = valueFor('APPLE_SIWA_CLIENT_ID');
+const iosBundleIdentifier = valueFor('APP_IOS_BUNDLE_IDENTIFIER');
+if (appleSiwaClientId && iosBundleIdentifier && appleSiwaClientId !== iosBundleIdentifier) {
+  errors.push('APPLE_SIWA_CLIENT_ID must exactly match APP_IOS_BUNDLE_IDENTIFIER.');
+}
+
 const publicSecretKeys = Object.keys(process.env)
   .filter((name) => name.startsWith('EXPO_PUBLIC_'))
   .filter((name) => forbiddenPublicName.test(name));
@@ -267,13 +417,13 @@ if (publicSecretValues.length > 0) {
 }
 
 const displayName =
-  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'RoutineKind';
+  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'Layerwell';
 if (
   (appVariant === 'production' || appEnv === 'production') &&
   /onskin/i.test(displayName) &&
   valueFor('BRAND_LEGAL_CLEARANCE') !== 'cleared'
 ) {
-  errors.push('Production identity still uses OnSkin without BRAND_LEGAL_CLEARANCE=cleared.');
+  errors.push('Production identity still uses Layerwell without BRAND_LEGAL_CLEARANCE=cleared.');
 }
 
 if (
@@ -316,6 +466,151 @@ if (!isIntegerInRange('EDGE_EXTERNAL_RESPONSE_MAX_BYTES', 1024, 1048576)) {
   errors.push('EDGE_EXTERNAL_RESPONSE_MAX_BYTES must be an integer from 1024 to 1048576.');
 }
 
+for (const [name, minimum, maximum] of [
+  ['HEALTH_CONSENT_WORKER_CLAIM_LIMIT', 1, 25],
+  ['HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE', 1, 100],
+  ['HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES', 1, 100],
+  ['HEALTH_CONSENT_WORKER_BUDGET_MS', 1000, 55000],
+  ['HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS', 5, 86400],
+  ['HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS', 5, 86400],
+]) {
+  if (rawValueFor(name) && !isIntegerInRange(name, minimum, maximum)) {
+    errors.push(`${name} must be an integer from ${minimum} to ${maximum}.`);
+  }
+}
+
+for (const key of [
+  'ACCOUNT_DELETION_PAYLOAD_KEY_HEX',
+  'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX',
+  'ACCOUNT_DELETION_WORKER_SECRET',
+  'HEALTH_CONSENT_WORKER_SECRET',
+]) {
+  if (rawValueFor(key) && !LOWERCASE_256_BIT_HEX.test(rawValueFor(key))) {
+    errors.push(`${key} must be exactly 64 lowercase hexadecimal characters.`);
+  }
+}
+
+if (
+  rawValueFor('ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION') &&
+  (!POSITIVE_SMALLINT_TEXT.test(rawValueFor('ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION')) ||
+    !isIntegerInRange('ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION', 1, 32767))
+) {
+  errors.push(
+    'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION must be an integer from 1 to 32767 without leading zeroes.',
+  );
+}
+
+if (
+  rawValueFor('REVENUECAT_PROJECT_ID') &&
+  (rawValueFor('REVENUECAT_PROJECT_ID') !== rawValueFor('REVENUECAT_PROJECT_ID').trim() ||
+    rawValueFor('REVENUECAT_PROJECT_ID').length > 255)
+) {
+  errors.push('REVENUECAT_PROJECT_ID must be trimmed and at most 255 characters.');
+}
+
+validateRevenueCatTombstoneKeyring();
+
+const deletionKeyMaterials = [
+  ['ACCOUNT_DELETION_PAYLOAD_KEY_HEX', rawValueFor('ACCOUNT_DELETION_PAYLOAD_KEY_HEX')],
+  ['ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX', rawValueFor('ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX')],
+  ['ACCOUNT_DELETION_WORKER_SECRET', rawValueFor('ACCOUNT_DELETION_WORKER_SECRET')],
+  ['HEALTH_CONSENT_WORKER_SECRET', rawValueFor('HEALTH_CONSENT_WORKER_SECRET')],
+];
+for (const entry of rawValueFor('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS').split(';')) {
+  const [version, keyHex, ...extra] = entry.split('=');
+  if (
+    extra.length === 0 &&
+    POSITIVE_SMALLINT_TEXT.test(version) &&
+    LOWERCASE_256_BIT_HEX.test(keyHex)
+  ) {
+    deletionKeyMaterials.push([
+      `REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS version ${version}`,
+      keyHex,
+    ]);
+  }
+}
+const deletionKeyOwnerByMaterial = new Map();
+for (const [name, material] of deletionKeyMaterials) {
+  if (!LOWERCASE_256_BIT_HEX.test(material)) continue;
+  const existing = deletionKeyOwnerByMaterial.get(material);
+  if (existing) {
+    errors.push(
+      `Durable privacy-lifecycle key material must be independent; ${name} reuses ${existing}.`,
+    );
+  } else {
+    deletionKeyOwnerByMaterial.set(material, name);
+  }
+}
+
+const revenueCatDeletionSecret = rawValueFor('REVENUECAT_V2_SECRET_API_KEY');
+if (
+  revenueCatDeletionSecret &&
+  (revenueCatDeletionSecret !== revenueCatDeletionSecret.trim() ||
+    revenueCatDeletionSecret.length > 1000)
+) {
+  errors.push(
+    'REVENUECAT_V2_SECRET_API_KEY must be non-blank, trimmed, and at most 1000 characters.',
+  );
+}
+
+const postHogDeletionRequired =
+  [edgeAppEnv, appEnv].some((value) => value && value !== 'development') ||
+  ['EXPO_PUBLIC_POSTHOG_KEY', 'POSTHOG_PROJECT_ID', 'POSTHOG_PERSONAL_API_KEY'].some((name) =>
+    Boolean(valueFor(name)),
+  );
+if (postHogDeletionRequired) {
+  for (const name of [
+    'POSTHOG_API_HOST',
+    'POSTHOG_PROJECT_ID',
+    'POSTHOG_PERSONAL_API_KEY',
+    'POSTHOG_CAPTURE_SHUTDOWN_AT',
+    'POSTHOG_NO_RECORDINGS_EVIDENCE',
+    'POSTHOG_NO_RECORDINGS_VERIFIED_AT',
+  ]) {
+    if (!isUsable(name)) errors.push(`PostHog durable deletion requires ${name}.`);
+  }
+  if (!isIntegerInRange('POSTHOG_ABSENCE_INTERVAL_SECONDS', 1, 86400)) {
+    errors.push('POSTHOG_ABSENCE_INTERVAL_SECONDS must be an integer from 1 to 86400.');
+  }
+  for (const [name, maximum] of [
+    ['POSTHOG_PROJECT_ID', 200],
+    ['POSTHOG_PERSONAL_API_KEY', 1000],
+  ]) {
+    const rawValue = rawValueFor(name);
+    if (rawValue && (rawValue !== rawValue.trim() || rawValue.length > maximum)) {
+      errors.push(`${name} must be trimmed and at most ${maximum} characters.`);
+    }
+  }
+  if (valueFor('POSTHOG_NO_RECORDINGS_EVIDENCE') !== POSTHOG_NO_RECORDINGS_EVIDENCE) {
+    errors.push(
+      `POSTHOG_NO_RECORDINGS_EVIDENCE must exactly equal ${POSTHOG_NO_RECORDINGS_EVIDENCE}.`,
+    );
+  }
+  const captureShutdownAt = canonicalIsoTimestamp('POSTHOG_CAPTURE_SHUTDOWN_AT');
+  const noRecordingsVerifiedAt = canonicalIsoTimestamp('POSTHOG_NO_RECORDINGS_VERIFIED_AT');
+  if (captureShutdownAt === null) {
+    errors.push('POSTHOG_CAPTURE_SHUTDOWN_AT must be a canonical UTC ISO-8601 timestamp.');
+  }
+  if (noRecordingsVerifiedAt === null) {
+    errors.push('POSTHOG_NO_RECORDINGS_VERIFIED_AT must be a canonical UTC ISO-8601 timestamp.');
+  }
+  if (
+    captureShutdownAt !== null &&
+    noRecordingsVerifiedAt !== null &&
+    noRecordingsVerifiedAt < captureShutdownAt
+  ) {
+    errors.push(
+      'POSTHOG_NO_RECORDINGS_VERIFIED_AT must be at or after POSTHOG_CAPTURE_SHUTDOWN_AT.',
+    );
+  }
+  if (
+    (captureShutdownAt !== null && captureShutdownAt > Date.now()) ||
+    (noRecordingsVerifiedAt !== null && noRecordingsVerifiedAt > Date.now())
+  ) {
+    errors.push('PostHog deletion evidence timestamps cannot be in the future.');
+  }
+}
+
 if (!isIntegerInRange('PUBLIC_FORMS_RATE_LIMIT_MAX', 1, 1000)) {
   errors.push('PUBLIC_FORMS_RATE_LIMIT_MAX must be an integer from 1 to 1000.');
 }
@@ -329,9 +624,13 @@ if (!isIntegerInRange('PUBLIC_FORMS_MAX_BYTES', 1024, 65536)) {
 }
 
 for (const group of groups) {
-  const readyCount = group.required.filter(isUsable).length;
+  const required = group.required ?? group.anyOf;
+  const expectedCount = group.required ? required.length : 1;
+  const readyCount = group.required
+    ? required.filter(isUsable).length
+    : Number(isAnyUsable(required));
   console.log(
-    `${readyCount === group.required.length ? 'OK ' : 'MISS'} ${group.name}: ${readyCount}/${group.required.length}`,
+    `${readyCount === expectedCount ? 'OK ' : 'MISS'} ${group.name}: ${readyCount}/${expectedCount}`,
   );
 }
 

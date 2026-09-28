@@ -56,7 +56,7 @@ counter for semantic no-ops.
 Focused matrix:
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/features/onboarding/skinProfileStore.test.ts \
   src/features/scheduler/profile.test.ts \
   src/features/onboarding/onboardingStatusQuery.test.ts \

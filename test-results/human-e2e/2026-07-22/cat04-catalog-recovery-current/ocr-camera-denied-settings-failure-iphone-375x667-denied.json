@@ -1,0 +1,51 @@
+{
+  "alerts": [],
+  "bodyText": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. Open settings On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Open settings",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 139.11,
+      "x": 117.94,
+      "y": 219
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue with manual text",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 399
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8540/shelf/ocr?cat04Audit=ocr-camera-denied-settings-failure-iphone-375x667-1784700198408",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

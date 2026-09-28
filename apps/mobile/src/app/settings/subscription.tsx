@@ -7,13 +7,18 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
 import { shouldTrackSubscriptionCancelIntent } from '@/features/subscription/cancelIntent';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
-import { PLANS } from '@/features/subscription/plans';
-import { restoreFeedbackMessage } from '@/features/subscription/restoreFeedback';
+import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
-import { MANAGE_SUBSCRIPTION_URL_ANDROID, MANAGE_SUBSCRIPTION_URL_IOS } from '@/lib/iap/revenuecat';
+import { env } from '@/lib/env';
+import {
+  MANAGE_SUBSCRIPTION_URL_ANDROID,
+  MANAGE_SUBSCRIPTION_URL_IOS,
+  showNativeManageSubscriptions,
+} from '@/lib/iap/revenuecat';
+import { storeTransactionRecoveryMessage } from '@/lib/iap/storeTransactionNotice';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -21,8 +26,8 @@ import { colors } from '@/theme/tokens';
 
 const POLICY_LINK_UNAVAILABLE_MESSAGE =
   'Link unavailable. We could not open this policy link. Please try again.';
-const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE =
-  'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.';
+const SUBSCRIPTION_STOREFRONT_COPY = subscriptionStorefrontCopy(Platform.OS);
+const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE = SUBSCRIPTION_STOREFRONT_COPY.managementUnavailable;
 const RESTORE_UNAVAILABLE_MESSAGE = 'We could not restore purchases. Please try again.';
 
 // Manage subscription (design 06, docs/08 §3.4). Plan/state, renewal date, one-tap
@@ -81,14 +86,9 @@ function Row({
 
 export default function SubscriptionScreen() {
   const { height, width } = useWindowDimensions();
-  const {
-    data,
-    isError,
-    isLoading,
-    isVerificationRetrying,
-    retryVerification,
-  } = useEntitlement();
-  const { manage, restore } = useEntitlementActions();
+  const { data } = useEntitlement();
+  const { restore } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const ultraShortSubscription = height < 460;
   const splitShortSubscription = height < 410;
@@ -98,9 +98,19 @@ export default function SubscriptionScreen() {
   const freePlanTitle = supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;
   const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;
   const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;
-  const entitlementChecking = isLoading || (!data && !isError);
-  const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);
-  const isPro = data?.isPro === true && !entitlementUncertain;
+  const isPro = data?.isPro ?? false;
+  const eligibleWinBackOffer =
+    env.iosWinBackEnabled &&
+    offering.data?.status === 'available' &&
+    offering.data.winBack?.canPurchase === true;
+  const expiredPlanCta = eligibleWinBackOffer
+    ? PAYWALL_COPY.winback.offer.settingsCta
+    : PAYWALL_COPY.winback.currentPlan.settingsCta;
+
+  function openExpiredPlanOptions() {
+    router.push(eligibleWinBackOffer ? '/paywall/winback' : '/paywall/upsell?feature=full_routine');
+  }
+
   async function openStore() {
     setSubscriptionFeedback(null);
     track('manage_subscription_opened');
@@ -111,13 +121,7 @@ export default function SubscriptionScreen() {
         period_type: entitlementState.periodType,
       });
     }
-    let openedNative: boolean;
-    try {
-      openedNative = await manage.mutateAsync();
-    } catch {
-      setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);
-      return;
-    }
+    const openedNative = await showNativeManageSubscriptions();
     if (openedNative) return;
     const fallbackUrl =
       Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS;
@@ -125,8 +129,7 @@ export default function SubscriptionScreen() {
     const opened = await openExternalHttpsUrl(url, {
       mode: 'linking',
       failureTitle: 'Subscription link unavailable',
-      failureMessage:
-        'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.',
+      failureMessage: SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE,
       alertOnFailure: false,
     });
     if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);
@@ -141,10 +144,15 @@ export default function SubscriptionScreen() {
     setSubscriptionFeedback(null);
     restore.mutate(undefined, {
       onSuccess: (result) => {
-        setSubscriptionFeedback(restoreFeedbackMessage(result));
+        const message = result.active
+          ? 'Your active subscription is restored on this device.'
+          : 'No active subscription was found for this account.';
+        setSubscriptionFeedback(message);
       },
-      onError: () => {
-        setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);
+      onError: (error) => {
+        setSubscriptionFeedback(
+          storeTransactionRecoveryMessage(error, 'restore') ?? RESTORE_UNAVAILABLE_MESSAGE,
+        );
       },
     });
   }
@@ -155,23 +163,18 @@ export default function SubscriptionScreen() {
     if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);
   }
 
-  const currentPlan = Object.values(PLANS).find((plan) => plan.productId === data?.productId);
-  const exactEntitlementPriceLabel = currentPlan ? data?.priceLabel : null;
   const periodLabel = data?.inReverseTrial
     ? 'Reverse trial'
     : data?.inTrial
       ? 'Free trial'
-      : `${BRAND.proName}${exactEntitlementPriceLabel ? ` · ${exactEntitlementPriceLabel}` : ''}`;
+      : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
   const isAppGrantedAccess = data?.store === 'app_granted';
   const isReverseTrialAccess = isAppGrantedAccess && data?.inReverseTrial === true;
-  const manageLabel =
-    data?.store === 'play_store'
-      ? 'Manage in Google Play'
-      : isReverseTrialAccess
-        ? PAYWALL_COPY.reverseTrial.keepCta
-        : isAppGrantedAccess
-          ? 'Review Pro options'
-          : PAYWALL_COPY.manage.manageRow;
+  const manageLabel = isReverseTrialAccess
+    ? PAYWALL_COPY.reverseTrial.keepCta
+    : isAppGrantedAccess
+      ? 'Review Pro options'
+      : SUBSCRIPTION_STOREFRONT_COPY.manageLabel;
   const manageAction = isAppGrantedAccess
     ? isReverseTrialAccess
       ? openReverseTrialOptions
@@ -182,7 +185,7 @@ export default function SubscriptionScreen() {
     ? PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)
     : isAppGrantedAccess
       ? PAYWALL_COPY.manage.appGrantedNote(endDateLabel)
-      : PAYWALL_COPY.manage.cancelNote(endDateLabel);
+      : SUBSCRIPTION_STOREFRONT_COPY.cancellationNote(endDateLabel);
   const statusPillLabel = data?.inReverseTrial
     ? 'No card'
     : data?.inTrial
@@ -312,114 +315,61 @@ export default function SubscriptionScreen() {
           </>
         ) : (
           <>
-            {entitlementChecking || entitlementUncertain ? (
-              <View
+            <View
+              className={
+                supportFloorSubscription
+                  ? 'mb-1 rounded-card bg-paper-raised p-2'
+                  : splitShortSubscription
+                    ? 'mb-2 rounded-card bg-paper-raised p-3'
+                    : compactSubscription
+                      ? 'mb-3 rounded-card bg-paper-raised p-4'
+                      : 'mb-4 rounded-card bg-paper-raised p-5'
+              }
+              style={{ borderWidth: 1, borderColor: colors.hairline }}
+            >
+              <Text
+                variant="titleSm"
+                style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
+              >
+                {freePlanTitle}
+              </Text>
+              {hideFreeSubscriptionBody ? null : (
+                <Text
+                  variant="bodySm"
+                  tone="muted"
+                  className={compactSubscription ? 'mt-1.5' : 'mt-2'}
+                  style={{ lineHeight: compactSubscription ? 19 : 21 }}
+                >
+                  {PAYWALL_COPY.manage.freeBody}
+                </Text>
+              )}
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={PAYWALL_COPY.manage.upgradeCta}
+                onPress={() => router.push('/paywall/upsell?feature=full_routine')}
                 className={
                   supportFloorSubscription
-                    ? 'mb-1 rounded-card bg-paper-raised p-2'
+                    ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
                     : splitShortSubscription
-                      ? 'mb-2 rounded-card bg-paper-raised p-3'
+                      ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
                       : compactSubscription
-                        ? 'mb-3 rounded-card bg-paper-raised p-4'
-                        : 'mb-4 rounded-card bg-paper-raised p-5'
+                        ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
+                        : 'mt-4 h-[50px] items-center justify-center rounded-pill'
                 }
-                style={{ borderWidth: 1, borderColor: colors.hairline }}
+                style={{ backgroundColor: colors.clay }}
               >
                 <Text
-                  accessibilityRole={entitlementUncertain ? 'alert' : undefined}
-                  variant="titleSm"
-                  style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
+                  className="font-sans-semibold"
+                  style={{
+                    color: colors.paper,
+                    fontSize: supportFloorSubscription ? 13 : 16,
+                    lineHeight: supportFloorSubscription ? 15 : undefined,
+                  }}
                 >
-                  {entitlementUncertain ? 'Plan status unavailable' : 'Checking your plan'}
+                  {upgradeCtaLabel}
                 </Text>
-                <Text variant="bodySm" tone="muted" className="mt-1.5">
-                  {entitlementUncertain
-                    ? 'We could not verify this plan. Retry before changing access.'
-                    : 'Confirming your subscription before we show plan options.'}
-                </Text>
-                {entitlementUncertain ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Retry plan verification"
-                    disabled={isVerificationRetrying}
-                    onPress={() => void retryVerification()}
-                    className={
-                      supportFloorSubscription
-                        ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
-                        : 'mt-3 h-[48px] items-center justify-center rounded-pill'
-                    }
-                    style={{
-                      backgroundColor: isVerificationRetrying
-                        ? colors.mutedLight
-                        : colors.clay,
-                    }}
-                  >
-                    <Text
-                      className="font-sans-semibold"
-                      style={{ color: colors.paper, fontSize: supportFloorSubscription ? 13 : 16 }}
-                    >
-                      {isVerificationRetrying ? 'Checking...' : 'Retry'}
-                    </Text>
-                  </Pressable>
-                ) : null}
-              </View>
-            ) : (
-              <View
-                className={
-                  supportFloorSubscription
-                    ? 'mb-1 rounded-card bg-paper-raised p-2'
-                    : splitShortSubscription
-                      ? 'mb-2 rounded-card bg-paper-raised p-3'
-                      : compactSubscription
-                        ? 'mb-3 rounded-card bg-paper-raised p-4'
-                        : 'mb-4 rounded-card bg-paper-raised p-5'
-                }
-                style={{ borderWidth: 1, borderColor: colors.hairline }}
-              >
-                <Text
-                  variant="titleSm"
-                  style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
-                >
-                  {freePlanTitle}
-                </Text>
-                {hideFreeSubscriptionBody ? null : (
-                  <Text
-                    variant="bodySm"
-                    tone="muted"
-                    className={compactSubscription ? 'mt-1.5' : 'mt-2'}
-                    style={{ lineHeight: compactSubscription ? 19 : 21 }}
-                  >
-                    {PAYWALL_COPY.manage.freeBody}
-                  </Text>
-                )}
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={PAYWALL_COPY.manage.upgradeCta}
-                  onPress={() => router.push('/paywall/upsell?feature=full_routine')}
-                  className={
-                    supportFloorSubscription
-                      ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
-                      : splitShortSubscription
-                        ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
-                        : compactSubscription
-                          ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
-                          : 'mt-4 h-[50px] items-center justify-center rounded-pill'
-                  }
-                  style={{ backgroundColor: colors.clay }}
-                >
-                  <Text
-                    className="font-sans-semibold"
-                    style={{
-                      color: colors.paper,
-                      fontSize: supportFloorSubscription ? 13 : 16,
-                      lineHeight: supportFloorSubscription ? 15 : undefined,
-                    }}
-                  >
-                    {upgradeCtaLabel}
-                  </Text>
-                </Pressable>
-              </View>
-            )}
+              </Pressable>
+            </View>
             <View
               className={
                 supportFloorSubscription
@@ -449,14 +399,14 @@ export default function SubscriptionScreen() {
               />
               {feedbackLabel}
             </View>
-            {!entitlementChecking && !entitlementUncertain && data?.expired ? (
+            {data?.expired ? (
               <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push('/paywall/upsell')}
+                onPress={openExpiredPlanOptions}
                 className="mt-4 min-h-[48px] items-center justify-center py-2"
               >
                 <Text variant="body" tone="clay" className="font-sans-semibold">
-                  See subscription plans →
+                  {expiredPlanCta} →
                 </Text>
               </Pressable>
             ) : null}

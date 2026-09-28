@@ -6,9 +6,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const database = 'onskin_outbox_clock_skew';
-const password = 'onskin-local-clock-skew-only';
-const container = `onskin-outbox-clock-${process.pid}`;
+const database = 'layerwell_outbox_clock_skew';
+const password = 'layerwell-local-clock-skew-only';
+const container = `layerwell-outbox-clock-${process.pid}`;
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -262,7 +262,7 @@ payloads as (
     pg_catalog.encode(
       extensions.digest(
         pg_catalog.convert_to(
-          'onskin:shelf-scan-payload:v1' || E'\n' ||
+          'layerwell:shelf-scan-payload:v1' || E'\n' ||
           '1234567890123' || E'\n' ||
           'no_match' || E'\n' ||
           '-' || E'\n' ||

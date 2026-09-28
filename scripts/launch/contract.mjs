@@ -18,7 +18,52 @@ const REQUIRED_EVIDENCE_LEVELS = Object.freeze([
   'store_approved',
 ]);
 
+const REQUIRED_CORE_PROFESSIONAL_REVIEWS = Object.freeze({
+  board_certified_dermatologist: Object.freeze({
+    taskId: 'REV-04',
+    scope: 'clinical_order_eligibility_and_user_copy',
+  }),
+  cosmetic_chemist: Object.freeze({
+    taskId: 'REV-05',
+    scope: 'formulation_order_and_application_copy',
+  }),
+  regulatory_counsel: Object.freeze({
+    taskId: 'H-07',
+    scope: 'claims_jurisdiction_and_market_clearance',
+  }),
+});
+
+const REQUIRED_CONFLICT_SHARE_REVIEWS = Object.freeze({
+  regulatory_claims_counsel: Object.freeze({
+    taskId: 'REV-02',
+    scope: 'exact_share_claims_copy_citations_and_market_positioning',
+  }),
+  privacy_security_reviewer: Object.freeze({
+    taskId: 'REV-03',
+    scope: 'share_projection_destination_retention_revocation_and_data_flow',
+  }),
+  board_certified_dermatologist: Object.freeze({
+    taskId: 'REV-04',
+    scope: 'exact_conflict_claim_clinical_meaning_and_user_copy',
+  }),
+  cosmetic_chemist: Object.freeze({
+    taskId: 'REV-05',
+    scope: 'exact_ingredient_compatibility_claim_and_application_copy',
+  }),
+  ip_content_rights_counsel: Object.freeze({
+    taskId: 'REV-06',
+    scope: 'exact_share_content_citations_images_trademarks_and_distribution_rights',
+  }),
+  release_signoff_operator: Object.freeze({
+    taskId: 'REV-07',
+    scope: 'detached_exact_source_signoffs_credentials_and_release_binding',
+  }),
+});
+
+// Deferred features retain all successor review requirements; this does not admit them.
 const REQUIRED_GUIDANCE_REVIEWS = Object.freeze({
+  recommendations: REQUIRED_CORE_PROFESSIONAL_REVIEWS,
+  conflict_share: REQUIRED_CONFLICT_SHARE_REVIEWS,
   conflict_engine: Object.freeze({
     board_certified_dermatologist: Object.freeze({
       taskId: 'H-03',
@@ -63,7 +108,7 @@ const REQUIRED_GUIDANCE_REVIEWS = Object.freeze({
   }),
 });
 
-const REQUIRED_REVIEW_FEATURE_KEYS = Object.freeze(Object.keys(REQUIRED_GUIDANCE_REVIEWS));
+const PROFESSIONAL_REVIEW_FEATURE_KEYS = Object.freeze(['conflict_engine', 'routine_builder', 'cycle_scheduler', 'recommendations', 'conflict_share']);
 
 const REQUIRED_CONFLICT_SHARE_ADMISSION = Object.freeze({
   sharePublicationAdmitted: false,
@@ -216,13 +261,13 @@ export function validateLaunchContract(contract) {
     !reviewRequirements ||
     typeof reviewRequirements !== 'object' ||
     Array.isArray(reviewRequirements) ||
-    !sameMembers(Object.keys(reviewRequirements), REQUIRED_REVIEW_FEATURE_KEYS)
+    !sameMembers(Object.keys(reviewRequirements), PROFESSIONAL_REVIEW_FEATURE_KEYS)
   ) {
     errors.push(
-      'featureProfessionalReviewRequirements must cover conflict_engine, routine_builder, and cycle_scheduler exactly.',
+      'featureProfessionalReviewRequirements must cover required guidance and retained deferred-feature reviews exactly.',
     );
   } else {
-    for (const featureKey of REQUIRED_REVIEW_FEATURE_KEYS) {
+    for (const featureKey of PROFESSIONAL_REVIEW_FEATURE_KEYS) {
       const requirements = reviewRequirements[featureKey];
       const expected = REQUIRED_GUIDANCE_REVIEWS[featureKey];
       const roles = Array.isArray(requirements)
@@ -230,7 +275,7 @@ export function validateLaunchContract(contract) {
         : [];
       if (!sameMembers(roles, Object.keys(expected))) {
         errors.push(
-          `featureProfessionalReviewRequirements.${featureKey} must require dermatologist, cosmetic_chemist, and regulatory_counsel exactly.`,
+          `featureProfessionalReviewRequirements.${featureKey} must require the exact reviewer roles.`,
         );
         continue;
       }
@@ -242,7 +287,7 @@ export function validateLaunchContract(contract) {
           requirement.scope !== expectedRequirement.scope
         ) {
           errors.push(
-            `featureProfessionalReviewRequirements.${featureKey}.${requirement.reviewerRole} must bind the exact H-03 task and scope.`,
+            `featureProfessionalReviewRequirements.${featureKey}.${requirement.reviewerRole} must bind the exact task and scope.`,
           );
         }
       }
@@ -267,12 +312,20 @@ export function validateLaunchContract(contract) {
     contract.commerceAdmission,
     REQUIRED_COMMERCE_ADMISSION,
   );
-  validateExactBooleanObject(
-    errors,
-    'iosWinBackOfferAdmission',
-    contract.iosWinBackOfferAdmission,
-    REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION,
-  );
+  for (const [key, expected] of Object.entries(REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION)) {
+    if (contract.iosWinBackOfferAdmission?.[key] !== expected) {
+      errors.push(`iosWinBackOfferAdmission.${key} must be ${expected}.`);
+    }
+  }
+  if (
+    Object.keys(contract.iosWinBackOfferAdmission ?? {}).length !==
+      Object.keys(REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION).length ||
+    Object.keys(contract.iosWinBackOfferAdmission ?? {}).some(
+      (key) => !(key in REQUIRED_IOS_WIN_BACK_OFFER_ADMISSION),
+    )
+  ) {
+    errors.push('iosWinBackOfferAdmission must contain only the exact PAY-08 admission keys.');
+  }
 
   for (const key of REQUIRED_SAFETY_FALSE) {
     if (contract.safetyConstraints?.[key] !== false)
@@ -313,7 +366,7 @@ export function platformEvidenceStatus(platform, passed, contract = loadLaunchCo
 export function launchContractSnapshot(contract = loadLaunchContract()) {
   const featureProfessionalReviewRequirements = Object.freeze(
     Object.fromEntries(
-      REQUIRED_REVIEW_FEATURE_KEYS.map((featureKey) => [
+      PROFESSIONAL_REVIEW_FEATURE_KEYS.map((featureKey) => [
         featureKey,
         Object.freeze(
           contract.featureProfessionalReviewRequirements[featureKey].map((item) =>

@@ -6,13 +6,45 @@ function compact(value: string): string {
   return value.toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
-const migrationUrl = new URL(
+const indexedMigrationUrl = new URL(
   '../../migrations/20260713000042_catalog_search_indexed_rpc.sql',
   import.meta.url,
 );
+const servingGateMigrationUrl = new URL(
+  '../../migrations/20260717000056_catalog_serving_eligibility_gate.sql',
+  import.meta.url,
+);
+const finalBoundaryMigrationUrl = new URL(
+  '../../migrations/20260921000073_catalog_search_promotion_boundary.sql',
+  import.meta.url,
+);
+
+Deno.test('current catalog search preserves the CAT-03 serving gate after index optimization', async () => {
+  const sql = compact(await Deno.readTextFile(finalBoundaryMigrationUrl));
+  assert(
+    sql.includes('create or replace function public.search_catalog_products(') &&
+      sql.includes('stable security definer') &&
+      sql.includes("set search_path = ''") &&
+      sql.includes('from public.catalog_servable_products as product') &&
+      !sql.includes('from public.products as product'),
+    'the final service search must read the current CAT-03 servable projection',
+  );
+  assert(
+    sql.includes(
+      'revoke all on function public.search_catalog_products(text, integer) from public, anon, authenticated, service_role',
+    ) &&
+      sql.includes('grant execute on function public.search_catalog_products(text, integer) to service_role'),
+    'only the service Edge lane may execute the final bounded search',
+  );
+  assert(
+    sql.includes('drop function public.promote_catalog_import(uuid)') &&
+      !sql.includes('drop function public.promote_catalog_import(uuid, text, text, text, text)'),
+    'the unreviewed one-argument promotion overload must be retired without removing CAT-02',
+  );
+});
 
 Deno.test('catalog search migration aligns substring predicates with trigram indexes', async () => {
-  const sql = compact(await Deno.readTextFile(migrationUrl));
+  const sql = compact(await Deno.readTextFile(indexedMigrationUrl));
 
   assert(
     sql.includes('create extension if not exists pg_trgm with schema extensions'),
@@ -44,66 +76,79 @@ Deno.test('catalog search migration aligns substring predicates with trigram ind
 Deno.test(
   'catalog search RPC preserves visibility, response evidence, ranking, and limits',
   async () => {
-    const sql = compact(await Deno.readTextFile(migrationUrl));
+    const sql = compact(await Deno.readTextFile(servingGateMigrationUrl));
 
     assert(
       sql.includes('create or replace function public.search_catalog_products('),
       'reviewed catalog search RPC is missing',
     );
-    assert(sql.includes('stable security invoker'), 'catalog search must remain invoker-scoped');
     assert(
-      sql.includes("where p.status <> 'blocked'"),
-      'search must continue to exclude blocked products',
+      sql.includes('stable security definer') && sql.includes("set search_path = ''"),
+      'catalog search must own its table access through a search-path-sealed service-only RPC',
     );
     assert(
-      !sql.includes("p.review_status = 'reviewed'") &&
-        !sql.includes('p.recommendation_eligible') &&
-        !sql.includes("p.quality_grade in ('verified', 'usable')"),
-      'the optimization must not silently narrow Shelf intake visibility',
+      sql.includes('from public.catalog_servable_products as product'),
+      'search must consume the central production-serving gate',
     );
     assert(
-      sql.includes("freshness.review_status = 'reviewed'"),
-      'unreviewed freshness evidence must remain hidden',
+      sql.includes('cs.production_approved is true') &&
+        sql.includes("cs.review_status = 'legal_approved'") &&
+        sql.includes("p.region = 'us'") &&
+        sql.includes("p.status = 'active'") &&
+        sql.includes("p.review_status = 'reviewed'") &&
+        sql.includes('p.last_reviewed_at is not null') &&
+        sql.includes('p.last_reviewed_at <= pg_catalog.now()') &&
+        sql.includes("p.quality_grade in ('verified', 'usable')") &&
+        sql.includes('p.recommendation_eligible is true') &&
+        sql.includes('p.unresolved_correction_count = 0') &&
+        sql.includes("nullif(pg_catalog.btrim(p.source_ref), '') is not null") &&
+        sql.includes('p.source_snapshot_date is not null') &&
+        sql.includes('p.source_snapshot_date <= current_date') &&
+        sql.includes("correction.status in ('triaged', 'accepted')") &&
+        sql.includes('correction.operator_reviewed_at is not null') &&
+        sql.includes("nullif(pg_catalog.btrim(correction.operator_reviewed_by), '') is not null") &&
+        sql.includes("nullif(pg_catalog.btrim(correction.operator_review_note), '') is not null"),
+      'search must fail closed on release territory, provenance, source, review, quality, and correction eligibility',
     );
     for (const field of [
-      'p.id',
-      'p.barcode',
-      'p.name',
-      'p.brand',
-      'p.category',
-      'p.region',
-      'p.default_pao_months',
-      'p.source',
-      'p.source_id as catalog_source_id',
-      'p.source_ref',
-      'p.source_url',
-      'p.source_snapshot_date',
-      'p.quality_grade',
-      'p.review_status',
-      'p.data_quality_score',
-      'p.ingredient_parse_status',
-      'p.ingredient_parse_confidence',
+      'product.id',
+      'product.barcode',
+      'product.name',
+      'product.brand',
+      'product.category',
+      'product.region',
+      'product.default_pao_months',
+      'product.source',
+      'product.catalog_source_id',
+      'product.source_ref',
+      'product.source_url',
+      'product.source_snapshot_date',
+      'product.quality_grade',
+      'product.review_status',
+      'product.data_quality_score',
+      'product.ingredient_parse_status',
+      'product.ingredient_parse_confidence',
     ]) {
       assert(sql.includes(field), `catalog search response is missing ${field}`);
     }
-    for (const evidenceField of [
-      "'pao_months'",
-      "'pao_source'",
-      "'expiry_date'",
-      "'expiry_source'",
-      "'region'",
-      "'source_id'",
-      "'review_status'",
-      "'created_at'",
-    ]) {
-      assert(sql.includes(evidenceField), `freshness response is missing ${evidenceField}`);
-    }
     assert(
-      sql.includes('coalesce( ( select jsonb_agg(') && sql.includes("'[]'::jsonb"),
-      'products without reviewed freshness must remain visible with an empty evidence array',
+      sql.includes("freshness.review_status = 'reviewed'") &&
+        sql.includes('freshness_source.id = freshness.source_id') &&
+        sql.includes('freshness_source.production_approved is true') &&
+        sql.includes("freshness_source.review_status = 'legal_approved'") &&
+        sql.includes('freshness.region = p.region') &&
+        sql.includes("'[]'::jsonb"),
+      'held-source, cross-territory, and unreviewed freshness must stay hidden while absent evidence remains an empty array',
     );
     assert(
-      sql.includes('order by p.data_quality_score desc, lower(p.name), p.id'),
+      sql.includes('cs.reviewed_at <= pg_catalog.now()') &&
+        sql.includes('cs.requires_attribution is false') &&
+        sql.includes("nullif(pg_catalog.btrim(cs.attribution_text), '') is not null") &&
+        sql.includes("nullif(pg_catalog.btrim(cs.attribution_url), '') is not null"),
+      'future review evidence and incomplete required attribution must suppress search',
+    );
+    assert(
+      sql.includes('order by product.data_quality_score desc, lower(product.name), product.id'),
       'data quality must remain primary with deterministic tie-breakers',
     );
     assert(
@@ -151,4 +196,8 @@ Deno.test('catalog search Edge handler uses only the reviewed parameterized RPC'
   );
   assert(!compactSource.includes('.or('), 'Edge search must not interpolate PostgREST OR grammar');
   assert(!compactSource.includes('ilike'), 'Edge search must not retain the unindexed predicate');
+  assert(
+    compactSource.includes('manualfallback: !data?.length'),
+    'an ineligible or unknown search result must preserve manual entry',
+  );
 });

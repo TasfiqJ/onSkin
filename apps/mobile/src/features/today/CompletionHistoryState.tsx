@@ -19,7 +19,7 @@ export function CompletionHistoryState({
           presentation="plain"
           align="center"
           title="Check-ins unavailable"
-          body="Your history wasn't reset. OnSkin can't safely read it right now, so check-offs are paused."
+          body="Your history wasn't reset. Layerwell can't safely read it right now, so check-offs are paused."
         >
           <Button
             accessibilityLabel="Retry loading check-ins"

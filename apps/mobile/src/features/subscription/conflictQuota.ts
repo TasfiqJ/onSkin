@@ -1,126 +1,37 @@
-import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 
-const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
-const SCHEMA_VERSION = 1 as const;
+const KEY = 'layerwell.subscription.freeConflictCheckRuleIds.v1';
 
-export const CONFLICT_QUOTA_INVALID = 'CONFLICT_QUOTA_INVALID';
-export const CONFLICT_QUOTA_UNSUPPORTED_VERSION = 'CONFLICT_QUOTA_UNSUPPORTED_VERSION';
 export const FREE_CONFLICT_CHECK_LIMIT = 1;
-
-type ConflictQuotaEnvelope = {
-  schemaVersion: typeof SCHEMA_VERSION;
-  ruleIds: string[];
-};
-
-export type ConflictQuotaRead =
-  | { status: 'missing'; ruleIds: [] }
-  | { status: 'available'; ruleIds: string[]; format: 'current' | 'legacy' }
-  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; ruleIds: null };
 
 export type ConflictCheckAccess = {
   allowed: boolean;
-  reason: 'pro' | 'already_viewed' | 'free_available' | 'quota_exhausted' | 'quota_unavailable';
+  reason: 'pro' | 'already_viewed' | 'free_available' | 'quota_exhausted';
   shouldRecord: boolean;
 };
 
-function devConflictQuotaFixture(): ConflictQuotaRead | null {
-  const fixture =
-    typeof __DEV__ !== 'undefined' && __DEV__
-      ? process.env.EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE
-      : undefined;
-  return fixture === 'unavailable' ? { status: 'unavailable', ruleIds: null } : null;
+function normalizeRuleIds(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [
+    ...new Set(
+      value
+        .filter((id): id is string => typeof id === 'string')
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0),
+    ),
+  ];
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
-  const actual = Object.keys(value).sort();
-  const expected = [...keys].sort();
-  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
-}
-
-function normalizeRuleIds(value: unknown): string[] | null {
-  if (!Array.isArray(value)) return null;
-  const ruleIds: string[] = [];
-  for (const item of value) {
-    if (typeof item !== 'string') return null;
-    const ruleId = item.trim();
-    if (!ruleId) return null;
-    if (!ruleIds.includes(ruleId)) ruleIds.push(ruleId);
-  }
-  return ruleIds;
-}
-
-function sameRuleIds(left: readonly unknown[], right: readonly string[]): boolean {
-  return left.length === right.length && left.every((ruleId, index) => ruleId === right[index]);
-}
-
-function quotaError(code: string): Error {
-  return new Error(code);
-}
-
-function decodeConflictQuota(raw: string): {
-  format: 'current' | 'legacy';
-  ruleIds: string[];
-} {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw quotaError(CONFLICT_QUOTA_INVALID);
-  }
-
-  // The original v1 payload was a bare array. It remains readable in memory,
-  // but only an explicit quota mutation may upgrade it to the current envelope.
-  if (Array.isArray(parsed)) {
-    const ruleIds = normalizeRuleIds(parsed);
-    if (!ruleIds) throw quotaError(CONFLICT_QUOTA_INVALID);
-    return { format: 'legacy', ruleIds };
-  }
-
-  if (!isRecord(parsed)) throw quotaError(CONFLICT_QUOTA_INVALID);
-  if (parsed.schemaVersion !== SCHEMA_VERSION) {
-    if (
-      typeof parsed.schemaVersion === 'number' &&
-      Number.isSafeInteger(parsed.schemaVersion) &&
-      parsed.schemaVersion > SCHEMA_VERSION
-    ) {
-      throw quotaError(CONFLICT_QUOTA_UNSUPPORTED_VERSION);
-    }
-    throw quotaError(CONFLICT_QUOTA_INVALID);
-  }
-  if (!hasExactKeys(parsed, ['schemaVersion', 'ruleIds'])) {
-    throw quotaError(CONFLICT_QUOTA_INVALID);
-  }
-  const ruleIds = normalizeRuleIds(parsed.ruleIds);
-  if (!ruleIds || !sameRuleIds(parsed.ruleIds as unknown[], ruleIds)) {
-    throw quotaError(CONFLICT_QUOTA_INVALID);
-  }
-  return { format: 'current', ruleIds };
-}
-
-function encodeConflictQuota(ruleIds: string[]): string {
-  return JSON.stringify({
-    schemaVersion: SCHEMA_VERSION,
-    ruleIds,
-  } satisfies ConflictQuotaEnvelope);
-}
-
-function classifyQuotaError(error: unknown): ConflictQuotaRead {
-  const message = error instanceof Error ? error.message : '';
-  if (message === CONFLICT_QUOTA_UNSUPPORTED_VERSION || message.includes('UNSUPPORTED')) {
-    return { status: 'unsupported_version', ruleIds: null };
-  }
-  if (
-    message === CONFLICT_QUOTA_INVALID ||
-    message === 'PRIVATE_KV_ENVELOPE_INVALID' ||
-    message === 'PRIVATE_KV_DECRYPTION_FAILED'
-  ) {
-    return { status: 'corrupt', ruleIds: null };
-  }
-  return { status: 'unavailable', ruleIds: null };
+function didNormalizeRuleIds(value: unknown, normalized: readonly string[]): boolean {
+  return (
+    !Array.isArray(value) ||
+    value.length !== normalized.length ||
+    normalized.some((id, index) => value[index] !== id)
+  );
 }
 
 export function conflictCheckAccess(input: {
@@ -128,19 +39,11 @@ export function conflictCheckAccess(input: {
   ruleId: string;
   seenRuleIds: readonly string[];
   limit?: number;
-  quotaAvailable?: boolean;
 }): ConflictCheckAccess {
-  if (input.isPro) return { allowed: true, reason: 'pro', shouldRecord: false };
-  if (input.quotaAvailable === false) {
-    return { allowed: false, reason: 'quota_unavailable', shouldRecord: false };
-  }
-
   const limit = input.limit ?? FREE_CONFLICT_CHECK_LIMIT;
   const ruleId = input.ruleId.trim();
   const seenRuleIds = normalizeRuleIds(input.seenRuleIds);
-  if (!ruleId || !seenRuleIds) {
-    return { allowed: false, reason: 'quota_unavailable', shouldRecord: false };
-  }
+  if (input.isPro) return { allowed: true, reason: 'pro', shouldRecord: false };
   if (seenRuleIds.includes(ruleId)) {
     return { allowed: true, reason: 'already_viewed', shouldRecord: false };
   }
@@ -150,54 +53,59 @@ export function conflictCheckAccess(input: {
   return { allowed: false, reason: 'quota_exhausted', shouldRecord: false };
 }
 
-/** Read-only quota inspection. Corrupt, future, and unreadable bytes are never
- * repaired, deleted, or translated into an unused quota. */
-export async function loadFreeConflictCheckRuleIds(): Promise<ConflictQuotaRead> {
-  const fixture = devConflictQuotaFixture();
-  if (fixture) return fixture;
-  let raw: string | null;
+async function loadFreeConflictCheckRuleIdsWithLease(
+  lease: HealthDataWriteOperationLease,
+): Promise<string[]> {
+  let raw: string | null = null;
   try {
+    lease.assertCurrent();
     raw = await getPrivateItem(KEY);
-  } catch (error) {
-    return classifyQuotaError(error);
+    lease.assertCurrent();
+  } catch {
+    lease.assertCurrent();
+    return [];
   }
-  if (raw === null) return { status: 'missing', ruleIds: [] };
+  if (!raw) return [];
   try {
-    const decoded = decodeConflictQuota(raw);
-    return { status: 'available', ...decoded };
-  } catch (error) {
-    return classifyQuotaError(error);
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeRuleIds(parsed);
+    lease.assertCurrent();
+    if (didNormalizeRuleIds(parsed, normalized)) {
+      if (normalized.length > 0) {
+        lease.assertCurrent();
+        await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+      } else {
+        lease.assertCurrent();
+        await removePrivateItem(KEY).catch(() => undefined);
+      }
+      lease.assertCurrent();
+    }
+    lease.assertCurrent();
+    return normalized;
+  } catch {
+    lease.assertCurrent();
+    // This is the store's established explicit repair policy. It remains
+    // purpose-authorized and cannot dispatch after its exact lease changes.
+    await removePrivateItem(KEY).catch(() => undefined);
+    lease.assertCurrent();
+    return [];
   }
 }
 
-/** Atomically claim the one free conflict check. The quota limit is enforced
- * inside the same-key transform, so concurrent distinct claims cannot both win. */
-export async function recordFreeConflictCheckRuleId(ruleId: string): Promise<ConflictQuotaRead> {
-  const fixture = devConflictQuotaFixture();
-  if (fixture) return fixture;
-  const normalizedRuleId = ruleId.trim();
-  if (!normalizedRuleId) return loadFreeConflictCheckRuleIds();
+export async function loadFreeConflictCheckRuleIds(): Promise<string[]> {
+  return runCurrentHealthDataOperation((lease) => loadFreeConflictCheckRuleIdsWithLease(lease));
+}
 
-  let nextRuleIds: string[] | null = null;
-  try {
-    await updatePrivateItem(KEY, (current) => {
-      const decoded = current === null ? null : decodeConflictQuota(current);
-      const ruleIds = decoded?.ruleIds ?? [];
-      nextRuleIds =
-        ruleIds.includes(normalizedRuleId) || ruleIds.length >= FREE_CONFLICT_CHECK_LIMIT
-          ? ruleIds
-          : [...ruleIds, normalizedRuleId];
-
-      if (current !== null && decoded?.format === 'current' && sameRuleIds(ruleIds, nextRuleIds)) {
-        return current;
-      }
-      return encodeConflictQuota(nextRuleIds);
-    });
-  } catch (error) {
-    return classifyQuotaError(error);
-  }
-
-  return nextRuleIds
-    ? { status: 'available', format: 'current', ruleIds: nextRuleIds }
-    : { status: 'unavailable', ruleIds: null };
+export async function recordFreeConflictCheckRuleId(ruleId: string): Promise<string[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const normalizedRuleId = ruleId.trim();
+    const seen = await loadFreeConflictCheckRuleIdsWithLease(lease);
+    lease.assertCurrent();
+    if (!normalizedRuleId) return seen;
+    const next = seen.includes(normalizedRuleId) ? seen : [...seen, normalizedRuleId];
+    lease.assertCurrent();
+    await setPrivateItem(KEY, JSON.stringify(next));
+    lease.assertCurrent();
+    return next;
+  });
 }

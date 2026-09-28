@@ -1,4 +1,4 @@
-import type { TrendChangeState } from '@onskin/types';
+import type { TrendChangeState } from '@layerwell/types';
 
 // Centralised trend copy (docs/12 §6/§9, the Slice-11..25 guard pattern). *** THE COPY
 // IS THE REGULATED SURFACE. *** It must be: descriptive, not evaluative or diagnostic

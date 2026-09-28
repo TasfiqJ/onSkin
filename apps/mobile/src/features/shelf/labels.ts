@@ -1,4 +1,4 @@
-import type { ExpirySource, PaoSource } from '@onskin/types';
+import type { ExpirySource, PaoSource } from '@layerwell/types';
 
 // One consistent provenance label across every shelf surface (docs/04 §3/§5.6) ,
 // the opened-date sheet, the product-detail freshness block, etc.. So the same
@@ -11,7 +11,7 @@ export function paoSourceLabel(source: PaoSource): string {
     case 'catalog':
       return 'from catalog';
     case 'category_default':
-      return 'estimated from category';
+      return 'legacy category estimate';
     case 'unknown':
     default:
       return 'PAO unknown';
@@ -21,11 +21,11 @@ export function paoSourceLabel(source: PaoSource): string {
 export function expirySourceLabel(source: ExpirySource): string {
   switch (source) {
     case 'printed':
-      return 'printed date';
+      return 'recorded package date';
     case 'pao_computed':
       return 'opened date + PAO';
     case 'estimated':
-      return 'estimated from category';
+      return 'legacy category estimate';
     case 'unknown':
     default:
       return 'Date unknown';

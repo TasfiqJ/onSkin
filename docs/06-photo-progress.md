@@ -4,14 +4,45 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 
 > This is build-order document **#6** of the 15 named in docs/00 (§"Build order", item 6: _"Guided photo capture + slider comparison"_). It is the **Progress** tab (Today · Progress · Shelf · You) and the feature docs/00 mandates shipping **FIRST, with zero AI claims**, before any cloud "skin analysis." It _extends_ the `photos` table defined in docs/01 §3, and it _implements_ the on-device capture pipeline docs/00 §4 specifies (`react-native-vision-camera` + on-device face detection via Apple Vision / ML Kit in a frame processor). It renders the spec's **guided-capture screen** (live feed + alignment overlay + lighting check + the coaching line "Turn slightly left — almost there," spec p10) and the **Progress screen** (Compare / Timeline modes, the dated slider, the weekly film strip, "13 weeks · 26 photos · all on this phone," and the honest tagline _"Same light, same angle — guided capture keeps photos honestly comparable. No scores, no AI grades,"_ spec p11). It is the **privacy-as-trust thesis made tangible** ("photos that never leave your phone," spec welcome/paywall). Capture reminders feed doc #7; the deferred Phase-2 cloud analysis is doc #12. The longitudinal photo timeline is, per docs/01 §7, the **single highest-switching-cost dataset a user can accumulate** — the compounding retention moat.
 
-> **Current implementation boundary (2026-07-10):** the real-time and
+> **Current implementation boundary (2026-07-18):** the real-time and
 > auto-capture language below remains target specification, not a current launch
 > claim. The repo currently uses Expo Camera for a manual still, then runs
 > transient on-device static-photo ML Kit face framing/pose analysis and a
 > temporary downsampled luminance/balance check in review. The preview overlay
 > is static, analyzer failure stays explicitly unavailable, and thresholds are
-> provisional until physical-device calibration. See D-085 and the Phase 5 exit
-> review.
+> provisional until physical-device calibration. CAT-06 now saves dedicated
+> photo consent before the OS camera request; shares fresh permission,
+> foreground/focus, camera-ready, keyed-remount, and operation-lease handling
+> with the Shelf camera routes; and keeps the exact raw still owned by an outer
+> route boundary until cleanup or atomic review handoff. Navigation and gate
+> replacement cannot silently orphan a disposable still; failed cleanup remains
+> visibly retryable. A 2026-09-26 PHOTO-03 source hardening checkpoint now
+> allowlists native detector output to bounding-box coordinates plus finite
+> Euler angles, refuses a matched pose when any required angle is absent or
+> nonfinite, and runs detector/lighting work under one per-URI account-generation
+> coordinator. Timeout, URI replacement, navigation, save, and unmount abort
+> where possible and drain before the raw still can be persisted or deleted.
+> The 64 px ImageManipulator JPEG is reserved in the existing content-free
+> plaintext-staging journal before native generation, adopted into its owned
+> path, deleted strictly, retried visibly on failure, and recovered at startup;
+> unresolved derivative cleanup blocks save and user-triggered route removal without treating
+> low measured quality as a save blocker. Reference comparisons no longer infer
+> “darker” from the composite exposure/balance/clipping score. A gate/account-
+> forced review unmount transfers its exact analyzer and raw lifecycle to a
+> process owner; failed disposal remains retained and the next shutter retries
+> it before creating another still. Native detector state reasserts the account/
+> URI lease immediately after every native await, so an abort cannot publish a
+> late face result or fallback error. These are source controls, not signed-archive or
+> physical-iPhone proof. The retained CAT-04/CAT-05 web packets predate this
+> source and are stale until regenerated. See D-085, the CAT-06 source
+> checkpoint, and the Phase 5 exit review.
+
+> A 2026-09-26 bounded PHOTO-01 source checkpoint also creates a journaled,
+> bounded JPEG thumbnail before raw-source deletion and publishes it atomically
+> with the identity-bound encrypted original and metadata. Both encrypted
+> renditions participate in reconciliation, deletion, reset, account/consent
+> cleanup, and path-free export. This does not close PHOTO-01 without the
+> signed-build and physical-device evidence listed in the checkpoint.
 
 ---
 
@@ -27,7 +58,7 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 
 - **The retention case is strong and evidence-backed — and it must stay calm.** Visible progress activates intrinsic motivation (the "progress principle"; a _Journal of Consumer Research_ finding that visual progress documentation increases persistence), concretises abstract goals, and fosters the **patience** the slow timeline demands — "when people see results, they recommit"; visual feedback raises adherence by roughly a third. The honest counter-weight: a progress photo tracks an **output the user doesn't fully control** (their skin), which can breed pressure or shame, so the framing is calm — **no scores, no pressure, celebrate consistency, your own eyes** — consistent with the calm-streak design (docs/03 §6).
 
-- **The differentiation is the honest inverse of a crowded category.** The market is racing toward **AI skin scores** — TroveSkin, SKOR (six-metric scores), L'Oréal Skin Genius, Perfect Corp, Lovi, Medgic — whose accuracy is repeatedly described as **"mixed" / "questioned,"** which publish **no independent accuracy benchmarks** (docs/00), and which typically **upload your face to servers**. A score from an uncontrolled selfie is largely lighting/angle-dependent noise dressed as objectivity. OnSkin gives **genuinely-comparable standardised photos + the user's own judgment + on-device-only** — _more_ trustworthy and _more_ valid than a dubious number, and aligned with the discerning 2026 consumer.
+- **The differentiation is the honest inverse of a crowded category.** The market is racing toward **AI skin scores** — TroveSkin, SKOR (six-metric scores), L'Oréal Skin Genius, Perfect Corp, Lovi, Medgic — whose accuracy is repeatedly described as **"mixed" / "questioned,"** which publish **no independent accuracy benchmarks** (docs/00), and which typically **upload your face to servers**. A score from an uncontrolled selfie is largely lighting/angle-dependent noise dressed as objectivity. Layerwell gives **genuinely-comparable standardised photos + the user's own judgment + on-device-only** — _more_ trustworthy and _more_ valid than a dubious number, and aligned with the discerning 2026 consumer.
 
 - **The privacy architecture is both the moat and the trust asset — and it is unusually strong.** On-device capture + on-device face detection (**no faceprint stored → avoids the BIPA biometric-identifier trigger**) + `local_only` default (**image bytes never leave the device**) + client-side encryption + separate consents + an optional biometric app-lock. Because nothing is uploaded by default, **there is no server-side face-photo trove to breach** — and vendor face-data breaches are a live 2026 risk. _You cannot leak what you never collect._ This earns the honest claim docs/00 wants: _"your photos never leave your device and never train AI."_
 
@@ -47,9 +78,9 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 
 5. **Progress photos are a multi-mechanism behaviour-change and retention tool — kept calm.** Visible progress drives intrinsic motivation (the "progress principle"; _Journal of Consumer Research_), concretises abstract goals, and builds patience; visual feedback lifts adherence ~30%; "see results → recommit." Honest caveat: tracking an output one doesn't control can create pressure/shame, so keep it calm — no scores, celebrate consistency, your own eyes (docs/03 §6).
 
-6. **The category is AI skin scores; the honest inverse is the differentiation.** TroveSkin, SKOR, Skin Genius, Perfect Corp, Lovi and others score faces (accuracy "mixed/questioned," no published benchmarks, faces uploaded to servers). OnSkin gives standardised, genuinely-comparable photos + the user's own eyes + **no AI scores** + **on-device** — more trustworthy and more valid than a score from an uncontrolled selfie.
+6. **The category is AI skin scores; the honest inverse is the differentiation.** TroveSkin, SKOR, Skin Genius, Perfect Corp, Lovi and others score faces (accuracy "mixed/questioned," no published benchmarks, faces uploaded to servers). Layerwell gives standardised, genuinely-comparable photos + the user's own eyes + **no AI scores** + **on-device** — more trustworthy and more valid than a score from an uncontrolled selfie.
 
-7. **Facial images are legally sensitive — but OnSkin's design avoids the worst exposure.** Facial images are sensitive under BIPA/CCPA-CPRA/GDPR Art. 9/MHMDA, _especially when a faceprint is extracted for identification_ (Finnegan, on cosmetics AI facial analysis). OnSkin stores **no faceprint** (on-device framing only) → it avoids BIPA's biometric-identifier trigger; skin photos still reveal health status → treated as Art. 9 / MHMDA data requiring **explicit, unbundled consent** (docs/01 §4).
+7. **Facial images are legally sensitive — but Layerwell's design avoids the worst exposure.** Facial images are sensitive under BIPA/CCPA-CPRA/GDPR Art. 9/MHMDA, _especially when a faceprint is extracted for identification_ (Finnegan, on cosmetics AI facial analysis). Layerwell stores **no faceprint** (on-device framing only) → it avoids BIPA's biometric-identifier trigger; skin photos still reveal health status → treated as Art. 9 / MHMDA data requiring **explicit, unbundled consent** (docs/01 §4).
 
 8. **On-device/`local_only` storage eliminates the breach target.** Because image bytes never leave the device by default, there is **no server-side face-photo trove** to leak — a decisive security and trust advantage over the upload-to-server AI-score apps; vendor face/biometric breaches are a real 2026 risk. _You cannot leak what you never collect._
 
@@ -133,6 +164,21 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 - **Low device storage** → warn before capture; photos are compressed (~150–400KB, docs/00).
 - **Front vs rear camera** → default front (selfie) for face; consistent across the series.
 
+**Current CAT-06 lifecycle, distinct from the target guidance above.** The
+implemented preview is Expo Camera with a manual shutter and static overlay.
+Dedicated photo consent must persist before the OS permission request. Preview
+admission then requires a focused route, active AppState, fresh granted
+permission, an open consent/cleanup gate, and camera-ready. An iOS
+permission-prompt `inactive` transition invalidates the request result and keeps
+the camera closed until the fresh foreground query. Mount failure and capture
+failure expose stable retry; retry uses a new keyed camera generation. A
+route-level owner blocks removal while shutter or exact raw-photo cleanup is
+pending, remains mounted outside entitlement/app-lock/storage/content gates,
+and either deletes the disposable still or transfers it atomically to review.
+This behavior still requires the exact signed-build CAT-06 two-iPhone/54-run
+permission, Settings, interruption, mount, offline, accessibility, network, and
+cleanup artifact.
+
 ### 4. The photo timeline & comparison — how it looks (the Progress tab, every detail)
 
 **The Progress screen (spec p11, the Progress tab).** Top to bottom:
@@ -194,7 +240,7 @@ create index on public.photos (user_id, series, taken_local_date);
 Facial images are the most sensitive data the app handles, and this feature's design is built to minimise that exposure rather than manage it after the fact.
 
 - **The legal landscape.** Facial images are sensitive under **BIPA, CCPA/CPRA, GDPR Art. 9, and Washington MHMDA**, and become **biometric identifiers** specifically when a **faceprint/template is extracted for identification** (Finnegan, on cosmetics AI facial-skin-analysis: facial images processed for analysis/identification "may be treated as biometric data… requiring more onerous legal obligations"; BIPA requires written informed consent, retention schedules, no sale, and carries a **private right of action**).
-- **OnSkin's posture avoids the worst trigger.** On-device face detection is **for framing only**; **no faceprint/template is ever computed or stored** → this avoids BIPA's biometric-identifier trigger (docs/00 §7, docs/01 §3). The coarse `head_*` pose angles are alignment QA, not an identification template.
+- **Layerwell's posture avoids the worst trigger.** On-device face detection is **for framing only**; **no faceprint/template is ever computed or stored** → this avoids BIPA's biometric-identifier trigger (docs/00 §7, docs/01 §3). The coarse `head_*` pose angles are alignment QA, not an identification template.
 - **But skin photos are still health-inference data**, so current capture requires dedicated **`photo_capture` consent at first camera use**. The reserved **`photo_cloud_backup` consent** remains unwired until a future complete backup path is reviewed because uploading special-category images off-device is higher-risk (docs/01 §4).
 - **`local_only` eliminates the breach target.** Because image bytes never leave the device by default, **there is no server-side face-photo trove to breach** — the strongest possible posture for face data, and a direct contrast with the AI-score apps that upload faces to servers (vendor face/biometric breaches are a live 2026 risk). _You cannot leak what you never collect._
 - **Defense in depth:** client-side **encryption**; **owner-only RLS** + private bucket (folder = uid) for any future cloud-opted photos with **signed URLs**; the optional **biometric app-lock** on the gallery; the mobile **export** includes sanitized local photo metadata and decrypted notes when available but excludes image bytes, thumbnails, device paths, note ciphertext, and key material, while any valid owned server-side photo rows can carry short-lived signed URLs (GDPR Art. 20, docs/01 §4); **deletion** cascades and removes any cloud objects (Apple/Google in-app deletion requirements, docs/01 §4); an optional **`face_region_redacted`** crop/blur for sharing a photo without the full face.
@@ -207,7 +253,7 @@ Facial images are the most sensitive data the app handles, and this feature's de
 - **AI skin scores are not validated.** Commercial skin-analysis vendors publish **no independent accuracy benchmarks** (docs/00), and consumer AI-score apps' accuracy is repeatedly described as **"mixed" / "questioned"** (TroveSkin reviews; the broader roundups). A score derived from an **uncontrolled selfie** is heavily confounded by lighting/angle — _false precision dressed as objectivity._
 - **Scores invite anxiety and shame.** A number to go up or down turns a calm progress record into a judgment; this is exactly the pressure/shame failure mode the behavioural literature warns about and the brand's calm ethos rejects (docs/03 §6).
 - **Facial-analysis fairness is unresolved.** Facial algorithms have documented accuracy gaps across skin tones and genders (ACLU on facial recognition; the white-light erythema limit, §2) — another reason not to stake user trust on an automated grade.
-- **OnSkin's inverse is more honest _and_ more valid.** Standardised, genuinely-comparable photos + the user's own eyes beat a dubious number — and, because capture is standardised, OnSkin's before/after is _more_ trustworthy than a score computed from an unguided photo. The spec says it: _"No scores, no AI grades."_
+- **Layerwell's inverse is more honest _and_ more valid.** Standardised, genuinely-comparable photos + the user's own eyes beat a dubious number — and, because capture is standardised, Layerwell's before/after is _more_ trustworthy than a score computed from an unguided photo. The spec says it: _"No scores, no AI grades."_
 
 **The deferred Phase-2 path (door open, firmly shut at launch).** docs/00's phased-AI plan leaves room to add cloud analysis later — but only **behind a separate consent gate, with fairness validation, honest grading, and never a hazard-style score** (that is **doc #12**, "AI trend analysis," the last build item). This document's stance is that the photo feature is **complete and compelling without any AI**, and that shipping it AI-free first is the trustworthy sequencing docs/00 prescribes.
 
@@ -223,8 +269,8 @@ Design tokens (docs/00 §8, D-005, docs/02 §7): Instrument Serif (the "Progress
 
 ### 10. Engineering / implementation notes
 
-- **Capture pipeline:** `react-native-vision-camera` + a **face-detection frame processor** (`react-native-vision-camera-face-detector`, ML Kit; or a custom Swift Vision plugin on iOS) for alignment/pose/quality; **on-device luminance/white-balance** from the frame buffer for the lighting check; **auto-capture** when all tolerances are met; the **ghost overlay** composited over the preview (docs/00 §4).
-- **Comparison UI:** the **slider** as a Reanimated gesture with a Skia/clip-path reveal; the **film strip** as a virtualised list; the optional time-lapse as a frame sequence.
+- **Current capture pipeline:** Expo Camera manual still with a static preview overlay; the captured local file is analyzed in review using transient ML Kit face framing/pose and a journal-owned, strictly deleted downsampled luminance/balance sample. The analyzer retains only bounding-box coordinates and finite Euler angles in JavaScript; missing pose cannot match. One per-URI lease drains analysis before raw persistence/deletion, and unresolved derivative cleanup keeps review fail-closed with retry. There is no real-time frame-processor guidance or auto-capture in the current source. CAT-06 owns permission/foreground/mount/shutter/raw-file cleanup; the target `react-native-vision-camera` frame processor and ghost-driven auto-capture described above remain unimplemented. PHOTO-03 remains open pending physical-device calibration, zero-egress capture, and signed-build evidence.
+- **Comparison UI:** the **slider** as a Reanimated gesture with a Skia/clip-path reveal; the **film strip** as a virtualised list; the optional time-lapse as a finite frame sequence. The current player waits for each encrypted frame to report a successful native display before starting its dwell, cancels playback on backgrounding without foreground auto-resume, and suppresses autoplay when the live Reduce Motion preference is enabled. It uses the shared memory-only sensitive-image path; current physical-device evidence is still required for encrypted rendering, lifecycle timing, assistive-technology focus/actions, and zero-egress/filesystem-residue verification.
 - **Storage:** **on-device encrypted files** in the app sandbox (`local_uri`); compressed ~150–400KB each, ~50–200/user/year (docs/00). A future cloud implementation may use the private Supabase bucket on a Wi-Fi/charging queue, with Cloudflare R2/S3 behind signed URLs as a scale fallback, but current V1 exposes no backup path.
 - **Security:** client-side encryption; biometric app-lock (`expo-local-authentication`) on the gallery; owner-only RLS; signed URLs for any cloud photo.
 - **Schema & decisions:** the `photos` extensions above; **D-028/029/030**; **B-PRIVACY** (DPIA, consent copy, legal sign-off of the "never leaves your device" claim).
@@ -235,12 +281,12 @@ Design tokens (docs/00 §8, D-005, docs/02 §7): Instrument Serif (the "Progress
 
 ## Seven-Figure Validation (the photo feature & the money)
 
-The photo feature sits at the intersection of emotion, trust, and retention — the three things a subscription skincare app most needs:
+The photo feature sits at the intersection of emotion, trust, and retention — the three things a subscriptilayerwellcare app most needs:
 
 - **It is the emotional payoff that sustains retention through the results window.** Skincare results take 8–12 weeks; most people quit before they see them. The photo timeline shows the slow change the mirror hides, fostering the **patience** that converts trials into long-term subscribers — "when people see results, they recommit," and visual feedback lifts adherence ~30%. docs/01 §7 names **longitudinal photos as the compounding switching cost** behind retention; a multi-month face timeline is the **highest-lock-in dataset a user can accumulate** (irreplaceable if they leave).
 - **It powers the paywall's #3 value prop and is its most emotionally resonant promise.** _"Private photo timeline — on-device only"_ (spec p7) is both a feature and a trust statement; the before/after is the demo that makes the value visceral.
 - **Privacy-as-trust is a direct monetisation and word-of-mouth engine.** Yuka earned **$7.3M (98.1% from subscriptions), zero marketing, on trust in its data refusal** (docs/01 §7); for an app handling **face photos**, the on-device/no-faceprint/no-upload posture is an even stronger trust asset — and the explicit contrast with apps that upload your face to servers is a sharp marketing wedge.
-- **The honest, no-AI-score stance is a defensible position in a crowded, dubious category.** The market is flooded with AI-skin-score apps of "mixed/questioned" accuracy and no published benchmarks; OnSkin's _standardised, comparable, your-own-eyes, on-device_ approach is the trustworthy alternative the discerning 2026 consumer is moving toward ("apps transparent about data practices earn more trust"; "an app that explains what it measures beats AR filters and gamification").
+- **The honest, no-AI-score stance is a defensible position in a crowded, dubious category.** The market is flooded with AI-skin-score apps of "mixed/questioned" accuracy and no published benchmarks; Layerwell's _standardised, comparable, your-own-eyes, on-device_ approach is the trustworthy alternative the discerning 2026 consumer is moving toward ("apps transparent about data practices earn more trust"; "an app that explains what it measures beats AR filters and gamification").
 - **It deepens every other surface.** Photos give the routine (docs/03), the scheduler (docs/05), and future recommendations something concrete to anchor to ("you've been consistent for 8 weeks — here's your timeline"), reinforcing the whole habit loop.
 
 **Verdict: yes — the guided photo-progress feature is a seven-figure, king-of-the-category feature.** It is the emotional core (the before/after that keeps people through the slow results window), the trust core (the privacy-as-trust promise made real on the most sensitive data the app holds), and a top retention/lock-in surface. The honest risks — phone photos have real limits (white-light, harder for erythema/tone in darker skin), and progress tracking can create pressure — are met head-on by honest framing, **no AI scores**, fairness care, and calm design. Built this way, it is the feature users fall in love with and the one that makes leaving feel like losing their own history.

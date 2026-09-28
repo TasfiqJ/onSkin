@@ -1,5 +1,5 @@
 export const CATALOG_SEARCH_RENDER_DIAGNOSTICS_GLOBAL =
-  '__ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__' as const;
+  '__LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__' as const;
 
 export type CatalogSearchRenderDiagnosticsSnapshot = Readonly<{
   composerCommits: number;
@@ -28,7 +28,7 @@ type MutableCatalogSearchRenderDiagnostics = {
 };
 
 type CatalogSearchDiagnosticsGlobal = typeof globalThis & {
-  __ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__?: MutableCatalogSearchRenderDiagnostics;
+  __LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__?: MutableCatalogSearchRenderDiagnostics;
 };
 
 const EMPTY_DIAGNOSTICS: CatalogSearchRenderDiagnosticsSnapshot = Object.freeze({
@@ -51,8 +51,8 @@ function diagnosticsEnabled(): boolean {
 function mutableDiagnostics(): MutableCatalogSearchRenderDiagnostics | null {
   if (!diagnosticsEnabled()) return null;
   const root = globalThis as CatalogSearchDiagnosticsGlobal;
-  root.__ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
-  return root.__ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__;
+  root.__LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
+  return root.__LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__;
 }
 
 function finiteDuration(durationMs: number): number {

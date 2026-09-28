@@ -30,8 +30,8 @@ const DEFAULT_REPORT = path.join(
 );
 const MIN_REALISTIC_ROWS = 250_000;
 const TWO_CHARACTER_RARE_CEILING = 1_000;
-const DATABASE = 'onskin_benchmark';
-const PASSWORD = 'onskin-local-opt116-only';
+const DATABASE = 'layerwell_benchmark';
+const PASSWORD = 'layerwell-local-opt116-only';
 
 function integerOption(name, fallback, minimum, maximum) {
   const prefix = `--${name}=`;
@@ -656,7 +656,7 @@ async function main() {
     return;
   }
 
-  const container = `onskin-opt116-${process.pid}-${Date.now()}`;
+  const container = `layerwell-opt116-${process.pid}-${Date.now()}`;
   const startedAt = new Date().toISOString();
   let started = false;
   try {

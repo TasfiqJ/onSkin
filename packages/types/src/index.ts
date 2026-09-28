@@ -1,15 +1,16 @@
 /**
- * @onskin/types. Shared domain types.
+ * @layerwell/types. Shared domain types.
  *
  * These literal unions mirror the data model in docs/01 §3 (and the catalog
  * sketch in docs/00 §2). They are the single source of truth for both the
- * mobile client and the Supabase Edge Functions. The generated Supabase
- * `Database` type lives in `./database.types.ts` (regenerate with
- * `supabase gen types typescript` once the project exists. See BLOCKERS
- * B-SUPABASE).
+ * mobile client and the Supabase Edge Functions. The raw Supabase schema type
+ * is generated from the clean local migration replay; the exported `Database`
+ * is the narrower publishable-key client capability overlay. Hosted
+ * repository/local/linked parity remains a separate DB-06/DB-08 launch gate.
  */
 
-export type * from './database.types';
+export type { Json } from './database.types';
+export type { ClientDatabase, Database } from './client-database.types';
 
 // --- Consent (docs/01 §3 `consents`, §4 placement map) -----------------------
 /** Each consent is unbundled. Collection is "separate and distinct" from
@@ -28,11 +29,11 @@ export const CONSENT_TYPES = [
   // within-person photo trend insight (still a health inference; distinct from
   // photo_capture / photo_cloud_backup). Installed base is re-consented, never enrolled.
   'photo_trend_insights',
-  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask RoutineKind". The
+  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask Layerwell". The
   // user's question is a health disclosure transmitted to a zero-retention cloud
   // language layer (MHMDA / GDPR Art. 9 attaches to the TRANSMISSION). Distinct from
   // every other consent; the deterministic on-device advisor needs no consent at all.
-  'ask_onskin',
+  'ask_layerwell',
 ] as const;
 export type ConsentType = (typeof CONSENT_TYPES)[number];
 
@@ -178,7 +179,15 @@ export type SubscriptionTier = 'free' | 'pro' | 'pro_plus';
  *  14-day store trial; 'normal' is a paid subscription; 'intro' an intro offer. */
 export type PeriodType = 'reverse_trial' | 'trial' | 'intro' | 'normal' | 'prepaid';
 /** Where the entitlement came from (docs/08 §8 `store`). */
-export type EntitlementStore = 'app_store' | 'play_store' | 'web' | 'app_granted' | 'test_store';
+export type EntitlementStore =
+  | 'app_store'
+  | 'play_store'
+  | 'web'
+  | 'app_granted'
+  /** RevenueCat-granted out-of-store, non-billing access. This is not an
+   * Apple/StoreKit promotional offer and never implies a purchase or renewal. */
+  | 'promotional'
+  | 'test_store';
 /** The purchasable plans (docs/08 §2.3). No weekly plan by design. */
 export type PlanId = 'annual' | 'monthly';
 /** Pro-gated feature areas, used to frame the contextual upsell (docs/08 §3.2). */
@@ -244,7 +253,7 @@ export type RecommendationEvent = (typeof RECOMMENDATION_EVENTS)[number];
 
 // --- Creator stacks + commerce (docs/10) -------------------------------------
 /** The affiliate rail a "where to buy" link resolves through. Rail-agnostic by
- *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on RoutineKind's
+ *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on Layerwell's
  *  own recommendations under a house account, swap rails without re-architecting. */
 export type AffiliateSource = 'shopmy' | 'skimlinks' | 'direct' | 'none';
 /** Who curated a shoppable stack. Expert/derm curation is the differentiator;
@@ -284,7 +293,7 @@ export const TREND_EVENTS = [
 ] as const;
 export type TrendEvent = (typeof TREND_EVENTS)[number];
 
-// --- "Ask RoutineKind" conversational advisor (docs/13) ----------------------
+// --- "Ask Layerwell" conversational advisor (docs/13) ----------------------
 /** The deterministic intent router (docs/13 §4). The router runs FIRST, BEFORE any
  *  language model, so medical/dosing/diagnosis intent is caught at the door and
  *  escalated. Never narrated. Deterministic intents are answered on-device at $0;
@@ -424,9 +433,6 @@ export const ONBOARDING_EVENTS = [
   'quiz_question_answered',
   'quiz_completed',
   'personalization_shown',
-  'notification_prompt_shown',
-  'notification_prompt_granted',
-  'notification_prompt_denied',
   'account_created',
   'paywall_shown',
   'trial_started',

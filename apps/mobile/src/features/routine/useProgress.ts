@@ -10,45 +10,34 @@ import {
   type WeekDay,
 } from '@/features/streak/streak';
 import { getCompletionSummary } from '@/features/today/completionsStore';
+import { currentCompletionSyncTimezone } from '@/features/today/completionSync';
+import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { localDateString } from '@/features/today/useToday';
 import {
-  ACCOUNT_GENERATION_CHANGED,
-  awaitAccountGenerationLease,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { isSupabaseConfigured } from '@/lib/env';
-import {
-  isRequestCancellation,
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
-import {
-  useLocalDateBoundary,
-  type LocalDateBoundaryIdentity,
-} from '@/lib/query/localDateBoundaryStore';
-import {
-  queryKeys,
-  runOwnerQueryOperation,
-  settleOwnerQueryOperations,
-  shouldRefetchCurrentLocalDayQuery,
-} from '@/lib/query/queryKeys';
-import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import {
+  decodeServerAdherenceProjection,
   normalizeProgressCompletionDate,
   normalizeProgressCount,
-  normalizeProgressLongestStreak,
+  type ServerAdherenceProjection,
 } from './progressSanitizers';
 
 // Calm, forgiving progress data (docs/03 §6 + docs/07 §4): weekly adherence, a
 // month heat-map, and the freeze-aware streak. The streak/freeze logic lives in the
 // pure, tested `features/streak/streak.ts`; this hook loads the completion log and
-// the cached personal best, then delegates. The v1 source of truth is the local-first
-// completionsStore (the Today check-off writes there); the server routine_completions
-// table is unioned in for the eventual sync (B-ROUTINE-PERSIST / B-SUPABASE). Empty
-// completions yield a calm zero state, not an error.
+// then delegates. The local-first completionsStore (the Today check-off writes there)
+// is the current source of truth. Only explicit server routine-level rows (`step_id`
+// null) are unioned for eventual sync; individual step rows never qualify a night.
+// The currently strict server cached streak is intentionally not trusted until its
+// forgiveness migration and parity evidence land. Empty completions yield a calm
+// zero state, not an error.
 
 export type { WeekDay, HeatCell } from '@/features/streak/streak';
 export type DayState = WeekDay['state'];
@@ -63,141 +52,88 @@ export type ProgressData = {
   graceUsed: boolean; // a freeze is currently absorbing a recent miss (streak safe)
   lapsed: boolean; // the streak lapsed past the forgiveness window (earn-back)
   frozenDates: string[];
+  /** Whether cross-device adherence was verified for this projection. */
+  serverStatus: 'not_configured' | 'verified' | 'unavailable';
 };
 
 type ServerCompletion = { completed_date: string };
+type ServerAdherence = Readonly<{
+  status: ProgressData['serverStatus'];
+  completions: ServerCompletion[];
+  projection: ServerAdherenceProjection | null;
+}>;
 
-// These are failure ceilings for optional reconciliation, not approved latency
-// SLAs. Local completion data remains the user-facing source of truth.
-const OPTIONAL_PROGRESS_READ_DEADLINE_MS = 8_000;
-const COMPLETIONS_RESPONSE_LIMIT_BYTES = 512 * 1024;
-const LONGEST_STREAK_RESPONSE_LIMIT_BYTES = 64 * 1024;
-
-function isAbortOrAccountGenerationError(error: unknown): boolean {
-  if (error === ACCOUNT_GENERATION_CHANGED) return true;
-  if (!error || typeof error !== 'object') return false;
-  const candidate = error as { code?: unknown; message?: unknown; name?: unknown };
-  return (
-    candidate.name === 'AbortError' ||
-    candidate.code === 'ABORT_ERR' ||
-    candidate.code === ACCOUNT_GENERATION_CHANGED ||
-    candidate.message === ACCOUNT_GENERATION_CHANGED
-  );
-}
-
-async function loadServerCompletions(
-  lookbackISO: string,
-  lease: AccountGenerationLease,
-): Promise<ServerCompletion[]> {
-  if (!isSupabaseConfigured) return [];
+async function loadServerAdherence(
+  lease: HealthDataWriteOperationLease,
+  expectedReferenceDay: string,
+): Promise<ServerAdherence> {
+  if (!isSupabaseConfigured) {
+    return { status: 'not_configured', completions: [], projection: null };
+  }
+  const timezone = currentCompletionSyncTimezone();
+  if (timezone === null) {
+    return { status: 'unavailable', completions: [], projection: null };
+  }
   try {
-    const data = await runRequestWithLease(
-      lease,
-      {
-        endpoint: 'progress_completions',
-        deadlineMs: OPTIONAL_PROGRESS_READ_DEADLINE_MS,
-        idempotent: true,
-        maxAttempts: 2,
-        maxResponseBytes: COMPLETIONS_RESPONSE_LIMIT_BYTES,
-      },
-      async ({ signal }) => {
-        const response = await supabase
-          .from('routine_completions')
-          .select('completed_date')
-          .gte('completed_date', lookbackISO)
-          .retry(false)
-          .abortSignal(signal);
-        if (response.error) throw supabaseRequestFailure(response.error, response.status);
-        return response.data ?? [];
-      },
-    );
     lease.assertCurrent();
-    return data
-      .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
-      .filter((completedDate): completedDate is string => Boolean(completedDate))
-      .map((completedDate) => ({ completed_date: completedDate }));
-  } catch (error) {
+    const projectionResult = await supabase.rpc('set_routine_adherence_timezone', {
+      p_timezone: timezone,
+    });
     lease.assertCurrent();
-    if (isAbortOrAccountGenerationError(error) || isRequestCancellation(error)) throw error;
-    return [];
+    if (projectionResult.error !== null) throw new Error('PROGRESS_SERVER_RPC_FAILED');
+    const projection = decodeServerAdherenceProjection(projectionResult.data);
+    if (
+      projection === null ||
+      projection.adherenceTimezone !== timezone ||
+      projection.referenceDay !== expectedReferenceDay
+    ) {
+      throw new Error('PROGRESS_SERVER_PROJECTION_INVALID');
+    }
+
+    const { data, error } = await supabase
+      .from('routine_completions')
+      .select('completed_date')
+      .is('step_id', null);
+    lease.assertCurrent();
+    if (error !== null || data === null) throw new Error('PROGRESS_SERVER_READ_FAILED');
+    const completions: ServerCompletion[] = [];
+    for (const completion of data) {
+      const completedDate = normalizeProgressCompletionDate(completion.completed_date);
+      if (completedDate === null || completedDate !== completion.completed_date) {
+        throw new Error('PROGRESS_SERVER_COMPLETION_INVALID');
+      }
+      completions.push({ completed_date: completedDate });
+    }
+    return { status: 'verified', completions, projection };
+  } catch {
+    lease.assertCurrent();
+    return { status: 'unavailable', completions: [], projection: null };
   }
 }
 
-async function loadServerLongestStreak(lease: AccountGenerationLease): Promise<number> {
-  if (!isSupabaseConfigured) return 0;
-  try {
-    const profile = await runRequestWithLease(
-      lease,
-      {
-        endpoint: 'progress_longest_streak',
-        deadlineMs: OPTIONAL_PROGRESS_READ_DEADLINE_MS,
-        idempotent: true,
-        maxAttempts: 2,
-        maxResponseBytes: LONGEST_STREAK_RESPONSE_LIMIT_BYTES,
-      },
-      async ({ signal }) => {
-        const response = await supabase
-          .from('profiles')
-          .select('longest_streak')
-          .limit(1)
-          .retry(false)
-          .abortSignal(signal)
-          .maybeSingle();
-        if (response.error) throw supabaseRequestFailure(response.error, response.status);
-        return response.data;
-      },
-    );
-    lease.assertCurrent();
-    return normalizeProgressLongestStreak(profile?.longest_streak);
-  } catch (error) {
-    lease.assertCurrent();
-    if (isAbortOrAccountGenerationError(error) || isRequestCancellation(error)) throw error;
-    return 0;
-  }
-}
-
-/** Read Progress using a local-day identity already owned by the current route. */
-export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity) {
-  const ownerScope = useOwnerQueryScope();
-  const { localDate: todayISO } = boundary;
+export function useProgress() {
+  const todayISO = useRoutineClock().localDate;
 
   return useQuery<ProgressData>({
-    ...deterministicLocalQueryPolicy,
-    queryKey: queryKeys.progress(ownerScope, boundary),
-    // Local encrypted completion history remains authoritative while offline;
-    // optional server reconciliation already fails soft inside the query.
-    refetchOnReconnect: (query) =>
-      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
-    refetchOnWindowFocus: (query) =>
-      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
-    queryFn: () =>
-      runOwnerQueryOperation(ownerScope, async (lease) => {
-        lease.assertCurrent();
+    queryKey: ['progress', todayISO],
+    retry: 1,
+    queryFn: async () => {
+      const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+      if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+      return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
         const today = new Date();
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-        // Look back far enough for the streak run (beyond the current month).
-        const lookback = new Date(today.getTime() - 120 * 86_400_000);
-
-        let localSummary: Awaited<ReturnType<typeof getCompletionSummary>>;
-        let completions: ServerCompletion[];
-        let serverLongest: number;
-        try {
-          [localSummary, completions, serverLongest] = await settleOwnerQueryOperations(lease, [
-            (childLease) => awaitAccountGenerationLease(childLease, () => getCompletionSummary()),
-            (childLease) => loadServerCompletions(localDateString(lookback), childLease),
-            (childLease) => loadServerLongestStreak(childLease),
-          ] as const);
-        } catch (error) {
-          lease.assertCurrent();
-          throw error;
-        }
+        const [localSummary, server] = await Promise.all([
+          getCompletionSummary(),
+          loadServerAdherence(lease, todayISO),
+        ]);
         lease.assertCurrent();
 
         const countByDate = new Map<string, number>();
         const completed = new Set<string>();
-        for (const c of completions) {
+        for (const c of server.completions) {
           const completedDate = normalizeProgressCompletionDate(c.completed_date);
-          if (!completedDate) continue;
+          if (!completedDate || completedDate > todayISO) continue;
           completed.add(completedDate);
           countByDate.set(completedDate, (countByDate.get(completedDate) ?? 0) + 1);
         }
@@ -206,12 +142,12 @@ export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity) {
         // sources represents the same completions, so take the max (never double-count).
         for (const d of localSummary.completedDates) {
           const completedDate = normalizeProgressCompletionDate(d);
-          if (completedDate) completed.add(completedDate);
+          if (completedDate && completedDate <= todayISO) completed.add(completedDate);
         }
         for (const [d, n] of localSummary.countByDate) {
           const completedDate = normalizeProgressCompletionDate(d);
           const count = normalizeProgressCount(n);
-          if (completedDate && count > 0) {
+          if (completedDate && completedDate <= todayISO && count > 0) {
             countByDate.set(completedDate, Math.max(countByDate.get(completedDate) ?? 0, count));
           }
         }
@@ -229,8 +165,11 @@ export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity) {
         for (const [date, n] of countByDate)
           if (date >= localDateString(monthStart)) monthCounts.set(date, n);
 
-        // longest is a non-decreasing personal best (D-011): greatest(server best, computed).
-        const longest = Math.max(serverLongest, bestStreak(completed), s.current);
+        const longest = Math.max(
+          bestStreak(completed, undefined, todayISO),
+          s.current,
+          server.projection?.longestStreak ?? 0,
+        );
 
         lease.assertCurrent();
         return {
@@ -243,13 +182,9 @@ export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity) {
           graceUsed: s.freezeActive,
           lapsed: s.lapsed,
           frozenDates: s.frozenDates,
+          serverStatus: server.status,
         };
-      }),
+      });
+    },
   });
-}
-
-/** Standalone Progress consumer. Route view models should share their boundary. */
-export function useProgress() {
-  const boundary = useLocalDateBoundary();
-  return useProgressFromBoundary(boundary);
 }

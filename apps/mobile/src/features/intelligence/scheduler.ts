@@ -1,4 +1,4 @@
-import type { GoalId } from '@onskin/types';
+import type { GoalId } from '@layerwell/types';
 
 import type { SensitivityLevel } from './engine';
 

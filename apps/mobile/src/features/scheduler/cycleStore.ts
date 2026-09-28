@@ -1,31 +1,51 @@
-import type { CycleVariant, DisruptionReason } from '@onskin/types';
+import type { CycleVariant, DisruptionReason } from '@layerwell/types';
 
-import { getCycleAnchorWithLease } from '@/features/routine/cycleAnchor';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { getCycleAnchor } from '@/features/routine/cycleAnchor';
+import { shippableRoutineCadencePolicy } from '@/features/routine/sequencing';
 import { localDateString } from '@/features/today/useToday';
 import {
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
+import { addDays } from './projection';
 import {
   customCycleProductIds,
   normalizeCustomCycleDefinition,
   type CustomCycleDefinition,
 } from './customCycle';
-import { addDays } from './projection';
 
 // Local-first cycle configuration (docs/05 sections 3 and 7). The generated
 // per-night schedule remains derived from the shelf; this store holds only the
 // user's persistent choices and disruption state on top of that schedule.
-const KEY = 'routinekind.cycle.v2';
-const LEGACY_KEY = 'onskin.cycle.v1';
+const KEY = 'layerwell.cycle.v2';
+const LEGACY_KEY = 'layerwell.cycle.v1';
+const LEGACY_ANCHOR_KEY = 'layerwell.cycleAnchor';
 const CYCLE_CONFIG_SCHEMA_VERSION = 1 as const;
+export const ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED =
+  'ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED';
+export const ROUTINE_RECOVERY_ADMISSION_CLOSED = 'ROUTINE_RECOVERY_ADMISSION_CLOSED';
 
-export const CYCLE_CONFIG_INVALID = 'CYCLE_CONFIG_INVALID';
-export const CYCLE_CONFIG_UNSUPPORTED_VERSION = 'CYCLE_CONFIG_UNSUPPORTED_VERSION';
-export const CYCLE_CONFIG_UNAVAILABLE = 'CYCLE_CONFIG_UNAVAILABLE';
+/**
+ * Cycle configuration is clinical-policy state, not a generic preference store.
+ * Keep this assertion at both the hook boundary and the storage boundary so a
+ * direct route/deep link or a future non-React caller cannot persist unreviewed
+ * cadence, recovery, staging, or disruption decisions.
+ */
+export function assertRoutineCadenceMutationAdmission(): void {
+  if (!canUseRoutineCadence()) {
+    throw new Error(ROUTINE_CADENCE_MUTATION_ADMISSION_CLOSED);
+  }
+}
+
+export function assertRoutineRecoveryAvailable(): void {
+  assertRoutineCadenceMutationAdmission();
+  if (!canUseRoutineRecovery()) {
+    throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+  }
+}
 
 export type RecoveryReason = Extract<DisruptionReason, 'procedure' | 'irritation'>;
 
@@ -50,22 +70,19 @@ export type CycleConfig = {
   customCycle: CustomCycleDefinition | null;
 };
 
-export type CycleConfigRead =
-  | { status: 'missing'; config: CycleConfig; source: 'default' }
-  | { status: 'available'; config: CycleConfig; source: 'current' | 'legacy' }
-  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; config: null };
-
-const CURRENT_CONFIG_KEYS = [
-  'schemaVersion',
-  'variant',
-  'anchorISO',
-  'pausedFrom',
-  'pauseReason',
-  'recovery',
-  'skips',
-  'stagingOverrides',
-  'customCycle',
-] as const;
+function defaults(anchorISO: string): CycleConfig {
+  return {
+    schemaVersion: CYCLE_CONFIG_SCHEMA_VERSION,
+    variant: 'auto',
+    anchorISO,
+    pausedFrom: null,
+    pauseReason: null,
+    recovery: null,
+    skips: [],
+    stagingOverrides: [],
+    customCycle: null,
+  };
+}
 
 const CYCLE_VARIANTS = new Set<CycleConfig['variant']>([
   'auto',
@@ -82,50 +99,12 @@ const DISRUPTION_REASONS = new Set<DisruptionReason>([
 ]);
 const RECOVERY_REASONS = new Set<RecoveryReason>(['procedure', 'irritation']);
 
-function defaults(anchorISO: string): CycleConfig {
-  return {
-    schemaVersion: CYCLE_CONFIG_SCHEMA_VERSION,
-    variant: 'auto',
-    anchorISO,
-    pausedFrom: null,
-    pauseReason: null,
-    recovery: null,
-    skips: [],
-    stagingOverrides: [],
-    customCycle: null,
-  };
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && !Array.isArray(value) && typeof value === 'object';
 }
 
 function hasOwn(value: Record<string, unknown>, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(value, key);
-}
-
-function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
-  const actual = Object.keys(value).sort();
-  const expected = [...keys].sort();
-  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
-}
-
-function canonicalize(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(canonicalize);
-  if (!isRecord(value)) return value;
-  return Object.fromEntries(
-    Object.keys(value)
-      .sort()
-      .map((key) => [key, canonicalize(value[key])]),
-  );
-}
-
-function canonicalJson(value: unknown): string {
-  return JSON.stringify(canonicalize(value));
-}
-
-function cycleConfigError(code: string): Error {
-  return new Error(code);
 }
 
 function normalizeLocalDateISO(value: unknown): string | null {
@@ -175,7 +154,7 @@ function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
   if (
     !startISO ||
     typeof days !== 'number' ||
-    !Number.isSafeInteger(days) ||
+    !Number.isInteger(days) ||
     days <= 0 ||
     !isRecoveryReason(value.reason)
   ) {
@@ -184,15 +163,32 @@ function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
   return { startISO, days, reason: value.reason };
 }
 
-/** Pure compatibility normalizer. Current records are accepted only when this
- * normalized form is structurally identical; legacy records may be normalized
- * in memory and upgraded by a later explicit mutation. */
 function normalizeStoredConfig(
   value: unknown,
   fallbackAnchorISO: string,
-  allowMissingSchemaVersion: boolean,
+  allowMissingSchemaVersion = false,
 ): CycleConfig | null {
   if (!isRecord(value)) return null;
+  if (!allowMissingSchemaVersion) {
+    const expectedKeys = [
+      'anchorISO',
+      'customCycle',
+      'pausedFrom',
+      'pauseReason',
+      'recovery',
+      'schemaVersion',
+      'skips',
+      'stagingOverrides',
+      'variant',
+    ].sort();
+    const actualKeys = Object.keys(value).sort();
+    if (
+      actualKeys.length !== expectedKeys.length ||
+      expectedKeys.some((key, index) => actualKeys[index] !== key || !hasOwn(value, key))
+    ) {
+      return null;
+    }
+  }
   const base = defaults(fallbackAnchorISO);
   const schemaVersion =
     value.schemaVersion ?? (allowMissingSchemaVersion ? CYCLE_CONFIG_SCHEMA_VERSION : undefined);
@@ -241,86 +237,23 @@ function normalizeStoredConfig(
   };
 }
 
-function parseStoredJson(raw: string): unknown {
+function parseStoredConfig(
+  raw: string,
+  fallbackAnchorISO: string,
+  allowMissingSchemaVersion = false,
+): {
+  parsed: unknown;
+  config: CycleConfig;
+} {
+  let parsed: unknown;
   try {
-    return JSON.parse(raw) as unknown;
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    throw cycleConfigError(CYCLE_CONFIG_INVALID);
+    throw new Error('CYCLE_CONFIG_INVALID');
   }
-}
-
-function assertSupportedSchema(value: unknown, allowMissing: boolean): void {
-  if (!isRecord(value)) throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  if (allowMissing && !hasOwn(value, 'schemaVersion')) return;
-  if (value.schemaVersion === CYCLE_CONFIG_SCHEMA_VERSION) return;
-  if (
-    typeof value.schemaVersion === 'number' &&
-    Number.isSafeInteger(value.schemaVersion) &&
-    value.schemaVersion > CYCLE_CONFIG_SCHEMA_VERSION
-  ) {
-    throw cycleConfigError(CYCLE_CONFIG_UNSUPPORTED_VERSION);
-  }
-  throw cycleConfigError(CYCLE_CONFIG_INVALID);
-}
-
-function decodeCurrentConfig(raw: string): CycleConfig {
-  const parsed = parseStoredJson(raw);
-  assertSupportedSchema(parsed, false);
-  if (!isRecord(parsed) || !hasExactKeys(parsed, CURRENT_CONFIG_KEYS)) {
-    throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  }
-  const anchorISO = normalizeLocalDateISO(parsed.anchorISO);
-  if (!anchorISO) throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  const config = normalizeStoredConfig(parsed, anchorISO, false);
-  if (!config || canonicalJson(parsed) !== canonicalJson(config)) {
-    throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  }
-  return config;
-}
-
-function embeddedLegacyAnchor(value: unknown): string | null {
-  return isRecord(value) ? normalizeLocalDateISO(value.anchorISO) : null;
-}
-
-function decodeLegacyConfig(value: unknown, fallbackAnchorISO: string): CycleConfig {
-  assertSupportedSchema(value, true);
-  const config = normalizeStoredConfig(value, fallbackAnchorISO, true);
-  if (!config) throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  return config;
-}
-
-function normalizeMutationConfig(value: unknown): CycleConfig {
-  if (!isRecord(value) || !hasExactKeys(value, CURRENT_CONFIG_KEYS)) {
-    throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  }
-  const anchorISO = normalizeLocalDateISO(value.anchorISO);
-  if (!anchorISO) throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  const normalized = normalizeStoredConfig(value, anchorISO, false);
-  if (!normalized || canonicalJson(value) !== canonicalJson(normalized)) {
-    throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  }
-  return normalized;
-}
-
-function encodeCycleConfig(config: CycleConfig): string {
-  const customCycle = config.customCycle
-    ? {
-        schemaVersion: config.customCycle.schemaVersion,
-        lengthNights: config.customCycle.lengthNights,
-        nights: config.customCycle.nights.map((night) => ({ productId: night.productId })),
-      }
-    : null;
-  return JSON.stringify({
-    schemaVersion: CYCLE_CONFIG_SCHEMA_VERSION,
-    variant: config.variant,
-    anchorISO: config.anchorISO,
-    pausedFrom: config.pausedFrom,
-    pauseReason: config.pauseReason,
-    recovery: config.recovery ? { ...config.recovery } : null,
-    skips: [...config.skips],
-    stagingOverrides: [...config.stagingOverrides],
-    customCycle,
-  } satisfies CycleConfig);
+  const config = normalizeStoredConfig(parsed, fallbackAnchorISO, allowMissingSchemaVersion);
+  if (!config) throw new Error('CYCLE_CONFIG_INVALID');
+  return { parsed, config };
 }
 
 function parseLocal(iso: string): Date {
@@ -353,30 +286,37 @@ function finishRecoveryAt(config: CycleConfig, todayISO: string): CycleConfig {
   return { ...shiftAnchor(config, recoveryDays), recovery: null };
 }
 
-function reconcileStoredConfig(config: CycleConfig, todayISO: string): CycleConfig {
+function reconcileStoredConfig(
+  config: CycleConfig,
+  todayISO: string,
+  allowRecoveryReconciliation: boolean,
+): CycleConfig {
   let next = config;
 
-  // Older builds could store pause and recovery together. Recovery takes over
-  // when it started later; a newer or same-date open-ended pause wins otherwise.
-  if (next.pausedFrom && next.recovery) {
-    if (next.pausedFrom < next.recovery.startISO) {
-      const pauseEnd = next.recovery.startISO < todayISO ? next.recovery.startISO : todayISO;
-      const pausedDays = Math.max(0, daysBetween(next.pausedFrom, pauseEnd));
-      next = {
-        ...shiftAnchor(next, pausedDays),
-        pausedFrom: null,
-        pauseReason: null,
-      };
-    } else {
-      next = finishRecoveryAt(next, next.pausedFrom);
+  if (allowRecoveryReconciliation) {
+    // Legacy builds could store pause and recovery together. Recovery takes over
+    // when it started later; a newer open-ended pause takes over from recovery.
+    // This preserves the last dated transition without counting overlap twice.
+    if (next.pausedFrom && next.recovery) {
+      if (next.pausedFrom < next.recovery.startISO) {
+        const pauseEnd = next.recovery.startISO < todayISO ? next.recovery.startISO : todayISO;
+        const pausedDays = Math.max(0, daysBetween(next.pausedFrom, pauseEnd));
+        next = {
+          ...shiftAnchor(next, pausedDays),
+          pausedFrom: null,
+          pauseReason: null,
+        };
+      } else {
+        next = finishRecoveryAt(next, next.pausedFrom);
+      }
     }
-  }
 
-  if (next.recovery && daysBetween(next.recovery.startISO, todayISO) >= next.recovery.days) {
-    next = {
-      ...shiftAnchor(next, next.recovery.days),
-      recovery: null,
-    };
+    if (next.recovery && daysBetween(next.recovery.startISO, todayISO) >= next.recovery.days) {
+      next = {
+        ...shiftAnchor(next, next.recovery.days),
+        recovery: null,
+      };
+    }
   }
 
   const currentAndFutureSkips = next.skips.filter((date) => date >= todayISO);
@@ -386,114 +326,106 @@ function reconcileStoredConfig(config: CycleConfig, todayISO: string): CycleConf
   return next;
 }
 
-function classifyCycleConfigError(error: unknown): CycleConfigRead {
-  const message = error instanceof Error ? error.message : '';
-  if (message === CYCLE_CONFIG_UNSUPPORTED_VERSION || message.includes('UNSUPPORTED')) {
-    return { status: 'unsupported_version', config: null };
-  }
-  if (
-    message === CYCLE_CONFIG_INVALID ||
-    message === 'CYCLE_ANCHOR_INVALID' ||
-    message === 'PRIVATE_KV_ENVELOPE_INVALID' ||
-    message === 'PRIVATE_KV_DECRYPTION_FAILED'
-  ) {
-    return { status: 'corrupt', config: null };
-  }
-  return { status: 'unavailable', config: null };
-}
-
-async function readCycleConfigValue(lease: AccountGenerationLease): Promise<
-  | { status: 'missing'; config: CycleConfig; source: 'default' }
-  | { status: 'available'; config: CycleConfig; source: 'current' | 'legacy' }
-> {
-  lease.assertCurrent();
-  const today = localDateString();
-  const raw = await awaitAccountGenerationLease(lease, () => getPrivateItem(KEY));
-  lease.assertCurrent();
-  if (raw !== null) {
-    return {
-      status: 'available',
-      source: 'current',
-      config: reconcileStoredConfig(decodeCurrentConfig(raw), today),
-    };
-  }
-
-  const legacyRaw = await awaitAccountGenerationLease(lease, () => getPrivateItem(LEGACY_KEY));
-  lease.assertCurrent();
-  if (legacyRaw !== null) {
-    const parsed = parseStoredJson(legacyRaw);
-    const fallbackAnchor =
-      embeddedLegacyAnchor(parsed) ?? (await getCycleAnchorWithLease(lease));
-    lease.assertCurrent();
-    return {
-      status: 'available',
-      source: 'legacy',
-      config: reconcileStoredConfig(decodeLegacyConfig(parsed, fallbackAnchor), today),
-    };
-  }
-
-  const fallbackAnchor = await getCycleAnchorWithLease(lease);
-  lease.assertCurrent();
-  return { status: 'missing', source: 'default', config: defaults(fallbackAnchor) };
-}
-
-/** Read and reconcile only in memory. Ordinary reads never migrate, normalize,
- * repair, delete, or persist date rollover changes. */
-export async function readCycleConfigWithLease(
-  lease: AccountGenerationLease,
-): Promise<CycleConfigRead> {
-  try {
-    const result = await readCycleConfigValue(lease);
-    lease.assertCurrent();
-    return result;
-  } catch (error) {
-    lease.assertCurrent();
-    return classifyCycleConfigError(error);
-  }
-}
-
-export function readCycleConfig(): Promise<CycleConfigRead> {
-  return runAccountGenerationOperation(readCycleConfigWithLease);
-}
-
-/** Query-facing compatibility API: valid missing state receives defaults; every
- * unreadable state throws a typed fail-closed error. */
-export async function loadCycleConfigWithLease(
-  lease: AccountGenerationLease,
-): Promise<CycleConfig> {
-  const result = await readCycleConfigWithLease(lease);
-  lease.assertCurrent();
-  if (result.status === 'available' || result.status === 'missing') return result.config;
-  if (result.status === 'unsupported_version') {
-    throw cycleConfigError(CYCLE_CONFIG_UNSUPPORTED_VERSION);
-  }
-  if (result.status === 'corrupt') throw cycleConfigError(CYCLE_CONFIG_INVALID);
-  throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
-}
-
-export function loadCycleConfig(): Promise<CycleConfig> {
-  return runAccountGenerationOperation(loadCycleConfigWithLease);
-}
-
-async function prepareMissingCurrentConfig(
-  lease: AccountGenerationLease,
+async function normalizeLatestStoredConfig(
+  fallbackAnchorISO: string,
+  todayISO: string,
+  lease: HealthDataWriteOperationLease,
 ): Promise<CycleConfig | null> {
-  const observedCurrent = await getPrivateItem(KEY);
+  let latest: CycleConfig | null = null;
+  assertRoutineCadenceMutationAdmission();
   lease.assertCurrent();
-  if (observedCurrent !== null) return null;
+  await updatePrivateItem(KEY, (currentRaw) => {
+    lease.assertCurrent();
+    if (!currentRaw) return null;
+    const { config: current } = parseStoredConfig(currentRaw, fallbackAnchorISO);
+    const recoveryAllowed = canUseRoutineRecovery();
+    if (current.recovery && !recoveryAllowed) {
+      latest = current;
+      return currentRaw;
+    }
+    latest = reconcileStoredConfig(current, todayISO, recoveryAllowed);
+    return JSON.stringify(latest);
+  });
+  lease.assertCurrent();
+  return latest;
+}
 
+async function migrateLegacyConfig(
+  fallbackAnchorISO: string,
+  todayISO: string,
+  lease: HealthDataWriteOperationLease,
+): Promise<CycleConfig | null> {
+  lease.assertCurrent();
   const legacyRaw = await getPrivateItem(LEGACY_KEY);
   lease.assertCurrent();
-  if (legacyRaw !== null) {
-    const parsed = parseStoredJson(legacyRaw);
-    const fallbackAnchor =
-      embeddedLegacyAnchor(parsed) ?? (await getCycleAnchorWithLease(lease));
-    lease.assertCurrent();
-    return decodeLegacyConfig(parsed, fallbackAnchor);
-  }
-  const fallbackAnchor = await getCycleAnchorWithLease(lease);
+  if (!legacyRaw) return null;
+  const legacyStored = parseStoredConfig(legacyRaw, fallbackAnchorISO, true).config;
+  if (legacyStored.recovery && !canUseRoutineRecovery()) return legacyStored;
+  let migrated: CycleConfig | null = null;
+
+  // The old key is intentionally retained for account cleanup and downgrade
+  // isolation. Once v2 exists, older builds can no longer overwrite this state.
+  assertRoutineCadenceMutationAdmission();
   lease.assertCurrent();
-  return defaults(fallbackAnchor);
+  await updatePrivateItem(KEY, (currentRaw) => {
+    lease.assertCurrent();
+    const recoveryAllowed = canUseRoutineRecovery();
+    if (currentRaw) {
+      const current = parseStoredConfig(currentRaw, fallbackAnchorISO).config;
+      if (current.recovery && !recoveryAllowed) {
+        migrated = current;
+        return currentRaw;
+      }
+      migrated = reconcileStoredConfig(current, todayISO, recoveryAllowed);
+      return JSON.stringify(migrated);
+    }
+    if (legacyStored.recovery && !recoveryAllowed) {
+      migrated = legacyStored;
+      return null;
+    }
+    migrated = reconcileStoredConfig(legacyStored, todayISO, recoveryAllowed);
+    return JSON.stringify(migrated);
+  });
+  lease.assertCurrent();
+  if (!migrated) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
+  return migrated;
+}
+
+async function loadCycleConfigForLease(lease: HealthDataWriteOperationLease): Promise<CycleConfig> {
+  lease.assertCurrent();
+  const fallbackAnchor = await getCycleAnchor();
+  lease.assertCurrent();
+  const today = localDateString();
+  lease.assertCurrent();
+  const raw = await getPrivateItem(KEY);
+  lease.assertCurrent();
+  if (!raw) {
+    const migrated = await migrateLegacyConfig(fallbackAnchor, today, lease);
+    lease.assertCurrent();
+    return migrated ?? defaults(fallbackAnchor);
+  }
+
+  const { parsed, config: normalized } = parseStoredConfig(raw, fallbackAnchor);
+  const recoveryAllowed = canUseRoutineRecovery();
+  if (normalized.recovery && !recoveryAllowed) return normalized;
+  const reconciled = reconcileStoredConfig(normalized, today, recoveryAllowed);
+  lease.assertCurrent();
+  if (JSON.stringify(parsed) === JSON.stringify(reconciled)) return reconciled;
+
+  const latest = await normalizeLatestStoredConfig(fallbackAnchor, today, lease);
+  lease.assertCurrent();
+  return latest ?? defaults(fallbackAnchor);
+}
+
+export async function loadCycleConfig(): Promise<CycleConfig> {
+  return runCurrentHealthDataOperation(loadCycleConfigForLease);
+}
+
+function sameRecovery(left: RecoveryState | null, right: RecoveryState | null): boolean {
+  if (!left || !right) return left === right;
+  return (
+    left.startISO === right.startISO && left.days === right.days && left.reason === right.reason
+  );
 }
 
 let devCycleConfigWriteFailureUsed = false;
@@ -512,25 +444,57 @@ async function maybeRejectDevCycleConfigWrite(): Promise<void> {
 async function mutateCycleConfig(
   transform: (current: CycleConfig, todayISO: string) => CycleConfig,
 ): Promise<CycleConfig> {
-  return runAccountGenerationOperation(async (lease) => {
+  assertRoutineCadenceMutationAdmission();
+  return runCurrentHealthDataOperation(async (lease) => {
     const today = localDateString();
-    const missingCurrent = await prepareMissingCurrentConfig(lease);
+    lease.assertCurrent();
+    let fallbackAnchor = today;
+    try {
+      const legacyAnchor = await getPrivateItem(LEGACY_ANCHOR_KEY);
+      lease.assertCurrent();
+      fallbackAnchor = normalizeLocalDateISO(legacyAnchor) ?? today;
+    } catch {
+      // The v2 transform below remains authoritative and re-reads its own key.
+      // A failed legacy-anchor read must not trigger a repair write before the
+      // requested cycle mutation has committed.
+      lease.assertCurrent();
+    }
+
+    const currentRaw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const legacyRaw = currentRaw ? null : await getPrivateItem(LEGACY_KEY);
+    lease.assertCurrent();
     let next: CycleConfig | null = null;
 
     await maybeRejectDevCycleConfigWrite();
+    assertRoutineCadenceMutationAdmission();
     lease.assertCurrent();
     await updatePrivateItem(KEY, (raw) => {
-      const stored = raw === null ? missingCurrent : decodeCurrentConfig(raw);
-      if (!stored) throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
-      const current = reconcileStoredConfig(stored, today);
-      const candidate = normalizeMutationConfig(transform(current, today));
-      next = reconcileStoredConfig(candidate, today);
-      const encoded = encodeCycleConfig(next);
-      return raw !== null && canonicalJson(stored) === canonicalJson(next) ? raw : encoded;
+      lease.assertCurrent();
+      const sourceRaw = raw ?? legacyRaw;
+      const stored = sourceRaw
+        ? parseStoredConfig(sourceRaw, fallbackAnchor, raw === null).config
+        : defaults(fallbackAnchor);
+      const recoveryAllowed = canUseRoutineRecovery();
+      if (raw === null && stored.recovery && !recoveryAllowed) {
+        throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+      }
+      const current = reconcileStoredConfig(stored, today, recoveryAllowed);
+      const candidate = normalizeStoredConfig(transform(current, today), current.anchorISO);
+      if (!candidate) throw new Error('CYCLE_CONFIG_INVALID');
+      if (!recoveryAllowed && !sameRecovery(candidate.recovery, stored.recovery)) {
+        throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+      }
+      next = reconcileStoredConfig(candidate, today, recoveryAllowed);
+      if (!canUseRoutineRecovery() && !sameRecovery(next.recovery, stored.recovery)) {
+        throw new Error(ROUTINE_RECOVERY_ADMISSION_CLOSED);
+      }
+      lease.assertCurrent();
+      return JSON.stringify(next);
     });
     lease.assertCurrent();
 
-    if (!next) throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
+    if (!next) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
     return next;
   });
 }
@@ -538,6 +502,9 @@ async function mutateCycleConfig(
 export async function updateCycleConfig(
   patch: Partial<Omit<CycleConfig, 'schemaVersion'>>,
 ): Promise<CycleConfig> {
+  if (Object.prototype.hasOwnProperty.call(patch, 'recovery')) {
+    assertRoutineRecoveryAvailable();
+  }
   return mutateCycleConfig((current) => ({ ...current, ...patch }));
 }
 
@@ -605,7 +572,16 @@ export async function startRecovery(days: number, reason: RecoveryReason): Promi
   if (!Number.isInteger(days) || days <= 0 || !isRecoveryReason(reason)) {
     throw new Error('CYCLE_RECOVERY_INPUT_INVALID');
   }
+  assertRoutineRecoveryAvailable();
+  const recoveryWindows = shippableRoutineCadencePolicy()?.recoveryWindows;
+  const isReviewedWindow =
+    recoveryWindows !== undefined &&
+    (reason === 'irritation'
+      ? days === recoveryWindows.irritationDays
+      : recoveryWindows.procedureChoicesDays.includes(days));
+  if (!isReviewedWindow) throw new Error('CYCLE_RECOVERY_INPUT_INVALID');
   return mutateCycleConfig((current, today) => {
+    assertRoutineRecoveryAvailable();
     const settled = finishRecoveryAt(finishPauseAt(current, today), today);
     return { ...settled, recovery: { startISO: today, days, reason } };
   });
@@ -613,7 +589,11 @@ export async function startRecovery(days: number, reason: RecoveryReason): Promi
 
 /** Finish recovery early and resume at the night where recovery began. */
 export async function endRecovery(): Promise<CycleConfig> {
-  return mutateCycleConfig((current, today) => finishRecoveryAt(current, today));
+  assertRoutineRecoveryAvailable();
+  return mutateCycleConfig((current, today) => {
+    assertRoutineRecoveryAvailable();
+    return finishRecoveryAt(current, today);
+  });
 }
 
 /** Recovery is active while today is within [start, start + days). */

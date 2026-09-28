@@ -1,7 +1,15 @@
 // Local catalog search only. Do not proxy Open Beauty Facts search-as-you-type.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
+import {
+  HEALTH_PROCESSING_EPOCH_HEADER,
+  healthProcessingCallerHeaders,
+  preflightActiveHealthProcessing,
+  readHealthProcessingEpochHeader,
+} from '../_shared/healthProcessingEpoch.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
@@ -22,17 +30,43 @@ let rateLimitHmacKey: CryptoKey | null = null;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, x-health-processing-epoch',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-type EdgeSupabaseClient = any;
+type EdgeRateLimitClient = {
+  rpc(
+    functionName: 'consume_edge_rate_limit',
+    args: Record<string, string | number>,
+  ): PromiseLike<{ data: unknown; error: unknown }>;
+};
+type HealthProcessingPreflightClient = Parameters<typeof preflightActiveHealthProcessing>[0];
+type AccountAccessPreflightClient = Parameters<typeof preflightAccountAccess>[0];
 
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json', ...headers },
   });
+}
+
+async function requireActiveHealthProcessing(
+  caller: HealthProcessingPreflightClient,
+  userId: string,
+  epoch: string,
+): Promise<Response | null> {
+  const result = await preflightActiveHealthProcessing(caller, userId, epoch);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
+async function requireSameAccountAccess(
+  caller: AccountAccessPreflightClient,
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
+  return result.ok ? null : json({ error: result.error }, result.status);
 }
 
 function intEnv(name: string, fallback: number, min: number, max: number): number {
@@ -43,6 +77,12 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasExactDatabaseError(error: unknown, message: string): boolean {
+  if (!isRecord(error)) return false;
+  const values = [error.message, error.details, error.hint];
+  return values.some((value) => typeof value === 'string' && value.trim() === message);
 }
 
 async function hmacSha256Hex(value: string): Promise<string> {
@@ -61,7 +101,7 @@ async function hmacSha256Hex(value: string): Promise<string> {
 }
 
 async function enforceRateLimit(
-  admin: EdgeSupabaseClient,
+  admin: EdgeRateLimitClient,
   scope: string,
   userId: string,
 ): Promise<Response | null> {
@@ -71,6 +111,7 @@ async function enforceRateLimit(
     p_key_hash: keyHash,
     p_limit: catalogRateLimitMax,
     p_window_seconds: catalogRateLimitWindowSeconds,
+    p_owner_user_id: userId,
   });
 
   if (error) {
@@ -86,35 +127,104 @@ async function enforceRateLimit(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
-  if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
+  if (contentLengthTooLarge(req, maxBodyBytes)) {
+    return json({ error: 'payload_too_large' }, 413);
+  }
 
   const authHeader = bearerAuthorizationHeader(req);
   if (!authHeader) return json({ error: 'unauthorized' }, 401);
+  const healthProcessingEpoch = readHealthProcessingEpochHeader(req.headers);
   const caller = createClient(supabaseUrl, publishableKey, {
-    global: { headers: { Authorization: authHeader } },
+    global: {
+      headers: healthProcessingEpoch
+        ? healthProcessingCallerHeaders(authHeader, healthProcessingEpoch)
+        : { Authorization: authHeader },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { data: userData } = await caller.auth.getUser();
   const userId = userData.user?.id;
   if (!userId) return json({ error: 'unauthorized' }, 401);
+  if (!healthProcessingEpoch) {
+    return json({ error: 'HEALTH_PROCESSING_EPOCH_REQUIRED' }, 409);
+  }
+
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
+  const initialHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (initialHealthError) return initialHealthError;
 
   const admin = createClient(supabaseUrl, serviceKey, {
+    global: {
+      headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const rateLimitError = await enforceRateLimit(admin, 'catalog-search', userId);
   if (rateLimitError) return rateLimitError;
 
-  const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'bad_json' });
+  const bodyHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (bodyHealthError) return bodyHealthError;
+  const bodyAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (bodyAccountError) return bodyAccountError;
+
+  const parsed = await readLimitedJson(req, maxBodyBytes, json, {
+    error: 'bad_json',
+  });
   if (parsed instanceof Response) return parsed;
   const body = isRecord(parsed) ? parsed : {};
   const query = normalizeCatalogSearchQuery(body.query);
   const searchTerm = catalogSearchTerm(query);
   const limit = catalogSearchLimit(body.limit);
   if (searchTerm.length < CATALOG_SEARCH_MIN_QUERY_LENGTH) {
+    const responseHealthError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (responseHealthError) return responseHealthError;
+    const responseAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
     return json({ result: 'too_short', products: [] });
   }
+
+  const searchHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (searchHealthError) return searchHealthError;
+  const searchAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (searchAccountError) return searchAccountError;
 
   const { data, error } = await admin.rpc(CATALOG_SEARCH_RPC, {
     p_query: searchTerm,
@@ -122,15 +232,65 @@ Deno.serve(async (req) => {
   });
   if (error) return json({ error: 'search_failed' }, 500);
 
-  await caller.from('catalog_lookup_events').insert({
-    user_id: userId,
-    lookup_type: 'search',
-    query,
-    result: data?.length ? 'matched' : 'no_match',
-    matched_product_id: data?.[0]?.id ?? null,
-    source_key: data?.[0]?.source ?? null,
-    quality_grade: data?.[0]?.quality_grade ?? null,
+  const persistHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (persistHealthError) return persistHealthError;
+  const persistAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (persistAccountError) return persistAccountError;
+
+  const { error: eventError } = await admin.rpc('record_catalog_lookup_event', {
+    p_user_id: userId,
+    p_expected_health_epoch: healthProcessingEpoch,
+    p_lookup_type: 'search',
+    p_result: data?.length ? 'matched' : 'no_match',
+    p_rate_limit: catalogRateLimitMax * 2,
+    p_window_seconds: catalogRateLimitWindowSeconds,
   });
 
-  return json({ result: data?.length ? 'matched' : 'no_match', products: data ?? [] });
+  if (eventError) {
+    const withdrawalError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (withdrawalError) return withdrawalError;
+    const eventAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (eventAccountError) return eventAccountError;
+    if (hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')) {
+      return json({ error: 'rate_limited' }, 429, {
+        'Retry-After': String(catalogRateLimitWindowSeconds),
+      });
+    }
+    return json({ error: 'search_failed' }, 500);
+  }
+
+  const responseHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (responseHealthError) return responseHealthError;
+  const responseAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (responseAccountError) return responseAccountError;
+
+  return json({
+    result: data?.length ? 'matched' : 'no_match',
+    products: data ?? [],
+    manualFallback: !data?.length,
+  });
 });

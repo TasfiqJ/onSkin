@@ -219,6 +219,9 @@ create index concurrently if not exists products_catalog_active_rank_idx
   )
   where status = 'active';
 
+-- pg_get_indexdef may omit the extensions schema when gin_trgm_ops is visible
+-- in the migration connection's search_path. Verify the catalog OID instead;
+-- keep the exact active predicate, expression, access method, and key checks.
 do $$
 declare
   v_index record;
@@ -230,6 +233,8 @@ begin
       access_method.amname as access_method,
       index_state.indnkeyatts as key_count,
       index_state.indisunique as is_unique,
+      operator_namespace.nspname as operator_class_schema,
+      operator_class.opcname as operator_class_name,
       lower(
         regexp_replace(
           pg_catalog.pg_get_indexdef(index_state.indexrelid),
@@ -245,6 +250,10 @@ begin
       on index_namespace.oid = index_relation.relnamespace
     join pg_catalog.pg_am as access_method
       on access_method.oid = index_relation.relam
+    join pg_catalog.pg_opclass as operator_class
+      on operator_class.oid = index_state.indclass[0]
+    join pg_catalog.pg_namespace as operator_namespace
+      on operator_namespace.oid = operator_class.opcnamespace
     where index_namespace.nspname = 'public'
       and index_relation.relname in (
         'products_catalog_active_name_trgm_idx',
@@ -259,24 +268,39 @@ begin
     if v_index.is_unique
       or position('where (status = ''active''::text)' in v_index.definition) = 0
     then
-      raise exception 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH';
+      raise exception using
+        errcode = '55000',
+        message = 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH',
+        detail = format('index=%s definition=%s', v_index.name, left(v_index.definition, 512));
     end if;
 
     case v_index.name
       when 'products_catalog_active_name_trgm_idx' then
         if v_index.access_method <> 'gin'
           or v_index.key_count <> 1
-          or position('lower(name) extensions.gin_trgm_ops' in v_index.definition) = 0
+          or v_index.operator_class_schema <> 'extensions'
+          or v_index.operator_class_name <> 'gin_trgm_ops'
+          or (
+            position('lower(name) gin_trgm_ops' in v_index.definition) = 0
+            and position('lower(name) extensions.gin_trgm_ops' in v_index.definition) = 0
+          )
         then
-          raise exception 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH';
+          raise exception using
+            errcode = '55000',
+            message = 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH',
+            detail = format('index=%s opclass=%s.%s definition=%s', v_index.name, v_index.operator_class_schema, v_index.operator_class_name, left(v_index.definition, 512));
         end if;
       when 'products_catalog_active_brand_trgm_idx' then
         if v_index.access_method <> 'gin'
           or v_index.key_count <> 1
+          or v_index.operator_class_schema <> 'extensions'
+          or v_index.operator_class_name <> 'gin_trgm_ops'
           or position('lower(coalesce(brand' in v_index.definition) = 0
-          or position('extensions.gin_trgm_ops' in v_index.definition) = 0
         then
-          raise exception 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH';
+          raise exception using
+            errcode = '55000',
+            message = 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH',
+            detail = format('index=%s opclass=%s.%s definition=%s', v_index.name, v_index.operator_class_schema, v_index.operator_class_name, left(v_index.definition, 512));
         end if;
       when 'products_catalog_active_bigram_idx' then
         if v_index.access_method <> 'gin'
@@ -284,7 +308,10 @@ begin
           or position('catalog_search_bigram_tokens(name)' in v_index.definition) = 0
           or position('catalog_search_bigram_tokens(coalesce(brand' in v_index.definition) = 0
         then
-          raise exception 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH';
+          raise exception using
+            errcode = '55000',
+            message = 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH',
+            detail = format('index=%s definition=%s', v_index.name, left(v_index.definition, 512));
         end if;
       when 'products_catalog_active_rank_idx' then
         if v_index.access_method <> 'btree'
@@ -294,10 +321,16 @@ begin
             in v_index.definition
           ) = 0
         then
-          raise exception 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH';
+          raise exception using
+            errcode = '55000',
+            message = 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH',
+            detail = format('index=%s definition=%s', v_index.name, left(v_index.definition, 512));
         end if;
       else
-        raise exception 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH';
+        raise exception using
+          errcode = '55000',
+          message = 'CATALOG_ACTIVE_SEARCH_INDEX_DEFINITION_MISMATCH',
+          detail = format('unexpected index=%s', v_index.name);
     end case;
   end loop;
 

@@ -1,13 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  monthlyEquivalent,
-  offerLine,
-  PLANS,
-  priceAmount,
-  REVERSE_TRIAL_DAYS,
-  WINBACK,
-} from './plans';
+import * as planCatalog from './plans';
+import { monthlyEquivalent, offerLine, PLANS, priceAmount, REVERSE_TRIAL_DAYS } from './plans';
 
 describe('plan catalog (docs/08 §2.3)', () => {
   it('annual is the default with a 14-day trial; monthly has no trial; no weekly plan', () => {
@@ -18,14 +12,13 @@ describe('plan catalog (docs/08 §2.3)', () => {
     expect((PLANS as Record<string, unknown>).weekly).toBeUndefined();
   });
   it('keeps RevenueCat product ids config-driven behind neutral local defaults', () => {
-    expect(PLANS.annual.productId).toBe('routinekind_pro_annual_dev');
-    expect(PLANS.monthly.productId).toBe('routinekind_pro_monthly_dev');
+    expect(PLANS.annual.productId).toBe('layerwell_pro_annual_dev');
+    expect(PLANS.monthly.productId).toBe('layerwell_pro_monthly_dev');
     expect(`${PLANS.annual.productId} ${PLANS.monthly.productId}`).not.toMatch(/onskin/i);
   });
-  it('the reverse trial is 7 days; the win-back is a respectful 30%-off offer', () => {
+  it('keeps the reverse trial at seven days without an invented win-back offer', () => {
     expect(REVERSE_TRIAL_DAYS).toBe(7);
-    expect(WINBACK.percentOff).toBe(30);
-    expect(WINBACK.priceLabel).toBe('$34.99');
+    expect((planCatalog as Record<string, unknown>).WINBACK).toBeUndefined();
   });
 });
 

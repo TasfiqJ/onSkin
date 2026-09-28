@@ -1,61 +1,55 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-  getAccountGeneration,
-  waitForAccountGenerationOperationsToSettle,
-} from '@/lib/auth/accountGeneration';
-import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
-import * as privateKV from '@/lib/storage/privateKV';
-import { OUTBOX_STORAGE_KEY, decodeOutboxEnvelope } from '@/lib/offline/outbox.pure';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   currentDeviceTimezone,
   DEFAULT_PREFS,
   loadNotifPrefs,
   NOTIF_PREFS_INVALID,
-  NOTIF_PREFS_UNAVAILABLE,
   NOTIF_PREFS_UNSUPPORTED_VERSION,
-  NOTIF_PREFS_WRITE_UNCERTAIN,
-  readNotifPrefs,
   saveNotifPrefs,
-  type NotifPrefs,
 } from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   tails: new Map<string, Promise<void>>(),
-  readOverride: null as PrivateKVReadResult | null,
-  readQueue: [] as PrivateKVReadResult[],
-  readFailure: null as Error | null,
-  updateFailureBeforeTransform: null as Error | null,
-  updateFailureAfterTransform: null as Error | null,
-  updateFailureAfterCommit: null as Error | null,
-  writes: 0,
-  getUser: vi.fn(),
-  from: vi.fn(),
-  upsert: vi.fn(),
-  upsertAbortSignal: vi.fn(),
-  nextUuid: 1,
-  randomUUID: vi.fn(),
+  updateFailure: null as Error | null,
 }));
 
-vi.mock('expo-crypto', () => ({
-  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
-  digestStringAsync: vi.fn(async () => 'a'.repeat(64)),
-  randomUUID: mocks.randomUUID,
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+  clearActiveHealthProcessingEpoch: vi.fn(),
 }));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', async () => {
+  const { runAccountGenerationOperation } = await import('@/lib/auth/accountGeneration');
+  return {
+    HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    runHealthDataWriteOperation: (
+      ownerUserId: string,
+      operation: (lease: {
+        generation: number;
+        epoch: number;
+        ownerUserId: string;
+        accountGeneration: number;
+        signal: AbortSignal;
+        assertCurrent: () => void;
+      }) => unknown,
+    ) =>
+      runAccountGenerationOperation((accountLease) =>
+        operation({
+          generation: 1,
+          epoch: 1,
+          ownerUserId,
+          accountGeneration: accountLease.generation,
+          signal: accountLease.signal,
+          assertCurrent: accountLease.assertCurrent,
+        }),
+      ),
+  };
+});
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  readPrivateItem: vi.fn(async (key: string) => {
-    if (mocks.readFailure) throw mocks.readFailure;
-    const queued = mocks.readQueue.shift();
-    if (queued) return queued;
-    if (mocks.readOverride) return mocks.readOverride;
-    const value = mocks.storage.get(key);
-    return value === undefined ? { status: 'absent' } : { status: 'available', value };
-  }),
+  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -69,151 +63,82 @@ vi.mock('@/lib/storage/privateKV', () => ({
       mocks.tails.set(key, tail);
       await previous;
       try {
-        if (mocks.updateFailureBeforeTransform) throw mocks.updateFailureBeforeTransform;
-        const current = mocks.storage.get(key) ?? null;
-        const next = updater(current);
-        if (mocks.updateFailureAfterTransform) throw mocks.updateFailureAfterTransform;
-        if (next !== current) {
-          mocks.writes += 1;
-          if (next === null) mocks.storage.delete(key);
-          else mocks.storage.set(key, next);
-        }
-        if (mocks.updateFailureAfterCommit) throw mocks.updateFailureAfterCommit;
+        if (mocks.updateFailure) throw mocks.updateFailure;
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
       }
     },
   ),
-  updatePrivateItemsTransactionally: vi.fn(
-    async (
-      keys: readonly string[],
-      updater: (current: ReadonlyMap<string, string | null>) => ReadonlyMap<string, string | null>,
-    ) => {
-      const queueKey = 'transaction';
-      const previous = mocks.tails.get(queueKey) ?? Promise.resolve();
-      let release!: () => void;
-      const tail = new Promise<void>((resolve) => {
-        release = resolve;
-      });
-      mocks.tails.set(queueKey, tail);
-      await previous;
-      try {
-        if (mocks.updateFailureBeforeTransform) throw mocks.updateFailureBeforeTransform;
-        const current = new Map(keys.map((key) => [key, mocks.storage.get(key) ?? null]));
-        const next = updater(current);
-        if (mocks.updateFailureAfterTransform) throw mocks.updateFailureAfterTransform;
-        for (const key of keys) {
-          const value = next.get(key) ?? null;
-          if (value === current.get(key)) continue;
-          mocks.writes += 1;
-          if (value === null) mocks.storage.delete(key);
-          else mocks.storage.set(key, value);
-        }
-        if (mocks.updateFailureAfterCommit) throw mocks.updateFailureAfterCommit;
-      } finally {
-        release();
-        if (mocks.tails.get(queueKey) === tail) mocks.tails.delete(queueKey);
-      }
-    },
-  ),
 }));
 
-vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: { getUser: mocks.getUser },
-    from: mocks.from,
-  },
-}));
+const KEY = 'layerwell.notifPrefs.v1';
 
-const KEY = 'onskin.notifPrefs.v1';
-let boundaryActive = false;
-
-function prefs(overrides: Partial<NotifPrefs> = {}): NotifPrefs {
-  return {
-    ...DEFAULT_PREFS,
-    timezone: currentDeviceTimezone(),
-    ...overrides,
-  };
-}
-
-function currentRaw(overrides: Partial<NotifPrefs> = {}): string {
-  const value = prefs(overrides);
-  return JSON.stringify({
-    version: 1,
-    prefs: {
-      ...value,
-      replenishmentAlertsOptInConfirmed: value.replenishmentAlerts,
-    },
-  });
-}
-
-function storedPrefs(): Record<string, unknown> {
-  const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
-    prefs?: Record<string, unknown>;
-  };
-  return parsed.prefs ?? {};
-}
-
-async function settleMirrors(): Promise<void> {
-  await Promise.resolve();
-  await waitForAccountGenerationOperationsToSettle();
-}
-
-describe('notification preference store', () => {
-  beforeEach(async () => {
-    await waitForAccountGenerationOperationsToSettle();
-    delete process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_STORAGE_FAILURE;
-    delete process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_WRITE_FAILURE;
+describe('notification lock-screen privacy preference', () => {
+  beforeEach(() => {
     mocks.storage.clear();
     mocks.tails.clear();
-    mocks.readOverride = null;
-    mocks.readQueue.length = 0;
-    mocks.readFailure = null;
-    mocks.updateFailureBeforeTransform = null;
-    mocks.updateFailureAfterTransform = null;
-    mocks.updateFailureAfterCommit = null;
-    mocks.writes = 0;
-    mocks.nextUuid = 1;
-    mocks.randomUUID.mockReset();
-    mocks.randomUUID.mockImplementation(
-      () => `00000000-0000-4000-8000-${(mocks.nextUuid++).toString(16).padStart(12, '0')}`,
+    mocks.updateFailure = null;
+  });
+
+  it('coerces legacy local prefs that tried to disable discreet lock-screen copy', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ ...DEFAULT_PREFS, lockscreenDiscreet: false }));
+
+    await expect(loadNotifPrefs()).resolves.toMatchObject({ lockscreenDiscreet: true });
+  });
+
+  it('keeps replenishment alerts off until the user explicitly opts in', async () => {
+    expect(DEFAULT_PREFS.amEnabled).toBe(false);
+    expect(DEFAULT_PREFS.pmEnabled).toBe(false);
+    expect(DEFAULT_PREFS.streakNudges).toBe(false);
+    expect(DEFAULT_PREFS.replenishmentAlerts).toBe(false);
+    await expect(loadNotifPrefs()).resolves.toMatchObject({
+      amEnabled: false,
+      pmEnabled: false,
+      streakNudges: false,
+      replenishmentAlerts: false,
+      amTime: '07:30',
+      pmTime: '21:30',
+    });
+  });
+
+  it('fails closed for legacy true values with no explicit opt-in marker', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ ...DEFAULT_PREFS, replenishmentAlerts: true }));
+
+    await expect(loadNotifPrefs()).resolves.toMatchObject({ replenishmentAlerts: false });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).not.toHaveProperty(
+      'replenishmentAlertsOptInConfirmed',
     );
-    mocks.getUser.mockReset();
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
-    mocks.from.mockReset();
-    mocks.from.mockReturnValue({ upsert: mocks.upsert });
-    mocks.upsert.mockReset();
-    mocks.upsert.mockReturnValue({ abortSignal: mocks.upsertAbortSignal });
-    mocks.upsertAbortSignal.mockReset();
-    mocks.upsertAbortSignal.mockResolvedValue({ error: null });
-    vi.mocked(privateKV.readPrivateItem).mockClear();
-    vi.mocked(privateKV.removePrivateItem).mockClear();
-    vi.mocked(privateKV.updatePrivateItem).mockClear();
-    vi.mocked(privateKV.updatePrivateItemsTransactionally).mockClear();
   });
 
-  afterEach(async () => {
-    if (boundaryActive) {
-      endAccountGenerationBoundary();
-      boundaryActive = false;
-    }
-    await waitForAccountGenerationOperationsToSettle();
-    delete process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_STORAGE_FAILURE;
-    delete process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_WRITE_FAILURE;
-  });
+  it('persists an explicit replenishment opt-in locally across unrelated edits', async () => {
+    await expect(saveNotifPrefs({ replenishmentAlerts: true })).resolves.toMatchObject({
+      replenishmentAlerts: true,
+    });
+    await expect(saveNotifPrefs({ pmEnabled: false })).resolves.toMatchObject({
+      pmEnabled: false,
+      replenishmentAlerts: true,
+    });
+    await Promise.resolve();
+    await Promise.resolve();
 
-  it('treats only genuine absence as safe defaults and never reads it as consent', async () => {
-    const result = await readNotifPrefs();
-
-    expect(result).toEqual({
-      status: 'absent',
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 1,
       prefs: {
-        ...DEFAULT_PREFS,
-        timezone: currentDeviceTimezone(),
+        replenishmentAlerts: true,
+        replenishmentAlertsOptInConfirmed: true,
       },
     });
-    expect(result.prefs).toMatchObject({
+  });
+
+  it('preserves unreadable local prefs and fails every optional notification closed', async () => {
+    const original = '{not-json';
+    mocks.storage.set(KEY, original);
+
+    await expect(loadNotifPrefs()).resolves.toMatchObject({
       amEnabled: false,
       pmEnabled: false,
       streakNudges: false,
@@ -223,459 +148,101 @@ describe('notification preference store', () => {
       promotionalOptIn: false,
       lockscreenDiscreet: true,
     });
-    await expect(loadNotifPrefs()).resolves.toEqual(result.prefs);
-    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.writes).toBe(0);
+
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('strictly reads current and compatible legacy records without rewriting bytes', async () => {
-    const cases = [
-      {
-        raw: currentRaw({ amEnabled: true, pmTime: '20:30' }),
-        expected: {
-          status: 'available',
-          format: 'current',
-          prefs: prefs({ amEnabled: true, pmTime: '20:30' }),
-        },
-      },
-      {
-        raw: JSON.stringify({
-          amEnabled: true,
-          amTime: ' 08:15 ',
-          quietEnd: ' 06:30 ',
-          lockscreenDiscreet: false,
-        }),
-        expected: {
-          status: 'available',
-          format: 'legacy',
-          prefs: prefs({
-            amEnabled: true,
-            amTime: '08:15',
-            quietEnd: '06:30',
-            lockscreenDiscreet: true,
-          }),
-        },
-      },
-    ] as const;
-
-    for (const { raw, expected } of cases) {
+  it('preserves wrong-shaped and future-version preference records', async () => {
+    for (const [raw, code] of [
+      [JSON.stringify(['amEnabled']), NOTIF_PREFS_INVALID],
+      [JSON.stringify({ version: 2, prefs: {} }), NOTIF_PREFS_UNSUPPORTED_VERSION],
+    ] as const) {
       mocks.storage.set(KEY, raw);
 
-      await expect(readNotifPrefs()).resolves.toEqual(expected);
-
-      expect(mocks.storage.get(KEY)).toBe(raw);
-    }
-    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.writes).toBe(0);
-  });
-
-  it.each([
-    [
-      { status: 'unavailable', reason: 'content_key_missing' } as const,
-      { status: 'unavailable', prefs: null, reason: 'content_key_missing' },
-      NOTIF_PREFS_UNAVAILABLE,
-    ],
-    [
-      { status: 'corrupt', reason: 'decryption_failed' } as const,
-      { status: 'corrupt', prefs: null, reason: 'decryption_failed' },
-      NOTIF_PREFS_INVALID,
-    ],
-    [
-      { status: 'unsupported_version' } as const,
-      { status: 'unsupported_version', prefs: null },
-      NOTIF_PREFS_UNSUPPORTED_VERSION,
-    ],
-  ])(
-    'forwards typed private state %# and its strict adapter error',
-    async (stored, expected, code) => {
-      mocks.readOverride = stored;
-
-      await expect(readNotifPrefs()).resolves.toEqual(expected);
-      await expect(loadNotifPrefs()).rejects.toThrow(code);
-
-      expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-      expect(mocks.writes).toBe(0);
-    },
-  );
-
-  it('maps an unexpected private read rejection to typed unavailability', async () => {
-    mocks.readFailure = new Error('READ_FAILED');
-
-    await expect(readNotifPrefs()).resolves.toEqual({
-      status: 'unavailable',
-      prefs: null,
-      reason: 'storage_unavailable',
-    });
-    await expect(loadNotifPrefs()).rejects.toThrow(NOTIF_PREFS_UNAVAILABLE);
-    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-  });
-
-  it.each([
-    ['malformed JSON', '{not-json', 'corrupt', NOTIF_PREFS_INVALID],
-    ['wrong top-level shape', JSON.stringify(['amEnabled']), 'corrupt', NOTIF_PREFS_INVALID],
-    [
-      'unknown legacy keys',
-      JSON.stringify({ amEnabled: true, extra: false }),
-      'corrupt',
-      NOTIF_PREFS_INVALID,
-    ],
-    [
-      'invalid current privacy state',
-      JSON.stringify({
-        version: 1,
-        prefs: {
-          ...prefs(),
-          replenishmentAlertsOptInConfirmed: false,
-          lockscreenDiscreet: false,
-        },
-      }),
-      'corrupt',
-      NOTIF_PREFS_INVALID,
-    ],
-    [
-      'oversized otherwise-valid legacy data',
-      `${' '.repeat(16_385)}${JSON.stringify({ amEnabled: true })}`,
-      'corrupt',
-      NOTIF_PREFS_INVALID,
-    ],
-    [
-      'future schema',
-      JSON.stringify({ version: 2, prefs: {} }),
-      'unsupported_version',
-      NOTIF_PREFS_UNSUPPORTED_VERSION,
-    ],
-  ])(
-    'preserves %s bytes across strict reads and refused writes',
-    async (_label, raw, status, code) => {
-      mocks.storage.set(KEY, raw);
-
-      const result = await readNotifPrefs();
-      expect(result.status).toBe(status);
-      await expect(loadNotifPrefs()).rejects.toThrow(code);
+      await expect(loadNotifPrefs()).resolves.toMatchObject({ amEnabled: false, pmEnabled: false });
       await expect(saveNotifPrefs({ pmEnabled: true })).rejects.toThrow(code);
 
       expect(mocks.storage.get(KEY)).toBe(raw);
-      expect(mocks.writes).toBe(0);
-      expect(mocks.upsert).not.toHaveBeenCalled();
-    },
-  );
-
-  it('requires an explicit replenishment marker and always hardens lock-screen privacy', async () => {
-    const withoutMarker = JSON.stringify({
-      replenishmentAlerts: true,
-      lockscreenDiscreet: false,
-    });
-    mocks.storage.set(KEY, withoutMarker);
-
-    await expect(readNotifPrefs()).resolves.toMatchObject({
-      status: 'available',
-      format: 'legacy',
-      prefs: { replenishmentAlerts: false, lockscreenDiscreet: true },
-    });
-    expect(mocks.storage.get(KEY)).toBe(withoutMarker);
-
-    mocks.storage.delete(KEY);
-    const first = await saveNotifPrefs({
-      replenishmentAlerts: true,
-      lockscreenDiscreet: false,
-    });
-    const second = await saveNotifPrefs({ pmEnabled: true });
-
-    expect(first).toMatchObject({
-      changed: true,
-      prefs: { replenishmentAlerts: true, lockscreenDiscreet: true },
-    });
-    expect(second).toMatchObject({
-      changed: true,
-      prefs: { pmEnabled: true, replenishmentAlerts: true, lockscreenDiscreet: true },
-    });
-    expect(storedPrefs()).toMatchObject({
-      replenishmentAlerts: true,
-      replenishmentAlertsOptInConfirmed: true,
-      lockscreenDiscreet: true,
-    });
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('persists an explicit valid timezone instead of discarding it', async () => {
-    mocks.storage.set(KEY, currentRaw());
-
-    await expect(saveNotifPrefs({ timezone: 'UTC' })).resolves.toMatchObject({
-      changed: currentDeviceTimezone() !== 'UTC',
-      prefs: { timezone: 'UTC' },
-    });
-
-    expect(storedPrefs()).toMatchObject({ timezone: 'UTC' });
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('rejects invalid runtime patches before any storage or owner I/O', async () => {
-    const invalidPatches: unknown[] = [
-      null,
-      [],
-      { unknown: true },
-      { replenishmentAlertsOptInConfirmed: true },
-      { amEnabled: 'yes' },
-      { amTime: '7:30' },
-      { quietStart: 22 },
-      { timezone: 'bad timezone' },
-      { timezone: 'x'.repeat(129) },
-    ];
-
-    for (const patch of invalidPatches) {
-      await expect(saveNotifPrefs(patch as Partial<NotifPrefs>)).rejects.toThrow(
-        NOTIF_PREFS_INVALID,
-      );
-    }
-
-    expect(privateKV.readPrivateItem).not.toHaveBeenCalled();
-    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('returns changed false and performs no write for semantic no-ops', async () => {
-    for (const raw of [currentRaw({ amEnabled: true }), JSON.stringify({ amEnabled: true })]) {
-      mocks.storage.set(KEY, raw);
-
-      await expect(saveNotifPrefs({ amEnabled: true })).resolves.toEqual({
-        prefs: prefs({ amEnabled: true }),
-        changed: false,
-      });
-
-      expect(mocks.storage.get(KEY)).toBe(raw);
-    }
-    await settleMirrors();
-
-    expect(mocks.writes).toBe(0);
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('preserves prior bytes and the original error when a write fails before transforming', async () => {
-    const original = currentRaw({ amEnabled: true });
-    mocks.storage.set(KEY, original);
-    mocks.updateFailureBeforeTransform = new Error('PRIVATE_WRITE_FAILED');
-
-    await expect(saveNotifPrefs({ pmEnabled: true })).rejects.toThrow('PRIVATE_WRITE_FAILED');
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(privateKV.readPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.writes).toBe(0);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('provides a one-shot non-destructive write-failure fixture for route recovery', async () => {
-    const original = currentRaw({ amEnabled: false });
-    mocks.storage.set(KEY, original);
-    process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_WRITE_FAILURE = 'once';
-    vi.stubGlobal('__DEV__', true);
-    try {
-      await expect(saveNotifPrefs({ amEnabled: true })).rejects.toThrow(
-        'E2E_NOTIF_PREFS_WRITE_FAILURE',
-      );
-      expect(mocks.storage.get(KEY)).toBe(original);
-      expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-
-      await expect(saveNotifPrefs({ amEnabled: true })).resolves.toMatchObject({
-        changed: true,
-        prefs: { amEnabled: true },
-      });
-    } finally {
-      vi.unstubAllGlobals();
     }
   });
 
-  it('recovers commit-response loss only from the exact expected readback', async () => {
-    mocks.storage.set(KEY, currentRaw());
-    mocks.updateFailureAfterCommit = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
+  it('normalizes stored booleans and reminder times before scheduling reads them', async () => {
+    const timezone = currentDeviceTimezone();
 
-    const result = await saveNotifPrefs({ pmEnabled: true });
-
-    expect(result).toEqual({ prefs: prefs({ pmEnabled: true }), changed: true });
-    expect(storedPrefs()).toMatchObject({ pmEnabled: true });
-    expect(privateKV.readPrivateItem).toHaveBeenCalledTimes(1);
-    expect(mocks.writes).toBe(1);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('confirms a semantic legacy no-op against the exact plaintext returned to privateKV', async () => {
-    const legacy = JSON.stringify({ amEnabled: true });
-    mocks.storage.set(KEY, legacy);
-    mocks.updateFailureAfterCommit = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
-
-    await expect(saveNotifPrefs({ amEnabled: true })).resolves.toEqual({
-      prefs: prefs({ amEnabled: true }),
-      changed: false,
-    });
-
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(privateKV.readPrivateItem).toHaveBeenCalledTimes(1);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('reports write uncertainty when readback does not exactly match the desired envelope', async () => {
-    const original = currentRaw();
-    mocks.storage.set(KEY, original);
-    mocks.updateFailureAfterTransform = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
-
-    await expect(saveNotifPrefs({ pmEnabled: true })).rejects.toThrow(NOTIF_PREFS_WRITE_UNCERTAIN);
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(privateKV.readPrivateItem).toHaveBeenCalledTimes(1);
-    expect(mocks.writes).toBe(0);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('reports write uncertainty when commit-loss readback is unavailable', async () => {
-    const original = currentRaw();
-    mocks.storage.set(KEY, original);
-    mocks.updateFailureAfterTransform = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
-    mocks.readOverride = { status: 'unavailable', reason: 'content_key_missing' };
-
-    await expect(saveNotifPrefs({ pmEnabled: true })).rejects.toThrow(NOTIF_PREFS_WRITE_UNCERTAIN);
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(privateKV.readPrivateItem).toHaveBeenCalledTimes(1);
-    expect(mocks.writes).toBe(0);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('preserves account-generation invalidation when confirmation read crosses a boundary', async () => {
-    mocks.storage.set(KEY, currentRaw());
-    mocks.updateFailureAfterTransform = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
-    vi.mocked(privateKV.readPrivateItem).mockImplementationOnce(async () => {
-      beginAccountGenerationBoundary();
-      boundaryActive = true;
-      throw new Error('READ_ABORTED');
-    });
-
-    await expect(saveNotifPrefs({ pmEnabled: true })).rejects.toMatchObject({
-      code: 'ACCOUNT_GENERATION_CHANGED',
-    });
-
-    expect(mocks.storage.get(KEY)).toBe(currentRaw());
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('serializes 100 atomic desired-state edits without losing any field', async () => {
-    mocks.storage.set(KEY, currentRaw());
-    mocks.getUser.mockResolvedValue({ data: { user: null }, error: null });
-    const desired = [
-      ['amEnabled', true],
-      ['pmEnabled', true],
-      ['streakNudges', true],
-      ['replenishmentAlerts', true],
-      ['captureReminders', true],
-      ['liveActivityEnabled', true],
-      ['promotionalOptIn', true],
-    ] as const;
-    const edits = Array.from({ length: 100 }, (_, index) => {
-      const [key, value] = desired[index % desired.length]!;
-      return { [key]: value } as Partial<NotifPrefs>;
-    });
-
-    const results = await Promise.all(edits.map((patch) => saveNotifPrefs(patch)));
-    await settleMirrors();
-
-    expect(results.filter((result) => result.changed)).toHaveLength(desired.length);
-    await expect(readNotifPrefs()).resolves.toMatchObject({
-      status: 'available',
-      prefs: Object.fromEntries(desired),
-    });
-    expect(mocks.writes).toBe(desired.length);
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('commits an authenticated full preference snapshot and sanitized outbox intent together', async () => {
-    mocks.storage.set(KEY, currentRaw());
-    const assertCurrent = vi.fn();
-
-    await expect(
-      saveNotifPrefs(
-        { pmEnabled: true, timezone: 'UTC' },
-        {
-          ownerId: 'user-1',
-          ownerGeneration: getAccountGeneration(),
-          assertCurrent,
-        },
-      ),
-    ).resolves.toMatchObject({ changed: true, prefs: { pmEnabled: true, timezone: 'UTC' } });
-
-    const outbox = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
-    expect(outbox.rows).toHaveLength(1);
-    expect(outbox.rows[0]).toMatchObject({
-      entityType: 'notification_preferences',
-      operationKind: 'upsert',
-      clientRevision: 1,
-      ownerGeneration: getAccountGeneration(),
-      payload: {
-        pm_reminder_enabled: true,
-        timezone: 'UTC',
-        lockscreen_discreet: true,
-      },
-    });
-    expect(JSON.stringify(outbox.rows[0]?.payload)).not.toMatch(/user_id|push_token|owner/i);
-    expect(privateKV.updatePrivateItemsTransactionally).toHaveBeenCalledWith(
-      [KEY, OUTBOX_STORAGE_KEY],
-      expect.any(Function),
-    );
-    expect(assertCurrent).toHaveBeenCalled();
-    expect(mocks.upsert).not.toHaveBeenCalled();
-  });
-
-  it('preserves both prior keys when an authenticated transaction cannot commit', async () => {
-    const original = currentRaw();
-    mocks.storage.set(KEY, original);
-    mocks.updateFailureAfterTransform = new Error('PRIVATE_TRANSACTION_FAILED');
-
-    await expect(
-      saveNotifPrefs(
-        { pmEnabled: true },
-        { ownerId: 'user-1', ownerGeneration: getAccountGeneration() },
-      ),
-    ).rejects.toThrow(NOTIF_PREFS_WRITE_UNCERTAIN);
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('coalesces 100 authenticated edits into one latest full snapshot', async () => {
-    mocks.storage.set(KEY, currentRaw());
-    const desired = [
-      ['amEnabled', true],
-      ['pmEnabled', true],
-      ['streakNudges', true],
-      ['replenishmentAlerts', true],
-      ['captureReminders', true],
-      ['liveActivityEnabled', true],
-      ['promotionalOptIn', true],
-    ] as const;
-    const owner = { ownerId: 'user-1', ownerGeneration: getAccountGeneration() };
-
-    await Promise.all(
-      Array.from({ length: 100 }, (_, index) => {
-        const [key, value] = desired[index % desired.length]!;
-        return saveNotifPrefs({ [key]: value }, owner);
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        amEnabled: 'yes',
+        pmEnabled: false,
+        amTime: ' 08:15 ',
+        pmTime: '99:99',
+        quietStart: null,
+        quietEnd: ' 06:30 ',
+        timezone: 'bad timezone',
+        liveActivityEnabled: true,
+        promotionalOptIn: 'true',
+        lockscreenDiscreet: false,
       }),
     );
 
-    const outbox = decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null);
-    expect(outbox.rows).toHaveLength(1);
-    expect(outbox.rows[0]).toMatchObject({
-      entityType: 'notification_preferences',
-      clientRevision: desired.length,
-      payload: {
-        am_reminder_enabled: true,
-        pm_reminder_enabled: true,
-        streak_nudges: true,
-        replenishment_alerts: true,
-        capture_reminders: true,
-        live_activity_enabled: true,
-        promotional_opt_in: true,
+    await expect(loadNotifPrefs()).resolves.toMatchObject({
+      amEnabled: false,
+      pmEnabled: false,
+      amTime: '08:15',
+      pmTime: DEFAULT_PREFS.pmTime,
+      quietStart: null,
+      quietEnd: '06:30',
+      timezone,
+      liveActivityEnabled: true,
+      promotionalOptIn: false,
+      lockscreenDiscreet: true,
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ amTime: ' 08:15 ' });
+  });
+
+  it('refuses to persist a false lock-screen discretion value', async () => {
+    const prefs = await saveNotifPrefs({ amEnabled: false, lockscreenDiscreet: false });
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(prefs).toMatchObject({
+      amEnabled: false,
+      lockscreenDiscreet: true,
+      timezone: currentDeviceTimezone(),
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 1,
+      prefs: {
+        amEnabled: false,
+        lockscreenDiscreet: true,
+        timezone: currentDeviceTimezone(),
       },
     });
+  });
+
+  it('serializes simultaneous partial preference edits without losing either writer', async () => {
+    await Promise.all([
+      saveNotifPrefs({ amEnabled: false }),
+      saveNotifPrefs({ pmEnabled: false }),
+      saveNotifPrefs({ captureReminders: true }),
+    ]);
+
+    await expect(loadNotifPrefs()).resolves.toMatchObject({
+      amEnabled: false,
+      pmEnabled: false,
+      captureReminders: true,
+    });
+  });
+
+  it('does not replace the prior envelope when an atomic write fails', async () => {
+    await saveNotifPrefs({ amEnabled: false });
+    await Promise.resolve();
+    await Promise.resolve();
+    const original = mocks.storage.get(KEY);
+    mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+
+    await expect(saveNotifPrefs({ pmEnabled: false })).rejects.toThrow('PRIVATE_WRITE_FAILED');
+
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 });

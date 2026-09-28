@@ -1,8 +1,5 @@
 # Architecture
 
-> Active scope (2026-09-27): iOS lean V1 supersedes earlier all-features launch requirements. Required feature IDs: 1, 2, 3, 5, 6, 7, 8, 9, 10, 11. See `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md` and `docs/hugeToDo/launch-contract.json`. Manual Shelf/local ingredient parsing, reviewed guidance, routine/cycle, Today, private Progress, local reminders and standard subscriptions remain required. Catalog/search/barcode, custom grants/reverse trial/win-back, recommendations, Ask, public sharing, commerce, community, trends, widgets and growth experiments are post-launch and must stay closed. Existing Apple/email account functionality and all current privacy, payment, persistence, accessibility and owner-isolation safeguards are preserved. Historical sections below do not add deferred features back to the V1 launch gate.
-
-
 ## Selected Architecture
 
 [Decision under uncertainty] Continue with the current Expo React Native monorepo, Supabase/Postgres backend, RevenueCat subscriptions, PostHog analytics, and Sentry crash reporting.
@@ -37,8 +34,8 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 
 ### A-003: Local-First Sensitive Data
 
-- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Native content keys stay in SecureStore, encrypted reads never rotate missing/invalid keys or delete ciphertext, and failed-read snapshots block fallback overwrites. Private-KV envelope validation excludes only known Supabase auth-storage keys; malformed or unsupported app-owned envelopes block before app content mounts, remain byte-identical, count as orphaned ciphertext, and cannot be replaced after a concurrent snapshot change. Same-key mutations serialize, queued mutations remain inside account-boundary draining, and private read/write/removal APIs reject Supabase auth and content-key namespaces. Opt-in app lock returns a typed preference result and fails closed while its encrypted preference is unreadable; malformed/future preference bytes can be removed only through an explicit device-authenticated reset of that setting alone, while key/decryption/storage failures offer reread only. Preference read, device readiness/authentication, reset or strict atomic write, and state publication remain inside the initiating account-generation lease and a provider interaction/preference generation. A newer read, real background, unmount, or account boundary prevents stale queued authentication from presenting and prevents late reset/write state from publishing; an already-started durable mutation is read back and reconciled. Native authentication is serialized, retains device PIN/passcode fallback, preserves only the exact presented OS-owned non-active hop, waits for active before publication, and abandons a missing foreground callback after ten seconds. One foreground-scoped photo-timeline unlock gates the Progress tab plus direct capture, review, and detail entries. After that unlock, every data-bearing Progress route must complete a successful encrypted metadata read before route content or photo mutations mount; read failure renders shared non-destructive recovery, never an empty or missing-photo fallback. Account changes unmount this data-bearing tree, verify a hashed local owner, persist a cleanup-required control across partial deletion, block/drain account-scoped private reads and mutations, clear query memory before and after registered cleanup, and fail closed before publishing the latest target session. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record. One cancellable account-generation lease covers owner capture through temporary plaintext deletion; a real account boundary aborts the Edge request, blocks new exports, drains active export cleanup, and rejects stale writes or shares before the next session can publish.
-- Recovery ordering: photo add/delete/clear mutations use an owner-bound two-phase local journal with exact owned paths. Cold startup verifies the persisted owner, replays or retains that journal, and only then scavenges temporary plaintext; route content, app lock, and offline work stay blocked when recovery is unavailable. Ordinary photo/key reads remain side-effect-free. Native process-kill and protected-filesystem proof remains an external verification gate.
+- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Native content keys stay in SecureStore, encrypted reads never rotate missing/invalid keys or delete ciphertext, and failed-read snapshots block fallback overwrites. Private-KV envelope validation excludes only known Supabase auth-storage keys; malformed or unsupported app-owned envelopes block before app content mounts, remain byte-identical, count as orphaned ciphertext, and cannot be replaced after a concurrent snapshot change. Same-key mutations serialize, queued mutations remain inside account-boundary draining, and private read/write/removal APIs reject Supabase auth and content-key namespaces. Opt-in app lock fails closed while its encrypted preference is unreadable; a malformed preference can be removed only through an explicit device-authenticated reset that deletes that setting alone. One foreground-scoped photo-timeline unlock gates the Progress tab plus direct capture, review, and detail entries. After that unlock, every data-bearing Progress route must complete a successful encrypted metadata read before route content or photo mutations mount; read failure renders shared non-destructive recovery, never an empty or missing-photo fallback. Account changes unmount this data-bearing tree, verify a hashed local owner, persist a cleanup-required control across partial deletion, block/drain account-scoped private reads and mutations, clear query memory before and after registered cleanup, and fail closed before publishing the latest target session. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record. One cancellable account-generation lease covers owner capture through temporary plaintext deletion; a real account boundary aborts the Edge request, blocks new exports, drains active export cleanup, and rejects stale writes or shares before the next session can publish.
+- PHOTO-03 source checkpoint: post-capture detector and lighting work share a route-owned, per-URI account-generation coordinator. Timeout, URI replacement, navigation, save, unmount, and account change abort admission and drain native work before the disposable raw still is persisted or deleted. Every native-detector continuation reasserts the account/URI lease before publishing state. Native face results are copied immediately into an allowlist of bounding-box coordinates and finite Euler angles; missing/partial/nonfinite pose cannot produce `matched`. The ImageManipulator derivative is reserved before generation in the existing content-free plaintext-staging journal, moved into the journal-owned path, strictly deleted, startup-scavenged, and visibly retryable; unresolved residue blocks save and user-triggered route removal. A gate/account-forced review unmount cannot keep route UI mounted, so it transfers the exact analyzer/raw lifecycle to a process owner, which retains failed disposal and gates the next shutter on retry. Composite lighting quality is not interpreted as directional brightness. This is source readiness only; process death still relies on startup cache/journal scavenging, and physical-device calibration, signed-archive dependency resolution, filesystem residue inspection, and zero-egress capture remain release evidence.
 - Criteria: privacy, trust, offline bathroom use.
 - Risk: multi-device sync and key recovery are delayed; genuine OS key loss makes local-only ciphertext unrecoverable.
 - Status: active.
@@ -67,37 +64,265 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   moderation, reliability, and operational dependencies.
 - Status: active.
 
-### A-007: Store-Bundled Client Update Delivery
+### A-007: Server-Attested Sign in with Apple Lifecycle
 
-- Decision: V1 client code and assets ship only inside reviewed App Store
-  binaries. EAS Build/Submit remain build and distribution tools; EAS Update is
-  disabled, uninstalled as a direct dependency, and unavailable for incident
-  rollback. Runtime fingerprints remain artifact/migration compatibility
-  identities, not OTA capability. `docs/UPDATE_DELIVERY_POLICY.md` supersedes
-  older conditional or historical OTA instructions.
-- Criteria: release behavior must match installed native dependencies and
-  resolved configuration; no channel, rollback, or recovery capability may be
-  claimed without a signed staging drill and named operational ownership.
-- Risk: JavaScript/asset hotfixes require a new App Store binary and review.
-  Reactivation requires the complete gate in the update-delivery policy.
-- Status: active.
+- Decision: Apple-backed Supabase sessions are usable only after one exact
+  native authorization has passed state/nonce checks, its one-use code has
+  been exchanged by the lifecycle server, and the resulting refresh token has
+  been stored in an owner/subject/client-bound AES-GCM envelope. A scheduled
+  worker validates the retained refresh token daily, signed Apple account
+  events can terminate authorization, and the database/Storage/Edge access
+  fence rejects stale or unvalidated Apple sessions. A terminal event can
+  transiently exact-match one existing Apple Auth identity before lifecycle
+  capture; if the identity itself is not present yet, first capture reconciles
+  the audience-bound keyed event before code exchange and remains terminal.
+- Criteria: one code consumer, replay resistance, exact-session authority,
+  durable revocation/deletion, no plaintext provider token at rest, and
+  bounded access when the worker or Apple is unavailable.
+- Risk: existing Apple users require fresh capture at cutover; referenced
+  subject/vault key versions cannot be retired until zero-row evidence exists.
+  Each successful daily validation atomically advances the current subject
+  digest and freshly seals the token under the current vault key; dormant,
+  deferred, or failing rows do not advance from configuration alone. Unresolved
+  terminal `unknown_subject` evidence also pins its subject-key version until
+  capture reconciliation or reviewed disposition. Hosted
+  Apple delivery, Cron/Vault, physical-iPhone, legal/privacy, and App Review
+  evidence remain open.
+- Status: locally verified source; production rollout gated.
 
-### A-008: Versioned Bulk Catalog Ingestion
+### A-008: Reviewed, Transactional Catalog Promotion
 
-- Decision: production Open Beauty Facts snapshots enter through a service-role-only, two-pass streaming importer and version-isolated staging tables. Each `(source, source revision)` pair is an immutable identity bound to exactly one artifact SHA-256 and importer version, plus a durable server checkpoint, exact batch receipt, content-free reject manifest, and local restart checkpoint. A source must be production-approved before one transaction may update source-owned catalog rows, retire rows absent from the new snapshot, switch the active-version pointer, and retain the predecessor plus staged version for rollback reconstruction. Partial imports never write the client-readable catalog, exact batch replay is idempotent, and public/API crawling is not the bulk-ingestion path. Search and barcode intake expose active products only; an inactive mapped barcode remains a tombstone and cannot be resurrected through live external lookup, while historical product rows remain for existing Shelf references and rollback reconstruction.
-- Criteria: bounded importer memory, traceable source revisions, deterministic normalization, response-loss-safe restart, no partially visible catalog, and a recoverable predecessor record.
-- Risk: the exact migration closure and nontransactional rerun, service-role/denial and promotion gates, failure matrix, replacement retirement, identity guards, and active-only search plans now pass a local 50,000-record PostgreSQL 15 replay. The inactive-barcode tombstone has focused pure/source-contract proof, not a hosted handler execution. Hosted staging, a full approved Open Beauty Facts artifact, migration-runner/version proof, client visibility during promotion, capacity budgets, handler execution, and an operational rollback drill remain before release verification.
-- Status: active.
+- Decision: source approval and record approval are separate gates. Approved
+  offline OBF/CosIng transforms enter sealed staging first; exact hashes,
+  reviewer dispositions, dedupe conflicts, immutable lineage, and one atomic
+  promotion are recorded before any projection row exists. Runtime API roles
+  cannot approve, promote, roll back, or directly mutate the global catalog.
+  Rollback withdraws only the affected batch and blocks its orphaned
+  projection rows instead of deleting catalog identities referenced by a
+  user's shelf, correction history, or lookup history.
+- Criteria: fixture exclusion, complete production-row traceability,
+  response-loss-safe idempotency, deterministic conflict handling,
+  transaction isolation, and fail-closed source withdrawal.
+- Risk: the deliberately conservative insert-only path sends cross-source or
+  natural-key collisions to review rather than merging them automatically.
+  CAT-08 operators now record immutable recommendations only;
+  approval/promotion/rollback intentionally stay migration-owner-only. Real source approvals,
+  hosted concurrency/rollback evidence, and the curated beta catalog remain
+  launch gates.
+- Status: implementation candidate; production rollout gated.
 
-### A-009: Encrypted Owner-Bound Transactional Outbox
+### A-009: Signed Launch Curation Is A Positive Serving Authority
 
-- Decision: Durable client-to-server Shelf state uses the additive `onskin.outbox.v1` record in encrypted private KV. An encrypted write-ahead intent journal commits the unchanged Shelf v3 snapshot and the outbox snapshot as one crash-recoverable logical transaction; normal private reads and writes roll an interrupted transaction forward before exposing either key. Rows contain a domain-separated owner hash and captured account generation, stable entity ID, operation UUID, per-entity client revision/idempotency key, sanitized payload or deletion tombstone, persisted attempt schedule, safe error class, and a persisted worker lease. Raw account IDs, authorization material, ingredients, local paths, and credentials are forbidden from payloads.
-- Ordering and delivery: ready Shelf state mirrors coalesce by entity, but leased and dead-letter rows remain inspectable. One account-generation-fenced, single-flight worker runs after mutation, foreground, and connectivity recovery; it leases no more than 25 rows per RPC, reclaims expired leases, uses bounded request retries plus persisted full-jitter exponential backoff, honors bounded `Retry-After`, and isolates permanent poison rows. The authenticated batch RPC derives `auth.uid()` server-side, records owner-scoped operation/idempotency receipts, locks a per-entity revision, and treats applied, duplicate, and stale delivery as terminal success. A stale worker can never settle a newer lease.
-- Scope: Shelf is the first production entity because its local UUID is already the server `user_products.id`. Immutable completion history is not coalesced or fabricated into this contract; the legacy completion queue remains isolated until authoritative server routine/step UUID mapping exists. Extending the entity union requires a new schema/server contract and migration proof.
-- Recovery and rollback: malformed/future outbox or transaction-journal bytes are preserved and fail closed. Account isolation drains account-generation work and removes the registered outbox/journal with the current owner's private records. The Shelf codec is unchanged, the outbox key and server tables/function are additive, and an older binary may continue using the existing owner-RLS Shelf API; rolling the new client back can leave encrypted pending intents dormant without losing local Shelf state.
-- Criteria: offline writes never wait for network, mutation and enqueue cannot tear, duplicate/reordered delivery is idempotent, account A work cannot publish or settle as B, and diagnostics remain content-free.
-- Risk: the bounded private-KV snapshot rewrites the outbox and is an interim store until the separately governed encrypted local-database decision. Hosted migration/RPC proof, physical-device process-kill/reconnect proof, and user-facing syncing/needs-attention presentation remain release evidence gates.
-- Status: active; locally implemented, release verification pending.
+- Decision: CAT-02 promotion creates traceable, non-servable source projections;
+  it does not authorize launch use. CAT-03 uses a separately signed target policy,
+  a privacy-minimized beta-shelf coverage corpus, an untouched holdout, exact
+  CAT-01/CAT-02 lineage, signed four-scope membership proofs, per-field provenance,
+  independent reviews, and a full-record decision witnessed before holdout access.
+  One and only one contributing artifact may match the target policy's CAT-02
+  lineage; barcode identity, category, and regulatory memberships must bind that
+  primary artifact and its exact staged product record. CAT-03 v1 serves only the
+  reviewed primary barcode. Alias serving requires a later versioned membership
+  contract and migration.
+  At least 2,000 reviewed/eligible records, all required-category floors, and at
+  least 100 demand-prioritized eligible records are hard release gates. Per-product
+  authorizations stage without serving; one exact-set territory campaign release
+  atomically changes the current catalog. Final clearance requires an independently
+  signed, point-in-time database readback of that release. A later retirement,
+  successor, dependency withdrawal, or review expiry makes that receipt historical
+  until a new exact campaign and readback pass. Every catalog read path must positively
+  find the current global campaign and its campaign-scoped product authority.
+  Mutable quality/review flags, a beta demand signal, or the absence of a correction
+  can never grant eligibility. The RLS-bypassing service role receives no direct
+  catalog-table lane and uses narrow guarded RPCs; authenticated direct reads are
+  limited to explicitly granted safe relations with positive serving RLS.
+  Legacy active-row policies do not publish unreviewed `conflict_rules`,
+  `sequencing_rules`, `creator_stacks`, or `creator_stack_items` to any API role.
+  Their production publication is a separate, evidence-bound B-DERM authority;
+  the app's bundled copies remain filtered to reviewed content in production and
+  are not part of a CAT-03 product root.
+  Outcome reviewers sign a pre-activation body before the activation operator;
+  their exact four-role signature-set root is then bound into the operator's
+  authorization, whose timestamp must follow every review and the planned time.
+  Live product and dependency roots cover every client-readable field and the
+  exact sorted set of every readable child row, so a mutation, insertion, or
+  deletion fails serving closed. Record insertion and campaign release take the
+  same global-then-campaign transaction advisory locks before checking lifecycle
+  state, preventing a record from entering a released campaign.
+  Every mutation of sealed served state appends an immutable per-product event
+  while holding the same global lock, including reviewed correction holds,
+  production/legal source withdrawal, and promoted-batch retirement. Correction-
+  hold evidence uses one bounded reporter-independent serving projection (hold/
+  product ID, state, bounded reason, server-opened time, and current mutation
+  root); correction/report identity, user identity, barcode, free text,
+  arbitrary JSON, assignment/resolution content, and ambient timestamps never
+  enter the permanent CAT-03 digest chain. Product/dependency
+  snapshot functions and mutation capture fix `TimeZone` to UTC before whole-row
+  JSON canonicalization.
+  Outcome reviewers sign the current mutation root. Exact byte restoration, closing the
+  hold, reapproving the source, or restoring the batch cannot resurrect that
+  authorization; recovery requires a newly reviewed current-root record,
+  successor campaign, atomic release, and current signed readback.
+  Retirement, source withdrawal, projection drift, an active correction hold, an
+  incomplete reviewed ingredient dependency, or a required sunscreen/US-OTC
+  review gap closes serving without deleting user references.
+- Criteria: no self-attested launch evidence, no beta-derived product facts,
+  complete dependency proof, role separation, independently witnessed prospective
+  commitments, replay-safe staging plus exact-set atomic campaign release, signed
+  readback, privacy-safe aggregate evidence, and immediate fail-closed retirement.
+- Risk: a self-selected beta corpus describes only the defined tester shelves and
+  cannot substantiate population or market-representativeness claims. Real consented
+  beta data, approved source artifacts, qualified catalog/regulatory reviewers,
+  hosted concurrency/readback evidence, and counsel-approved market-specific policy
+  remain launch gates.
+- Status: source implementation candidate; production activation gated.
+
+### A-010: Dedicated Operator Identity Cannot Become Catalog Authority
+
+- Decision: CAT-08 uses a separate internal console and six bounded RPCs, never
+  a generic table editor. Browser API roles cannot execute the RPCs directly.
+  Edge signature-verifies the exact nonanonymous `aal2` bearer, then passes
+  its signed Auth-session UUID and exact deployment tuple through six hardcoded
+  functions in a non-Data-API gateway schema. A constrained, nonsuperuser,
+  membership/ownership-free `LOGIN NOINHERIT NOBYPASSRLS` role connects through
+  the transaction pooler with CA and hostname verification; service-role
+  transport is absent. Postgres derives the confirmed normalized
+  email, actor, and verified TOTP factor from the live Auth session. Every
+  action also requires an active immutable grant/capability binding and a
+  database-open runtime row matching environment, source revision, Edge
+  deployment ID, and monotonic control generation, plus a ten-minute operator
+  work session. A separately committed, grant-free admission preflight spends
+  a per-actor global budget before every action; successful action transactions
+  spend a bounded class budget. Session renewal and actions use one advisory-
+  then-grant-lock order, immediate server-derived revocations, and a fresh
+  post-lock wall clock. Queue mutations require a five-minute
+  database-clock lease,
+  UUIDv4 idempotency receipt, advisory lock, and compare-and-swap version.
+  Triage, disposition, CAT-02/CAT-03 repair attestation, and release are
+  capability-separated. Triage opens a reporter-independent product hold;
+  accepting, rejecting, closing, withdrawing, or erasing the correction cannot
+  release it. A third person may attest only exact current CAT-01/CAT-02
+  authority plus a signed staged CAT-03 successor over the active-hold mutation
+  root. A fourth distinct person releases; release advances the root and never
+  activates serving. CAT-03 owners must complete a fresh post-release record,
+  campaign release/activation, and readback. Source/import review actions are immutable
+  recommendations only and never receive migration-owner CAT-02/CAT-03
+  promotion/release authority.
+- Criteria: no shared or caller-selected identity, no browser service secret,
+  no raw API-role protected-table access, short immutable work sessions fenced
+  on every request by revocable Auth/TOTP/grant authority, all-action admission
+  and class rate budgets, linearizable renewal/revocation ordering, bounded
+  cursor/lease/CAS behavior, immutable minimized audit, reporter erasure without
+  risk resurrection, and per-product separation of duties.
+- Risk: local migration, Edge, and console source cannot prove hosted Auth/MFA,
+  revocation, concurrent sessions, deployment isolation, staffing, retention,
+  credential rotation, verified pooler TLS, runtime freeze/rollback, incident
+  response, human E2E, professional review, or Apple acceptance. Production
+  acceptance requires independent hosted proof of the dedicated gateway role's
+  exact ACL/membership/ownership state, full TLS verification, concurrency/rate
+  behavior, and the frozen runtime/deployment receipt.
+- Status: `in_progress` source candidate; CAT-07 and external acceptance gates
+  remain open.
+
+### A-011: Separate Local Completion Intent, Stable Product Identity, And Server Adherence
+
+- Decision: Today and Shelf use strict encrypted v3 local records. A Today
+  mutation persists its visible check-off and append-only replay event in one
+  private-KV transform; the Shelf record retains its own owner-free FIFO and
+  terminal operations. The offline coordinator drains Shelf before completion
+  replay. Server product content is separable from the minimum stable
+  owner/product identity required by a delayed completion. Delete therefore
+  creates or advances a deletion-wins tombstone without erasing historical
+  routine references. Missing identity is retryable. If the client has an
+  unresolved terminal Shelf fact and no corrective Shelf work, it reversibly
+  moves the exact completion dependency group through its routine-day marker
+  to the outbox tail; it does not permanently reject the completion. An exact
+  remote-terminal step instead creates a terminal receipt and terminally
+  cascades its routine-day marker. The server admits owner-derived
+  Shelf/completion RPCs, makes routine-day rows the only adherence input, and
+  projects the timezone-bound two-total-missed-day algorithm. Private replay
+  ledgers retain only a domain-separated request digest and bounded
+  disposition, never the raw payload.
+- Criteria: persistence-before-success, stable idempotency, no completion
+  overtaking missing product identity, no permanent head-of-line deadlock,
+  deletion-wins without resurrection, immutable historical evidence,
+  server/client adherence parity, health/account fencing, purpose-limited
+  export, and withdrawal/account erasure.
+- Risk: no protocol replay horizon exists, so an arbitrary TTL could destroy
+  the only delayed-device idempotency or tombstone fact. The minimized
+  identities and receipts remain for the active account/health-purpose
+  lifetime and are erased on health withdrawal or account deletion. Final
+  retention/legal basis, the `request_sha256` access exclusion, hosted
+  two-device convergence, native process-death behavior, archive privacy
+  declarations, and App Review remain open.
+- Status: `in_progress` source candidate through migrations `0068` and `0069`.
+
+### A-012: Admit Recommendation Provenance Before Product Or Commerce Output
+
+- Decision: Recommendation output is a positive-admission boundary, not a
+  consequence of a UI route, feature flag, quality score, `reviewedBy` string,
+  or available product row. The current source admits only explicit
+  `type_first` and `shelf_context` provenance. Product-specific mode is
+  literally closed, the admitted catalog-product set is empty, and no current
+  producer can construct `catalog_product` provenance. Goal-active output
+  requires the Phase 7 flag plus exact current health consent, profile and goal
+  provenance, and a current positive review clearance; the clearance registry
+  starts empty. The current goal-provenance envelope checks exact structure,
+  current quiz-contract hashes, and the exact goal set, but it is not an
+  unforgeable authorization receipt. Unavailable
+  profiles and unreadable recommendation preference/dismissal records withhold
+  suggestions. The production engine takes no caller-supplied recommendation
+  type collection. Commerce admission is unconditionally false in this
+  checkpoint, so neither current provenance kind may render where-to-buy or
+  trigger a retailer fetch.
+- Criteria: zero product publication by default, no caller-minted review
+  authority, closed-set rejection reasons, exhaustive provenance handling,
+  current health/profile inputs and exact goal-set matching, no commission or affiliate data in
+  detection/ranking, no retailer request before commerce admission, and an
+  honest no-result/review-pending recovery state. Migration `0071` purges every
+  legacy recommendation-cache row and revokes all unused runtime table
+  privileges; retained owner/export reads and the exact preference-writer RPC
+  cannot publish a recommendation.
+- Risk: structural type guidance can still convey an express or implied
+  health-product claim. Exact copy, catalog facts, market classification,
+  professional receipts, consumer-health privacy obligations, analytics,
+  accessibility, native/network behavior, and final App Privacy disclosures
+  remain separate gates. A later product-specific mode requires a new
+  versioned admission contract binding an exact SKU, market, and admission
+  receipt. Goal-active output additionally requires server-minted and
+  server-verified receipts bound to the exact account, health-processing
+  lifecycle, profile completion, goal set, review scope, and expiry. Relaxing a
+  literal or adding a database row is insufficient.
+- Status: `in_progress` zero-product-admission source candidate through
+  migration `0071`. It is not clinical, cosmetic-chemistry, privacy, legal,
+  App Store, safety, market, or revenue clearance.
+
+### A-013: Separate Private Conflict Guidance From Share And Public-Link Authority
+
+- Decision: CORE-07A is literal zero-share admission. Private conflict
+  admission never grants publication authority. A future export must carry a
+  separate issuer-authenticated immutable receipt over the exact admitted
+  conflict, copy, citations, market, projection bytes, review receipts,
+  content-rights scope, expiry, and revocation state. The renderer boundary
+  accepts only an explicitly allowlisted sanitized projection, never a private
+  conflict/Shelf/profile object. No receipt issuer exists, so the current path
+  returns before capture, temporary-file, link, network, native-share, or
+  analytics work. Public links are a second independent positive authority; no
+  token service exists, so every identifier resolves to a neutral unavailable
+  state without implying that a record exists.
+- Criteria: no authority by flag/domain/`reviewedBy`/owned-pair coincidence,
+  no raw/private object crossing the renderer boundary, no valid-looking token
+  inference, no side effect before positive admission, exact-payload
+  confirmation immediately before native share, and independent public-token
+  retention/revocation/deletion/abuse controls.
+- Risk: an allowlisted projection can still express a health-adjacent claim.
+  Future activation therefore requires exact-source `REV-02` regulatory,
+  `REV-03` privacy/security, `REV-04` dermatology, `REV-05` cosmetic chemistry,
+  and `REV-06` IP/content-rights decisions plus `REV-07` detached signoffs,
+  final identity/domain, hosted token/security/privacy evidence, archive-bound
+  native iPhone QA, and App Review. No current source control proves legal
+  compliance, clinical validity, Apple acceptance, growth, or revenue.
+- Status: `in_progress` zero-share/public-link source candidate; CORE-07 and
+  launch remain blocked.
 
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
@@ -106,13 +331,40 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 - Risk: V1 does not yet define a clinically reviewed status-refresh interval or transactional server mirror; multi-device status reconciliation remains deferred. No production release may mark the starter exclusion/cadence data reviewed without the detached Phase 3 signoff process.
 - Status: active.
 
+### A-014: Ship Client Changes Only In Store-Bundled Binaries
+
+- Decision: V1 client JavaScript, assets, native code, plugins, permissions,
+  entitlements, privacy configuration, and app configuration ship in reviewed
+  App Store binaries only. EAS Build and Submit remain build/distribution
+  tools, but EAS Update is disabled and is not a delivery or rollback path.
+  The mobile app has no direct `expo-updates` dependency or update URL, and
+  EAS build profiles have no update `channel`. The runtime fingerprint is an
+  artifact and migration-compatibility identity, not evidence of OTA delivery.
+- Criteria: release claims match the installed configuration; client recovery
+  preserves store-reviewed native/privacy changes and compatibility with
+  encrypted-storage migrations; incident responders have one explicit path.
+- Risk: client hotfixes require a new reviewed binary and store rollout. A
+  future OTA path requires a new accepted decision and all reactivation gates
+  in `docs/UPDATE_DELIVERY_POLICY.md`; no channel, command, or rollback may be
+  inferred from the runtime fingerprint alone.
+- Status: accepted V1 release policy; signed-build and App Store evidence
+  remain separate launch gates.
+
 ## System Architecture
 
 ```text
 apps/mobile
   UI routes and feature modules
   local-first stores
+  encrypted Shelf/completion v3 journals and FIFO outboxes
+  Shelf-first offline replay with reversible completion-dependency deferral
   deterministic client mirrors
+  zero-product recommendation admission with closed provenance variants
+  type-first and Shelf-context recommendation output only
+  commerce guard before any where-to-buy render or fetch
+  central exact-session remote admission and controlled refresh
+  composite Apple ID-token authentication plus lifecycle capture permit
+  durable owner-aware store transaction journal
 
 Supabase
   Auth
@@ -120,15 +372,27 @@ Supabase
   RLS
   Edge Functions
   catalog/rules/routine data
+  sealed catalog staging, reviews, revisions, promotion, and rollback evidence
+  entitlements (RevenueCat projection)
+  reverse_trial_grants (independent no-card grant)
+  account publication leases and deletion barriers
+  sealed Apple lifecycle, one-use capture, and signed-event state
+  server-owned adherence projection and minimized Shelf/completion replay receipts
+  sealed legacy recommendation cache with no runtime API-role writer
+
+Apple
+  native authorization -> identity token + one-use authorization code
+  token/JWKS endpoints -> server verification, exchange, daily validation, revoke
+  signed account events -> public-signature-verified Edge ingress
 
 RevenueCat
   IAP purchases
   offerings
-  entitlements
-  webhook -> Supabase Edge Function
+  ordered webhook -> Supabase entitlement projection
+  authenticated reconciliation -> provider request_date watermark
 
 External data
-  Open Beauty Facts exports/API
+  Reviewed Open Beauty Facts offline artifacts (request-time API disabled)
   CosIng ingredient data
 
 Observability
@@ -144,6 +408,7 @@ Core tables:
 - `skin_profiles`
 - `consents`
 - `user_products`
+- `shelf_product_identities`
 - `products`
 - `ingredients`
 - `product_ingredients`
@@ -155,8 +420,17 @@ Core tables:
 - `photos`
 - `notification_preferences`
 - `entitlements`
+- `reverse_trial_grants`
 - `subscription_events`
+- `account_publication_leases`
 - `catalog_reports`
+- `catalog_import_batches`
+- private catalog staging, review, revision, effect, and promotion ledgers
+- `apple_auth_lifecycles`
+- `apple_auth_capture_operations`
+- `apple_auth_server_events`
+- private `shelf_sync_operations`
+- private `routine_completion_sync_operations`
 
 ## API Structure
 
@@ -168,13 +442,195 @@ Supabase Edge Functions:
 - consent withdrawal
 - RevenueCat webhook
 - subscription grants
+- subscription reconciliation
+- Apple authorization capture / native credential invalidation
+- signed Apple account-event ingress
+- scheduled Apple refresh-token validation
 - public waitlist/support/share routes
+
+Owner-derived Postgres RPC boundaries:
+
+- `sync_shelf_product`
+- `record_routine_completion`
+- `set_routine_adherence_timezone`
+- `refresh_routine_adherence`
+- `export_shelf_product_identities_for_subject`
+- `export_shelf_sync_receipts_for_subject`
+- `export_routine_completion_sync_receipts_for_subject`
+
+Account deletion uses a service-role-only transactional RPC for database rows that
+cannot be safely erased through caller RLS. Commerce click-token ownership is unique;
+deleting a click nulls its order-attribution token. Any legacy-held OBF contribution
+payload rows require a live Auth owner, are deleted inside the same scrub, and cascade on
+direct Auth deletion; legacy null-owner payloads are purged by migration. The launch
+architecture has no writer or external-publication path for that table. Account-only subscription events are
+deleted, while shared events retain another live Auth owner and remove the deleting user
+from every scalar, alias, and transfer field. The Edge caller accepts only an exact
+zero-residue RPC attestation.
+
+Migrations `20260713000048` through `20260713000052` add a bounded durable lifecycle
+around that scrub: authenticated owner-derived `begin`, authenticated opaque
+`preflight`, capability-only `status`, and worker-secret-only `work` lanes; sealed
+operation, encrypted provider-step, receipt, recovery-audit, and RevenueCat-tombstone
+state; per-account locks and barriers; account-owned rate-limit cleanup; guarded service
+writers; reconciliation instead of blind provider redispatch; and at-most-once Auth hard
+deletion after locked local re-attestation. Migration 0052 also session-binds intake and
+preflight, seals short-lived publication capabilities, atomically drains them at deletion
+intake, gates local erasure on exact authority end, and gates RevenueCat completion on a
+five-minute settle plus two claim-distinct full-family absence rounds. RevenueCat calls
+consume credential-bound database-global Customer Information/Project Configuration
+budgets of 225/25 per fixed UTC minute, honor the maximum valid provider backoff, and
+defer capacity without spending an attempt. Full-family customer reads are fourteen-wide,
+capped to ten seconds each, and the subsequent aliases read keeps the maximum accepted
+family within 60 seconds in the deterministic bound. Identity state is capped at
+64 aliases as a local fail-closed/manual-review bound and protected by write-ahead probe
+state so an interrupted scan resets absence evidence. The Cron worker is authoritative;
+`EdgeRuntime.waitUntil` is only an intake accelerator.
+
+Provider erasure remains fail-closed at its attestation boundary. RevenueCat REST API v2
+treats exact `200`, `202`, or `404` deletion outcomes only as nonterminal dispatch
+evidence and requires full read-only identity-family absence reconciliation before
+completion; no bare `404` is terminal proof. Provider timeouts remain armed through the
+bounded response-body read, and an ambiguous DELETE is never redispatched. Required-mode
+PostHog deletion persists the
+exact target set and provider status, then requires two interval-separated absence
+observations. Apple is `revoked` only after subject-bound token exchange and Apple's
+exact `200` no-body revoke response. Missing or failed automatic proof records a durable
+manual-revocation outcome instead of withholding account deletion or claiming success.
+The mobile client observes Apple's native revoke event, checks credential state before
+restored-session publication and on foreground, and retains owner-bound recovery and
+manual instructions until safe cleanup or explicit acknowledgement. A transferred Apple
+credential now fails closed as `credential_transferred`; the product does not treat that
+state as a valid credential or claim that transfer handling is complete.
+
+Migration `0052` supplies the database publication fence. The 2026-07-15 source candidate
+routes authenticated Supabase traffic through one exact-session remote-admission gate,
+uses one controlled refresh path bound to the retained opaque refresh token, closes new
+Supabase and RevenueCat publication synchronously, and drains already-admitted work before
+account replacement or deletion publication. The deletion handoff, RevenueCat publication
+controller, and central remote gate have focused process-death, configure-in-flight,
+lost-release, caller-detachment, and child-request-settlement coverage. This is source
+evidence, not proof of a race-free hosted lifecycle.
+
+Migration `20260714000053_entitlement_authority_lanes.sql` separates commerce authority:
+`entitlements` is the ordered RevenueCat
+projection, while `reverse_trial_grants` is the independent app-issued no-card lane. An
+owner-derived, no-argument `auth.uid()` projection RPC returns both without accepting a
+caller-selected user ID. Authenticated reconciliation performs a bounded RevenueCat v1
+read and accepts the provider's fresh snake-case `request_date` as the snapshot watermark;
+it never fabricates provider order. The mobile store durably journals native transaction
+admission before purchase or restore can be repeated, and keeps unresolved ownership or
+confirmation state visible and fail-closed.
+
+The 2026-08-04 PAY-07 source boundary additionally removes every local
+reverse-trial mint, rejects RevenueCat `NOT_REQUESTED` positives, preserves
+RevenueCat `PROMOTIONAL` as a RevenueCat-granted out-of-store, non-billing
+`promotional` entitlement (not an Apple/StoreKit promotional offer), and requires
+a completed post-mount exact-owner query plus fresh verification and a
+future exact expiry before the success route can render confirmation. A live
+wall clock closes/refetches at the earliest evidence boundary and on foreground.
+Renewal and price copy additionally requires an exact billing-store lane,
+`willRenew=true`, the entitlement's own price, and cadence derived from the
+configured product ID; app grants, promotions,
+non-renewing access, and unknown billing facts use separate non-billing or
+non-claiming copy. Expo platform resolution confines deterministic
+positive visual fixtures to the web development module; the default and native
+modules return no grant or delay. `APP_VARIANT` and `EXPO_PUBLIC_APP_ENV` must
+match, and a non-development runtime treats an explicit development public value
+as production. Trial advertising also fails closed unless RevenueCat reports
+the exact iOS product as introductory-offer eligible for the current customer.
+The production build must retain explicit RevenueCat
+informational response-signature verification and return `VERIFIED` or
+`VERIFIED_ON_DEVICE` in exact sandbox/TestFlight proof; otherwise
+`NOT_REQUESTED` correctly denies access. A governed Phase 6 artifact cross-binds
+those sandbox/TestFlight purchase and Restore observations to the exact app,
+bundle, build, Git SHA, SDK, products, entitlement, and reviewer. These controls harden
+admission but do not clear the independent Apple-policy and abuse gates for the
+custom server app grant.
+
+The custom app-grant write authority is also server-fail-closed. The
+`subscription-grants` Edge Function refuses before authentication and
+service-role work unless the resolved Edge environment is `development` and
+`SUPABASE_URL` is an exact HTTP loopback origin with an explicit port. A hosted
+Supabase URL is denied even when mislabeled development. The mobile development
+switch is therefore not the server security boundary.
+
+Migration `20260715000054_health_consent_withdrawal_lifecycle.sql` brings the current chain
+to the prior fully verified 53-migration checkpoint. It adds a non-account-deleting health-consent lifecycle, processing-epoch
+write barrier, service-only durable worker claims, relational/Storage absence attestation,
+and cross-owner community-evidence detachment. The combined local checkpoint passed two
+clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle), database lint,
+and an empty shadow diff; all 77 public tables had RLS enabled, with 54 classified as private
+(40 directly queryable and 14 sealed from direct API-role access).
+Phase 9 health-consent verification passed 104 Deno tests plus 7 evidence tests, and the
+mobile workspace passed typecheck, lint, and 3,026 tests across 266 files. The
+publication/entitlement lane rehearsals pass
+on PostgreSQL 15 and 17. Hosted clean-reset, Cron/Vault/concurrency, live RevenueCat and App Store sandbox,
+provider interruption and recreation, physical-iPhone, professional, privacy/security/
+legal, and App Review evidence remain required. Old or tampered clients still require an
+approved provider block, enforceable mandatory-version/zero-installed-cohort proof, or
+continuing re-deletion control. The Sign in with Apple authorization-code capture and
+state/nonce binding, encrypted versioned token vault, daily token validation, canonical
+signed server-notification ingress, and authoritative session-access fence are implemented
+in the subsequent source candidate, migration
+`20260715000055_apple_auth_lifecycle.sql`, and the three Apple Edge Functions. The vault
+and subject-HMAC keyrings retain at most three overlapping versions. Successful daily
+validation atomically re-derives the current subject digest and freshly seals the token
+under the current vault key; dormant or failing rows still need zero-old-key evidence,
+user recapture/reauthorization, or lifecycle retirement before an old key can be removed.
+Hosted cutover, live Apple event delivery, Cron/Vault continuity, stale-JWT denial, and
+physical-iPhone proof remain open.
+The post-0055 local gate passed two clean resets, exact 54-migration history, the full
+structural pgTAP suite plus 114 Apple lifecycle assertions, schema lint, an empty shadow
+diff, temporary type generation, 20 focused event/lifecycle Edge tests, and the 47-test
+Apple auth work lane. These results do not replace hosted or device evidence.
+Hosted non-destructive health-consent worker/Storage/backup and physical-iPhone proof,
+approved final consent copy, the exact privacy report, policy/support URLs, and non-expiring
+demo review access are also launch blockers.
+
+Migrations `20260726000068_routine_adherence_authority.sql` and
+`20260726000069_routine_completion_sync_bridge.sql` establish the current
+CORE-05 source boundary. `0068` makes validated-IANA-timezone routine-day rows
+the adherence input, projects one current/best/freeze result under the account/
+health locks, keeps profile streak fields server-owned, and erases the derived
+state at health withdrawal. `0069` separates active Shelf content from stable
+identity/tombstone state, keeps routine-step ownership as a database invariant,
+and seals direct product/routine/step/completion writes behind owner-derived,
+active-health/account-fenced RPCs. Delete wins even when an upsert never
+arrived; a delayed completion at or before the effective cutoff can reconcile,
+while a later completion is terminal.
+
+The `0069` private ledgers store operation/event identity, owner, a
+domain-separated request digest, bounded result, and timestamps—not raw Shelf
+or completion payloads. Direct access stays revoked. Three authenticated,
+nonanonymous, `auth.uid()`-derived, health-lifecycle-fenced keyset export RPCs
+expose only the subject identity/tombstone fields and receipt state/result/
+timestamps. Server export
+schema v4 performs two count/checksum/owner/column-guarded passes. It pins the
+initial health-lifecycle epoch into every health-fenced caller read and
+rechecks the final lifecycle; stable withdrawn/never-active state uses a valid
+deny epoch and must return exact empty health sources, any nonactive residue
+fails closed, and withdrawing or changed state aborts. Internal
+`request_sha256` is excluded because it is a
+guessable deleted-payload fingerprint, subject to counsel approval of that
+rights decision. With no agreed replay horizon, identities/receipts persist
+only for the active account and active health purpose and are erased on
+withdrawal or account/Auth deletion. These source controls are not hosted,
+native, legal, privacy-label, or App Review evidence.
 
 Client APIs:
 
 - feature modules call local stores first where privacy/offline matters
-- Supabase queries only when configured and consented
-- Pro gates read RevenueCat/Supabase entitlement mirror
+- Shelf replay drains before completion replay; an unresolved terminal Shelf
+  fact may move only the exact pending same-routine/date completion group
+  through its marker to the FIFO tail, preserving every original event for
+  corrective replay
+- authenticated Supabase requests use the central exact-session admission gate and its
+  controlled refresh path; a closed gate cannot be bypassed by feature code
+- entitlement readers call the owner-derived projection RPC and combine, rather than
+  overwrite, the RevenueCat and no-card grant lanes
+- native purchase and restore admission is serialized through the durable transaction
+  journal; unresolved transactions block repeat purchase attempts
 
 ## Auth Model
 
@@ -184,6 +640,18 @@ Client APIs:
   `email_change` OTP. If a development project auto-confirms that same-user
   email update, the route completes immediately instead of asking for a code
   that was never sent.
+- Native Apple authentication creates independent CSPRNG state and raw nonce
+  values, sends the nonce digest to Apple, and requires the exact state echo.
+  The raw nonce accompanies the ID token to Supabase while the authorization
+  code is reserved for the lifecycle server. One composite permit prevents the
+  resulting session from publishing until the server has verified the token,
+  exchanged the code, and sealed the refresh token. Ambiguous exchange requires
+  a new user-authorized code; it is never blindly retried.
+- Verified terminal Apple events pass a raw subject only transiently to the
+  service-only RPC. The value is not persisted. A pre-identity terminal event
+  leaves audience-bound keyed evidence that first capture must reconcile under
+  the owner lock before code dispatch; duplicate delivery is not required for
+  closure.
 - Provider and email account upgrades assert that the Supabase user ID remains
   unchanged and that the resulting identity is permanent.
 - A linking conflict fails closed. The app never falls back to a normal sign-in
@@ -191,18 +659,31 @@ Client APIs:
   user ID and trigger local-private-data cleanup.
 - Normal Apple/Google/email sign-in remains available when there is no active
   anonymous session to preserve.
-- Sign-out, a changed user ID, a signed-out restore with retained owner metadata,
-  or a cold-start owner mismatch cannot render account data until prior queries,
-  registered local records, vendor
-  identities, and in-flight private-record/photo writes are isolated and
-  cleared. Explicit sign-out also removes persisted auth; account deletion delegates
-  to this root boundary once. Rapid auth events serialize, a durable cleanup-required
-  control forces retry after partial deletion, and session-restore or cleanup failure
-  remains behind a retry gate. A domain-separated owner hash is stored locally
-  instead of the raw Supabase user ID.
+- Sign-out, a changed user ID, a cold-start owner mismatch, or an interrupted
+  authorized cleanup cannot render account data until prior queries, registered
+  local records, vendor identities, and in-flight private-record/photo writes
+  are isolated and cleared. A signed-out restore with a valid retained-owner
+  proof preserves the quarantined records without mounting them; exact-owner
+  reauthentication consumes that proof, while any different login clears the
+  records before publication. Explicit sign-out also removes persisted auth;
+  account deletion delegates to this root boundary once. Rapid auth events
+  serialize, a durable private-cleanup control forces retry after partial
+  deletion, and a separate auth-derived-cleanup control survives a forced
+  sign-out until query, notification, analytics, image-memory, and vendor resets
+  all succeed. Session restore or cleanup failure remains behind a retry gate.
+  Owner decisions validate the complete cleanup/owner/retained/quarantine proof
+  tuple; a domain-separated owner hash is stored instead of the raw Supabase
+  user ID.
 - Supabase user ID becomes stable app user identity.
 - RevenueCat `appUserID` bound to Supabase user ID.
 - Owner-scoped RLS on user tables.
+- Session candidates are server-verified before central remote admission. Controlled
+  refresh atomically rotates the candidate lineage, and sign-out, owner change, deletion,
+  invalid Apple credential state, or lease failure closes publication synchronously.
+- Apple-backed access additionally requires the exact JWT session to remain in
+  `auth.sessions` and an active lifecycle validated within 72 hours. Native
+  invalidation and terminal signed Apple events retire the vault, increment the
+  generation, delete sessions, and keep remote authority closed.
 
 ## Deployment Notes
 
@@ -217,6 +698,12 @@ Release validators and packet builders must read
 only for a platform listed in that contract; every cross-platform service used
 by the iOS app remains fully in scope.
 
+The coherent Apple deployment, event registration, one-minute worker,
+monitoring, key-rotation, deletion, and rollback procedure is
+`docs/phase-9/apple-auth-lifecycle-operations-runbook.md`. Migration 0055 must
+not be applied separately from compatible functions, mobile recovery, and an
+existing-account recapture/mandatory-version plan.
+
 ## Open Technical Questions
 
 - [Open Question] Final brand and package identifiers.
@@ -225,3 +712,5 @@ by the iOS app remains fully in scope.
 - [Open Question] Which production iOS OCR module best satisfies the required
   accuracy, privacy, binary, and device-performance gates.
 - [Open Question] Whether professional/B2B workflow needs separate tenant model.
+- [Open Question] Which reviewed no-transfer or app/team-transfer migration
+  policy applies to Apple `TRANSFERRED` accounts.

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { TrendChangeState } from '@onskin/types';
+import type { TrendChangeState } from '@layerwell/types';
 import { describe, expect, it } from 'vitest';
 
 import { TREND_COPY, trendNarrative } from './copy';

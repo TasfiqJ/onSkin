@@ -6,23 +6,23 @@ import { ScrollView, View } from 'react-native';
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
-import { grantAskConsent, revokeAskConsent } from '@/features/ask/consent';
-import { askConsentQueryOptions } from '@/features/ask/consentQuery';
+import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
-import { clearAskStore, setAskConsentLocal } from '@/features/ask/store';
-import { BRAND } from '@/lib/brand';
 import {
   motionAllowed,
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
-import { consentManagementState } from '@/lib/consent/consentQuery';
+import { BRAND } from '@/lib/brand';
+import {
+  consentCopyFor,
+  HEALTH_DEPENDENT_CONSENT_COPY_REVIEW_STATUS,
+} from '@/lib/consent/dependentConsentContract';
+import { env } from '@/lib/env';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
-// The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
+// The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_layerwell consent
 // for the CLOUD-grounded language layer. Distinct, revocable, never default-on. The
 // deterministic on-device advisor needs no consent; this gate is only for the deeper
 // cloud path (deferred, B-AI-ASSISTANT-VENDOR). Honest posture (the stress-tested §7):
@@ -33,6 +33,11 @@ type AskConsentFailureModes = {
   ledgerLocalOnly: boolean;
   revokeOnce: boolean;
 };
+
+const askConsentSurfaceEnabled =
+  phase7Flags.cloudAsk &&
+  (env.appEnvironment !== 'production' ||
+    HEALTH_DEPENDENT_CONSENT_COPY_REVIEW_STATUS.ask_layerwell.grant === 'approved');
 
 function devAskConsentFailureModes(): AskConsentFailureModes {
   if (typeof __DEV__ === 'undefined' || !__DEV__) {
@@ -67,9 +72,8 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 }
 
 export default function AskConsentScreen() {
-  const reduceMotion = useReduceMotionPreference();
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
+  const reduceMotion = useReduceMotionPreference();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [askConsentFailureUsed, setAskConsentFailureUsed] = useState({
@@ -80,12 +84,13 @@ export default function AskConsentScreen() {
   const scrollRef = useRef<ScrollView | null>(null);
   const failureModes = devAskConsentFailureModes();
   const consented = useQuery({
-    ...askConsentQueryOptions(ownerScope),
-    enabled: phase7Flags.cloudAsk,
+    queryKey: ['ask_layerwell'],
+    queryFn: isAskConsented,
+    enabled: askConsentSurfaceEnabled,
+    retry: 0,
   });
-  const consentControl = consentManagementState(consented, (value) => value === true);
 
-  if (!phase7Flags.cloudAsk)
+  if (!askConsentSurfaceEnabled)
     return (
       <DeferredSurface
         surface="cloudAsk"
@@ -107,8 +112,7 @@ export default function AskConsentScreen() {
       throw new Error('E2E_ASK_CONSENT_GRANT_FAILURE');
     }
     if (failureModes.ledgerLocalOnly) {
-      await setAskConsentLocal(true);
-      return;
+      throw new Error('E2E_ASK_CONSENT_LEDGER_REQUIRED');
     }
     await grantAskConsent();
   };
@@ -119,8 +123,7 @@ export default function AskConsentScreen() {
       throw new Error('E2E_ASK_CONSENT_REVOKE_FAILURE');
     }
     if (failureModes.ledgerLocalOnly) {
-      await clearAskStore();
-      return;
+      throw new Error('E2E_ASK_WITHDRAWAL_LEDGER_REQUIRED');
     }
     await revokeAskConsent();
   };
@@ -135,14 +138,10 @@ export default function AskConsentScreen() {
         grant,
         revoke,
         onSaved: () => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          qc.setQueryData(queryKeys.askConsent(ownerScope), enabled);
+          qc.setQueryData(['ask_layerwell'], enabled);
         },
         onFailure: showSaveFailure,
-        invalidate: () => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
-          return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.askConsent(ownerScope) });
-        },
+        invalidate: () => qc.invalidateQueries({ queryKey: ['ask_layerwell'] }),
       });
       if (saved) setSaveFailed(false);
     } finally {
@@ -196,6 +195,14 @@ export default function AskConsentScreen() {
               {ASK_COPY.privacy.consentLine}
             </Text>
           </View>
+          <View className="mt-4 border-t pt-3.5" style={{ borderTopColor: colors.hairline }}>
+            <Text variant="bodySm" className="font-sans-semibold" tone="muted">
+              Exact consent text for this choice
+            </Text>
+            <Text variant="bodySm" className="mt-2" tone="muted">
+              {consentCopyFor('ask_layerwell', consented.data ? 'withdrawal' : 'grant').text}
+            </Text>
+          </View>
         </Card>
 
         <Card className="mt-4 flex-row items-center justify-between">
@@ -209,39 +216,12 @@ export default function AskConsentScreen() {
           </View>
           <ToggleSwitch
             accessibilityLabel={ASK_COPY.privacy.toggleLabel}
-            value={consentControl.value}
-            disabled={saving || !consentControl.canChange}
+            value={consented.data ?? false}
+            disabled={saving || !consented.isSuccess}
             inactiveTrackColor={colors.greigeDeep}
             onChange={(v) => void onToggle(v)}
           />
         </Card>
-
-        {consentControl.isUnavailable ? (
-          <Card accessibilityRole="alert" className="mt-3">
-            <Text className="font-sans-semibold text-[13px]">Consent status unavailable</Text>
-            <Text className="mt-1 text-[12px]" tone="muted" style={{ lineHeight: 17 }}>
-              {consentControl.hasVerifiedValue
-                ? 'The last confirmed choice is still shown. You can turn an active choice off, or try the read again.'
-                : 'We could not safely read this choice. Nothing was changed, and the switch stays unavailable until the read succeeds.'}
-            </Text>
-            <Button
-              accessibilityLabel="Retry Ask consent status"
-              className="mt-3"
-              disabled={!consentControl.canRetry}
-              label={consentControl.isChecking ? 'Trying again...' : 'Try again'}
-              variant="ghost"
-              onPress={() => void consented.refetch()}
-            />
-          </Card>
-        ) : consentControl.isChecking ? (
-          <Text
-            accessibilityLiveRegion="polite"
-            className="mt-3 text-center text-[12px]"
-            tone="muted"
-          >
-            Checking your saved consent choice...
-          </Text>
-        ) : null}
 
         {saveFailed ? (
           <Card

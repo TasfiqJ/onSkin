@@ -8,6 +8,16 @@ on:
   schedule:
     - cron: '17 9 * * 1'
   workflow_dispatch:
+    inputs:
+      confirm_destructive_account_deletion:
+        description: Authorize deletion of a disposable staging account after staging-security review
+        required: true
+        default: false
+        type: boolean
+      ios_build_id:
+        description: Optional exact iOS EAS build UUID or build URL tied to this evidence
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -107,9 +117,10 @@ jobs:
       - name: Gitleaks
         id: gitleaks
         continue-on-error: true
-        # gitleaks/gitleaks-action v2
-        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc
+        # gitleaks/gitleaks-action v3.0.0 (Node 24); personal repositories need no license.
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: 'false'
 
       - name: TruffleHog verified secrets
@@ -174,14 +185,15 @@ jobs:
       - name: Semgrep OWASP/TypeScript/React/secrets
         id: semgrep
         continue-on-error: true
-        # semgrep/semgrep-action v1
-        uses: semgrep/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d
-        with:
-          config: >-
-            p/owasp-top-ten
-            p/typescript
-            p/react
-            p/secrets
+        # The archived semgrep-action bundles Semgrep 1.36.0, which cannot parse
+        # MEDIUM severity in current registry rules. Pin a maintained CLI instead.
+        run: |
+          pipx install semgrep==1.177.0
+          semgrep scan --error \
+            --config p/owasp-top-ten \
+            --config p/typescript \
+            --config p/react \
+            --config p/secrets .
 
       - name: OSV scanner
         id: osv
@@ -226,14 +238,38 @@ jobs:
   live-supabase-adversarial:
     name: Live Supabase adversarial evidence
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.confirm_destructive_account_deletion == true
     environment: staging-security
+    env:
+      APP_ENV: staging
+      EXPO_PUBLIC_APP_ENV: staging
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: ${{ vars.STAGING_SUPABASE_PROJECT_REF }}
+      PHASE9_EVIDENCE_SOURCE_SHA: ${{ github.sha }}
+      PHASE9_EVIDENCE_WORKFLOW_RUN_ID: ${{ github.run_id }}
+      PHASE9_EVIDENCE_WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
+      PHASE9_EVIDENCE_REF: ${{ github.ref }}
+      PHASE9_EVIDENCE_ACTOR: ${{ github.actor }}
+      PHASE9_EVIDENCE_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+      PHASE9_EVIDENCE_REPOSITORY: ${{ github.repository }}
+      PHASE9_EVIDENCE_WORKFLOW: ${{ github.workflow }}
+      PHASE9_EVIDENCE_EVENT: ${{ github.event_name }}
+      PHASE5_IOS_BUILD_ID: ${{ inputs.ios_build_id }}
     steps:
       - name: Checkout
         # actions/checkout v6.0.3
         uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
         with:
           persist-credentials: false
+
+      - name: Remove stale protected live evidence
+        run: |
+          rm -f docs/phase-9/generated/live-edge-auth.json
+          rm -f docs/phase-9/generated/live-edge-auth.md
+          rm -f docs/phase-9/generated/live-data-rights.json
+          rm -f docs/phase-9/generated/live-data-rights.md
+          rm -f docs/phase-9/generated/live-consent-withdrawal.json
+          rm -f docs/phase-9/generated/live-consent-withdrawal.md
+          rm -rf docs/phase-9/generated/ci-live-evidence
 
       - name: Setup Node
         # actions/setup-node v6.4.0
@@ -246,6 +282,7 @@ jobs:
         run: npm ci
 
       - name: Run live staging Edge auth harness
+        id: live_edge_auth
         run: npm run phase9:live-edge-auth:strict
         env:
           EXPO_PUBLIC_APP_ENV: staging
@@ -264,10 +301,12 @@ jobs:
           SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Run live staging data-rights harness
+        id: live_data_rights
         run: npm run phase9:live-data-rights:strict
         env:
           EXPO_PUBLIC_APP_ENV: staging
           PHASE9_RUN_LIVE_DATA_RIGHTS: 'true'
+          PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION: 'true'
           DATA_EXPORT_RATE_LIMIT_MAX: ${{ vars.STAGING_DATA_EXPORT_RATE_LIMIT_MAX }}
           DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS: ${{ vars.STAGING_DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS }}
           DATA_EXPORT_PHOTO_URL_TTL_SECONDS: ${{ vars.STAGING_DATA_EXPORT_PHOTO_URL_TTL_SECONDS }}
@@ -279,6 +318,7 @@ jobs:
           SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Run live staging consent-withdrawal harness
+        id: live_consent_withdrawal
         run: npm run phase9:live-consent-withdrawal:strict
         env:
           EXPO_PUBLIC_APP_ENV: staging
@@ -316,7 +356,6 @@ jobs:
         env:
           EXPO_PUBLIC_APP_ENV: staging
           PHASE9_RUN_LIVE_ORDER_REPORT_POLL: 'true'
-          PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED: ${{ vars.STAGING_ORDER_REPORT_POLL_ACTIVATED_EXPECTED }}
           SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
           SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
@@ -332,3 +371,42 @@ jobs:
           REVENUECAT_WEBHOOK_AUTH: ${{ secrets.STAGING_REVENUECAT_WEBHOOK_AUTH }}
           REVENUECAT_WEBHOOK_SIGNING_SECRET: ${{ secrets.STAGING_REVENUECAT_WEBHOOK_SIGNING_SECRET }}
           REVENUECAT_WEBHOOK_MAX_BYTES: ${{ vars.STAGING_REVENUECAT_WEBHOOK_MAX_BYTES }}
+
+      - name: Write protected live outcome manifest
+        if: always()
+        env:
+          LIVE_EDGE_AUTH_OUTCOME: ${{ steps.live_edge_auth.outcome }}
+          LIVE_DATA_RIGHTS_OUTCOME: ${{ steps.live_data_rights.outcome }}
+          LIVE_CONSENT_WITHDRAWAL_OUTCOME: ${{ steps.live_consent_withdrawal.outcome }}
+        run: >-
+          node -e "const fs=require('node:fs'); const dir='docs/phase-9/generated/ci-live-evidence'; fs.mkdirSync(dir,{recursive:true}); const evidence={sourceSha:process.env.PHASE9_EVIDENCE_SOURCE_SHA,workflowRunId:process.env.PHASE9_EVIDENCE_WORKFLOW_RUN_ID,workflowRunAttempt:process.env.PHASE9_EVIDENCE_WORKFLOW_RUN_ATTEMPT,ref:process.env.PHASE9_EVIDENCE_REF,actor:process.env.PHASE9_EVIDENCE_ACTOR,triggeringActor:process.env.PHASE9_EVIDENCE_TRIGGERING_ACTOR,repository:process.env.PHASE9_EVIDENCE_REPOSITORY,workflow:process.env.PHASE9_EVIDENCE_WORKFLOW,event:process.env.PHASE9_EVIDENCE_EVENT,steps:{liveEdgeAuth:process.env.LIVE_EDGE_AUTH_OUTCOME,liveDataRights:process.env.LIVE_DATA_RIGHTS_OUTCOME,liveConsentWithdrawal:process.env.LIVE_CONSENT_WITHDRAWAL_OUTCOME}}; fs.writeFileSync(dir+'/account-deletion-live-outcomes.json',JSON.stringify(evidence,null,2)+'\n');"
+
+      - name: Upload redacted protected live evidence
+        if: always()
+        # actions/upload-artifact v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: account-deletion-live-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            docs/phase-9/generated/live-edge-auth.json
+            docs/phase-9/generated/live-edge-auth.md
+            docs/phase-9/generated/live-data-rights.json
+            docs/phase-9/generated/live-data-rights.md
+            docs/phase-9/generated/live-consent-withdrawal.json
+            docs/phase-9/generated/live-consent-withdrawal.md
+            docs/phase-9/generated/ci-live-evidence/account-deletion-live-outcomes.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce protected live evidence results
+        if: always()
+        env:
+          LIVE_EDGE_AUTH_OUTCOME: ${{ steps.live_edge_auth.outcome }}
+          LIVE_DATA_RIGHTS_OUTCOME: ${{ steps.live_data_rights.outcome }}
+          LIVE_CONSENT_WITHDRAWAL_OUTCOME: ${{ steps.live_consent_withdrawal.outcome }}
+        run: |
+          test "$LIVE_EDGE_AUTH_OUTCOME" = "success"
+          test "$LIVE_DATA_RIGHTS_OUTCOME" = "success"
+          test "$LIVE_CONSENT_WITHDRAWAL_OUTCOME" = "success"
+          node -e "const fs=require('node:fs'); for (const path of ['docs/phase-9/generated/live-edge-auth.json','docs/phase-9/generated/live-data-rights.json']) { const evidence=JSON.parse(fs.readFileSync(path,'utf8')); if (evidence.status !== 'pass' || evidence.sourceSha !== process.env.PHASE9_EVIDENCE_SOURCE_SHA || evidence.workflowRunId !== process.env.PHASE9_EVIDENCE_WORKFLOW_RUN_ID || evidence.workflowRunAttempt !== process.env.PHASE9_EVIDENCE_WORKFLOW_RUN_ATTEMPT || evidence.ref !== process.env.PHASE9_EVIDENCE_REF || evidence.actor !== process.env.PHASE9_EVIDENCE_ACTOR || evidence.triggeringActor !== process.env.PHASE9_EVIDENCE_TRIGGERING_ACTOR || evidence.expectedSupabaseProjectRef !== process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF || evidence.actualSupabaseProjectRef !== process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF || evidence.supabaseHost !== process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF + '.supabase.co') throw new Error('account-deletion live evidence contract failed'); }"
+          node -e "const fs=require('node:fs'); const evidence=JSON.parse(fs.readFileSync('docs/phase-9/generated/live-consent-withdrawal.json','utf8')); if (evidence.schemaVersion !== 2 || evidence.status !== 'pass' || evidence.sourceSha !== process.env.PHASE9_EVIDENCE_SOURCE_SHA || evidence.sourceTreeClean !== true || evidence.expectedSupabaseProjectRef !== process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF || evidence.actualSupabaseProjectRef !== process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF || evidence.supabaseHost !== process.env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF + '.supabase.co' || !Array.isArray(evidence.checkManifest?.names) || evidence.checkManifest.names.length !== 8 || !Array.isArray(evidence.checks) || evidence.checks.length !== evidence.checkManifest.names.length || evidence.checks.some((check,index)=>check.name !== evidence.checkManifest.names[index] || check.status !== 'pass' || check.detail !== '') || evidence.warnings?.length !== 0 || evidence.errors?.length !== 0) throw new Error('consent-withdrawal live evidence contract failed');"

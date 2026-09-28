@@ -75,7 +75,7 @@ function write(root, path, value) {
 }
 
 function runFixture(files, registry = registrySource) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-analytics-audit-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-analytics-audit-'));
   try {
     write(root, 'apps/mobile/tsconfig.json', tsconfigSource);
     write(root, 'apps/mobile/src/lib/analytics/eventRegistry.ts', registry);

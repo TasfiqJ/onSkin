@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-28T03:23:44.542Z",
+  "generatedAt": "2026-09-28T03:48:20.066Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-lean-v1-2026",
@@ -152,8 +152,8 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "status": "pass",
-  "strict": true,
+  "status": "blocked",
+  "strict": false,
   "purpose": "Audit the accepted device support policy so install floors, viewport launch gates, and 320-wide stress-only evidence cannot drift silently.",
   "files": {
     "appBase": "apps/mobile/app.base.json",
@@ -236,7 +236,7 @@
     "launchGate": {
       "id": "iphone-375-667-200-text-pressure",
       "required": true,
-      "status": "pass",
+      "status": "fail",
       "supportClass": "supported-phone",
       "title": "375 x 667 compact iPhone-class 200% text-pressure route sweep"
     },
@@ -251,24 +251,37 @@
       "skipped-routes-430-932-200-text-pressure"
     ],
     "legacyGateProblems": [],
-    "gateCount": 43
+    "gateCount": 48
   },
   "requiredPackageScripts": [
     "docs:device-support-policy-audit",
+    "docs:device-support-policy-audit:test",
     "docs:device-support-policy-audit:strict",
-    "docs:device-support-policy-audit:check"
+    "docs:device-support-policy-audit:check",
+    "e2e:human:manifest:contract:test",
+    "release:governed-packets:check"
   ],
   "requiredLaunchVerifyParts": [
-    "docs:device-support-policy-audit:check",
+    "docs:device-support-policy-audit:test",
     "phase5:check-native-config",
-    "e2e:human:manifest:check"
+    "e2e:human:manifest:contract:test"
   ],
   "summary": {
-    "blockerCount": 0,
+    "blockerCount": 9,
     "warningCount": 0,
     "docCount": 8,
     "configContractCount": 2
   },
-  "blockers": [],
+  "blockers": [
+    "iPhone 375 x 667 launch-floor gate must pass.",
+    "iphone-375-667-200-text-pressure must pass.",
+    "iphone-375-200-text-pressure must pass.",
+    "modern-390-200-text-pressure must pass.",
+    "boundary-414-896-200-text-pressure must pass.",
+    "modern-430-200-text-pressure must pass.",
+    "skipped-routes-375-667-200-text-pressure must pass.",
+    "skipped-routes-390-844-200-text-pressure must pass.",
+    "skipped-routes-430-932-200-text-pressure must pass."
+  ],
   "warnings": []
 }

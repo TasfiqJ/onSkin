@@ -271,7 +271,7 @@ H-05 when a provider requires them.
 | ACCT-09 | C/H   | Cloudflare Turnstile                  | Codex creates/configures site, keys, domains, auth/public forms, and failure behavior                              |
 | ACCT-10 | C/H/V | Catalog sources                       | Codex handles source applications, licensing packet, imports, attribution, correction workflow, and monitoring     |
 | ACCT-11 | C/H/V | AI/model provider                     | Codex evaluates privacy, safety, latency, residency, cost, and contract fit, then configures approved provider     |
-| ACCT-12 | C/H/V | Commerce/affiliate provider           | Codex selects and applies to ShopMy or approved alternative, configures API, links, disclosures, and polling       |
+| ACCT-12 | C/H/V | Commerce/affiliate provider           | Blocked under COM-01A; a future reviewed successor may select/apply to an approved provider and configure the rail |
 | ACCT-13 | C/H   | Support/helpdesk                      | Codex selects/configures inbox, forms, taxonomy, SLAs, macros, escalation, privacy, and reporting                  |
 | ACCT-14 | C/H   | Moderation service/staff              | Codex prepares staffing/vendor recommendation, tools, runbook, training, and audit; founder contracts real humans  |
 | ACCT-15 | C/H   | Attribution/paid measurement          | Codex selects privacy-preserving approach, configures consent/ATT where required, and validates payloads           |
@@ -286,32 +286,32 @@ H-05 when a provider requires them.
 | IOS-03 | C     | Fix native Sign in with Apple config, including Expo property/plugin and deletion revocation credentials                                            | Real iPhone Apple sign-in and revocation pass                                                         |
 | IOS-04 | C     | Decide and configure iPhone/iPad support based on complete device QA                                                                                | Store device support and screenshots match actual behavior                                            |
 | IOS-05 | C     | Configure version/build numbering, deployment target, icons, splash, permission text, localization, and encryption declaration                      | Resolved production Expo config is final and placeholder-free                                         |
-| IOS-06 | C     | Link the EAS project, owner, project ID, channels, and development/preview/production environments                                                  | EAS project info and environment inventory match the launch contract                                  |
+| IOS-06 | C     | Link the EAS project, owner, project ID, and development/staging/production build environments without update channels                              | EAS project info and environment inventory match the store-only launch contract                       |
 | IOS-07 | C     | Configure distribution certificate, provisioning, APNs key, App Store Connect API key, and submit profile                                           | Reproducible production build and upload succeed                                                      |
 | IOS-08 | C     | Make EAS use a current Apple-compliant build image                                                                                                  | Build log proves Xcode 26+ and iOS 26 SDK+                                                            |
 | IOS-09 | C     | Generate and inspect the full privacy manifest/report, required-reason API declarations, SDK signatures, entitlements, symbols, and binary metadata | No App Store processing warning remains unexplained                                                   |
 | IOS-10 | C/R   | Complete export-compliance assessment and configuration                                                                                             | App Store build has the correct declaration or approved documentation                                 |
-| IOS-11 | C     | Create rollback-safe EAS Update/channel policy                                                                                                      | Native changes require new binary; JS updates cannot cross native/privacy/feature-contract boundaries |
+| IOS-11 | C     | Enforce store-bundled client delivery and rehearse halt, containment, and binary-hotfix recovery                                                    | No OTA channels or updates are enabled; affected flows and supported binaries pass hotfix drills      |
 
 ## 12. Supabase, Data, Security, and Deployment
 
 Known deployment contradictions are Codex work.
 
-| ID    | Owner | Codex deliverable                                                                                                                                                                                       | Acceptance                                                                                        |
-| ----- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| DB-01 | C     | Add shared support for hosted SUPABASE_SECRET_KEYS and SUPABASE_PUBLISHABLE_KEYS maps with safe local/legacy fallback                                                                                   | All functions work with current hosted keys; no secret is exposed to the client                   |
-| DB-02 | C     | Correct revenuecat-webhook and order-report-poll gateway authentication                                                                                                                                 | External signed/authenticated requests reach handlers and fail closed on bad credentials          |
-| DB-03 | C     | Deploy every required function: account-deletion, catalog lookup/search/report, consent-withdrawal, data-export, growth-event, order-report-poll, revenuecat-webhook, subscription-grants, and waitlist | Staging function inventory is complete and hashed                                                 |
-| DB-04 | C     | Add explicit APP_ENV and complete secret/config validation                                                                                                                                              | Staging never defaults silently to production behavior                                            |
-| DB-05 | C     | Reconcile every migration and apply to a fresh local instance                                                                                                                                           | Clean reset applies all migrations with zero drift                                                |
-| DB-06 | C     | Create and deploy staging through reviewed migration order                                                                                                                                              | Before/after counts, migration IDs, function versions, and types are retained                     |
-| DB-07 | C     | Configure anonymous auth, manual linking, email OTP, SMTP, Apple/Google providers, Turnstile, redirect allowlists, rate limits, and session security                                                    | All auth paths pass live staging                                                                  |
-| DB-08 | C     | Regenerate database types and remove schema drift                                                                                                                                                       | Generated types match staging                                                                     |
-| DB-09 | C     | Prove two-user and anonymous RLS, adversarial writes, canonical conflict pairs, Shelf provenance, consent immutability, moderation ownership, and admin isolation                                       | Live redacted evidence shows no cross-user access                                                 |
-| DB-10 | C     | Verify export, deletion, consent withdrawal, provider deletion, account-boundary cancellation, and temporary-file cleanup                                                                               | Privacy-rights matrix passes on staging                                                           |
-| DB-11 | C     | Configure Security Advisor, Performance Advisor, SSL/network posture, indexes, backups, recovery, resource alerts, and load limits                                                                      | Production checklist has owners and evidence                                                      |
-| DB-12 | C     | Create reviewed production migration/deploy/rollback procedure                                                                                                                                          | No dashboard-only production schema mutation is required                                          |
-| DB-13 | C/H   | Create and deploy production after staging signoff                                                                                                                                                      | Production project, schema, functions, secrets, auth, and monitoring pass the live release matrix |
+| ID    | Owner | Codex deliverable                                                                                                                                                                                       | Acceptance                                                                                         |
+| ----- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| DB-01 | C     | Add shared support for hosted SUPABASE_SECRET_KEYS and SUPABASE_PUBLISHABLE_KEYS maps with safe local/legacy fallback                                                                                   | All functions work with current hosted keys; no secret is exposed to the client                    |
+| DB-02 | C     | Correct RevenueCat webhook authentication; keep order-report-poll literal-zero until a new reviewed commerce admission checkpoint                                                                       | RevenueCat external requests fail closed; commerce configuration cannot activate the inert handler |
+| DB-03 | C     | Deploy every required function: account-deletion, catalog lookup/search/report, consent-withdrawal, data-export, growth-event, order-report-poll, revenuecat-webhook, subscription-grants, and waitlist | Staging function inventory is complete and hashed                                                  |
+| DB-04 | C     | Add explicit APP_ENV and complete secret/config validation                                                                                                                                              | Staging never defaults silently to production behavior                                             |
+| DB-05 | C     | Reconcile every migration and apply to a fresh local instance                                                                                                                                           | Clean reset applies all migrations with zero drift                                                 |
+| DB-06 | C     | Create and deploy staging through reviewed migration order                                                                                                                                              | Before/after counts, migration IDs, function versions, and types are retained                      |
+| DB-07 | C     | Configure anonymous auth, manual linking, email OTP, SMTP, Apple/Google providers, Turnstile, redirect allowlists, rate limits, and session security                                                    | All auth paths pass live staging                                                                   |
+| DB-08 | C     | Regenerate database types and remove schema drift                                                                                                                                                       | Generated types match staging                                                                      |
+| DB-09 | C     | Prove two-user and anonymous RLS, adversarial writes, canonical conflict pairs, Shelf provenance, consent immutability, moderation ownership, and admin isolation                                       | Live redacted evidence shows no cross-user access                                                  |
+| DB-10 | C     | Verify export, deletion, consent withdrawal, provider deletion, account-boundary cancellation, and temporary-file cleanup                                                                               | Privacy-rights matrix passes on staging                                                            |
+| DB-11 | C     | Configure Security Advisor, Performance Advisor, SSL/network posture, indexes, backups, recovery, resource alerts, and load limits                                                                      | Production checklist has owners and evidence                                                       |
+| DB-12 | C     | Create reviewed production migration/deploy/rollback procedure                                                                                                                                          | No dashboard-only production schema mutation is required                                           |
+| DB-13 | C/H   | Create and deploy production after staging signoff                                                                                                                                                      | Production project, schema, functions, secrets, auth, and monitoring pass the live release matrix  |
 
 ## 13. Authentication and Account Isolation
 
@@ -324,19 +324,126 @@ Known deployment contradictions are Codex work.
 | AUTH-05 | C     | Prove sign-out, token expiry, cold start, owner mismatch, cleanup failure, and A-to-B switching isolation                                 | No prior-owner data appears on any route                   |
 | AUTH-06 | C     | Bind RevenueCat identity, analytics identity, query caches, encrypted stores, exports, and in-flight operations to the account generation | No stale write/share or cross-account entitlement survives |
 
+2026-07-15 source checkpoint: the current candidate implements the native
+state/raw-nonce contract, composite ID-token plus server-capture permit,
+one-use authorization-code exchange, versioned encrypted refresh-token vault,
+daily validation worker, canonical signed Apple event ingress, native
+credential invalidation, terminal event-before-identity reconciliation before
+code exchange, deletion-vault reuse, and exact-session
+RLS/Storage/Edge/direct-RPC fence. This advances IOS-03, AUTH-01, AUTH-03,
+AUTH-05, AUTH-06, DB-09, and DB-10 source work; it does not complete their live
+acceptance. Existing Apple accounts require fresh capture or a compatible
+mandatory-version recovery plan. Vault and subject-HMAC keyrings allow up to
+three overlapping versions. Every successful daily validation atomically
+advances the current subject digest and freshly sealed vault envelope; dormant,
+deferred, or failing rows do not advance from configuration alone. Hosted
+migration/function deployment, primary-App-ID event
+registration and actual delivery, Vault/Cron continuity and rotation,
+stale-JWT adversarial proof, physical-iPhone/TestFlight, privacy/security/legal
+review, and App Review remain required. Operations are defined in
+`docs/phase-9/apple-auth-lifecycle-operations-runbook.md`.
+
+The local migration-0055 replay gate passed two clean resets, exact 54/0055
+history, the full structural suite plus 114/114 Apple pgTAP, schema lint, empty
+shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
+47-test Apple auth work lane. These results advance source evidence only.
+
 ## 14. Catalog, Shelf, Camera, Barcode, and Native OCR
 
-| ID     | Owner | Codex deliverable                                                                                                           | Acceptance                                                                      |
-| ------ | ----- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| CAT-01 | C/R   | Complete OBF/CosIng licensing, attribution, image-rights, contribution, and correction posture                              | Approved source memos and production identifiers exist                          |
-| CAT-02 | C     | Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines                            | Fixture data is excluded; every production record is traceable                  |
-| CAT-03 | C     | Curate a production launch catalog from representative beta shelves                                                         | Catalog reaches signed coverage/quality targets                                 |
-| CAT-04 | C     | Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows                                  | Every failure has a safe recovery and owner-scoped report                       |
-| CAT-05 | C     | Implement real iOS-native OCR with editable confidence-aware output                                                         | Clear, curved, tiny, multilingual, and glare-heavy labels pass real-device QA   |
-| CAT-06 | C     | Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior | Physical iPhone evidence passes                                                 |
-| CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior           | Chemistry/legal review and live data evidence pass                              |
-| CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                 | Authorized operators can review sources/reports without direct database editing |
-| CAT-09 | C     | Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact                   | Dashboards and thresholds are production-ready                                  |
+| ID     | Owner | Codex deliverable                                                                                                                    | Acceptance                                                                                                                                               |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CAT-01 | C/R   | Complete OBF/CosIng exact-artifact, attribution, image-rights, database-classification, no-runtime-recipient, and correction posture | Counsel-approved source decisions and production artifact identifiers exist; imports stay offline/hash-bound and runtime lookup/contribution stay absent |
+| CAT-02 | C     | Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines                                     | Fixture data is excluded; every production record is traceable                                                                                           |
+| CAT-03 | C     | Curate a production launch catalog from a defined consented beta-shelf corpus and untouched holdout                                  | Catalog reaches signed coverage/quality targets without a market-representativeness claim                                                                |
+| CAT-04 | C     | Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows                                           | Every failure has a safe recovery and owner-scoped report                                                                                                |
+| CAT-05 | C     | Validate and release-gate the iOS-native OCR source candidate with bounded editable output and local-only photo handling             | Exact signed-build evidence passes the governed two-iPhone, 25-label/50-run accuracy, RTL, privacy/cleanup, accessibility, and performance contracts     |
+| CAT-06 | C     | Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior          | Physical iPhone evidence passes                                                                                                                          |
+| CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, physical-package date, source precedence, provenance, and unknown-state behavior             | Chemistry/legal review and live data evidence pass                                                                                                       |
+| CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                          | Authorized operators can review sources/reports without direct database editing                                                                          |
+| CAT-09 | C     | Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact                            | Dashboards and thresholds are production-ready                                                                                                           |
+
+2026-07-22 CAT-08 source checkpoint: the local candidate defines a dedicated
+operator boundary whose Edge verifies the exact issuer/subject/audience/live
+token and AAL2 claim while Postgres independently derives the actor from the
+exact live Auth session and verified TOTP factor. A dedicated constrained
+transaction-pooler login can execute only the six application-gateway
+functions; browser/API roles cannot execute them, and hosted transport requires
+CA/hostname verification. Ten-minute work-session checks, five-minute lease/CAS
+queue claims, committed global and per-action database rate budgets, immutable
+operation/audit records, and capability-separated triage, disposition, repair
+attestation, and release are fail-closed. `open` reports do not suppress serving; triage creates
+an independent reporter-free product hold that survives withdrawal/account
+deletion. Accepted/rejected dispositions cannot release it. A third person may
+attest only an exact current CAT-02 projection and signed staged CAT-03
+successor over the active-hold root. A fourth distinct person releases; release
+advances the root and cannot activate serving, so CAT-03 owners must complete a
+fresh post-release campaign/activation/readback. API roles receive no raw
+operator/correction/hold table lane, and the legacy service-role correction
+review lane is revoked. A deterministic local two-connection rehearsal proves
+action-first and session-revocation-first grant-lock ordering against the real
+database gateway.
+
+CAT-08 remains `in_progress` and blocked by CAT-07. A separate publishable-key-
+only internal-console source candidate exists, but it is not deployed or E2E-
+proven. A local ignored synthetic-fixture browser packet predates the final
+claim-bound-detail and authority revisions, so it is not current governed
+acceptance evidence. Real named MFA-enrolled operators and coverage, hosted
+full-chain/RLS/stale-session/two-connection race/deletion/audit evidence,
+verified operator/build/capability/incident display, hosted rate-threshold/load
+evidence and scheduled idle-period bucket purge, an approved workforce
+audit-retention/deprovisioning contract, legacy-hold cutover remediation,
+current human-simulated operator E2E, incident drills, and
+privacy/security/legal review are absent. Local source
+controls do not establish production operation, legal compliance, Apple
+acceptance, product-market fit, or revenue.
+
+2026-07-25 CAT-09 source checkpoint: search and barcode result/latency,
+on-device OCR result/latency, ingredient-parse result/source/unknown-count,
+true search no-match recovery, accepted correction workload, and directional
+support-impact definitions now have fixed coarse vocabularies and frozen
+aggregate formulas. Exact queries, barcodes, OCR/ingredient content, product
+identity, duration, timestamp, and free text are excluded. The publication gate
+is default closed, contains no event buffer or replay path, and invalidates
+stale generations when deletion or Auth account/background/deletion boundaries
+close synchronously. No non-test production caller opens the gate and no vendor
+transport is enabled, so no live CAT-09 measurement is claimed.
+
+CAT-09 remains `in_progress`, blocked by CAT-08 and by the absence of a separate
+approved analytics-consent record and authoritative owner/receipt verifier,
+vendor/processor terms and privacy/legal review, exact-build live payload and
+withdrawal/account-switch/deletion/no-replay evidence, named dashboard owners,
+links, reviewed thresholds, and real support-impact evidence. Local source
+contracts do not complete CAT-09 or establish App Review, legal, product-
+quality, market, or revenue outcomes.
+
+2026-07-19 CAT-07 source checkpoint: the current candidate preserves physical-package dates,
+explicit label PAO, reviewed catalog PAO, reserved future catalog-linked
+category estimate, and unknown as distinct states. Unknown is not an estimate;
+only printed or label/catalog-PAO evidence can drive countdown, expired,
+Expiring-filter, or replenishment behavior. Replacement requires an explicit
+opening-state choice and clears inherited physical-package dates. Canonical local v1
+bytes remain unchanged on read and failed mutation; v2 is emitted only after a
+successful authorized atomic mutation. The regulatory basis is EU Article
+19(1)(c) plus Annex VII point 2, with ordinary U.S. cosmetic-label gaps and
+classification-specific U.S./Canadian sunscreen rules; no universal printed
+sunscreen date is assumed. Migration `0060` fully purges, force-RLS seals, and
+prevents repopulation of legacy `ingredient_pao_defaults`; current
+`product_categories` values are editorial/future metadata and every current
+category-default Shelf claim fails closed to unknown. See
+`docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md`.
+
+CAT-07 remains `in_progress`, blocked by CAT-06 and launch-blocked by a green
+integrated source/static-policy checkpoint, named chemistry/legal review, fresh
+local and hosted migration/RLS plus live catalog truth-table evidence, and
+exact signed-build physical-iPhone encrypted-storage/relaunch/accessibility/
+notification evidence. The retained 2026-07-11 Expo-web packet predates the
+current replacement and storage contracts and is stale for acceptance.
+
+CAT-07 also remains blocked on qualified classification of user-initiated,
+item-specific affiliate navigation under Apple 2.5.18 and 5.1.2. Treat consent
+as necessary but not sufficient; do not ship commerce sourced from Shelf data
+until App Review/privacy counsel approve the exact contextual-shopping versus
+sensitive-data-targeted-advertising boundary and the FTC-reviewed net impression.
 
 ## 15. Reviewed Guidance, Core Loop, and Recommendations
 
@@ -352,15 +459,15 @@ Known deployment contradictions are Codex work.
 
 ## 16. Photos, Progress, Trend Insights, and App Lock
 
-| ID       | Owner | Codex deliverable                                                                                                                    | Acceptance                                                                     |
-| -------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| PHOTO-01 | C     | Complete local encrypted photo capture, storage, thumbnails, timeline, compare, detail, notes, and deletion                          | Photos remain device-only and recover safely from failures                     |
-| PHOTO-02 | C     | Complete app-wide lock, Progress unlock, key corruption/read failure, authenticated reset, and no-content-flash behavior             | Sensitive content never mounts before successful gates                         |
-| PHOTO-03 | C     | Complete post-capture face framing/pose and lighting measurement without identity embeddings                                         | Diverse-condition device matrix passes; analyzer data never leaves device      |
-| PHOTO-04 | C     | Complete time-lapse playback, pause/replay/background/Reduce Motion/accessibility behavior                                           | No decrypted frame is written to share/cache or analytics                      |
-| PHOTO-05 | C/R   | Build the real trend engine rather than returning simulated insights                                                                 | Output provenance, limitations, failure states, and performance are measurable |
-| PHOTO-06 | C/R   | Run diverse-condition calibration/fairness evaluation across skin tones, lighting, hair, glasses, devices, and ordinary environments | Predeclared thresholds and false accept/reject report are signed               |
-| PHOTO-07 | C/R   | Finalize photo, face-signal, trend, local-only, retention, key-loss, export, and deletion disclosures                                | App, policies, privacy labels, and network behavior match                      |
+| ID       | Owner | Codex deliverable                                                                                                                    | Acceptance                                                                                                                           |
+| -------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| PHOTO-01 | C     | Complete local encrypted photo capture, storage, thumbnails, timeline, compare, detail, notes, and deletion                          | Photos remain device-only and recover safely from failures                                                                           |
+| PHOTO-02 | C     | Complete app-wide lock, Progress unlock, key corruption/read failure, authenticated reset, and no-content-flash behavior             | Sensitive content never mounts before successful gates                                                                               |
+| PHOTO-03 | C     | Complete post-capture face framing/pose and lighting measurement without identity embeddings                                         | Diverse-condition device matrix passes; analyzer data never leaves device                                                            |
+| PHOTO-04 | C     | Complete time-lapse playback, pause/replay/background/Reduce Motion/accessibility behavior                                           | No decrypted frame is written to share/cache or analytics                                                                            |
+| PHOTO-05 | C/R   | Replace PHOTO-05A literal zero admission with a versioned real on-device Trend engine/result issuer; never restore simulated output  | Exact-build provenance, measurement/calibration, limitations, abstention/failure states, zero egress, and performance are measurable |
+| PHOTO-06 | C/R   | Run diverse-condition calibration/fairness evaluation across skin tones, lighting, hair, glasses, devices, and ordinary environments | Predeclared thresholds and false accept/reject report are signed                                                                     |
+| PHOTO-07 | C/R   | Finalize photo, face-signal, trend, local-only, retention, key-loss, export, and deletion disclosures                                | App, policies, privacy labels, and network behavior match                                                                            |
 
 ## 17. Payments, RevenueCat, Reverse Trial, and Finance
 
@@ -389,6 +496,30 @@ Known deployment contradictions are Codex work.
 | ASK-07 | C     | Build production quality, safety, latency, cost, refusal, feedback, and incident dashboards                                                        | Launch on-call can identify and disable unsafe behavior |
 
 ## 19. Commerce, Replenishment, and Creator Links
+
+**COM-01A current source boundary (2026-07-29): literal zero admission.**
+Mobile/direct routes, catalog and stack reads, consent grants, click recording,
+external retailer navigation, commerce analytics, provider polling, order
+reads, and attribution writes are inert and side-effect-free. Only refusal,
+withdrawal, owner deletion, and account data-rights cleanup remain, and cleanup
+cannot activate commerce. Positive commerce flows and their 2026-07-06 through
+2026-07-08 evidence are historical/stale. This is a source checkpoint only;
+COM-01 through COM-07 remain launch-blocked.
+
+A future successor must pass qualified Apple 2.5.18, 3.1.3(e), and 5.1.2(vi)
+classification, App Privacy/ATT reconciliation, FTC affiliate/native-ad and
+health-claim review, HBNR analysis, Washington RCW 19.373, Nevada NRS
+603A.400-.550, and applicable CCPA/CPRA controls. It must enforce that no photo,
+face signal, Trend result, health profile, concern, condition, inferred health
+attribute, or health-derived category selects, targets, ranks, measures, or
+attributes commerce. Consent, ATT, pseudonymization, or an opaque token does not
+cure a prohibited photo-derived marketing use. Approved provider/account and
+contracts, reviewed catalog/stacks/copy, hosted rights/security/operations,
+signed-archive and supported-iPhone proof, App Review, and named exact-source
+signoffs remain mandatory. The checkpoint guarantees neither Apple/legal
+acceptance nor commercial viability, product-market fit, seven-figure revenue,
+or any revenue. See
+`docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`.
 
 | ID     | Owner | Codex deliverable                                                                                                                           | Acceptance                                           |
 | ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
@@ -480,31 +611,31 @@ Named professionals make only the decisions that require their authority.
 
 ## 26. TestFlight and All-Features Beta
 
-| ID      | Owner | Codex deliverable                                                                                                                                                                      | Acceptance                                                 |
-| ------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| BETA-01 | C     | Build and upload internal TestFlight candidate with all launch features enabled against staging                                                                                        | Processing warnings resolved and internal smoke passes     |
-| BETA-02 | C     | Prepare Beta App Review metadata, demo account, review notes, privacy/support links, and test instructions                                                                             | External testing approved                                  |
-| BETA-03 | C/H   | Recruit and manage representative beta cohort                                                                                                                                          | Genuine target users and tested-device coverage exist      |
-| BETA-04 | C     | Configure feedback/support intake with category, severity, privacy, SLA, and routing                                                                                                   | Every beta report is triageable                            |
-| BETA-05 | C     | Measure activation, catalog, routine, adherence, photos, notifications, payments, Ask, commerce, community, trends, widgets, sharing, retention, cost, safety, moderation, and support | Signed beta dashboards/reports meet thresholds             |
-| BETA-06 | C     | Conduct scripted usability sessions and prepare interview guides; founder/testers provide genuine responses                                                                            | Findings link to fixes or accepted risk                    |
-| BETA-07 | C     | Fix every P0/P1 and rerun the exact surface                                                                                                                                            | Exit review has no unresolved launch blocker               |
-| BETA-08 | C/H/R | Produce go/hold decision packet                                                                                                                                                        | Founder and required reviewers authorize release candidate |
+| ID      | Owner | Codex deliverable                                                                                                                                                                      | Acceptance                                                                                |
+| ------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| BETA-01 | C     | Build and upload internal TestFlight candidate with all launch features enabled against staging                                                                                        | Processing warnings resolved and internal smoke passes                                    |
+| BETA-02 | C     | Prepare Beta App Review metadata, demo account, review notes, privacy/support links, and test instructions                                                                             | External testing approved                                                                 |
+| BETA-03 | C/H   | Recruit and manage the defined target beta cohort                                                                                                                                      | Genuine target users and tested-device coverage exist; no market-representativeness claim |
+| BETA-04 | C     | Configure feedback/support intake with category, severity, privacy, SLA, and routing                                                                                                   | Every beta report is triageable                                                           |
+| BETA-05 | C     | Measure activation, catalog, routine, adherence, photos, notifications, payments, Ask, commerce, community, trends, widgets, sharing, retention, cost, safety, moderation, and support | Signed beta dashboards/reports meet thresholds                                            |
+| BETA-06 | C     | Conduct scripted usability sessions and prepare interview guides; founder/testers provide genuine responses                                                                            | Findings link to fixes or accepted risk                                                   |
+| BETA-07 | C     | Fix every P0/P1 and rerun the exact surface                                                                                                                                            | Exit review has no unresolved launch blocker                                              |
+| BETA-08 | C/H/R | Produce go/hold decision packet                                                                                                                                                        | Founder and required reviewers authorize release candidate                                |
 
 ## 27. App Store Product Page, Compliance, and Submission
 
-| ID       | Owner | Codex deliverable                                                                                                                                                                  | Acceptance                                                  |
-| -------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| STORE-01 | C     | Produce final name, subtitle, promotional text, description, keywords, categories, copyright, localization, and claims review                                                      | Metadata describes every real feature without unsafe claims |
-| STORE-02 | C     | Produce final iPhone screenshots and optional preview showing the actual release build                                                                                             | Assets meet current size/content rules and match the app    |
-| STORE-03 | C/R   | Complete age rating including UGC/social/medical questions, regulated-device declaration, DSA trader status, content rights, and export compliance                                 | App Store fields match legal decisions                      |
-| STORE-04 | C/R   | Complete App Privacy Nutrition Labels for app and every SDK/vendor, plus privacy choices URL                                                                                       | Labels match observed network/data behavior                 |
-| STORE-05 | C     | Complete subscription metadata, localization, price, tax, review screenshots, availability, and first-submission attachment                                                        | Monthly/annual products are included and Ready to Submit    |
-| STORE-06 | C     | Create non-expiring reviewer account and detailed steps for onboarding, every gated feature, purchases, restore, deletion, community moderation, Ask, commerce, widgets, and links | Reviewer can reach and test every feature                   |
-| STORE-07 | C     | Build production candidate, inspect binary, select build, resolve processing, export, privacy, entitlement, symbol, and SDK warnings                                               | App version is Ready for Review                             |
-| STORE-08 | C/H   | Present final submission packet for explicit authorization                                                                                                                         | Founder authorizes submission                               |
-| STORE-09 | C/V   | Submit app and subscriptions, monitor review, respond, fix, and resubmit                                                                                                           | Apple approves the app and products                         |
-| STORE-10 | C/H   | Keep release manual until production and operations recheck passes                                                                                                                 | Founder authorizes public availability                      |
+| ID       | Owner | Codex deliverable                                                                                                                                                                                                         | Acceptance                                                                     |
+| -------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| STORE-01 | C     | Produce final name, subtitle, promotional text, description, keywords, categories, copyright, localization, and claims review                                                                                             | Metadata describes every real feature without unsafe claims                    |
+| STORE-02 | C     | Produce final iPhone screenshots and optional preview showing the actual release build                                                                                                                                    | Assets meet current size/content rules and match the app                       |
+| STORE-03 | C/R   | Complete age rating including UGC, the social-media-capability answer required beginning September 2026, social/medical questions, regulated-device declaration, DSA trader status, content rights, and export compliance | App Store fields match legal decisions and the exact release feature inventory |
+| STORE-04 | C/R   | Complete App Privacy Nutrition Labels for app and every SDK/vendor, plus privacy choices URL                                                                                                                              | Labels match observed network/data behavior                                    |
+| STORE-05 | C     | Complete subscription metadata, localization, price, tax, review screenshots, availability, and first-submission attachment                                                                                               | Monthly/annual products are included and Ready to Submit                       |
+| STORE-06 | C     | Create non-expiring reviewer account and detailed steps for onboarding, every gated feature, purchases, restore, deletion, community moderation, Ask, commerce, widgets, and links                                        | Reviewer can reach and test every feature                                      |
+| STORE-07 | C     | Build production candidate, inspect binary, select build, resolve processing, export, privacy, entitlement, symbol, and SDK warnings                                                                                      | App version is Ready for Review                                                |
+| STORE-08 | C/H   | Present final submission packet for explicit authorization                                                                                                                                                                | Founder authorizes submission                                                  |
+| STORE-09 | C/V   | Submit app and subscriptions, monitor review, respond, fix, and resubmit                                                                                                                                                  | Apple approves the app and products                                            |
+| STORE-10 | C/H   | Keep release manual until production and operations recheck passes                                                                                                                                                        | Founder authorizes public availability                                         |
 
 ## 28. Production and Controlled Launch
 
@@ -533,7 +664,14 @@ fails closed without corrupting data:
 - Creator links and paid measurement.
 - Widgets/Live Activities publication.
 - Review prompt.
-- OBF live API/contribution.
+- Catalog source-artifact promotion/import.
+
+OBF request-time API access and external contribution are excluded from the
+launch architecture, not hidden behind a kill switch. Product Opener documents
+API v3 as current and v2 as deprecated, but Layerwell calls neither. Any future
+proposal to add OBF as a runtime recipient is a new privacy, legal, architecture,
+and release decision. Counsel must first classify the exact OBF database use and
+approve the resulting ODbL obligations.
 
 A kill switch is an incident control, not a way to submit an unfinished feature.
 Every feature must first pass its full launch gate while enabled.
@@ -573,6 +711,8 @@ Infrastructure and native:
     npm run phase2:check-env:strict
     npm run phase2:rls-smoke
     npm run phase5:check-native-config:strict
+    npm run cat05:native-ocr-source-contract:test
+    PHASE5_NATIVE_OCR_EVIDENCE_PATH=... npm run phase5:native-ocr-evidence:strict
     npm run phase5:performance-evidence:strict
     npm run phase5:qa-packet:strict
 
@@ -595,6 +735,10 @@ Release, beta, and launch:
 Human E2E:
 
     npm run e2e:human:manifest:check
+    npm run e2e:cat05-native-ocr-ui
+
+The CAT-05 Expo-web command is deterministic UI-state evidence only and must
+record `nativeDeviceProof=false`; it cannot satisfy the native evidence command.
 
 ## 31. Current Known State
 
@@ -607,22 +751,54 @@ As of this document date:
 - No live staging or production Supabase project is verified.
 - RevenueCat runtime code exists, but real Apple products, keys, offering,
   webhook, sandbox lifecycle, and finance signoff are missing.
-- Current working identity RoutineKind is not legally cleared.
+- Current working identity Layerwell is not legally cleared.
 - Production config deliberately fails closed without final brand and Phase 3
   review clearance.
 - All Phase 7 and Phase 8 public feature flags are false.
-- Community aggregates/submissions, trend engine, and native widgets have
-  hardcoded incapability paths that require implementation, not flag changes.
-- Native OCR is disabled in every EAS profile.
+- Community aggregates/submissions and the trend engine retain hardcoded
+  incapability paths that require implementation, not flag changes. Native
+  widgets now have a Layerwell-specific SQLite/CAS/outbox source candidate,
+  but publication and Live Activity start remain disabled by literal signed
+  flags and cannot be enabled by an environment or OTA flag alone.
+- Native OCR now has an Apple Vision revision-3 source candidate. Only the
+  internal `staging` EAS profile enables it for evidence collection;
+  `development` and `production` remain disabled. No Xcode/Swift compilation,
+  signed-archive linkage, physical-iPhone, real-label accuracy, zero-network,
+  cache cleanup, VoiceOver/Dynamic Type, or performance proof exists yet.
 - Cloud Ask lacks a completed production provider/gateway/safety contract.
-- Commerce lacks an approved live rail.
+- COM-01A enforces literal zero admission. Commerce lacks accepted Apple/legal
+  classification, an approved live rail/account and contract, reviewed
+  catalog/stacks/copy, hosted operations, signed-archive and supported-iPhone
+  evidence, App Review, and named signoffs; COM-01 through COM-07 remain open.
 - Community lacks complete live moderation operations.
-- Widgets and Live Activities lack finished native targets.
+- Widgets and Live Activities now have a hash-pinned `expo-widgets` native
+  patch, typed bridge, owner-bound coordinator/host source, deterministic stale
+  handling, and unconditional cleanup call sites. They still lack a
+  macOS-compiled and signed final-identity target plus archive and supported
+  physical-iPhone evidence, so feature 19 remains launch-blocked.
+- The active IOS-02 work was performed in a Windows workspace without Xcode or
+  a Swift compiler. Local source/model/static tests do not prove Swift
+  compilation, code signing, entitlements, device behavior, privacy/legal
+  compliance, App Review acceptance, or revenue.
 - Cross-platform validators still require Android and must be migrated.
 - The Supabase staging deploy wrapper has missing functions/auth/secrets.
-- Native Sign in with Apple configuration requires correction.
-- The reverse-trial environment/validator contract contradicts its app-granted
-  implementation.
+- Native Sign in with Apple lifecycle source is implemented, but final Apple
+  identifiers/keys, hosted migration and function deployment, primary-App-ID
+  event registration/delivery, the one-minute Vault/Cron worker, existing-user
+  recapture cutover, rotation/rollback drills, and physical-iPhone/TestFlight
+  evidence remain open.
+- The PAY-07 source candidate removes client-created reverse-trial authority,
+  denies the Edge grant before authentication outside an explicit development
+  runtime on an exact HTTP loopback Supabase origin,
+  confines positive entitlement fixtures to Expo web development, rejects
+  unverified provider positives, and makes cached/direct success routes fail
+  closed. PAY-06/PAY-07 remain incomplete. The safest iOS release candidate
+  disables the custom server full-Pro grant and uses an Apple-managed
+  introductory offer. Any retained exception needs counsel analysis, Apple
+  correspondence if obtainable, abuse controls, and the exact submitted build's
+  App Review outcome; none guarantees acceptance. Hosted RevenueCat Trusted
+  Entitlements evidence and physical-iPhone StoreKit lifecycle proof also remain
+  open.
 - App Store privacy, export, metadata, subscriptions, reviewer packet, and
   signed production build do not yet exist.
 

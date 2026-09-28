@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -5,429 +7,395 @@ import {
   endAccountGenerationBoundary,
 } from '@/lib/auth/accountGeneration';
 
-import { CONSENT_WITHDRAWAL_RESPONSE_INVALID, withdrawConsent } from './withdrawal';
-import {
-  DATA_SHARING_WITHDRAWAL_E2E_ATTEMPTS_KEY,
-  DATA_SHARING_WITHDRAWAL_E2E_FAILURE,
-  DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK,
-} from './withdrawalE2EFixture';
+import { HEALTH_DEPENDENT_CONSENT_COPY } from './dependentConsentContract';
+import { CONSENT_WITHDRAWAL_OWNER_CHANGED, withdrawConsent } from './withdrawal';
 
-const validCleanupByConsentType = {
-  photo_cloud_backup: {
-    photo_rows_relocalized: 2,
-    storage_objects_removed: 1,
-    skipped_storage_paths: 1,
-  },
-  photo_trend_insights: { photo_trend_deleted: 3 },
-  ask_onskin: { ask_safety_audit_deleted: 4 },
-  community_participation: {
-    community_reports_deleted: 1,
-    community_reactions_deleted: 2,
-    community_questions_deleted: 3,
-    community_blocks_deleted: 4,
-  },
-  data_sharing: {
-    order_attributions_detached: 5,
-    commerce_click_events_deleted: 6,
-  },
-  marketing: { marketing_withdrawal_recorded: true },
-} as const;
-
-type WithdrawableConsentType = keyof typeof validCleanupByConsentType;
+const OPERATION_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 
 const mocks = vi.hoisted(() => ({
-  digest: vi.fn(async () => 'hash'),
-  getSession: vi.fn(),
+  appEnvironment: 'development' as 'development' | 'staging' | 'production',
+  configured: true,
+  digest: vi.fn(),
   getUser: vi.fn(),
   invoke: vi.fn(),
+  readCandidate: vi.fn(),
 }));
-
-const state = vi.hoisted(() => ({ isSupabaseConfigured: false, platform: 'ios' }));
-
 vi.mock('@/lib/env', () => ({
-  get isSupabaseConfigured() {
-    return state.isSupabaseConfigured;
-  },
-}));
-
-vi.mock('react-native', () => ({
-  Platform: {
-    get OS() {
-      return state.platform;
+  env: {
+    get appEnvironment() {
+      return mocks.appEnvironment;
     },
   },
+  get isSupabaseConfigured() { return mocks.configured; },
 }));
-
 vi.mock('expo-crypto', () => ({
   CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
   digestStringAsync: mocks.digest,
+  getRandomBytesAsync: vi.fn(),
 }));
-
 vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: { getSession: mocks.getSession, getUser: mocks.getUser },
-    functions: { invoke: mocks.invoke },
-  },
+  readPersistedSupabaseSessionCandidate: mocks.readCandidate,
+  supabase: { auth: { getUser: mocks.getUser }, functions: { invoke: mocks.invoke } },
 }));
 
-let boundaryActive = false;
-const fixtureStorage = new Map<string, string>();
+function jwt(subject: string): string {
+  const encode = (value: unknown) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  return `${encode({ alg: 'HS256' })}.${encode({ sub: subject, session_id: `s-${subject}`, exp: 4_102_444_800 })}.sig`;
+}
+function candidate(subject: string) {
+  return { access_token: jwt(subject), refresh_token: 'r', expires_at: 4_102_444_800, user: { id: subject } };
+}
 
-afterEach(() => {
-  delete process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL;
-  vi.unstubAllGlobals();
-  if (boundaryActive) {
-    endAccountGenerationBoundary();
-    boundaryActive = false;
-  }
-});
-
-describe('consent withdrawal backend guard', () => {
+describe('consent withdrawal transport guard', () => {
+  let boundaryOpen = false;
   beforeEach(() => {
-    state.isSupabaseConfigured = false;
-    state.platform = 'ios';
-    fixtureStorage.clear();
-    vi.stubGlobal('__DEV__', true);
-    vi.stubGlobal('sessionStorage', {
-      getItem: (key: string) => fixtureStorage.get(key) ?? null,
-      setItem: (key: string, value: string) => fixtureStorage.set(key, value),
-    });
-    mocks.digest.mockClear();
-    mocks.getSession.mockReset();
+    mocks.appEnvironment = 'development';
+    mocks.configured = true;
+    mocks.digest.mockReset();
+    mocks.digest.mockImplementation(async (_algorithm: string, text: string) =>
+      createHash('sha256').update(text).digest('hex'),
+    );
     mocks.getUser.mockReset();
-    mocks.invoke.mockClear();
-    mocks.getUser.mockResolvedValue({
-      data: { user: { id: 'owner-a' } },
-      error: null,
-    });
-    mocks.getSession.mockResolvedValue({
-      data: { session: { access_token: 'token-a', user: { id: 'owner-a' } } },
-      error: null,
-    });
-    mocks.invoke.mockResolvedValue({
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-a' } }, error: null });
+    mocks.invoke.mockReset();
+    mocks.invoke.mockResolvedValue({ data: { withdrawn: true }, error: null });
+    mocks.readCandidate.mockReset();
+    mocks.readCandidate.mockResolvedValue(candidate('user-a'));
+  });
+  afterEach(() => {
+    if (boundaryOpen) endAccountGenerationBoundary();
+    boundaryOpen = false;
+  });
+
+  it('sends the exact dependent CAS body and authenticated initiating owner', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.data_sharing.withdrawal;
+    mocks.invoke.mockResolvedValueOnce({
       data: {
         withdrawn: true,
-        consent_type: 'marketing',
-        cleanup: { marketing_withdrawal_recorded: true },
+        pending: false,
+        retry_required: false,
+        operation_id: OPERATION_ID,
+        consent_type: 'data_sharing',
+        state: 'withdrawn',
+        processing_epoch: 7,
+        consent_generation: 15,
+        cleanup: {
+          order_attributions_detached: 1,
+          commerce_click_events_deleted: 1,
+          more_pending: false,
+        },
+        replayed: false,
       },
       error: null,
     });
+    await expect(withdrawConsent({
+      type: 'data_sharing',
+      version: copy.version,
+      consentText: copy.text,
+      expectedUserId: 'user-a',
+      expectedProcessingEpoch: 7,
+      expectedConsentGeneration: 14,
+      idempotencyKey: 'ab'.repeat(32),
+    })).resolves.toEqual({
+      operationId: OPERATION_ID,
+      consentType: 'data_sharing',
+      processingEpoch: 7,
+      consentGeneration: 15,
+      replayed: false,
+    });
+    expect(mocks.invoke).toHaveBeenCalledWith('consent-withdrawal', expect.objectContaining({
+      body: {
+        consentType: 'data_sharing',
+        version: copy.version,
+        consentTextHash: copy.sha256,
+        idempotencyKey: 'ab'.repeat(32),
+        expectedProcessingEpoch: 7,
+        expectedConsentGeneration: 14,
+      },
+      headers: { Authorization: `Bearer ${jwt('user-a')}` },
+      signal: expect.any(AbortSignal),
+    }));
   });
 
-  it('hashes, owner-fences, and validates the exact third fixture acknowledgement', async () => {
-    state.platform = 'web';
-    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'fail_twice_then_succeed';
-    const params = {
-      type: 'data_sharing' as const,
-      version: 'test',
-      consentText: 'copy',
+  it('allows an exact terminal withdrawal replay in production', async () => {
+    mocks.appEnvironment = 'production';
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        withdrawn: true,
+        pending: false,
+        retry_required: false,
+        operation_id: OPERATION_ID,
+        consent_type: 'ask_layerwell',
+        state: 'withdrawn',
+        processing_epoch: 7,
+        consent_generation: 3,
+        replayed: true,
+      },
+      error: null,
+    });
+
+    await expect(
+      withdrawConsent({
+        type: 'ask_layerwell',
+        version: copy.version,
+        consentText: copy.text,
+        expectedUserId: 'user-a',
+        expectedProcessingEpoch: 7,
+        expectedConsentGeneration: 2,
+        idempotencyKey: 'ac'.repeat(32),
+      }),
+    ).resolves.toMatchObject({
+      consentType: 'ask_layerwell',
+      consentGeneration: 3,
+      replayed: true,
+    });
+  });
+
+  it('rejects missing dependent CAS fields before auth or network', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    await expect(withdrawConsent({
+      type: 'ask_layerwell', version: copy.version, consentText: copy.text, expectedUserId: 'user-a',
+    })).rejects.toThrow('HEALTH_DEPENDENT_WITHDRAWAL_CONTRACT_INVALID');
+    expect(mocks.readCandidate).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('treats an HTTP-202-shaped body as pending, never terminal success', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        withdrawn: false,
+        pending: true,
+        retry_required: true,
+        operation_id: OPERATION_ID,
+        consent_type: 'ask_layerwell',
+        state: 'withdrawing',
+        processing_epoch: 7,
+        consent_generation: 3,
+        stage: 'cleanup',
+        error: 'CONSENT_WITHDRAWAL_RETRY_REQUIRED',
+      },
+      error: null,
+    });
+    await expect(
+      withdrawConsent({
+        type: 'ask_layerwell',
+        version: copy.version,
+        consentText: copy.text,
+        expectedUserId: 'user-a',
+        expectedProcessingEpoch: 7,
+        expectedConsentGeneration: 2,
+        idempotencyKey: '12'.repeat(32),
+      }),
+    ).rejects.toThrow('HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_PENDING');
+  });
+
+  it('rejects a terminal body that does not attest the exact generation', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        withdrawn: true,
+        pending: false,
+        retry_required: false,
+        operation_id: OPERATION_ID,
+        consent_type: 'ask_layerwell',
+        state: 'withdrawn',
+        processing_epoch: 7,
+        consent_generation: 99,
+        replayed: true,
+      },
+      error: null,
+    });
+    await expect(
+      withdrawConsent({
+        type: 'ask_layerwell',
+        version: copy.version,
+        consentText: copy.text,
+        expectedUserId: 'user-a',
+        expectedProcessingEpoch: 7,
+        expectedConsentGeneration: 2,
+        idempotencyKey: '13'.repeat(32),
+      }),
+    ).rejects.toThrow('HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID');
+  });
+
+  it('rejects a terminal response with an invalid UUID or any undeclared key', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    const invoke = (operationId: string, extra: Record<string, unknown> = {}) => ({
+      data: {
+        withdrawn: true,
+        pending: false,
+        retry_required: false,
+        operation_id: operationId,
+        consent_type: 'ask_layerwell',
+        state: 'withdrawn',
+        processing_epoch: 7,
+        consent_generation: 3,
+        replayed: true,
+        ...extra,
+      },
+      error: null,
+    });
+    const request = () => withdrawConsent({
+      type: 'ask_layerwell',
+      version: copy.version,
+      consentText: copy.text,
+      expectedUserId: 'user-a',
+      expectedProcessingEpoch: 7,
+      expectedConsentGeneration: 2,
+      idempotencyKey: '14'.repeat(32),
+    });
+
+    mocks.invoke.mockResolvedValueOnce(invoke('not-a-uuid'));
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+    mocks.invoke.mockResolvedValueOnce(invoke(OPERATION_ID, { unexpected: 'field' }));
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+  });
+
+  it('rejects a pending response with an invalid UUID or any undeclared key', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    const pending = (operationId: string, extra: Record<string, unknown> = {}) => ({
+      data: {
+        withdrawn: false,
+        pending: true,
+        retry_required: true,
+        operation_id: operationId,
+        consent_type: 'ask_layerwell',
+        state: 'withdrawing',
+        processing_epoch: 7,
+        consent_generation: 3,
+        stage: 'cleanup',
+        error: 'CONSENT_WITHDRAWAL_RETRY_REQUIRED',
+        ...extra,
+      },
+      error: null,
+    });
+    const request = () => withdrawConsent({
+      type: 'ask_layerwell',
+      version: copy.version,
+      consentText: copy.text,
+      expectedUserId: 'user-a',
+      expectedProcessingEpoch: 7,
+      expectedConsentGeneration: 2,
+      idempotencyKey: '15'.repeat(32),
+    });
+
+    mocks.invoke.mockResolvedValueOnce(pending('bad-id'));
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+    mocks.invoke.mockResolvedValueOnce(pending(OPERATION_ID, { unexpected: true }));
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+    mocks.invoke.mockResolvedValueOnce(pending(OPERATION_ID, { consent_generation: 4 }));
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+  });
+
+  it('validates every terminal cleanup field by its exact type and invariant', async () => {
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.photo_capture.withdrawal;
+    const request = () => withdrawConsent({
+      type: 'photo_capture',
+      version: copy.version,
+      consentText: copy.text,
+      expectedUserId: 'user-a',
+      expectedProcessingEpoch: 7,
+      expectedConsentGeneration: 2,
+      idempotencyKey: '16'.repeat(32),
+    });
+    const response = (cleanup: Record<string, unknown>) => ({
+      data: {
+        withdrawn: true,
+        pending: false,
+        retry_required: false,
+        operation_id: OPERATION_ID,
+        consent_type: 'photo_capture',
+        state: 'withdrawn',
+        processing_epoch: 7,
+        consent_generation: 3,
+        cleanup,
+        replayed: false,
+      },
+      error: null,
+    });
+    const valid = {
+      remote_photo_rows_deleted: 1,
+      storage_objects_removed: 1,
+      skipped_storage_paths: 0,
+      local_device_cleanup_claimed: false,
+      photo_trend_deleted: 1,
     };
 
-    await expect(withdrawConsent(params)).rejects.toThrow(DATA_SHARING_WITHDRAWAL_E2E_FAILURE);
-    await expect(withdrawConsent(params)).rejects.toThrow(DATA_SHARING_WITHDRAWAL_E2E_FAILURE);
-    await expect(withdrawConsent(params)).resolves.toBeUndefined();
-
-    expect(fixtureStorage.get(DATA_SHARING_WITHDRAWAL_E2E_ATTEMPTS_KEY)).toBe('3');
-    expect(mocks.digest).toHaveBeenCalledTimes(3);
-    expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('does not bypass the backend guard for another consent type', async () => {
-    state.platform = 'web';
-    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'fail_twice_then_succeed';
-
-    await expect(
-      withdrawConsent({
-        type: 'marketing',
-        version: 'test',
-        consentText: 'copy',
-      }),
-    ).rejects.toThrow('CONSENT_BACKEND_UNAVAILABLE');
-
-    expect(mocks.digest).not.toHaveBeenCalled();
-    expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(fixtureStorage.size).toBe(0);
-  });
-
-  it('detaches a held fixture response immediately when the owner boundary starts', async () => {
-    state.platform = 'web';
-    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'hold_then_succeed';
-
-    const withdrawal = withdrawConsent({
-      type: 'data_sharing',
-      version: 'test',
-      consentText: 'copy',
-    });
-    await vi.waitFor(() =>
-      expect(
-        (
-          globalThis as typeof globalThis & {
-            __ROUTINEKIND_E2E_RELEASE_DATA_SHARING_WITHDRAWAL__?: () => void;
-          }
-        )[DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK],
-      ).toBeTypeOf('function'),
+    mocks.invoke.mockResolvedValueOnce(
+      response({ ...valid, remote_photo_rows_deleted: false }),
     );
-    const release = (
-      globalThis as typeof globalThis & {
-        __ROUTINEKIND_E2E_RELEASE_DATA_SHARING_WITHDRAWAL__?: () => void;
-      }
-    )[DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK];
-
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-
-    await expect(withdrawal).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    release?.();
-    await Promise.resolve();
-
-    expect(mocks.digest).toHaveBeenCalledOnce();
-    expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('detaches a never-resolving hash before any fixture or network work starts', async () => {
-    state.platform = 'web';
-    process.env.EXPO_PUBLIC_E2E_SETTINGS_DATA_SHARING_WITHDRAWAL = 'hold_then_succeed';
-    mocks.digest.mockImplementationOnce(() => new Promise<string>(() => undefined));
-
-    const withdrawal = withdrawConsent({
-      type: 'data_sharing',
-      version: 'test',
-      consentText: 'copy',
-    });
-    await vi.waitFor(() => expect(mocks.digest).toHaveBeenCalledOnce());
-
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-
-    await expect(withdrawal).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(fixtureStorage.size).toBe(0);
-    expect(
-      (
-        globalThis as typeof globalThis & {
-          __ROUTINEKIND_E2E_RELEASE_DATA_SHARING_WITHDRAWAL__?: () => void;
-        }
-      )[DATA_SHARING_WITHDRAWAL_E2E_RELEASE_HOOK],
-    ).toBeUndefined();
-    expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('fails before hashing or invoking placeholder Supabase when unconfigured', async () => {
-    await expect(
-      withdrawConsent({
-        type: 'marketing',
-        version: 'test',
-        consentText: 'copy',
-      }),
-    ).rejects.toThrow('CONSENT_BACKEND_UNAVAILABLE');
-
-    expect(mocks.digest).not.toHaveBeenCalled();
-    expect(mocks.invoke).not.toHaveBeenCalled();
-  });
-
-  it('pins the initiating owner-A token on the withdrawal request', async () => {
-    state.isSupabaseConfigured = true;
-
-    await withdrawConsent({
-      type: 'marketing',
-      version: 'test',
-      consentText: 'copy',
-    });
-
-    expect(mocks.invoke).toHaveBeenCalledWith(
-      'consent-withdrawal',
-      expect.objectContaining({
-        headers: { Authorization: 'Bearer token-a' },
-        signal: expect.any(AbortSignal),
-        body: {
-          consentType: 'marketing',
-          version: 'test',
-          consentTextHash: 'hash',
-        },
-      }),
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+    mocks.invoke.mockResolvedValueOnce(
+      response({ ...valid, local_device_cleanup_claimed: true }),
+    );
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
+    );
+    mocks.invoke.mockResolvedValueOnce(response({ ...valid, skipped_storage_paths: 1 }));
+    await expect(request()).rejects.toThrow(
+      'HEALTH_DEPENDENT_CONSENT_WITHDRAWAL_ATTESTATION_INVALID',
     );
   });
 
-  it.each([
-    ['null response', null],
-    [
-      'false withdrawn flag',
-      {
-        withdrawn: false,
-        consent_type: 'marketing',
-        cleanup: { marketing_withdrawal_recorded: true },
-      },
-    ],
-    [
-      'wrong consent type',
-      {
-        withdrawn: true,
-        consent_type: 'data_sharing',
-        cleanup: { marketing_withdrawal_recorded: true },
-      },
-    ],
-    ['missing cleanup', { withdrawn: true, consent_type: 'marketing' }],
-    [
-      'array cleanup',
-      { withdrawn: true, consent_type: 'marketing', cleanup: ['not', 'an', 'object'] },
-    ],
-    [
-      'extra top-level field',
-      {
-        withdrawn: true,
-        consent_type: 'marketing',
-        cleanup: { marketing_withdrawal_recorded: true },
-        ok: true,
-      },
-    ],
-  ])('rejects a %s with one stable acknowledgement error', async (_label, data) => {
-    state.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({ data, error: null });
-
-    await expect(
-      withdrawConsent({
-        type: 'marketing',
-        version: 'test',
-        consentText: 'copy',
-      }),
-    ).rejects.toThrow(CONSENT_WITHDRAWAL_RESPONSE_INVALID);
+  it('rejects a foreign persisted JWT subject before mutation', async () => {
+    mocks.readCandidate.mockResolvedValueOnce(candidate('user-b'));
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    await expect(withdrawConsent({
+      type: 'ask_layerwell',
+      version: copy.version,
+      consentText: copy.text,
+      expectedUserId: 'user-a',
+      expectedProcessingEpoch: 7,
+      expectedConsentGeneration: 2,
+      idempotencyKey: 'cd'.repeat(32),
+    })).rejects.toThrow(CONSENT_WITHDRAWAL_OWNER_CHANGED);
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
-  it.each(Object.entries(validCleanupByConsentType))(
-    'accepts the exact %s cleanup acknowledgement',
-    async (type, cleanup) => {
-      state.isSupabaseConfigured = true;
-      mocks.invoke.mockResolvedValueOnce({
-        data: { withdrawn: true, consent_type: type, cleanup },
-        error: null,
-      });
-
-      await expect(
-        withdrawConsent({
-          type: type as WithdrawableConsentType,
-          version: 'test',
-          consentText: 'copy',
-        }),
-      ).resolves.toBeUndefined();
-    },
-  );
-
-  it.each(Object.keys(validCleanupByConsentType))(
-    'rejects an empty %s cleanup acknowledgement',
-    async (type) => {
-      state.isSupabaseConfigured = true;
-      mocks.invoke.mockResolvedValueOnce({
-        data: { withdrawn: true, consent_type: type, cleanup: {} },
-        error: null,
-      });
-
-      await expect(
-        withdrawConsent({
-          type: type as WithdrawableConsentType,
-          version: 'test',
-          consentText: 'copy',
-        }),
-      ).rejects.toThrow(CONSENT_WITHDRAWAL_RESPONSE_INVALID);
-    },
-  );
-
-  it.each(Object.entries(validCleanupByConsentType))(
-    'rejects an extra %s cleanup acknowledgement field',
-    async (type, cleanup) => {
-      state.isSupabaseConfigured = true;
-      mocks.invoke.mockResolvedValueOnce({
-        data: {
-          withdrawn: true,
-          consent_type: type,
-          cleanup: { ...cleanup, unexpected: 0 },
-        },
-        error: null,
-      });
-
-      await expect(
-        withdrawConsent({
-          type: type as WithdrawableConsentType,
-          version: 'test',
-          consentText: 'copy',
-        }),
-      ).rejects.toThrow(CONSENT_WITHDRAWAL_RESPONSE_INVALID);
-    },
-  );
-
-  it.each(
-    Object.entries(validCleanupByConsentType)
-      .filter(([type]) => type !== 'marketing')
-      .flatMap(([type, cleanup]) => {
-        const [countKey] = Object.keys(cleanup);
-        return [
-          [`${type} string`, type, { ...cleanup, [countKey]: '1' }],
-          [`${type} negative`, type, { ...cleanup, [countKey]: -1 }],
-          [`${type} noninteger`, type, { ...cleanup, [countKey]: 1.5 }],
-        ] as const;
-      }),
-  )('rejects a %s count field', async (_label, type, cleanup) => {
-    state.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({
-      data: { withdrawn: true, consent_type: type, cleanup },
-      error: null,
+  it('aborts an in-flight invocation across an A→B account boundary', async () => {
+    let started!: () => void;
+    let release!: () => void;
+    const didStart = new Promise<void>((resolve) => { started = resolve; });
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    let signal: AbortSignal | null = null;
+    mocks.invoke.mockImplementationOnce(async (_name: string, options: { signal: AbortSignal }) => {
+      signal = options.signal;
+      started();
+      await gate;
+      return { data: {}, error: null };
     });
-
-    await expect(
-      withdrawConsent({
-        type: type as WithdrawableConsentType,
-        version: 'test',
-        consentText: 'copy',
-      }),
-    ).rejects.toThrow(CONSENT_WITHDRAWAL_RESPONSE_INVALID);
-  });
-
-  it('rejects a false marketing acknowledgement invariant', async () => {
-    state.isSupabaseConfigured = true;
-    mocks.invoke.mockResolvedValueOnce({
-      data: {
-        withdrawn: true,
-        consent_type: 'marketing',
-        cleanup: { marketing_withdrawal_recorded: false },
-      },
-      error: null,
+    const copy = HEALTH_DEPENDENT_CONSENT_COPY.ask_layerwell.withdrawal;
+    const pending = withdrawConsent({
+      type: 'ask_layerwell',
+      version: copy.version,
+      consentText: copy.text,
+      expectedUserId: 'user-a',
+      expectedProcessingEpoch: 7,
+      expectedConsentGeneration: 2,
+      idempotencyKey: 'ef'.repeat(32),
     });
-
-    await expect(
-      withdrawConsent({
-        type: 'marketing',
-        version: 'test',
-        consentText: 'copy',
-      }),
-    ).rejects.toThrow(CONSENT_WITHDRAWAL_RESPONSE_INVALID);
-  });
-
-  it('rejects a delayed owner-A withdrawal response after owner B starts', async () => {
-    state.isSupabaseConfigured = true;
-    let releaseInvoke!: () => void;
-    mocks.invoke.mockImplementationOnce(
-      () =>
-        new Promise((resolve) => {
-          releaseInvoke = () =>
-            resolve({
-              data: {
-                withdrawn: true,
-                consent_type: 'marketing',
-                cleanup: { marketing_withdrawal_recorded: true },
-              },
-              error: null,
-            });
-        }),
-    );
-
-    const withdrawal = withdrawConsent({
-      type: 'marketing',
-      version: 'test',
-      consentText: 'copy',
-    });
-    await vi.waitFor(() => expect(mocks.invoke).toHaveBeenCalledOnce());
+    await didStart;
     beginAccountGenerationBoundary();
-    boundaryActive = true;
-    releaseInvoke();
-
-    await expect(withdrawal).rejects.toMatchObject({ kind: 'owner_changed' });
+    boundaryOpen = true;
+    expect((signal as AbortSignal | null)?.aborted).toBe(true);
+    await expect(pending).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
+    endAccountGenerationBoundary();
+    boundaryOpen = false;
+    release();
   });
 });

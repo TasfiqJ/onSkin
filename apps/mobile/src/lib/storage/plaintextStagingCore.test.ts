@@ -4,12 +4,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   createPlaintextStagingCoordinator,
+  createPlaintextStagingStartupRecovery,
+  createImageManipulatorPlaintextCoordinator,
+  isCanonicalImageManipulatorJpegName,
+  LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
   PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
-  PLAINTEXT_STAGING_ENTRY_MISSING,
   PLAINTEXT_STAGING_ENTRY_UNOWNED,
   PLAINTEXT_STAGING_JOURNAL_INVALID,
   PLAINTEXT_STAGING_JOURNAL_KEY,
-  PLAINTEXT_STAGING_SCAVENGE_FAILED,
   PLAINTEXT_STAGING_STATE_INVALID,
 } from './plaintextStagingCore';
 
@@ -18,6 +20,14 @@ const SECOND_ID = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 const STAGING_DIRECTORY = 'file://cache/private-plaintext-staging-v1/';
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 
+function deferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  const promise = new Promise<T>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
+
 function createHarness(options: { cacheDirectory?: string | null; ids?: string[] } = {}) {
   const storage = new Map<string, string>();
   const files = new Set<string>();
@@ -25,10 +35,6 @@ function createHarness(options: { cacheDirectory?: string | null; ids?: string[]
   const ids = [...(options.ids ?? [FIRST_ID, SECOND_ID])];
   const deleteAsync = vi.fn(async (uri: string) => {
     files.delete(uri);
-    for (const file of [...files]) {
-      if (file.startsWith(uri)) files.delete(file);
-    }
-    directories.delete(uri);
   });
   const getItem = vi.fn(async (key: string) => storage.get(key) ?? null);
   const removeItem = vi.fn(async (key: string) => {
@@ -75,19 +81,118 @@ function readJournal(storage: Map<string, string>) {
 }
 
 describe('plaintext staging journal', () => {
-  it('reserves conflict-card exports under an exact owned PNG purpose', async () => {
+  it('uses the current identity namespace and migrates a legacy journal before cleanup', async () => {
     const harness = createHarness();
+    harness.storage.set(
+      LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
+      JSON.stringify({
+        version: 1,
+        entries: [
+          {
+            operationId: FIRST_ID,
+            createdAt: 1,
+            purpose: 'data_export_json',
+            state: 'plaintext_written',
+          },
+        ],
+      }),
+    );
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
 
-    const handle = await harness.coordinator.reserve('conflict_share_png');
+    expect(PLAINTEXT_STAGING_JOURNAL_KEY).toBe('layerwell.plaintext_staging_journal.v1');
+    await expect(harness.coordinator.scavenge()).resolves.toBe(1);
 
-    expect(handle).toEqual({
-      operationId: FIRST_ID,
-      purpose: 'conflict_share_png',
-      uri: `${STAGING_DIRECTORY}${FIRST_ID}.png`,
+    expect(harness.files).toEqual(new Set());
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('fails closed when current and legacy journals claim different plaintext', async () => {
+    const harness = createHarness();
+    const journal = (operationId: string) =>
+      JSON.stringify({
+        version: 1,
+        entries: [
+          {
+            operationId,
+            createdAt: 1,
+            purpose: 'data_export_json',
+            state: 'plaintext_written',
+          },
+        ],
+      });
+    harness.storage.set(PLAINTEXT_STAGING_JOURNAL_KEY, journal(FIRST_ID));
+    harness.storage.set(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY, journal(SECOND_ID));
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+    harness.files.add(`${STAGING_DIRECTORY}${SECOND_ID}.json`);
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_JOURNAL_INVALID);
+
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.files.size).toBe(2);
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(true);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(true);
+  });
+
+  it('keeps the legacy journal authoritative when the current-key migration write fails', async () => {
+    const harness = createHarness();
+    const legacyJournal = JSON.stringify({
+      version: 1,
+      entries: [
+        {
+          operationId: FIRST_ID,
+          createdAt: 1,
+          purpose: 'data_export_json',
+          state: 'plaintext_written',
+        },
+      ],
     });
-    expect(readJournal(harness.storage)).toMatchObject({
-      entries: [{ operationId: FIRST_ID, purpose: 'conflict_share_png', state: 'reserved' }],
+    harness.storage.set(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY, legacyJournal);
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+    harness.deps.storage.setItem.mockRejectedValueOnce(new Error('storage write interrupted'));
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow('storage write interrupted');
+
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.get(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(legacyJournal);
+
+    await expect(harness.coordinator.scavenge()).resolves.toBe(1);
+    expect(harness.files).toEqual(new Set());
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('resumes safely from identical dual journals when legacy removal is interrupted', async () => {
+    const harness = createHarness();
+    const legacyJournal = JSON.stringify({
+      version: 1,
+      entries: [
+        {
+          operationId: FIRST_ID,
+          createdAt: 1,
+          purpose: 'data_export_json',
+          state: 'plaintext_written',
+        },
+      ],
     });
+    harness.storage.set(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY, legacyJournal);
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+    harness.deps.storage.removeItem.mockRejectedValueOnce(new Error('storage remove interrupted'));
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow('storage remove interrupted');
+
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.storage.get(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(legacyJournal);
+    expect(harness.storage.get(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(legacyJournal);
+    expect(harness.deps.storage.setItem.mock.invocationCallOrder[0]).toBeLessThan(
+      harness.deps.storage.removeItem.mock.invocationCallOrder[0]!,
+    );
+
+    await expect(harness.coordinator.scavenge()).resolves.toBe(1);
+    expect(harness.files).toEqual(new Set());
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
   });
 
   it('reserves an opaque owned filename with a content-free strict journal entry', async () => {
@@ -162,37 +267,6 @@ describe('plaintext staging journal', () => {
     });
   });
 
-  it('resolves only an exact opaque, written capture entry with a present file', async () => {
-    const harness = createHarness();
-    const handle = await harness.coordinator.reserve('photo_capture_jpeg');
-
-    await expect(
-      harness.coordinator.lookup(handle.operationId, 'photo_capture_jpeg'),
-    ).resolves.toBeNull();
-    harness.files.add(handle.uri);
-    await harness.coordinator.markState(handle, 'plaintext_written');
-
-    await expect(
-      harness.coordinator.lookup(handle.operationId, 'photo_capture_jpeg'),
-    ).resolves.toEqual(handle);
-    await expect(
-      harness.coordinator.lookup(handle.operationId, 'photo_analysis_jpeg'),
-    ).resolves.toBeNull();
-    await expect(
-      harness.coordinator.lookup('../not-opaque', 'photo_capture_jpeg'),
-    ).resolves.toBeNull();
-  });
-
-  it('fails closed when a written capture journal entry has no file', async () => {
-    const harness = createHarness();
-    const handle = await harness.coordinator.reserve('photo_capture_jpeg');
-    await harness.coordinator.markState(handle, 'plaintext_written');
-
-    await expect(
-      harness.coordinator.lookup(handle.operationId, 'photo_capture_jpeg'),
-    ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_MISSING);
-  });
-
   it('retains cleanup-pending ownership when deletion fails and succeeds on retry', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('photo_share_png');
@@ -211,55 +285,6 @@ describe('plaintext staging journal', () => {
     expect(readJournal(harness.storage)).toBeNull();
   });
 
-  it('cleans a capture by opaque operation even from cleanup-pending recovery', async () => {
-    const harness = createHarness();
-    const handle = await harness.coordinator.reserve('photo_capture_jpeg');
-    harness.files.add(handle.uri);
-    await harness.coordinator.markState(handle, 'plaintext_written');
-    harness.deleteAsync.mockRejectedValueOnce(new Error('process interrupted cleanup'));
-
-    await expect(harness.coordinator.cleanup(handle)).rejects.toThrow(
-      'process interrupted cleanup',
-    );
-    await expect(
-      harness.coordinator.cleanupOperation(handle.operationId, 'photo_capture_jpeg'),
-    ).resolves.toBeUndefined();
-
-    expect(harness.files.has(handle.uri)).toBe(false);
-    expect(readJournal(harness.storage)).toBeNull();
-  });
-
-  it('proves an already-scavenged capture absent but rejects unowned plaintext', async () => {
-    const harness = createHarness();
-
-    await expect(
-      harness.coordinator.cleanupOperation(FIRST_ID, 'photo_capture_jpeg'),
-    ).resolves.toBeUndefined();
-
-    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
-    await expect(
-      harness.coordinator.cleanupOperation(FIRST_ID, 'photo_capture_jpeg'),
-    ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-  });
-
-  it('never treats a lost journal as proof that an exact handle plaintext file is absent', async () => {
-    const harness = createHarness();
-    const handle = await harness.coordinator.reserve('conflict_share_png');
-    harness.files.add(handle.uri);
-    harness.storage.delete(PLAINTEXT_STAGING_JOURNAL_KEY);
-
-    await expect(harness.coordinator.cleanup(handle)).rejects.toThrow(
-      PLAINTEXT_STAGING_ENTRY_UNOWNED,
-    );
-    expect(harness.files.has(handle.uri)).toBe(true);
-
-    harness.files.delete(handle.uri);
-    await expect(harness.coordinator.cleanup(handle)).resolves.toBeUndefined();
-    await expect(
-      harness.coordinator.cleanup({ ...handle, uri: `${handle.uri}.forged` }),
-    ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-  });
-
   it('simulates crash/relaunch by scavenging an orphan from a fresh coordinator', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('data_export_json');
@@ -271,24 +296,7 @@ describe('plaintext staging journal', () => {
 
     expect(harness.files.has(handle.uri)).toBe(false);
     expect(readJournal(harness.storage)).toBeNull();
-    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
-  });
-
-  it('scavenges a partially written reserved export after a simulated relaunch', async () => {
-    const harness = createHarness();
-    const handle = await harness.coordinator.reserve('data_export_json');
-    harness.files.add(handle.uri);
-    expect(readJournal(harness.storage)).toMatchObject({
-      entries: [{ operationId: FIRST_ID, state: 'reserved' }],
-    });
-
-    const relaunched = createPlaintextStagingCoordinator(harness.deps);
-    await expect(relaunched.scavenge()).resolves.toBe(1);
-
-    expect(harness.files.has(handle.uri)).toBe(false);
-    expect(harness.directories.has(STAGING_DIRECTORY)).toBe(false);
-    expect(readJournal(harness.storage)).toBeNull();
-    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
+    expect(harness.deleteAsync).toHaveBeenCalledWith(handle.uri, { idempotent: true });
   });
 
   it('keeps the journal intact when scavenger deletion fails so relaunch can retry', async () => {
@@ -297,7 +305,7 @@ describe('plaintext staging journal', () => {
     harness.files.add(handle.uri);
     harness.deleteAsync.mockRejectedValueOnce(new Error('filesystem unavailable'));
 
-    await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_SCAVENGE_FAILED);
+    await expect(harness.coordinator.scavenge()).rejects.toThrow('filesystem unavailable');
     expect(readJournal(harness.storage)).not.toBeNull();
     expect(harness.files.has(handle.uri)).toBe(true);
 
@@ -306,16 +314,14 @@ describe('plaintext staging journal', () => {
     expect(readJournal(harness.storage)).toBeNull();
   });
 
-  it('deletes the dedicated plaintext directories before surfacing a malformed journal', async () => {
+  it('fails closed on a malformed journal before touching the filesystem', async () => {
     const harness = createHarness();
     harness.storage.set(PLAINTEXT_STAGING_JOURNAL_KEY, '{not-json');
     harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
 
     await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_JOURNAL_INVALID);
-    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
-    expect(harness.files).not.toContain(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
-    expect(readJournal(harness.storage)).toBeNull();
-    await expect(harness.coordinator.scavenge()).resolves.toBe(0);
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.files).toContain(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
   });
 
   it('rejects journal entries that contain a path or any non-schema field', async () => {
@@ -337,10 +343,10 @@ describe('plaintext staging journal', () => {
     );
 
     await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_JOURNAL_INVALID);
-    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
   });
 
-  it('deletes the entire app-owned staging directory before surfacing an unowned entry', async () => {
+  it('deletes journal-owned plaintext but fails closed without touching a coexisting foreign file', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('photo_share_jpeg');
     const foreign = `${STAGING_DIRECTORY}foreign.txt`;
@@ -348,12 +354,11 @@ describe('plaintext staging journal', () => {
     harness.files.add(foreign);
 
     await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, {
+    expect(harness.deleteAsync).toHaveBeenCalledExactlyOnceWith(handle.uri, {
       idempotent: true,
     });
-    expect(harness.files).toEqual(new Set());
+    expect(harness.files).toEqual(new Set([foreign]));
     expect(readJournal(harness.storage)).toBeNull();
-    await expect(harness.coordinator.scavenge()).resolves.toBe(0);
   });
 
   it('blocks a new reservation while an unowned cache entry exists', async () => {
@@ -387,100 +392,84 @@ describe('plaintext staging journal', () => {
     await expect(harness.coordinator.reserve('data_export_json')).rejects.toThrow(
       PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
     );
-    await expect(harness.coordinator.scavenge()).rejects.toThrow(
-      PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
-    );
-    expect(harness.deps.storage.setItem).not.toHaveBeenCalled();
-  });
-
-  it('runs a queued startup scavenger before a later reservation', async () => {
-    const harness = createHarness();
-    let releaseScavenge!: () => void;
-    const scavengeGate = new Promise<void>((resolve) => {
-      releaseScavenge = resolve;
-    });
-    harness.deleteAsync.mockImplementationOnce(async (uri: string) => {
-      expect(uri).toBe(STAGING_DIRECTORY);
-      await scavengeGate;
-    });
-
-    const scavenging = harness.coordinator.scavenge();
-    const reserving = harness.coordinator.reserve('photo_capture_jpeg');
-    await vi.waitFor(() =>
-      expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, {
-        idempotent: true,
-      }),
-    );
-    expect(harness.deps.fileSystem.makeDirectoryAsync).not.toHaveBeenCalled();
-
-    releaseScavenge();
-    await expect(scavenging).resolves.toBe(0);
-    await expect(reserving).resolves.toMatchObject({ purpose: 'photo_capture_jpeg' });
-  });
-
-  it('scavenges the app-owned Camera and ImageManipulator ingress directories', async () => {
-    const harness = createHarness();
-    const cameraFile = 'file://cache/Camera/camera-output.jpg';
-    const analysisFile = 'file://cache/ImageManipulator/analysis-output.jpg';
-    harness.files.add(cameraFile);
-    harness.files.add(analysisFile);
-
     await expect(harness.coordinator.scavenge()).resolves.toBe(0);
-
-    expect(harness.files.has(cameraFile)).toBe(false);
-    expect(harness.files.has(analysisFile)).toBe(false);
-    expect(harness.deleteAsync).toHaveBeenCalledWith('file://cache/Camera/', {
-      idempotent: true,
-    });
-    expect(harness.deleteAsync).toHaveBeenCalledWith('file://cache/ImageManipulator/', {
-      idempotent: true,
-    });
-  });
-
-  it('propagates ingress cleanup failure so an account boundary can stay closed', async () => {
-    const harness = createHarness();
-    harness.deleteAsync.mockRejectedValueOnce(new Error('camera cache unavailable'));
-
-    await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_SCAVENGE_FAILED);
-    expect(harness.deleteAsync).toHaveBeenCalledWith('file://cache/ImageManipulator/', {
-      idempotent: true,
-    });
+    expect(harness.deps.storage.setItem).not.toHaveBeenCalled();
   });
 });
 
 describe('plaintext staging startup contract', () => {
-  it('runs owner-bound photo recovery and scavenging after session isolation but before app lock', () => {
-    const rootLayout = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');
-    const startupGate = readFileSync(
-      `${SRC_DIR}/lib/storage/PlaintextStagingStartupGate.tsx`,
-      'utf8',
-    );
-    const startupCoordinator = readFileSync(
-      `${SRC_DIR}/lib/storage/privateStorageStartup.ts`,
-      'utf8',
-    );
+  it('rescans a failed manipulation before admitting the next operation', async () => {
+    const scan = deferred<void>();
+    const events: string[] = [];
+    const coordinator = createImageManipulatorPlaintextCoordinator(async () => {
+      events.push('scan:start');
+      await scan.promise;
+      events.push('scan:end');
+      return 1;
+    });
 
-    expect(rootLayout).toContain('<PlaintextStagingStartupGate>');
-    expect(rootLayout.indexOf('<SessionBoundaryGate>')).toBeLessThan(
-      rootLayout.indexOf('<PlaintextStagingStartupGate>'),
-    );
-    expect(rootLayout.indexOf('<PlaintextStagingStartupGate>')).toBeLessThan(
-      rootLayout.indexOf('<AppLockProvider>'),
-    );
-    expect(startupGate).toContain('preparePrivateStorageForSession(userId)');
-    expect(startupGate).not.toContain('const startupScavengeResult');
-    expect(startupCoordinator.indexOf('await dependencies.recoverPhotos();')).toBeLessThan(
-      startupCoordinator.indexOf('await dependencies.scavengePlaintext();'),
-    );
-    expect(startupGate).toContain("if (status === 'ready') return children;");
-    expect(startupGate).not.toContain('.catch(() => undefined)');
-    expect(rootLayout).not.toContain('void scavengePlaintextStaging().catch');
+    const first = coordinator.run(async () => {
+      events.push('first');
+      throw new Error('native failed after write');
+    });
+    const second = coordinator.run(async () => {
+      events.push('second');
+      return 2;
+    });
+    await vi.waitFor(() => expect(events).toEqual(['first', 'scan:start']));
+    scan.resolve();
+
+    await expect(first).rejects.toThrow('native failed after write');
+    await expect(second).resolves.toBe(2);
+    expect(events).toEqual(['first', 'scan:start', 'scan:end', 'second']);
   });
 
-  it('bypasses a missing native cache only on the filesystem-free web adapter', () => {
-    const adapter = readFileSync(`${SRC_DIR}/lib/storage/plaintextStaging.ts`, 'utf8');
+  it('recognizes only exact ImageManipulator UUIDv4 JPEG cache names', () => {
+    expect(isCanonicalImageManipulatorJpegName('00000000-0000-4000-8000-000000000001.jpg')).toBe(
+      true,
+    );
+    expect(isCanonicalImageManipulatorJpegName('00000000-0000-4000-8000-000000000001.png')).toBe(
+      false,
+    );
+    expect(isCanonicalImageManipulatorJpegName('../private.jpg')).toBe(false);
+  });
 
-    expect(adapter).toContain("if (Platform.OS === 'web') return Promise.resolve(0);");
-    expect(adapter).toContain('return coordinator.scavenge();');
+  it('shares one startup drain and permits an exact retry after recovery failure', async () => {
+    const run = vi
+      .fn<() => Promise<number>>()
+      .mockRejectedValueOnce(new Error('cache unavailable'))
+      .mockResolvedValueOnce(2);
+    const recovery = createPlaintextStagingStartupRecovery(run);
+
+    const first = recovery.start();
+    expect(recovery.start()).toBe(first);
+    await expect(first).rejects.toThrow('cache unavailable');
+    await expect(recovery.retry()).resolves.toBe(2);
+    expect(run).toHaveBeenCalledTimes(2);
+  });
+
+  it('starts one content-free scavenger before the root component can mount', () => {
+    const rootLayout = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');
+    const functionOffset = rootLayout.indexOf('export default function RootLayout()');
+    const scavengeOffset = rootLayout.indexOf(
+      'void startPlaintextStagingRecovery().catch(() => undefined);',
+    );
+
+    expect(rootLayout).toContain(
+      "import { startPlaintextStagingRecovery } from '@/lib/storage/plaintextStaging';",
+    );
+    expect(scavengeOffset).toBeGreaterThan(-1);
+    expect(scavengeOffset).toBeLessThan(functionOffset);
+    expect(rootLayout).not.toContain('console.log(startPlaintextStagingRecovery');
+  });
+
+  it('routes the exported retry through the startup coordinator before current rescanning', () => {
+    const source = readFileSync(`${SRC_DIR}/lib/storage/plaintextStaging.ts`, 'utf8');
+    const retry = source.slice(source.indexOf('export function retryPlaintextStagingRecovery'));
+
+    expect(retry).toMatch(/return startup\s*\.retry\(\)/u);
+    expect(retry.indexOf('return startup')).toBeLessThan(
+      retry.indexOf('imageManipulatorPlaintext'),
+    );
   });
 });

@@ -51,7 +51,7 @@ The no-desired-frequency step-up path could also raise and clear a paused ramp.
 Focused matrix:
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/features/routine/rampStore.test.ts \
   src/features/routine/useRamp.test.ts \
   src/lib/storage/privateKV.test.ts

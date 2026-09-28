@@ -1,0 +1,92 @@
+{
+  "alerts": [],
+  "bodyText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Reviewed Barrier Serum RoutineKind Fixture / Unknown source / Usable barcode 036000291452 Use this match Not this product Add by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Catalog search query",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 244.91,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Search",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 74.09,
+      "x": 276.91,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Use Reviewed Barrier Serum match",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 293,
+      "x": 41,
+      "y": 303
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not this product",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 293,
+      "x": 41,
+      "y": 359
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add by hand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 579
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Catalog search query",
+      "value": "ceramide cleanser"
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8460/shelf/search?cat04Audit=search-matched-iphone-375x667-1784409469539&e2eQuery=ceramide+cleanser",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

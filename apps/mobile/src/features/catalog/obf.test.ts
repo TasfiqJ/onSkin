@@ -11,11 +11,11 @@ describe('Open Beauty Facts mapping', () => {
   it('requires a product-opener compatible user agent', () => {
     expect(
       buildOpenBeautyFactsUserAgent({
-        appName: 'RoutineKind',
+        appName: 'Layerwell',
         version: '1.0.0',
         contactEmail: 'support@example.com',
       }),
-    ).toBe('RoutineKind/1.0.0 (support@example.com)');
+    ).toBe('Layerwell/1.0.0 (support@example.com)');
     expect(() =>
       buildOpenBeautyFactsUserAgent({ appName: 'App', version: '1.0.0', contactEmail: 'bad' }),
     ).toThrow();

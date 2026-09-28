@@ -1,8 +1,8 @@
 
-> @onskin/mobile@0.1.0 web
+> @layerwell/mobile@0.1.0 web
 > expo start --web --port 8310 --host localhost
 
-Starting project at C:\Users\jasim\Desktop\onSkin\apps\mobile
+Starting project at C:\Users\jasim\Desktop\layerwell\apps\mobile
 Using src/app as the root directory for Expo Router.
 React Compiler enabled
 Expo Autolinking module resolution enabled

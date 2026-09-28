@@ -1,3 +1,5 @@
+import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+
 export const ACCOUNT_GENERATION_CHANGED = 'ACCOUNT_GENERATION_CHANGED';
 export const ACCOUNT_GENERATION_LEASE_INVALID_CODE = ACCOUNT_GENERATION_CHANGED;
 export const ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE = ACCOUNT_GENERATION_CHANGED;
@@ -11,13 +13,20 @@ export class AccountGenerationLeaseError extends Error {
   }
 }
 
+export function isAccountGenerationLeaseError(error: unknown): boolean {
+  return (
+    error instanceof AccountGenerationLeaseError ||
+    (typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === ACCOUNT_GENERATION_LEASE_INVALID_CODE)
+  );
+}
+
 export type AccountGenerationLease = Readonly<{
   generation: number;
   signal: AbortSignal;
   assertCurrent: () => void;
-  /** Terminal handoff into account isolation. Removes only this operation from
-   * drain tracking, starts the boundary synchronously, and returns its release. */
-  beginBoundaryHandoff: () => () => void;
 }>;
 
 type ActiveAccountGenerationOperation = {
@@ -26,14 +35,14 @@ type ActiveAccountGenerationOperation = {
 };
 
 let accountGeneration = 0;
+// Unlike `accountGeneration`, this counter describes Auth identity/session
+// continuity rather than private-store exclusion. Purpose-limited health-data
+// cleanup intentionally opens an account boundary, but it must not make a
+// still-current owner workflow look stale. Every real Auth boundary advances
+// this counter, including nested A -> B -> A transitions.
+let accountIdentityGeneration = 0;
 let accountBoundaryDepth = 0;
 const activeOperations = new Set<ActiveAccountGenerationOperation>();
-
-/** Opaque in-memory owner epoch for cache namespacing; never a raw account identifier. */
-export function getAccountGeneration(): number {
-  if (accountBoundaryDepth > 0) throw invalidLeaseError();
-  return accountGeneration;
-}
 
 function invalidLeaseError(): AccountGenerationLeaseError {
   return new AccountGenerationLeaseError();
@@ -45,58 +54,18 @@ export function assertAccountGenerationLease(lease: AccountGenerationLease): voi
   }
 }
 
-/**
- * Await an API that cannot accept AbortSignal directly without allowing it to
- * pin the account boundary forever. The underlying read may still finish later,
- * but its result is detached and can never publish after this lease is aborted.
- */
-export function awaitAccountGenerationLease<T>(
-  lease: AccountGenerationLease,
-  operation: () => PromiseLike<T>,
-): Promise<T> {
-  try {
-    lease.assertCurrent();
-  } catch (error) {
-    return Promise.reject(error);
+export function captureAccountIdentityGeneration(): number {
+  return accountIdentityGeneration;
+}
+
+export function assertAccountIdentityGeneration(expectedGeneration: number): void {
+  if (
+    !Number.isSafeInteger(expectedGeneration) ||
+    expectedGeneration < 0 ||
+    expectedGeneration !== accountIdentityGeneration
+  ) {
+    throw invalidLeaseError();
   }
-
-  return new Promise<T>((resolve, reject) => {
-    let settled = false;
-
-    const finish = (callback: () => void) => {
-      if (settled) return;
-      settled = true;
-      lease.signal.removeEventListener('abort', onAbort);
-      callback();
-    };
-    const onAbort = () => finish(() => reject(invalidLeaseError()));
-
-    lease.signal.addEventListener('abort', onAbort, { once: true });
-    if (lease.signal.aborted) {
-      onAbort();
-      return;
-    }
-
-    let pending: PromiseLike<T>;
-    try {
-      pending = operation();
-    } catch (error) {
-      finish(() => reject(error));
-      return;
-    }
-
-    void Promise.resolve(pending).then(
-      (value) => {
-        try {
-          lease.assertCurrent();
-          finish(() => resolve(value));
-        } catch (error) {
-          finish(() => reject(error));
-        }
-      },
-      (error: unknown) => finish(() => reject(error)),
-    );
-  });
 }
 
 export function runAccountGenerationOperation<T>(
@@ -106,22 +75,10 @@ export function runAccountGenerationOperation<T>(
 
   const controller = new AbortController();
   let lease!: AccountGenerationLease;
-  let activeOperation!: ActiveAccountGenerationOperation;
   lease = Object.freeze({
     generation: accountGeneration,
     signal: controller.signal,
     assertCurrent: () => assertAccountGenerationLease(lease),
-    beginBoundaryHandoff: () => {
-      assertAccountGenerationLease(lease);
-      if (!activeOperations.delete(activeOperation)) throw invalidLeaseError();
-      beginAccountGenerationBoundary();
-      let released = false;
-      return () => {
-        if (released) return;
-        released = true;
-        endAccountGenerationBoundary();
-      };
-    },
   });
 
   let resolveCompletion!: (value: T | PromiseLike<T>) => void;
@@ -130,7 +87,7 @@ export function runAccountGenerationOperation<T>(
     resolveCompletion = resolve;
     rejectCompletion = reject;
   });
-  activeOperation = {
+  const activeOperation: ActiveAccountGenerationOperation = {
     completion,
     controller,
   };
@@ -149,7 +106,13 @@ export function runAccountGenerationOperation<T>(
   return completion;
 }
 
-export function beginAccountGenerationBoundary(): void {
+function beginBoundary(advanceAccountIdentity: boolean): void {
+  // Closing the process-wide health lease is part of the synchronous boundary
+  // transition. It must happen before any await/drain so no request can borrow
+  // the previous account's health authority while the stores are rotating.
+  clearActiveHealthProcessingEpoch();
+  if (advanceAccountIdentity) accountIdentityGeneration += 1;
+
   if (accountBoundaryDepth === 0) {
     accountBoundaryDepth = 1;
     accountGeneration += 1;
@@ -160,6 +123,39 @@ export function beginAccountGenerationBoundary(): void {
   }
 
   accountBoundaryDepth += 1;
+}
+
+export function beginAccountGenerationBoundary(): void {
+  beginBoundary(true);
+}
+
+/**
+ * Atomically converts a still-current tracked operation into the destructive
+ * account boundary it is about to own. The caller must return from its tracked
+ * operation immediately after acquiring this release handle: beginning the
+ * boundary intentionally invalidates that lease and aborts every other tracked
+ * continuation.
+ *
+ * This is the safe hand-off for purpose-limited cleanup. Wrapping the whole
+ * cleanup in `runAccountGenerationOperation` would make cleanup wait on itself;
+ * checking a generation and beginning a boundary in separate turns would let an
+ * A-to-B account transition land in between.
+ */
+export function beginAccountGenerationBoundaryFromLease(
+  lease: AccountGenerationLease,
+): () => void {
+  assertAccountGenerationLease(lease);
+  // Purpose-limited cleanup rotates the private stores but does not represent
+  // a new Auth subject/session. Keep the identity generation stable while the
+  // ordinary account-generation lease still fences all concurrent work.
+  beginBoundary(false);
+
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    endAccountGenerationBoundary();
+  };
 }
 
 export async function waitForAccountGenerationOperationsToSettle(): Promise<void> {

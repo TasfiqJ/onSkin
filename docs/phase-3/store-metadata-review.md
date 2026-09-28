@@ -14,6 +14,11 @@ Last updated: 2026-07-04
 
 ## Draft Positioning
 
+All text below is candidate copy only. Before submission, generate the final
+description and captions from the exact signed release capability inventory;
+delete every line whose feature is not production-admitted and reviewer-
+reachable in that build.
+
 App category: skincare routine organization and progress tracking.
 
 Subtitle draft:
@@ -22,17 +27,17 @@ Subtitle draft:
 
 Short description draft:
 
-> Build a calmer skincare routine, keep your shelf organized, compare progress photos, and understand possible product-order conflicts without scores or medical claims.
+> `[REPLACE WITH EXACT-BUILD, ADMITTED-FEATURE COPY.]`
 
 Long description draft:
 
 - Keep your skincare products in one private shelf.
 - Build AM and PM routines in a clear order.
-- Get conservative routine-conflict flags.
-- Compare your own progress photos under similar conditions.
-- Keep photos on device by default.
-- See recommendations by fit and evidence, not commission.
-- Paid links, when enabled, are clearly disclosed.
+- `[ONLY AFTER EXACT-HASH PROFESSIONAL ADMISSION: conservative routine-conflict flags.]`
+- `[ONLY AFTER PHOTO-01..07 AND EXACT-BUILD PROOF: compare progress photos under similar conditions.]`
+- `[ONLY AFTER ARCHIVE/DEVICE/NETWORK PROOF: on-device photo-storage wording.]`
+- `[ONLY AFTER CORE-06 ADMISSION: recommendations by fit and evidence.]`
+- `[ONLY AFTER COM-01..07 ADMISSION: clearly disclosed paid links.]`
 
 ## Screenshot Caption Rules
 
@@ -40,9 +45,9 @@ Allowed:
 
 - "Your shelf, in one place."
 - "Tonight's routine, in order."
-- "Possible routine conflict."
-- "Progress photos, no scores."
-- "Paid links are disclosed."
+- "Possible routine conflict." only after exact-hash professional admission.
+- "Progress photos, no scores." only after PHOTO-01..07 and exact-build proof.
+- "Paid links are disclosed." only after COM-01..07 admission.
 
 Blocked:
 

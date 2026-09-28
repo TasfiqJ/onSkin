@@ -1,4 +1,4 @@
-export const SHELF_RENDER_DIAGNOSTICS_GLOBAL = '__ONSKIN_SHELF_RENDER_DIAGNOSTICS__' as const;
+export const SHELF_RENDER_DIAGNOSTICS_GLOBAL = '__LAYERWELL_SHELF_RENDER_DIAGNOSTICS__' as const;
 
 export type ShelfRenderDiagnosticsSnapshot = Readonly<{
   archiveListCommits: number;
@@ -18,7 +18,7 @@ type MutableShelfRenderDiagnostics = {
 };
 
 type ShelfDiagnosticsGlobal = typeof globalThis & {
-  __ONSKIN_SHELF_RENDER_DIAGNOSTICS__?: MutableShelfRenderDiagnostics;
+  __LAYERWELL_SHELF_RENDER_DIAGNOSTICS__?: MutableShelfRenderDiagnostics;
 };
 
 const EMPTY_DIAGNOSTICS: ShelfRenderDiagnosticsSnapshot = Object.freeze({
@@ -37,8 +37,8 @@ const EMPTY_DIAGNOSTICS: ShelfRenderDiagnosticsSnapshot = Object.freeze({
 function mutableDiagnostics(): MutableShelfRenderDiagnostics | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
   const root = globalThis as ShelfDiagnosticsGlobal;
-  root.__ONSKIN_SHELF_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
-  return root.__ONSKIN_SHELF_RENDER_DIAGNOSTICS__;
+  root.__LAYERWELL_SHELF_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
+  return root.__LAYERWELL_SHELF_RENDER_DIAGNOSTICS__;
 }
 
 function finiteDuration(durationMs: number): number {

@@ -47,7 +47,7 @@ prove the plan's 100-writer or exact no-op gates.
 Focused matrix:
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/features/community/reactionStore.test.ts \
   src/lib/storage/privateStringSet.test.ts \
   src/lib/storage/privateKV.test.ts \

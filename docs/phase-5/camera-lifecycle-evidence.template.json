@@ -1,0 +1,2817 @@
+{
+  "schemaVersion": 1,
+  "testStartedAt": null,
+  "completedAt": null,
+  "sourceGitSha": null,
+  "sourceHashes": {
+    "package.json": null,
+    "package-lock.json": null,
+    "apps/mobile/app.base.json": null,
+    "apps/mobile/app.config.js": null,
+    "apps/mobile/eas.json": null,
+    "apps/mobile/package.json": null,
+    "apps/mobile/src/app/_layout.tsx": null,
+    "apps/mobile/src/app/progress/capture.tsx": null,
+    "apps/mobile/src/app/progress/review.tsx": null,
+    "apps/mobile/src/app/shelf/ocr.tsx": null,
+    "apps/mobile/src/app/shelf/scan.tsx": null,
+    "apps/mobile/src/features/native/camera/barcode.ts": null,
+    "apps/mobile/src/features/native/camera/failureCopy.ts": null,
+    "apps/mobile/src/features/native/camera/labelPhotoLifecycle.ts": null,
+    "apps/mobile/src/features/native/camera/labelPhotoStartup.ts": null,
+    "apps/mobile/src/features/native/camera/useCameraAccessLifecycle.ts": null,
+    "apps/mobile/src/features/native/camera/useCameraAccessLifecycle.test.ts": null,
+    "apps/mobile/src/features/photos/applyCaptureConsent.ts": null,
+    "apps/mobile/src/features/photos/consent.ts": null,
+    "apps/mobile/src/features/photos/PhotoStorageGate.tsx": null,
+    "apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx": null,
+    "apps/mobile/src/features/photos/progressCapturePrivacy.ts": null,
+    "apps/mobile/src/features/photos/progressCapturePrivacy.test.ts": null,
+    "apps/mobile/src/features/photos/progressCaptureRouteBoundary.ts": null,
+    "apps/mobile/src/features/photos/progressCaptureRouteBoundary.test.ts": null,
+    "apps/mobile/src/features/photos/progressRoutes.test.ts": null,
+    "apps/mobile/src/features/shelf/shelfRoutes.test.ts": null,
+    "apps/mobile/src/features/navigation/sheetRouteContracts.test.ts": null,
+    "apps/mobile/src/lib/appConfig.test.ts": null,
+    "apps/mobile/src/lib/env.ts": null,
+    "scripts/cat05/native-label-ocr-source-contract.test.mjs": null,
+    "scripts/phase5/build-device-qa-packet.mjs": null,
+    "scripts/phase5/camera-lifecycle-evidence-contract.mjs": null,
+    "scripts/phase5/camera-lifecycle-evidence-smoke.mjs": null,
+    "scripts/phase5/check-camera-lifecycle-evidence.mjs": null,
+    "scripts/phase5/check-native-config.mjs": null,
+    "scripts/phase5/device-qa-packet-smoke.mjs": null,
+    "docs/phase-5/camera-lifecycle-evidence-runbook.md": null,
+    "docs/phase-5/camera-lifecycle-evidence.template.json": null,
+    "docs/phase-5/device-qa-checklist.md": null,
+    "docs/phase-5/native-build-runbook.md": null
+  },
+  "build": {
+    "easIosBuildId": null,
+    "profile": null,
+    "appBundleIdentifier": null,
+    "appVersion": null,
+    "iosBuildNumber": null,
+    "displayName": null,
+    "archiveSha256": null,
+    "resolvedBuildImage": "macos-tahoe-26.4-xcode-26.4",
+    "easCliVersion": "21.0.1",
+    "xcodeVersion": null,
+    "iosSdkVersion": null
+  },
+  "signedArchive": {
+    "applicationIdentifier": null,
+    "bundleIdentifier": null,
+    "teamIdentifier": null,
+    "provisioningProfileUuid": null,
+    "signingCertificateSha256": null,
+    "executableSha256": null,
+    "codeSignatureValid": null,
+    "finalInfoPlist": {
+      "bundleIdentifier": null,
+      "displayName": null,
+      "appVersion": null,
+      "iosBuildNumber": null,
+      "cameraUsageDescription": null,
+      "cameraUsageDescriptionOccurrenceCount": null,
+      "unresolvedBuildVariablesAbsent": null
+    }
+  },
+  "devicePolicy": {
+    "reviewedAt": null,
+    "reviewedBy": null,
+    "minimumIosVersion": "17.0",
+    "currentPublicIosVersion": "iOS 26.5.2",
+    "currentIosReleaseSourceUrl": "https://support.apple.com/en-ca/100100",
+    "supportedFloorDeviceId": "ios-floor-device",
+    "currentFlagshipDeviceId": "ios-current-device"
+  },
+  "devices": [
+    {
+      "id": "ios-floor-device",
+      "role": "supported_floor_class",
+      "physical": true,
+      "model": null,
+      "hardwareModelIdentifier": null,
+      "osVersion": "iOS 17.x",
+      "osBuild": null,
+      "identifierSha256": null,
+      "viewportWidthPoints": null,
+      "freshInstall": true,
+      "installedBundleIdentifier": null,
+      "installedAppVersion": null,
+      "installedIosBuildNumber": null,
+      "installedArchiveSha256": null,
+      "installedAt": null,
+      "installationMethod": null,
+      "installationReceiptArtifactId": "install_receipt-ios-floor-device",
+      "inAppIdentityVerified": null
+    },
+    {
+      "id": "ios-current-device",
+      "role": "current_flagship",
+      "physical": true,
+      "model": null,
+      "hardwareModelIdentifier": null,
+      "osVersion": "iOS 26.5.2",
+      "osBuild": null,
+      "identifierSha256": null,
+      "viewportWidthPoints": null,
+      "freshInstall": true,
+      "installedBundleIdentifier": null,
+      "installedAppVersion": null,
+      "installedIosBuildNumber": null,
+      "installedArchiveSha256": null,
+      "installedAt": null,
+      "installationMethod": null,
+      "installationReceiptArtifactId": "install_receipt-ios-current-device",
+      "inAppIdentityVerified": null
+    }
+  ],
+  "runs": [
+    {
+      "id": "ios-floor-device-shelf_scan-permission",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "permission",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "undetermined",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionStartedUndetermined": null,
+        "requestWasTriggeredInContext": null,
+        "grantedStateReachedReadyCamera": null,
+        "retryableDenialShowedRecovery": null,
+        "retryRequestSucceeded": null,
+        "cameraStayedUnmountedBeforeGrant": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-permission"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-settings",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "settings",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "denied",
+        "canAskAgain": false
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permanentDenialUsedCanAskAgainFalse": null,
+        "singleOpenSettingsActionVisible": null,
+        "settingsReturnPerformedFreshPermissionQuery": null,
+        "grantAfterSettingsReachedReadyCamera": null,
+        "settingsOpenFailureWasVisibleAndRetryable": null,
+        "nonCameraFallbackStayedReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-settings"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-lifecycle",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "lifecycle",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionPromptInactiveInvalidatedRequestResult": null,
+        "backgroundInvalidatedCameraLease": null,
+        "foregroundQueriedPermissionBeforeRemount": null,
+        "foregroundPermissionQueryWasAuthoritative": null,
+        "lateNativeCallbackWasIgnored": null,
+        "noStateMutationOccurredAfterUnmount": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-lifecycle"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-mount",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "mount",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "onlyOneCameraPreviewWasMounted": null,
+        "unfocusedCameraWasUnmounted": null,
+        "cameraReadyWasRequiredBeforeOperation": null,
+        "mountOrReadyFailureShowedStableRecovery": null,
+        "retryCreatedFreshCameraGeneration": null,
+        "retryRecoveredWithoutRelaunch": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-mount"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-camera_operation",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "camera_operation",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "validBarcodeWasProcessedOnce": null,
+        "invalidChecksumWasRejectedLocally": null,
+        "duplicateReadWasSuppressed": null,
+        "queuedBarcodeAfterInvalidationWasIgnored": null,
+        "lookupFailureShowedSearchOcrAndManualRecovery": null,
+        "operationFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-camera_operation"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-offline",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "offline",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "offline",
+      "result": null,
+      "observations": {
+        "offlineStateWasVerifiedOnDevice": null,
+        "noThirdPartySourceRequestOccurred": null,
+        "manualAndSearchRecoveryStayedReachable": null,
+        "queuedCandidateDidNotMutateShelfWithoutConfirmation": null,
+        "reconnectRecoveryStayedAccountAndConsentBound": null,
+        "offlineFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-offline"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-interruption",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "interruption",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "nativeInterruptionSuspendedCameraUse": null,
+        "inFlightLeaseWasInvalidated": null,
+        "resumePerformedFreshPermissionQuery": null,
+        "cameraRemountedOnceAfterRecovery": null,
+        "staleCallbackDidNotNavigateOrMutate": null,
+        "userCouldRetrySuccessfully": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-interruption"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-accessibility",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "accessibility",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "voiceOverLabelsAndValuesPassed": null,
+        "voiceOverFocusOrderPassed": null,
+        "dynamicTypeTwoHundredPercentPassed": null,
+        "minimumFortyFourPointTargetsPassed": null,
+        "noColorOnlyStatePassed": null,
+        "reduceMotionPassed": null,
+        "settingsRetryAndFallbackWereReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-accessibility"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_scan-privacy",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_scan",
+      "scenarioId": "privacy",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "barcodeFramesWereNeverPersisted": null,
+        "zeroBarcodeFrameUploadsObserved": null,
+        "zeroRawBarcodeAnalyticsObserved": null,
+        "zeroUnexpectedCameraNetworkRequestsObserved": null,
+        "noSensitiveCameraLogsObserved": null,
+        "networkCaptureCoveredTheScenarioWindow": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_scan-privacy"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-permission",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "permission",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "undetermined",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionStartedUndetermined": null,
+        "requestWasTriggeredInContext": null,
+        "grantedStateReachedReadyCamera": null,
+        "retryableDenialShowedRecovery": null,
+        "retryRequestSucceeded": null,
+        "cameraStayedUnmountedBeforeGrant": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-permission"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-settings",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "settings",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "denied",
+        "canAskAgain": false
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permanentDenialUsedCanAskAgainFalse": null,
+        "singleOpenSettingsActionVisible": null,
+        "settingsReturnPerformedFreshPermissionQuery": null,
+        "grantAfterSettingsReachedReadyCamera": null,
+        "settingsOpenFailureWasVisibleAndRetryable": null,
+        "nonCameraFallbackStayedReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-settings"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-lifecycle",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "lifecycle",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionPromptInactiveInvalidatedRequestResult": null,
+        "backgroundInvalidatedCameraLease": null,
+        "foregroundQueriedPermissionBeforeRemount": null,
+        "foregroundPermissionQueryWasAuthoritative": null,
+        "lateNativeCallbackWasIgnored": null,
+        "noStateMutationOccurredAfterUnmount": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-lifecycle"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-mount",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "mount",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "onlyOneCameraPreviewWasMounted": null,
+        "unfocusedCameraWasUnmounted": null,
+        "cameraReadyWasRequiredBeforeOperation": null,
+        "mountOrReadyFailureShowedStableRecovery": null,
+        "retryCreatedFreshCameraGeneration": null,
+        "retryRecoveredWithoutRelaunch": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-mount"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-camera_operation",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "camera_operation",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "shutterStayedBlockedUntilCameraReady": null,
+        "captureFailureShowedStableRecovery": null,
+        "captureRetrySucceeded": null,
+        "manualIngredientFallbackStayedReachable": null,
+        "lateCaptureResultWasIgnored": null,
+        "lateRawPhotoCleanupWasAwaited": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-camera_operation"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-offline",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "offline",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "offline",
+      "result": null,
+      "observations": {
+        "offlineStateWasVerifiedOnDevice": null,
+        "labelCaptureWorkedWithoutNetwork": null,
+        "manualIngredientEntryWorkedWithoutNetwork": null,
+        "zeroOcrNetworkRequestsObserved": null,
+        "zeroImageOrTranscriptUploadsObserved": null,
+        "offlineFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-offline"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-interruption",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "interruption",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "nativeInterruptionSuspendedCameraUse": null,
+        "inFlightLeaseWasInvalidated": null,
+        "resumePerformedFreshPermissionQuery": null,
+        "cameraRemountedOnceAfterRecovery": null,
+        "staleCallbackDidNotNavigateOrMutate": null,
+        "userCouldRetrySuccessfully": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-interruption"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-accessibility",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "accessibility",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "voiceOverLabelsAndValuesPassed": null,
+        "voiceOverFocusOrderPassed": null,
+        "dynamicTypeTwoHundredPercentPassed": null,
+        "minimumFortyFourPointTargetsPassed": null,
+        "noColorOnlyStatePassed": null,
+        "reduceMotionPassed": null,
+        "settingsRetryAndFallbackWereReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-accessibility"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-shelf_ocr-privacy",
+      "deviceId": "ios-floor-device",
+      "route": "shelf_ocr",
+      "scenarioId": "privacy",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "managedLabelPhotoWasRemovedAfterContinue": null,
+        "managedLabelPhotoWasRemovedAfterRetake": null,
+        "managedLabelPhotoWasRemovedAfterLeave": null,
+        "expoCameraStartupResidueWasRemovedAfterColdRelaunch": null,
+        "governedImageDigestWasAbsentFromImageCaches": null,
+        "zeroImageTranscriptUploadsAndSensitiveLogsObserved": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-shelf_ocr-privacy"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-permission",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "permission",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "undetermined",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionStartedUndetermined": null,
+        "requestWasTriggeredInContext": null,
+        "grantedStateReachedReadyCamera": null,
+        "retryableDenialShowedRecovery": null,
+        "retryRequestSucceeded": null,
+        "cameraStayedUnmountedBeforeGrant": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-permission"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-settings",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "settings",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "denied",
+        "canAskAgain": false
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permanentDenialUsedCanAskAgainFalse": null,
+        "singleOpenSettingsActionVisible": null,
+        "settingsReturnPerformedFreshPermissionQuery": null,
+        "grantAfterSettingsReachedReadyCamera": null,
+        "settingsOpenFailureWasVisibleAndRetryable": null,
+        "nonCameraFallbackStayedReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-settings"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-lifecycle",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "lifecycle",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionPromptInactiveInvalidatedRequestResult": null,
+        "backgroundInvalidatedCameraLease": null,
+        "foregroundQueriedPermissionBeforeRemount": null,
+        "foregroundPermissionQueryWasAuthoritative": null,
+        "lateNativeCallbackWasIgnored": null,
+        "noStateMutationOccurredAfterUnmount": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-lifecycle"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-mount",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "mount",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "onlyOneCameraPreviewWasMounted": null,
+        "unfocusedCameraWasUnmounted": null,
+        "cameraReadyWasRequiredBeforeOperation": null,
+        "mountOrReadyFailureShowedStableRecovery": null,
+        "retryCreatedFreshCameraGeneration": null,
+        "retryRecoveredWithoutRelaunch": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-mount"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-camera_operation",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "camera_operation",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "localPhotoConsentPrecededPermissionRequest": null,
+        "consentSaveFailureKeptCameraClosedAndRetryable": null,
+        "shutterStayedBlockedUntilCameraReady": null,
+        "captureFailureShowedStableRecovery": null,
+        "captureRetrySucceeded": null,
+        "routeExitDuringShutterDrainedBeforeRemoval": null,
+        "gateReplacementPreservedCleanupRecovery": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-camera_operation"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-offline",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "offline",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "offline",
+      "result": null,
+      "observations": {
+        "offlineStateWasVerifiedOnDevice": null,
+        "captureSaveAndTimelineViewWorkedOffline": null,
+        "savedPhotoWasEncryptedAndDeviceOnly": null,
+        "zeroPhotoOrMetadataUploadsObserved": null,
+        "noCloudBackupControlWasExposed": null,
+        "offlineFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-offline"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-interruption",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "interruption",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "nativeInterruptionSuspendedCameraUse": null,
+        "inFlightLeaseWasInvalidated": null,
+        "resumePerformedFreshPermissionQuery": null,
+        "cameraRemountedOnceAfterRecovery": null,
+        "staleCallbackDidNotNavigateOrMutate": null,
+        "userCouldRetrySuccessfully": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-interruption"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-accessibility",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "accessibility",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "voiceOverLabelsAndValuesPassed": null,
+        "voiceOverFocusOrderPassed": null,
+        "dynamicTypeTwoHundredPercentPassed": null,
+        "minimumFortyFourPointTargetsPassed": null,
+        "noColorOnlyStatePassed": null,
+        "reduceMotionPassed": null,
+        "settingsRetryAndFallbackWereReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-accessibility"],
+      "notes": null
+    },
+    {
+      "id": "ios-floor-device-progress_capture-privacy",
+      "deviceId": "ios-floor-device",
+      "route": "progress_capture",
+      "scenarioId": "privacy",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "rawCaptureWasRemovedAfterRetake": null,
+        "rawCaptureWasRemovedAfterBackOrClose": null,
+        "rawCaptureWasRemovedAfterSuccessfulSave": null,
+        "cleanupFailureBlockedRemovalAndShowedRetry": null,
+        "cleanupRetryDidNotDuplicateEncryptedStorage": null,
+        "previewUsedNoImageCache": null,
+        "zeroPhotoUploadsAndSensitiveLogsObserved": null
+      },
+      "proofArtifactIds": ["proof-ios-floor-device-progress_capture-privacy"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-permission",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "permission",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "undetermined",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionStartedUndetermined": null,
+        "requestWasTriggeredInContext": null,
+        "grantedStateReachedReadyCamera": null,
+        "retryableDenialShowedRecovery": null,
+        "retryRequestSucceeded": null,
+        "cameraStayedUnmountedBeforeGrant": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-permission"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-settings",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "settings",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "denied",
+        "canAskAgain": false
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permanentDenialUsedCanAskAgainFalse": null,
+        "singleOpenSettingsActionVisible": null,
+        "settingsReturnPerformedFreshPermissionQuery": null,
+        "grantAfterSettingsReachedReadyCamera": null,
+        "settingsOpenFailureWasVisibleAndRetryable": null,
+        "nonCameraFallbackStayedReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-settings"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-lifecycle",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "lifecycle",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionPromptInactiveInvalidatedRequestResult": null,
+        "backgroundInvalidatedCameraLease": null,
+        "foregroundQueriedPermissionBeforeRemount": null,
+        "foregroundPermissionQueryWasAuthoritative": null,
+        "lateNativeCallbackWasIgnored": null,
+        "noStateMutationOccurredAfterUnmount": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-lifecycle"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-mount",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "mount",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "onlyOneCameraPreviewWasMounted": null,
+        "unfocusedCameraWasUnmounted": null,
+        "cameraReadyWasRequiredBeforeOperation": null,
+        "mountOrReadyFailureShowedStableRecovery": null,
+        "retryCreatedFreshCameraGeneration": null,
+        "retryRecoveredWithoutRelaunch": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-mount"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-camera_operation",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "camera_operation",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "validBarcodeWasProcessedOnce": null,
+        "invalidChecksumWasRejectedLocally": null,
+        "duplicateReadWasSuppressed": null,
+        "queuedBarcodeAfterInvalidationWasIgnored": null,
+        "lookupFailureShowedSearchOcrAndManualRecovery": null,
+        "operationFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-camera_operation"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-offline",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "offline",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "offline",
+      "result": null,
+      "observations": {
+        "offlineStateWasVerifiedOnDevice": null,
+        "noThirdPartySourceRequestOccurred": null,
+        "manualAndSearchRecoveryStayedReachable": null,
+        "queuedCandidateDidNotMutateShelfWithoutConfirmation": null,
+        "reconnectRecoveryStayedAccountAndConsentBound": null,
+        "offlineFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-offline"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-interruption",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "interruption",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "nativeInterruptionSuspendedCameraUse": null,
+        "inFlightLeaseWasInvalidated": null,
+        "resumePerformedFreshPermissionQuery": null,
+        "cameraRemountedOnceAfterRecovery": null,
+        "staleCallbackDidNotNavigateOrMutate": null,
+        "userCouldRetrySuccessfully": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-interruption"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-accessibility",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "accessibility",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "voiceOverLabelsAndValuesPassed": null,
+        "voiceOverFocusOrderPassed": null,
+        "dynamicTypeTwoHundredPercentPassed": null,
+        "minimumFortyFourPointTargetsPassed": null,
+        "noColorOnlyStatePassed": null,
+        "reduceMotionPassed": null,
+        "settingsRetryAndFallbackWereReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-accessibility"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_scan-privacy",
+      "deviceId": "ios-current-device",
+      "route": "shelf_scan",
+      "scenarioId": "privacy",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "barcodeFramesWereNeverPersisted": null,
+        "zeroBarcodeFrameUploadsObserved": null,
+        "zeroRawBarcodeAnalyticsObserved": null,
+        "zeroUnexpectedCameraNetworkRequestsObserved": null,
+        "noSensitiveCameraLogsObserved": null,
+        "networkCaptureCoveredTheScenarioWindow": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_scan-privacy"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-permission",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "permission",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "undetermined",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionStartedUndetermined": null,
+        "requestWasTriggeredInContext": null,
+        "grantedStateReachedReadyCamera": null,
+        "retryableDenialShowedRecovery": null,
+        "retryRequestSucceeded": null,
+        "cameraStayedUnmountedBeforeGrant": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-permission"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-settings",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "settings",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "denied",
+        "canAskAgain": false
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permanentDenialUsedCanAskAgainFalse": null,
+        "singleOpenSettingsActionVisible": null,
+        "settingsReturnPerformedFreshPermissionQuery": null,
+        "grantAfterSettingsReachedReadyCamera": null,
+        "settingsOpenFailureWasVisibleAndRetryable": null,
+        "nonCameraFallbackStayedReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-settings"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-lifecycle",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "lifecycle",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionPromptInactiveInvalidatedRequestResult": null,
+        "backgroundInvalidatedCameraLease": null,
+        "foregroundQueriedPermissionBeforeRemount": null,
+        "foregroundPermissionQueryWasAuthoritative": null,
+        "lateNativeCallbackWasIgnored": null,
+        "noStateMutationOccurredAfterUnmount": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-lifecycle"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-mount",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "mount",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "onlyOneCameraPreviewWasMounted": null,
+        "unfocusedCameraWasUnmounted": null,
+        "cameraReadyWasRequiredBeforeOperation": null,
+        "mountOrReadyFailureShowedStableRecovery": null,
+        "retryCreatedFreshCameraGeneration": null,
+        "retryRecoveredWithoutRelaunch": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-mount"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-camera_operation",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "camera_operation",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "shutterStayedBlockedUntilCameraReady": null,
+        "captureFailureShowedStableRecovery": null,
+        "captureRetrySucceeded": null,
+        "manualIngredientFallbackStayedReachable": null,
+        "lateCaptureResultWasIgnored": null,
+        "lateRawPhotoCleanupWasAwaited": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-camera_operation"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-offline",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "offline",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "offline",
+      "result": null,
+      "observations": {
+        "offlineStateWasVerifiedOnDevice": null,
+        "labelCaptureWorkedWithoutNetwork": null,
+        "manualIngredientEntryWorkedWithoutNetwork": null,
+        "zeroOcrNetworkRequestsObserved": null,
+        "zeroImageOrTranscriptUploadsObserved": null,
+        "offlineFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-offline"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-interruption",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "interruption",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "nativeInterruptionSuspendedCameraUse": null,
+        "inFlightLeaseWasInvalidated": null,
+        "resumePerformedFreshPermissionQuery": null,
+        "cameraRemountedOnceAfterRecovery": null,
+        "staleCallbackDidNotNavigateOrMutate": null,
+        "userCouldRetrySuccessfully": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-interruption"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-accessibility",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "accessibility",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "voiceOverLabelsAndValuesPassed": null,
+        "voiceOverFocusOrderPassed": null,
+        "dynamicTypeTwoHundredPercentPassed": null,
+        "minimumFortyFourPointTargetsPassed": null,
+        "noColorOnlyStatePassed": null,
+        "reduceMotionPassed": null,
+        "settingsRetryAndFallbackWereReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-accessibility"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-shelf_ocr-privacy",
+      "deviceId": "ios-current-device",
+      "route": "shelf_ocr",
+      "scenarioId": "privacy",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "managedLabelPhotoWasRemovedAfterContinue": null,
+        "managedLabelPhotoWasRemovedAfterRetake": null,
+        "managedLabelPhotoWasRemovedAfterLeave": null,
+        "expoCameraStartupResidueWasRemovedAfterColdRelaunch": null,
+        "governedImageDigestWasAbsentFromImageCaches": null,
+        "zeroImageTranscriptUploadsAndSensitiveLogsObserved": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-shelf_ocr-privacy"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-permission",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "permission",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "undetermined",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionStartedUndetermined": null,
+        "requestWasTriggeredInContext": null,
+        "grantedStateReachedReadyCamera": null,
+        "retryableDenialShowedRecovery": null,
+        "retryRequestSucceeded": null,
+        "cameraStayedUnmountedBeforeGrant": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-permission"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-settings",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "settings",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "denied",
+        "canAskAgain": false
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permanentDenialUsedCanAskAgainFalse": null,
+        "singleOpenSettingsActionVisible": null,
+        "settingsReturnPerformedFreshPermissionQuery": null,
+        "grantAfterSettingsReachedReadyCamera": null,
+        "settingsOpenFailureWasVisibleAndRetryable": null,
+        "nonCameraFallbackStayedReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-settings"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-lifecycle",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "lifecycle",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "permissionPromptInactiveInvalidatedRequestResult": null,
+        "backgroundInvalidatedCameraLease": null,
+        "foregroundQueriedPermissionBeforeRemount": null,
+        "foregroundPermissionQueryWasAuthoritative": null,
+        "lateNativeCallbackWasIgnored": null,
+        "noStateMutationOccurredAfterUnmount": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-lifecycle"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-mount",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "mount",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "onlyOneCameraPreviewWasMounted": null,
+        "unfocusedCameraWasUnmounted": null,
+        "cameraReadyWasRequiredBeforeOperation": null,
+        "mountOrReadyFailureShowedStableRecovery": null,
+        "retryCreatedFreshCameraGeneration": null,
+        "retryRecoveredWithoutRelaunch": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-mount"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-camera_operation",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "camera_operation",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "localPhotoConsentPrecededPermissionRequest": null,
+        "consentSaveFailureKeptCameraClosedAndRetryable": null,
+        "shutterStayedBlockedUntilCameraReady": null,
+        "captureFailureShowedStableRecovery": null,
+        "captureRetrySucceeded": null,
+        "routeExitDuringShutterDrainedBeforeRemoval": null,
+        "gateReplacementPreservedCleanupRecovery": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-camera_operation"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-offline",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "offline",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "offline",
+      "result": null,
+      "observations": {
+        "offlineStateWasVerifiedOnDevice": null,
+        "captureSaveAndTimelineViewWorkedOffline": null,
+        "savedPhotoWasEncryptedAndDeviceOnly": null,
+        "zeroPhotoOrMetadataUploadsObserved": null,
+        "noCloudBackupControlWasExposed": null,
+        "offlineFailureDidNotCrashOrHang": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-offline"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-interruption",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "interruption",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "nativeInterruptionSuspendedCameraUse": null,
+        "inFlightLeaseWasInvalidated": null,
+        "resumePerformedFreshPermissionQuery": null,
+        "cameraRemountedOnceAfterRecovery": null,
+        "staleCallbackDidNotNavigateOrMutate": null,
+        "userCouldRetrySuccessfully": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-interruption"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-accessibility",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "accessibility",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "voiceOverLabelsAndValuesPassed": null,
+        "voiceOverFocusOrderPassed": null,
+        "dynamicTypeTwoHundredPercentPassed": null,
+        "minimumFortyFourPointTargetsPassed": null,
+        "noColorOnlyStatePassed": null,
+        "reduceMotionPassed": null,
+        "settingsRetryAndFallbackWereReachable": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-accessibility"],
+      "notes": null
+    },
+    {
+      "id": "ios-current-device-progress_capture-privacy",
+      "deviceId": "ios-current-device",
+      "route": "progress_capture",
+      "scenarioId": "privacy",
+      "startedAt": null,
+      "completedAt": null,
+      "permissionBefore": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "permissionAfter": {
+        "status": "granted",
+        "canAskAgain": true
+      },
+      "networkMode": "online",
+      "result": null,
+      "observations": {
+        "rawCaptureWasRemovedAfterRetake": null,
+        "rawCaptureWasRemovedAfterBackOrClose": null,
+        "rawCaptureWasRemovedAfterSuccessfulSave": null,
+        "cleanupFailureBlockedRemovalAndShowedRetry": null,
+        "cleanupRetryDidNotDuplicateEncryptedStorage": null,
+        "previewUsedNoImageCache": null,
+        "zeroPhotoUploadsAndSensitiveLogsObserved": null
+      },
+      "proofArtifactIds": ["proof-ios-current-device-progress_capture-privacy"],
+      "notes": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "eas_build_log",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "text/plain",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "archive_identity_report",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "final_info_plist_report",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "device_inventory_report",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "network_privacy_report",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "privacy_cleanup_report",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "accessibility_report",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "scenario_index",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "install_receipt-ios-floor-device",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "install_receipt-ios-current-device",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-permission",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-settings",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-lifecycle",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-mount",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-camera_operation",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-offline",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-interruption",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-accessibility",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_scan-privacy",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-permission",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-settings",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-lifecycle",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-mount",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-camera_operation",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-offline",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-interruption",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-accessibility",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-shelf_ocr-privacy",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-permission",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-settings",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-lifecycle",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-mount",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-camera_operation",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-offline",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-interruption",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-accessibility",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-floor-device-progress_capture-privacy",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-permission",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-settings",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-lifecycle",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-mount",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-camera_operation",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-offline",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-interruption",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-accessibility",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_scan-privacy",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-permission",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-settings",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-lifecycle",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-mount",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-camera_operation",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-offline",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-interruption",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-accessibility",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-shelf_ocr-privacy",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-permission",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-settings",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-lifecycle",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-mount",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-camera_operation",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-offline",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-interruption",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-accessibility",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    },
+    {
+      "id": "proof-ios-current-device-progress_capture-privacy",
+      "path": null,
+      "sha256": null,
+      "bytes": null,
+      "mediaType": "application/json",
+      "privacy": {
+        "classification": "synthetic_or_redacted_non_sensitive",
+        "containsUserPhotoPixels": false,
+        "containsLabelPhotoPixels": false,
+        "containsRawBarcode": false,
+        "containsRawTranscript": false,
+        "containsRawDeviceIdentifier": false,
+        "containsAbsoluteLocalPath": false,
+        "reviewedBy": null,
+        "reviewedAt": null
+      }
+    }
+  ],
+  "knownLimitations": [],
+  "signoff": {
+    "decision": null,
+    "qaSignedOffBy": null,
+    "privacySecuritySignedOffBy": null,
+    "accessibilitySignedOffBy": null,
+    "signedAt": null
+  }
+}

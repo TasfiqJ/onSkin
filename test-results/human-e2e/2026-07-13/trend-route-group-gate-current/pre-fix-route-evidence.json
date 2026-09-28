@@ -1,0 +1,67 @@
+{
+  "requestedUrl": "http://localhost:8267/trend/optin",
+  "observed": {
+    "buttons": [
+      {
+        "height": 55.99211502075195,
+        "text": "Back to Progress",
+        "width": 327.7305908203125
+      }
+    ],
+    "heading": "Photo trend insights are not in this beta",
+    "horizontalOverflowPx": 0,
+    "inputCount": 0,
+    "switchCount": 0,
+    "url": "http://localhost:8267/trend/fairness",
+    "viewport": {
+      "height": 668,
+      "width": 376
+    }
+  },
+  "visualRecapture": {
+    "date": "2026-07-13",
+    "captureMethod": "Human-driven Google Chrome 149 device emulation and DevTools Capture screenshot",
+    "requestedUrl": "http://localhost:8270/trend/optin",
+    "observedFinalUrl": "http://localhost:8270/trend/fairness",
+    "cssViewport": {
+      "width": 375,
+      "height": 667
+    },
+    "devicePixelRatio": 2,
+    "screenshot": {
+      "file": "pre-fix-optin-canonicalized-to-fairness.png",
+      "pixelWidth": 750,
+      "pixelHeight": 1334,
+      "sha256": "8cb7830829c44df9640ba77a0688c295a83a3cad31a219cc820c51dfc63d8964"
+    },
+    "visibleInkPixelBounds": {
+      "badgeText": { "x": 65, "y": 272, "width": 61, "height": 17 },
+      "headingText": { "x": 49, "y": 387, "width": 639, "height": 125 },
+      "bodyText": { "x": 49, "y": 565, "width": 651, "height": 120 },
+      "detailText": { "x": 84, "y": 784, "width": 550, "height": 65 },
+      "recoveryLabel": { "x": 257, "y": 1197, "width": 239, "height": 29 }
+    },
+    "note": "The pre-fix and post-fix pixels intentionally match because both named routes render the same truthful hard-disabled surface. The defect is the final URL change, which was reproduced while this image was captured."
+  },
+  "dialog": false,
+  "warnErrorLogs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:46:42.100Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-13T15:46:42.100Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-13T15:46:42.117Z",
+      "url": "http://localhost:8267/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

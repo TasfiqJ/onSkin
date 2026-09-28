@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 
-import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
-import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
-import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
-import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import {
   generatePlan,
@@ -19,8 +14,10 @@ import {
 import {
   applyRoutineOrderOverrides,
   loadRoutineOrderOverrides,
+  ROUTINE_ORDER_QUERY_KEY,
   type RoutineOrderOverrides,
 } from './orderStore';
+import { routineGenerationProfileForRealShelf } from './planProfileAdmission';
 
 // The user's generated plan. Live from the shelf via the (tested) generatePlan
 // pipeline; when the shelf is empty, falls back to the design's Maya example so
@@ -37,6 +34,7 @@ const MAYA_PRODUCTS: RoutineProduct[] = [
 const MAYA_PROFILE: RoutineGenerationProfile = {
   sensitivity: 'sensitive',
   pregnancy: false,
+  reproductiveStatus: 'none',
   goals: ['barrier_repair'],
 };
 
@@ -50,184 +48,111 @@ export type PlanResult = {
   activeProductIds: string[];
 };
 
-export type PlanQueryResult = {
+export type PlanHookResult = {
   data: PlanResult | undefined;
+  /** True only while one or more canonical inputs are still loading. */
   isLoading: boolean;
+  /** True when any canonical input query failed, even if React Query retained cached data. */
   isError: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
-  retry: () => Promise<{ isError: boolean }>;
+  /** True only when every canonical input is current and structurally available. */
+  sourceReady: boolean;
+  /** Explicitly identifies the Maya design fallback without requiring callers to inspect data. */
+  isExample: boolean;
 };
 
-export type PlanShelfSource = Pick<
-  ReturnType<typeof useShelf>,
-  'data' | 'isError' | 'isFetching' | 'isPending' | 'isSuccess'
->;
-export type PlanProfileSource = Pick<
-  ReturnType<typeof useProfileBits>,
-  'data' | 'isError' | 'isFetching' | 'isPending' | 'isSuccess'
->;
+function loadRoutineOrderForCurrentHealthLease(): Promise<RoutineOrderOverrides> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const overrides = await loadRoutineOrderOverrides();
+    lease.assertCurrent();
+    return overrides;
+  });
+}
 
-/**
- * Derive one plan observer from route-owned Shelf/profile snapshots. Routes that
- * already need those domains must pass the exact query results here instead of
- * recursively mounting duplicate TanStack observers through `usePlan()`.
- */
-export function usePlanFromSources(
-  shelf: PlanShelfSource,
-  profile: PlanProfileSource,
-): PlanQueryResult {
-  const ownerScope = useOwnerQueryScope();
+export function usePlan(): PlanHookResult {
+  const shelf = useShelf();
+  const profile = useProfileBits();
   const routineOrder = useQuery({
-    ...deterministicLocalQueryPolicy,
-    queryKey: queryKeys.routineOrder(ownerScope),
-    queryFn: () =>
-      runOwnerQueryOperation(ownerScope, async (lease) => {
-        lease.assertCurrent();
-        const overrides = await awaitAccountGenerationLease(lease, () =>
-          loadRoutineOrderOverrides(),
-        );
-        lease.assertCurrent();
-        return overrides;
-      }),
+    queryKey: ROUTINE_ORDER_QUERY_KEY,
+    queryFn: loadRoutineOrderForCurrentHealthLease,
+    retry: 1,
     staleTime: Infinity,
   });
+  const isLoading = shelf.isLoading || profile.isLoading || routineOrder.isLoading;
+  const isError = shelf.isError || profile.isError || routineOrder.isError;
+  const sourceReady = Boolean(
+    !isLoading &&
+    !isError &&
+    shelf.data !== undefined &&
+    profile.data !== undefined &&
+    profile.data.source !== 'unavailable' &&
+    routineOrder.data !== undefined,
+  );
+  if (isLoading) {
+    return { data: undefined, isLoading: true, isError, sourceReady: false, isExample: false };
+  }
 
-  const data = useMemo<PlanResult | undefined>(() => {
-    if (
-      !shelf.isSuccess ||
-      !profile.isSuccess ||
-      !routineOrder.isSuccess ||
-      !shelf.data ||
-      !profile.data ||
-      !routineOrder.data
-    ) {
-      return undefined;
-    }
+  const orderOverrides = routineOrder.data ?? { schemaVersion: 1, am: [], pm: [] };
 
-    const orderOverrides = routineOrder.data;
-    const items = shelf.data.items ?? [];
-    if (items.length > 0) {
-      const products: RoutineProduct[] = items.map((item) => ({
-        id: item.engineProduct.id,
-        name: item.engineProduct.name,
-        tags: item.engineProduct.tags,
-        category: item.category,
-        concentration: item.engineProduct.concentration,
-      }));
-      const real: RoutineGenerationProfile = {
-        sensitivity: profile.data.sensitivity,
-        pregnancy: profile.data.pregnancy,
-        pregnancySafety: profile.data.pregnancySafety,
-        pregnancyStatus: profile.data.pregnancyStatus,
-        goals: profile.data.goals,
-      };
-      const canonicalPlan = generatePlan(
-        products,
-        real,
-        shippableRules(),
-        shelf.data.conflictChoices,
-      );
+  const items = shelf.data?.items ?? [];
+  if (items.length > 0) {
+    // A real shelf must never inherit the synthetic example profile. If the
+    // user's current health/profile source is unavailable, publish no plan.
+    const real = routineGenerationProfileForRealShelf(profile.data);
+    if (!real) {
       return {
-        plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
-        canonicalPlan,
+        data: undefined,
+        isLoading: false,
+        isError,
+        sourceReady: false,
         isExample: false,
-        profileLabel: routinePlanProfileLabel(profile.data, false),
-        orderOverrides,
-        orderPersistenceUnavailable: false,
-        activeProductIds: items.map((item) => item.id),
       };
     }
-
-    const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
-    return {
-      plan: canonicalPlan,
+    const products: RoutineProduct[] = items.map((i) => ({
+      id: i.engineProduct.id,
+      name: i.engineProduct.name,
+      tags: i.engineProduct.tags,
+      category: i.category,
+      concentration: i.engineProduct.concentration,
+    }));
+    // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
+    // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
+    // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
+    // useShelf/recommendations. In production the conflict layer stays inert until
+    // clinical sign-off; in dev the full starter matrix drives the plan.
+    const canonicalPlan = generatePlan(products, real, shelf.data?.conflictChoices);
+    const data: PlanResult = {
+      plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
       canonicalPlan,
-      isExample: true,
-      profileLabel: routinePlanProfileLabel(null, true),
+      isExample: false,
+      profileLabel: routinePlanProfileLabel(profile.data ?? null, false),
       orderOverrides,
-      orderPersistenceUnavailable: false,
-      activeProductIds: [],
+      orderPersistenceUnavailable: routineOrder.isError,
+      activeProductIds: items.map((item) => item.id),
     };
-  }, [
-    shelf.isSuccess,
-    shelf.data,
-    profile.isSuccess,
-    profile.data,
-    routineOrder.isSuccess,
-    routineOrder.data,
-  ]);
-
-  // The route owns shared Shelf/profile recovery. This hook retries only the
-  // routine-order observer it mounted itself.
-  async function retry(): Promise<{ isError: boolean }> {
-    if (!routineOrder.isError) return { isError: false };
-    const result = await routineOrder.refetch();
-    return { isError: result.isError };
-  }
-
-  if (shelf.isPending || profile.isPending || routineOrder.isPending) {
     return {
-      data: undefined,
-      isLoading: true,
-      isError: false,
-      isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
-      isSuccess: false,
-      retry,
-    };
-  }
-
-  // A missing/empty Shelf is valid and may intentionally render the design
-  // example. An unreadable Shelf, profile, or saved routine order is not absence
-  // and must never seed Maya products or publish derived routine guidance.
-  if (
-    shelf.isError ||
-    profile.isError ||
-    routineOrder.isError ||
-    !shelf.isSuccess ||
-    !profile.isSuccess ||
-    !routineOrder.isSuccess ||
-    !data
-  ) {
-    return {
-      data: undefined,
+      data,
       isLoading: false,
-      isError: true,
-      isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
-      isSuccess: false,
-      retry,
+      isError,
+      sourceReady,
+      isExample: false,
     };
   }
-
+  const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE);
+  const data: PlanResult = {
+    plan: canonicalPlan,
+    canonicalPlan,
+    isExample: true,
+    profileLabel: routinePlanProfileLabel(null, true),
+    orderOverrides,
+    orderPersistenceUnavailable: routineOrder.isError,
+    activeProductIds: [],
+  };
   return {
     data,
     isLoading: false,
-    isError: false,
-    isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
-    isSuccess: true,
-    retry,
-  };
-}
-
-/** Standalone plan consumer. Route view models should prefer `usePlanFromSources`. */
-export function usePlan(): PlanQueryResult {
-  const shelf = useShelf();
-  const profile = useProfileBits();
-  const plan = usePlanFromSources(shelf, profile);
-
-  return {
-    ...plan,
-    retry: async () => {
-      const results = await Promise.all([
-        shelf.isError ? shelf.refetch() : Promise.resolve(),
-        profile.isError ? profile.refetch() : Promise.resolve(),
-        plan.retry(),
-      ]);
-      return {
-        isError: results.some(
-          (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
-        ),
-      };
-    },
+    isError,
+    sourceReady,
+    isExample: true,
   };
 }

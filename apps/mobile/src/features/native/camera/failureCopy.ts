@@ -15,3 +15,21 @@ export const CAMERA_FAILURE_COPY = {
   labelCaptureTitle: "Label wasn't captured",
   labelCaptureBody: 'Use manual text for now, or try the label photo again.',
 } as const;
+
+/**
+ * User-safe camera permission operation failures. These messages intentionally
+ * describe only the recoverable app state; native exception text and guesses
+ * about the OS permission state must never reach route copy or analytics.
+ */
+export const CAMERA_PERMISSION_FAILURE_COPY = {
+  refresh_failed: {
+    title: 'Camera access could not be checked',
+    body: 'Try checking again. You can continue with any option that does not use the camera.',
+    retryLabel: 'Check camera again',
+  },
+  request_failed: {
+    title: 'Camera access was not changed',
+    body: 'Try the camera request again. You can continue with any option that does not use the camera.',
+    retryLabel: 'Try camera access again',
+  },
+} as const;

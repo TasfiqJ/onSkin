@@ -73,7 +73,7 @@ For UI-facing work also read:
 
 ## Codex Must Not Do
 
-- Do not launch or configure production assets under `OnSkin` without written clearance.
+- Do not launch or configure production assets under `Layerwell` without written clearance.
 - Do not expose unreviewed rules in production.
 - Do not market scanner, AI skin score, skin age, diagnosis, treatment, cure, prevention, or guaranteed improvement claims.
 - Do not make commerce influence recommendation ranking.

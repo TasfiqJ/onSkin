@@ -1,7 +1,7 @@
-import { GOALS, type FunctionalTag, type GoalId } from '@onskin/types';
+import { GOALS, type FunctionalTag, type GoalId } from '@layerwell/types';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { detectConflicts, type EngineProduct } from '@/features/intelligence/engine';
+import { previewDetectConflicts, type EngineProduct } from '@/features/intelligence/engine';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
 import { REC_TYPES } from './catalog';
@@ -18,6 +18,7 @@ import {
 } from './copy';
 import { recommend, type RecInput, type RecShelfItem } from './engine';
 import { DEFAULT_PREFERENCES } from './preferences';
+import { REPLENISHMENT_REASONS } from './replenishment';
 
 // Claim-safety guard for the recommendation copy (docs/09 §10, the Slice-11/20/21/22
 // pattern). Recommendations are health-adjacent and must stay claim-safe: recommend
@@ -91,7 +92,7 @@ const builderStrings: string[] = [
   whyCopy.gapMoisturiser,
   whyCopy.gapCleanser,
   whyCopy.routineCompletion,
-  ...(['countdown', 'expired', 'finished'] as const).flatMap((reason) =>
+  ...REPLENISHMENT_REASONS.flatMap((reason) =>
     Object.values(replacementCopy('Vitamin C serum', reason)),
   ),
   whyCopy.betterFit('your cleanser'),
@@ -115,7 +116,7 @@ function engineStrings(): string[] {
     { id: 'Retinol', name: 'Retinol 0.5%', tags: ['retinoid'] as FunctionalTag[] },
     { id: 'Glycolic', name: 'Glycolic 7%', tags: ['aha'] as FunctionalTag[] },
   ];
-  const conflicts = detectConflicts(
+  const conflicts = previewDetectConflicts(
     conflictShelf,
     { sensitivity: 'sensitive', pregnancy: false },
     STARTER_RULES,
@@ -126,7 +127,6 @@ function engineStrings(): string[] {
       shelf: [shelfItem({ id: 'Niacinamide', role: 'hydrating_serum', tags: ['niacinamide'] })],
       conflicts: [],
       preferences: { values: ['fragrance_free'], budget: 'mid', formats: [] },
-      rules: STARTER_RULES,
     },
     {
       profile: { sensitivity: 'neutral', pregnancy: true, goals: ['clear_skin'] },
@@ -135,10 +135,16 @@ function engineStrings(): string[] {
         shelfItem({ id: 'Cream', role: 'moisturiser', tags: ['ceramide'] }),
         shelfItem({ id: 'SPF', role: 'spf', tags: ['sunscreen'] }),
       ],
-      replenishment: [{ id: 'SPF', name: 'SPF', tags: ['sunscreen'], reason: 'countdown' }],
+      replenishment: [
+        {
+          id: 'SPF',
+          name: 'SPF',
+          tags: ['sunscreen'],
+          reason: 'printed_expiry_countdown',
+        },
+      ],
       conflicts: [],
       preferences: DEFAULT_PREFERENCES,
-      rules: STARTER_RULES,
     },
     // better-fit (fragranced cleanser on sensitive skin) + a real conflict-resolution.
     {
@@ -152,7 +158,6 @@ function engineStrings(): string[] {
       ],
       conflicts,
       preferences: DEFAULT_PREFERENCES,
-      rules: STARTER_RULES,
     },
   ];
   const out: string[] = [];
@@ -224,8 +229,42 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
     expect(REC_COPY.youreSet.bodyNoGoals.toLowerCase()).not.toContain('goal');
     expect(REC_COPY.youreSet.body.toLowerCase()).toContain('goal'); // the dev/reviewed variant may
   });
+  it("does not promise a future notification from the you're-set state", () => {
+    expect(REC_COPY.youreSet.footnote.toLowerCase()).toContain('current reviewed inputs');
+    expect(REC_COPY.youreSet.footnote.toLowerCase()).not.toContain("we'll tell you");
+    expect(REC_COPY.youreSet.footnote.toLowerCase()).not.toContain('the moment');
+  });
+  it('never claims treatment coverage because treatment is not a required coverage role', () => {
+    expect(REC_COPY.youreSet.body.toLowerCase()).not.toContain('treatment');
+    expect(REC_COPY.youreSet.bodyNoGoals.toLowerCase()).not.toContain('treatment');
+    expect(REC_COPY.youreSet.checks.join(' ').toLowerCase()).not.toContain('treatment');
+  });
   it('the hub subtitle states the cardinal rule (ranked by fit/evidence, never commission)', () => {
     expect(REC_COPY.hub.subtitle.toLowerCase()).toContain('never by commission');
+  });
+  it('distinguishes the sole current preference influence from unavailable product matching', () => {
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).toContain('only fragrance-free');
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).toContain('not available');
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).toContain(
+      'do not affect current suggestions',
+    );
+    expect(REC_COPY.preferences.compactScope.toLowerCase()).toContain('fragrance-free only');
+    expect(REC_COPY.preferences.footnote.toLowerCase()).toContain('only fragrance-free');
+    expect(REC_COPY.preferences.footnote.toLowerCase()).toContain(
+      'do not affect current suggestions',
+    );
+    expect(REC_COPY.preferences.subtitle.toLowerCase()).not.toContain('these shape what fits you');
+  });
+  it('keeps product-label PAO distinct from reviewed catalog PAO without attributing who recorded it', () => {
+    const label = replacementCopy('Vitamin C serum', 'label_pao_countdown');
+    const catalog = replacementCopy('Vitamin C serum', 'catalog_pao_countdown');
+    expect(label.why).toContain('PAO recorded from the product label');
+    expect(label.evidence).toContain('PAO recorded from the product label');
+    expect(label.why).not.toContain('you recorded');
+    expect(label.why).not.toContain('reviewed catalog');
+    expect(catalog.why).toContain('reviewed catalog PAO');
+    expect(catalog.evidence).toContain('reviewed catalog PAO');
+    expect(catalog.why).not.toContain('recorded from the product label');
   });
 });
 

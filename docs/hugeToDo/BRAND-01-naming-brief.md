@@ -6,7 +6,7 @@ Status: prepared for founder approval; not legal clearance
 ## Decision to make
 
 Choose a protectable, pronounceable public brand for the iOS skincare product
-currently using `RoutineKind` as its development identity. The name must work as
+currently using `Layerwell` as its development identity. The name must work as
 an App Store name, spoken recommendation, domain/handle root, subscription
 brand, and eventual platform brand. It must not imply medical diagnosis,
 treatment, clinical authority, or unreviewed artificial-intelligence output.
@@ -57,7 +57,7 @@ The brand must not contain or lean on terms that reasonably suggest:
 - public before/after comparison or cloud photo analysis;
 - commission-influenced recommendation quality.
 
-Avoid `OnSkin` and close variations. An incumbent uses the exact name for a
+Avoid `Layerwell` and close variations. An incumbent uses the exact name for a
 skincare/cosmetic scanner in the same distribution channel; the evidence and
 rationale are recorded in [`brand-evidence.md`](../brand-evidence.md).
 

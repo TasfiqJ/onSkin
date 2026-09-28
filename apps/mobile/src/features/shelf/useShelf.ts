@@ -1,48 +1,41 @@
-import type { ProductStatus } from '@onskin/types';
+import type { ProductStatus } from '@layerwell/types';
 import { useQuery } from '@tanstack/react-query';
 
 import {
-  detectConflicts,
+  evaluateConflicts,
   isReassuring,
+  type ConflictEvaluationStatus,
   type DetectedConflict,
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
-import { deriveConcentration } from '@/features/intelligence/concentration';
 import {
   choiceForConflict,
   unresolvedConflicts as filterUnresolvedConflicts,
   type ConflictChoices,
 } from '@/features/intelligence/conflictChoices';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
-import { loadConflictChoices } from '@/features/intelligence/overrides';
+import { getConflictChoices } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
-import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
-import { readProfileBitsWithLease, type ProfileBits } from '@/features/scheduler/profile';
+import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
-import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
-import {
-  useLocalDateBoundary,
-  type LocalDateBoundaryIdentity,
-} from '@/lib/query/localDateBoundaryStore';
-import {
-  queryKeys,
-  runOwnerQueryOperation,
-  settleOwnerQueryOperations,
-  shouldRefetchCurrentLocalDayQuery,
-} from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import { functionalTagsForCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
-import { loadShelf, type ShelfProduct } from './store';
+import {
+  getShelfMirrorIncompatibilities,
+  loadShelf,
+  type ShelfMirrorIncompatibility,
+  type ShelfProduct,
+} from './store';
 
 // The Shelf data layer (docs/04 §5): reads the local-first store, tags products
 // via the client dictionary, runs the launch-gated conflict engine, and computes
-// the five-state PAO/expiry badge per card. usePlan + the conflict-detail sheet
+// the provenance-aware PAO/expiry badge per card. usePlan + the conflict-detail sheet
 // also read from here, so they reflect the user's real cabinet.
 
 export type ShelfItem = {
@@ -68,16 +61,15 @@ export type ShelfData = {
   unresolvedConflicts: DetectedConflict[];
   conflictChoices: ConflictChoices;
   reassurances: DetectedConflict[];
+  conflictCoverageStatus: ConflictEvaluationStatus;
+  unsupportedConflictPairs: string[];
+  /** Local rows remain visible; these deterministic issues require user repair
+   * before the encrypted mirror queue can represent them truthfully. */
+  mirrorIncompatibilities: ShelfMirrorIncompatibility[];
   /** The top noteworthy (non-reassuring) interaction for the calm shelf banner. */
   banner: DetectedConflict | null;
-  /** Exact owner-leased profile snapshot used to derive this Shelf result. */
-  profile: ProfileBits;
 };
 
-/** True when the product's surfaced expiry is only an estimate (a category PAO
- *  default, not a label/catalog value or a printed expiry). Drives the honest
- *  two-line "est.\n{Mon}" badge (design frame 03, Vitamin C). Mirrors the "est."
- *  branch of formatShelfMetaLine so the badge and the meta line never disagree. */
 /** Apply a just-persisted choice to the shared Shelf cache without a second
  * private read. This prevents a transient post-write read failure from
  * resurrecting the advisory the user just resolved. */
@@ -135,47 +127,22 @@ export function applyConflictChoicesToShelfData(
   };
 }
 
-/**
- * Read Shelf data using a route-owned local-day identity. Date-sensitive route
- * view models should share the exact boundary snapshot with every child query
- * instead of mounting another local-date subscription for each domain hook.
- */
-export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
-  const ownerScope = useOwnerQueryScope();
-  const { localDate: today } = boundary;
+export function useShelf() {
+  const today = localDateString();
 
-  const query = useQuery<ShelfData>({
-    queryKey: queryKeys.shelf(ownerScope, boundary),
-    // Shelf, profile-consent, and conflict-choice inputs are authoritative
-    // encrypted local reads, so they must execute while React Query is offline.
-    networkMode: 'always',
-    refetchOnReconnect: (activeQuery) =>
-      activeQuery.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(activeQuery),
-    refetchOnWindowFocus: (activeQuery) =>
-      activeQuery.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(activeQuery),
-    retry: false,
-    // Shelf is app-owned encrypted local state. A successful snapshot stays
-    // authoritative until an explicit mutation/profile invalidation or the
-    // local-date query key changes; routine tab/stack remounts must not reread it.
-    staleTime: Infinity,
-    // A later observer mounting after an unreadable private-store result must
-    // not silently retry behind the recovery notice. Recovery is deliberate:
-    // the user taps Try again, which calls refetch on the existing query.
-    retryOnMount: false,
+  return useQuery<ShelfData>({
+    queryKey: ['shelf'],
+    retry: 1,
     queryFn: () =>
-      runOwnerQueryOperation(ownerScope, async (lease) => {
-        const [products, profileBits, conflictChoices] = await settleOwnerQueryOperations(lease, [
-          (childLease) => awaitAccountGenerationLease(childLease, () => loadShelf()),
-          (childLease) => readProfileBitsWithLease(childLease),
-          (childLease) => awaitAccountGenerationLease(childLease, () => loadConflictChoices()),
-        ] as const);
+      runCurrentHealthDataOperation(async (lease) => {
+        lease.assertCurrent();
+        const [products, mirrorIncompatibilities, profileBits, conflictChoices] = await Promise.all(
+          [loadShelf(), getShelfMirrorIncompatibilities(), readProfileBits(), getConflictChoices()],
+        );
         lease.assertCurrent();
         const profile: EngineProfile = {
           sensitivity: profileBits.sensitivity,
-          // Conflict copy may assert pregnancy only after an affirmative answer.
-          // Unknown/prefer-not still filter routine products through the separate
-          // pregnancySafety mode, without creating a literal Pregnancy pseudo-item.
-          pregnancy: profileBits.pregnancy,
+          reproductiveStatus: profileBits.pregnancyStatus,
         };
 
         const active = products.filter((p) => p.status === 'active');
@@ -189,11 +156,11 @@ export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
           // Preserve catalog field boundaries. Without a delimiter, an unrelated
           // ingredient percentage can attach to the next ingredient name and falsely
           // clear a cautious unknown-strength active.
-          const concentration = deriveConcentration([p.name, ...p.ingredients].join('; '), tagArr);
-          return { id: p.id, name: p.name, tags: tagArr, subflags: [...subflags], concentration };
+          return { id: p.id, name: p.name, tags: tagArr, subflags: [...subflags] };
         });
 
-        const conflicts = detectConflicts(engineProducts, profile, shippableRules());
+        const conflictEvaluation = evaluateConflicts(engineProducts, profile);
+        const conflicts = conflictEvaluation.conflicts;
         const reassurances = conflicts.filter(isReassuring);
         // Either explicit timing choice resolves repeat prompts for the exact pair
         // and current rule version. Safety and stale-version rows remain unresolved.
@@ -265,8 +232,7 @@ export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
         // chronologically rather than in insertion order (review fix).
         items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
 
-        lease.assertCurrent();
-        return {
+        const result = {
           items,
           archive,
           conflicts,
@@ -274,28 +240,14 @@ export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
           conflictChoices,
           reassurances,
           banner,
-          profile: profileBits,
+          conflictCoverageStatus: conflictEvaluation.status,
+          unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
+          mirrorIncompatibilities,
         };
+        lease.assertCurrent();
+        return result;
       }),
   });
-
-  const refreshingStaleSnapshot = query.isSuccess && query.isStale;
-  return {
-    ...query,
-    // Invalidation can leave an old successful value in the cache while an
-    // inactive observer is remounted. Hide that embedded profile/conflict
-    // snapshot until the strict private reread succeeds.
-    data: query.isSuccess && !refreshingStaleSnapshot ? query.data : undefined,
-    isLoading: query.isLoading || refreshingStaleSnapshot,
-    isPending: query.isPending || refreshingStaleSnapshot,
-    isSuccess: query.isSuccess && !refreshingStaleSnapshot,
-  };
-}
-
-/** Standalone Shelf consumer. Route view models should prefer the shared boundary hook. */
-export function useShelf() {
-  const boundary = useLocalDateBoundary();
-  return useShelfFromBoundary(boundary);
 }
 
 /** Chronological tiebreak within a sort bucket: soonest surfaced-expiry first, items
@@ -309,7 +261,7 @@ function cmpExpiry(a: ShelfItem, b: ShelfItem): number {
   return 0;
 }
 
-/** Lower = surfaced first (expired, then countdown, then dated, then unknown). */
+/** Lower = surfaced first by supported tracked-date state, then unknown. */
 function sortWeight(i: ShelfItem): number {
   switch (i.badge.kind) {
     case 'expired':

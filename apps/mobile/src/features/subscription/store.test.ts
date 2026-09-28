@@ -1,53 +1,60 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { deriveState, type EntitlementOwnerContext, type StoredEntitlement } from './entitlement';
 import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-} from '@/lib/auth/accountGeneration';
-
-import { deriveState, type StoredEntitlement } from './entitlement';
-import { resolveEntitlementCacheRead } from './entitlementEvidence';
-import {
-  ENTITLEMENT_CACHE_INVALID,
-  ENTITLEMENT_CACHE_UNSUPPORTED_VERSION,
-  acceptRevenueCatVerifiedEmpty,
-  acceptTrustedRevenueCatEntitlement,
-  acceptVerifiedEntitlement,
+  ENTITLEMENT_CACHE_FOREIGN_OWNER,
+  ENTITLEMENT_EVIDENCE_CURSOR_REQUIRED,
   clearEntitlement,
   clearStoreEntitlementIfRevenueCatVerifiedEmpty,
-  downgradeToFree,
-  fetchServerEntitlement,
-  loadEntitlement,
-  readEntitlementCache,
-  rowToStoredEntitlement,
+  customerInfoToEvidence,
+  entitlementOwnerContextForUser,
+  fetchServerEvidence,
+  isDurablyAdmissibleStoreResult,
+  mergeEntitlementEvidence,
+  mergeEntitlementEvidenceBatch,
+  publishCustomerInfoEvidence,
+  readEntitlementSnapshot,
+  rowToEvidence,
   saveVerifiedEntitlement,
   startReverseTrialOnServer,
 } from './store';
 
+const A = 'a'.repeat(64);
+const B = 'b'.repeat(64);
+const KEY = 'layerwell.entitlement.v2';
+const LEGACY_KEY = 'layerwell.entitlement.v1';
+const NOW = '2026-07-14T12:00:00.000Z';
+
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
-  readErrors: new Map<string, Error>(),
   mutationTails: new Map<string, Promise<void>>(),
   nextMutationReadError: null as Error | null,
-  nextMutationError: null as Error | null,
-  nextMutationErrorKey: null as string | null,
-  nextMutationErrorAttempt: null as number | null,
-  mutationAttempts: new Map<string, number>(),
-  writes: 0,
-  writeKeys: [] as string[],
-  env: {
-    appEnvironment: 'development' as 'development' | 'staging' | 'production',
-    revenueCatReverseTrialProductId: 'routinekind_pro_reverse_trial_local',
-  },
+  nextMutationWriteError: null as Error | null,
+  currentOwnerBinding: 'a'.repeat(64) as string | null,
+  appEnvironment: 'development' as 'development' | 'staging' | 'production',
+  customProGrantEnabled: false,
   isSupabaseConfigured: false,
-  getUser: vi.fn(),
-  getSession: vi.fn(),
-  invoke: vi.fn(),
   from: vi.fn(),
+  rpc: vi.fn(),
+  invoke: vi.fn(),
+  writes: 0,
+}));
+
+vi.mock('@/lib/auth/sessionOwner', () => ({
+  localDataOwnerBinding: vi.fn(async (userId: string) => (userId === 'account-a' ? A : B)),
+  readLocalDataOwnerProofBinding: vi.fn(async () => mocks.currentOwnerBinding),
 }));
 
 vi.mock('@/lib/env', () => ({
-  env: mocks.env,
+  env: {
+    get appEnvironment() {
+      return mocks.appEnvironment;
+    },
+    get customProGrantEnabled() {
+      return mocks.customProGrantEnabled;
+    },
+    revenueCatEntitlementId: 'pro',
+  },
   get isSupabaseConfigured() {
     return mocks.isSupabaseConfigured;
   },
@@ -57,18 +64,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   PRIVATE_KV_DECRYPTION_FAILED: 'PRIVATE_KV_DECRYPTION_FAILED',
   PRIVATE_KV_ENVELOPE_INVALID: 'PRIVATE_KV_ENVELOPE_INVALID',
   PRIVATE_KV_ENVELOPE_UNSUPPORTED: 'PRIVATE_KV_ENVELOPE_UNSUPPORTED',
-  getPrivateItem: vi.fn(async (key: string) => {
-    const failure = mocks.readErrors.get(key);
-    if (failure) throw failure;
-    return mocks.storage.get(key) ?? null;
-  }),
-  setPrivateItem: vi.fn(async (key: string, value: string) => {
-    mocks.storage.set(key, value);
-    mocks.writes += 1;
-  }),
-  removePrivateItem: vi.fn(async (key: string) => {
-    if (mocks.storage.delete(key)) mocks.writes += 1;
-  }),
+  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
   multiRemovePrivateItems: vi.fn(async (keys: readonly string[]) => {
     for (const key of keys) {
       if (mocks.storage.delete(key)) mocks.writes += 1;
@@ -80,33 +76,22 @@ vi.mock('@/lib/storage/privateKV', () => ({
       const operation = previous
         .catch(() => undefined)
         .then(() => {
-          const readFailure = mocks.nextMutationReadError;
-          if (readFailure) {
+          if (mocks.nextMutationReadError) {
+            const error = mocks.nextMutationReadError;
             mocks.nextMutationReadError = null;
-            throw readFailure;
+            throw error;
           }
           const current = mocks.storage.get(key) ?? null;
           const next = updater(current);
-          const attempt = (mocks.mutationAttempts.get(key) ?? 0) + 1;
-          mocks.mutationAttempts.set(key, attempt);
-          const failure =
-            mocks.nextMutationError &&
-            (mocks.nextMutationErrorKey === null || mocks.nextMutationErrorKey === key) &&
-            (mocks.nextMutationErrorAttempt === null ||
-              mocks.nextMutationErrorAttempt === attempt)
-              ? mocks.nextMutationError
-              : null;
-          if (failure) {
-            mocks.nextMutationError = null;
-            mocks.nextMutationErrorKey = null;
-            mocks.nextMutationErrorAttempt = null;
-            throw failure;
+          if (mocks.nextMutationWriteError) {
+            const error = mocks.nextMutationWriteError;
+            mocks.nextMutationWriteError = null;
+            throw error;
           }
           if (next === current) return;
           if (next === null) mocks.storage.delete(key);
           else mocks.storage.set(key, next);
           mocks.writes += 1;
-          mocks.writeKeys.push(key);
         });
       const settled = operation.then(
         () => undefined,
@@ -123,2845 +108,1104 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
-    auth: {
-      getUser: mocks.getUser,
-      getSession: mocks.getSession,
-    },
-    functions: {
-      invoke: mocks.invoke,
-    },
     from: mocks.from,
+    rpc: mocks.rpc,
+    functions: { invoke: mocks.invoke },
   },
 }));
 
-const NOW = new Date('2026-07-05T12:00:00.000Z');
-const KEY = 'onskin.entitlement.v2';
-const PREVIOUS_KEY = KEY;
-const LEGACY_KEY = 'onskin.entitlement.v1';
-const REVENUECAT_EMPTY_KEY = LEGACY_KEY;
+const contextA: EntitlementOwnerContext = { ownerBinding: A };
 
-function cachedEntitlement(overrides: Record<string, unknown> = {}) {
+function storeEntitlement(overrides: Partial<StoredEntitlement> = {}): StoredEntitlement {
+  return {
+    tier: 'pro',
+    isActive: true,
+    periodType: 'normal',
+    store: 'app_store',
+    productId: 'layerwell_pro_annual',
+    expiresAt: '2027-07-14T12:00:00.000Z',
+    willRenew: true,
+    grantedAt: '2026-07-01T00:00:00.000Z',
+    source: 'revenuecat',
+    environment: 'sandbox',
+    managementUrl: 'https://apps.apple.com/account/subscriptions',
+    verifiedAt: '2026-07-14T10:00:00.000Z',
+    offeringId: 'default',
+    packageId: 'annual',
+    storeUserId: 'provider-user',
+    priceLabel: '$49.99/year',
+    ...overrides,
+  };
+}
+
+function appGrant(overrides: Partial<StoredEntitlement> = {}): StoredEntitlement {
   return {
     tier: 'pro',
     isActive: true,
     periodType: 'reverse_trial',
     store: 'app_granted',
-    productId: 'routinekind_pro_reverse_trial_local',
-    expiresAt: '2026-07-12T12:00:00.000Z',
-    willRenew: false,
-    grantedAt: '2026-07-05T12:00:00.000Z',
-    source: 'app_granted',
-    environment: 'development',
-    managementUrl: null,
-    verifiedAt: '2026-07-05T12:00:00.000Z',
-    offeringId: 'local_reverse_trial',
-    packageId: 'reverse_trial_7d',
-    storeUserId: null,
-    priceLabel: null,
-    ...overrides,
-  };
-}
-
-function cacheEnvelope(entitlement: unknown, version = 1): string {
-  return JSON.stringify({ version, entitlement });
-}
-
-function compositeCacheEnvelope(
-  entitlement: unknown | null,
-  revenueCatEmpty: Record<string, unknown> | null = null,
-): string {
-  const trustedRevenueCatProof = trustedRevenueCatMarkerFor(entitlement);
-  if (revenueCatEmpty || trustedRevenueCatProof) {
-    mocks.storage.set(
-      REVENUECAT_EMPTY_KEY,
-      JSON.stringify({
-        version: 2,
-        revenueCatEmpty,
-        trustedRevenueCatProof,
-      }),
-    );
-  }
-  if (entitlement !== null) return JSON.stringify(entitlement);
-  return JSON.stringify({
-    tier: 'pro',
-    isActive: false,
-    periodType: null,
-    store: null,
     productId: null,
-    expiresAt: null,
+    expiresAt: '2026-07-21T12:00:00.000Z',
     willRenew: false,
-    grantedAt: null,
-    source: 'local_cache',
-    environment: null,
+    grantedAt: '2026-07-14T09:00:00.000Z',
+    source: 'app_granted',
+    environment: 'production',
     managementUrl: null,
-    verifiedAt: revenueCatEmpty?.verifiedAt ?? NOW.toISOString(),
+    verifiedAt: '2026-07-14T09:00:00.000Z',
     offeringId: null,
     packageId: null,
     storeUserId: null,
     priceLabel: null,
-  });
-}
-
-function trustedRevenueCatMarkerFor(entitlement: unknown) {
-  if (!entitlement || typeof entitlement !== 'object') return null;
-  const proof = entitlement as Partial<StoredEntitlement>;
-  if (proof.source !== 'revenuecat' || !proof.storeUserId) return null;
-  return {
-    storeUserId: proof.storeUserId,
-    proofIdentity: JSON.stringify([
-      proof.source ?? null,
-      proof.verifiedAt ?? null,
-      proof.tier,
-      proof.isActive,
-      proof.periodType,
-      proof.store,
-      proof.productId,
-      proof.expiresAt,
-      proof.willRenew,
-      proof.grantedAt,
-      proof.environment ?? null,
-      proof.storeUserId ?? null,
-    ]),
+    ...overrides,
   };
 }
 
-function storeEntitlement(overrides: Record<string, unknown> = {}): StoredEntitlement {
-  return cachedEntitlement({
-    periodType: 'normal',
+function customerInfo(
+  verification: 'VERIFIED' | 'VERIFIED_ON_DEVICE' | 'NOT_REQUESTED' | 'FAILED',
+  requestDate: string,
+  activeVerification:
+    | 'VERIFIED'
+    | 'VERIFIED_ON_DEVICE'
+    | 'NOT_REQUESTED'
+    | 'FAILED'
+    | null = verification,
+) {
+  return {
+    requestDate,
+    entitlements: {
+      verification,
+      active:
+        activeVerification !== null
+          ? {
+              pro: {
+                verification: activeVerification,
+                isActive: true,
+                productIdentifier: 'layerwell_pro_annual',
+              },
+            }
+          : {},
+      all: {},
+    },
+  } as Parameters<typeof customerInfoToEvidence>[0];
+}
+
+function snapshotEvidence(requestDate: string, entitlement: StoredEntitlement | null) {
+  const converted = customerInfoToEvidence(
+    customerInfo('VERIFIED', requestDate, entitlement ? 'VERIFIED' : null),
+    entitlement,
+  );
+  if (converted.status !== 'evidence') throw new Error('fixture conversion failed');
+  return converted.evidence;
+}
+
+function webhookRow(overrides: Record<string, unknown> = {}) {
+  return {
+    entitlement: 'pro',
+    is_active: true,
+    period_type: 'normal',
     store: 'app_store',
-    productId: 'routinekind_pro_annual',
-    expiresAt: '2027-07-05T12:00:00.000Z',
-    willRenew: true,
+    product_id: 'layerwell_pro_annual',
+    expires_at: '2027-07-14T12:00:00.000Z',
+    will_renew: true,
+    original_purchase_at: '2026-07-01T00:00:00.000Z',
+    source: 'server',
+    environment: 'production',
+    management_url: null,
+    verified_at: '2026-07-14T11:00:00.000Z',
+    store_user_id: 'provider-user',
+    offering_id: 'default',
+    package_id: 'annual',
+    rc_event_at: '2026-07-14T11:00:00.000Z',
+    rc_event_priority: 50,
+    rc_event_id: 'event-1',
+    ...overrides,
+  };
+}
+
+function storeProjectionRow(overrides: Record<string, unknown> = {}) {
+  return {
+    tier: 'pro',
+    is_active: true,
+    product_id: 'layerwell_pro_annual',
+    expires_at: '2027-07-14T12:00:00.000Z',
+    store: 'app_store',
+    period_type: 'normal',
+    will_renew: true,
+    granted_at: '2026-07-01T00:00:00.000Z',
     source: 'revenuecat',
     environment: 'production',
-    offeringId: 'default',
-    packageId: 'annual',
-    storeUserId: 'owner-a',
+    management_url: 'https://apps.apple.com/account/subscriptions',
+    verified_at: '2026-07-14T11:00:00.000Z',
+    offering_id: 'default',
+    package_id: 'annual',
+    cursor: {
+      kind: 'rc_webhook',
+      at: '2026-07-14T11:00:00.000Z',
+      priority: 50,
+      event_id: 'event-1',
+    },
     ...overrides,
-  }) as StoredEntitlement;
-}
-
-function verifiedEmptyEvidence(verifiedAt = '2026-07-05T12:01:00.000Z') {
-  return {
-    verifiedAt,
-    managementUrl: null,
-    storeUserId: 'owner-a',
-  } as const;
-}
-
-function mockServerEntitlement(row: Record<string, unknown>) {
-  const builder = {
-    select: vi.fn(),
-    eq: vi.fn(),
-    limit: vi.fn(),
-    abortSignal: vi.fn(),
-    maybeSingle: vi.fn().mockResolvedValue({ data: row, error: null }),
   };
-  builder.select.mockReturnValue(builder);
-  builder.eq.mockReturnValue(builder);
-  builder.limit.mockReturnValue(builder);
-  builder.abortSignal.mockReturnValue(builder);
-  mocks.from.mockReturnValue(builder);
+}
+
+function appGrantProjectionRow(overrides: Record<string, unknown> = {}) {
+  return {
+    tier: 'pro',
+    is_active: true,
+    product_id: null,
+    expires_at: '2026-07-21T12:00:00.000Z',
+    store: 'app_granted',
+    period_type: 'reverse_trial',
+    will_renew: false,
+    granted_at: '2026-07-14T09:00:00.000Z',
+    source: 'app_granted',
+    environment: 'production',
+    management_url: null,
+    verified_at: '2026-07-14T09:00:00.000Z',
+    offering_id: null,
+    package_id: null,
+    cursor: null,
+    ...overrides,
+  };
+}
+
+function projectionResponse(
+  storeProjection: Record<string, unknown> = { state: 'absent', row: null },
+  appGrantProjection: Record<string, unknown> = { state: 'absent', row: null },
+) {
+  return {
+    schema_version: 1,
+    store_projection: storeProjection,
+    app_grant_projection: appGrantProjection,
+  };
+}
+
+function projectionRpcBuilder(...results: readonly Readonly<{ data: unknown; error: unknown }>[]) {
+  const abortSignal = vi.fn();
+  for (const result of results) abortSignal.mockResolvedValueOnce(result);
+  const builder = { abortSignal };
+  mocks.rpc.mockReturnValue(builder);
   return builder;
 }
 
-function withoutKey(record: Record<string, unknown>, keyToRemove: string): Record<string, unknown> {
-  return Object.fromEntries(Object.entries(record).filter(([key]) => key !== keyToRemove));
+async function mergeAppGrant(entitlement = appGrant()) {
+  return mergeEntitlementEvidence(
+    contextA,
+    {
+      kind: 'app_grant',
+      grantAt: entitlement.grantedAt!,
+      entitlement,
+    },
+    NOW,
+  );
 }
 
-describe('subscription entitlement cache', () => {
+describe('owner-bound entitlement evidence store', () => {
   beforeEach(() => {
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
     vi.useFakeTimers();
-    vi.setSystemTime(NOW);
+    vi.setSystemTime(new Date(NOW));
     mocks.storage.clear();
-    mocks.readErrors.clear();
     mocks.mutationTails.clear();
     mocks.nextMutationReadError = null;
-    mocks.nextMutationError = null;
-    mocks.nextMutationErrorKey = null;
-    mocks.nextMutationErrorAttempt = null;
-    mocks.mutationAttempts.clear();
-    mocks.writes = 0;
-    mocks.writeKeys = [];
-    mocks.getUser.mockReset();
-    mocks.getUser.mockResolvedValue({
-      data: { user: { id: 'owner-a' } },
-      error: null,
-    });
-    mocks.getSession.mockReset();
-    mocks.getSession.mockResolvedValue({
-      data: {
-        session: {
-          access_token: 'token-a',
-          user: { id: 'owner-a' },
-        },
-      },
-      error: null,
-    });
-    mocks.invoke.mockReset();
-    mocks.from.mockReset();
-    mocks.env.appEnvironment = 'development';
+    mocks.nextMutationWriteError = null;
+    mocks.currentOwnerBinding = A;
+    mocks.appEnvironment = 'development';
+    mocks.customProGrantEnabled = false;
     mocks.isSupabaseConfigured = false;
+    mocks.from.mockReset();
+    mocks.rpc.mockReset();
+    mocks.invoke.mockReset();
+    mocks.writes = 0;
   });
 
-  afterEach(() => {
-    endAccountGenerationBoundary();
+  it('creates contexts with the canonical localDataOwnerBinding and rejects a foreign proof', async () => {
+    await expect(entitlementOwnerContextForUser('account-a')).resolves.toEqual(contextA);
+    await expect(entitlementOwnerContextForUser('account-b')).rejects.toThrow(
+      ENTITLEMENT_CACHE_FOREIGN_OWNER,
+    );
   });
 
-  it('aborts a delayed server entitlement read when the account generation changes', async () => {
-    mocks.isSupabaseConfigured = true;
-    let rejectQuery!: (reason?: unknown) => void;
-    let observeSignal!: (signal: AbortSignal) => void;
-    const signalObserved = new Promise<AbortSignal>((resolve) => {
-      observeSignal = resolve;
+  it('persists a definitive empty tombstone across relaunch without reviving prior access', async () => {
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T10:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    const empty = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', null),
+      NOW,
+    );
+
+    expect(empty.status).toBe('committed');
+    expect(empty.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(empty.snapshot?.priorEntitlement).toMatchObject({
+      productId: 'layerwell_pro_annual',
+      isActive: false,
     });
-    const pendingQuery = new Promise<never>((_resolve, reject) => {
-      rejectQuery = reject;
+    const raw = mocks.storage.get(KEY)!;
+    expect(JSON.parse(raw).store.definitive).toMatchObject({
+      state: 'empty',
+      entitlement: null,
+      priorEntitlement: { productId: 'layerwell_pro_annual' },
     });
-    const builder = {
-      select: vi.fn(),
-      eq: vi.fn(),
-      limit: vi.fn(),
-      abortSignal: vi.fn(),
-      maybeSingle: vi.fn(() => pendingQuery),
-    };
-    builder.select.mockReturnValue(builder);
-    builder.eq.mockReturnValue(builder);
-    builder.limit.mockReturnValue(builder);
-    builder.abortSignal.mockImplementation((signal: AbortSignal) => {
-      observeSignal(signal);
-      signal.addEventListener(
-        'abort',
-        () => rejectQuery(Object.assign(new Error('aborted'), { name: 'AbortError' })),
-        { once: true },
+
+    const relaunched = await readEntitlementSnapshot(contextA, '2026-07-14T12:01:00.000Z');
+    expect(relaunched.status).toBe('available');
+    if (relaunched.status === 'available') {
+      expect(
+        deriveState(relaunched.snapshot.entitlement, relaunched.snapshot.effectiveNowISO).isPro,
+      ).toBe(false);
+      expect(relaunched.snapshot.activeStoreEntitlement).toBeNull();
+    }
+  });
+
+  it('preserves the app-grant lane when RevenueCat definitively verifies an empty store lane', async () => {
+    await mergeAppGrant();
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', null),
+      NOW,
+    );
+    const read = await readEntitlementSnapshot(contextA, NOW);
+    expect(read.status).toBe('available');
+    if (read.status === 'available') {
+      expect(read.snapshot.activeStoreEntitlement).toBeNull();
+      expect(read.snapshot.activeAppGrantEntitlement).toMatchObject({
+        periodType: 'reverse_trial',
+        isActive: true,
+      });
+      expect(deriveState(read.snapshot.entitlement, read.snapshot.effectiveNowISO).isPro).toBe(
+        true,
       );
-      return builder;
-    });
-    mocks.from.mockReturnValue(builder);
-
-    const request = fetchServerEntitlement();
-    const signal = await signalObserved;
-
-    beginAccountGenerationBoundary();
-
-    expect(signal.aborted).toBe(true);
-    await expect(request).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.from).toHaveBeenCalledWith('entitlements');
-    expect(builder.abortSignal).toHaveBeenCalledWith(signal);
-    expect(builder.maybeSingle).toHaveBeenCalledTimes(1);
-    expect(mocks.writes).toBe(0);
+    }
   });
 
-  it('grants and persists a versioned development reverse trial when Supabase is not configured', async () => {
-    const started = await startReverseTrialOnServer(() => {}, 'owner-a');
-    const entitlement = started.entitlement!;
+  it('keeps VERIFIED_ON_DEVICE positive evidence provisional and ignores its empty result', async () => {
+    const positive = customerInfoToEvidence(
+      customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z'),
+      storeEntitlement(),
+    );
+    expect(positive.status).toBe('evidence');
+    if (positive.status === 'evidence') {
+      expect(positive.evidence.kind).toBe('store_provisional_active');
+      await mergeEntitlementEvidence(contextA, positive.evidence, NOW);
+    }
+    expect(
+      customerInfoToEvidence(
+        customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T12:00:00.000Z', null),
+        null,
+      ),
+    ).toEqual({ status: 'ignored', reason: 'verified_on_device_empty' });
 
+    const read = await readEntitlementSnapshot(contextA, NOW);
+    expect(read.status === 'available' && read.snapshot.activeStoreEntitlement?.isActive).toBe(
+      true,
+    );
+    expect(JSON.parse(mocks.storage.get(KEY)!).store.definitive).toBeNull();
+  });
+
+  it('rejects FAILED and NOT_REQUESTED verification without creating positive evidence', async () => {
+    expect(
+      customerInfoToEvidence(
+        customerInfo('FAILED', '2026-07-14T11:00:00.000Z'),
+        storeEntitlement(),
+      ),
+    ).toEqual({ status: 'rejected', reason: 'verification_failed' });
+    expect(
+      customerInfoToEvidence(customerInfo('NOT_REQUESTED', '2026-07-14T11:00:00.000Z'), null),
+    ).toEqual({ status: 'rejected', reason: 'verification_not_requested' });
+
+    const weak = customerInfoToEvidence(
+      customerInfo('NOT_REQUESTED', '2026-07-14T11:00:00.000Z'),
+      storeEntitlement(),
+    );
+    expect(weak).toEqual({ status: 'rejected', reason: 'verification_not_requested' });
+  });
+
+  it.each([
+    ['VERIFIED', true, 'store_definitive', 'evidence'],
+    ['VERIFIED', false, 'store_definitive', 'evidence'],
+    ['VERIFIED_ON_DEVICE', true, 'store_provisional_active', 'evidence'],
+    ['VERIFIED_ON_DEVICE', false, null, 'ignored'],
+    ['NOT_REQUESTED', true, null, 'rejected'],
+    ['NOT_REQUESTED', false, null, 'rejected'],
+    ['FAILED', true, null, 'rejected'],
+    ['FAILED', false, null, 'rejected'],
+  ] as const)(
+    'maps aggregate %s with mapped-active=%s to %s/%s',
+    (verification, mappedActive, expectedKind, expectedStatus) => {
+      const converted = customerInfoToEvidence(
+        customerInfo(verification, '2026-07-14T11:00:00.000Z', mappedActive ? verification : null),
+        mappedActive ? storeEntitlement() : null,
+      );
+      expect(converted.status).toBe(expectedStatus);
+      if (converted.status === 'evidence') expect(converted.evidence.kind).toBe(expectedKind);
+    },
+  );
+
+  it('rejects a failed active entitlement even when the aggregate claims VERIFIED', () => {
+    expect(
+      customerInfoToEvidence(
+        customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z', 'FAILED'),
+        storeEntitlement(),
+      ),
+    ).toEqual({ status: 'rejected', reason: 'verification_failed' });
+  });
+
+  it.each(['NOT_REQUESTED', 'VERIFIED_ON_DEVICE'] as const)(
+    'rejects selected-child %s beneath aggregate VERIFIED',
+    (activeVerification) => {
+      expect(
+        customerInfoToEvidence(
+          customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z', activeVerification),
+          storeEntitlement(),
+        ),
+      ).toEqual({ status: 'rejected', reason: 'verification_mismatch' });
+    },
+  );
+
+  it('persists an equal-provider-time contradiction as a fail-closed conflict requiring refresh', async () => {
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    const webhook = rowToEvidence(
+      webhookRow({
+        is_active: false,
+        rc_event_at: '2026-07-14T11:00:00.000Z',
+      }),
+    );
+    expect(webhook.status).toBe('evidence');
+    if (webhook.status !== 'evidence') return;
+
+    const conflict = await mergeEntitlementEvidence(contextA, webhook.evidence, NOW);
+    expect(conflict).toMatchObject({
+      status: 'conflict',
+      disposition: 'conflict',
+      requiresUncachedRefresh: true,
+    });
+    expect(conflict.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(conflict.snapshot?.hasConflict).toBe(true);
+
+    const staleRetry = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(staleRetry).toMatchObject({ status: 'unchanged', requiresUncachedRefresh: true });
+
+    const refreshed = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:01.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(refreshed).toMatchObject({ status: 'committed', requiresUncachedRefresh: false });
+    expect(refreshed.snapshot?.activeStoreEntitlement?.isActive).toBe(true);
+  });
+
+  it('uses webhook provider cursor priority/id and never processing timestamps for precedence', async () => {
+    const newerPriority = rowToEvidence(
+      webhookRow({ rc_event_priority: 60, rc_event_id: 'event-a' }),
+    );
+    const olderPriority = rowToEvidence(
+      webhookRow({
+        is_active: false,
+        rc_event_priority: 50,
+        rc_event_id: 'event-z',
+        verified_at: '2099-01-01T00:00:00.000Z',
+        updated_at: '2099-01-01T00:00:00.000Z',
+      }),
+    );
+    if (newerPriority.status !== 'evidence' || olderPriority.status !== 'evidence') {
+      throw new Error('fixture conversion failed');
+    }
+    await mergeEntitlementEvidence(contextA, newerPriority.evidence, NOW);
+    const stale = await mergeEntitlementEvidence(contextA, olderPriority.evidence, NOW);
+    expect(stale.disposition).toBe('stale');
+    expect(stale.snapshot?.activeStoreEntitlement?.isActive).toBe(true);
+
+    const idTieBreak = rowToEvidence(
+      webhookRow({ is_active: false, rc_event_priority: 60, rc_event_id: 'event-z' }),
+    );
+    if (idTieBreak.status !== 'evidence') throw new Error('fixture conversion failed');
+    const applied = await mergeEntitlementEvidence(contextA, idTieBreak.evidence, NOW);
+    expect(applied.disposition).toBe('applied');
+    expect(applied.snapshot?.activeStoreEntitlement).toBeNull();
+  });
+
+  it('does not let missing-cursor legacy evidence override a definitive watermark', async () => {
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', null),
+      NOW,
+    );
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    expect(legacy.status === 'evidence' && legacy.evidence.kind).toBe('legacy_positive');
+    if (legacy.status !== 'evidence') return;
+    const merge = await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    expect(merge.disposition).toBe('ignored');
+    expect(merge.snapshot?.activeStoreEntitlement).toBeNull();
+
+    expect(
+      rowToEvidence(
+        webhookRow({
+          is_active: false,
+          rc_event_at: null,
+          rc_event_priority: null,
+          rc_event_id: null,
+        }),
+      ),
+    ).toEqual({ status: 'ignored', reason: 'missing_store_cursor' });
+  });
+
+  it('replaces an exact owner-bound retired NOT_REQUESTED cache with fresh definitive evidence', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      legacy: { provenance: string };
+    };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    mocks.storage.set(KEY, JSON.stringify(seeded));
+
+    await expect(readEntitlementSnapshot(contextA, NOW)).resolves.toMatchObject({
+      status: 'corrupt',
+    });
+
+    const repaired = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(repaired).toMatchObject({ status: 'committed', disposition: 'applied' });
+    expect(repaired.snapshot?.activeStoreEntitlement?.isActive).toBe(true);
+    expect(mocks.storage.get(KEY)).not.toContain('revenuecat_not_requested');
+    await expect(readEntitlementSnapshot(contextA, NOW)).resolves.toMatchObject({
+      status: 'available',
+      snapshot: { activeStoreEntitlement: { isActive: true } },
+    });
+  });
+
+  it('scrubs only the retired proof while retaining newer inactive, app-grant, revision, and clock authority', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    const retiredProof = (JSON.parse(mocks.storage.get(KEY)!) as { legacy: unknown }).legacy;
+
+    mocks.storage.delete(KEY);
+    await mergeAppGrant();
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T12:00:00.000Z', null),
+      NOW,
+    );
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      revision: number;
+      clockAnchor: string;
+      store: { definitive: unknown };
+      appGrant: { definitive: unknown };
+      legacy: { provenance: string } | null;
+    };
+    seeded.legacy = retiredProof as { provenance: string };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    const expected = {
+      revision: seeded.revision,
+      clockAnchor: seeded.clockAnchor,
+      storeDefinitive: seeded.store.definitive,
+      appGrantDefinitive: seeded.appGrant.definitive,
+    };
+    mocks.storage.set(KEY, JSON.stringify(seeded));
+
+    const repaired = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:30:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(repaired.disposition).toBe('stale');
+    expect(repaired.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(repaired.snapshot?.activeAppGrantEntitlement?.isActive).toBe(true);
+    const saved = JSON.parse(mocks.storage.get(KEY)!) as typeof seeded;
+    expect(saved.legacy).toBeNull();
+    expect(saved.revision).toBe(expected.revision);
+    expect(saved.clockAnchor).toBe(expected.clockAnchor);
+    expect(saved.store.definitive).toEqual(expected.storeDefinitive);
+    expect(saved.appGrant.definitive).toEqual(expected.appGrantDefinitive);
+  });
+
+  it('scrubs only the retired proof while retaining a fail-closed conflict', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    const retiredProof = (JSON.parse(mocks.storage.get(KEY)!) as { legacy: unknown }).legacy;
+
+    mocks.storage.delete(KEY);
+    await mergeAppGrant();
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    const contradictory = rowToEvidence(
+      webhookRow({ is_active: false, rc_event_at: '2026-07-14T11:00:00.000Z' }),
+    );
+    if (contradictory.status !== 'evidence') throw new Error('conflict fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, contradictory.evidence, NOW);
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      revision: number;
+      clockAnchor: string;
+      store: { conflict: unknown };
+      appGrant: { definitive: unknown };
+      legacy: { provenance: string } | null;
+    };
+    seeded.legacy = retiredProof as { provenance: string };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    const expected = {
+      revision: seeded.revision,
+      clockAnchor: seeded.clockAnchor,
+      conflict: seeded.store.conflict,
+      appGrantDefinitive: seeded.appGrant.definitive,
+    };
+    mocks.storage.set(KEY, JSON.stringify(seeded));
+
+    const repaired = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T10:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(repaired.snapshot?.hasConflict).toBe(true);
+    expect(repaired.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(repaired.snapshot?.activeAppGrantEntitlement?.isActive).toBe(true);
+    const saved = JSON.parse(mocks.storage.get(KEY)!) as typeof seeded;
+    expect(saved.legacy).toBeNull();
+    expect(saved.revision).toBe(expected.revision);
+    expect(saved.clockAnchor).toBe(expected.clockAnchor);
+    expect(saved.store.conflict).toEqual(expected.conflict);
+    expect(saved.appGrant.definitive).toEqual(expected.appGrantDefinitive);
+  });
+
+  it('does not let weak evidence adopt a retired NOT_REQUESTED cache', async () => {
+    const legacy = rowToEvidence(
+      webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+    );
+    if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+    await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+
+    const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+      legacy: { provenance: string };
+    };
+    seeded.legacy.provenance = 'revenuecat_not_requested';
+    const raw = JSON.stringify(seeded);
+    mocks.storage.set(KEY, raw);
+
+    const blocked = await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+    expect(blocked.status).toBe('blocked');
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it.each(['foreign owner', 'forged fingerprint'] as const)(
+    'does not scrub a %s retired cache during repair',
+    async (label) => {
+      const legacy = rowToEvidence(
+        webhookRow({ rc_event_at: null, rc_event_priority: null, rc_event_id: null }),
+      );
+      if (legacy.status !== 'evidence') throw new Error('legacy fixture conversion failed');
+      await mergeEntitlementEvidence(contextA, legacy.evidence, NOW);
+
+      const seeded = JSON.parse(mocks.storage.get(KEY)!) as {
+        ownerBinding: string;
+        legacy: { provenance: string; fingerprint: string };
+      };
+      seeded.legacy.provenance = 'revenuecat_not_requested';
+      if (label === 'foreign owner') seeded.ownerBinding = B;
+      else seeded.legacy.fingerprint = 'forged';
+      const raw = JSON.stringify(seeded);
+      mocks.storage.set(KEY, raw);
+
+      const blocked = await mergeEntitlementEvidence(
+        contextA,
+        snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+        NOW,
+      );
+      expect(blocked.status).toBe('blocked');
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    },
+  );
+
+  it.each([
+    ['corrupt', '{not-json', 'corrupt'],
+    ['future', JSON.stringify({ version: 999 }), 'unsupported_version'],
+  ])('preserves %s bytes and blocks authoritative overwrite', async (_label, raw, status) => {
+    mocks.storage.set(KEY, raw);
+    await expect(readEntitlementSnapshot(contextA, NOW)).resolves.toMatchObject({ status });
+    const merge = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(merge.status).toBe('blocked');
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it('never grants owner A evidence to owner B after an account transition', async () => {
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    mocks.currentOwnerBinding = B;
+    const contextB = await entitlementOwnerContextForUser('account-b');
+    const foreign = await readEntitlementSnapshot(contextB, NOW);
+    expect(foreign).toEqual({ status: 'foreign_owner', snapshot: null });
+    expect(mocks.storage.get(KEY)).toContain(A);
+
+    await clearEntitlement();
+    const cleanB = await mergeEntitlementEvidence(
+      contextB,
+      snapshotEvidence('2026-07-14T12:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(cleanB.snapshot?.ownerBinding).toBe(B);
+  });
+
+  it('does not adopt an unbound legacy cache but can replace it with authoritative owner evidence', async () => {
+    const legacy = JSON.stringify({ version: 1, entitlement: storeEntitlement() });
+    mocks.storage.set(KEY, legacy);
+    mocks.storage.set(LEGACY_KEY, JSON.stringify(storeEntitlement()));
+    await expect(readEntitlementSnapshot(contextA, NOW)).resolves.toEqual({
+      status: 'legacy_unbound',
+      snapshot: null,
+    });
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+
+    const merged = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    expect(merged.status).toBe('committed');
+    expect(JSON.parse(mocks.storage.get(KEY)!).ownerBinding).toBe(A);
+    expect(mocks.storage.get(LEGACY_KEY)).toBeDefined();
+  });
+
+  it('serializes concurrent evidence and keeps the provider-newest result', async () => {
+    const newer = mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T12:00:00.000Z', storeEntitlement({ productId: 'new' })),
+      NOW,
+    );
+    const older = mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', storeEntitlement({ productId: 'old' })),
+      NOW,
+    );
+    await Promise.all([newer, older]);
+    const read = await readEntitlementSnapshot(contextA, NOW);
+    expect(read.status === 'available' && read.snapshot.activeStoreEntitlement?.productId).toBe(
+      'new',
+    );
+  });
+
+  it('leaves prior bytes and access neutral when the atomic write fails', async () => {
+    await mergeAppGrant();
+    const before = mocks.storage.get(KEY);
+    mocks.nextMutationWriteError = new Error('PRIVATE_KV_WRITE_FAILED');
+    const result = await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T11:00:00.000Z', null),
+      NOW,
+    );
+    expect(result).toMatchObject({ status: 'blocked', snapshot: null });
+    expect(mocks.storage.get(KEY)).toBe(before);
+    const read = await readEntitlementSnapshot(contextA, NOW);
+    expect(read.status === 'available' && read.snapshot.activeAppGrantEntitlement?.isActive).toBe(
+      true,
+    );
+  });
+
+  it('publishes only the exact owner query after cancellation and committed merge', async () => {
+    const queryClient = {
+      cancelQueries: vi.fn(async () => undefined),
+      setQueryData: vi.fn(),
+    };
+    const result = await publishCustomerInfoEvidence({
+      context: contextA,
+      customerInfo: customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z'),
+      entitlement: storeEntitlement(),
+      queryClient,
+      observedAtISO: NOW,
+    });
+    expect(result.status).toBe('committed');
+    expect(queryClient.cancelQueries).toHaveBeenCalledWith({
+      queryKey: ['entitlement', A],
+      exact: true,
+    });
+    expect(queryClient.setQueryData).toHaveBeenCalledWith(
+      ['entitlement', A],
+      expect.objectContaining({ isPro: true }),
+    );
+    expect(isDurablyAdmissibleStoreResult('VERIFIED', result)).toBe(true);
+    expect(isDurablyAdmissibleStoreResult('NOT_REQUESTED', result)).toBe(false);
+  });
+
+  it('re-publishes trusted local state when non-definitive empty evidence is ignored', async () => {
+    await mergeAppGrant();
+    const queryClient = {
+      cancelQueries: vi.fn(async () => undefined),
+      setQueryData: vi.fn(),
+    };
+    const result = await publishCustomerInfoEvidence({
+      context: contextA,
+      customerInfo: customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z', null),
+      entitlement: null,
+      queryClient,
+      observedAtISO: NOW,
+    });
+
+    expect(result).toMatchObject({ status: 'ignored', reason: 'verified_on_device_empty' });
+    expect(queryClient.setQueryData).toHaveBeenCalledWith(
+      ['entitlement', A],
+      expect.objectContaining({ isPro: true, source: 'app_granted' }),
+    );
+  });
+
+  it('marks only applied or exact-duplicate admissible provider evidence as durably persisted', async () => {
+    const queryClient = {
+      cancelQueries: vi.fn(async () => undefined),
+      setQueryData: vi.fn(),
+    };
+    const first = await publishCustomerInfoEvidence({
+      context: contextA,
+      customerInfo: customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z'),
+      entitlement: storeEntitlement(),
+      queryClient,
+      observedAtISO: NOW,
+    });
+    const duplicate = await publishCustomerInfoEvidence({
+      context: contextA,
+      customerInfo: customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z'),
+      entitlement: storeEntitlement(),
+      queryClient,
+      observedAtISO: NOW,
+    });
+    const stale = await publishCustomerInfoEvidence({
+      context: contextA,
+      customerInfo: customerInfo('VERIFIED', '2026-07-14T10:00:00.000Z'),
+      entitlement: storeEntitlement(),
+      queryClient,
+      observedAtISO: NOW,
+    });
+    expect(first.disposition).toBe('applied');
+    expect(duplicate.disposition).toBe('duplicate');
+    expect(stale.disposition).toBe('stale');
+    expect(isDurablyAdmissibleStoreResult('VERIFIED', first)).toBe(true);
+    expect(isDurablyAdmissibleStoreResult('VERIFIED', duplicate)).toBe(true);
+    expect(isDurablyAdmissibleStoreResult('VERIFIED', stale)).toBe(false);
+  });
+
+  it('keeps server absence and transport error distinct and non-clearing', async () => {
+    mocks.isSupabaseConfigured = true;
+    const builder = projectionRpcBuilder(
+      { data: projectionResponse(), error: null },
+      { data: null, error: new Error('offline') },
+    );
+    const firstSignal = new AbortController().signal;
+    await expect(fetchServerEvidence(contextA, firstSignal)).resolves.toEqual({
+      status: 'absent',
+    });
+    expect(mocks.rpc).toHaveBeenNthCalledWith(1, 'read_entitlement_projections');
+    expect(builder.abortSignal).toHaveBeenNthCalledWith(1, firstSignal);
+    await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toEqual({
+      status: 'transport_error',
+      reason: 'server_projection_query_failed',
+    });
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('rejects a projection that completes after the local owner changes', async () => {
+    mocks.isSupabaseConfigured = true;
+    const builder = {
+      abortSignal: vi.fn(async () => {
+        mocks.currentOwnerBinding = B;
+        return {
+          data: projectionResponse({ state: 'active', row: storeProjectionRow() }),
+          error: null,
+        };
+      }),
+    };
+    mocks.rpc.mockReturnValue(builder);
+
+    await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toEqual({
+      status: 'blocked',
+      reason: ENTITLEMENT_CACHE_FOREIGN_OWNER,
+    });
     expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(started.started).toBe(true);
-    expect(entitlement).toMatchObject({
-      tier: 'pro',
-      isActive: true,
-      periodType: 'reverse_trial',
-      store: 'app_granted',
-      source: 'app_granted',
-      environment: 'development',
-      willRenew: false,
-      productId: 'routinekind_pro_reverse_trial_local',
-    });
-    expect(entitlement.expiresAt).toBe('2026-07-12T12:00:00.000Z');
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'routinekind_pro_reverse_trial_local',
-    });
-    await expect(loadEntitlement()).resolves.toMatchObject(entitlement);
-
-    const state = deriveState(entitlement, NOW.toISOString());
-    expect(state).toMatchObject({ isPro: true, inReverseTrial: true, daysLeft: 7 });
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
-  it('still fails closed outside development when Supabase is not configured', async () => {
-    mocks.env.appEnvironment = 'production';
+  it('maps both server authority lanes and commits them in one atomic transform', async () => {
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({
+      data: projectionResponse(
+        { state: 'active', row: storeProjectionRow() },
+        { state: 'active', row: appGrantProjectionRow() },
+      ),
+      error: null,
+    });
 
+    const fetched = await fetchServerEvidence(contextA, new AbortController().signal);
+    expect(fetched.status).toBe('evidence');
+    if (fetched.status !== 'evidence') throw new Error('expected projection evidence');
+    expect(fetched.evidence).toHaveLength(2);
+    const merged = await mergeEntitlementEvidenceBatch(contextA, fetched.evidence, NOW);
+    expect(merged.status).toBe('committed');
+    expect(merged.snapshot?.activeStoreEntitlement).toMatchObject({
+      source: 'revenuecat',
+      productId: 'layerwell_pro_annual',
+    });
+    expect(merged.snapshot?.activeAppGrantEntitlement).toMatchObject({
+      source: 'app_granted',
+      periodType: 'reverse_trial',
+    });
+    expect(mocks.writes).toBe(1);
+  });
+
+  it('reconciles a legacy-unknown store row once and re-reads one authoritative tombstone', async () => {
+    mocks.isSupabaseConfigured = true;
+    const legacy = projectionResponse({
+      state: 'legacy_unknown',
+      row: storeProjectionRow({ is_active: false, cursor: null }),
+    });
+    const tombstone = projectionResponse({
+      state: 'inactive',
+      row: storeProjectionRow({
+        tier: null,
+        is_active: false,
+        product_id: null,
+        expires_at: null,
+        store: null,
+        period_type: null,
+        will_renew: false,
+        granted_at: null,
+        management_url: null,
+        offering_id: null,
+        package_id: null,
+        cursor: {
+          kind: 'rc_snapshot',
+          at: '2026-07-14T11:30:00+00:00',
+          fingerprint: 'verified-empty',
+        },
+      }),
+    });
+    const builder = projectionRpcBuilder(
+      { data: legacy, error: null },
+      { data: tombstone, error: null },
+    );
+    mocks.invoke.mockResolvedValue({ data: { outcome: 'reconciled' }, error: null });
+    const signal = new AbortController().signal;
+
+    const fetched = await fetchServerEvidence(contextA, signal);
+    expect(fetched).toMatchObject({
+      status: 'evidence',
+      evidence: [
+        {
+          kind: 'store_definitive',
+          state: 'empty',
+          entitlement: null,
+          cursor: {
+            kind: 'revenuecat_snapshot',
+            requestDate: '2026-07-14T11:30:00.000Z',
+          },
+        },
+      ],
+    });
+    expect(mocks.rpc).toHaveBeenCalledTimes(2);
+    expect(builder.abortSignal).toHaveBeenCalledTimes(2);
+    expect(mocks.invoke).toHaveBeenCalledTimes(1);
+    expect(mocks.invoke).toHaveBeenCalledWith('subscription-reconciliation', {
+      body: {},
+      signal,
+    });
+  });
+
+  it('does not clear trusted local store evidence when legacy reconciliation fails', async () => {
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T10:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    const before = mocks.storage.get(KEY);
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({
+      data: projectionResponse({
+        state: 'legacy_unknown',
+        row: storeProjectionRow({ is_active: false, cursor: null }),
+      }),
+      error: null,
+    });
+    mocks.invoke.mockResolvedValue({ data: null, error: new Error('offline') });
+
+    await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toEqual({
+      status: 'transport_error',
+      reason: 'subscription_reconciliation_failed',
+    });
+    expect(mocks.storage.get(KEY)).toBe(before);
+    const read = await readEntitlementSnapshot(contextA, NOW);
+    expect(read.status === 'available' && read.snapshot.activeStoreEntitlement?.isActive).toBe(
+      true,
+    );
+  });
+
+  it('retains an independent app grant even when legacy store reconciliation fails', async () => {
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({
+      data: projectionResponse(
+        {
+          state: 'legacy_unknown',
+          row: storeProjectionRow({ is_active: false, cursor: null }),
+        },
+        { state: 'active', row: appGrantProjectionRow() },
+      ),
+      error: null,
+    });
+    mocks.invoke.mockResolvedValue({ data: null, error: new Error('offline') });
+
+    const fetched = await fetchServerEvidence(contextA, new AbortController().signal);
+    expect(fetched).toMatchObject({
+      status: 'evidence',
+      evidence: [{ kind: 'app_grant' }],
+    });
+  });
+
+  it('rejects incoherent projection shapes without mutating trusted bytes', async () => {
+    await mergeAppGrant();
+    const before = mocks.storage.get(KEY);
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({
+      data: projectionResponse({
+        state: 'inactive',
+        row: storeProjectionRow({ is_active: true }),
+      }),
+      error: null,
+    });
+
+    await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toEqual({
+      status: 'rejected',
+      reason: 'server_projection_invalid',
+    });
+    expect(mocks.storage.get(KEY)).toBe(before);
+  });
+
+  it('keeps the compatibility save wrapper app-grant-only', async () => {
+    await expect(saveVerifiedEntitlement(storeEntitlement())).rejects.toThrow(
+      ENTITLEMENT_EVIDENCE_CURSOR_REQUIRED,
+    );
+    await expect(saveVerifiedEntitlement(appGrant())).resolves.toMatchObject({
+      source: 'app_granted',
+    });
+  });
+
+  it('keeps the compatibility empty wrapper aggregate-VERIFIED-only', async () => {
+    await mergeEntitlementEvidence(
+      contextA,
+      snapshotEvidence('2026-07-14T10:00:00.000Z', storeEntitlement()),
+      NOW,
+    );
+    await expect(clearStoreEntitlementIfRevenueCatVerifiedEmpty()).resolves.toBe('blocked');
+    await expect(
+      clearStoreEntitlementIfRevenueCatVerifiedEmpty(
+        customerInfo('VERIFIED_ON_DEVICE', '2026-07-14T11:00:00.000Z', null),
+      ),
+    ).resolves.toBe('blocked');
+    await expect(
+      clearStoreEntitlementIfRevenueCatVerifiedEmpty(
+        customerInfo('VERIFIED', '2026-07-14T11:00:00.000Z', null),
+      ),
+    ).resolves.toBe('committed');
+    const read = await readEntitlementSnapshot(contextA, NOW);
+    expect(read.status === 'available' && read.snapshot.activeStoreEntitlement).toBeNull();
+  });
+
+  it('rejects an unconfigured reverse trial without invoking or writing authority', async () => {
+    mocks.customProGrantEnabled = true;
     await expect(startReverseTrialOnServer()).rejects.toThrow(
       'Reverse trial is unavailable until Supabase is configured.',
     );
-    await expect(loadEntitlement()).resolves.toBeNull();
-  });
-
-  it('clears persisted entitlement records only through the explicit reset path', async () => {
-    await startReverseTrialOnServer();
-    mocks.storage.set(PREVIOUS_KEY, cacheEnvelope(cachedEntitlement()));
-    mocks.storage.set(LEGACY_KEY, JSON.stringify(cachedEntitlement()));
-
-    await clearEntitlement();
-
-    await expect(loadEntitlement()).resolves.toBeNull();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.writes).toBe(0);
     expect(mocks.storage.has(KEY)).toBe(false);
-    expect(mocks.storage.has(PREVIOUS_KEY)).toBe(false);
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
   });
 
-  it('clears store-backed access when RevenueCat verifies no entitlement', async () => {
-    await saveVerifiedEntitlement(
-      cachedEntitlement({
-        periodType: 'normal',
-        store: 'app_store',
-        productId: 'routinekind_pro_annual',
-        expiresAt: null,
-        willRenew: true,
-        source: 'revenuecat',
-        environment: 'sandbox',
-      }) as StoredEntitlement,
-    );
-
-    await expect(
-      clearStoreEntitlementIfRevenueCatVerifiedEmpty(verifiedEmptyEvidence()),
-    ).resolves.toBeNull();
-
-    await expect(loadEntitlement()).resolves.toBeNull();
-  });
-
-  it('preserves app-granted reverse trials when RevenueCat restore finds no store purchase', async () => {
-    const started = await startReverseTrialOnServer(() => {}, 'owner-a');
-    const entitlement = started.entitlement!;
-    const before = mocks.storage.get(KEY);
-
-    await expect(
-      clearStoreEntitlementIfRevenueCatVerifiedEmpty(verifiedEmptyEvidence()),
-    ).resolves.toMatchObject(entitlement);
-
-    await expect(loadEntitlement()).resolves.toMatchObject(entitlement);
-    expect(mocks.storage.get(KEY)).toBe(before);
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: entitlement.productId,
-    });
-    expect(JSON.parse(mocks.storage.get(REVENUECAT_EMPTY_KEY) ?? '{}')).toMatchObject({
-      version: 2,
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:01:00.000Z' },
-    });
-  });
-
-  it('stores independent app-granted proof behind a newer RevenueCat empty watermark', async () => {
-    mocks.env.appEnvironment = 'production';
-    await saveVerifiedEntitlement(
-      storeEntitlement({ verifiedAt: '2026-07-05T12:00:00.000Z' }),
-    );
-    const empty = await acceptRevenueCatVerifiedEmpty(
-      verifiedEmptyEvidence('2026-07-05T12:02:00.000Z'),
-    );
-    expect(empty).toMatchObject({
-      entitlement: null,
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-      persisted: true,
-    });
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'absent',
-      entitlement: null,
-      revenueCatEmpty: verifiedEmptyEvidence('2026-07-05T12:02:00.000Z'),
-    });
-
-    const appGrant = cachedEntitlement({
-      productId: 'delayed-independent-app-grant',
-      source: 'app_granted',
-      environment: 'production',
-      storeUserId: 'owner-a',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    }) as StoredEntitlement;
-    await expect(acceptVerifiedEntitlement(appGrant)).resolves.toMatchObject({
-      entitlement: { productId: 'delayed-independent-app-grant', isActive: true },
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-      persisted: true,
-    });
-
-    await expect(
-      acceptVerifiedEntitlement(
-        storeEntitlement({
-          productId: 'delayed-store-proof',
-          verifiedAt: '2026-07-05T12:01:30.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'delayed-independent-app-grant' },
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-      persisted: true,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'delayed-independent-app-grant',
-    });
-    expect(JSON.parse(mocks.storage.get(REVENUECAT_EMPTY_KEY) ?? '{}')).toMatchObject({
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-    });
-  });
-
-  it('applies a coexisting RevenueCat empty watermark when selecting the read result', async () => {
-    mocks.env.appEnvironment = 'production';
-    const watermark = verifiedEmptyEvidence('2026-07-05T12:02:00.000Z');
-    const olderStore = storeEntitlement({ verifiedAt: '2026-07-05T12:01:00.000Z' });
-    mocks.storage.set(KEY, compositeCacheEnvelope(olderStore, watermark));
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'absent',
-      entitlement: null,
-      revenueCatEmpty: watermark,
-    });
-
-    const equalStore = storeEntitlement({ verifiedAt: watermark.verifiedAt });
-    mocks.storage.set(KEY, compositeCacheEnvelope(equalStore, watermark));
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'absent',
-      revenueCatEmpty: watermark,
-    });
-
-    const newerStore = storeEntitlement({ verifiedAt: '2026-07-05T12:03:00.000Z' });
-    mocks.storage.set(KEY, compositeCacheEnvelope(newerStore, watermark));
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'routinekind_pro_annual', isActive: true },
-    });
-
-    const appGrant = cachedEntitlement({
-      environment: 'production',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    mocks.storage.set(KEY, compositeCacheEnvelope(appGrant, watermark));
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { store: 'app_granted', isActive: true },
-    });
-
-    const futureWatermark = verifiedEmptyEvidence('2026-07-05T12:05:00.001Z');
-    mocks.storage.set(
-      KEY,
-      compositeCacheEnvelope(
-        storeEntitlement({ verifiedAt: '2026-07-05T12:00:00.000Z' }),
-        futureWatermark,
-      ),
-    );
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'routinekind_pro_annual', isActive: true },
-    });
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('canonicalizes a strict v2 store proof already blocked by its empty watermark before accepting mutations', async () => {
-    mocks.env.appEnvironment = 'production';
-    const watermark = verifiedEmptyEvidence('2026-07-05T12:02:00.000Z');
-    const blockedStore = storeEntitlement({
-      productId: 'blocked-store-t1',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    mocks.storage.set(KEY, compositeCacheEnvelope(blockedStore, watermark));
-
-    await expect(
-      acceptVerifiedEntitlement(
-        storeEntitlement({
-          productId: 'older-store-t0',
-          verifiedAt: '2026-07-05T12:00:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: null,
-      revenueCatEmpty: watermark,
-      persisted: true,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      source: 'local_cache',
-      isActive: false,
-      verifiedAt: watermark.verifiedAt,
-    });
-
-    mocks.storage.set(KEY, compositeCacheEnvelope(blockedStore, watermark));
-    const independentAppGrant = cachedEntitlement({
-      productId: 'independent-app-grant-t0',
-      environment: 'production',
-      verifiedAt: '2026-07-05T12:00:30.000Z',
-    }) as StoredEntitlement;
-    await expect(acceptVerifiedEntitlement(independentAppGrant)).resolves.toMatchObject({
-      entitlement: { productId: 'independent-app-grant-t0', isActive: true },
-      revenueCatEmpty: watermark,
-      persisted: true,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'independent-app-grant-t0',
-      isActive: true,
-    });
-  });
-
-  it('preserves a legacy-key app grant when RevenueCat verifies no store purchase', async () => {
-    const legacy = JSON.stringify(
-      cachedEntitlement({ productId: 'legacy-app-grant', storeUserId: 'owner-a' }),
-    );
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await expect(
-      clearStoreEntitlementIfRevenueCatVerifiedEmpty(verifiedEmptyEvidence()),
-    ).resolves.toMatchObject({ productId: 'legacy-app-grant', isActive: true });
-
-    expect(mocks.storage.has(KEY)).toBe(true);
-    expect(JSON.parse(mocks.storage.get(LEGACY_KEY) ?? '{}')).toMatchObject({
-      version: 2,
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:01:00.000Z' },
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'legacy-app-grant',
-    });
-    expect(JSON.parse(mocks.storage.get(REVENUECAT_EMPTY_KEY) ?? '{}')).toMatchObject({
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:01:00.000Z' },
-    });
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'legacy-app-grant',
-      isActive: true,
-    });
-  });
-
-  it('preserves a malformed primary cache and fails closed instead of reviving stale legacy access', async () => {
-    const malformed = '{not-json';
-    const legacy = JSON.stringify(
-      cachedEntitlement({
-        productId: 'stale-legacy-product',
-        source: 'revenuecat',
-        store: 'app_store',
-        environment: 'sandbox',
-        periodType: 'trial',
-      }),
-    );
-    mocks.storage.set(KEY, malformed);
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'corrupt',
-      entitlement: null,
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(malformed);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('reads a valid unversioned primary cache without rewriting it', async () => {
-    const legacy = JSON.stringify(cachedEntitlement({ productId: 'legacy-primary' }));
-    mocks.storage.set(KEY, legacy);
-
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'legacy-primary', isActive: true },
-    });
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('keeps forgiving fail-closed normalization for partial unversioned legacy records', async () => {
-    const legacy = JSON.stringify({ tier: 'pro', isActive: true });
-    mocks.storage.set(KEY, legacy);
-
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: {
-        tier: 'pro',
-        isActive: false,
-        periodType: null,
-        verifiedAt: null,
-      },
-    });
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it.each([
-    [
-      'an extra envelope key',
-      JSON.stringify({ version: 1, entitlement: cachedEntitlement(), extra: true }),
-    ],
-    ['a missing entitlement field', cacheEnvelope(withoutKey(cachedEntitlement(), 'priceLabel'))],
-    ['an extra entitlement field', cacheEnvelope({ ...cachedEntitlement(), extra: true })],
-    ['a wrong entitlement field type', cacheEnvelope(cachedEntitlement({ isActive: 'true' }))],
-    [
-      'a non-canonical entitlement field value',
-      cacheEnvelope(cachedEntitlement({ expiresAt: 'not-a-date' })),
-    ],
-  ])(
-    'classifies a current envelope with %s as corrupt without rewriting it',
-    async (_case, raw) => {
-      mocks.storage.set(KEY, raw);
-
-      await expect(readEntitlementCache()).resolves.toEqual({
-        status: 'corrupt',
-        entitlement: null,
-      });
-      await expect(loadEntitlement()).resolves.toBeNull();
-      expect(mocks.storage.get(KEY)).toBe(raw);
-      expect(mocks.writes).toBe(0);
-    },
-  );
-
-  it('reads the valid legacy key without migrating it during an ordinary read', async () => {
-    const legacy = JSON.stringify(cachedEntitlement({ productId: 'legacy-key-product' }));
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'legacy-key-product', isActive: true },
-    });
-    expect(mocks.storage.has(KEY)).toBe(false);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('reads the rollback-compatible v2 key without rewriting or falling through to v1', async () => {
-    const previousEntitlement = cachedEntitlement({ productId: 'rollback-v2-proof' });
-    const previous = cacheEnvelope(previousEntitlement);
-    const staleV1 = JSON.stringify(
-      cachedEntitlement({
-        productId: 'stale-v1-proof',
-        verifiedAt: '2026-07-05T12:04:00.000Z',
-      }),
-    );
-    mocks.storage.set(PREVIOUS_KEY, previous);
-    mocks.storage.set(LEGACY_KEY, staleV1);
-
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'rollback-v2-proof', isActive: true },
-    });
-    expect(mocks.storage.has(KEY)).toBe(true);
-    expect(mocks.storage.get(PREVIOUS_KEY)).toBe(previous);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(staleV1);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('rewrites the former v1 envelope as a rollback-readable canonical raw v2 proof', async () => {
-    const previousEntitlement = cachedEntitlement({
-      productId: 'rollback-compatible-proof',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    });
-    const previous = cacheEnvelope(previousEntitlement);
-    mocks.storage.set(PREVIOUS_KEY, previous);
-
-    await expect(
-      acceptVerifiedEntitlement(
-        cachedEntitlement({
-          productId: 'older-incoming-proof',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }) as StoredEntitlement,
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'rollback-compatible-proof' },
-      persisted: true,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual(previousEntitlement);
-    expect(mocks.writes).toBe(1);
-  });
-
-  it('does not revive v1 when the rollback-compatible v2 key is unreadable', async () => {
-    const unsupportedPrevious = cacheEnvelope(cachedEntitlement(), 3);
-    const legacy = JSON.stringify(
-      cachedEntitlement({ productId: 'must-not-revive-v1' }),
-    );
-    mocks.storage.set(PREVIOUS_KEY, unsupportedPrevious);
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unsupported_version',
-      entitlement: null,
-    });
-    await expect(
-      acceptVerifiedEntitlement(
-        cachedEntitlement({ productId: 'memory-only-proof' }) as StoredEntitlement,
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'memory-only-proof' },
-      persisted: false,
-    });
-    expect(mocks.storage.has(KEY)).toBe(true);
-    expect(mocks.storage.get(PREVIOUS_KEY)).toBe(unsupportedPrevious);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('orders against a legacy proof and migrates the effective result through the primary key', async () => {
-    const legacyEntitlement = cachedEntitlement({
-      productId: 'newer-legacy-proof',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    });
-    const legacy = cacheEnvelope(legacyEntitlement);
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await expect(
-      acceptVerifiedEntitlement(
-        cachedEntitlement({
-          productId: 'older-incoming-proof',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }) as StoredEntitlement,
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'newer-legacy-proof' },
-      revenueCatEmpty: null,
-      persisted: true,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual(legacyEntitlement);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(1);
-  });
-
-  it.each(['corrupt', 'unsupported_version', 'unavailable'] as const)(
-    'returns valid proof memory-only and preserves an %s legacy key',
-    async (failure) => {
-      const legacy =
-        failure === 'corrupt'
-          ? '{not-json'
-          : failure === 'unsupported_version'
-            ? cacheEnvelope(cachedEntitlement(), 3)
-            : cacheEnvelope(cachedEntitlement({ productId: 'unreadable-legacy' }));
-      mocks.storage.set(LEGACY_KEY, legacy);
-      if (failure === 'unavailable') {
-        mocks.readErrors.set(LEGACY_KEY, new Error('PRIVATE_KV_CONTENT_KEY_MISSING'));
-      }
-
-      await expect(
-        acceptVerifiedEntitlement(
-          cachedEntitlement({ productId: 'memory-only-proof' }) as StoredEntitlement,
-        ),
-      ).resolves.toMatchObject({
-        entitlement: { productId: 'memory-only-proof', isActive: true },
-        persisted: true,
-      });
-      expect(mocks.storage.has(KEY)).toBe(true);
-      expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-        productId: 'memory-only-proof',
-      });
-      expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-      expect(mocks.writes).toBe(1);
-    },
-  );
-
-  it('does not rewrite an exact v2 state when the same proof is accepted', async () => {
-    const entitlement = cachedEntitlement();
-    const raw = compositeCacheEnvelope(entitlement);
-    mocks.storage.set(KEY, raw);
-
-    await expect(
-      acceptVerifiedEntitlement(entitlement as StoredEntitlement),
-    ).resolves.toMatchObject({ entitlement, persisted: true });
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('durably enriches a same-proof management URL without replacing authority', async () => {
-    const entitlement = cachedEntitlement({ storeUserId: 'owner-a' }) as StoredEntitlement;
-    await acceptVerifiedEntitlement(entitlement);
-    await expect(
-      acceptVerifiedEntitlement({
-        ...entitlement,
-        managementUrl: 'https://apps.apple.com/account/subscriptions',
-      }),
-    ).resolves.toMatchObject({
-      entitlement: {
-        productId: entitlement.productId,
-        managementUrl: 'https://apps.apple.com/account/subscriptions',
-      },
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache({ expectedStoreUserId: 'owner-a' })).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { managementUrl: 'https://apps.apple.com/account/subscriptions' },
-    });
-  });
-
-  it('preserves an unsupported future cache and does not fall back to legacy access', async () => {
-    const future = cacheEnvelope(cachedEntitlement({ productId: 'future-product' }), 3);
-    const legacy = JSON.stringify(cachedEntitlement({ productId: 'stale-legacy-product' }));
-    mocks.storage.set(KEY, future);
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unsupported_version',
-      entitlement: null,
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(future);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('distinguishes unavailable private storage from absence and preserves all bytes', async () => {
-    const raw = cacheEnvelope(cachedEntitlement());
-    const legacy = JSON.stringify(cachedEntitlement({ productId: 'stale-legacy-product' }));
-    mocks.storage.set(KEY, raw);
-    mocks.storage.set(LEGACY_KEY, legacy);
-    mocks.readErrors.set(KEY, new Error('PRIVATE_KV_CONTENT_KEY_MISSING'));
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('preserves key-unavailable bytes across conditional and verified mutation attempts', async () => {
-    const raw = cacheEnvelope(cachedEntitlement());
-    mocks.storage.set(KEY, raw);
-    mocks.nextMutationReadError = new Error('PRIVATE_KV_CONTENT_KEY_MISSING');
-
-    await expect(downgradeToFree('missing-proof', 'owner-a')).resolves.toBe(false);
-    expect(mocks.storage.get(KEY)).toBe(raw);
-
-    mocks.nextMutationReadError = new Error('PRIVATE_KV_CONTENT_KEY_MISSING');
-    await expect(saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement)).rejects.toThrow(
-      'PRIVATE_KV_CONTENT_KEY_MISSING',
-    );
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('fails closed on an active RevenueCat cache without verification', async () => {
-    const raw = JSON.stringify(cachedEntitlement({ source: 'revenuecat', verifiedAt: null }));
-    mocks.storage.set(KEY, raw);
-
-    await expect(loadEntitlement()).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('does not mint verification time for a server row that omitted authoritative timestamps', async () => {
-    const entitlement = rowToStoredEntitlement({
-      entitlement: 'pro',
-      is_active: true,
-      period_type: 'normal',
-      store: 'app_store',
-      product_id: 'routinekind_pro_annual',
-      expires_at: '2026-08-05T12:00:00.000Z',
-      will_renew: true,
-      original_purchase_at: '2026-07-05T12:00:00.000Z',
-      source: 'server',
-      environment: 'production',
-    });
-
-    expect(entitlement.verifiedAt).toBeNull();
-    await expect(saveVerifiedEntitlement(entitlement)).rejects.toThrow(
-      'INVALID_ENTITLEMENT_CACHE_RECORD',
-    );
-    expect(mocks.storage.has(KEY)).toBe(false);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('retains a server-authored updated_at as legacy verification evidence', () => {
-    expect(
-      rowToStoredEntitlement({
-        entitlement: 'pro',
-        is_active: true,
-        period_type: 'normal',
-        store: 'app_store',
-        product_id: 'routinekind_pro_annual',
-        expires_at: '2026-08-05T12:00:00.000Z',
-        will_renew: true,
-        original_purchase_at: '2026-07-05T12:00:00.000Z',
-        source: 'server',
-        environment: 'production',
-        updated_at: '2026-07-05T11:59:00.000Z',
-      }).verifiedAt,
-    ).toBe('2026-07-05T11:59:00.000Z');
-  });
-
-  it('does not honor or rewrite a time-boxed entitlement cache without a valid expiry', async () => {
-    const raw = JSON.stringify(cachedEntitlement({ expiresAt: 'not-a-date' }));
-    mocks.storage.set(KEY, raw);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'corrupt',
-      entitlement: null,
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('rejects non-canonical security-sensitive enum bytes without rewriting', async () => {
-    const raw = JSON.stringify(
-      cachedEntitlement({
-        tier: ' pro ',
-        periodType: ' trial ',
-        store: ' app_store ',
-        productId: ' routinekind_pro_annual ',
-        source: ' revenuecat ',
-        environment: ' sandbox ',
-        verifiedAt: ' 2026-07-05T12:00:00.000Z ',
-      }),
-    );
-    mocks.storage.set(KEY, raw);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'corrupt',
-      entitlement: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('does not honor a development app-granted cache outside development', async () => {
-    mocks.env.appEnvironment = 'production';
-    const raw = JSON.stringify(cachedEntitlement());
-    mocks.storage.set(KEY, raw);
-
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      source: 'app_granted',
-      environment: 'development',
-      isActive: false,
-    });
-    expect(mocks.storage.get(KEY)).toBe(raw);
-  });
-
-  it('does not honor a Test Store entitlement cache in production', async () => {
-    mocks.env.appEnvironment = 'production';
-    const raw = JSON.stringify(
-      cachedEntitlement({
-        periodType: 'normal',
-        store: 'test_store',
-        productId: 'routinekind_pro_annual',
-        expiresAt: '2026-08-05T12:00:00.000Z',
-        willRenew: true,
-        source: 'revenuecat',
-        environment: 'test_store',
-        verifiedAt: '2026-07-05T12:00:00.000Z',
-      }),
-    );
-    mocks.storage.set(KEY, raw);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(raw);
-  });
-
-  it.each([
-    [
-      'a verification time beyond the five-minute skew window',
-      () => storeEntitlement({ verifiedAt: '2026-07-05T12:05:00.001Z' }),
-    ],
-    ['a development app grant in production', () => cachedEntitlement() as StoredEntitlement],
-    [
-      'a Test Store proof in production',
-      () => storeEntitlement({ store: 'test_store', environment: 'test_store' }),
-    ],
-    [
-      'mismatched app-grant semantics',
-      () =>
-        cachedEntitlement({
-          store: 'app_store',
-          source: 'app_granted',
-          environment: 'production',
-        }) as StoredEntitlement,
-    ],
-    [
-      'a time-boxed proof without expiry',
-      () => storeEntitlement({ periodType: 'trial', expiresAt: null }),
-    ],
-  ])('rejects %s before touching durable bytes', async (_case, incoming) => {
-    mocks.env.appEnvironment = 'production';
-    const raw = compositeCacheEnvelope(
-      storeEntitlement({ productId: 'durable-current-proof' }),
-    );
-    mocks.storage.set(KEY, raw);
-
-    await expect(
-      acceptVerifiedEntitlement(incoming(), {
-        reviewedAt: NOW.toISOString(),
-        appEnvironment: 'production',
-      }),
-    ).rejects.toThrow('INVALID_ENTITLEMENT_CACHE_RECORD');
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('replaces evidence-invalid future current bytes with a later valid proof', async () => {
-    mocks.env.appEnvironment = 'production';
-    const futureCurrent = storeEntitlement({
-      productId: 'future-poison',
-      verifiedAt: '2026-07-05T12:05:00.001Z',
-    });
-    mocks.storage.set(KEY, compositeCacheEnvelope(futureCurrent));
-    const valid = storeEntitlement({
-      productId: 'valid-current',
-      verifiedAt: NOW.toISOString(),
-    });
-
-    await expect(acceptVerifiedEntitlement(valid)).resolves.toMatchObject({
-      entitlement: { productId: 'valid-current', verifiedAt: NOW.toISOString() },
-      persisted: true,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'valid-current',
-    });
-  });
-
-  it('refuses to overwrite malformed or unsupported bytes during verified saves', async () => {
-    const malformed = '{not-json';
-    mocks.storage.set(KEY, malformed);
-
-    await expect(saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement)).rejects.toThrow(
-      ENTITLEMENT_CACHE_INVALID,
-    );
-    expect(mocks.storage.get(KEY)).toBe(malformed);
-
-    const future = cacheEnvelope(cachedEntitlement(), 3);
-    mocks.storage.set(KEY, future);
-    await expect(saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement)).rejects.toThrow(
-      ENTITLEMENT_CACHE_UNSUPPORTED_VERSION,
-    );
-    expect(mocks.storage.get(KEY)).toBe(future);
-  });
-
-  it('keeps the previous cache durable when a verified save fails', async () => {
-    const previous = cacheEnvelope(cachedEntitlement({ productId: 'previous-product' }));
-    mocks.storage.set(KEY, previous);
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-
-    await expect(
-      saveVerifiedEntitlement(
-        cachedEntitlement({ productId: 'replacement-product' }) as StoredEntitlement,
-      ),
-    ).rejects.toThrow('PRIVATE_KV_WRITE_FAILED');
-    expect(mocks.storage.get(KEY)).toBe(previous);
-  });
-
-  it.each(['malformed', 'unsupported', 'key_unavailable', 'write_failed'] as const)(
-    'accepts an active RevenueCat proof memory-only across %s persistence failure',
-    async (failure) => {
-      mocks.env.appEnvironment = 'production';
-      const original =
-        failure === 'malformed'
-          ? '{not-json'
-          : failure === 'unsupported'
-            ? cacheEnvelope(storeEntitlement(), 3)
-            : compositeCacheEnvelope(
-                storeEntitlement({
-                  productId: 'durable-older-proof',
-                  verifiedAt: '2026-07-05T11:59:00.000Z',
-                }),
-              );
-      mocks.storage.set(KEY, original);
-      if (failure === 'key_unavailable') {
-        mocks.nextMutationReadError = new Error('PRIVATE_KV_CONTENT_KEY_MISSING');
-      } else if (failure === 'write_failed') {
-        mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-      }
-
-      await expect(
-        acceptVerifiedEntitlement(storeEntitlement({ productId: 'memory-active-proof' })),
-      ).resolves.toMatchObject({
-        entitlement: { productId: 'memory-active-proof', isActive: true },
-        persisted: false,
-      });
-      expect(mocks.storage.get(KEY)).toBe(original);
-    },
-  );
-
-  it('atomically preserves newer/equal evidence and accepts a newer inactive revocation', async () => {
-    const current = cachedEntitlement({
-      periodType: 'normal',
-      store: 'app_store',
-      productId: 'current-active',
-      expiresAt: null,
-      willRenew: true,
-      source: 'revenuecat',
-      environment: 'sandbox',
-      storeUserId: 'owner-a',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    }) as StoredEntitlement;
-    await saveVerifiedEntitlement(current);
-    const currentBytes = mocks.storage.get(KEY);
-
-    const olderAccepted = await saveVerifiedEntitlement({
-      ...current,
-      productId: 'older-duplicate',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    const equalAccepted = await saveVerifiedEntitlement({
-      ...current,
-      productId: 'equal-duplicate',
-    });
-
-    expect(olderAccepted.productId).toBe('current-active');
-    expect(equalAccepted.productId).toBe('current-active');
-    expect(mocks.storage.get(KEY)).toBe(currentBytes);
-
-    const revoked = await saveVerifiedEntitlement({
-      ...current,
-      isActive: false,
-      willRenew: false,
-      productId: 'newer-revocation',
-      verifiedAt: '2026-07-05T12:03:00.000Z',
-    });
-    expect(revoked).toMatchObject({
-      isActive: false,
-      productId: 'newer-revocation',
-      verifiedAt: '2026-07-05T12:03:00.000Z',
-    });
-    await expect(loadEntitlement()).resolves.toMatchObject(revoked);
-  });
-
-  it('returns a newer active trial when an older verified-empty result loses ordering', async () => {
-    const current = cachedEntitlement({
-      periodType: 'trial',
-      store: 'app_store',
-      productId: 'newer-store-trial',
-      expiresAt: '2026-07-12T12:00:00.000Z',
-      willRenew: true,
-      source: 'revenuecat',
-      environment: 'sandbox',
-      storeUserId: 'owner-a',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    }) as StoredEntitlement;
-    await saveVerifiedEntitlement(current);
-    const before = mocks.storage.get(KEY);
-
-    await expect(
-      clearStoreEntitlementIfRevenueCatVerifiedEmpty(
-        verifiedEmptyEvidence('2026-07-05T12:01:00.000Z'),
-      ),
-    ).resolves.toMatchObject({
-      productId: 'newer-store-trial',
-      isActive: true,
-      periodType: 'trial',
-    });
-    expect(mocks.storage.get(KEY)).toBe(before);
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'newer-store-trial',
-    });
-    expect(JSON.parse(mocks.storage.get(REVENUECAT_EMPTY_KEY) ?? '{}')).toMatchObject({
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:01:00.000Z' },
-    });
-  });
-
-  it('converges concurrent verified saves on the newest authoritative timestamp', async () => {
-    const base = cachedEntitlement({
-      periodType: 'normal',
-      store: 'app_store',
-      expiresAt: null,
-      willRenew: true,
-      source: 'revenuecat',
-      environment: 'sandbox',
-    }) as StoredEntitlement;
-    const newer = {
-      ...base,
-      productId: 'newer-concurrent',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    };
-    const older = {
-      ...base,
-      productId: 'older-concurrent',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    };
-
-    const [newerResult, delayedOlderResult] = await Promise.all([
-      saveVerifiedEntitlement(newer),
-      saveVerifiedEntitlement(older),
-    ]);
-
-    expect(newerResult.productId).toBe('newer-concurrent');
-    expect(delayedOlderResult.productId).toBe('newer-concurrent');
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'newer-concurrent',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    });
-  });
-
-  it('keeps a verified-empty RevenueCat tombstone ahead of an older delayed server row', async () => {
-    mocks.env.appEnvironment = 'production';
+  it('keeps the custom full-Pro grant disabled unless the development exception is explicit', async () => {
     mocks.isSupabaseConfigured = true;
-    await saveVerifiedEntitlement(
-      cachedEntitlement({
-        periodType: 'normal',
-        store: 'app_store',
-        productId: 'prior-store-access',
-        expiresAt: null,
-        willRenew: true,
-        source: 'revenuecat',
-        environment: 'production',
-        verifiedAt: '2026-07-05T12:00:00.000Z',
-      }) as StoredEntitlement,
-    );
-    await clearStoreEntitlementIfRevenueCatVerifiedEmpty(
-      verifiedEmptyEvidence('2026-07-05T12:02:00.000Z'),
-    );
-
-    const emptyRead = await readEntitlementCache();
-    expect(resolveEntitlementCacheRead(emptyRead, NOW.toISOString(), 'production')).toMatchObject({
-      isPro: false,
-      expired: false,
-      priorPeriodType: null,
-      evidenceStatus: 'absent',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
-
-    mockServerEntitlement({
-      entitlement: 'pro',
-      is_active: true,
-      period_type: 'normal',
-      store: 'app_store',
-      product_id: 'delayed-server-access',
-      expires_at: '2026-08-05T12:00:00.000Z',
-      will_renew: true,
-      original_purchase_at: '2026-06-05T12:00:00.000Z',
-      source: 'server',
-      environment: 'production',
-      storeUserId: 'owner-a',
-      verified_at: '2026-07-05T12:01:00.000Z',
-    });
-
-    await expect(fetchServerEntitlement()).resolves.toMatchObject({
-      status: 'evidence',
-      acceptance: {
-        entitlement: null,
-        revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-      },
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
+    await expect(startReverseTrialOnServer()).rejects.toThrow('CUSTOM_PRO_GRANT_DISABLED');
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.writes).toBe(0);
   });
 
-  it.each(['malformed', 'unsupported', 'key_unavailable', 'write_failed'] as const)(
-    'returns valid server proof in memory while preserving %s cache bytes',
-    async (failure) => {
-      mocks.env.appEnvironment = 'production';
-      mocks.isSupabaseConfigured = true;
-      const original =
-        failure === 'malformed'
-          ? '{not-json'
-          : failure === 'unsupported'
-            ? cacheEnvelope(cachedEntitlement(), 3)
-            : cacheEnvelope(
-                cachedEntitlement({
-                  periodType: 'normal',
-                  store: 'app_store',
-                  productId: 'durable-current',
-                  expiresAt: null,
-                  source: 'revenuecat',
-                  environment: 'production',
-                  verifiedAt: '2026-07-05T12:00:00.000Z',
-                }),
-              );
-      mocks.storage.set(KEY, original);
-      if (failure === 'key_unavailable') {
-        mocks.nextMutationReadError = new Error('PRIVATE_KV_CONTENT_KEY_MISSING');
-      } else if (failure === 'write_failed') {
-        mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-      }
-      mockServerEntitlement({
-        entitlement: 'pro',
-        is_active: true,
-        period_type: 'normal',
-        store: 'app_store',
-        product_id: 'memory-only-server-proof',
-        expires_at: '2026-08-05T12:00:00.000Z',
-        will_renew: true,
-        original_purchase_at: '2026-06-05T12:00:00.000Z',
-        source: 'server',
-        environment: 'production',
-        verified_at: '2026-07-05T12:03:00.000Z',
-      });
-
-      await expect(fetchServerEntitlement()).resolves.toMatchObject({
-        status: 'evidence',
-        acceptance: {
-          entitlement: {
-            productId: 'memory-only-server-proof',
-            isActive: true,
-            source: 'server',
-            verifiedAt: '2026-07-05T12:03:00.000Z',
-          },
-        },
-      });
-      expect(mocks.storage.get(KEY)).toBe(original);
-    },
-  );
-
-  it('rejects invalid server evidence without changing unreadable cache bytes', async () => {
-    mocks.env.appEnvironment = 'production';
+  it('commits a reverse trial only from the configured server response', async () => {
+    mocks.customProGrantEnabled = true;
     mocks.isSupabaseConfigured = true;
-    const malformed = '{not-json';
-    mocks.storage.set(KEY, malformed);
-    mockServerEntitlement({
-      entitlement: 'pro',
-      is_active: true,
-      period_type: 'normal',
-      store: 'app_store',
-      product_id: 'invalid-server-proof',
-      expires_at: '2026-08-05T12:00:00.000Z',
-      will_renew: true,
-      original_purchase_at: '2026-06-05T12:00:00.000Z',
-      source: 'server',
-      environment: 'production',
-      verified_at: null,
-      updated_at: null,
-    });
-
-    await expect(fetchServerEntitlement()).resolves.toEqual({ status: 'failure' });
-    expect(mocks.storage.get(KEY)).toBe(malformed);
-  });
-
-  it('does not let a concurrent verified save get deleted by an older clear decision', async () => {
-    mocks.storage.set(
-      KEY,
-      cacheEnvelope(
-        cachedEntitlement({
-          periodType: 'normal',
-          store: 'app_store',
-          productId: 'old-store-product',
-          expiresAt: null,
-          willRenew: true,
-          source: 'revenuecat',
-          environment: 'sandbox',
-          verifiedAt: '2026-07-05T11:58:00.000Z',
-        }),
-      ),
-    );
-    const replacement = cachedEntitlement({
-      productId: 'new-app-grant',
-      verifiedAt: '2026-07-05T12:00:00.000Z',
-    }) as StoredEntitlement;
-
-    const clear = clearStoreEntitlementIfRevenueCatVerifiedEmpty(
-      verifiedEmptyEvidence('2026-07-05T11:59:00.000Z'),
-    );
-    const save = saveVerifiedEntitlement(replacement);
-    await Promise.all([clear, save]);
-
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'new-app-grant',
-      isActive: true,
-    });
-  });
-
-  it('does not let a stale downgrade overwrite a concurrent verified store entitlement', async () => {
-    const expiredReverseTrial = cachedEntitlement({
-      productId: 'expired-reverse-trial',
-      expiresAt: '2026-07-04T12:00:00.000Z',
-      verifiedAt: '2026-07-05T11:59:00.000Z',
-      storeUserId: 'owner-a',
-    }) as StoredEntitlement;
-    mocks.storage.set(
-      KEY,
-      cacheEnvelope(expiredReverseTrial),
-    );
-    const replacement = cachedEntitlement({
-      periodType: 'normal',
-      store: 'app_store',
-      productId: 'new-store-product',
-      expiresAt: null,
-      willRenew: true,
-      source: 'revenuecat',
-      environment: 'sandbox',
-      verifiedAt: '2026-07-05T12:00:00.000Z',
-    }) as StoredEntitlement;
-
-    const downgrade = downgradeToFree(
-      deriveState(expiredReverseTrial, NOW.toISOString()).evidenceIdentity!,
-      'owner-a',
-    );
-    const save = saveVerifiedEntitlement(replacement);
-    await Promise.all([downgrade, save]);
-
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'new-store-product',
-      isActive: true,
-      willRenew: true,
-    });
-  });
-
-  it('does not downgrade an identical reverse-trial identity owned by another account', async () => {
-    const expiredReverseTrial = cachedEntitlement({
-      productId: 'owner-a-expired-reverse',
-      expiresAt: '2026-07-04T12:00:00.000Z',
-      storeUserId: 'owner-a',
-    }) as StoredEntitlement;
-    mocks.storage.set(KEY, JSON.stringify(expiredReverseTrial));
-
-    await expect(
-      downgradeToFree(
-        deriveState(expiredReverseTrial, NOW.toISOString()).evidenceIdentity!,
-        'owner-b',
-      ),
-    ).resolves.toBe(false);
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'owner-a-expired-reverse',
-      isActive: true,
-    });
-  });
-
-  it('migrates a legacy downgrade through the primary v2 key without rewriting legacy bytes', async () => {
-    const legacyEntitlement = cachedEntitlement({
-      productId: 'expired-legacy-reverse-trial',
-      expiresAt: '2026-07-04T12:00:00.000Z',
-      storeUserId: 'owner-a',
-    });
-    const legacy = cacheEnvelope(legacyEntitlement);
-    mocks.storage.set(LEGACY_KEY, legacy);
-
-    await downgradeToFree(
-      deriveState(legacyEntitlement as StoredEntitlement, NOW.toISOString())
-        .evidenceIdentity!,
-      'owner-a',
-    );
-
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      ...legacyEntitlement,
-      isActive: false,
-      willRenew: false,
-    });
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(legacy);
-  });
-
-  it('keeps unsupported bytes intact when a conditional mutation cannot decode them', async () => {
-    const future = cacheEnvelope(cachedEntitlement(), 3);
-    mocks.storage.set(KEY, future);
-
-    await expect(downgradeToFree('unsupported-proof', 'owner-a')).resolves.toBe(false);
-    await expect(
-      clearStoreEntitlementIfRevenueCatVerifiedEmpty(verifiedEmptyEvidence()),
-    ).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(future);
-  });
-
-  it.each(
-    (['development', 'production'] as const).flatMap((appEnvironment) =>
-      (['corrupt', 'key_unavailable', 'write_failed'] as const).map(
-        (failure) => [appEnvironment, failure] as const,
-      ),
-    ),
-  )(
-    'returns a %s reverse trial in memory across %s persistence failure',
-    async (appEnvironment, failure) => {
-      mocks.env.appEnvironment = appEnvironment;
-      mocks.isSupabaseConfigured = appEnvironment === 'production';
-      const original =
-        failure === 'corrupt'
-          ? '{not-json'
-          : compositeCacheEnvelope(
-              storeEntitlement({
-                productId: 'durable-older-proof',
-                isActive: false,
-                verifiedAt: '2026-07-05T11:59:00.000Z',
-              }),
-            );
-      mocks.storage.set(KEY, original);
-      if (failure === 'key_unavailable') {
-        mocks.nextMutationReadError = new Error('PRIVATE_KV_CONTENT_KEY_MISSING');
-      } else if (failure === 'write_failed') {
-        mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-      }
-      if (appEnvironment === 'production') {
-        mocks.invoke.mockResolvedValue({
-          data: {
-            entitlement: {
-              entitlement: 'pro',
-              is_active: true,
-              period_type: 'reverse_trial',
-              store: 'app_granted',
-              product_id: 'server-reverse-trial',
-              expires_at: '2026-07-12T12:00:00.000Z',
-              will_renew: false,
-              original_purchase_at: NOW.toISOString(),
-              source: 'server',
-              environment: 'production',
-              verified_at: NOW.toISOString(),
-            },
-          },
-          error: null,
-        });
-      }
-
-      await expect(startReverseTrialOnServer()).resolves.toMatchObject({
-        started: true,
-        entitlement: {
-          isActive: true,
-          periodType: 'reverse_trial',
-          store: 'app_granted',
-          productId:
-            appEnvironment === 'production'
-              ? 'server-reverse-trial'
-              : 'routinekind_pro_reverse_trial_local',
-        },
-      });
-      expect(mocks.storage.get(KEY)).toBe(original);
-    },
-  );
-
-  it('rejects a malformed server reverse-trial grant instead of caching inactive poison', async () => {
-    mocks.isSupabaseConfigured = true;
-    mocks.env.appEnvironment = 'production';
+    const grantedAt = '2026-07-14T12:00:00.000Z';
     mocks.invoke.mockResolvedValue({
       data: {
-        entitlement: {
-          entitlement: 'pro',
-          is_active: true,
+        entitlement: webhookRow({
           period_type: 'reverse_trial',
           store: 'app_granted',
-          product_id: 'routinekind_pro_reverse_trial_server',
-          expires_at: null,
+          product_id: null,
+          expires_at: '2026-07-21T12:00:00.000Z',
           will_renew: false,
-          original_purchase_at: '2026-07-05T12:00:00.000Z',
-          source: 'server',
+          original_purchase_at: grantedAt,
+          source: 'app_granted',
           environment: 'production',
-          verified_at: '2026-07-05T12:00:00.000Z',
-        },
+          management_url: null,
+          verified_at: grantedAt,
+          store_user_id: null,
+          offering_id: null,
+          package_id: null,
+          rc_event_at: null,
+          rc_event_priority: null,
+          rc_event_id: null,
+        }),
       },
       error: null,
     });
 
-    await expect(startReverseTrialOnServer()).rejects.toThrow(
-      'INVALID_ENTITLEMENT_CACHE_RECORD',
-    );
+    const grant = await startReverseTrialOnServer();
     expect(mocks.invoke).toHaveBeenCalledWith('subscription-grants', {
-      headers: { Authorization: 'Bearer token-a' },
-      signal: expect.any(AbortSignal),
       body: { action: 'start_reverse_trial' },
+      signal: expect.any(AbortSignal),
     });
-    await expect(loadEntitlement()).resolves.toBeNull();
-  });
-
-  it('does not cache an owner-A reverse trial response after an account boundary begins', async () => {
-    mocks.isSupabaseConfigured = true;
-    mocks.env.appEnvironment = 'production';
-    let releaseResponse!: (value: unknown) => void;
-    let markStarted!: () => void;
-    const started = new Promise<void>((resolve) => {
-      markStarted = resolve;
-    });
-    mocks.invoke.mockImplementationOnce(() => {
-      markStarted();
-      return new Promise((resolve) => {
-        releaseResponse = resolve;
-      });
-    });
-
-    const starting = startReverseTrialOnServer();
-    await started;
-    beginAccountGenerationBoundary();
-    releaseResponse({
-      data: {
-        entitlement: {
-          entitlement: 'pro',
-          is_active: true,
-          period_type: 'reverse_trial',
-          store: 'app_granted',
-          product_id: 'owner-a-reverse-trial',
-          expires_at: '2026-07-12T12:00:00.000Z',
-          will_renew: false,
-          original_purchase_at: '2026-07-05T12:00:00.000Z',
-          source: 'server',
-          environment: 'production',
-          verified_at: '2026-07-05T12:00:00.000Z',
-        },
-      },
-      error: null,
-    });
-
-    await expect(starting).rejects.toMatchObject({ kind: 'owner_changed' });
-    expect(mocks.storage.has(KEY)).toBe(false);
-  });
-
-  it('reports the reverse-trial grant as superseded when a concurrent paid proof wins', async () => {
-    mocks.isSupabaseConfigured = true;
-    mocks.env.appEnvironment = 'production';
-    let releaseGrant!: (value: unknown) => void;
-    let markInvoked!: () => void;
-    const invoked = new Promise<void>((resolve) => {
-      markInvoked = resolve;
-    });
-    mocks.invoke.mockImplementationOnce(() => {
-      markInvoked();
-      return new Promise((resolve) => {
-        releaseGrant = resolve;
-      });
-    });
-
-    const starting = startReverseTrialOnServer(() => {}, 'owner-a');
-    await invoked;
-    await acceptTrustedRevenueCatEntitlement(
-      storeEntitlement({
-        productId: 'concurrent-paid-winner',
-        verifiedAt: '2026-07-05T12:02:00.000Z',
-      }),
-    );
-    releaseGrant({
-      data: {
-        entitlement: {
-          entitlement: 'pro',
-          is_active: true,
-          period_type: 'reverse_trial',
-          store: 'app_granted',
-          product_id: 'superseded-reverse-grant',
-          expires_at: '2026-07-12T12:00:00.000Z',
-          will_renew: false,
-          original_purchase_at: NOW.toISOString(),
-          source: 'server',
-          environment: 'production',
-          verified_at: '2026-07-05T12:03:00.000Z',
-        },
-      },
-      error: null,
-    });
-
-    await expect(starting).resolves.toMatchObject({
-      started: false,
-      entitlement: { productId: 'concurrent-paid-winner', storeUserId: 'owner-a' },
-    });
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'concurrent-paid-winner',
-    });
-  });
-
-  it('recovers a failed T2 proof write without letting a delayed T1 become durable', async () => {
-    const t1 = storeEntitlement({
-      productId: 't1',
-      verifiedAt: '2026-07-05T12:00:00.000Z',
-    });
-    const t2 = storeEntitlement({
-      productId: 't2',
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(t1);
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(t2),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 't2' },
-      persisted: false,
-    });
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 't2' },
-    });
-
-    await expect(
-      acceptVerifiedEntitlement(
-        storeEntitlement({
-          productId: 'delayed-t1',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({ entitlement: { productId: 't2' }, persisted: true });
-
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 't2' },
-    });
-  });
-
-  it('recovers a failed T2 empty write before a delayed T1 active proof', async () => {
-    await saveVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'durable-t1',
-        verifiedAt: '2026-07-05T12:00:00.000Z',
-      }),
-    );
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-
-    await expect(
-      acceptRevenueCatVerifiedEmpty(
-        verifiedEmptyEvidence('2026-07-05T12:02:00.000Z'),
-      ),
-    ).resolves.toMatchObject({ entitlement: null, persisted: false });
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'absent',
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-    });
-
-    await acceptVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'delayed-active-t1',
-        verifiedAt: '2026-07-05T12:01:00.000Z',
-      }),
-    );
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'absent',
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:02:00.000Z' },
-    });
-  });
-
-  it('drops a failed-write memory shadow at an account-generation boundary', async () => {
-    await acceptTrustedRevenueCatEntitlement(
-      storeEntitlement({ productId: 'owner-a-durable-t1' }),
-    );
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    await acceptTrustedRevenueCatEntitlement(
-      storeEntitlement({
-        productId: 'owner-a-memory-t2',
-        verifiedAt: '2026-07-05T12:02:00.000Z',
-      }),
-    );
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'owner-a-memory-t2',
-    });
-
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'owner-a-durable-t1',
-    });
-  });
-
-  it('fails closed after the tombstone-first crash window and never revives v1', async () => {
-    const tombstone = {
-      tier: 'pro',
-      isActive: false,
-      periodType: null,
-      store: null,
+    expect(grant).toMatchObject({
+      source: 'app_granted',
+      store: 'app_granted',
       productId: null,
-      expiresAt: null,
-      willRenew: false,
-      grantedAt: null,
-      source: 'local_cache',
-      environment: null,
-      managementUrl: null,
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-      offeringId: null,
-      packageId: null,
-      storeUserId: null,
-      priceLabel: null,
-    };
-    mocks.storage.set(KEY, JSON.stringify(tombstone));
-    mocks.storage.set(LEGACY_KEY, JSON.stringify(cachedEntitlement()));
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it('treats a v1 watermark with a missing v2 proof as authoritative absence', async () => {
-    const watermark = verifiedEmptyEvidence('2026-07-05T12:02:00.000Z');
-    mocks.storage.set(
-      REVENUECAT_EMPTY_KEY,
-      JSON.stringify({
-        version: 2,
-        revenueCatEmpty: watermark,
-        trustedRevenueCatProof: null,
-      }),
-    );
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'absent',
-      entitlement: null,
-      revenueCatEmpty: watermark,
-    });
-  });
-
-  it('ignores an account-A watermark when a rollback build left account-B proof in v2', async () => {
-    mocks.env.appEnvironment = 'production';
-    mocks.storage.set(
-      REVENUECAT_EMPTY_KEY,
-      JSON.stringify({
-        version: 2,
-        revenueCatEmpty: verifiedEmptyEvidence('2026-07-05T12:03:00.000Z'),
-        trustedRevenueCatProof: trustedRevenueCatMarkerFor(
-          storeEntitlement({
-            productId: 'owner-b-proof',
-            storeUserId: 'owner-b',
-            verifiedAt: '2026-07-05T12:01:00.000Z',
-          }),
-        ),
-      }),
-    );
-    mocks.storage.set(
-      KEY,
-      JSON.stringify(
-        storeEntitlement({
-          productId: 'owner-b-proof',
-          storeUserId: 'owner-b',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }),
-      ),
-    );
-
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'owner-b-proof', storeUserId: 'owner-b' },
-    });
-  });
-
-  it('retains inactive store evidence while a live app grant wins and blocks delayed resurrection', async () => {
-    mocks.env.appEnvironment = 'production';
-    const grant = cachedEntitlement({
-      productId: 'app-grant-t1',
-      environment: 'production',
-      storeUserId: 'owner-a',
-      expiresAt: '2026-07-05T12:10:00.000Z',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    }) as StoredEntitlement;
-    await saveVerifiedEntitlement(grant);
-    await acceptVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'inactive-store-t3',
-        isActive: false,
-        verifiedAt: '2026-07-05T12:03:00.000Z',
-      }),
-    );
-    await expect(loadEntitlement()).resolves.toMatchObject({ productId: 'app-grant-t1' });
-    expect(JSON.parse(mocks.storage.get(REVENUECAT_EMPTY_KEY) ?? '{}')).toMatchObject({
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:03:00.000Z' },
-    });
-
-    await acceptVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'delayed-active-store-t2',
-        verifiedAt: '2026-07-05T12:02:00.000Z',
-      }),
-    );
-    const atExpiry = resolveEntitlementCacheRead(
-      await readEntitlementCache(),
-      '2026-07-05T12:10:00.000Z',
-      'production',
-    );
-    expect(atExpiry).toMatchObject({ isPro: false, productId: null });
-
-    await acceptVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'active-store-t4',
-        verifiedAt: '2026-07-05T12:04:00.000Z',
-      }),
-    );
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'active-store-t4',
       isActive: true,
+      grantedAt,
     });
+    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({ version: 2, ownerBinding: A });
   });
 
-  it('treats a cold pre-marker RevenueCat proof as uncertainty, never offline access', async () => {
-    const proof = storeEntitlement({ productId: 'pre-marker-proof' });
-    mocks.storage.set(KEY, JSON.stringify(proof));
-
-    await expect(
-      readEntitlementCache({ expectedStoreUserId: 'owner-a' }),
-    ).resolves.toEqual({ status: 'unavailable', entitlement: null });
-  });
-
-  it('writes the proof before its trusted marker and restores it after a cold restart', async () => {
-    const proof = storeEntitlement({ productId: 'trusted-cold-proof' });
-    await expect(
-      acceptTrustedRevenueCatEntitlement(proof),
-    ).resolves.toMatchObject({ persisted: true, entitlement: { productId: 'trusted-cold-proof' } });
-
-    expect(mocks.writeKeys.slice(-2)).toEqual([KEY, LEGACY_KEY]);
-    expect(JSON.parse(mocks.storage.get(LEGACY_KEY) ?? '{}')).toMatchObject({
-      version: 2,
-      revenueCatEmpty: null,
-      trustedRevenueCatProof: {
-        storeUserId: 'owner-a',
-        proofIdentity: trustedRevenueCatMarkerFor(proof)?.proofIdentity,
-      },
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(
-      readEntitlementCache({ expectedStoreUserId: 'owner-a' }),
-    ).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'trusted-cold-proof' },
-    });
-  });
-
-  it.each([
-    ['owner', { storeUserId: 'owner-b' }],
-    ['proof identity', { proofIdentity: '["different-proof"]' }],
-  ])('rejects a trusted marker with a mismatched %s', async (_name, markerOverride) => {
-    const proof = storeEntitlement({ productId: 'marker-mismatch-proof' });
-    const marker = trustedRevenueCatMarkerFor(proof);
-    mocks.storage.set(KEY, JSON.stringify(proof));
-    mocks.storage.set(
-      LEGACY_KEY,
-      JSON.stringify({
-        version: 2,
-        revenueCatEmpty: null,
-        trustedRevenueCatProof: { ...marker, ...markerOverride },
-      }),
-    );
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it('never lets generic or server acceptance mint a trusted RevenueCat marker', async () => {
-    await acceptVerifiedEntitlement(storeEntitlement({ productId: 'generic-rc-proof' }));
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
+  it('explicit reset removes both entitlement cache keys', async () => {
+    await mergeAppGrant();
+    mocks.storage.set(LEGACY_KEY, 'legacy');
     await clearEntitlement();
-    const serverProof = storeEntitlement({
-      productId: 'server-proof',
-      source: 'server',
-    });
-    await acceptVerifiedEntitlement(serverProof);
+    expect(mocks.storage.has(KEY)).toBe(false);
     expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'server-proof', source: 'server' },
-    });
-  });
-
-  it('fails closed after a proof-first crash before the trusted marker write', async () => {
-    const proof = storeEntitlement({ productId: 'proof-without-marker-after-crash' });
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-    mocks.nextMutationErrorAttempt = 2;
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(proof),
-    ).resolves.toMatchObject({
-      persisted: false,
-      entitlement: { productId: 'proof-without-marker-after-crash' },
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'proof-without-marker-after-crash',
-    });
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'proof-without-marker-after-crash' },
-    });
-
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it('preclears marker P before trusted inactive Q so rollback cannot replay P', async () => {
-    const proofP = storeEntitlement({
-      productId: 'trusted-active-p',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(proofP);
-    mocks.mutationAttempts.clear();
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-    mocks.nextMutationErrorAttempt = 2;
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'trusted-inactive-q',
-          isActive: false,
-          willRenew: false,
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      persisted: false,
-      entitlement: { productId: 'trusted-inactive-q', isActive: false },
-    });
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-
-    mocks.storage.set(KEY, JSON.stringify(proofP));
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it('does not launder a newer generic RevenueCat winner with an older trusted marker', async () => {
-    const newerGeneric = storeEntitlement({
-      productId: 'generic-t3',
-      verifiedAt: '2026-07-05T12:03:00.000Z',
-    });
-    await acceptVerifiedEntitlement(newerGeneric);
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'trusted-t2',
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({ entitlement: { productId: 'generic-t3' } });
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it('migrates a cold unmarked legacy RevenueCat proof after an explicit trusted refresh', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify(
-        storeEntitlement({
-          productId: 'legacy-unmarked-t3',
-          verifiedAt: '2026-07-05T12:03:00.000Z',
-        }),
-      ),
-    );
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'older-than-unmarked-v2',
-          verifiedAt: '2026-07-05T12:00:00.000Z',
-        }),
-      ),
-    ).rejects.toThrow('ENTITLEMENT_ACTIVE_PROVIDER_BARRIER');
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'trusted-refresh-t4',
-          verifiedAt: '2026-07-05T12:04:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      persisted: true,
-      entitlement: { productId: 'trusted-refresh-t4' },
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'trusted-refresh-t4' },
-    });
-  });
-
-  it('clears a superseded marker so rollback bytes cannot replay its old proof', async () => {
-    const trusted = storeEntitlement({
-      productId: 'trusted-marker-p',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(trusted);
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(true);
-
-    await acceptVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'server-winner',
-        source: 'server',
-        verifiedAt: '2026-07-05T12:04:00.000Z',
-      }),
-    );
-    expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-
-    // Simulate a rollback build rewriting the old SDK-shaped proof into v2.
-    mocks.storage.set(KEY, JSON.stringify(trusted));
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it('aborts a non-RC replacement before v2 when clearing its old trusted marker fails', async () => {
-    const trusted = storeEntitlement({
-      productId: 'trusted-p-before-clear-failure',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(trusted);
-    const markerBytes = mocks.storage.get(LEGACY_KEY);
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-
-    await expect(
-      acceptVerifiedEntitlement(
-        storeEntitlement({
-          productId: 'server-s-not-durable',
-          source: 'server',
-          verifiedAt: '2026-07-05T12:04:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'server-s-not-durable' },
-      persisted: false,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      productId: 'trusted-p-before-clear-failure',
-    });
-    expect(mocks.storage.get(LEGACY_KEY)).toBe(markerBytes);
-
-    // A rollback rewrite of P cannot turn S into a marker-replay state because
-    // S was never committed. Forward read sees the original trusted pair.
-    mocks.storage.set(KEY, JSON.stringify(trusted));
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'trusted-p-before-clear-failure' },
-    });
-  });
-
-  it('recovers a marker-only sidecar after a rollback build removes v2', async () => {
-    await acceptTrustedRevenueCatEntitlement(
-      storeEntitlement({
-        productId: 'trusted-before-v2-removal',
-        verifiedAt: '2026-07-05T12:01:00.000Z',
-      }),
-    );
-    mocks.storage.delete(KEY);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'older-than-marker-only',
-          verifiedAt: '2026-07-05T12:00:00.000Z',
-        }),
-      ),
-    ).rejects.toThrow('ENTITLEMENT_ACTIVE_PROVIDER_BARRIER');
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'trusted-recreated-v2',
-          verifiedAt: '2026-07-05T12:04:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'trusted-recreated-v2' },
-      persisted: true,
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'trusted-recreated-v2' },
-    });
-  });
-
-  it('recovers a marker-only sidecar through an exact trusted proof retry', async () => {
-    const proof = storeEntitlement({
-      productId: 'marker-only-exact-proof',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(proof);
-    mocks.storage.delete(KEY);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-
-    await expect(acceptTrustedRevenueCatEntitlement(proof)).resolves.toMatchObject({
-      persisted: true,
-      entitlement: { productId: 'marker-only-exact-proof' },
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'marker-only-exact-proof' },
-    });
-  });
-
-  it('keeps older W0 uncertain when rollback removes newer active P1 behind its marker', async () => {
-    await acceptRevenueCatVerifiedEmpty({
-      verifiedAt: '2026-07-05T12:00:00.000Z',
-      storeUserId: 'owner-a',
-    });
-    const p1 = storeEntitlement({
-      productId: 'active-p1-behind-w0',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(p1);
-    mocks.storage.delete(KEY);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'older-than-active-marker',
-          verifiedAt: '2026-07-05T12:00:30.000Z',
-        }),
-      ),
-    ).rejects.toThrow('ENTITLEMENT_ACTIVE_PROVIDER_BARRIER');
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-    await expect(acceptTrustedRevenueCatEntitlement(p1)).resolves.toMatchObject({
-      persisted: true,
-      entitlement: { productId: 'active-p1-behind-w0' },
-    });
-  });
-
-  it('lets an expired trusted marker defeat equal-time rollback server access', async () => {
-    const expiringQ3 = storeEntitlement({
-      productId: 'expiring-trusted-q3',
-      periodType: 'trial',
-      expiresAt: '2026-07-05T12:02:00.000Z',
-      willRenew: false,
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    });
-    await acceptTrustedRevenueCatEntitlement(expiringQ3);
-
-    mocks.storage.set(
-      KEY,
-      JSON.stringify(
-        storeEntitlement({
-          productId: 'rollback-server-s3',
-          source: 'server',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }),
-      ),
-    );
-    vi.setSystemTime(new Date('2026-07-05T12:03:00.000Z'));
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'delayed-active-r2',
-          verifiedAt: '2026-07-05T12:00:30.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({ entitlement: null, persisted: true });
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'absent',
-      entitlement: null,
-      revenueCatEmpty: { verifiedAt: '2026-07-05T12:01:00.000Z' },
-    });
-  });
-
-  it.each(['active', 'empty'] as const)(
-    'repairs a tombstone-first crash with later trusted %s evidence',
-    async (repairKind) => {
-      await acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'trusted-before-empty-crash',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }),
-      );
-      mocks.mutationAttempts.clear();
-      mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-      mocks.nextMutationErrorKey = LEGACY_KEY;
-      mocks.nextMutationErrorAttempt = 2;
-      await expect(
-        acceptRevenueCatVerifiedEmpty({
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-          storeUserId: 'owner-a',
-        }),
-      ).resolves.toMatchObject({ persisted: false, entitlement: null });
-      expect(mocks.storage.has(KEY)).toBe(true);
-      expect(mocks.storage.has(LEGACY_KEY)).toBe(false);
-
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      await expect(readEntitlementCache()).resolves.toEqual({
-        status: 'unavailable',
-        entitlement: null,
-      });
-
-      if (repairKind === 'active') {
-        await expect(
-          acceptTrustedRevenueCatEntitlement(
-            storeEntitlement({
-              productId: 'trusted-active-repair-t3',
-              verifiedAt: '2026-07-05T12:03:00.000Z',
-            }),
-          ),
-        ).resolves.toMatchObject({ persisted: true });
-      } else {
-        await expect(
-          acceptRevenueCatVerifiedEmpty({
-            verifiedAt: '2026-07-05T12:03:00.000Z',
-            storeUserId: 'owner-a',
-          }),
-        ).resolves.toMatchObject({ persisted: true });
-      }
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      await expect(readEntitlementCache()).resolves.toMatchObject(
-        repairKind === 'active'
-          ? {
-              status: 'available',
-              entitlement: { productId: 'trusted-active-repair-t3' },
-            }
-          : {
-              status: 'absent',
-              entitlement: null,
-              revenueCatEmpty: { verifiedAt: '2026-07-05T12:03:00.000Z' },
-            },
-      );
-    },
-  );
-
-  it.each([false, true])(
-    'keeps a crashed empty T3 ahead of delayed trusted T2 (older watermark: %s)',
-    async (withOlderWatermark) => {
-      if (withOlderWatermark) {
-        await acceptRevenueCatVerifiedEmpty({
-          verifiedAt: '2026-07-05T12:00:00.000Z',
-          storeUserId: 'owner-a',
-        });
-      }
-      await acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'active-p1-before-empty-crash',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }),
-      );
-      mocks.mutationAttempts.clear();
-      mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-      mocks.nextMutationErrorKey = LEGACY_KEY;
-      mocks.nextMutationErrorAttempt = 2;
-      await expect(
-        acceptRevenueCatVerifiedEmpty({
-          verifiedAt: '2026-07-05T12:03:00.000Z',
-          storeUserId: 'owner-a',
-        }),
-      ).resolves.toMatchObject({ persisted: false, entitlement: null });
-
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      await expect(readEntitlementCache()).resolves.toEqual({
-        status: 'unavailable',
-        entitlement: null,
-      });
-      await expect(
-        acceptTrustedRevenueCatEntitlement(
-          storeEntitlement({
-            productId: 'delayed-active-t2',
-            verifiedAt: '2026-07-05T12:02:00.000Z',
-          }),
-        ),
-      ).resolves.toMatchObject({ entitlement: null, persisted: true });
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      await expect(readEntitlementCache()).resolves.toMatchObject({
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: { verifiedAt: '2026-07-05T12:03:00.000Z' },
-      });
-
-      await expect(
-        acceptTrustedRevenueCatEntitlement(
-          storeEntitlement({
-            productId: 'newer-active-t4',
-            verifiedAt: '2026-07-05T12:04:00.000Z',
-          }),
-        ),
-      ).resolves.toMatchObject({
-        persisted: true,
-        entitlement: { productId: 'newer-active-t4' },
-      });
-    },
-  );
-
-  it('keeps a durable unmarked inactive Q3 ahead of delayed trusted active R2', async () => {
-    await acceptTrustedRevenueCatEntitlement(
-      storeEntitlement({
-        productId: 'trusted-active-p1',
-        verifiedAt: '2026-07-05T12:01:00.000Z',
-      }),
-    );
-    mocks.mutationAttempts.clear();
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-    mocks.nextMutationErrorAttempt = 2;
-    await acceptTrustedRevenueCatEntitlement(
-      storeEntitlement({
-        productId: 'durable-inactive-q3',
-        isActive: false,
-        willRenew: false,
-        verifiedAt: '2026-07-05T12:03:00.000Z',
-      }),
-    );
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'delayed-active-r2',
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({ entitlement: null, persisted: true });
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'newer-active-r4',
-          verifiedAt: '2026-07-05T12:04:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'newer-active-r4' },
-      persisted: true,
-    });
-  });
-
-  it('allows an exact trusted retry to finish the marker phase for durable Q3', async () => {
-    const q3 = storeEntitlement({
-      productId: 'exact-retry-q3',
-      verifiedAt: '2026-07-05T12:03:00.000Z',
-    });
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-    mocks.nextMutationErrorAttempt = 2;
-    await expect(acceptTrustedRevenueCatEntitlement(q3)).resolves.toMatchObject({
-      persisted: false,
-      entitlement: { productId: 'exact-retry-q3' },
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'older-than-q3',
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).rejects.toThrow('ENTITLEMENT_ACTIVE_PROVIDER_BARRIER');
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
-    await expect(acceptTrustedRevenueCatEntitlement(q3)).resolves.toMatchObject({
-      persisted: true,
-      entitlement: { productId: 'exact-retry-q3' },
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'exact-retry-q3' },
-    });
-  });
-
-  it('preserves a newer volatile R4 when delayed R2 is blocked by durable active Q3', async () => {
-    const q3 = storeEntitlement({
-      productId: 'durable-active-q3',
-      verifiedAt: '2026-07-05T12:03:00.000Z',
-    });
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-    mocks.nextMutationErrorAttempt = 2;
-    await acceptTrustedRevenueCatEntitlement(q3);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    mocks.mutationAttempts.clear();
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = KEY;
-    mocks.nextMutationErrorAttempt = 1;
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'volatile-newer-r4',
-          verifiedAt: '2026-07-05T12:04:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'volatile-newer-r4' },
-      persisted: false,
-    });
-
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'delayed-older-r2',
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'volatile-newer-r4' },
-      persisted: true,
-    });
-    await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'volatile-newer-r4',
-    });
-  });
-
-  it('preserves an independent memory-only app grant while active Q3 blocks R2', async () => {
-    const q3 = storeEntitlement({
-      productId: 'active-q3-before-appgrant',
-      verifiedAt: '2026-07-05T12:03:00.000Z',
-    });
-    mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
-    mocks.nextMutationErrorKey = LEGACY_KEY;
-    mocks.nextMutationErrorAttempt = 2;
-    await acceptTrustedRevenueCatEntitlement(q3);
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-
-    await expect(
-      acceptVerifiedEntitlement(
-        cachedEntitlement({
-          productId: 'independent-memory-appgrant',
-          environment: 'production',
-          storeUserId: 'owner-a',
-          expiresAt: '2026-07-05T12:02:00.000Z',
-          verifiedAt: '2026-07-05T12:01:00.000Z',
-        }) as StoredEntitlement,
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'independent-memory-appgrant' },
-      persisted: false,
-    });
-    await expect(readEntitlementCache()).resolves.toMatchObject({
-      status: 'available',
-      entitlement: { productId: 'independent-memory-appgrant' },
-    });
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'blocked-r2-after-appgrant',
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'independent-memory-appgrant' },
-      persisted: false,
-    });
-
-    vi.setSystemTime(new Date('2026-07-05T12:03:00.000Z'));
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-
-    await expect(acceptTrustedRevenueCatEntitlement(q3)).resolves.toMatchObject({
-      persisted: true,
-      entitlement: { productId: 'active-q3-before-appgrant' },
-    });
-  });
-
-  it('rejects an owner-A app grant when owner B is the expected account', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify(
-        cachedEntitlement({
-          productId: 'owner-a-appgrant',
-          environment: 'production',
-          storeUserId: 'owner-a',
-        }),
-      ),
-    );
-    await expect(
-      readEntitlementCache({ expectedStoreUserId: 'owner-b' }),
-    ).resolves.toEqual({ status: 'unavailable', entitlement: null });
-  });
-
-  it('discards a newer owner-A app grant before accepting owner-B empty evidence', async () => {
-    mocks.env.appEnvironment = 'production';
-    await acceptVerifiedEntitlement(
-      cachedEntitlement({
-        productId: 'owner-a-newer-appgrant',
-        environment: 'production',
-        storeUserId: 'owner-a',
-        verifiedAt: '2026-07-05T12:04:00.000Z',
-      }) as StoredEntitlement,
-    );
-    await expect(
-      acceptRevenueCatVerifiedEmpty({
-        verifiedAt: '2026-07-05T12:02:00.000Z',
-        storeUserId: 'owner-b',
-      }),
-    ).resolves.toMatchObject({
-      entitlement: null,
-      revenueCatEmpty: { storeUserId: 'owner-b' },
-    });
-  });
-
-  it('restores owner-B verified empty from its ownerless tombstone only for owner B', async () => {
-    await acceptRevenueCatVerifiedEmpty({
-      verifiedAt: '2026-07-05T12:02:00.000Z',
-      storeUserId: 'owner-b',
-    });
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-
-    await expect(
-      readEntitlementCache({ expectedStoreUserId: 'owner-b' }),
-    ).resolves.toMatchObject({
-      status: 'absent',
-      entitlement: null,
-      revenueCatEmpty: { storeUserId: 'owner-b' },
-    });
-    await expect(
-      readEntitlementCache({ expectedStoreUserId: 'owner-a' }),
-    ).resolves.toEqual({ status: 'unavailable', entitlement: null });
-  });
-
-  it('discards a newer generic owner-A proof before accepting an older trusted owner-B proof', async () => {
-    await acceptVerifiedEntitlement(
-      storeEntitlement({
-        productId: 'owner-a-generic-t4',
-        storeUserId: 'owner-a',
-        verifiedAt: '2026-07-05T12:04:00.000Z',
-      }),
-    );
-    await expect(
-      acceptTrustedRevenueCatEntitlement(
-        storeEntitlement({
-          productId: 'owner-b-trusted-t2',
-          storeUserId: 'owner-b',
-          verifiedAt: '2026-07-05T12:02:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({
-      entitlement: { productId: 'owner-b-trusted-t2', storeUserId: 'owner-b' },
-      persisted: true,
-    });
-  });
-
-  it.each([
-    ['store-first', '2026-07-05T12:03:00.000Z'],
-    ['grant-first', '2026-07-05T12:03:00.000Z'],
-    ['store-first', '2026-07-05T12:02:00.000Z'],
-    ['grant-first', '2026-07-05T12:02:00.000Z'],
-  ] as const)(
-    'keeps a live paid store proof when an inactive app grant arrives %s at %s',
-    async (order, grantVerifiedAt) => {
-      mocks.env.appEnvironment = 'production';
-      const store = storeEntitlement({
-        productId: 'paid-store-t2',
-        verifiedAt: '2026-07-05T12:02:00.000Z',
-      });
-      const inactiveGrant = cachedEntitlement({
-        productId: 'inactive-grant',
-        isActive: false,
-        environment: 'production',
-        storeUserId: 'owner-a',
-        verifiedAt: grantVerifiedAt,
-      }) as StoredEntitlement;
-      const first = order === 'store-first' ? store : inactiveGrant;
-      const second = order === 'store-first' ? inactiveGrant : store;
-      await acceptVerifiedEntitlement(first);
-      await expect(acceptVerifiedEntitlement(second)).resolves.toMatchObject({
-        entitlement: { productId: 'paid-store-t2', isActive: true },
-      });
-      await expect(loadEntitlement()).resolves.toMatchObject({
-        productId: 'paid-store-t2',
-        isActive: true,
-      });
-    },
-  );
-
-  it.each(['store-first', 'grant-first'] as const)(
-    'lets a live app grant beat a 72-hour-stale store proof when it arrives %s',
-    async (order) => {
-      mocks.env.appEnvironment = 'production';
-      const staleStore = storeEntitlement({
-        productId: 'stale-store-proof',
-        verifiedAt: '2026-07-02T11:59:59.999Z',
-      });
-      const liveGrant = cachedEntitlement({
-        productId: 'live-independent-grant',
-        environment: 'production',
-        storeUserId: 'owner-a',
-        verifiedAt: '2026-07-05T12:00:00.000Z',
-      }) as StoredEntitlement;
-      const first = order === 'store-first' ? staleStore : liveGrant;
-      const second = order === 'store-first' ? liveGrant : staleStore;
-      await acceptVerifiedEntitlement(first);
-      await expect(acceptVerifiedEntitlement(second)).resolves.toMatchObject({
-        entitlement: { productId: 'live-independent-grant' },
-      });
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      await expect(
-        readEntitlementCache({ expectedStoreUserId: 'owner-a' }),
-      ).resolves.toMatchObject({
-        status: 'available',
-        entitlement: { productId: 'live-independent-grant' },
-      });
-    },
-  );
-
-  it('keeps within-window live store authority above a live app grant', async () => {
-    mocks.env.appEnvironment = 'production';
-    const grant = cachedEntitlement({
-      productId: 'live-grant',
-      environment: 'production',
-      storeUserId: 'owner-a',
-      verifiedAt: '2026-07-05T12:01:00.000Z',
-    }) as StoredEntitlement;
-    await acceptVerifiedEntitlement(grant);
-    await expect(
-      acceptVerifiedEntitlement(
-        storeEntitlement({
-          productId: 'fresh-store',
-          verifiedAt: '2026-07-05T12:00:00.000Z',
-        }),
-      ),
-    ).resolves.toMatchObject({ entitlement: { productId: 'fresh-store' } });
-  });
-
-  it.each([0, 1])('does not authorize an unmarked RevenueCat legacy v%s proof', async (version) => {
-    const proof = storeEntitlement({ productId: `legacy-v${version}-rc` });
-    mocks.storage.set(LEGACY_KEY, version === 0 ? JSON.stringify(proof) : cacheEnvelope(proof));
-
-    await expect(readEntitlementCache({ expectedStoreUserId: 'owner-a' })).resolves.toEqual({
-      status: 'unavailable',
-      entitlement: null,
-    });
-  });
-
-  it.each([
-    [0, 'exact'],
-    [0, 'newer'],
-    [1, 'exact'],
-    [1, 'newer'],
-  ] as const)(
-    'repairs an unmarked RevenueCat legacy v%s proof through a %s trusted refresh',
-    async (version, repairKind) => {
-      const legacy = storeEntitlement({
-        productId: `unmarked-legacy-v${version}`,
-        verifiedAt: '2026-07-05T12:03:00.000Z',
-      });
-      mocks.storage.set(
-        LEGACY_KEY,
-        version === 0 ? JSON.stringify(legacy) : cacheEnvelope(legacy),
-      );
-      await expect(readEntitlementCache({ expectedStoreUserId: 'owner-a' })).resolves.toEqual({
-        status: 'unavailable',
-        entitlement: null,
-      });
-
-      await expect(
-        acceptTrustedRevenueCatEntitlement(
-          storeEntitlement({
-            productId: `older-than-legacy-v${version}`,
-            verifiedAt: '2026-07-05T12:02:00.000Z',
-          }),
-        ),
-      ).rejects.toThrow('ENTITLEMENT_ACTIVE_PROVIDER_BARRIER');
-      await expect(readEntitlementCache({ expectedStoreUserId: 'owner-a' })).resolves.toEqual({
-        status: 'unavailable',
-        entitlement: null,
-      });
-
-      const repair =
-        repairKind === 'exact'
-          ? legacy
-          : storeEntitlement({
-              productId: `trusted-refresh-v${version}`,
-              verifiedAt: '2026-07-05T12:04:00.000Z',
-            });
-      await expect(
-        acceptTrustedRevenueCatEntitlement(repair),
-      ).resolves.toMatchObject({
-        persisted: true,
-        entitlement: { productId: repair.productId },
-      });
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      await expect(readEntitlementCache({ expectedStoreUserId: 'owner-a' })).resolves.toMatchObject({
-        status: 'available',
-        entitlement: { productId: repair.productId },
-      });
-    },
-  );
-
-  it('rejects a store-backed reverse_trial proof before app-grant lifecycle handling', async () => {
-    mocks.env.appEnvironment = 'production';
-    await expect(
-      acceptVerifiedEntitlement(
-        storeEntitlement({
-          periodType: 'reverse_trial',
-          source: 'server',
-          store: 'app_store',
-          willRenew: false,
-          expiresAt: '2026-07-12T12:00:00.000Z',
-        }),
-      ),
-    ).rejects.toThrow('INVALID_ENTITLEMENT_CACHE_RECORD');
-    await expect(loadEntitlement()).resolves.toBeNull();
-  });
-
-  it.each([
-    ['invalid app-grant environment', { environment: 'preview' }],
-    ['missing app-grant environment', { environment: undefined }],
-    [
-      'invalid RevenueCat store',
-      { source: 'revenuecat', store: 'side_load', environment: 'production' },
-    ],
-    [
-      'invalid trial period',
-      { periodType: 'free_trial', expiresAt: null, environment: 'production' },
-    ],
-    ['invalid owner stamp', { storeUserId: ' owner-a ' }],
-  ])('rejects raw v0 %s instead of normalizing it into authority', async (_name, overrides) => {
-    mocks.env.appEnvironment = 'production';
-    const raw = JSON.stringify(cachedEntitlement(overrides));
-    mocks.storage.set(KEY, raw);
-
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'corrupt',
-      entitlement: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    mocks.storage.delete(KEY);
-  });
-
-  it.each([
-    ['period_type', { period_type: 'free_trial' }],
-    ['store', { store: 'side_load' }],
-    ['environment', { environment: 'preview' }],
-    ['source', { source: 'client_minted' }],
-  ])('rejects an explicit invalid server %s before normalization', (_name, override) => {
-    expect(() =>
-      rowToStoredEntitlement({
-        entitlement: 'pro',
-        is_active: true,
-        period_type: 'normal',
-        store: 'app_store',
-        product_id: 'annual',
-        expires_at: '2027-07-05T12:00:00.000Z',
-        will_renew: true,
-        original_purchase_at: NOW.toISOString(),
-        source: 'server',
-        environment: 'production',
-        verified_at: NOW.toISOString(),
-        ...override,
-      }),
-    ).toThrow('INVALID_ENTITLEMENT_CACHE_RECORD');
   });
 });

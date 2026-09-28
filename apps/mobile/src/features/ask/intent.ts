@@ -1,4 +1,4 @@
-import type { AskIntent } from '@onskin/types';
+import type { AskIntent } from '@layerwell/types';
 
 // The deterministic intent router (docs/13 §4). It runs FIRST. BEFORE any language
 // model. So medical/dosing/diagnosis intent is caught at the door and ESCALATED, never

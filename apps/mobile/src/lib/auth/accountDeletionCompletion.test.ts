@@ -80,7 +80,7 @@ describe('account-deletion completion capability', () => {
 
     expect(mocks.digestStringAsync).toHaveBeenCalledWith(
       'SHA-256',
-      `onskin:account-deletion-completion:${TOKEN}`,
+      `layerwell:account-deletion-completion:${TOKEN}`,
     );
     expect(mocks.rpc).toHaveBeenCalledWith('account_deletion_completion_status', {
       p_completion_token_hash: TOKEN_HASH,
@@ -93,7 +93,7 @@ describe('account-deletion completion capability', () => {
           autoRefreshToken: false,
           detectSessionInUrl: false,
           persistSession: false,
-          storageKey: 'onskin-account-deletion-completion-anonymous',
+          storageKey: 'layerwell-account-deletion-completion-anonymous',
         },
       },
     );

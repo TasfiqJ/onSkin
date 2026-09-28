@@ -1,0 +1,136 @@
+{
+  "candidateNativeBuild": {
+    "archiveSha256": null,
+    "easIosBuildId": null,
+    "executedByThisAudit": false,
+    "profile": "staging",
+    "proofStatus": "not_applicable_to_expo_web_ui_audit"
+  },
+  "evidenceKind": "deterministic_expo_web_ocr_review_ui_state",
+  "evidenceSchemaVersion": 2,
+  "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+  "nativeDeviceProof": false,
+  "proves": [
+    "The Expo-web route renders and permits user interaction with the declared deterministic OCR review states.",
+    "The route preserves a user edit against a late deterministic fixture result and requires explicit suggestion adoption.",
+    "The route preserves the fixture Unicode transcript through the editable review and supported manual handoff surface.",
+    "The supported web viewports pass the scripted control-name, 44px proxy, center-hit, clipping, and horizontal-overflow checks.",
+    "The synthetic browser run emitted no disallowed console/page/network/dialog failure under the local-only fixture environment.",
+    "The source candidate contains the declared no-cache preview, trusted-cache-URI, guarded-navigation, and awaited-cleanup assertions; this is source proof only."
+  ],
+  "doesNotProve": [
+    "It does not execute Apple Vision, the Swift bridge, a camera, a real label image, or an iOS binary.",
+    "Its raw-photo cache and cleanup checks are source assertions only; they do not prove runtime deletion, cache behavior, or privacy on a native device.",
+    "It is not physical-iPhone, iOS Simulator, native accessibility, OCR accuracy, OCR latency, runtime cleanup, native privacy, zero-network, archive, App Review, or release evidence.",
+    "Its local-only browser-request assertion covers this synthetic web run only and must not be used as a native photo or transcript privacy claim."
+  ],
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "c681d936-9d1d-4561-a9c3-f57845ab6157",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "5d644e5887c41ea4da3f55ca738f5ca432ff40ddc6418a4cb3f69c8aa9f3e8d8",
+      "profile": "development-only-deterministic-expo-web"
+    }
+  },
+  "fixtureEnvironmentVariable": "EXPO_PUBLIC_E2E_SHELF_OCR_RESULT",
+  "fixtureTranscript": "Aqua, Glycerin, Niacinamide, 水, Ниацинамид",
+  "privacySourceContract": {
+    "assertionIds": [
+      "label-preview-hidden-during-cleanup-and-cache-disabled",
+      "label-route-removal-cancels-recognition-before-photo-cleanup",
+      "progress-capture-accepts-only-trusted-camera-cache-uri",
+      "progress-review-preview-cache-disabled",
+      "progress-review-route-removal-awaits-discard",
+      "progress-helper-restricts-and-deletes-owned-cache-source"
+    ],
+    "files": [
+      {
+        "bytes": 40361,
+        "path": "apps/mobile/src/app/progress/capture.tsx",
+        "sha256": "6687c26e6fcccedf226c15b1d3a70a679d37e795e34f87380315a14f17a75294"
+      },
+      {
+        "bytes": 23652,
+        "path": "apps/mobile/src/app/progress/review.tsx",
+        "sha256": "2285d285f16d3b1f73b11645951bad2ce40c17ee0fa33fa9a4ad9b26ed5b7046"
+      },
+      {
+        "bytes": 47372,
+        "path": "apps/mobile/src/app/shelf/ocr.tsx",
+        "sha256": "b34279c4b205855588c18baa3759d61f11314e80746601ea5f49a279a849bd83"
+      },
+      {
+        "bytes": 5144,
+        "path": "apps/mobile/src/features/photos/progressCapturePrivacy.ts",
+        "sha256": "0eca260c61607af6e5b9d1b80d6d93ebea98370eaaa3a13a7e66516d77465003"
+      }
+    ],
+    "nativeDeviceProof": false,
+    "proofKind": "source-assertions-only"
+  },
+  "runId": "c681d936-9d1d-4561-a9c3-f57845ab6157",
+  "scenarioMatrix": [
+    {
+      "fixture": "recognized",
+      "groupId": "recognized",
+      "id": "recognized-review-retake-continue"
+    },
+    {
+      "fixture": "recognized",
+      "groupId": "recognized",
+      "id": "edit-fence-suggestion-adoption"
+    },
+    {
+      "fixture": "no_text",
+      "groupId": "no-text",
+      "id": "no-text-manual-recovery"
+    },
+    {
+      "fixture": "timed_out",
+      "groupId": "timed-out",
+      "id": "timeout-manual-recovery"
+    },
+    {
+      "fixture": "failed",
+      "groupId": "failed",
+      "id": "failure-manual-recovery"
+    }
+  ],
+  "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+  "sourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+  "surface": "Expo web / headless Chromium / development-only deterministic fixture",
+  "viewportMatrix": [
+    {
+      "id": "iphone-375x667",
+      "width": 375,
+      "height": 667
+    },
+    {
+      "id": "iphone-390x844",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "iphone-430x932",
+      "width": 430,
+      "height": 932
+    }
+  ],
+  "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+  "webFixtureBuild": {
+    "buildId": "5d644e5887c41ea4da3f55ca738f5ca432ff40ddc6418a4cb3f69c8aa9f3e8d8",
+    "profile": "development-only-deterministic-expo-web"
+  }
+}

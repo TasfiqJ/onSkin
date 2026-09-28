@@ -8,13 +8,18 @@ import {
   markdownList,
   printResult,
   read,
-  warn,
   write,
 } from './lib.mjs';
+import {
+  dependencyAuditEvidenceWarnings,
+  resolveDependencyAuditProvenance,
+} from './dependency-sbom-contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const npmAuditRequested = env.PHASE9_RUN_NPM_AUDIT === 'true';
+const npmAuditOffline = String(process.env.npm_config_offline ?? '').toLowerCase() === 'true';
 
 block(errors, exists('package-lock.json'), 'package-lock.json is missing.');
 
@@ -33,7 +38,7 @@ const packages = Object.entries(lock.packages ?? {})
   .sort((a, b) => a.path.localeCompare(b.path));
 
 let audit = null;
-if (env.PHASE9_RUN_NPM_AUDIT === 'true') {
+if (npmAuditRequested) {
   try {
     const npmExecPath = process.env.npm_execpath;
     const auditJson = npmExecPath
@@ -54,11 +59,14 @@ if (env.PHASE9_RUN_NPM_AUDIT === 'true') {
       );
     }
   }
-} else {
-  warn(warnings, false, 'npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.');
 }
 
 const vulnerabilities = audit?.metadata?.vulnerabilities ?? null;
+const auditProvenance = resolveDependencyAuditProvenance({
+  requested: npmAuditRequested,
+  offline: npmAuditRequested && npmAuditOffline,
+  completed: vulnerabilities !== null,
+});
 if (vulnerabilities) {
   block(
     errors,
@@ -158,14 +166,16 @@ const markdownCell = (value) => {
   return text.replace(/\|/g, '\\|') || '-';
 };
 
-warn(
-  warnings,
-  evidenceFlagEnabled(env.PHASE9_DEPENDENCY_AUDIT_PASS),
-  'Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.',
+warnings.push(
+  ...dependencyAuditEvidenceWarnings({
+    provenance: auditProvenance,
+    signedOff: evidenceFlagEnabled(env.PHASE9_DEPENDENCY_AUDIT_PASS),
+  }),
 );
 
 const packet = {
   generatedAt: new Date().toISOString(),
+  auditProvenance,
   packageManager: lock.packageManager ?? null,
   lockfileVersion: lock.lockfileVersion ?? null,
   packageCount: packages.length,
@@ -184,6 +194,8 @@ write(
     '# Phase 9 Dependency Inventory',
     '',
     `Generated: ${packet.generatedAt}`,
+    `Audit mode: ${packet.auditProvenance.mode}`,
+    `Audit completed: ${packet.auditProvenance.completed ? 'yes' : 'no'}`,
     `Package count: ${packages.length}`,
     `Lockfile version: ${packet.lockfileVersion ?? 'unknown'}`,
     '',

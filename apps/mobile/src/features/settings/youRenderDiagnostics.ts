@@ -1,4 +1,4 @@
-export const YOU_RENDER_DIAGNOSTICS_GLOBAL = '__ONSKIN_YOU_RENDER_DIAGNOSTICS__' as const;
+export const YOU_RENDER_DIAGNOSTICS_GLOBAL = '__LAYERWELL_YOU_RENDER_DIAGNOSTICS__' as const;
 
 export type YouRenderDiagnosticsSnapshot = Readonly<{
   screenRenders: number;
@@ -25,7 +25,7 @@ type MutableYouRenderDiagnostics = {
 };
 
 type YouDiagnosticsGlobal = typeof globalThis & {
-  __ONSKIN_YOU_RENDER_DIAGNOSTICS__?: MutableYouRenderDiagnostics;
+  __LAYERWELL_YOU_RENDER_DIAGNOSTICS__?: MutableYouRenderDiagnostics;
 };
 
 const EMPTY_DIAGNOSTICS: YouRenderDiagnosticsSnapshot = Object.freeze({
@@ -55,8 +55,8 @@ function diagnosticsEnabled(): boolean {
 function mutableDiagnostics(): MutableYouRenderDiagnostics | null {
   if (!diagnosticsEnabled()) return null;
   const root = globalThis as YouDiagnosticsGlobal;
-  root.__ONSKIN_YOU_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
-  return root.__ONSKIN_YOU_RENDER_DIAGNOSTICS__;
+  root.__LAYERWELL_YOU_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
+  return root.__LAYERWELL_YOU_RENDER_DIAGNOSTICS__;
 }
 
 function recordRender(key: keyof MutableYouRenderDiagnostics): void {

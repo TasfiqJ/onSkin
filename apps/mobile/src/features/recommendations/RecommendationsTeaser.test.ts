@@ -48,78 +48,25 @@ describe('RecommendationsTeaser mobile contracts', () => {
     expect(source).toContain(
       'const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap)',
     );
-    expect(source).toContain('recId={spfGap.id}');
-    expect(source).toContain('onDismissFailure={markDismissFailure}');
-    expect(source).toContain('onDismissSuccess={clearDismissFailure}');
+    expect(source).toContain('<GapPrompt compact={compact} recId={spfGap.id} />');
     expect(source).toContain('showCompactGapOnly ? null');
     expect(source).toContain('<ForYouCard');
     expect(source).toContain('compact={compact}');
     expect(source).toContain('count={result.recommendations.length}');
     expect(source).toContain('youreSet={result.youreSet}');
+    expect(source).toContain('statusBody={statusBody}');
+    expect(source).toContain('result.goalReviewPending');
+    expect(source).toContain('REC_COPY.todayCard.bodyReviewPending');
+    expect(source).toContain('REC_COPY.todayCard.bodyNoPairEvaluation');
+    expect(source).toContain('REC_COPY.todayCard.bodyNoCurrentSuggestion');
+    expect(source).toContain(
+      'statusBody ? REC_COPY.todayCard.statusTitle : REC_COPY.todayCard.title',
+    );
+    expect(source).not.toContain('coverageUnavailable');
     expect(source).not.toContain('hitSlop={8}');
     expect(source).not.toContain('hitSlop={6}');
     expect(source).not.toContain(
       'className="h-[38px] items-center justify-center rounded-pill px-5"',
     );
-    expect(source).toContain('Suggestion not dismissed');
-    expect(source).toContain('if (dismissFailed && !isSuccess)');
-    expect(source).toContain(
-      'const dismissFailed = controlledDismissFailed ?? localDismissFailed;',
-    );
-    expect(source).toContain('className="mt-2 min-h-[48px] items-center justify-center');
-    expect(source).toContain('accessibilityState={{ disabled: dismissing }}');
-  });
-
-  it('keeps dismissal route-owned and single-flight across prompt unmounts', () => {
-    const source = readFileSync(`${RECS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
-    const handler = source.slice(
-      source.indexOf('const dismiss = async () => {'),
-      source.indexOf('\n\n  const openRecommendation'),
-    );
-
-    expect(handler).toContain('if (dismissInFlightRef.current) return;');
-    expect(handler).toContain('dismissInFlightRef.current = true;');
-    expect(handler).toContain('await runRecommendationDismissalMutation');
-    expect(handler).toContain('onFailure: onDismissFailure');
-    expect(handler).toContain('onSuccess: onDismissSuccess');
-    expect(handler).toContain("if (outcome === 'failed' && mountedRef.current)");
-    expect(handler).not.toContain('await dismissRecommendation');
-    expect(handler).not.toContain('await qc.invalidateQueries');
-
-    expect(source).toContain('if (mountedRef.current) setLocalDismissFailed(true);');
-    expect(source).toContain('if (mountedRef.current) setLocalDismissFailed(false);');
-    expect(source.indexOf('if (mountedRef.current) setLocalDismissFailed(true);')).toBeLessThan(
-      source.indexOf('onDismissFailure?.();'),
-    );
-    expect(source.indexOf('if (mountedRef.current) setLocalDismissFailed(false);')).toBeLessThan(
-      source.indexOf('onDismissSuccess?.();'),
-    );
-  });
-
-  it('reuses route-owned Shelf/profile sources while preserving the standalone teaser', () => {
-    const source = readFileSync(`${RECS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
-    const standaloneStart = source.indexOf('export function RecommendationsTeaser(');
-    const sharedStart = source.indexOf('function RecommendationsTeaserFromSourcesImpl(');
-    const standalone = source.slice(standaloneStart, sharedStart);
-    const shared = source.slice(sharedStart);
-
-    expect(source).toContain('export type RecommendationsTeaserProps = {');
-    expect(source).toContain('export type RecommendationsTeaserFromSourcesProps =');
-    expect(source).toContain('shelf: RecommendationShelfSource;');
-    expect(source).toContain('profile: RecommendationProfileSource;');
-    expect(standalone).toContain('const recommendations = useRecommendations();');
-    expect(standalone).toContain(
-      '<RecommendationsTeaserContent {...props} recommendations={recommendations} />',
-    );
-    expect(shared).toContain(
-      'const recommendations = useRecommendationsFromSources(shelf, profile);',
-    );
-    expect(shared).toContain(
-      '<RecommendationsTeaserContent {...props} recommendations={recommendations} />',
-    );
-    expect(shared).toContain(
-      'export const RecommendationsTeaserFromSources = memo(RecommendationsTeaserFromSourcesImpl);',
-    );
-    expect(shared).not.toContain('useRecommendations();');
   });
 });

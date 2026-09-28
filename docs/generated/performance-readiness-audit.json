@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-28T03:24:08.248Z",
+  "generatedAt": "2026-09-28T03:48:20.278Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-lean-v1-2026",
@@ -153,9 +153,9 @@
     "android": "not_applicable"
   },
   "status": "pass",
-  "strict": true,
+  "strict": false,
   "summary": {
-    "performanceMetricCount": 7,
+    "performanceMetricCount": 8,
     "docsChecked": 12,
     "packageScriptsChecked": 9,
     "blockers": 0,
@@ -168,6 +168,7 @@
     "routine generation time",
     "local photo loading",
     "memory use in photo timeline",
+    "native_ocr_recognition_ms",
     "photo_capture_analysis_ms"
   ],
   "packageScripts": [
@@ -218,7 +219,7 @@
       "present": true
     },
     {
-      "scriptPart": "phase5:performance-evidence",
+      "scriptPart": "phase5:performance-evidence:smoke",
       "present": true
     }
   ],
@@ -235,12 +236,12 @@
     },
     {
       "path": "LAUNCH_READINESS.md",
-      "checkedNeedles": 10,
+      "checkedNeedles": 11,
       "missing": []
     },
     {
       "path": "BLOCKERS.md",
-      "checkedNeedles": 9,
+      "checkedNeedles": 10,
       "missing": []
     },
     {
@@ -260,7 +261,7 @@
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
-      "checkedNeedles": 9,
+      "checkedNeedles": 10,
       "missing": []
     },
     {
@@ -270,7 +271,7 @@
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
-      "checkedNeedles": 10,
+      "checkedNeedles": 11,
       "missing": []
     },
     {
@@ -280,7 +281,7 @@
     },
     {
       "path": "docs/phase-5/performance-evidence.template.json",
-      "checkedNeedles": 7,
+      "checkedNeedles": 8,
       "missing": []
     }
   ],

@@ -28,17 +28,17 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const finalContactEnv = {
-  EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
-  EXPO_PUBLIC_TERMS_URL: 'https://routinekind.app/terms',
-  EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
-  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://routinekind.app/account-deletion',
-  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://routinekind.app/data-export',
-  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://routinekind.app/consumer-health-privacy',
-  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.app',
-  EXPO_PUBLIC_MARKETING_URL: 'https://routinekind.app',
-  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@routinekind.app',
+  EXPO_PUBLIC_PRIVACY_URL: 'https://layerwell.app/privacy',
+  EXPO_PUBLIC_TERMS_URL: 'https://layerwell.app/terms',
+  EXPO_PUBLIC_SUPPORT_URL: 'https://layerwell.app/support',
+  EXPO_PUBLIC_ACCOUNT_DELETION_URL: 'https://layerwell.app/account-deletion',
+  EXPO_PUBLIC_DATA_EXPORT_URL: 'https://layerwell.app/data-export',
+  EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL: 'https://layerwell.app/consumer-health-privacy',
+  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.app',
+  EXPO_PUBLIC_MARKETING_URL: 'https://layerwell.app',
+  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@layerwell.app',
   EXPO_PUBLIC_APP_STORE_URL: 'https://apps.apple.com/app/id123456789',
-  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.routinekind.app',
+  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.layerwell.app',
 };
 
 const validPhase7ShareEvidence = {
@@ -46,6 +46,14 @@ const validPhase7ShareEvidence = {
   PHASE7_CLINICAL_REVIEW_PASS: 'true',
   PHASE7_DEVICE_QA_PASS: ' True ',
   PHASE7_SIGNED_OFF_BY: ' Tas Mohammed ',
+};
+
+const validPosthogEnv = {
+  EXPO_PUBLIC_POSTHOG_KEY: 'phc_livevalue',
+  EXPO_PUBLIC_POSTHOG_HOST: 'https://eu.i.posthog.com',
+  POSTHOG_PERSONAL_API_KEY: 'phx_livevalue',
+  POSTHOG_PROJECT_ID: '12345',
+  POSTHOG_API_HOST: 'https://eu.posthog.com',
 };
 
 function run(extraEnv) {
@@ -58,6 +66,12 @@ function run(extraEnv) {
 
 function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+}
+
+function contactChecksHaveNoUnexpectedBlockers(result) {
+  const text = output(result);
+  const blockers = text.split(/\r?\n/u).filter((line) => line.startsWith('FAIL '));
+  return result.status === 0 && blockers.length === 0;
 }
 
 function runWithTemplateReleaseCandidate(extraEnv = {}) {
@@ -85,7 +99,98 @@ const cases = [
     result: run({}),
     expect(result) {
       return (
-        result.status === 0 && !output(result).includes('Missing or non-production final value')
+        contactChecksHaveNoUnexpectedBlockers(result) &&
+        !output(result).includes('Missing or non-production final value')
+      );
+    },
+  },
+  {
+    name: 'Phase 9 requires an explicit Apple revocation client ID',
+    result: run({ APPLE_SIWA_CLIENT_ID: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'APPLE_SIWA_CLIENT_ID must be explicitly configured for Apple credential revocation.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 requires the Apple revocation client ID to match the iOS bundle',
+    result: run({
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.layerwell.app',
+      APPLE_SIWA_CLIENT_ID: 'com.layerwell.other',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'APPLE_SIWA_CLIENT_ID must exactly match APP_IOS_BUNDLE_IDENTIFIER.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 accepts the exact paired EU PostHog configuration',
+    result: run(validPosthogEnv),
+    expect(result) {
+      const text = output(result);
+      return (
+        contactChecksHaveNoUnexpectedBlockers(result) &&
+        !text.includes('is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog') &&
+        !text.includes('must equal https://eu.i.posthog.com when PostHog is enabled') &&
+        !text.includes('must equal https://eu.posthog.com when PostHog is enabled')
+      );
+    },
+  },
+  {
+    name: 'Phase 9 requires PostHog server deletion credentials when mobile analytics is enabled',
+    result: run({
+      ...validPosthogEnv,
+      POSTHOG_PROJECT_ID: '',
+      POSTHOG_PERSONAL_API_KEY: '',
+    }),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 1 &&
+        text.includes(
+          'POSTHOG_PROJECT_ID is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog.',
+        ) &&
+        text.includes(
+          'POSTHOG_PERSONAL_API_KEY is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 rejects a mismatched PostHog mobile ingest region',
+    result: run({
+      ...validPosthogEnv,
+      EXPO_PUBLIC_POSTHOG_HOST: 'https://us.i.posthog.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'EXPO_PUBLIC_POSTHOG_HOST must equal https://eu.i.posthog.com when PostHog is enabled.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 rejects a mismatched PostHog server API region',
+    result: run({
+      ...validPosthogEnv,
+      POSTHOG_API_HOST: 'https://us.posthog.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'POSTHOG_API_HOST must equal https://eu.posthog.com when PostHog is enabled.',
+        )
       );
     },
   },
@@ -95,7 +200,7 @@ const cases = [
     expect(result) {
       const text = output(result);
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         text.includes(
           'Android build, Play testing, Play packet, and Play Store URL evidence: excluded by launch contract.',
         ) &&
@@ -107,10 +212,10 @@ const cases = [
   },
   {
     name: 'Phase 9 rejects credential-bearing final policy URLs',
-    result: run({ EXPO_PUBLIC_PRIVACY_URL: 'https://user:pass@routinekind.app/privacy' }),
+    result: run({ EXPO_PUBLIC_PRIVACY_URL: 'https://user:pass@layerwell.app/privacy' }),
     expect(result) {
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         output(result).includes(
           'Missing or non-production final value for EXPO_PUBLIC_PRIVACY_URL.',
         )
@@ -119,10 +224,10 @@ const cases = [
   },
   {
     name: 'Phase 9 rejects reserved final domains',
-    result: run({ EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local' }),
+    result: run({ EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local' }),
     expect(result) {
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         output(result).includes(
           'Missing or non-production final value for EXPO_PUBLIC_FINAL_BRAND_DOMAIN.',
         )
@@ -134,7 +239,7 @@ const cases = [
     result: run({ EXPO_PUBLIC_SUPPORT_EMAIL: 'support@example.com' }),
     expect(result) {
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         output(result).includes(
           'Missing or non-production final value for EXPO_PUBLIC_SUPPORT_EMAIL.',
         )
@@ -145,7 +250,7 @@ const cases = [
     name: 'Phase 9 blocks production deferred surfaces before final domain readiness',
     result: run({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local',
       EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED: 'true',
     }),
     expect(result) {
@@ -167,7 +272,7 @@ const cases = [
     expect(result) {
       const text = output(result);
       return (
-        result.status === 0 &&
+        contactChecksHaveNoUnexpectedBlockers(result) &&
         !text.includes('Production Share cards requires PHASE7_BRAND_READY=true.') &&
         !text.includes('Production Share cards requires PHASE7_CLINICAL_REVIEW_PASS=true.') &&
         !text.includes('Production Share cards requires PHASE7_DEVICE_QA_PASS=true.') &&
@@ -200,12 +305,12 @@ const cases = [
         text.includes(
           'docs/phase-9/release-candidates/rc-smoke-template-' +
             process.pid +
-            '/manual-qa-matrix.md must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.',
+            '/manual-qa-matrix.md must not contain unresolved placeholders when Phase 9 evidence is claimed.',
         ) &&
         text.includes(
           'docs/phase-9/release-candidates/rc-smoke-template-' +
             process.pid +
-            '/rollout-plan.md must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.',
+            '/rollout-plan.md must not contain unresolved placeholders when Phase 9 evidence is claimed.',
         ) &&
         text.includes(
           'docs/phase-9/release-candidates/rc-smoke-template-' +

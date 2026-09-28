@@ -3,46 +3,38 @@ import { useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { DockButton, FloatingDock } from '@/components/navigation/DockMotion';
-import { useCurrentRoutineType } from '@/features/today/useToday';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { FONT_FAMILY_TOKENS as fontFamilies } from '../../../font-assets';
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
-import { pendingLifecycleRouteResult } from '@/features/subscription/lifecycle';
+import { pendingLifecycleRoute } from '@/features/subscription/lifecycle';
 import { useAuth } from '@/lib/auth/AuthProvider';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { colors } from '@/theme/tokens';
 
 function useExpiryReoffer() {
   const { user } = useAuth();
-  const ownerScope = useOwnerQueryScope();
   const storeUserId = user?.id ?? null;
   useEffect(() => {
     if (!storeUserId) return;
     let mounted = true;
-    void pendingLifecycleRouteResult(new Date().toISOString(), {
-      expectedStoreUserId: storeUserId,
-    }).then((result) => {
-      if (!mounted || result.status !== 'route' || !isOwnerQueryScopeCurrent(ownerScope)) {
-        return;
-      }
-      const { prompt } = result;
-      router.push({
-        pathname: prompt.route === '/paywall/reoffer' ? '/paywall/upsell' : prompt.route,
-        params: { lifecyclePromptId: prompt.promptId },
-      });
+    void runAccountGenerationOperation(async (lease) => {
+      const route = await pendingLifecycleRoute(new Date().toISOString());
+      lease.assertCurrent();
+      if (!mounted || !route) return;
+      router.push(route === '/paywall/reoffer' ? '/paywall/upsell' : route);
+    }).catch(() => {
+      // Account changes or unavailable private storage must not navigate.
     });
     return () => {
       mounted = false;
     };
-  }, [ownerScope, storeUserId]);
+  }, [storeUserId]);
 }
 
 export default function TabsLayout() {
   useExpiryReoffer();
   const pathname = usePathname();
-  const boundary = useLocalDateBoundary();
-  const routineType = useCurrentRoutineType(boundary);
+  const { phase: routineType } = useRoutineClock();
   const dark = pathname.endsWith('/today') && routineType === 'PM';
   const insets = useSafeAreaInsets();
   const backgroundColor = dark ? colors.night : colors.paper;

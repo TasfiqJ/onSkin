@@ -56,7 +56,7 @@ describe('Shelf scan outbox migration', () => {
   it('binds replay identity to the canonical payload without retaining raw barcode receipts', () => {
     expect(migration).toContain('add column if not exists payload_hash text');
     expect(migration).toContain('extensions.digest(');
-    expect(migration).toContain("'onskin:shelf-scan-payload:v1'");
+    expect(migration).toContain("'layerwell:shelf-scan-payload:v1'");
     expect(migration).toMatch(
       /'shelf_scan:' \|\| v_operation_id::text \|\| ':' \|\| v_payload_hash/,
     );

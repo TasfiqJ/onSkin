@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:02:18.381Z",
+  "generatedAt": "2026-08-10T01:45:05.450Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -70,23 +70,154 @@
       "review_prompts",
       "creator_links",
       "paid_measurement"
-    ]
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
+    }
   },
   "platformStatus": {
     "ios": "required",
     "android": "not_applicable"
   },
   "app": {
-    "name": "RoutineKind",
-    "slug": "routinekind",
+    "name": "Layerwell",
+    "slug": "layerwell",
     "version": "0.1.0",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
-    "scheme": "routinekind",
-    "iosBundleIdentifier": "com.routinekind.app",
-    "androidPackage": "com.routinekind.app",
-    "androidAllowBackup": true,
+    "scheme": "layerwell",
+    "iosBundleIdentifier": "com.layerwell.app",
+    "androidPackage": "com.layerwell.app",
+    "androidAllowBackup": false,
     "androidPermissions": [
       "android.permission.CAMERA",
       "android.permission.POST_NOTIFICATIONS"
@@ -95,7 +226,7 @@
   "easBuildProfiles": {
     "development": {
       "channel": "development",
-      "iosImage": "sdk-56",
+      "iosImage": "macos-tahoe-26.4-xcode-26.4",
       "distribution": "internal",
       "developmentClient": true,
       "appVariant": "development",
@@ -103,7 +234,7 @@
     },
     "staging": {
       "channel": "staging",
-      "iosImage": "sdk-56",
+      "iosImage": "macos-tahoe-26.4-xcode-26.4",
       "distribution": "internal",
       "developmentClient": false,
       "appVariant": "staging",
@@ -111,29 +242,44 @@
     },
     "production": {
       "channel": "production",
-      "iosImage": "sdk-56",
+      "iosImage": "macos-tahoe-26.4-xcode-26.4",
       "distribution": "store",
       "developmentClient": false,
       "appVariant": "production",
       "appEnvironment": "production"
     }
   },
+  "reviewedIosBuildEnvironment": {
+    "easCliVersion": "21.0.1",
+    "image": "macos-tahoe-26.4-xcode-26.4",
+    "imagePinScope": "expo-specific-name-minor-updates-possible",
+    "macosVersion": "26.4.1",
+    "xcodeVersion": "26.4",
+    "xcodeBuild": "17E202",
+    "iosSdkVersion": "26.4",
+    "nodeVersion": "22.22.2",
+    "cocoapodsVersion": "1.16.2",
+    "fastlaneVersion": "2.233.1",
+    "reviewedAt": "2026-07-16",
+    "source": "https://docs.expo.dev/build-reference/infrastructure/",
+    "cliSource": "https://docs.expo.dev/eas/cli/"
+  },
   "resolvedVariants": {
     "development": {
-      "name": "RoutineKind Dev",
-      "scheme": "routinekind-development",
-      "iosBundleIdentifier": "com.routinekind.app.development",
-      "androidPackage": "com.routinekind.app.development",
-      "androidAllowBackup": true,
+      "name": "Layerwell Dev",
+      "scheme": "layerwell-development",
+      "iosBundleIdentifier": "com.layerwell.app.development",
+      "androidPackage": "com.layerwell.app.development",
+      "androidAllowBackup": false,
       "appVariant": "development",
       "appEnvironment": "development"
     },
     "staging": {
-      "name": "RoutineKind Staging",
-      "scheme": "routinekind-staging",
-      "iosBundleIdentifier": "com.routinekind.app.staging",
-      "androidPackage": "com.routinekind.app.staging",
-      "androidAllowBackup": true,
+      "name": "Layerwell Staging",
+      "scheme": "layerwell-staging",
+      "iosBundleIdentifier": "com.layerwell.app.staging",
+      "androidPackage": "com.layerwell.app.staging",
+      "androidAllowBackup": false,
       "appVariant": "staging",
       "appEnvironment": "staging"
     },
@@ -142,12 +288,80 @@
     }
   },
   "artifacts": {},
+  "iosArchivePrivacyEvidence": null,
+  "iosPrivacySourceAudit": {
+    "status": "archive_required",
+    "claims": {
+      "appStoreAcceptanceProven": false,
+      "appStorePrivacyLabelsVerified": false,
+      "archiveInspected": false,
+      "binarySignaturesVerified": false,
+      "mergedPrivacyReportVerified": false
+    },
+    "scope": {
+      "installedRegistryNativeCandidatesAudited": true,
+      "allInstalledRegistryPackagesAudited": false,
+      "nativeCandidateDiscovery": "reviewed root signals, mapped packages, or malformed installed package metadata",
+      "linkedWorkspacePackagesAudited": false,
+      "firstPartyAppAndExtensionSourcesAudited": false,
+      "generatedPrebuildAudited": false,
+      "cocoaPodsResolvedSourcesAudited": false,
+      "swiftPackageResolvedSourcesAudited": false,
+      "releaseArchiveAudited": false
+    },
+    "summary": {
+      "nativePackageCount": 72,
+      "privacyManifestCount": 23,
+      "validPrivacyManifestCount": 23,
+      "invalidPrivacyManifestCount": 0,
+      "manifestBindingArchiveRequiredCount": 23,
+      "podspecCount": 228,
+      "xcframeworkSourceCandidateCount": 16,
+      "frameworkSourceCandidateCount": 0,
+      "nativeBinaryFileSourceCandidateCount": 0,
+      "appleSdkIntersectionCount": 10,
+      "errorCount": 0,
+      "warningCount": 24
+    },
+    "inputs": {
+      "baseline": {
+        "path": "docs/phase-9/apple-ios-privacy-baseline.json",
+        "bytes": 5479,
+        "sha256": "fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921"
+      },
+      "mapping": {
+        "path": "docs/phase-9/ios-sdk-package-mapping.json",
+        "bytes": 8370,
+        "sha256": "a386fbed9e85957844e98dd6cff0d6466f7ee8ad01f821e224c9dbbeea63d564"
+      },
+      "packageLock": {
+        "path": "package-lock.json",
+        "bytes": 607493,
+        "sha256": "c7d3880abf0211eadd0644ee2531fbba507d8661ed379c8cead68095c7bd1318"
+      }
+    },
+    "ledgerHashes": {
+      "nativePackagesSha256": "bb8d387764d362560a75798b49cbb8b91577c37d2b9ccb4047fbb0f89e56de81",
+      "privacyManifestsSha256": "2c6cc525899e121d2502adb57cf0b439aeeb9da01729837d77f00f134b6ffe75",
+      "podspecsSha256": "9dfc07e80bf3ac94441b138a7d8783e0cf2bf06b3e767988eeb1153a4ed1a2b0",
+      "xcframeworksSha256": "8aa177c6c9402d6216b5a95c48084a29f743093c5f36d44fb6b556c9656500c9",
+      "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "appleSdkIntersectionsSha256": "6f3551f3ed4b7490b8190cc09125336c1715df11c6441fbeb604c1d52ff72112"
+    },
+    "archiveReviewerMetadataFlag": false,
+    "archiveEvidenceIndexValidated": false,
+    "archiveCodeSignatureCryptographicallyVerified": false,
+    "archiveContainerIntegrityMachineValidated": false,
+    "provisioningCmsSignatureTrusted": false
+  },
   "blockers": [],
   "warnings": [
     "Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.",
-    "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",
+    "Exact iOS archive evidence not supplied: set PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH to the completed RC JSON.",
     "Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.",
-    "Missing iOS privacy report/privacy manifest evidence: PHASE9_IOS_PRIVACY_REPORT_PASS=true.",
+    "Missing iOS privacy-report reviewer metadata flag: PHASE9_IOS_PRIVACY_REPORT_PASS=true. This flag is not archive evidence.",
+    "A hash-bound, named-reviewed production archive evidence index remains required: archive, aggregate privacy report PDF, manifest ledger, required-reason APIs, SDK signatures, entitlements, symbols, binary processing, observed traffic, and App Privacy answers. Index validation proves archive-container integrity, release-identity binding, file binding, and matching review metadata; it does not prove opaque report truth, Apple trust, legal compliance, or App Store acceptance.",
     "Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true."
   ]
 }

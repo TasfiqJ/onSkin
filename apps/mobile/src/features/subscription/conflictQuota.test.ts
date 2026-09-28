@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
 import {
   conflictCheckAccess,
   loadFreeConflictCheckRuleIds,
@@ -8,43 +14,48 @@ import {
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
-  getPrivateItem: vi.fn(),
-  updatePrivateItem: vi.fn(),
+  readGate: null as Promise<void> | null,
+  readStarted: null as (() => void) | null,
   writes: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: mocks.getPrivateItem,
-  updatePrivateItem: mocks.updatePrivateItem,
+  getPrivateItem: vi.fn(async (key: string) => {
+    mocks.readStarted?.();
+    if (mocks.readGate) await mocks.readGate;
+    return mocks.storage.get(key) ?? null;
+  }),
+  setPrivateItem: vi.fn(async (key: string, value: string) => {
+    mocks.storage.set(key, value);
+    mocks.writes += 1;
+  }),
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.storage.delete(key);
+    mocks.writes += 1;
+  }),
 }));
 
-const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
-const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
-const originalDev = runtime.__DEV__;
+const KEY = 'layerwell.subscription.freeConflictCheckRuleIds.v1';
+let accountGeneration = 0;
 
 describe('free conflict-check quota', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mocks.storage.clear();
+    mocks.readGate = null;
+    mocks.readStarted = null;
     mocks.writes = 0;
-    mocks.getPrivateItem.mockReset();
-    mocks.updatePrivateItem.mockReset();
-    mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
-    mocks.updatePrivateItem.mockImplementation(
-      async (key: string, updater: (current: string | null) => string | null) => {
-        const current = mocks.storage.get(key) ?? null;
-        const next = updater(current);
-        if (next === current) return;
-        mocks.writes += 1;
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
-      },
-    );
+    clearActiveHealthProcessingEpoch();
+    await runAccountGenerationOperation((lease) => {
+      accountGeneration = lease.generation;
+    });
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration,
+    });
   });
 
   afterEach(() => {
-    if (originalDev === undefined) delete runtime.__DEV__;
-    else runtime.__DEV__ = originalDev;
-    delete process.env.EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE;
+    clearActiveHealthProcessingEpoch();
   });
 
   it('allows and records the first free conflict check', () => {
@@ -75,192 +86,66 @@ describe('free conflict-check quota', () => {
     });
   });
 
-  it('fails a free user closed when quota state is unavailable', () => {
-    expect(
-      conflictCheckAccess({
-        isPro: false,
-        ruleId: 'rule-a',
-        seenRuleIds: [],
-        quotaAvailable: false,
-      }),
-    ).toEqual({
-      allowed: false,
-      reason: 'quota_unavailable',
-      shouldRecord: false,
-    });
+  it('lets Pro users open every conflict check', () => {
+    expect(conflictCheckAccess({ isPro: true, ruleId: 'rule-b', seenRuleIds: ['rule-a'] })).toEqual(
+      {
+        allowed: true,
+        reason: 'pro',
+        shouldRecord: false,
+      },
+    );
   });
 
-  it('lets Pro users open every conflict check without depending on quota storage', () => {
-    expect(
-      conflictCheckAccess({
-        isPro: true,
-        ruleId: 'rule-b',
-        seenRuleIds: [],
-        quotaAvailable: false,
-      }),
-    ).toEqual({ allowed: true, reason: 'pro', shouldRecord: false });
+  it('persists rule ids once', async () => {
+    await expect(recordFreeConflictCheckRuleId(' rule-a ')).resolves.toEqual(['rule-a']);
+    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual(['rule-a']);
+
+    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual(['rule-a']);
   });
 
-  it('distinguishes a missing quota without writing an empty record', async () => {
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'missing',
-      ruleIds: [],
-    });
-    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.writes).toBe(0);
-  });
+  it('removes malformed persisted quota state', async () => {
+    mocks.storage.set(KEY, '{not-json');
 
-  it('atomically records the first id in a strict versioned envelope', async () => {
-    await expect(recordFreeConflictCheckRuleId(' rule-a ')).resolves.toEqual({
-      status: 'available',
-      format: 'current',
-      ruleIds: ['rule-a'],
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      schemaVersion: 1,
-      ruleIds: ['rule-a'],
-    });
-    expect(mocks.updatePrivateItem).toHaveBeenCalledTimes(1);
-  });
-
-  it('reads a normalized legacy array without repairing it, then upgrades on mutation', async () => {
-    const legacy = JSON.stringify([' rule-a ', 'rule-a']);
-    mocks.storage.set(KEY, legacy);
-
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'available',
-      format: 'legacy',
-      ruleIds: ['rule-a'],
-    });
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
-
-    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toMatchObject({
-      status: 'available',
-      format: 'current',
-      ruleIds: ['rule-a'],
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      schemaVersion: 1,
-      ruleIds: ['rule-a'],
-    });
-  });
-
-  it('classifies malformed bytes as corrupt and preserves them on reads and mutations', async () => {
-    const before = '{not-json';
-    mocks.storage.set(KEY, before);
-
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'corrupt',
-      ruleIds: null,
-    });
-    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual({
-      status: 'corrupt',
-      ruleIds: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(before);
-  });
-
-  it('classifies missing-schema current-shaped data as corrupt without repair', async () => {
-    const before = JSON.stringify({ ruleIds: ['rule-a'] });
-    mocks.storage.set(KEY, before);
-
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'corrupt',
-      ruleIds: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(before);
-    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
-  });
-
-  it('classifies and preserves a future schema', async () => {
-    const before = JSON.stringify({ schemaVersion: 2, ruleIds: ['rule-a'] });
-    mocks.storage.set(KEY, before);
-
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'unsupported_version',
-      ruleIds: null,
-    });
-    await expect(recordFreeConflictCheckRuleId('rule-b')).resolves.toEqual({
-      status: 'unsupported_version',
-      ruleIds: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(before);
-  });
-
-  it('returns typed unavailable on private-storage failure', async () => {
-    mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
-
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'unavailable',
-      ruleIds: null,
-    });
-  });
-
-  it('supports a dev-only unavailable fixture without touching quota bytes', async () => {
-    runtime.__DEV__ = true;
-    process.env.EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE = 'unavailable';
-
-    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
-      status: 'unavailable',
-      ruleIds: null,
-    });
-    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual({
-      status: 'unavailable',
-      ruleIds: null,
-    });
-    expect(mocks.getPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
-  });
-
-  it('returns typed unavailable and preserves quota bytes on write failure', async () => {
-    const before = JSON.stringify({ schemaVersion: 1, ruleIds: [] });
-    mocks.storage.set(KEY, before);
-    mocks.updatePrivateItem.mockRejectedValueOnce(new Error('secure storage write unavailable'));
-
-    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual({
-      status: 'unavailable',
-      ruleIds: null,
-    });
-    expect(mocks.storage.get(KEY)).toBe(before);
-  });
-
-  it('does not write blank rule ids into quota history', async () => {
-    await expect(recordFreeConflictCheckRuleId('   ')).resolves.toEqual({
-      status: 'missing',
-      ruleIds: [],
-    });
-    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual([]);
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 
-  it('does zero writes for a repeated claim in the current canonical format', async () => {
-    mocks.storage.set(KEY, JSON.stringify({ schemaVersion: 1, ruleIds: ['rule-a'] }));
+  it('normalizes duplicate and invalid persisted rule ids', async () => {
+    mocks.storage.set(KEY, JSON.stringify([' rule-a ', '', 'rule-a', 42, ' rule-b ']));
 
-    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toMatchObject({
-      status: 'available',
-      ruleIds: ['rule-a'],
-    });
-    expect(mocks.writes).toBe(0);
+    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual(['rule-a', 'rule-b']);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toEqual(['rule-a', 'rule-b']);
   });
 
-  it('allows only one winner across 100 simultaneous distinct free claims', async () => {
-    const results = await Promise.all(
-      Array.from({ length: 100 }, (_, index) => recordFreeConflictCheckRuleId(`rule-${index}`)),
-    );
+  it('does not write blank rule ids into quota history', async () => {
+    await expect(recordFreeConflictCheckRuleId('   ')).resolves.toEqual([]);
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
 
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      schemaVersion: 1,
-      ruleIds: ['rule-0'],
+  it('does not repair or return quota bytes after close and same-epoch re-grant', async () => {
+    const original = JSON.stringify([' rule-a ', '', 'rule-a']);
+    mocks.storage.set(KEY, original);
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
     });
-    expect(results).toHaveLength(100);
-    expect(
-      results.every(
-        (result) =>
-          result.status === 'available' &&
-          result.ruleIds.length === 1 &&
-          result.ruleIds[0] === 'rule-0',
-      ),
-    ).toBe(true);
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readStarted = markReadStarted;
+
+    const pending = loadFreeConflictCheckRuleIds();
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration,
+    });
+    releaseRead();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 });

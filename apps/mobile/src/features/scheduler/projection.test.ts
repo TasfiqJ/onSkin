@@ -24,6 +24,17 @@ const cycle = orchestrate(
   base,
 ).cycle!;
 
+function withTimeZone<T>(timeZone: string, run: () => T): T {
+  const previous = process.env.TZ;
+  process.env.TZ = timeZone;
+  try {
+    return run();
+  } finally {
+    if (previous === undefined) delete process.env.TZ;
+    else process.env.TZ = previous;
+  }
+}
+
 afterAll(() => {
   delete (globalThis as { __DEV__?: boolean }).__DEV__;
 });
@@ -80,4 +91,33 @@ describe('projection (docs/05 §3)', () => {
     );
     expect(recoveryNights.every((night) => night >= 1)).toBe(true);
   });
+
+  it.each([
+    ['America/Toronto', 'spring-forward', ['2026-03-07', '2026-03-08', '2026-03-09']],
+    ['America/Toronto', 'fall-back', ['2026-10-31', '2026-11-01', '2026-11-02']],
+    ['America/Los_Angeles', 'spring-forward', ['2026-03-07', '2026-03-08', '2026-03-09']],
+    ['America/Los_Angeles', 'fall-back', ['2026-10-31', '2026-11-01', '2026-11-02']],
+    ['UTC', 'year rollover', ['2026-12-31', '2027-01-01', '2027-01-02']],
+  ] as const)(
+    'keeps date-only projection on calendar days in %s across %s',
+    (timeZone, _transition, expectedDates) => {
+      withTimeZone(timeZone, () => {
+        const [start, middle, end] = expectedDates;
+        expect(addDays(start, 1)).toBe(middle);
+        expect(addDays(start, 2)).toBe(end);
+
+        const projected = weekAhead(cycle, start, start, 2);
+        expect(projected.map(({ dateISO }) => dateISO)).toEqual(expectedDates);
+        expect(projected.map(({ dateISO }) => nightIndex(cycle, start, dateISO))).toEqual([
+          0,
+          1 % cycle.lengthNights,
+          2 % cycle.lengthNights,
+        ]);
+
+        const expectedReverseIndex =
+          ((-2 % cycle.lengthNights) + cycle.lengthNights) % cycle.lengthNights;
+        expect(nightIndex(cycle, end, start)).toBe(expectedReverseIndex);
+      });
+    },
+  );
 });

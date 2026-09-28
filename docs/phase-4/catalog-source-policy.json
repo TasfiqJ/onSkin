@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "policyId": "catalog-source-policy-v1",
+  "effectiveDate": "2026-07-16",
+  "status": "engineering_control_pending_external_legal_and_identity_approval",
+  "legalDisclaimer": "This is a fail-closed engineering control, not legal advice or evidence of legal approval.",
+  "globalControls": {
+    "approvalManifestRequiredForProduction": true,
+    "artifactSha256Required": true,
+    "recordLevelProvenanceRequired": true,
+    "publicAttributionSurfaceRequired": true,
+    "runtimeThirdPartyCatalogRequestsAllowed": false,
+    "contributionBackAllowed": false,
+    "externalProductImagesAllowed": false,
+    "permittedLaunchTerritories": ["US"],
+    "approvalMaxValidityDays": 366
+  },
+  "sources": {
+    "open_beauty_facts": {
+      "displayName": "Open Beauty Facts",
+      "componentId": "obf_odbl_component",
+      "productionApproved": false,
+      "legalReviewRequired": true,
+      "sourceUrl": "https://world.openbeautyfacts.org/",
+      "allowedSnapshotHosts": ["openbeautyfacts.org", "openfoodfacts.org"],
+      "allowedSnapshotPathPrefixes": ["/data", "/data/"],
+      "allowedImportModes": ["fixture", "approved_offline_export"],
+      "maxSnapshotAgeDays": 31,
+      "forbiddenProductionArtifactSha256": [
+        "af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd"
+      ],
+      "transformLimits": {
+        "maxArtifactBytes": 67108864,
+        "maxRecords": 100000,
+        "maxFieldCharacters": 20000,
+        "maxCategoryTags": 100
+      },
+      "allowedFields": [
+        "code",
+        "product_name",
+        "brands",
+        "categories_tags",
+        "ingredients_text",
+        "last_modified_t"
+      ],
+      "requiredDeterminations": {
+        "attribution": "approved_for_exact_public_surface",
+        "imageRights": "images_prohibited",
+        "contributionBack": "disabled",
+        "corrections": "first_party_correction_workflow_only",
+        "thirdPartyContentRights": "approved_for_exact_textual_fields_and_nominative_use",
+        "sourceTermsSnapshot": "exact_terms_snapshot_retained"
+      },
+      "requiredTermsUrls": [
+        "https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/",
+        "https://opendatacommons.org/licenses/odbl/1-0/",
+        "https://opendatacommons.org/licenses/dbcl/1-0/"
+      ],
+      "databaseClassificationOptions": ["derivative_database", "collective_database_component"],
+      "shareAlikeImplementationOptions": [
+        "entire_derivative_or_alterations_machine_readable",
+        "source_component_unmodified_separate_and_machine_readable"
+      ],
+      "sourceIsolationMode": "separate_source_component_pending_legal_classification",
+      "licenses": {
+        "database": {
+          "name": "Open Database License 1.0",
+          "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+        },
+        "contents": {
+          "name": "Database Contents License 1.0",
+          "url": "https://opendatacommons.org/licenses/dbcl/1-0/"
+        },
+        "images": {
+          "name": "CC BY-SA; additional depicted packaging, copyright, trademark, and personality rights may apply",
+          "url": "https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/",
+          "allowed": false
+        }
+      },
+      "requiredProductionUses": ["offline_export_import", "product_facts"],
+      "forbiddenProductionUses": [
+        "runtime_api",
+        "search_as_you_type_api",
+        "api_crawling",
+        "product_images",
+        "automatic_contribution_back"
+      ],
+      "forbiddenClaims": ["complete", "always_accurate", "source_verified", "safe"],
+      "attributionRequired": true,
+      "shareAlikeReviewRequired": true,
+      "correctionWorkflowRequired": true
+    },
+    "cosing": {
+      "displayName": "European Commission CosIng",
+      "componentId": "cosing_reference_component",
+      "productionApproved": false,
+      "legalReviewRequired": true,
+      "sourceUrl": "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en",
+      "allowedSnapshotHosts": ["ec.europa.eu", "europa.eu"],
+      "allowedSnapshotPathPrefixes": [
+        "/sectors/cosmetics/cosmetic-ingredient-database_en",
+        "/growth/tools-databases/cosing"
+      ],
+      "allowedImportModes": ["fixture", "approved_offline_snapshot"],
+      "maxSnapshotAgeDays": 366,
+      "forbiddenProductionArtifactSha256": [
+        "7bb4651229ab07aa7fd70f11168ddfcc41da75cd61279d7f0d413b1ea809e3a4"
+      ],
+      "transformLimits": {
+        "maxArtifactBytes": 33554432,
+        "maxRecords": 100000,
+        "maxFieldCharacters": 20000,
+        "maxSynonymsPerRecord": 50
+      },
+      "allowedFields": [
+        "inci_name",
+        "display_name",
+        "cas_number",
+        "ec_number",
+        "annex_status",
+        "synonyms",
+        "cosing_ref",
+        "record_status",
+        "glossary_decision"
+      ],
+      "requiredDeterminations": {
+        "reuse": "approved_for_exact_offline_fields",
+        "attribution": "approved_for_exact_public_surface",
+        "thirdPartyRights": "excluded_or_separately_cleared",
+        "regulatoryDisclaimer": "informative_not_approval_or_safety",
+        "imageRights": "images_prohibited",
+        "corrections": "first_party_correction_workflow_only",
+        "ecReuseConditions": "source_credit_change_indication_no_distortion_non_liability_operationalized",
+        "glossaryDecision": "eu_2025_1175_exact_version_retained"
+      },
+      "requiredTermsUrls": [
+        "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en",
+        "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database/cosing-glossary-ingredients_en",
+        "https://eur-lex.europa.eu/eli/dec/2011/833/oj/eng",
+        "https://commission.europa.eu/legal-notice_en"
+      ],
+      "databaseCombinationMode": "provenance_tagged_reference_component",
+      "allowedRecordStatuses": ["active"],
+      "requiredGlossaryDecision": "EU_2025_1175",
+      "reuseBasis": {
+        "name": "European Commission reuse framework; source-specific and third-party rights review required",
+        "url": "https://eur-lex.europa.eu/eli/dec/2011/833/oj/eng"
+      },
+      "requiredProductionUses": ["offline_reference_import", "inci_normalization"],
+      "forbiddenProductionUses": ["runtime_api", "product_images"],
+      "forbiddenClaims": [
+        "approved",
+        "safe",
+        "recommended",
+        "product_legal_in_market",
+        "medical_clearance",
+        "pregnancy_safe"
+      ],
+      "attributionRequired": true,
+      "correctionWorkflowRequired": true
+    }
+  },
+  "researchSources": [
+    "https://openfoodfacts.github.io/openfoodfacts-server/api/",
+    "https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/",
+    "https://opendatacommons.org/licenses/odbl/1-0/",
+    "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en",
+    "https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database/cosing-glossary-ingredients_en",
+    "https://eur-lex.europa.eu/eli/dec/2011/833/oj/eng"
+  ]
+}

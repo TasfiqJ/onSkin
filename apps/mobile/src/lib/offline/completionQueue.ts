@@ -1,314 +1,312 @@
-import { supabase } from '@/lib/supabase/client';
 import {
-  AccountGenerationLeaseError,
-  runAccountGenerationOperation,
-} from '@/lib/auth/accountGeneration';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+  acknowledgeCompletionSyncOperation,
+  deferCompletionSyncDependencyOperation,
+  getPendingCompletionSyncOperations,
+  recoverCompletionSyncUnsynced,
+  rejectCompletionSyncOperation,
+} from '@/features/today/completionsStore';
+import { hasUnresolvedTerminalShelfMirrorOperationForProduct } from '@/features/shelf/store';
 import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
-import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
-
+  remoteTerminalCompletionSyncCode,
+  retryableCompletionSyncCode,
+  currentCompletionSyncTimezone,
+  type CompletionSyncOperation,
+  type CompletionSyncRemoteTerminalCode,
+} from '@/features/today/completionSync';
 import {
-  completionKey,
-  isStale,
-  normalizeLocalDay,
-  normalizePendingCompletion,
-  withQueued,
-  type PendingCompletion,
-} from './completionQueue.pure';
+  captureHealthDataWriteLease,
+  runHealthDataOperation,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
+import type { Database } from '@layerwell/types';
 
-export type { PendingCompletion } from './completionQueue.pure';
+export const COMPLETION_SYNC_RESPONSE_INVALID = 'COMPLETION_SYNC_RESPONSE_INVALID';
 
-// Persisted offline write queue for routine check-offs (docs/01 §6: "writes must
-// succeed locally and sync later"): a dependency-free queue-and-retry on the
-// encrypted private KV store. A check-off is enqueued durably (it survives an
-// app kill) and drained to Supabase when connectivity returns; dedup mirrors the
-// DB unique (user, step, day).
-//
-// DEFERRED SYNC TARGET (B-SUPABASE / B-ROUTINE-PERSIST): the v1 source of truth
-// for completions is the local-first log in `features/today/completionsStore.ts`.
-// This queue is the server-sync half: it activates once the routine is persisted
-// server-side and check-offs carry real `routine_id`/`step_id` UUIDs to insert.
-// Until then `flushCompletions` no-ops (no session) and the feeder that maps the
-// local log to server ids lands with B-ROUTINE-PERSIST. The pure dedup/staleness
-// logic (completionQueue.pure.ts) is unit-tested and ready.
-const KEY = 'onskin.completions.pending';
-const SCHEMA_VERSION = 1 as const;
+type CompletionRpcArguments = Database['public']['Functions']['record_routine_completion']['Args'];
 
-export const COMPLETION_QUEUE_INVALID = 'COMPLETION_QUEUE_INVALID';
-export const COMPLETION_QUEUE_UNAVAILABLE = 'COMPLETION_QUEUE_UNAVAILABLE';
-export const COMPLETION_QUEUE_UNSUPPORTED_VERSION = 'COMPLETION_QUEUE_UNSUPPORTED_VERSION';
+type CompletionRpcResponse =
+  | Readonly<{
+      version: 1;
+      event_id: string;
+      status: 'accepted' | 'idempotent';
+      code: null;
+    }>
+  | Readonly<{
+      version: 1;
+      event_id: string;
+      status: 'retryable';
+      code: 'COMPLETION_PRODUCT_RETRY_LATER';
+    }>
+  | Readonly<{
+      version: 1;
+      event_id: string;
+      status: 'terminal';
+      code: CompletionSyncRemoteTerminalCode;
+    }>;
 
-export type CompletionQueueRead =
-  | { status: 'absent'; items: PendingCompletion[] }
-  | { status: 'available'; items: PendingCompletion[] }
-  | { status: 'unavailable'; items: null }
-  | { status: 'corrupt'; items: null }
-  | { status: 'unsupported_version'; items: null };
+type CompletionRpcError = Readonly<{
+  code?: string;
+  message?: string;
+}> | null;
 
-export type CompletionSyncDiagnostics = Readonly<{
-  result: 'cancelled' | 'failed' | 'idle' | 'not_run' | 'pending' | 'signed_out' | 'synced';
-  at: string | null;
-}>;
-
-let completionSyncDiagnostics: CompletionSyncDiagnostics = { result: 'not_run', at: null };
-
-function recordCompletionSyncResult(result: CompletionSyncDiagnostics['result']): void {
-  completionSyncDiagnostics = { result, at: new Date().toISOString() };
-}
-
-export function readCompletionSyncDiagnostics(): CompletionSyncDiagnostics {
-  return { ...completionSyncDiagnostics };
-}
-
-export function resetCompletionSyncDiagnosticsForTests(): void {
-  completionSyncDiagnostics = { result: 'not_run', at: null };
-}
-
-type CompletionQueueEnvelope = {
-  version: typeof SCHEMA_VERSION;
-  items: PendingCompletion[];
-};
+type CompletionRpc = (
+  functionName: 'record_routine_completion',
+  args: CompletionRpcArguments,
+) => Promise<{ data: unknown; error: CompletionRpcError }>;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function hasOwn(value: Record<string, unknown>, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(value, key);
-}
-
-function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
-  const keys = Object.keys(value);
-  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
-}
-
-function queueError(code: string): Error {
-  return new Error(code);
-}
-
-function normalizePendingList(value: unknown, strictCurrent = false): PendingCompletion[] {
-  if (!Array.isArray(value)) throw queueError(COMPLETION_QUEUE_INVALID);
-  const out: PendingCompletion[] = [];
-  for (const row of value) {
-    const normalized = normalizePendingCompletion(row);
-    if (!normalized) throw queueError(COMPLETION_QUEUE_INVALID);
-    if (strictCurrent) {
-      if (
-        !isRecord(row) ||
-        !hasExactKeys(row, [
-          'userId',
-          'routineId',
-          'stepId',
-          'completedDate',
-          'enqueuedAt',
-        ]) ||
-        row.userId !== normalized.userId ||
-        row.routineId !== normalized.routineId ||
-        row.stepId !== normalized.stepId ||
-        row.completedDate !== normalized.completedDate ||
-        row.enqueuedAt !== normalized.enqueuedAt
-      ) {
-        throw queueError(COMPLETION_QUEUE_INVALID);
-      }
-    }
-    const duplicate = out.some(
-      (existing) => completionKey(existing) === completionKey(normalized),
-    );
-    if (duplicate && strictCurrent) throw queueError(COMPLETION_QUEUE_INVALID);
-    if (!duplicate) {
-      out.push(normalized);
-    }
+function decodeCompletionRpcResponse(
+  value: unknown,
+  expectedEventId: string,
+): CompletionRpcResponse {
+  if (!isRecord(value)) throw new Error(COMPLETION_SYNC_RESPONSE_INVALID);
+  const keys = Object.keys(value).sort();
+  if (
+    keys.length !== 4 ||
+    keys[0] !== 'code' ||
+    keys[1] !== 'event_id' ||
+    keys[2] !== 'status' ||
+    keys[3] !== 'version' ||
+    value.version !== 1 ||
+    value.event_id !== expectedEventId ||
+    (value.status !== 'accepted' &&
+      value.status !== 'idempotent' &&
+      value.status !== 'retryable' &&
+      value.status !== 'terminal')
+  ) {
+    throw new Error(COMPLETION_SYNC_RESPONSE_INVALID);
   }
-  return out;
+  const status = value.status;
+  if (status === 'accepted' || status === 'idempotent') {
+    if (value.code !== null) throw new Error(COMPLETION_SYNC_RESPONSE_INVALID);
+    return { version: 1, event_id: expectedEventId, status, code: null };
+  }
+  if (status === 'retryable') {
+    const code = retryableCompletionSyncCode(value.code);
+    if (code === null) throw new Error(COMPLETION_SYNC_RESPONSE_INVALID);
+    return { version: 1, event_id: expectedEventId, status, code };
+  }
+  const code = remoteTerminalCompletionSyncCode(value.code);
+  if (code === null) throw new Error(COMPLETION_SYNC_RESPONSE_INVALID);
+  return { version: 1, event_id: expectedEventId, status, code };
 }
 
-function decodePending(raw: string | null): PendingCompletion[] {
-  if (raw === null) return [];
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw queueError(COMPLETION_QUEUE_INVALID);
-  }
-
-  if (Array.isArray(parsed)) return normalizePendingList(parsed);
-  if (!isRecord(parsed)) throw queueError(COMPLETION_QUEUE_INVALID);
-  if (!hasOwn(parsed, 'version')) throw queueError(COMPLETION_QUEUE_INVALID);
-  if (parsed.version !== SCHEMA_VERSION) {
+function rpcArguments(operation: CompletionSyncOperation): CompletionRpcArguments {
+  const common = {
+    p_event_id: operation.eventId,
+    p_routine_id: operation.routineId,
+    p_completed_at: operation.completedAt,
+    p_completed_date: operation.completedDate,
+    p_timezone: operation.timezone,
+  };
+  if (operation.kind === 'routine_day') {
     if (
-      typeof parsed.version === 'number' &&
-      Number.isSafeInteger(parsed.version) &&
-      parsed.version > SCHEMA_VERSION
+      operation.routineType !== 'PM' ||
+      operation.stepId !== null ||
+      operation.userProductId !== null ||
+      operation.stepOrder !== null
     ) {
-      throw queueError(COMPLETION_QUEUE_UNSUPPORTED_VERSION);
+      throw new Error('COMPLETION_SYNC_INVALID');
     }
-    throw queueError(COMPLETION_QUEUE_INVALID);
+    return {
+      ...common,
+      p_routine_type: 'PM',
+      p_step_id: null,
+      p_user_product_id: null,
+      p_step_order: null,
+    };
   }
-  if (!hasExactKeys(parsed, ['version', 'items'])) {
-    throw queueError(COMPLETION_QUEUE_INVALID);
+  if (
+    operation.stepId === null ||
+    operation.userProductId === null ||
+    operation.stepOrder === null
+  ) {
+    throw new Error('COMPLETION_SYNC_INVALID');
   }
-  return normalizePendingList(parsed.items, true);
+  return {
+    ...common,
+    p_routine_type: operation.routineType,
+    p_step_id: operation.stepId,
+    p_user_product_id: operation.userProductId,
+    p_step_order: operation.stepOrder,
+  };
 }
 
-function encodePending(items: PendingCompletion[]): string {
-  return JSON.stringify({ version: SCHEMA_VERSION, items } satisfies CompletionQueueEnvelope);
+type CompletionFlushResult = {
+  flushed: number;
+  terminal: number;
+  remaining: number;
+};
+
+let completionFlushTail: Promise<void> = Promise.resolve();
+type CompletionFlushEntry = {
+  dirty: boolean;
+  promise: Promise<CompletionFlushResult>;
+};
+const completionFlushesByLease = new Map<string, CompletionFlushEntry>();
+
+function completionFlushLeaseKey(lease: HealthDataWriteLease): string {
+  return [lease.ownerUserId, lease.generation, lease.epoch, lease.accountGeneration].join('|');
 }
 
-export async function readCompletionQueue(): Promise<CompletionQueueRead> {
-  const stored = await readPrivateItem(KEY);
-  if (stored.status === 'absent') return { status: 'absent', items: [] };
-  if (stored.status === 'unavailable') return { status: 'unavailable', items: null };
-  if (stored.status === 'corrupt') return { status: 'corrupt', items: null };
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', items: null };
-  }
+async function runCompletionFlush(
+  initialLease: HealthDataWriteLease,
+): Promise<CompletionFlushResult> {
+  return runHealthDataOperation(initialLease.ownerUserId, async (lease) => {
+    if (
+      lease.generation !== initialLease.generation ||
+      lease.epoch !== initialLease.epoch ||
+      lease.accountGeneration !== initialLease.accountGeneration
+    ) {
+      throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    }
+    lease.assertCurrent();
+    // Historical v1 transport bytes cannot be safely promoted because they do
+    // not carry the v3 event/provenance contract. They remain encrypted,
+    // purpose-limited `legacy_pending_completion_sync` export evidence until an
+    // explicit retention purge (health withdrawal/account deletion). A replay
+    // wake must never destroy them, including before a server session exists.
+    await recoverCompletionSyncUnsynced(currentCompletionSyncTimezone());
+    lease.assertCurrent();
+    const pending = await getPendingCompletionSyncOperations();
+    lease.assertCurrent();
+    if (pending.length === 0) return { flushed: 0, terminal: 0, remaining: 0 };
 
-  try {
-    return { status: 'available', items: decodePending(stored.value) };
-  } catch (error) {
-    return error instanceof Error && error.message === COMPLETION_QUEUE_UNSUPPORTED_VERSION
-      ? { status: 'unsupported_version', items: null }
-      : { status: 'corrupt', items: null };
-  }
-}
+    const { data } = await getPersistedSupabaseUser();
+    lease.assertCurrent();
+    if (data.user?.id === undefined) {
+      return { flushed: 0, terminal: 0, remaining: pending.length };
+    }
+    if (data.user.id !== lease.ownerUserId) {
+      throw new Error('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    }
 
-export async function getPendingCompletions(): Promise<PendingCompletion[]> {
-  const result = await readCompletionQueue();
-  if (result.status === 'available' || result.status === 'absent') return result.items;
-  if (result.status === 'unsupported_version') {
-    throw queueError(COMPLETION_QUEUE_UNSUPPORTED_VERSION);
-  }
-  if (result.status === 'corrupt') throw queueError(COMPLETION_QUEUE_INVALID);
-  throw queueError(COMPLETION_QUEUE_UNAVAILABLE);
-}
+    let flushed = 0;
+    let terminal = 0;
+    let replaySnapshot = pending;
+    let snapshotIndex = 0;
+    let replayBudget = pending.length;
+    while (snapshotIndex < replaySnapshot.length && replayBudget > 0) {
+      const operation = replaySnapshot[snapshotIndex]!;
+      lease.assertCurrent();
+      let result: Awaited<ReturnType<CompletionRpc>>;
+      try {
+        result = await supabase.rpc('record_routine_completion', rpcArguments(operation));
+      } catch {
+        lease.assertCurrent();
+        break;
+      }
+      lease.assertCurrent();
+      if (result.error !== null) break;
 
-export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {
-  const normalized = normalizePendingCompletion(rec);
-  if (!normalized) return;
-  await updatePrivateItem(KEY, (current) => {
-    const pending = decodePending(current);
-    const next = withQueued(pending, normalized);
-    return next === pending ? current : encodePending(next);
+      const response = decodeCompletionRpcResponse(result.data, operation.eventId);
+      if (response.status === 'retryable') {
+        if (
+          operation.kind === 'step' &&
+          operation.userProductId !== null &&
+          (await hasUnresolvedTerminalShelfMirrorOperationForProduct(operation.userProductId))
+        ) {
+          lease.assertCurrent();
+          const disposition = await deferCompletionSyncDependencyOperation(
+            operation.eventId,
+            operation.userProductId,
+          );
+          lease.assertCurrent();
+          if (!disposition.deferred) break;
+          replayBudget -= disposition.moved;
+          replaySnapshot = await getPendingCompletionSyncOperations();
+          lease.assertCurrent();
+          snapshotIndex = 0;
+          continue;
+        }
+        break;
+      }
+      if (response.status === 'terminal') {
+        if (await rejectCompletionSyncOperation(operation.eventId, response.code)) {
+          terminal += 1;
+        }
+        // A terminal final-step rejection may atomically quarantine its bound
+        // routine-day marker. Stop this stale snapshot and re-read durable state
+        // before any later RPC dispatch.
+        break;
+      }
+      if (!(await acknowledgeCompletionSyncOperation(operation.eventId))) break;
+      flushed += 1;
+      replayBudget -= 1;
+      snapshotIndex += 1;
+      lease.assertCurrent();
+    }
+
+    const remaining = (await getPendingCompletionSyncOperations()).length;
+    lease.assertCurrent();
+    return { flushed, terminal, remaining };
   });
-}
-
-/** Step ids checked off but not yet synced, for a given local day (read merge). */
-export async function pendingStepIdsForDate(date: string): Promise<Set<string>> {
-  const normalizedDate = normalizeLocalDay(date);
-  if (!normalizedDate) return new Set();
-  const out = new Set<string>();
-  for (const c of await getPendingCompletions()) {
-    if (c.completedDate === normalizedDate && c.stepId) out.add(c.stepId);
-  }
-  return out;
 }
 
 /**
- * Drain the queue to Supabase. Removes rows that land (or already exist; a 23505
- * dedup means it's recorded). Keeps rows that fail transiently (offline) for the
- * next attempt. Drops rows outside the server completion window or that belong to
- * a different signed-in user (they can't pass the current session's RLS). Safe to
- * call repeatedly; a no-op when the queue is empty or there's no session yet.
+ * Single-flight FIFO replay of the encrypted v3 completion outbox. The RPC
+ * derives the owner from Auth, validates exact routine/Shelf ownership and
+ * returns a versioned disposition. Network, authorization, and protocol
+ * ambiguity retain the operation; only exact accepted/idempotent responses
+ * acknowledge it, and only an explicit terminal response quarantines it.
  */
-async function flushCompletionsWithDiagnostics(
-  now: Date = new Date(),
-): Promise<{
+export function flushCompletions(): Promise<{
   flushed: number;
+  terminal: number;
   remaining: number;
-  syncResult: Exclude<CompletionSyncDiagnostics['result'], 'cancelled' | 'failed' | 'not_run'>;
 }> {
-  return runAccountGenerationOperation(async (lease) => {
-    const pending = await getPendingCompletions();
-    lease.assertCurrent();
-    if (pending.length === 0) return { flushed: 0, remaining: 0, syncResult: 'idle' };
-
-    const userId = (await captureAuthenticatedAccountOwner(lease))?.userId;
-    if (!userId) {
-      return { flushed: 0, remaining: pending.length, syncResult: 'signed_out' };
-    }
-
-    const removeKeys = new Set<string>();
-    let flushed = 0;
-    for (const rec of pending) {
-      if (rec.userId !== userId) {
-        removeKeys.add(completionKey(rec)); // a prior account's row; drop
-        continue;
-      }
-      if (isStale(rec.completedDate, now)) {
-        removeKeys.add(completionKey(rec)); // outside the server window; drop
-        continue;
-      }
-      try {
-        lease.assertCurrent();
-        await runRequestWithLease(
-          lease,
-          {
-            endpoint: 'completion_sync',
-            deadlineMs: 8_000,
-            idempotent: true,
-            maxAttempts: 2,
-            maxResponseBytes: 16 * 1024,
-          },
-          async ({ signal }) => {
-            const response = await supabase
-              .from('routine_completions')
-              .insert({
-                user_id: userId,
-                routine_id: rec.routineId,
-                step_id: rec.stepId,
-                completed_date: rec.completedDate,
-              })
-              .abortSignal(signal);
-            // The database uniqueness key is the durable operation identity.
-            // A response-lost retry that observes the existing row is success.
-            if (response.error?.code === '23505') return null;
-            if (response.error) {
-              throw supabaseRequestFailure(response.error, response.status);
-            }
-            return null;
-          },
-        );
-        lease.assertCurrent();
-        removeKeys.add(completionKey(rec));
-        flushed += 1; // landed, or already recorded (dedup)
-      } catch {
-        lease.assertCurrent();
-        // Network failure: leave the row in the latest queue for the next flush.
-      }
-    }
-
-    let remaining = pending.length;
-    await updatePrivateItem(KEY, (current) => {
-      const latest = decodePending(current);
-      if (removeKeys.size === 0) {
-        remaining = latest.length;
-        return current;
-      }
-      const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
-      remaining = next.length;
-      return next.length === latest.length ? current : encodePending(next);
-    });
-    lease.assertCurrent();
-    return {
-      flushed,
-      remaining,
-      syncResult: remaining > 0 ? 'pending' : flushed > 0 ? 'synced' : 'idle',
-    };
-  });
-}
-
-export async function flushCompletions(
-  now: Date = new Date(),
-): Promise<{ flushed: number; remaining: number }> {
+  let lease: HealthDataWriteLease;
   try {
-    const { flushed, remaining, syncResult } = await flushCompletionsWithDiagnostics(now);
-    recordCompletionSyncResult(syncResult);
-    return { flushed, remaining };
+    lease = captureHealthDataWriteLease();
   } catch (error) {
-    recordCompletionSyncResult(error instanceof AccountGenerationLeaseError ? 'cancelled' : 'failed');
-    throw error;
+    return Promise.reject(error);
   }
+  const leaseKey = completionFlushLeaseKey(lease);
+  const existing = completionFlushesByLease.get(leaseKey);
+  if (existing !== undefined) {
+    // A wake means the durable outbox may have changed after the active worker
+    // took its snapshot. Coalesce callers onto one promise but retain one dirty
+    // rerun so work appended during the RPC cannot be stranded.
+    existing.dirty = true;
+    return existing.promise;
+  }
+
+  const entry = {
+    dirty: false,
+    promise: Promise.resolve({
+      flushed: 0,
+      terminal: 0,
+      remaining: 0,
+    }),
+  } satisfies CompletionFlushEntry;
+  const pending = completionFlushTail.then(async () => {
+    let flushed = 0;
+    let terminal = 0;
+    let remaining = 0;
+    do {
+      entry.dirty = false;
+      const result = await runCompletionFlush(lease);
+      flushed += result.flushed;
+      terminal += result.terminal;
+      remaining = result.remaining;
+    } while (entry.dirty);
+    return { flushed, terminal, remaining };
+  });
+  entry.promise = pending;
+  completionFlushTail = pending.then(
+    () => undefined,
+    () => undefined,
+  );
+  completionFlushesByLease.set(leaseKey, entry);
+  const release = () => {
+    if (completionFlushesByLease.get(leaseKey) === entry) {
+      completionFlushesByLease.delete(leaseKey);
+    }
+  };
+  void pending.then(release, release);
+  return pending;
 }

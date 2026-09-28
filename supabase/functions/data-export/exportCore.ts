@@ -1,8 +1,61 @@
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
+import type { HealthLifecycleExportSnapshot } from '../consent-withdrawal/healthLifecycleCore.ts';
+
+export type HealthLifecycleExportDecision =
+  | { allowed: true; snapshot: HealthLifecycleExportSnapshot }
+  | {
+      allowed: false;
+      error: 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS' | 'HEALTH_DATA_LIFECYCLE_CHANGED';
+      retryAfterSeconds: number;
+    };
+
+export function healthReadEpochForExport(snapshot: HealthLifecycleExportSnapshot): number {
+  if (!Number.isSafeInteger(snapshot.processing_epoch) || snapshot.processing_epoch < 0) {
+    throw new Error('EXPORT_HEALTH_PROCESSING_EPOCH_INVALID');
+  }
+  if (snapshot.state === 'active' && snapshot.processing_epoch < 1) {
+    throw new Error('EXPORT_HEALTH_PROCESSING_EPOCH_INVALID');
+  }
+
+  // The database request header intentionally accepts only positive epochs.
+  // A never-active/terminal lifecycle still needs a syntactically valid value
+  // so restrictive RLS policies can evaluate to false and return an exact
+  // empty source rather than turning an account export into an availability
+  // error. Active reads always use the exact pinned epoch.
+  return Math.max(1, snapshot.processing_epoch);
+}
+
+export function healthLifecycleExportDecision(
+  initial: HealthLifecycleExportSnapshot,
+  final: HealthLifecycleExportSnapshot,
+): HealthLifecycleExportDecision {
+  if (initial.state === 'withdrawing' || final.state === 'withdrawing') {
+    return {
+      allowed: false,
+      error: 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS',
+      retryAfterSeconds: 60,
+    };
+  }
+  if (
+    initial.state !== final.state ||
+    initial.processing_epoch !== final.processing_epoch ||
+    initial.operation_state !== final.operation_state ||
+    initial.result_code !== final.result_code ||
+    initial.consent_version !== final.consent_version ||
+    initial.consent_text_hash !== final.consent_text_hash
+  ) {
+    return {
+      allowed: false,
+      error: 'HEALTH_DATA_LIFECYCLE_CHANGED',
+      retryAfterSeconds: 5,
+    };
+  }
+  return { allowed: true, snapshot: final };
+}
 
 export type DatabaseSourceManifest = {
   kind: 'database_table';
-  scope: 'caller_rls' | 'service_role_filtered';
+  scope: 'caller_rls' | 'caller_rpc_owner' | 'service_role_filtered';
   order_by: readonly string[];
   count: number;
   count_before: number;
@@ -45,23 +98,6 @@ export type PaginatedRows = {
   rows: Record<string, unknown>[];
   manifest: DatabaseSourceManifest;
 };
-
-export type ExportMemoryBudgetSnapshot = Readonly<{
-  maxBytes: number;
-  maxItems: number;
-  retainedBytes: number;
-  retainedItems: number;
-  peakRetainedBytes: number;
-  peakRetainedItems: number;
-}>;
-
-export type ExportMemoryBudget = Readonly<{
-  reserveJson: (source: string, value: unknown) => number;
-  release: (bytes: number, items: number) => void;
-  snapshot: () => ExportMemoryBudgetSnapshot;
-}>;
-
-export const EXPORT_RETAINED_ITEM_OVERHEAD_BYTES = 128;
 
 export type StorageListEntry = {
   name?: unknown;
@@ -115,7 +151,9 @@ function normalizeForCanonicalJson(value: unknown): unknown {
     const record = value as Record<string, unknown>;
     const normalized: Record<string, unknown> = {};
     for (const key of Object.keys(record).sort()) {
-      if (record[key] !== undefined) normalized[key] = normalizeForCanonicalJson(record[key]);
+      if (record[key] !== undefined) {
+        normalized[key] = normalizeForCanonicalJson(record[key]);
+      }
     }
     return normalized;
   }
@@ -124,77 +162,6 @@ function normalizeForCanonicalJson(value: unknown): unknown {
 
 export function canonicalJson(value: unknown): string {
   return JSON.stringify(normalizeForCanonicalJson(value));
-}
-
-function utf8ByteLength(value: string): number {
-  return new TextEncoder().encode(value).byteLength;
-}
-
-export function createExportMemoryBudget(maxBytes: number, maxItems: number): ExportMemoryBudget {
-  if (!Number.isSafeInteger(maxBytes) || maxBytes < 1) {
-    throw new Error('INVALID_EXPORT_MEMORY_BUDGET');
-  }
-  if (!Number.isSafeInteger(maxItems) || maxItems < 1) {
-    throw new Error('INVALID_EXPORT_MEMORY_ITEM_BUDGET');
-  }
-
-  let retainedBytes = 0;
-  let retainedItems = 0;
-  let peakRetainedBytes = 0;
-  let peakRetainedItems = 0;
-  return Object.freeze({
-    reserveJson(source: string, value: unknown): number {
-      // The fixed allowance covers the retained array/set/map/object reference
-      // cost around each value; one more byte covers its JSON delimiter.
-      const bytes = utf8ByteLength(canonicalJson(value)) + EXPORT_RETAINED_ITEM_OVERHEAD_BYTES + 1;
-      if (bytes > maxBytes - retainedBytes || retainedItems >= maxItems) {
-        throw sourceFailure(source, 'MEMORY_BUDGET_EXCEEDED');
-      }
-      retainedBytes += bytes;
-      retainedItems += 1;
-      peakRetainedBytes = Math.max(peakRetainedBytes, retainedBytes);
-      peakRetainedItems = Math.max(peakRetainedItems, retainedItems);
-      return bytes;
-    },
-    release(bytes: number, items: number): void {
-      if (
-        !Number.isSafeInteger(bytes) ||
-        bytes < 0 ||
-        bytes > retainedBytes ||
-        !Number.isSafeInteger(items) ||
-        items < 0 ||
-        items > retainedItems
-      ) {
-        throw new Error('INVALID_EXPORT_MEMORY_RELEASE');
-      }
-      retainedBytes -= bytes;
-      retainedItems -= items;
-    },
-    snapshot(): ExportMemoryBudgetSnapshot {
-      return Object.freeze({
-        maxBytes,
-        maxItems,
-        retainedBytes,
-        retainedItems,
-        peakRetainedBytes,
-        peakRetainedItems,
-      });
-    },
-  });
-}
-
-export function encodeJsonWithinByteLimit(
-  value: unknown,
-  maxBytes: number,
-): Readonly<{ body: string; byteLength: number }> {
-  if (!Number.isSafeInteger(maxBytes) || maxBytes < 1) {
-    throw new Error('INVALID_EXPORT_RESPONSE_BYTE_LIMIT');
-  }
-  const body = JSON.stringify(value);
-  if (typeof body !== 'string') throw new Error('EXPORT_RESPONSE_INVALID');
-  const byteLength = utf8ByteLength(body);
-  if (byteLength > maxBytes) throw new Error('EXPORT_RESPONSE_BYTE_LIMIT_EXCEEDED');
-  return Object.freeze({ body, byteLength });
 }
 
 async function sha256Hex(value: string): Promise<string> {
@@ -235,13 +202,16 @@ export async function paginateRows(options: {
   pageSize: number;
   maxRows: number;
   note?: string;
-  memoryBudget?: ExportMemoryBudget;
   fetchCount: () => Promise<number | null>;
   fetchPage: (offset: number, limit: number) => Promise<Record<string, unknown>[]>;
 }): Promise<PaginatedRows> {
   const { source, pageSize, maxRows, orderBy } = options;
-  if (!Number.isInteger(pageSize) || pageSize < 1) throw new Error('INVALID_EXPORT_PAGE_SIZE');
-  if (!Number.isInteger(maxRows) || maxRows < pageSize) throw new Error('INVALID_EXPORT_ROW_LIMIT');
+  if (!Number.isInteger(pageSize) || pageSize < 1) {
+    throw new Error('INVALID_EXPORT_PAGE_SIZE');
+  }
+  if (!Number.isInteger(maxRows) || maxRows < pageSize) {
+    throw new Error('INVALID_EXPORT_ROW_LIMIT');
+  }
   if (orderBy.length === 0) throw new Error('EXPORT_ORDER_REQUIRED');
 
   const countBefore = exactCount(source, await options.fetchCount());
@@ -250,63 +220,53 @@ export async function paginateRows(options: {
   const rows: Record<string, unknown>[] = [];
   const orderIdentities = new Set<string>();
   let pageRequests = 0;
-  let reservedBytes = 0;
-  let reservedItems = 0;
 
-  try {
-    for (let offset = 0; ; offset += pageSize) {
-      const page = await options.fetchPage(offset, pageSize);
-      pageRequests += 1;
-      if (!Array.isArray(page) || page.length > pageSize) {
-        throw sourceFailure(source, 'INVALID_PAGE');
-      }
-
-      for (const row of page) {
-        if (!row || typeof row !== 'object' || Array.isArray(row)) {
-          throw sourceFailure(source, 'INVALID_ROW');
-        }
-        const identity = orderIdentity(source, row, orderBy);
-        if (orderIdentities.has(identity)) {
-          throw sourceFailure(source, 'DUPLICATE_ORDER_KEY');
-        }
-        const rowBytes = options.memoryBudget?.reserveJson(source, row) ?? 0;
-        reservedBytes += rowBytes;
-        if (options.memoryBudget) reservedItems += 1;
-        orderIdentities.add(identity);
-        rows.push(row);
-        if (rows.length > countBefore || rows.length > maxRows) {
-          throw sourceFailure(source, 'COUNT_CHANGED_DURING_PAGINATION');
-        }
-      }
-
-      if (page.length < pageSize) break;
+  for (let offset = 0; ; offset += pageSize) {
+    const page = await options.fetchPage(offset, pageSize);
+    pageRequests += 1;
+    if (!Array.isArray(page) || page.length > pageSize) {
+      throw sourceFailure(source, 'INVALID_PAGE');
     }
 
-    const countAfter = exactCount(source, await options.fetchCount());
-    if (countBefore !== countAfter || rows.length !== countBefore) {
-      throw sourceFailure(source, 'COUNT_MISMATCH');
+    for (const row of page) {
+      if (!row || typeof row !== 'object' || Array.isArray(row)) {
+        throw sourceFailure(source, 'INVALID_ROW');
+      }
+      const identity = orderIdentity(source, row, orderBy);
+      if (orderIdentities.has(identity)) {
+        throw sourceFailure(source, 'DUPLICATE_ORDER_KEY');
+      }
+      orderIdentities.add(identity);
+      rows.push(row);
+      if (rows.length > countBefore || rows.length > maxRows) {
+        throw sourceFailure(source, 'COUNT_CHANGED_DURING_PAGINATION');
+      }
     }
 
-    return {
-      rows,
-      manifest: {
-        kind: 'database_table',
-        scope: options.scope,
-        order_by: [...orderBy],
-        count: rows.length,
-        count_before: countBefore,
-        count_after: countAfter,
-        page_requests: pageRequests,
-        checksum: await checksumRows(rows),
-        checksum_algorithm: 'sha256-canonical-json-v1',
-        complete: true,
-        ...(options.note ? { note: options.note } : {}),
-      },
-    };
-  } catch (error) {
-    options.memoryBudget?.release(reservedBytes, reservedItems);
-    throw error;
+    if (page.length < pageSize) break;
   }
+
+  const countAfter = exactCount(source, await options.fetchCount());
+  if (countBefore !== countAfter || rows.length !== countBefore) {
+    throw sourceFailure(source, 'COUNT_MISMATCH');
+  }
+
+  return {
+    rows,
+    manifest: {
+      kind: 'database_table',
+      scope: options.scope,
+      order_by: [...orderBy],
+      count: rows.length,
+      count_before: countBefore,
+      count_after: countAfter,
+      page_requests: pageRequests,
+      checksum: await checksumRows(rows),
+      checksum_algorithm: 'sha256-canonical-json-v1',
+      complete: true,
+      ...(options.note ? { note: options.note } : {}),
+    },
+  };
 }
 
 export async function boundedMap<T, R>(
@@ -321,21 +281,15 @@ export async function boundedMap<T, R>(
 
   const results = new Array<R>(values.length);
   let nextIndex = 0;
-  let failure: unknown = null;
   const worker = async () => {
-    while (failure === null && nextIndex < values.length) {
+    while (nextIndex < values.length) {
       const index = nextIndex;
       nextIndex += 1;
-      try {
-        results[index] = await operation(values[index]!, index);
-      } catch (error) {
-        failure ??= error;
-      }
+      results[index] = await operation(values[index]!, index);
     }
   };
 
   await Promise.all(Array.from({ length: Math.min(concurrency, values.length) }, () => worker()));
-  if (failure !== null) throw failure;
   return results;
 }
 
@@ -355,108 +309,90 @@ async function listStorageOnce(options: {
   bucket: StorageBucket;
   pageSize: number;
   maxObjects: number;
-  memoryBudget?: ExportMemoryBudget;
-}): Promise<{
-  paths: string[];
-  pageRequests: number;
-  reservedBytes: number;
-  reservedItems: number;
-}> {
-  const { userId, bucket, pageSize, maxObjects } = options;
+  maxDepth: number;
+  maxPrefixes: number;
+  maxPageRequests: number;
+}): Promise<{ paths: string[]; pageRequests: number }> {
+  const { userId, bucket, pageSize, maxObjects, maxDepth, maxPrefixes, maxPageRequests } = options;
   const pendingPrefixes = [userId];
-  const knownPrefixes = new Set(pendingPrefixes);
+  const scheduledPrefixes = new Set(pendingPrefixes);
   const visitedPrefixes = new Set<string>();
   const paths = new Set<string>();
   let pageRequests = 0;
-  let reservedBytes = 0;
-  let reservedItems = 0;
 
-  try {
-    for (let prefixIndex = 0; prefixIndex < pendingPrefixes.length; prefixIndex += 1) {
-      const prefix = pendingPrefixes[prefixIndex]!;
-      if (visitedPrefixes.has(prefix)) continue;
-      visitedPrefixes.add(prefix);
-      if (visitedPrefixes.size > maxObjects) {
-        throw sourceFailure('photo_storage_objects', 'PREFIX_LIMIT_EXCEEDED');
+  const listPage = async (
+    prefix: string,
+    limit: number,
+    offset: number,
+  ): Promise<StorageListEntry[]> => {
+    if (pageRequests >= maxPageRequests) {
+      throw sourceFailure('photo_storage_objects', 'PAGE_REQUEST_LIMIT_EXCEEDED');
+    }
+    try {
+      const { data, error } = await bucket.list(prefix, {
+        limit,
+        offset,
+        sortBy: { column: 'name', order: 'asc' },
+      });
+      pageRequests += 1;
+      if (error || !data || data.length > limit) {
+        throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
+      }
+      return data;
+    } catch (error) {
+      if (error instanceof Error && error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')) {
+        throw error;
+      }
+      throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
+    }
+  };
+
+  for (let prefixIndex = 0; prefixIndex < pendingPrefixes.length; prefixIndex += 1) {
+    const prefix = pendingPrefixes[prefixIndex]!;
+    if (visitedPrefixes.has(prefix)) continue;
+    visitedPrefixes.add(prefix);
+
+    let offset = 0;
+    while (true) {
+      const page = await listPage(prefix, pageSize, offset);
+
+      for (const entry of page) {
+        const path = ownedChildPath(userId, prefix, entry.name);
+        const depth = path.split('/').length - 1;
+        if (depth > maxDepth) {
+          throw sourceFailure('photo_storage_objects', 'PATH_DEPTH_LIMIT_EXCEEDED');
+        }
+        if (entry.id === null) {
+          if (!visitedPrefixes.has(path) && !scheduledPrefixes.has(path)) {
+            if (scheduledPrefixes.size >= maxPrefixes) {
+              throw sourceFailure('photo_storage_objects', 'PREFIX_LIMIT_EXCEEDED');
+            }
+            scheduledPrefixes.add(path);
+            pendingPrefixes.push(path);
+          }
+        } else if (typeof entry.id === 'string' && entry.id.length > 0) {
+          if (paths.has(path)) {
+            throw sourceFailure('photo_storage_objects', 'DUPLICATE_PATH');
+          }
+          paths.add(path);
+          if (paths.size > maxObjects) {
+            throw sourceFailure('photo_storage_objects', 'OBJECT_LIMIT_EXCEEDED');
+          }
+        } else {
+          throw sourceFailure('photo_storage_objects', 'INVALID_LIST_ENTRY');
+        }
       }
 
-      let offset = 0;
-      while (true) {
-        let page: StorageListEntry[];
-        try {
-          const { data, error } = await bucket.list(prefix, {
-            limit: pageSize,
-            offset,
-            sortBy: { column: 'name', order: 'asc' },
-          });
-          pageRequests += 1;
-          if (error || !data || data.length > pageSize) {
-            throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-          }
-          page = data;
-        } catch (error) {
-          if (error instanceof Error && error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')) {
-            throw error;
-          }
-          throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-        }
-
-        for (const entry of page) {
-          const path = ownedChildPath(userId, prefix, entry.name);
-          if (entry.id === null) {
-            if (!knownPrefixes.has(path)) {
-              const pathBytes =
-                options.memoryBudget?.reserveJson('photo_storage_objects', path) ?? 0;
-              reservedBytes += pathBytes;
-              if (options.memoryBudget) reservedItems += 1;
-              knownPrefixes.add(path);
-              pendingPrefixes.push(path);
-            }
-          } else if (typeof entry.id === 'string' && entry.id.length > 0) {
-            if (paths.has(path)) {
-              throw sourceFailure('photo_storage_objects', 'DUPLICATE_PATH');
-            }
-            const pathBytes = options.memoryBudget?.reserveJson('photo_storage_objects', path) ?? 0;
-            reservedBytes += pathBytes;
-            if (options.memoryBudget) reservedItems += 1;
-            paths.add(path);
-            if (paths.size > maxObjects) {
-              throw sourceFailure('photo_storage_objects', 'OBJECT_LIMIT_EXCEEDED');
-            }
-          } else {
-            throw sourceFailure('photo_storage_objects', 'INVALID_LIST_ENTRY');
-          }
-        }
-
-        offset += page.length;
-        if (page.length === 0) break;
-        if (page.length < pageSize) {
-          try {
-            const { data, error } = await bucket.list(prefix, {
-              limit: 1,
-              offset,
-              sortBy: { column: 'name', order: 'asc' },
-            });
-            pageRequests += 1;
-            if (error || !data || data.length > 1) {
-              throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-            }
-            if (data.length === 0) break;
-          } catch (error) {
-            if (error instanceof Error && error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')) {
-              throw error;
-            }
-            throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-          }
-        }
+      offset += page.length;
+      if (page.length === 0) break;
+      if (page.length < pageSize) {
+        const lookahead = await listPage(prefix, 1, offset);
+        if (lookahead.length === 0) break;
       }
     }
-
-    return { paths: [...paths].sort(), pageRequests, reservedBytes, reservedItems };
-  } catch (error) {
-    options.memoryBudget?.release(reservedBytes, reservedItems);
-    throw error;
   }
+
+  return { paths: [...paths].sort(), pageRequests };
 }
 
 export async function listStoragePathsVerified(options: {
@@ -464,7 +400,9 @@ export async function listStoragePathsVerified(options: {
   bucket: StorageBucket;
   pageSize: number;
   maxObjects: number;
-  memoryBudget?: ExportMemoryBudget;
+  maxDepth?: number;
+  maxPrefixes?: number;
+  maxPageRequests?: number;
 }): Promise<{ paths: string[]; manifest: StorageSourceManifest }> {
   if (!photoPathBelongsToUser(options.userId, `${options.userId}/ownership-check`)) {
     throw sourceFailure('photo_storage_objects', 'INVALID_OWNER');
@@ -476,40 +414,53 @@ export async function listStoragePathsVerified(options: {
     throw new Error('INVALID_STORAGE_OBJECT_LIMIT');
   }
 
-  let first: Awaited<ReturnType<typeof listStorageOnce>> | null = null;
-  let second: Awaited<ReturnType<typeof listStorageOnce>> | null = null;
-  try {
-    first = await listStorageOnce(options);
-    const firstChecksum = await checksumRows(first.paths.map((path) => ({ path })));
-    second = await listStorageOnce(options);
-    const secondChecksum = await checksumRows(second.paths.map((path) => ({ path })));
-
-    if (first.paths.length !== second.paths.length || firstChecksum !== secondChecksum) {
-      throw sourceFailure('photo_storage_objects', 'UNSTABLE_INVENTORY');
-    }
-
-    const pageRequests = first.pageRequests + second.pageRequests;
-    options.memoryBudget?.release(first.reservedBytes, first.reservedItems);
-    first = null;
-    return {
-      paths: second.paths,
-      manifest: {
-        kind: 'storage_inventory',
-        scope: 'service_role_owner_prefix',
-        order_by: ['path'],
-        count: second.paths.length,
-        verification_passes: 2,
-        page_requests: pageRequests,
-        checksum: secondChecksum,
-        checksum_algorithm: 'sha256-canonical-json-v1',
-        complete: true,
-      },
-    };
-  } catch (error) {
-    if (first) options.memoryBudget?.release(first.reservedBytes, first.reservedItems);
-    if (second) options.memoryBudget?.release(second.reservedBytes, second.reservedItems);
-    throw error;
+  // These defaults are deliberately finite so every caller, including future
+  // ones, has a hard traversal ceiling. Privacy deletion callers pass tighter
+  // limits appropriate to a single Edge invocation.
+  const boundedOptions = {
+    ...options,
+    maxDepth: options.maxDepth ?? 32,
+    maxPrefixes: options.maxPrefixes ?? 4_096,
+    maxPageRequests: options.maxPageRequests ?? 8_192,
+  };
+  if (!Number.isInteger(boundedOptions.maxDepth) || boundedOptions.maxDepth < 1) {
+    throw new Error('INVALID_STORAGE_DEPTH_LIMIT');
   }
+  if (!Number.isInteger(boundedOptions.maxPrefixes) || boundedOptions.maxPrefixes < 1) {
+    throw new Error('INVALID_STORAGE_PREFIX_LIMIT');
+  }
+  if (!Number.isInteger(boundedOptions.maxPageRequests) || boundedOptions.maxPageRequests < 1) {
+    throw new Error('INVALID_STORAGE_PAGE_REQUEST_LIMIT');
+  }
+
+  const first = await listStorageOnce(boundedOptions);
+  const firstChecksum = await checksumRows(first.paths.map((path) => ({ path })));
+  const second = await listStorageOnce({
+    ...boundedOptions,
+    // maxPageRequests is a total two-pass request budget, not a per-pass
+    // budget. This keeps verification executable within an Edge deadline.
+    maxPageRequests: boundedOptions.maxPageRequests - first.pageRequests,
+  });
+  const secondChecksum = await checksumRows(second.paths.map((path) => ({ path })));
+
+  if (first.paths.length !== second.paths.length || firstChecksum !== secondChecksum) {
+    throw sourceFailure('photo_storage_objects', 'UNSTABLE_INVENTORY');
+  }
+
+  return {
+    paths: second.paths,
+    manifest: {
+      kind: 'storage_inventory',
+      scope: 'service_role_owner_prefix',
+      order_by: ['path'],
+      count: second.paths.length,
+      verification_passes: 2,
+      page_requests: first.pageRequests + second.pageRequests,
+      checksum: secondChecksum,
+      checksum_algorithm: 'sha256-canonical-json-v1',
+      complete: true,
+    },
+  };
 }
 
 export async function derivedManifest(options: {

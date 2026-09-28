@@ -24,7 +24,7 @@ export function formatShelfMetaLine(p: ShelfProduct): string {
   else if (p.openedAt) parts.push(keepTogether(`opened ${monthLabel(p.openedAt)}`));
   else parts.push(keepTogether('no date set'));
   if (p.expirySource === 'printed' && p.expiryDate) {
-    parts.push(keepTogether('printed expiry'));
+    parts.push(keepTogether('recorded package date'));
   } else if (
     p.expirySource === 'pao_computed' &&
     p.paoMonths != null &&
@@ -36,7 +36,7 @@ export function formatShelfMetaLine(p: ShelfProduct): string {
     p.paoMonths != null &&
     p.paoSource === 'category_default'
   ) {
-    parts.push(keepTogether(`est. ${p.paoMonths} mo`));
+    parts.push(keepTogether(`legacy est. ${p.paoMonths} mo`));
   } else if (p.expirySource === 'unknown') {
     parts.push(keepTogether('Date unknown'));
   }

@@ -1,38 +1,39 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import {
+  clearStoredSkinProfile,
   getStoredSkinProfile,
   isOnboardedLocal,
-  readLocalOnboardingStatus,
   readStoredSkinProfile,
   setStoredSkinProfile,
+  setStoredSkinProfileFromExplicitQuiz,
+  SKIN_PROFILE_CONTRACT_MISMATCH,
   SKIN_PROFILE_INVALID,
-  SKIN_PROFILE_UNAVAILABLE,
   SKIN_PROFILE_UNSUPPORTED_VERSION,
   type StoredSkinProfile,
   updateStoredPregnancyStatus,
 } from './skinProfileStore';
-import type { SkinProfileResult } from './quiz';
+import { ONBOARDING_QUIZ, scoreQuiz, type QuizAnswers, type SkinProfileResult } from './quiz';
 
 const mocks = vi.hoisted(() => {
   const storage = new Map<string, string>();
   return {
     storage,
-    readPrivateItem: vi.fn(async (key: string): Promise<PrivateKVReadResult> => {
-      const value = storage.get(key);
-      return value === undefined ? { status: 'absent' } : { status: 'available', value };
-    }),
-    privateReadOverride: null as PrivateKVReadResult | null,
+    getPrivateItem: vi.fn(async (key: string) => storage.get(key) ?? null),
+    getPrivateItemGate: null as Promise<void> | null,
+    getPrivateItemStarted: null as (() => void) | null,
     tails: new Map<string, Promise<void>>(),
-    persistedWrites: 0,
     updateFailure: null as Error | null,
   };
 });
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  readPrivateItem: mocks.readPrivateItem,
+  getPrivateItem: mocks.getPrivateItem,
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -47,13 +48,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
       await previous;
       try {
         if (mocks.updateFailure) throw mocks.updateFailure;
-        const current = mocks.storage.get(key) ?? null;
-        const next = updater(current);
-        if (next !== current) {
-          mocks.persistedWrites += 1;
-          if (next === null) mocks.storage.delete(key);
-          else mocks.storage.set(key, next);
-        }
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -62,314 +59,373 @@ vi.mock('@/lib/storage/privateKV', () => ({
   ),
 }));
 
-const KEY = 'onskin.skinprofile.v1';
-const RESULT: SkinProfileResult = {
-  axes: {
-    oily_dry: 0.25,
-    sensitive_resistant: 0.75,
-    pigmented_non: 0.5,
-    wrinkled_tight: 0.4,
-  },
-  axisScores: {
-    oily_dry: -2,
-    sensitive_resistant: 2,
-    pigmented_non: 0,
-    wrinkled_tight: -1,
-  },
-  dspt: 'DSNT',
-  fitzpatrick: 3,
-  monkTone: 5,
-  sensitivities: ['fragrance'],
-  pregnancyStatus: 'none',
+const KEY = 'layerwell.skinprofile.v1';
+const COMPLETE_ANSWERS = Object.fromEntries(
+  ONBOARDING_QUIZ.map((question) => [
+    question.id,
+    question.multiSelect === true ? [question.options[0]!.id] : question.options[0]!.id,
+  ]),
+) as QuizAnswers;
+const RESULT = scoreQuiz(COMPLETE_ANSWERS);
+const PROFILE: StoredSkinProfile = {
+  result: RESULT,
+  goals: ['clear_skin'],
+  completedAt: '2026-07-07T00:00:00.000Z',
 };
+const LEGACY_RESULT: SkinProfileResult = {
+  axes: RESULT.axes,
+  axisScores: RESULT.axisScores,
+  dspt: RESULT.dspt,
+  fitzpatrick: RESULT.fitzpatrick,
+  monkTone: RESULT.monkTone,
+  sensitivities: RESULT.sensitivities,
+  pregnancyStatus: RESULT.pregnancyStatus,
+};
+const LEGACY_PROFILE = {
+  result: LEGACY_RESULT,
+  goals: ['clear_skin'],
+  completedAt: '2026-07-07T00:00:00.000Z',
+};
+
+function currentEnvelope(profile: StoredSkinProfile = PROFILE): {
+  version: 2;
+  profile: StoredSkinProfile;
+} {
+  return { version: 2, profile };
+}
+
+function clone<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
 
 describe('skin profile local onboarding gate store', () => {
   beforeEach(() => {
     mocks.storage.clear();
-    mocks.privateReadOverride = null;
-    mocks.readPrivateItem.mockReset();
-    mocks.readPrivateItem.mockImplementation(async (key: string) => {
-      if (mocks.privateReadOverride) return mocks.privateReadOverride;
-      const value = mocks.storage.get(key);
-      return value === undefined ? { status: 'absent' } : { status: 'available', value };
+    mocks.getPrivateItem.mockReset();
+    mocks.getPrivateItemGate = null;
+    mocks.getPrivateItemStarted = null;
+    mocks.getPrivateItem.mockImplementation(async (key: string) => {
+      mocks.getPrivateItemStarted?.();
+      if (mocks.getPrivateItemGate) await mocks.getPrivateItemGate;
+      return mocks.storage.get(key) ?? null;
     });
     mocks.tails.clear();
-    mocks.persistedWrites = 0;
     mocks.updateFailure = null;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
-  it('preserves malformed skin profile JSON for explicit recovery', async () => {
-    mocks.storage.set(KEY, '{not-json');
+  it('saves and returns only an exact v2 current-contract receipt', async () => {
+    await setStoredSkinProfile(PROFILE);
 
-    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    expect(mocks.storage.get(KEY)).toBe('{not-json');
     await expect(readStoredSkinProfile()).resolves.toEqual({
-      status: 'invalid',
-      profile: null,
-      reason: 'invalid_record',
+      status: 'available',
+      profile: PROFILE,
     });
-  });
-
-  it('preserves wrong-shaped skin profile records for explicit recovery', async () => {
-    mocks.storage.set(KEY, JSON.stringify({ goals: ['clear_skin'], completedAt: '2026-07-07' }));
-
-    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    await expect(readLocalOnboardingStatus()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    expect(mocks.storage.has(KEY)).toBe(true);
-  });
-
-  it('normalizes goals and sensitivities before marking onboarding complete', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify({
-        result: {
-          ...RESULT,
-          dspt: ' dsnt ',
-          sensitivities: [' fragrance ', '', 'fragrance', false],
-          pregnancyStatus: ' none ',
-        },
-        goals: [' clear_skin ', 'bad-goal', 'clear_skin', 'hydration'],
-        completedAt: '2026-07-07T00:00:00.000Z',
-      }),
-    );
-
-    await expect(getStoredSkinProfile()).resolves.toMatchObject({
-      result: { dspt: 'DSNT', sensitivities: ['fragrance'], pregnancyStatus: 'none' },
-      goals: ['clear_skin', 'hydration'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
+    await expect(getStoredSkinProfile()).resolves.toEqual(PROFILE);
     await expect(isOnboardedLocal()).resolves.toBe(true);
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      result: { dspt: ' dsnt ' },
-      goals: [' clear_skin ', 'bad-goal', 'clear_skin', 'hydration'],
-    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual(currentEnvelope());
   });
 
-  it('rejects invalid DSPT codes instead of inventing a profile', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify({
-        result: { ...RESULT, dspt: 'XXXX' },
-        goals: ['clear_skin'],
-        completedAt: '2026-07-07T00:00:00.000Z',
-      }),
-    );
+  it('stores deterministic provenance without raw quiz answers or an answer hash', async () => {
+    await setStoredSkinProfile(PROFILE);
 
-    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    expect(mocks.storage.has(KEY)).toBe(true);
-  });
-
-  it('rejects records with no approved onboarding goals', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify({
-        result: RESULT,
-        goals: ['bad-goal'],
-        completedAt: '2026-07-07T00:00:00.000Z',
-      }),
-    );
-
-    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
-    expect(mocks.storage.has(KEY)).toBe(true);
-  });
-
-  it('distinguishes a private-storage read failure from an absent profile', async () => {
-    const preserved = JSON.stringify({ version: 99, opaque: 'keep-me' });
-    mocks.storage.set(KEY, preserved);
-    mocks.privateReadOverride = {
-      status: 'unavailable',
-      reason: 'content_key_storage_unavailable',
+    const stored = mocks.storage.get(KEY) ?? '';
+    const parsed = JSON.parse(stored) as {
+      version: number;
+      profile: { result: Record<string, unknown> };
     };
+    expect(parsed.version).toBe(2);
+    expect(parsed.profile.result).toMatchObject({
+      axesBasisPoints: RESULT.axesBasisPoints,
+      provenance: RESULT.provenance,
+    });
+    expect(Object.keys(parsed.profile.result).sort()).toEqual(
+      [
+        'axes',
+        'axesBasisPoints',
+        'axisScores',
+        'dspt',
+        'fitzpatrick',
+        'monkTone',
+        'pregnancyStatus',
+        'provenance',
+        'sensitivities',
+      ].sort(),
+    );
+    expect(stored).not.toContain('q_oil');
+    expect(stored).not.toContain('answerHash');
+    expect(stored).not.toContain('answers');
+  });
+
+  it.each([
+    ['unversioned', JSON.stringify(LEGACY_PROFILE)],
+    ['v1 envelope', JSON.stringify({ version: 1, profile: LEGACY_PROFILE })],
+  ])('preserves %s legacy bytes but never treats them as onboarded', async (_label, raw) => {
+    mocks.storage.set(KEY, raw);
+
+    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'legacy', profile: null });
+    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(isOnboardedLocal()).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it('allows a fresh explicit current quiz result to atomically replace valid legacy bytes', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        version: 1,
+        profile: {
+          ...LEGACY_PROFILE,
+          // The old decoder admitted any non-empty approved goal list.
+          goals: ['clear_skin', 'hydration', 'barrier_repair'],
+        },
+      }),
+    );
+
+    await setStoredSkinProfile(PROFILE);
 
     await expect(readStoredSkinProfile()).resolves.toEqual({
-      status: 'unavailable',
-      profile: null,
-      reason: 'content_key_storage_unavailable',
+      status: 'available',
+      profile: PROFILE,
     });
-    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_UNAVAILABLE);
-    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_UNAVAILABLE);
-    expect(mocks.storage.get(KEY)).toBe(preserved);
-    mocks.privateReadOverride = null;
-    mocks.storage.delete(KEY);
+  });
+
+  it('classifies exact-shape provenance drift as a contract mismatch and permits rescore recovery', async () => {
+    const mismatched = clone(currentEnvelope());
+    (mismatched.profile.result.provenance as unknown as Record<string, unknown>).contractSha256 =
+      '0'.repeat(64);
+    const raw = JSON.stringify(mismatched);
+    mocks.storage.set(KEY, raw);
+
+    await expect(readStoredSkinProfile()).resolves.toEqual({
+      status: 'contract_mismatch',
+      profile: null,
+    });
     await expect(getStoredSkinProfile()).resolves.toBeNull();
-    await expect(readLocalOnboardingStatus()).resolves.toBe('missing');
     await expect(isOnboardedLocal()).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(raw);
+
+    await setStoredSkinProfile(PROFILE);
+    await expect(readStoredSkinProfile()).resolves.toMatchObject({ status: 'available' });
   });
 
   it.each([
     [
-      { status: 'corrupt', reason: 'decryption_failed' } as const,
-      { status: 'invalid', profile: null, reason: 'decryption_failed' } as const,
-      SKIN_PROFILE_INVALID,
+      'basis points disagree with the raw score',
+      (envelope: ReturnType<typeof currentEnvelope>) => {
+        envelope.profile.result.axesBasisPoints.oily_dry += 1;
+      },
     ],
     [
-      { status: 'unsupported_version' } as const,
-      { status: 'unsupported_version', profile: null } as const,
-      SKIN_PROFILE_UNSUPPORTED_VERSION,
+      'compatibility float is not derived from basis points',
+      (envelope: ReturnType<typeof currentEnvelope>) => {
+        envelope.profile.result.axes.oily_dry += 0.01;
+      },
     ],
-  ])(
-    'preserves typed private-store state %o instead of translating it to absence',
-    async (stored, expected, code) => {
-      const original = 'encrypted-private-envelope';
-      mocks.storage.set(KEY, original);
-      mocks.privateReadOverride = stored;
+    [
+      'DSPT does not match the signed scores and tie rule',
+      (envelope: ReturnType<typeof currentEnvelope>) => {
+        envelope.profile.result.dspt = 'OSPW';
+      },
+    ],
+    [
+      'sensitivity list is not in canonical option order',
+      (envelope: ReturnType<typeof currentEnvelope>) => {
+        envelope.profile.result.sensitivities = ['essential_oils', 'fragrance'];
+      },
+    ],
+    [
+      'provenance shape has an extra field',
+      (envelope: ReturnType<typeof currentEnvelope>) => {
+        Object.assign(envelope.profile.result.provenance, { answersSha256: 'forbidden' });
+      },
+    ],
+  ])('rejects current-envelope tampering when %s', async (_label, mutate) => {
+    const envelope = clone(currentEnvelope());
+    mutate(envelope);
+    const raw = JSON.stringify(envelope);
+    mocks.storage.set(KEY, raw);
 
-      await expect(readStoredSkinProfile()).resolves.toEqual(expected);
-      await expect(getStoredSkinProfile()).rejects.toThrow(code);
-      await expect(readLocalOnboardingStatus()).rejects.toThrow(code);
-      expect(mocks.storage.get(KEY)).toBe(original);
-    },
-  );
-
-  it('saves only valid skin profile records', async () => {
-    await setStoredSkinProfile({
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
-
-    await expect(getStoredSkinProfile()).resolves.toMatchObject({
-      result: RESULT,
-      goals: ['clear_skin'],
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      version: 1,
-      profile: { result: RESULT, goals: ['clear_skin'] },
-    });
+    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'invalid', profile: null });
+    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(isOnboardedLocal()).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(raw);
   });
 
-  it('updates pregnancy status without changing the rest of the local profile', async () => {
-    await setStoredSkinProfile({
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
-
-    await expect(updateStoredPregnancyStatus('breastfeeding')).resolves.toMatchObject({
-      result: { ...RESULT, pregnancyStatus: 'breastfeeding' },
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
-    await expect(getStoredSkinProfile()).resolves.toMatchObject({
-      result: { pregnancyStatus: 'breastfeeding' },
-    });
+  it('rejects malformed JSON and wrong-shaped records without deleting recovery bytes', async () => {
+    for (const raw of [
+      '{not-json',
+      JSON.stringify({ goals: ['clear_skin'], completedAt: '2026-07-07' }),
+      JSON.stringify({ version: 2, profile: { ...PROFILE, extra: true } }),
+    ]) {
+      mocks.storage.set(KEY, raw);
+      await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'invalid', profile: null });
+      await expect(getStoredSkinProfile()).resolves.toBeNull();
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    }
   });
 
-  it('refuses a status update when the authoritative local profile is unavailable', async () => {
+  it('rejects invalid new records before touching storage', async () => {
+    const invalid = clone(PROFILE);
+    invalid.goals = [];
+
+    await expect(setStoredSkinProfile(invalid)).rejects.toThrow('INVALID_SKIN_PROFILE_RECORD');
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('distinguishes a private-storage read failure from an absent profile', async () => {
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
+
+    await expect(readStoredSkinProfile()).resolves.toEqual({
+      status: 'unavailable',
+      profile: null,
+    });
+    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'missing', profile: null });
+  });
+
+  it('updates pregnancy status without changing the current receipt provenance', async () => {
+    await setStoredSkinProfile(PROFILE);
+
+    const next = await updateStoredPregnancyStatus('breastfeeding');
+    expect(next).toEqual({
+      ...PROFILE,
+      result: {
+        ...PROFILE.result,
+        pregnancyStatus: 'breastfeeding',
+      },
+    });
+    expect(next.result.provenance).toEqual(RESULT.provenance);
+    await expect(getStoredSkinProfile()).resolves.toEqual(next);
+  });
+
+  it('refuses a pregnancy update when the authoritative local profile is missing', async () => {
     await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow(
       'SKIN_PROFILE_UNAVAILABLE',
     );
   });
 
-  it('preserves future-version and malformed current-envelope bytes', async () => {
-    const validProfile: StoredSkinProfile = {
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    };
+  it('preserves future-version and malformed current bytes against silent overwrite', async () => {
     for (const [raw, status, code] of [
       [
-        JSON.stringify({ version: 2, profile: validProfile }),
+        JSON.stringify({ version: 3, profile: PROFILE }),
         'unsupported_version',
         SKIN_PROFILE_UNSUPPORTED_VERSION,
       ],
       [
-        JSON.stringify({ version: 1, profile: { ...validProfile, extra: true } }),
+        JSON.stringify({ version: 2, profile: { ...PROFILE, extra: true } }),
         'invalid',
         SKIN_PROFILE_INVALID,
       ],
     ] as const) {
       mocks.storage.set(KEY, raw);
 
-      await expect(readStoredSkinProfile()).resolves.toEqual(
-        status === 'invalid'
-          ? { status, profile: null, reason: 'invalid_record' }
-          : { status, profile: null },
-      );
-      await expect(getStoredSkinProfile()).rejects.toThrow(code);
-      await expect(isOnboardedLocal()).rejects.toThrow(code);
-      await expect(setStoredSkinProfile(validProfile)).rejects.toThrow(code);
+      await expect(readStoredSkinProfile()).resolves.toEqual({ status, profile: null });
+      await expect(setStoredSkinProfile(PROFILE)).rejects.toThrow(code);
       await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow(code);
       expect(mocks.storage.get(KEY)).toBe(raw);
     }
   });
 
+  it.each([
+    ['future-version', JSON.stringify({ version: 3, profile: PROFILE })],
+    ['malformed', '{not-json'],
+    ['invalid current shape', JSON.stringify({ version: 2, profile: { ...PROFILE, extra: true } })],
+  ])(
+    'atomically replaces %s bytes only through a freshly completed explicit quiz',
+    async (_label, raw) => {
+      mocks.storage.set(KEY, raw);
+
+      await setStoredSkinProfileFromExplicitQuiz(PROFILE);
+
+      await expect(readStoredSkinProfile()).resolves.toEqual({
+        status: 'available',
+        profile: PROFILE,
+      });
+    },
+  );
+
+  it.each([
+    ['future-version', JSON.stringify({ version: 3, profile: PROFILE })],
+    ['malformed', '{not-json'],
+  ])(
+    'keeps prior %s bytes intact when explicit-quiz recovery cannot durably write',
+    async (_label, raw) => {
+      mocks.storage.set(KEY, raw);
+      mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+
+      await expect(setStoredSkinProfileFromExplicitQuiz(PROFILE)).rejects.toThrow(
+        'PRIVATE_WRITE_FAILED',
+      );
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    },
+  );
+
+  it('preserves contract-mismatched bytes against pregnancy-only mutation', async () => {
+    const mismatched = clone(currentEnvelope());
+    (mismatched.profile.result.provenance as unknown as Record<string, unknown>).contentVersion =
+      'other';
+    const raw = JSON.stringify(mismatched);
+    mocks.storage.set(KEY, raw);
+
+    await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow(
+      SKIN_PROFILE_CONTRACT_MISMATCH,
+    );
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
   it('serializes a profile replacement and pregnancy edit without stale read overwrite', async () => {
-    await setStoredSkinProfile({
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
+    await setStoredSkinProfile(PROFILE);
+    const replacement: StoredSkinProfile = {
+      ...PROFILE,
+      goals: ['hydration'],
+      completedAt: '2026-07-08T00:00:00.000Z',
+    };
 
     await Promise.all([
-      setStoredSkinProfile({
-        result: RESULT,
-        goals: ['hydration'],
-        completedAt: '2026-07-08T00:00:00.000Z',
-      }),
+      setStoredSkinProfile(replacement),
       updateStoredPregnancyStatus('breastfeeding'),
     ]);
 
-    await expect(getStoredSkinProfile()).resolves.toMatchObject({
-      result: { pregnancyStatus: 'breastfeeding' },
-      goals: ['hydration'],
-      completedAt: '2026-07-08T00:00:00.000Z',
+    await expect(getStoredSkinProfile()).resolves.toEqual({
+      ...replacement,
+      result: { ...replacement.result, pregnancyStatus: 'breastfeeding' },
     });
-  });
-
-  it('does zero persisted writes for a semantically identical profile and status', async () => {
-    const profile: StoredSkinProfile = {
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    };
-    const reorderedBytes = JSON.stringify({ profile, version: 1 });
-    mocks.storage.set(KEY, reorderedBytes);
-
-    await setStoredSkinProfile(profile);
-    await expect(updateStoredPregnancyStatus('none')).resolves.toEqual(profile);
-
-    expect(mocks.persistedWrites).toBe(0);
-    expect(mocks.storage.get(KEY)).toBe(reorderedBytes);
-  });
-
-  it('preserves a valid profile across 100 simultaneous pregnancy-status transforms', async () => {
-    await setStoredSkinProfile({
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
-    mocks.persistedWrites = 0;
-    const statuses: StoredSkinProfile['result']['pregnancyStatus'][] = Array.from(
-      { length: 100 },
-      (_, index) => (index % 2 === 0 ? 'pregnant' : 'breastfeeding'),
-    );
-
-    const results = await Promise.all(statuses.map(updateStoredPregnancyStatus));
-
-    expect(results.map((profile) => profile.result.pregnancyStatus)).toEqual(statuses);
-    await expect(getStoredSkinProfile()).resolves.toMatchObject({
-      result: { pregnancyStatus: 'breastfeeding' },
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
-    expect(mocks.persistedWrites).toBe(100);
   });
 
   it('keeps the prior profile intact when an atomic write fails', async () => {
-    await setStoredSkinProfile({
-      result: RESULT,
-      goals: ['clear_skin'],
-      completedAt: '2026-07-07T00:00:00.000Z',
-    });
+    await setStoredSkinProfile(PROFILE);
     const original = mocks.storage.get(KEY);
     mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
 
     await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow('PRIVATE_WRITE_FAILED');
-
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('rejects an A-to-B same-epoch read instead of publishing a fail-soft result', async () => {
+    await setStoredSkinProfile(PROFILE);
+    let releaseRead!: () => void;
+    mocks.getPrivateItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      mocks.getPrivateItemStarted = resolve;
+    });
+
+    const pending = readStoredSkinProfile();
+    await readStarted;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-b', accountGeneration: 0 });
+    const rejection = expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+
+    releaseRead();
+    await rejection;
+  });
+
+  it('clears the stored profile after health processing closes', async () => {
+    mocks.storage.set(KEY, 'private-profile-bytes');
+    clearActiveHealthProcessingEpoch();
+
+    await clearStoredSkinProfile();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

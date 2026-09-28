@@ -1,5 +1,3 @@
-import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
-
 // PHOTO-05A zero-admission boundary.
 //
 // The release binary has no validated trend engine
@@ -61,8 +59,7 @@ const UNAVAILABLE_INSIGHT_RESULT: UnavailableTrendInsightResult = Object.freeze(
 });
 
 /** Reserved compatibility read. No skin-profile transport runs without an engine. */
-export async function readMonkBandWithLease(lease: AccountGenerationLease): Promise<number | null> {
-  lease.assertCurrent();
+export async function readMonkBand(): Promise<number | null> {
   return null;
 }
 

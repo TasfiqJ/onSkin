@@ -17,6 +17,20 @@ describe('streak milestones', () => {
     expect(m?.copy).toMatch(/cycle/i);
   });
 
+  it('omits cycle milestones when no admitted cycle length exists', () => {
+    expect(milestoneThresholds(null).map((milestone) => milestone.key)).toEqual(['d7', 'd30']);
+    expect(currentMilestone(4, null)).toBeNull();
+    expect(currentMilestone(7, null)?.key).toBe('d7');
+    expect(currentMilestone(30, null)?.key).toBe('d30');
+  });
+
+  it('does not publish a cycle milestone for malformed cycle lengths', () => {
+    expect(milestoneThresholds(Number.NaN).map((milestone) => milestone.key)).toEqual([
+      'd7',
+      'd30',
+    ]);
+  });
+
   it('surfaces the 7-day milestone at one week', () => {
     expect(currentMilestone(7, 4)?.key).toBe('d7');
   });

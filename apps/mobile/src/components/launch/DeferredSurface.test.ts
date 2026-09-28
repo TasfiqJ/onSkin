@@ -18,6 +18,10 @@ describe('DeferredSurface mobile layout', () => {
     expect(source).toContain('<View className="pb-3 pt-2">');
     expect(source).toContain('className="mb-6"');
     expect(source).toContain('variant="ghost"');
+    expect(source).toContain("fallbackBehavior = 'back-or-replace'");
+    expect(source).toContain("if (fallbackBehavior === 'replace')");
+    expect(source).toContain('replaceWithFallback(router, fallbackRoute)');
+    expect(source).toContain('backOrReplace(router, fallbackRoute)');
     expect(source).not.toContain('<View className="flex-1 justify-center">');
   });
 

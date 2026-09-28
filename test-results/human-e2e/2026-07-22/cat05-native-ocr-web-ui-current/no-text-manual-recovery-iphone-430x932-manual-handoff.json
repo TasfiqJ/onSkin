@@ -1,0 +1,174 @@
+{
+  "alerts": [],
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. Product name Brand Category Choose ▾ Barcode (optional) Ingredients · optional, we’ll find the actives Aqua, 水, Glycérine, Пользователь On the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown. Continue",
+  "controls": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Brand",
+      "role": "input",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 176.19,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Category",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 193.81,
+      "x": 212.19,
+      "y": 230
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Barcode, optional",
+      "role": "input",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 66,
+      "hitOk": true,
+      "label": "Ingredients",
+      "role": "textarea",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 406
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 864
+    }
+  ],
+  "inputs": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "label": "Product name",
+      "value": ""
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "label": "Brand",
+      "value": ""
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "label": "Barcode, optional",
+      "value": ""
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "label": "Ingredients",
+      "value": "Aqua, 水, Glycérine, Пользователь"
+    }
+  ],
+  "issues": [],
+  "liveRegions": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8640/shelf/manual?redacted-query",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  },
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "c681d936-9d1d-4561-a9c3-f57845ab6157",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "5d644e5887c41ea4da3f55ca738f5ca432ff40ddc6418a4cb3f69c8aa9f3e8d8",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "no-text-manual-recovery-iphone-430x932-manual-handoff",
+    "fixtureGroup": "no-text",
+    "scenarioId": "no-text-manual-recovery",
+    "viewport": {
+      "height": 932,
+      "id": "iphone-430x932",
+      "width": 430
+    }
+  }
+}

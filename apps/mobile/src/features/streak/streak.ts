@@ -50,6 +50,7 @@ export function streakState(
   today: string,
   freezeWindow = DEFAULT_FREEZE_WINDOW,
 ): StreakState {
+  const eligibleCompleted = new Set([...completed].filter((day) => day <= today));
   let current = 0;
   let committedFreezes = 0;
   const frozen: string[] = [];
@@ -60,7 +61,7 @@ export function streakState(
   let pendingDates: string[] = [];
   for (let i = 0; i <= 730; i++) {
     const day = addDays(today, -i);
-    if (completed.has(day)) {
+    if (eligibleCompleted.has(day)) {
       current += 1;
       committedFreezes += pendingFreezes;
       frozen.push(...pendingDates);
@@ -74,7 +75,12 @@ export function streakState(
     if (committedFreezes + pendingFreezes > freezeWindow) break; // gap exceeds forgiveness
   }
   if (current === 0) {
-    return { current: 0, freezeActive: false, frozenDates: [], lapsed: completed.size > 0 };
+    return {
+      current: 0,
+      freezeActive: false,
+      frozenDates: [],
+      lapsed: eligibleCompleted.size > 0,
+    };
   }
   return { current, freezeActive: frozen.length > 0, frozenDates: frozen, lapsed: false };
 }
@@ -83,8 +89,12 @@ export function streakState(
  * The best forgiving run over all history (the non-decreasing personal best, D-011
  *. Callers take greatest(priorBest, this)). Linear over the completion log.
  */
-export function bestStreak(completed: Set<string>, freezeWindow = DEFAULT_FREEZE_WINDOW): number {
-  const sorted = [...completed].sort();
+export function bestStreak(
+  completed: Set<string>,
+  freezeWindow = DEFAULT_FREEZE_WINDOW,
+  throughDate?: string,
+): number {
+  const sorted = [...completed].filter((day) => !throughDate || day <= throughDate).sort();
   let best = 0;
   let run = 0;
   let freezes = 0;

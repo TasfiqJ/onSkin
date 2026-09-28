@@ -1,6 +1,6 @@
 # User Flow Tree
 
-This file maps human-simulated E2E branches for OnSkin. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
+This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
 ## Surface Inventory
 
@@ -12,6 +12,10 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Secondary web command: `npm --workspace apps/mobile run web`
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/`
 - Device/layout support policy: `docs/DEVICE_SUPPORT_POLICY.md`.
+- Release scope is iOS all-features. Android commands, layouts, and historical
+  evidence below are cross-platform resilience work only; they are not launch
+  acceptance gates. Google OAuth is tested as an iPhone sign-in provider. No
+  Google Play or Play Billing evidence is required for this iOS release.
 - Launch-blocking Expo web floor: 360 x 640. 320-wide browser viewports and
   sub-640 browser-only heights are resilience stress audits unless a supported
   native device, keyboard/Dynamic Type state, or store-review requirement
@@ -31,58 +35,21 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ## Known App Areas From Route Inspection
 
-- Onboarding: age, account, consent, goals, notifications, products, quiz, analyzing, reveal, paywall.
+- Onboarding: age, consent, goals, quiz, products, notifications, analyzing, reveal, account, paywall. Goals are health-purpose input and may not mount before a current health-data grant.
 - Tabs: Today, Shelf, Progress, You.
-- Shelf flows: search, scan, OCR, no match, manual add, opened date, replenish, archive, product detail.
+- Shelf flows: search, scan, OCR, no match, manual add, opened date, catalog-match recovery, catalog reporting, replenish, archive, product detail.
 - Progress flows: photo capture/review, timeline, progress detail.
 - Settings/account flows: subscription, timing, privacy/local data, account actions.
 - Growth and sharing flows: share cards and conflict screens.
 - Trend, community, commerce, and Ask surfaces.
 
-## Flow: Launch Theme And Route-Level System Bars
-
-- Goal: Status icons retain readable contrast while a user moves between the
-  launch app's paper surfaces and intentional night surfaces.
-- Persona: Any supported-iPhone user, regardless of the device appearance
-  setting.
-- Entry state: The device is set to Light or Dark appearance and the app opens
-  on a paper route.
-- Start screen/URL/window: `/today?routine=AM`, then PM Today, `/cycle/week`,
-  `/shelf/scan`, Progress capture/review/detail, onboarding reveal, commerce
-  transparency, win-back, and standard/safety conflict variants.
-- Success state: The launch UI remains intentionally light-only; paper routes
-  use dark status icons, full night routes use light status icons, and returning
-  or crossing a gated paper paywall restores dark icons without a stale frame.
-- Priority: Important
-- Automate later: Yes, through native iOS screenshot/UI testing.
-- Surface: Supported iPhone is authoritative. Expo web may verify route palette
-  and transitions but does not render native status icons.
-- Evidence: Source/config contract and Expo config resolution; supported-iPhone
-  screenshots in both device appearance settings remain release-device QA.
-
-### Branches
-
-- Branch: device appearance is Dark while a paper route is active
-  - Expected result: The app does not silently switch to an unreviewed dark
-    palette; the paper surface and dark status icons remain deterministic.
-- Branch: enter and leave an intentional night route
-  - Expected result: Status icons become light only while the night surface is
-    mounted, then return to dark on the destination paper route.
-- Branch: Pro access gate replaces a night feature
-  - Expected result: The paper access/paywall surface uses the root dark-icon
-    policy; a hidden night child cannot override it.
-- Branch: Android predictive back
-  - Expected result: No launch claim is made. The flag remains disabled because
-    Android is outside the accepted release contract; route-by-route Android
-    native E2E is required before a future enablement.
-
 ## Flow: App Private Data Availability
 
 - Goal: A user never sees encrypted local state misrepresented as empty/default when the shared private-data key is unavailable.
 - Persona: Returning user with local profile, shelf, routine, completion, preference, entitlement, or Progress records.
-- Entry state: The app has resolved and isolated the authenticated local owner; encrypted private records may be readable, temporarily unavailable, missing their key, malformed, unable to authenticate, or contain an interrupted photo mutation.
+- Entry state: The app has resolved auth and the app-lock preference; encrypted private records may be readable, temporarily unavailable, missing their key, malformed, or unable to authenticate.
 - Start screen/URL/window: Cold or foreground entry to any app route.
-- Success state: Owner-bound photo recovery and plaintext cleanup finish before app lock, then app content mounts only after the post-unlock read-only audit verifies every private-KV envelope; transient failure remains non-destructive and retryable.
+- Success state: App content mounts only after a read-only audit verifies every private-KV envelope; transient failure remains non-destructive and retryable.
 - Priority: Critical
 - Automate later: Yes
 - Surface: iOS and Android; Expo web for provider ordering, route blocking, retry, and responsive recovery.
@@ -91,46 +58,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Readable Private Data
 
 1. Action: Open or foreground the app after any configured app-wide authentication succeeds.
-   Expected result: After account isolation, the app verifies the persisted owner, replays any photo mutation journal, and scavenges temporary plaintext before the app-lock prompt can delay cleanup. After app unlock it performs a non-creating readability audit, ignores unrelated/legacy plaintext and separately keyed Supabase session envelopes, then mounts Offline Sync and the intended route. Progress timeline authentication remains after the audit.
+   Expected result: The app performs a non-creating readability audit, ignores unrelated/legacy plaintext and separately keyed Supabase session envelopes, then mounts Offline Sync and the intended route. App-lock authentication remains before the audit, and Progress timeline authentication remains after the audit.
    Evidence: Provider-order contract, private-KV unit tests, route snapshot, and native secure-storage access log.
 
 ### Branches
-
-- Branch: interrupted photo mutation during cold-start recovery
-  - Priority: Critical
-  - Automate later: Yes, with native process-kill and filesystem fault injection.
-  - Action: Kill the process after each durable add, delete, and clear phase, including after an encrypted final is written but before metadata commit and after metadata commit but before plaintext or encrypted-file cleanup. Relaunch as the same owner, retry once with a transient key/filesystem failure, then repeat while an A-to-B account boundary begins during recovery.
-  - Expected result: No photo route, app-lock prompt, Offline Sync task, or next-owner content mounts until owner verification, journal replay, and plaintext scavenging complete. A failed recovery leaves its journal-owned source/file bytes intact and exposes the generic retry surface; scavenging never runs ahead of recovery. Successful retry converges without duplicate metadata, ownerless encrypted finals, metadata pointing at missing files, or plaintext residue. A mismatched owner performs account isolation instead of replaying the previous owner's journal.
-  - Evidence: Fresh-coordinator phase fault-injection tests, provider-order contract, retry screenshots, process-kill/relaunch video, account-boundary transcript, and native filesystem inventory.
-
-- Branch: malformed or future account-owner control marker
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Seed a valid same-owner marker and representative private record, then replace only the owner marker with malformed bytes and a syntactically valid future version. Cold-open as the same user, as a different user, and signed out; retry while the marker remains unchanged.
-  - Expected result: The session boundary blocks all app content and shows its retry surface. It does not mark cleanup required, clear queries or persisted private records, claim the marker for the pending user, or rewrite the unknown bytes. A valid installed-base raw SHA-256 marker remains readable and migrates only when the normal authenticated claim mutation succeeds; a valid different-owner marker still performs drained account isolation.
-  - Evidence: Strict codec, response-loss, and destructive-boundary unit tests; supported-phone recovery screenshot and localStorage byte snapshots on Expo web; native AsyncStorage interruption and physical two-account proof remain release-device QA.
-
-- Branch: malformed cleanup authority or interrupted owner claim
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Seed malformed and future cleanup-required markers, then separately interrupt an authenticated owner claim after its durable pending intent and after a valid-but-wrong owner write. Retry as the intended owner, a different owner, and signed out.
-  - Expected result: Only exact `v1:required` and the supported legacy `1` authorize cleanup. Unknown cleanup bytes remain unchanged behind the session gate and never start destructive work. A nonce-bound intent matching the authenticated owner repairs an absent or ambiguous owner write without another cleanup; a mismatched nonce or another owner's intent blocks publication and preserves every control record. An interrupted owner-neutral nonce preflight retains ordinary owner/unclaimed semantics.
-  - Evidence: Cleanup-codec, ambiguous-write, pending-claim, registry, and destructive-boundary unit tests; fresh Expo-web retry capture and native AsyncStorage response-loss injection remain open.
 
 - Branch: shared encrypted private data unavailable
   - Priority: Critical
   - Automate later: Yes
   - Action: After encrypted private records exist, force the shared SecureStore/Keychain/Keystore content-key read to fail; cold-open representative `/today`, `/shelf`, `/routine/plan`, `/settings/privacy`, and `/progress` routes at supported phone sizes. Retry once while failure persists, then repeat with one-shot failure and restored key access. Repeat after app background/foreground and with app lock enabled.
-  - Expected result: App-wide recovery appears only after app unlock and before Offline Sync, navigation, tabs, route queries, local mutations, or sensitive/default route copy mounts. It exposes no raw error or ciphertext, retains a 56 pt retry after repeated failure, has no horizontal overflow, emits no analytics/backend request, and leaves every encrypted envelope byte-identical. A successful retry mounts the originally requested route. Foreground return rechecks availability before content can reappear. Missing-key/wrong-key states never create replacement key material; first photo-key creation records a fingerprinted pending state before SecureStore and adopts a stored key only when that fingerprint matches. Explicit local-data deletion remains the only destructive recovery.
+  - Expected result: App-wide recovery appears only after app unlock and before Offline Sync, navigation, tabs, route queries, local mutations, or sensitive/default route copy mounts. It exposes no raw error or ciphertext, retains a 56 pt retry after repeated failure, has no horizontal overflow, emits no analytics/backend request, and leaves every encrypted envelope byte-identical. A successful retry mounts the originally requested route. Foreground return rechecks availability before content can reappear. Missing-key/wrong-key states never create replacement key material; explicit local-data deletion remains the only destructive recovery.
   - Evidence: Persistent failure screenshots and visible-text/role snapshots across representative routes at 360 x 640 and 390 x 844, one-shot retry screenshot, app-lock ordering sequence, foreground recheck, control geometry, dialog/page-error/browser logs, vendor request log, ciphertext hash/unit evidence, and physical iOS/Android fault-injection logs.
   - Current evidence: `assertPrivateKVReadable` scans all private envelopes without creating or returning key material, while `PrivateDataAvailabilityGate` sits inside `AppLockProvider` and outside Offline Sync/navigation. Focused storage/provider contracts prove missing-key failure preserves every envelope and unrelated keyed envelope formats are ignored. The 2026-07-10 Expo web run passed persistent failure on five representative routes at 360 x 640 and 390 x 844, one-shot recovery, foreground recheck with exact-route restoration, and rejected app-lock ordering. Every seeded ciphertext/key hash remained byte-identical and no sensitive vendor request occurred. Physical iOS Keychain and Android Keystore fault injection remains Tas QA.
-  - Current semantic-state evidence: 2026-07-16 actual Expo web at 1281 x 720 forced persistent shared-private-storage unavailability. The app rendered exactly one alert with the visible `Unavailable` state label, non-destructive encrypted-data copy, and one full-width Retry action. Retrying while the fixture persisted retained the same state and added explicit unchanged-data detail without opening a JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-16/interface-state-tokens-current/`; supported-iOS appearance, VoiceOver announcement order, Dynamic Type, and dark-surface review remain open.
-- Branch: Today completion history becomes unreadable after route mount
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Seed at least one checked routine step, force the completion-history read to return unavailable, open `/today?routine=AM`, then retry after restoring read access.
-  - Expected result: Today explains that history was not reset, exposes no routine checkboxes or mutation controls while unreadable, and offers one retry action. A successful retry restores the prior checked steps and count without replacing encrypted bytes.
-  - Evidence: Store and route contracts plus the 2026-07-12 390 x 844 Expo web run at `test-results/human-e2e/2026-07-12/optimization-private-state-current/`; native secure-storage interruption remains Tas QA.
 - Branch: malformed or unsupported private envelope
   - Priority: Critical
   - Automate later: Yes
@@ -143,18 +82,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Cold-open a data-bearing route with a malformed plaintext or encrypted app-lock preference. Inspect the initial state, then choose `Unlock and reset app lock`; repeat with device authentication unavailable, cancelled, failed, and successful.
   - Expected result: No route content, tabs, private-data recovery, or automatic biometric prompt appears before the explicit recovery action. The malformed preference remains unchanged after load and failed/cancelled authentication. The screen explains that only app-lock settings will reset. Successful device authentication removes only that preference, leaves every other private record untouched, and then mounts the requested route. Generic key/decryption failures do not offer destructive preference reset.
   - Evidence: Store/provider contracts and the real web malformed-preference authenticated reset at `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`; native prompt/cancel/failure/accessibility evidence remains Tas QA.
-- Branch: unavailable or non-repairable app-lock preference
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Cold-open a data-bearing route with `EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE=always`, retry twice, refresh, and relaunch. Repeat with `once` over proven disabled and enabled preferences at the 375 x 667 compact launch viewport, 390 x 844 and 430 x 932 modern launch viewports, the 360 x 640 resilience viewport, and the 320 x 480 stress viewport.
-  - Expected result: The app fails closed without mounting route data or automatically opening device authentication. The recovery screen says nothing changed and offers `Try again`, never authenticated reset. Persistent failure stays blocked and preserves the preference bytes. One-shot recovery applies the actual stored value: absent/disabled mounts without a biometric prompt, while enabled enters the ordinary lock and authentication flow. The retry control remains at least 48 points, long text scrolls without horizontal overflow, and no raw storage reason, dialog, analytics request, or private-data request appears.
-  - Evidence: Typed store, provider-decision, owner-generation, interaction-lifecycle, registry, and route contract suites cover the local behavior. Persistent failure plus one-shot disabled/enabled Expo-web interaction evidence is recorded at `test-results/human-e2e/2026-07-14/app-lock-typed-preference-current/`; physical Keychain/Keystore interruption and assistive-technology proof remain Tas QA.
-- Branch: account change while app-lock authentication is pending
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Start ordinary unlock, photo-timeline unlock, malformed-preference repair, and app-lock enable confirmation as account A; hold each native response, complete the A-to-B boundary, then release the old response.
-  - Expected result: Every old operation is cancelled by the originating account-generation lease. A's delayed prompt cannot unlock B, publish stale feedback, reset B's app-lock preference, or write B's enabled value. In-flight reset/write work that already began is drained by account isolation before B can publish. B performs a fresh typed preference read and follows only its own state.
-  - Evidence: Deterministic delayed-boundary tests cover read, readiness, ordinary unlock, timeline-equivalent authentication, repair authentication/reset, enable authentication, disable write, and state publication. Real two-account native-prompt timing remains release-device QA.
 
 ## Flow: Bottom Tab Navigation
 
@@ -220,17 +147,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The Today tab scene uses the night background behind the PM route, while non-Today tabs keep the paper background so there is no paper strip or flash around the night Today surface.
   - Evidence: Phone-width screenshot, route snapshot, and computed background colors.
   - Current local evidence: 2026-07-08 headless Chrome Expo web at 320 x 568 and 390 x 568 verified PM Today uses dark bottom-scene samples around the floating tab bar after the fix, Progress/Shelf/You use paper samples, tab labels and hit targets remain correct, exactly one tab is selected, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`.
-- Branch: pseudo-localized long strings on supported phones
-  - Priority: Important
-  - Automate later: Yes
-  - Entry state: Local Expo web with `TEXT_PRESSURE_PSEUDO_LOCALE=expanded`, text scale `1.2`, and placeholder local account/storage state.
-  - Action: Direct-open Today, Progress, Routine Plan, Recommendation Preferences, Privacy, Ask, Shelf Search, and the contextual full-routine upsell at 375 x 667 and 390 x 844.
-  - Expected result: Visible prose is bracketed, accented, and expanded through the shared text boundary; prose input placeholders expand; data-format placeholders and internal enums remain unchanged; the route is past startup loaders; visible controls remain complete, 44 px+, and center-hit-testable; text does not overflow its own box; the page has no horizontal overflow or unexpected browser warning/error.
-  - Invalid/recovery branch: An unsupported pseudo-locale value fails closed to normal copy, and a closed Chrome/CDP connection fails the audit instead of hanging or passing partial artifacts.
-  - Back/refresh branch: Every direct route starts from a fresh navigation and waits for session/private-storage/entitlement startup gates to settle before capture.
-  - Accessibility branch: Phone Ask uses a compact visible title and a single complete suggestion under combined long-copy/text pressure while preserving the full Ask title as its accessibility label; scroll-clipped controls are intersected with their real ancestor viewport before hit-testing.
-  - Evidence: Two eight-route screenshot/JSON matrices plus focused policy/inventory tests.
-  - Current evidence: 2026-07-17 headless Chrome Expo web passed all 16 route/viewport cases at 375 x 667 and 390 x 844 with expanded pseudo-localized copy and 120% text pressure. Both final summaries report zero clipped visible controls, zero undersized controls, zero blocked centers, zero text/horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-16/pseudo-localization-120-375x667-current/`, `test-results/human-e2e/2026-07-16/pseudo-localization-120-390x844-current/`, and `docs/e2e-bug-reports/2026-07-17-pseudo-localization-ask-pressure.md`. Native iOS localization, Dynamic Type, VoiceOver, keyboard, and bidirectional-layout review remain open.
 - Branch: keyboard or text-scale pressure
   - Priority: Important
   - Automate later: Yes
@@ -254,12 +170,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current 412 x 844 / 200% boundary ProGate evidence: 2026-07-09 headless Chrome Expo web re-ran the focused Progress and contextual upsell route audit after extending dense contextual paywall treatment to the 391-430 px wide, 840-899 px tall text-pressure band. `/progress`, `/progress/capture`, `/progress/review`, and `/paywall/upsell?feature=full_routine` report zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-412-844-progate-current/`. Native simulator/device safe-area, screen-reader, and Dynamic Type QA remain open.
   - Current 412 x 844 / 200% Recommendation Preferences evidence: 2026-07-09 headless Chrome Expo web reproduced `/recommendations/preferences` budget chips peeking into the bottom edge as 26 px partial targets. Post-fix, the route defers lower-priority budget chips below the first viewport for the supported modern/tall text-pressure height band while keeping visible value chips complete and hit-testable. The focused rerun reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-412-844-preferences-postfix3/` and `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-412-boundary-text-pressure.md`. Native simulator/device safe-area, screen-reader, and Dynamic Type QA remain open.
   - Current 414 x 896 / 200% boundary route-audit evidence: 2026-07-09 headless Chrome Expo web reproduced contextual ProGate CTA clipping on `/progress`, `/cycle/disruption`, and `/cycle/procedure`, then exposed Recommendation Preferences budget-chip peeking after the entitlement-loading wait fix. Post-fix, contextual paywalls and Recommendation Preferences use boundary/tall text-pressure density, and the final 49-route sweep reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3/` and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-boundary-414-clearance.md`. Native simulator/device safe-area, screen-reader, and Dynamic Type QA remain open.
-  - Current 390 x 640 support-band 170% route-audit evidence: 2026-07-09 headless Chrome Expo web re-ran the 49-route text-pressure audit after support-band density guards for contextual ProGate paywalls, Recommendation Preferences, Shelf scan/manual, and Skin Notes. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-390-640-current/`. Native iOS/Android Dynamic Type, safe-area, screen-reader, keyboard, camera, and store-sheet QA remain device gates.
-  - Current 412 x 640 support-band 200% route-audit evidence: 2026-07-09 headless Chrome Expo web re-ran the full 49-route text-pressure audit for a 412-wide Android-class viewport at the shortest supported 640 px height. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-640-current/`. Native iOS/Android Dynamic Type, safe-area, screen-reader, keyboard, camera, and store-sheet QA remain device gates.
-  - Current 430 x 640 support-band 200% route-audit evidence: 2026-07-09 headless Chrome Expo web reproduced `/recommendations/preferences` Texture chips as partial targets, `/community` exposing a Sensitive Skin note as a partial target, and `/settings/privacy` exposing a policy row with a blocked center; follow-up full reruns then exposed lower value chips in Recommendation Preferences and a Shelf Scan fallback row whose center hit the camera-helper layer. Post-fix, 430-wide support-floor guards cover Recommendation Preferences, Skin Notes, Settings Privacy, and Shelf Scan, with lower-priority controls pushed below the first viewport. The focused reruns, final full 49-route 430 x 640 sweep, and affected-route 390 x 640 regression report zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-focused-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-preferences-postfix2/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-scan-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-postfix3/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-640-affected-regression-postfix/`, and `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-430-640-text-pressure.md`. Native iOS/Android Dynamic Type, safe-area, screen-reader, keyboard, camera, and store-sheet QA remain device gates.
-- Current onboarding/paywall/detail support-band evidence: 2026-07-09 headless Chrome Expo web re-ran the focused 390 x 640 / 170% text-pressure route audit for `/onboarding/age`, `/onboarding/goals`, `/onboarding/products`, `/onboarding/paywall`, `/paywall/downgrade`, and the missing Shelf detail route after extending compact support-band guards. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-onboarding-paywall-detail-current/`. Native iOS/Android Dynamic Type and safe-area QA remain device gates.
-- Current 430 x 640 onboarding/paywall support-band evidence: 2026-07-09 headless Chrome Expo web re-ran the focused 200% text-pressure route audit for `/onboarding/age`, `/onboarding/goals`, `/onboarding/products`, `/onboarding/paywall`, and `/paywall/downgrade` after extending those compact guards through 430 px width. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-paywall-430-640-current/`. Native iOS/Android Dynamic Type, safe-area, keyboard, screen-reader, and store-sheet QA remain device gates.
-- Current 390 x 844 onboarding products 200% text-pressure evidence: 2026-07-09 headless Chrome Expo web re-ran focused `/onboarding/products` after extending its compact footer/category behavior to modern 390-wide, tall supported-phone text-pressure layouts. The route reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, zero text overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-products-390-844-current/`. Native iOS/Android Dynamic Type, safe-area, keyboard, and screen-reader QA remain device gates.
+  - Current 390 x 640 support-band 170% route-audit evidence: 2026-07-09 headless Chrome Expo web re-ran the 49-route text-pressure audit after support-band density guards for contextual ProGate paywalls, Recommendation Preferences, Shelf scan/manual, and Skin Notes. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-390-640-current/`. Native iOS Dynamic Type, safe-area, screen-reader, keyboard, camera, and store-sheet QA remain launch-device gates; Android is compatibility follow-up.
+  - Current 412 x 640 support-band 200% route-audit evidence: 2026-07-09 headless Chrome Expo web re-ran the full 49-route text-pressure audit for a 412-wide Android-class viewport at the shortest supported 640 px height. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-640-current/`. Native iOS Dynamic Type, safe-area, screen-reader, keyboard, camera, and store-sheet QA remain launch-device gates; Android is compatibility follow-up.
+  - Current 430 x 640 support-band 200% route-audit evidence: 2026-07-09 headless Chrome Expo web reproduced `/recommendations/preferences` Texture chips as partial targets, `/community` exposing a Sensitive Skin note as a partial target, and `/settings/privacy` exposing a policy row with a blocked center; follow-up full reruns then exposed lower value chips in Recommendation Preferences and a Shelf Scan fallback row whose center hit the camera-helper layer. Post-fix, 430-wide support-floor guards cover Recommendation Preferences, Skin Notes, Settings Privacy, and Shelf Scan, with lower-priority controls pushed below the first viewport. The focused reruns, final full 49-route 430 x 640 sweep, and affected-route 390 x 640 regression report zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-focused-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-preferences-postfix2/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-scan-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-postfix3/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-640-affected-regression-postfix/`, and `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-430-640-text-pressure.md`. Native iOS Dynamic Type, safe-area, screen-reader, keyboard, camera, and store-sheet QA remain launch-device gates; Android is compatibility follow-up.
+- Current onboarding/paywall/detail support-band evidence: 2026-07-09 headless Chrome Expo web re-ran the focused 390 x 640 / 170% text-pressure route audit for `/onboarding/age`, `/onboarding/goals`, `/onboarding/products`, `/onboarding/paywall`, `/paywall/downgrade`, and the missing Shelf detail route after extending compact support-band guards. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-onboarding-paywall-detail-current/`. Native iOS Dynamic Type and safe-area QA remain launch-device gates; Android is compatibility follow-up.
+- Current 430 x 640 onboarding/paywall support-band evidence: 2026-07-09 headless Chrome Expo web re-ran the focused 200% text-pressure route audit for `/onboarding/age`, `/onboarding/goals`, `/onboarding/products`, `/onboarding/paywall`, and `/paywall/downgrade` after extending those compact guards through 430 px width. The pass reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-paywall-430-640-current/`. Native iOS Dynamic Type, safe-area, keyboard, screen-reader, and store-sheet QA remain launch-device gates; Android is compatibility follow-up.
+- Current 390 x 844 onboarding products 200% text-pressure evidence: 2026-07-09 headless Chrome Expo web re-ran focused `/onboarding/products` after extending its compact footer/category behavior to modern 390-wide, tall supported-phone text-pressure layouts. The route reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, zero text overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-products-390-844-current/`. Native iOS Dynamic Type, safe-area, keyboard, and screen-reader QA remain launch-device gates; Android is compatibility follow-up.
   - Current retained 320 x 480 stress-floor 100% route-audit evidence: 2026-07-09 headless Chrome Expo web re-ran the 49-route audit at 320 x 480 after adding the native support-floor config contract and direct-entry density guards. Post-fix, `/ask`, `/community/note/missing-note-e2e`, `/recommendations/stale-local-rec`, `/settings/privacy`, `/settings/subscription`, `/shelf/no-match`, and `/shelf/opened` keep visible controls complete, center-hit-testable, and 44 px+, with lower-priority actions either complete above chrome or deliberately below the first viewport until scroll. The final sweep reports zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard/`. Native iOS/Android safe-area, screen-reader, and Dynamic Type QA remain open.
   - Current retained 320 x 480 stress-floor 170% / 200% route-audit evidence: 2026-07-09 headless Chrome Expo web re-ran the 49-route text-pressure audit at 320 x 480 after current-source fixes for Settings Privacy, Settings Subscription, Recommendation Preferences, Ask, Shelf no-match, Community missing-note recovery, and stale Recommendation detail. Post-fix, compact stress-floor routes use shorter visible labels with full accessibility labels retained, suppress nonessential hints/subtitles, compact policy and restore rows, keep the destructive privacy action complete, show only the essential Shelf no-match recovery actions, and shorten the Recommendation Preferences heading. Final sweeps at 200% and 170% report zero failed routes, zero clipped visible controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`, `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-16/`, and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-support-floor-480-clearance.md`. Native iOS/Android safe-area, screen-reader, and Dynamic Type QA remain open.
   - Current 140% route-audit evidence: 2026-07-08 headless Chrome Expo web re-ran the 49-route 320 x 568 compact phone sweep at 140% text pressure. The audit reproduced direct upsell CTA clipping, ProGate routine paywall compliance overlap/monthly-price overflow, and Recommendation Preferences chip groups peeking as partial targets. Post-fix, direct upsell and ProGate use a 320 px narrow-short density tier with icon dismiss, hidden nonessential body copy, hidden monthly-equivalent labels, and tighter price/CTA blocks; Recommendation Preferences keeps visible chips 48 px and moves lower chip groups below the first viewport. The final sweeps report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`, `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-7/`, and `docs/e2e-bug-reports/2026-07-08-text-pressure-140-compact-568-clearance.md`. Native simulator/device Dynamic Type remains open.
@@ -358,16 +274,17 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-consent-quiz-resilience/`, `test-results/human-e2e/2026-07-07/onboarding-profile-save-failure/`, and `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`
 - Current clean first-session evidence: `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`
+- Current consent-before-goals and health-withdrawal evidence: `test-results/human-e2e/2026-07-15/health-consent-withdrawal-current/`
 - Dev-only reset fixture: start Expo web with `EXPO_PUBLIC_E2E_LOCAL_RESET=1` and open `/?e2eReset=local` to clear local private state plus query cache, then return to `/`.
 
 ### Path A: Happy Path
 
-1. Action: Launch the app, proceed through age, consent, goals, quiz/products, notifications, analyzing, reveal, and account/paywall steps using safe local choices.
-   Expected result: Each step advances intentionally, copy stays within approved claims, and the final state is clear.
+1. Action: Launch the app, complete the neutral age gate, grant the dedicated health-data consent, then proceed through goals, quiz, products, analyzing/reveal, notifications, and account/paywall steps using safe local choices.
+   Expected result: The enforced order is age -> consent -> goals -> quiz. No goal or quiz input mounts or persists before a current version/hash grant; each later step advances intentionally, copy stays within approved claims, and the final state is clear.
    Evidence: Screenshot or video of each major transition plus terminal/simulator logs.
-   Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 430 uses the dev-only reset fixture, completes age, goals, health consent, quiz, three-product shelf intake, reveal, notification skip, account skip, and the no-card `Explore first. 7 days of Pro` paywall path. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`.
-   Current reveal-insight evidence: 2026-07-09 Codex in-app browser Expo web at 390 x 640 uses the dev-only reset fixture, completes age, goals, explicit health-data consent, all 12 quiz questions, three-product shelf intake with `Retinol 0.3% serum`, `Glycolic 7% toner`, and `Ceramide moisturizer`, and verifies reveal shows the shelf-derived `FIRST INSIGHT` / `Timing handled` card with no `See my routine` CTA before continuing to notifications, account, and onboarding paywall. Evidence is in `test-results/human-e2e/2026-07-09/onboarding-first-session-reveal-insight-current/`.
-   Current maintained full-activation evidence: 2026-07-09 headless Chrome Expo web at 320 x 430 uses the dev-only reset fixture, completes age, goals, explicit health-data consent, all 12 quiz questions, three-product shelf intake with `Retinol 0.3% serum`, `Glycolic 7% toner`, and `Mineral SPF 50`, verifies the reveal `FIRST INSIGHT` / `Timing handled` card, skips notifications and account, chooses the no-card `Explore first` paywall path, opens `/routine/plan`, taps `Start today`, and completes forced AM `Mineral SPF 50` plus forced PM `Glycolic 7%` check-offs to `1 of 1`. Evidence is in `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current/`. This viewport is resilience evidence below the launch web support floor.
+   Historical predecessor evidence only: the 2026-07-08/09 runs under `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`, `test-results/human-e2e/2026-07-09/onboarding-first-session-reveal-insight-current/`, and `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current/` used age -> goals -> consent. They remain useful for layout/core-loop regression but do not satisfy the current consent-before-goals requirement.
+   Current local partial evidence: The 2026-07-15 Expo-web run at 390 x 844 proves fresh reset -> Welcome -> age -> consent -> goals, with goals stable through timed route sampling and reload. It does not cover quiz and the later onboarding path, a hosted authoritative lifecycle, or physical-iPhone behavior; those remain open.
+   Current complete Expo-web evidence: The 2026-07-26 supported 390 x 844 run in `test-results/human-e2e/2026-07-26/core01-age-profile-provenance-current/` first proves direct `/today` entry fails closed to age, then completes age -> consent -> goals -> all 12 quiz questions -> three-product intake -> reveal -> notifications -> account skip -> paywall -> `Explore first` -> routine plan -> `Start today` -> AM and PM check-offs. It then re-enters age verification from the eligible session, submits a valid below-threshold DOB, proves the calm block state survives protected-provider teardown without retaining the DOB fields, and proves direct Today plus reload remain fenced by the minimized tombstone. `summary.json` records `verdict: pass`, all three re-verification route checks as `true`, the expected named products and derived profile, and zero horizontal overflow on every summarized screen. This is real Expo-web interaction with an explicit development-only anonymous-owner fixture; it is not hosted Supabase, signed iOS, physical-device, Apple sandbox, accessibility, or professional-review evidence.
 
 ### Branches
 
@@ -386,42 +303,49 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot and text snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `We don't store your birth date.` with no mojibake, complete day/month/year fields, a visible Continue control, zero horizontal overflow, and no visible sub-44 px controls.
   - Current support-floor text-pressure evidence: 2026-07-09 headless Chrome Expo web added a skipped-route sweep for omitted direct-entry routes at 320 x 480 / 170%. Before the fix, `/onboarding/age` put the day, month, and year inputs under the fixed Continue footer. Post-fix, the compact age gate scrolls above the footer, uses shorter support-floor copy, and the full 21-route skipped sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
-- Branch: unreadable saved age confirmation
+- Branch: exact minimized age-policy receipt gates every private provider
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open `/onboarding/age` with persistent and one-shot age-verification read failures, including a previously passed gate, then activate Try again.
-  - Expected result: Unavailable, corrupt, or future-version state shows one accessible recovery alert and a 56 px retry action; no DOB fields, Continue action, false first-visit state, reset, or navigation is exposed. Persistent retry remains fail-closed. One-shot retry re-reads the exact saved flag and redirects a verified user without asking for DOB again.
-  - Evidence: Phone-width screenshots, visible text/control geometry, route snapshots, browser logs, and exact storage-state comparison where the test surface exposes it.
-  - Current local evidence: 2026-07-13 Codex in-app browser Expo web verifies persistent and one-shot read failures at the 375 × 667 launch floor, 390 × 844 supported modern phone, and 320 × 480 compact stress size. Each unavailable state has exactly one accessible alert, no DOB input or Continue action, a 55.99 px retry control, zero horizontal overflow, no dialogs, and zero browser errors. Persistent retry stays fail-closed; one-shot retry with a previously saved pass flag advances directly to Goals without asking for DOB again. Evidence is in `test-results/human-e2e/2026-07-13/age-verification-storage-recovery-current/`.
-- Branch: age-confirmation save failure
+  - Action: Cold-open `/`, `/today`, `/shelf`, and `/settings/privacy` with a missing receipt, the old boolean/v1 receipt, malformed JSON, a future receipt version, a mismatched policy hash, a current eligible receipt, and a forced private-storage read failure. Repeat after foreground return, receipt removal, account switch, and account deletion.
+  - Expected result: Only the exact current receipt (`receipt_version`, pinned policy hash, and `eligible: true`) permits protected providers to mount. No DOB, birth year, age, timestamp, threshold outcome, or underage reason is retained. Missing/stale/malformed/future/mismatched states route to the neutral age screen without mounting health-data providers; storage failure stays on a retryable fail-closed shell. A fresh non-affirmative evaluation immediately closes the live provider tree and atomically replaces any prior eligible receipt with the exact minimized re-verification tombstone. Account cleanup/export accounts for the receipt key, while health-purpose-only withdrawal does not erase this separate eligibility control.
+  - Evidence: Root-provider source contract, minimized-receipt unit tests, storage byte snapshot, direct-route/foreground/account-boundary screenshots and logs, plus physical-iPhone lifecycle evidence.
+  - Current source and Expo-web evidence: The v1 minimized receipt, exact re-verification tombstone, and root `AgePolicyGate` are implemented with exact-hash/status classification and focused tests. Protected providers close immediately on background/inactive or a fresh safe-route downgrade, remain closed through a fresh foreground storage read, ignore stale completions, and preserve an unavailable retry shell. The 2026-07-26 390 x 844 run proves direct `/today` recovers to age without mounting Today content, an eligible DOB reaches consent after the protected provider-tree transition, and the same session completes the core loop. It then proves a below-threshold re-verification tears down the protected tree, retains no DOB field across the navigator swap, and keeps direct Today closed before and after reload. Evidence is in `test-results/human-e2e/2026-07-26/core01-age-profile-provenance-current/01a-direct-protected-age-gate.*`, `03a-after-age-submit.*`, `04-consent.*`, `25-age-reverification-before-submit.*` through `28-age-reverification-reload-today-blocked.*`, and `summary.json`; the fixed finding is recorded in `docs/e2e-bug-reports/2026-07-26-age-policy-downgrade-revocation.md`. A total storage-overwrite failure followed by process termination cannot claim durable revocation; native fault injection, AppState/account-boundary permutations, and physical-device lifecycle evidence remain required.
+- Branch: Apple Declared Age Range launch boundary
   - Priority: Critical
   - Automate later: Yes
-  - Action: Enter a valid adult DOB with a targeted write failure, activate Continue, then retry after a one-shot failure.
-  - Expected result: The route never stores the DOB, never advances before the minimized pass flag is durably written, keeps the entered fields intact, exposes one accessible save error, blocks duplicate pending writes, suppresses navigation/state publication if the screen unmounts during a write, and advances only after a successful deliberate retry.
-  - Evidence: Before/after screenshots, visible text and field values, route snapshots, browser logs, and persisted minimized-flag verification where available.
-  - Current local evidence: 2026-07-13 Expo web uses the real DOB form with a one-shot write failure. The first Continue keeps `/onboarding/age`, preserves all three field values, shows one accessible save error, retains a 55.99 px action, and does not navigate. A deliberate second Continue writes the minimized flag and advances to Goals; the later one-shot read-recovery flow confirms that saved pass without exposing DOB fields. The final post-visual save-generation guard invalidates late navigation/state publication on unmount and passed focused/full automated tests plus adversarial review; a requested fresh second browser backend was unavailable, so a direct slow-write-and-leave interaction remains open. Evidence is in `test-results/human-e2e/2026-07-13/age-verification-storage-recovery-current/`.
+  - Action: On clean signed iOS 26.2+ sandbox builds for every final bundle ID, exercise eligible and ineligible regions, under-13, 13–15, 16–17, adult unconfirmed/confirmed accounts, share/decline, every declaration method, parental controls, communication limits, foreground/relaunch, and `RESCIND_CONSENT`.
+  - Expected result: The exact signed archive contains the Boolean Declared Age Range entitlement. Only a shared lower bound at or above 16 may grant access; upper bound, declaration method, estimated/exact age, or DOB never grants access or enters retained bytes. Unavailable, declined, malformed, stale, old-OS/SDK, revoked, or jurisdictionally incomplete states fail closed before protected providers mount. Consent rescission immediately closes affected access and follows the reviewed retention/deletion policy.
+  - Evidence: Signed archive entitlement report, build/toolchain log, Apple sandbox account matrix, physical-iPhone video and accessibility run, redacted adapter response snapshots, App Store Server Notifications V2 JWS/replay/idempotency trace, and named legal/privacy review.
+  - Current source evidence: A first-party Expo iOS module, exact request-bound response decoder, lower-bound-only decision function, non-iOS fallback, source/autolinking tests, and Expo entitlement are implemented. The adapter remains literally `launch_blocked`; Windows source checks are not Swift compilation, signing, Apple sandbox, device, server-notification, or professional-review evidence.
 - Branch: goal selection on shortest phone
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open `/onboarding/goals` on a 320 x 480 phone viewport and inspect all goal cards plus the fixed Continue action.
-  - Expected result: All six goal choices are visible, readable, and hit-testable above the footer, with no goal card clipped underneath Continue, no horizontal overflow, and no visible control below 44 px.
+  - Action: After a current health-data grant, open `/onboarding/goals` on a 320 x 480 phone viewport and inspect all goal cards plus the fixed Continue action.
+  - Expected result: All six goal choices are visible, readable, and hit-testable above the footer, with no goal card clipped underneath Continue, no horizontal overflow, and no visible control below 44 px. Continue advances to the quiz, not to consent, because consent is already established.
   - Evidence: Screenshot and small-phone control geometry snapshot.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced goal cards sitting under the fixed Continue footer, then verified the compact two-column goal grid. Post-fix geometry shows all six goal cards at 130.7 px wide and at least 74 px tall, Continue at 56 px tall, zero hit-blocked controls, zero sub-44 controls, and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck/`.
-  - Current split-short evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 390 reproduced Sensitivity and Barrier repair visible under the fixed Continue footer with blocked tap centers. Post-fix split-short density keeps all six goal cards at about 130.7 x 60 px, above Continue, with zero clipped controls, zero sub-44 controls, zero blocked center hit-tests, and a successful Sensitivity selection followed by Continue advancing to health-data consent. Evidence and report are in `test-results/human-e2e/2026-07-08/onboarding-first-session-390-current/` and `docs/e2e-bug-reports/2026-07-08-onboarding-goals-390-footer-overlap.md`.
+  - Historical layout evidence: 2026-07-08 evidence in `test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck/`, `test-results/human-e2e/2026-07-08/onboarding-first-session-390-current/`, and `docs/e2e-bug-reports/2026-07-08-onboarding-goals-390-footer-overlap.md` proves card geometry only. Its Continue destination was consent and must not be treated as current flow evidence.
+- Branch: direct goals or quiz entry without health-data consent
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With no current health-data grant, open `/onboarding/goals` and `/onboarding/quiz` directly, including after decline, stale-version consent, malformed local consent, withdrawal, and refresh/relaunch.
+  - Expected result: Neither goals nor quiz content mounts or persists. The app recovers to `/onboarding/consent` for an initial unconsented user, or to the account-preserving health-data paused shell for a withdrawing/withdrawn user. A stale local route cannot bypass the authoritative server lifecycle or processing epoch.
+  - Evidence: Route/provider contract tests, local storage snapshot, screenshots before any health input appears, refresh/relaunch trace, and configured staging request log proving no health write.
+  - Current local partial evidence: The 2026-07-15 Expo-web run directly requested `/onboarding/goals` after decline and recovered to consent without mounting goals. Direct quiz, stale/malformed records, hosted authoritative lifecycle denial, and native relaunch variants still require current evidence.
 - Branch: consent declined
   - Priority: Critical
   - Automate later: Yes
   - Action: Decline health-data collection consent before the quiz.
-  - Expected result: Consent remains unbundled and voluntary; the app does not enter the health-data quiz, records the decline best-effort, and explains that the personalized quiz stays locked unless the user agrees.
+  - Expected result: Consent remains unbundled and voluntary; the app does not enter goals or the health-data quiz, records the decline atomically when the backend is configured, and explains that personalized health features stay locked unless the user agrees. Decline does not delete the account or billing state.
   - Evidence: Screenshot and state notes.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 opens `/onboarding/consent`, taps `I don't agree`, shows `No consent recorded` plus the personalized-quiz-locked explanation, keeps the route on consent, and direct `/onboarding/quiz` after the decline recovers to consent without rendering quiz questions.
-- Branch: direct quiz entry without health-data consent
+  - Current consent-before-goals evidence: The 2026-07-15 Expo-web replay again displayed `No consent recorded`; a direct goals request remained gated, and the subsequent single grant stayed on goals through 100 ms sampling to 1.9 seconds, a 6.5-second sample, and reload.
+- Branch: historical direct-quiz local-gate predecessor
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open `/onboarding/quiz` directly with no local health-data collection grant, then refresh the route.
-  - Expected result: The quiz questions do not render; the app recovers to `/onboarding/consent` so health-data collection remains unbundled and explicit before quiz access.
-  - Evidence: Screenshot, route snapshot, and browser console logs.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 direct `/onboarding/quiz` with a clean local context redirects to `/onboarding/consent`, does not render the first quiz question before consent, stays on consent after refresh, then opens `/onboarding/quiz` with the first question only after `I agree. Continue`; all checked states have zero horizontal overflow and no visible sub-44 px controls.
+  - Action: Retain the pre-authoritative-lifecycle direct-quiz evidence as a local route-gate regression case; use the combined direct goals/quiz branch above for current acceptance.
+  - Expected result: Historical evidence can prove that the earlier local gate hid quiz questions, but it cannot prove consent-before-goals, server lifecycle/epoch authority, withdrawal routing, or zero pre-grant persistence.
+  - Evidence: Historical screenshot, route snapshot, and browser console logs; fresh current evidence belongs to the combined branch above.
+  - Historical local evidence: 2026-07-07 Expo web 320 x 568 direct `/onboarding/quiz` with a clean local context redirects to `/onboarding/consent`, does not render the first quiz question before consent, stays on consent after refresh, then opens `/onboarding/quiz` with the first question only after `I agree. Continue`; all checked states have zero horizontal overflow and no visible sub-44 px controls.
 - Branch: notification permission denied
   - Priority: Important
   - Automate later: Yes
@@ -444,16 +368,54 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Focused auth contract tests, browser screenshots/logs for deterministic email-code error and recovery, plus physical-device staging evidence with redacted before/after IDs for Apple, Google, and live email.
   - Local fixture: In development only, start Expo web with `EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user`; the deterministic email code is `424242`. This proves the route interaction and recovery path without claiming live Supabase/provider behavior.
   - Current local evidence: 2026-07-10 headless Chrome Expo web at the accepted 360 x 640 support floor completes the full first-session path, enters email on `/onboarding/account`, reaches code entry, verifies an invalid `111111` code shows the stable recovery message, replaces it with `424242`, reaches onboarding paywall, and continues through routine setup plus completed AM and PM check-offs. The repaired `Use a different method` target is 48 px; all captured steps have zero horizontal overflow and zero geometry issues, and no disallowed browser warnings/errors occurred. Evidence is in `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`; the pre-fix 40 px target and bug record are in `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-account-target-prefix/` and `docs/e2e-bug-reports/2026-07-10-onboarding-account-code-target.md`.
+  - Current-source checkpoint: 2026-09-21 headless Chrome Expo web at the 375 x 667 launch viewport completed onboarding through email-code entry, rejected `111111` with visible recovery copy and a 60-second resend countdown, accepted fixture code `424242`, and reached the current paywall with truthful paid and free paths visible. The source route uses `Continue with the free plan`; the July `Explore first`/routine-plan continuation above is historical, not proof of the current full activation path. Evidence is in the ignored local `test-results/human-e2e/2026-09-21/onboarding-account-upgrade-checkpoint-current/`; live resend, email delivery, native identity, and full current activation remain unproven.
   - Open external evidence: `B-VERIFY-AUTH-LINKING` remains launch-blocked until Tas supplies configured staging and supported-device proof.
+- Branch: email-code resend, expiry, rate limit, and offline recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On `/onboarding/account`, request an email code for an anonymous account. Try to resend immediately, wait for the visible cooldown, enter an invalid code, then resend and verify. Repeat after the client validity window, with a provider rate-limit response, while offline, and after returning from `Use a different method`.
+  - Expected result: Immediate resend is unavailable for 60 seconds; resend uses the pending `email_change` owner and address rather than a fresh sign-in. Local expiry disables Verify and permits a new request; the provider remains the OTP validity authority. Invalid, rate-limited, and offline requests show safe recovery copy without clearing the anonymous session, stored local data, or a still-pending challenge after a failed resend. A successful resend clears the entered code and starts a fresh cooldown. A changed owner cannot reuse the pending challenge. The developmental fixture demonstrates UI only, not email delivery.
+  - Evidence: Focused challenge-state/auth tests, route contract, Expo-web screenshots and console log using `EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user`, and later live staging/native provider logs with redacted owner IDs.
+  - Open external evidence: Hosted Auth template, rate-limit, actual delivery/expiry, secure email-change configuration, and supported-iPhone same-user verification remain required under AUTH-02 and `B-VERIFY-AUTH-LINKING`.
+- Branch: Sign in with Apple credential lifecycle and publication fence
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On a supported physical iPhone/TestFlight build, cancel Apple authorization; complete a valid first link/sign-in; interrupt provider exchange; relaunch before lifecycle capture settles; return from background with authorized, revoked, not-found, and transferred credential states; then deliver signed email and terminal server events before/after capture. On Expo web, directly open `/onboarding/account`, refresh, navigate back/forward, and verify the native Apple action is absent rather than simulated.
+  - Expected result: Cancellation is neutral. A provisional Supabase Apple session never publishes account data until exact identity-token/nonce verification, one-use code exchange, encrypted refresh-token capture, and exact-session server preflight all succeed. Ambiguous exchange never reuses the code. Revoked/not-found/transferred evidence closes publication and clears every owner session. Signed terminal evidence creates or reuses the durable six-step deletion graph; evidence received before Auth identity commit is reconciled by first capture and returns committed `blocked` before code dispatch. Email/unknown events never send the raw subject to the database; terminal lookup uses it transiently and never stores it. Expo web exposes email/Google-compatible account choices only and never presents a fake Apple control.
+  - Evidence: Physical-iPhone recording, redacted Apple/Supabase operation timeline, Edge/worker logs, signed-event delivery trace, lifecycle/deletion database evidence, and Expo-web screenshot/DOM/console evidence proving the non-native route remains usable with Apple hidden.
+  - Current source evidence: Focused mobile/Edge/database contracts cover deferred publication, exact-session admission, cancellation, identity binding, one-use dispatch, encrypted vault capture, daily validation and key rotation, native invalidation, signed-event replay/order, pre-lifecycle terminal matching, pre-identity capture reconciliation, durable deletion, and stale-session denial. Expo-web human simulation proves only route/navigation/platform gating; it cannot establish native Apple UI, Keychain, provider, background, or live hosted behavior.
+  - Current web evidence: 2026-07-15 Codex in-app browser Expo web completed the real onboarding sequence into `/onboarding/account`, verified the exact native Apple action count stayed zero at 375 x 667, 390 x 844, and 430 x 932, used the credential-free `Not now` continuation, and replayed back, forward, and reload with zero console errors. The unavailable local Supabase configuration was disclosed instead of presenting nonfunctional provider controls. Evidence is in `test-results/human-e2e/2026-07-15/apple-auth-web-platform-gate-current/`.
+  - Open external evidence: Supported physical-iPhone/TestFlight proof, configured Apple Developer/Supabase credentials, hosted Cron/worker/event endpoint evidence, provider rate/capacity observations, and native cancellation/background/relaunch/VoiceOver/Dynamic Type runs remain launch gates.
 - Branch: account change isolates private memory and persisted state
   - Priority: Critical
   - Automate later: Yes
   - Action: Populate account A Shelf, profile, routine, completion, and Progress query state; sign out, restore no session while owner metadata remains, or switch to account B; force one session-restore or local cleanup failure; retry; then open Welcome plus direct Shelf, Today, and Progress routes.
-  - Expected result: Every data-bearing provider and route unmounts before cleanup starts. Rapid auth events serialize and same-user refreshes publish the latest session. Explicit sign-out removes persisted auth. New private operations are blocked; in-flight private reads, writes, removals, photo writes, and marker writes settle before deletion; all TanStack queries are cancelled and cleared before and after deletion; and only a neutral transition or recovery gate is visible. A cleanup-required control survives partial deletion, so retry cannot publish account B over residual account A data even when the owner hash was already removed. Session-restore or cleanup failure never publishes account B or remounts account A data. A signed-out restore with retained owner metadata clears stale data. Account deletion uses the same root boundary once. A successful retry resets navigation; no account A product, profile, routine, completion, entitlement, or photo metadata is visible from the signed-out/new-account routes. Anonymous same-user upgrades and same-user token refreshes retain data.
+  - Expected result: Every data-bearing provider and route unmounts before cleanup starts. Rapid auth events serialize and same-user refreshes publish the latest session. Explicit sign-out removes persisted auth. New private operations are blocked; in-flight private reads, writes, removals, photo writes, and marker writes settle before deletion; all TanStack queries are cancelled and cleared before and after deletion; and only a neutral transition or recovery gate is visible. A private-cleanup control survives partial deletion, so retry cannot publish account B over residual account A data even when the owner hash was already removed. A separate auth-derived-cleanup control survives recovery-forced sign-out until session storage, query, notification, analytics, image-memory, and vendor resets all succeed. Session-restore or cleanup failure never publishes account B or remounts account A data. A signed-out restore with valid retained-owner metadata preserves quarantined data without mounting it; exact-owner reauthentication reopens it, while any different login wipes before publication. Account deletion uses the same root boundary once. A successful retry resets navigation; no account A product, profile, routine, completion, entitlement, or photo metadata is visible from the signed-out/new-account routes. Anonymous same-user upgrades and same-user token refreshes retain data.
   - Evidence: Hashed-owner and boundary-decision tests, delayed-write tests, route/provider source contracts, browser screenshots/logs, direct-route snapshots, and configured staging A-to-B proof with redacted account IDs.
   - Local fixture: In development only, start Expo web with `EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry`. It supplies a synthetic permanent account A, delays cleanup, fails the first cleanup attempt, and permits the retry; it does not claim live Supabase behavior.
   - Current local evidence: 2026-07-10 headless Chrome Expo web at the accepted 360 x 640 support floor populated account A through onboarding, Shelf, routine generation, and AM/PM check-offs; opened the signed-in account surface without reloading; forced the first cleanup attempt to fail; verified the recovery gate exposed no account A product names and kept a 56 px retry; retried through the neutral transition; reached signed-out Welcome; and used in-app navigation to direct Shelf and Today empty states with all three account A product names absent. Every captured state had zero horizontal overflow, no disallowed browser warnings/errors occurred, and the signed-out `Add products` action remained 56 px and hit-testable. Evidence is in `test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/`; the fixed Critical finding is recorded in `docs/e2e-bug-reports/2026-07-10-account-transition-query-cache-leak.md`.
   - Open external evidence: Live Supabase sign-out, failed session restore, signed-out cold start with retained owner metadata, token-expiry, cold-start owner mismatch, and A-to-B transitions remain staging/device QA under `B-VERIFY-AUTH-LINKING` and `B-SUPABASE`.
+- Branch: exact-owner cold start while remote publication preflight is offline
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With encrypted local data and a locally restorable Supabase session for account A, cold-start offline so the deletion/publication preflight and RevenueCat publication cannot reach their services. Repeat with missing, malformed, expired, and account-B local session evidence.
+  - Expected result: Only a locally validated session whose subject exactly matches the durable local-data owner may mount account A's local-first data. Commerce, entitlement refresh, paywalls, Restore, purchase, and server mutations remain closed until remote publication succeeds. Connectivity recovery retries publication without unmounting or exposing local data. Missing, invalid, expired, or differently owned session evidence never mounts account A data, and an authoritative deletion/session-rejection response still enters the hard deletion or rejected-session boundary.
+  - Evidence: Cold-start screen recording, encrypted owner/session snapshots with identifiers redacted, offline network log, commerce-control assertions, connectivity-recovery trace, and focused publication-boundary tests.
+  - Open external evidence: Supported physical iPhones must prove cold process start, airplane-mode relaunch, exact-owner recovery, owner mismatch, token expiry, and reconnect behavior against configured staging before this branch is release-ready. Android follow-up is non-launch resilience work.
+- Branch: exact-owner foreground return while commerce refresh is offline
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Publish account A online, background the app long enough to close remote commerce authority, disconnect networking, then foreground and navigate through Today, Shelf, Progress, a paywall, and an attempted server mutation. Reconnect and repeat.
+  - Expected result: Account A's already validated local-first data remains mounted across true background and an offline foreground refresh. RevenueCat refresh, purchase/Restore, paywalls, and server mutations stay fail-closed while remote authority is unavailable; no stale commerce ticket is reused. Reconnection reacquires authority for the same owner and enables only the operations allowed by the newly committed state. An owner change or authoritative deletion/session rejection still unmounts private providers before cleanup.
+  - Evidence: Foreground screen recording, AppState and publication trace, offline request log, local-route and commerce-control snapshots, reconnect trace, and focused lifecycle tests.
+  - Open external evidence: Native iOS process/background behavior, StoreKit surfaces, and configured RevenueCat identity state remain release-device gates. Android/Play Billing follow-up is outside this iOS release contract.
+- Branch: transient iOS inactive lifecycle state
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On a supported iPhone, trigger Control Center, Notification Center, an incoming call/system interruption, Face ID or Sign in with Apple reauthentication, and the StoreKit side-button confirmation path so the app transitions through iOS `inactive` without first entering a true background state.
+  - Expected result: App Lock/privacy shielding hides private content whenever required, but the transient `inactive` transition alone does not drain the account-scoped commerce ticket or detach an in-flight StoreKit operation. Returning directly to `active` continues under the same still-valid publication; any actual `background` transition closes commerce authority and requires reacquisition. No purchase, Restore, or account mutation crosses an owner change or closed publication boundary.
+  - Evidence: Redacted physical-iPhone AppState timeline aligned with StoreKit/Face ID/Apple-auth video, commerce-ticket trace, caller completion result, and relaunch/background comparison.
+  - Open external evidence: This branch cannot be accepted from Expo web or unit tests; physical-iPhone/TestFlight proof is mandatory.
 - Branch: quiz and reveal draft copy
   - Priority: Critical
   - Automate later: Yes
@@ -493,6 +455,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app does not advance to reveal as if onboarding were saved; it shows a retry path while preserving the quiz answers in memory. Tapping Try again consumes the one-shot failure and reaches reveal with the same quiz-derived profile.
   - Evidence: Error-state screenshot and retry/reveal route snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 with `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once` selects a goal, grants consent, completes the quiz, skips product intake, shows `We could not save your profile.` on `/onboarding/analyzing` without revealing a profile, then `Try again` reaches `/onboarding/reveal` with `YOUR SKIN PROFILE`.
+- Branch: exact quiz-provenance receipt and stale-profile recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete the exact current quiz, relaunch, and directly open profile-consuming routes. Repeat with an unversioned/v1 profile, malformed/future envelope, altered content/scoring/combined hash, altered basis points, altered DSPT, unreadable local storage, a missing local profile with an exact server v2 row, and a missing local profile with a legacy or partially populated server row.
+  - Expected result: The local v2 receipt contains only canonical derived outputs, one or two approved goals, completion time, and the exact content/scoring provenance; it contains no raw answers, question IDs, or answer hash. Raw answers remain in memory only while a local save is pending or failed, then are wiped after the durable v2 result succeeds. Only the exact current receipt is locally usable. Ordinary reads/writes preserve and fail closed on legacy, malformed, future, mathematically inconsistent, or contract-mismatched bytes. A fresh explicit quiz may atomically replace any unusable profile bytes; a storage failure preserves the prior bytes and retry answers. Server fallback occurs only when local status is genuinely missing and accepts only the exact v2 tuple; a stale local authority can never be bypassed. Server-only pregnancy remains conservative/unknown. The draft review status remains launch-blocked pending exact-hash professional review.
+  - Evidence: Local/server parser and database constraint tests, private-storage/export snapshots, reload/direct-route screenshots, server-request filters, and physical-iPhone evidence.
+  - Current source and Expo-web evidence: Deterministic content/scoring manifests, exact hashes, integer basis-point scoring, v2 local/server provenance, raw-answer post-save minimization, atomic explicit-quiz recovery, and fail-closed readers are implemented with focused source tests. The 2026-07-26 supported 390 x 844 run completes the exact 12-question UI, renders its derived OSPW profile through reveal/paywall/routine, and completes the first AM/PM cycle in the same session; see `test-results/human-e2e/2026-07-26/core01-age-profile-provenance-current/`. Storage-byte inspection, exact server v2 fallback/RLS on hosted Supabase, relaunch/profile-consumer permutations, physical-iPhone verification, and professional review remain required.
 
 ## Flow: Routine Plan First Value
 
@@ -531,6 +500,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The label reflects that profile state rather than hardcoding `dry, sensitive skin`.
   - Evidence: Screenshot and local profile fixture snapshot.
   - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 seeds the real local profile store with oily/resistant axes plus a real shelf, opens `/routine/plan`, and verifies `BUILT FOR OILY, RESISTANT SKIN`, `Gel cleanser`, `Mineral SPF 50`, no dry/sensitive copy, a complete compact PM suffix, zero horizontal overflow, and 44 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`.
+- Branch: sequencing review gate is closed or only partially reviewed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: In development, set `EXPO_PUBLIC_E2E_ROUTINE_SEQUENCING_REVIEW_GATE=closed`, add classifiable stable products, and inspect Reveal, Plan, Today AM, and Today PM. Repeat in a production-mode unit/integration fixture with only one role carrying review metadata and inject stale cycle data for a withheld active.
+  - Expected result: Unreviewed products remain visible on the Shelf but are absent from both generated phases, Today check-offs, and cycle projections. The UI says automatic order is not set and never promises manual placement. It surfaces no starter or synthesized use instruction, missing-product gap advice, or “highest-impact” SPF recommendation. Start today still reaches Today without attempting a closed cadence write. A partially reviewed role cannot authorize a different role, while an exact reviewed role may publish only its own phase, order, and instruction.
+  - Evidence: Reveal/Plan/Today screenshots and visible-text snapshots at supported phone sizes, browser logs, generated-plan and Today-projection snapshots, plus focused production-gate tests.
+  - Open external evidence: Current source has focused unit/static coverage; a post-fix human-simulated Expo web pass and physical-iPhone review-build verification remain required.
 - Branch: pregnancy and breastfeeding status stays consistent across settings, Plan, and Today
   - Priority: Critical
   - Automate later: Yes
@@ -596,20 +572,20 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 - Goal: A user sees one coherent public app identity across high-visibility runtime surfaces.
 - Persona: New or returning user using a build configured with the working rebrand candidate.
-- Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` and `EXPO_PUBLIC_APP_SCHEME=routinekind`.
+- Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell` and `EXPO_PUBLIC_APP_SCHEME=layerwell`.
 - Start screen/URL/window: Direct routes `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`.
-- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `RoutineKind` through runtime configuration; old public `OnSkin` copy is absent from the checked surfaces.
+- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `Layerwell` through runtime configuration; the rejected working identity is absent from the checked surfaces.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web smoke; iOS and Android after final native identifiers are cleared.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/runtime-brand-identity/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/runtime-brand-identity/`
+- Historical evidence reference (not present in this checkout): `test-results/human-e2e/2026-07-07/runtime-brand-identity/`. A fresh Layerwell pass is required.
 
 ### Path A: Configured Runtime Copy
 
 1. Action: Start Expo web with the working public display name, open `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`, then inspect visible page copy.
-   Expected result: `/ask` renders `Ask RoutineKind`; the paywall/subscription surfaces render `RoutineKind Pro`; no checked surface displays old public `OnSkin` labels.
-   Evidence: Screenshots, visible-text snapshots, and browser console logs. Current local evidence: 2026-07-07 Expo web at 320 x 568 renders `Ask RoutineKind`, `Part of RoutineKind Pro.`, and `RoutineKind Pro` in subscription settings, with zero visible `OnSkin` labels and no browser console errors. This does not close final brand/legal clearance or native identifier QA.
+   Expected result: `/ask` renders `Ask Layerwell`; the paywall/subscription surfaces render `Layerwell Pro`; no checked surface displays the rejected working identity.
+   Evidence: Screenshots, visible-text snapshots, and browser console logs. Historical local evidence: 2026-07-07 Expo web at 320 x 568 rendered the then-configured working identity in Ask, paywall, and subscription settings, with no earlier-brand labels reported visible and no browser console errors. The recorded pass predates Layerwell, its evidence directory is not present in this checkout, and it cannot verify current branding. Final brand/legal clearance and native identifier QA also remain open.
 
 ### Branches
 
@@ -617,36 +593,37 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Inspect the runtime share-card constants without a final brand domain.
-  - Expected result: The card watermark uses `RoutineKind`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
+  - Expected result: The card watermark uses `Layerwell`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
   - Evidence: Unit test output and source snapshot.
 - Branch: public-copy sweep smoke
   - Priority: Critical
   - Automate later: Yes
   - Action: Start Expo web with the working public display name, open `/onboarding/age`, `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local reverse-trial path before `/routine/widgets`.
-  - Expected result: Visible public copy on age gate, share landing, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; widgets route remains the existing native-widget deferred surface until device QA enables it.
+  - Expected result: Visible public copy on the age gate, catalog search, and timing lock-screen preview uses `Layerwell` and does not show the rejected working identity; every `/s/[shareId]` path renders the same product-free `Public sharing is unavailable.` recovery without deriving content from the path; widgets remain the existing native-widget deferred surface until device QA enables them.
   - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` verifies `/onboarding/age`, `/s/sharecard01`, `/shelf/search`, `/settings/timing`, and free `/routine/widgets` before and after tapping `Explore first. 7 days of Pro`. The four public copy surfaces show `RoutineKind`, all six captured states show no visible `OnSkin`, the no-card Pro week reaches the widgets deferred surface (`Widgets are not in this beta` / `Back to Today`), visible controls are 48 px+, horizontal overflow is zero, and current-origin browser warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with the previous working display name verified the pre-CORE-07A `/s/sharecard01` surface alongside the age, catalog, timing, and widget surfaces. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; the former public-share behavior and previous brand identity are superseded and are not current acceptance evidence. Final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
 - Branch: public share landing attribution
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open `/s/[shareId]` with safe campaign attribution parameters, then open an invalid share id.
-  - Expected result: The public landing page renders without exposing private shelf, skin-profile, product, token, signed-url, or JWT values; invalid share IDs recover to the safe missing-share state; analytics attribution remains sanitized by source-contract and payload tests.
-  - Evidence: Phone-width screenshots, visible-text snapshot, browser console logs, route URL snapshot, and focused analytics/attribution test output.
-  - Current local evidence: 2026-07-09 Chrome DevTools Protocol Expo web at the 360 x 640 supported phone floor opened `/s/sharecard01` with safe attribution and `/s/not-a-valid-share-id` with sensitive-looking attribution/query values. Both routes rendered the safe public shelf-check landing surface, kept `Scan a product` and `Add manually` as complete 56 px controls, reported zero horizontal overflow, zero route issues, and zero disallowed browser logs, and exposed no private product, shelf, skin-profile, token, signed-url, JWT, photo, or health context in visible text. Evidence is in `test-results/human-e2e/2026-07-09/share-landing-attribution-current/`.
+  - Action: Open `/s/[shareId]` with both ordinary and sensitive-looking query parameters, then repeat with a different or invalid path value.
+  - Expected result: Every path and query renders the same product-free `Public sharing is unavailable.` recovery. The route does not parse or validate an identifier, derive a projection, fetch a record, emit attribution or analytics, expose private shelf/profile/product/health data, or create a public token, signed URL, or JWT. `Go to Shelf` and `Add a product` navigate only into the local private flow.
+  - Evidence: Phone-width screenshots, visible-text snapshot, browser console/network logs, route URL snapshot, focused zero-admission source-contract output, and navigation snapshots.
+  - Current source boundary: CORE-07A statically binds every `/s/[shareId]` path to the same product-free recovery and the source-contract rejects path/query reads, payload reconstruction, network or storage reads, token handling, and analytics. A fresh human-simulated phone-floor pass remains required before launch.
+  - Historical local evidence: 2026-07-09 evidence in `test-results/human-e2e/2026-07-09/share-landing-attribution-current/` predates CORE-07A and is retained only as regression history; its former public shelf-check landing and `Scan a product` / `Add manually` expectations are superseded.
 - Branch: Phase 8 public-site identity smoke
   - Priority: Critical
   - Automate later: Yes
   - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
-  - Expected result: The static launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, keep final app association IDs as placeholders until store-console identity is cleared, and disclose the V1 support floor on support.html: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
+  - Expected result: The branded launch pages use `Layerwell`, show no rejected working identity, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared. `share.html` instead remains a brand-neutral, inert `Public links are unavailable.` recovery that does not derive content from the address. `support.html` discloses the V1 support floor: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
   - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
-  - Current local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700, verified the visible support copy includes RoutineKind's V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no visible legacy `OnSkin`, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`.
+  - Historical local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700. Its saved visible-text snapshot uses the previous working identity and verifies the V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`; it does not verify Layerwell branding.
 - Branch: Phase 8 public-site placeholder store links
   - Priority: Critical
   - Automate later: Yes
-  - Action: Serve `docs/phase-8/public-site` locally before final store URLs are substituted, open `index.html` and `share.html` at phone width, then tap one App Store/Google Play waitlist fallback.
-  - Expected result: Raw `__APP_STORE_URL__` and `__PLAY_STORE_URL__` tokens are never clickable `href` values. Placeholder store buttons visibly route to `/waitlist.html`; when final production store URLs are substituted, the runtime guard promotes only validated App Store and Play Store HTTPS URLs.
-  - Evidence: Phone-width screenshots, visible-text/link snapshots, click-through URL snapshot, and source-level final-substitution check.
-  - Current local evidence: 2026-07-08 Codex in-app browser at 390 x 700 serves `docs/phase-8/public-site` on localhost, verifies `index.html` and `share.html` render `App Store waitlist` / `Google Play waitlist` with `/waitlist.html` hrefs and `data-store-ready=false`, taps App Store and Google Play fallbacks into the waitlist, records zero horizontal overflow, and source-checks that final App Store / Play Store URL substitution leaves no placeholder tokens while keeping the production-host runtime guard. Evidence and report are in `test-results/human-e2e/2026-07-08/phase8-public-store-link-fallback/` and `docs/e2e-bug-reports/2026-07-08-phase8-public-store-placeholder-hrefs.md`.
+  - Action: Serve `docs/phase-8/public-site` locally before final store URLs are substituted. Open `index.html` at phone width and tap one App Store/Google Play waitlist fallback; separately inspect `share.html` as the inert unavailable route.
+  - Expected result: On `index.html`, raw `__APP_STORE_URL__` and `__PLAY_STORE_URL__` tokens are never clickable `href` values, placeholder store buttons visibly route to `/waitlist.html`, and final substitution promotes only validated App Store and Play Store HTTPS URLs. `share.html` contains no anchor, button, form, iframe, script, token parsing, beacon, analytics, or store destination and displays only the neutral unavailable state.
+  - Evidence: Phone-width screenshots, visible-text/link snapshots, click-through URL snapshot for `index.html`, inert-surface DOM/network snapshot for `share.html`, and source-level final-substitution check.
+  - Historical local evidence: 2026-07-08 evidence and the report in `test-results/human-e2e/2026-07-08/phase8-public-store-link-fallback/` and `docs/e2e-bug-reports/2026-07-08-phase8-public-store-placeholder-hrefs.md` predate CORE-07A. Their `index.html` placeholder-store verification remains useful history; the former `share.html` waitlist/store destinations are superseded and are not current acceptance evidence.
 
 ## Flow: Today Routine Completion
 
@@ -662,7 +639,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-checkoff-append-only/`
-- Current 390 x 844 route-model evidence: 2026-07-15 headless Chrome Expo web completes the maintained first-session flow, dispatches two same-rectangle touches while each AM and PM durable write is still pending, verifies the target is disabled with `SAVING`, repeats the completed AM row, reloads the page, and retains exact `1 of 1` AM/PM completion with zero geometry issues and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-15/today-opt114-final/`.
+- Current CORE-05 source boundary: local Shelf and completion records are strict
+  encrypted v3 structures; Today persists the visible check-off and replay
+  event together; the offline coordinator drains Shelf before completion;
+  migrations `0068`/`0069` provide owner-derived adherence and sync RPCs,
+  deletion-wins stable product identity, and minimized replay receipts. The
+  historical UI evidence above predates this exact replay bridge and does not
+  prove hosted, two-device, native-storage, withdrawal/export, or
+  archive-identical behavior.
 
 ### Path A: Happy Path
 
@@ -683,34 +667,61 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: offline or sync pending
   - Priority: Important
   - Automate later: Yes
-  - Action: Complete a step with network disabled or sync unavailable if supported locally.
-  - Expected result: Local completion is preserved and sync state is honest.
-  - Evidence: Screenshot and logs.
+  - Action: Complete a step with the network disabled, relaunch, add/update/delete its Shelf product while still offline, then reconnect with controlled response loss on the Shelf and completion RPCs.
+  - Expected result: Local completion and the exact original event identity remain preserved. Shelf replay drains first. Network, authorization, thrown-RPC, and malformed-response ambiguity retain the exact FIFO head; only an exact accepted/idempotent four-field response acknowledges it. Relaunch does not invent a new event, duplicate completion, or success claim.
+  - Evidence: Today/Shelf screenshots, encrypted v3 state snapshots before/after relaunch, ordered network/RPC trace, event/operation IDs, and server readback.
+- Branch: terminal Shelf fact with correctable completion dependency
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Queue a completion whose product upsert receives an exact terminal Shelf result. Leave unrelated Shelf and completion work behind it; then queue a corrected Shelf upsert or deletion and retry.
+  - Expected result: The missing product completion first receives `COMPLETION_PRODUCT_RETRY_LATER`. If the Shelf record has that unresolved terminal fact and no pending correction, the client atomically moves the exact step plus the remaining same-routine/date pending group through its routine-day marker to the durable outbox tail. Unrelated work drains within the bounded replay budget. No original event enters a permanent dependency quarantine or is deleted. A later correction replays the exact original event. The marker never overtakes an earlier step.
+  - Evidence: Local v3 journal/outbox/terminal snapshots for every transition, ordered RPC trace, corrected replay readback, and crash/relaunch checkpoints around the atomic deferral.
+  - Open external evidence: Current source has focused tests; exact-current app-surface, physical-iPhone process-death, and hosted two-device evidence remain required.
+- Branch: remote-terminal completion cascades routine-day marker
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Make any scheduled PM step receive each exact remote terminal code, including a step that is terminal before the final check-off appends the routine-day marker and the final step immediately preceding an existing marker.
+  - Expected result: The original step remains in the local journal and enters the terminal receipt lane. Any same-routine/date routine-day marker is removed from pending replay and receives `COMPLETION_DEPENDENCY_TERMINAL` with the terminal step event IDs in journal order. The marker is never dispatched. A terminal step cannot manufacture adherence, a milestone, or a server routine-day row.
+  - Evidence: Visible Today/adherence state, local terminal receipt snapshot, zero marker-RPC trace, server rows, relaunch proof, and exact code coverage.
+  - Open external evidence: Current source has focused tests; fresh UI/native/hosted evidence has not been retained.
+- Branch: deletion wins across missing upsert and delayed completion
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On two authenticated sessions, exercise missing upsert then delete, delete response loss/retry, an upsert after the tombstone, completions at/before and after the effective deletion cutoff, and a cross-owner UUID race.
+  - Expected result: Same-owner delete creates only a minimal content-free identity/tombstone and is idempotent. Later upsert cannot resurrect content. A completion at or before the cutoff can reconcile; a later one is terminal. Cross-owner reuse is an ownership conflict. Direct table mutation stays denied, and withdrawal/account deletion removes identity and receipt residue.
+  - Evidence: Two-session ordered trace; exact identity/content/completion/receipt rows; direct-DML denial; withdrawal/account-deletion zero counts; and response-loss replay.
+  - Open external evidence: Local database contracts do not replace hosted two-device, stale-session, worker, backup, or physical-iPhone proof.
+- Branch: legacy UUID or timezone cannot construct replay work
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Relaunch with legacy/v1/v2 completion bytes, incompatible legacy Shelf identifiers/names/barcodes, unavailable or invalid timezone, a later valid IANA timezone, and repeated UUID-collision fixtures.
+  - Expected result: Historical completion schemas never invent routine IDs, step IDs, timestamps, adherence, or replay work. Incompatible Shelf records stay repair-required. A visible check-off that cannot construct canonical sync evidence stays in explicit encrypted unsynced state and can promote its original event after a valid timezone is available. UUID generation is lowercase v4, bounded, collision-aware, and fails closed instead of reusing identity.
+  - Evidence: Byte-identical legacy snapshots, repair/unsynced UI and export snapshots, recovered event identity, timezone/date trace, and focused source/native relaunch tests.
+- Branch: partial routine does not become adherence
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete one AM step, then one of several PM steps, and open Streak & adherence.
+  - Expected result: Step check-offs persist, but neither a partial AM nor partial PM routine creates a completed night, advances the streak, earns a cycle milestone, or triggers the seven-day review moment. The day qualifies exactly once only after every currently projected PM or recovery step is durably complete.
+  - Evidence: Before/after Today screenshots, adherence screen snapshot, private completion-envelope snapshot, analytics/haptic log, and relaunch verification.
+- Branch: governed App Store review request after durable value
+  - Priority: Important
+  - Automate later: Yes
+  - Action: On a supported iPhone development build, reach the seventh durable completed routine day and separately save an exact reviewed conflict choice. Repeat with a partial or failed completion, failed conflict save, data export, payment, disabled flag, malformed or future prompt history, the same app version, cooldown/cap exhaustion, simultaneous qualifying outcomes, backgrounding, consent withdrawal, and account switch. Dismiss the system sheet where it appears and repeat with VoiceOver.
+  - Expected result: Only the two successful governed value moments may request StoreKit, after the saved action finishes and a two-second settled-state pause. At most one attempt is reserved per app version, no more than three in 365 days, and attempts remain at least 30 days apart. Every denial branch stays silent. StoreKit display or dismissal never blocks, reverses, gates, rewards, or pressures the completed product action, and focus returns safely when the system sheet closes.
+  - Evidence: Exact build/version, screen recording or screenshots, sanitized logs, encrypted attempt-state snapshots, simultaneous-call trace, account/consent-boundary trace, VoiceOver focus notes, and focused source tests. StoreKit nondisplay is an allowed system outcome and must not be misreported as proof that the request was never made.
+  - Open external evidence: Source tests pass, but Windows and Expo web cannot render the native StoreKit review sheet; signed iOS and physical-device verification remain required.
+- Branch: completion storage unreadable or write unconfirmed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open Today with malformed/future-version/unreadable completion state; separately make a check-off persistence operation reject before commit and ambiguously after commit.
+  - Expected result: Today never renders an invented unchecked state, disables completion controls, explains that check-offs are unavailable, and offers retry. A failed or unconfirmed write produces no success haptic, analytics, milestone, review prompt, or navigation success and preserves bytes unless exact rollback is verified.
+  - Evidence: Error/retry screenshots, accessibility snapshot, storage transcript, and zero-success-side-effect log.
 - Branch: relaunch after completion
   - Priority: Important
   - Automate later: Yes
   - Action: Complete a step, relaunch the app, and return to Today.
   - Expected result: The state remains correct.
   - Evidence: Video or screenshot sequence.
-- Branch: repeated tap while a completion is saving
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Tap the same incomplete routine row rapidly more than once while its durable write is pending, then tap the completed row again.
-  - Expected result: The row exposes one honest saving state, only one durable append is attempted for that owner/date/step, completion remains checked, and duplicate taps do not replay activation analytics, haptics, review prompts, or remove the completion.
-  - Evidence: Before/during/after UI snapshots plus the completion-store or browser transcript.
-- Branch: completion storage unavailable or interrupted
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Open Today with the local completion read unavailable, or force the next completion write to fail, then choose Retry after storage becomes available.
-  - Expected result: Today fails closed without showing a false `0 of N`, does not emit success feedback for a failed write, retains an accessible recovery action, and publishes only the exact durable snapshot after Retry succeeds.
-  - Evidence: Failure/recovery screenshots plus storage and browser logs.
-  - Current local recovery evidence: 2026-07-15 Codex in-app Browser at 390 x 844 opens `/today?routine=AM` with `EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE=today_once`, verifies `Check-ins unavailable`, the byte-preservation explanation, and the uniquely named `Retry loading check-ins` action, then activates Retry and reaches the truthful empty-routine surface in place. DOM snapshots and terminal output are retained in the Codex task transcript; the focused store/view-model contracts cover failed-write publication and retry.
-- Branch: open screen crosses the AM/PM boundary
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Keep Today open as local time crosses 17:00 without navigating or remounting the route.
-  - Expected result: The visible routine switches from Morning to Evening at the boundary while an explicit `?routine=AM` or `?routine=PM` development/test override remains stable.
-  - Evidence: Fake-clock component contract plus pre/post visible-state snapshots on a compatible surface.
 - Branch: compact PM cycle strip labels
   - Priority: Critical
   - Automate later: Yes
@@ -724,6 +735,25 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Today in the evening routine state.
   - Expected result: The header uses the current local date and clock time, never a static design-placeholder time.
   - Evidence: Screenshot and visible-text snapshot.
+- Branch: live 17:00, midnight, foreground, and timezone transition
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Keep Today open from 16:59 through 17:00 and from 23:59 through midnight; separately background the app, change day or timezone, and foreground it.
+  - Expected result: The visible clock refreshes, AM becomes PM at 17:00, the local-date completion and progress query keys change at midnight, and foregrounding immediately adopts the current local date/phase without writing a completion to the stale day or phase.
+  - Evidence: Fake-timer/AppState transcript plus native foreground and DST/timezone video.
+- Branch: one/two missed nights and three-night lapse
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete qualifying PM/recovery routines around one and two missed nights, then repeat with three missed nights.
+  - Expected result: One or two interior misses are absorbed automatically with calm protected copy and no guilt; a third miss lapses the active run without shrinking the historical best, and the next qualifying routine produces a neutral welcome-back state.
+  - Evidence: Adherence/welcome-back screenshots, client/server parity fixture, relaunch/cross-device proof, and analytics publication evidence when legally admitted.
+- Branch: CORE-05 combined data export and withdrawal
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With pending, accepted, and terminal Shelf/completion sync facts, request a combined export; then withdraw health-data consent and request/export again only through the lifecycle states the UI permits.
+  - Expected result: The current-device export labels local pending/terminal v3 records as `shelf_and_sync_state` and `completion_and_sync_state`. Server schema v4 includes exact subject-facing stable identity and receipt fields through three owner-derived projections and excludes internal `request_sha256`. Every active export read uses the initial lifecycle-derived health epoch and aborts if lifecycle changes. Stable withdrawn/never-active state yields exact empty health sources under the deny epoch; synthetic nonactive residue fails closed. Withdrawal erases local sync state, stable identities, and both minimized ledgers without deleting Auth or billing.
+  - Evidence: Export JSON and manifest; owner/count/checksum/column results; lifecycle transition trace; exact pre/post database/local counts; raw-payload/digest absence; and account/billing preservation.
+  - Open external evidence: Hosted export completeness/concurrency, native share/cache cleanup, processor/backup handling, final policy/App Privacy answers, `request_sha256` rights treatment, and counsel/App Review remain open.
 
 ## Flow: Shelf Product Add
 
@@ -731,30 +761,39 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Persona: User building their shelf.
 - Entry state: User has completed onboarding or has a seeded account/local state.
 - Start screen/URL/window: Shelf tab.
-- Success state: Product is added, or the user receives a clear no-match/manual-add path.
+- Success state: Product is added, or the user receives a clear no-match/manual-add/retry path without an automatic report, queued lookup, or Shelf mutation.
 - Priority: Critical
 - Automate later: Yes
-- Surface: iOS and Android first because camera/OCR may be native-only.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/shelf/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`
+- Surface: iOS 17+ is the launch surface. Expo web may verify compatible
+  navigation, recovery, async, and layout behavior but cannot prove camera,
+  permission, SecureStore/Keychain, or physical-device behavior. Android is
+  resilience-only under the current launch contract.
+- Launch-blocking web-compatible viewports: 375 x 667, 390 x 844, and 430 x 932. The 360-wide and 320-wide browser sizes are resilience/stress evidence,
+  not the launch support floor.
+- Evidence folder: `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`
+- Retained governed local evidence: the deterministic Expo-web matrix bound to
+  the pre-CAT-06 source passed 45/45 matched, wrong-match, no-match,
+  offline/error, permission/Settings failure, malformed-identity, OCR-capture
+  fallback, and manual-barcode validation scenario executions plus 18/18
+  consent bootstraps at 375 x 667, 390 x 844, and 430 x 932. It retains 365
+  tracked files and 144 screenshots with zero browser failures. The packet is
+  now historical/stale after the shared camera lifecycle changed and must be
+  regenerated against the accepted CAT-06 source. It records
+  `nativeDeviceProof=false`: neither the retained packet nor a regenerated web
+  packet proves native camera, SecureStore/relaunch, hosted
+  reconnect/reporting, physical-iPhone accessibility, or backend behavior.
+- Historical local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`,
+  `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`, and
+  `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`.
 
 ### Path A: Happy Path
 
-1. Action: Open Shelf, search for a known fixture product, select it, and confirm the detail/shelf state.
-   Expected result: Search results are understandable, the catalog search input and Search action stay inside narrow phone viewports, the shelf state updates without unsafe recommendation claims, and a real-product shelf exposes a clear Build my routine handoff into `/routine/plan`.
-   Evidence: Screenshots of search, selection, and final shelf state.
+1. Action: Open Shelf, search for a known reviewed fixture product, choose `Use this match`, complete opened/freshness intake, save, and confirm the detail/Shelf state.
+   Expected result: Only an exact reviewed, currently servable first-party catalog projection is accepted; search controls stay within every supported iPhone-class viewport; one deliberate save creates one Shelf row; and no recommendation, source-rights, or freshness fact is invented.
+   Evidence: Supported-viewport screenshots, step/result JSON, browser/network logs, and focused decoder/save contracts. Native catalog acceptance still requires the physical-iPhone and hosted lanes below.
 
 ### Branches
 
-- Branch: local Shelf changes are pending, syncing, or need attention
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Add or edit a Shelf product while server sync is unavailable, reconnect while the owner-bound outbox drains, then exercise a permanent/dead-letter result and its explicit retry.
-  - Expected result: The Shelf remains fully usable and names `Saved locally`, `Syncing Shelf changes`, and `Shelf sync needs attention` without exposing account, product, or error payloads. Only the current account generation contributes status. A retry is single-flight, requeues only that owner's dead rows, and never resets local Shelf data or flattens an unreadable/future outbox into success.
-  - Evidence: Supported-phone screenshots for all three states, visible role/text and live-region snapshots, retry control geometry and duplicate-activation result, refresh/relaunch behavior, browser logs, and focused owner/status/retry tests.
-  - Current local evidence: 2026-07-18 Codex in-app browser Expo web at requested 390 x 844 / observed 390 x 845 renders the empty Shelf with `Saved locally`, one named `Syncing Shelf changes` progress bar, and one `Shelf sync needs attention` alert plus a 308 x 56 px retry. A real manual `E2E Sync Cleanser` add returns to the populated Shelf without blocking local use, and reload preserves the product and syncing state. All captures have zero horizontal overflow, no JavaScript dialog, and no browser errors. The first syncing pass exposed duplicate nested progress-bar roles; the exact post-fix rerun exposes one. Evidence is in `test-results/human-e2e/2026-07-18/shelf-outbox-status-current/` and `docs/e2e-bug-reports/2026-07-18-shelf-sync-duplicate-progressbar.md`; signed iOS offline/reconnect/process-death and hosted RPC failure evidence remain release QA.
 - Branch: product detail routine role
   - Priority: Critical
   - Automate later: Yes
@@ -768,51 +807,65 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Add or open a real Shelf product, open product detail, tap More options, close the remove/discard sheet, tap Report an issue, and choose a catalog issue while the catalog backend is unavailable.
   - Expected result: Lifecycle and catalog-report choices stay inside named route-owned sheets, use 48 px+ controls, open no native or JavaScript dialog, keep the product detail at zero horizontal overflow, and render raw-error-free inline report feedback after a failed catalog report.
   - Evidence: Product-detail screenshots, sheet dialog snapshot, inline alert snapshot, dialog-state check, control-geometry snapshot, and browser logs.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 adds `Route Owned Balm`, opens product detail, verifies `Remove from shelf?` and `Report catalog issue` are named `role="dialog"` sheets with modal semantics and 48 px+ controls, submits `Wrong product match` against the unavailable catalog backend, and sees inline `Report not sent` feedback with no JavaScript/native dialog and zero horizontal overflow. The first pass found unnamed dialog nodes; post-fix evidence is in `test-results/human-e2e/2026-07-08/shelf-detail-you-inline-recovery-current/`.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 adds `Route Owned Balm`, opens product detail, verifies `Remove from shelf?` and `Report catalog issue` are named `role="dialog"` sheets with modal semantics and 48 px+ controls, submits `Wrong product match` against the unavailable catalog backend, and sees inline `Report not sent` feedback with no JavaScript/native dialog and zero horizontal overflow. The first pass found unnamed dialog nodes; post-fix evidence is in `test-results/human-e2e/2026-07-08/shelf-detail-you-inline-recovery-current/`. This predates the explicit identity/recipient confirmation and does not prove the current report flow.
   - Current glyph/dock recheck: 2026-07-08 Codex in-app browser Expo web at 320 x 568 adds `Glyph Gel`, opens product detail, verifies the product-detail `More options` glyph remains a 48 x 48 accessible `More options` button after replacing the literal ellipsis text, confirms the best-before row is fully reachable after scroll instead of sitting under the lifecycle dock, opens the named `Remove from shelf?` dialog, keeps lifecycle controls 48 px+, has zero horizontal overflow, and records no current-origin browser warn/error logs. Evidence and report are in `test-results/human-e2e/2026-07-08/shelf-detail-more-options-glyph-current/` and `docs/e2e-bug-reports/2026-07-08-shelf-detail-more-options-glyph-dock.md`.
 - Branch: no search result
   - Priority: Critical
   - Automate later: Yes
   - Action: Search for a product that should not match, tap `Report missing product`, then use `Add by hand`.
-  - Expected result: No-match state offers a privacy-safe missing-product report and manual add; when catalog reporting is unavailable, the route renders inline `Report not sent` feedback without a native or JavaScript dialog, then preserves the typed product name through manual add.
+  - Expected result: No-match state offers a separate missing-product report and manual add. Before `Send report`, the user can confirm or edit the product name and sees the exact identity, account linkage, first-party operator recipient, export/deletion treatment, and no-third-party-catalog-recipient boundary. Cancel sends nothing. When catalog reporting is unavailable, the route renders inline `Report not sent` feedback without a native or JavaScript dialog, then preserves the typed product name through manual add.
   - Evidence: Screenshot, visible-text snapshot, console/network log snapshot, route snapshot, and control-geometry snapshot.
   - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match`, searches `definitely missing sunscreen`, verifies the no-match copy offers `Add by hand`, and confirms the fallback opens `/shelf/manual` with zero horizontal overflow and 50 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`.
-  - Current missing-product report evidence: 2026-07-09 Codex in-app browser Expo web uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match` at 390 x 844 to search `definitely missing sunscreen`, verifies `Report missing product` is a 155 x 48 px hit-testable action, taps it, sees inline `Report not sent` feedback with no JavaScript dialog or current-route warn/error logs, and continues through `Add by hand` with the missing query preserved in Product name. A 360 x 640 support-floor spot check verifies Back, Search, Report missing product, and Add by hand remain fully visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`; live Supabase report insertion remains environment QA.
-- Branch: catalog loading, empty, and offline meanings remain distinct
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Submit a delayed catalog search, let a reviewed no-match fixture complete, then repeat while the catalog backend is unavailable.
-  - Expected result: Pending work exposes a named `Loading` progress state and disables duplicate Search. A successful no-match exposes the non-alert `Nothing here yet` / `No catalog match` empty state with reporting and manual-add recovery. Transport unavailability exposes exactly one `Offline` alert with catalog-specific copy and manual-add recovery. No state relies on color alone, no offline/error result is flattened into empty, and no native or JavaScript dialog opens.
-  - Evidence: Loading, no-match, and offline screenshots; visible role/text snapshots; alert and recovery counts; control geometry; dialog and browser-log summary; shared-state inventory and route contract tests.
-  - Current local evidence: 2026-07-16 actual Expo web at 1281 x 720 used a 1.5-second no-match fixture and the unavailable local Supabase fixture. The delayed request rendered exactly one named `Loading` progress state while Search was disabled; completion rendered the visibly named empty state with both Report missing product and Add by hand; the offline pass rendered exactly one `Offline` alert, one Add by hand recovery, a 1232.6 x 118.9 px notice, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-16/interface-state-tokens-current/`; supported-phone, native screen-reader, Dynamic Type, and dark-mode visual review remain open.
-- Branch: catalog request cancellation and recovery
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Start a deliberately delayed catalog search, leave the route while Search is pending, wait beyond the response delay, then re-enter and search again.
-  - Expected result: The pending request is aborted on blur/unmount, no stale result or analytics outcome is published into the destination route, Search does not remain stuck disabled, and a fresh search can complete normally after re-entry.
-  - Evidence: Pending-state screenshot, destination URL/screenshot after the delayed response would have completed, recovery search screenshot, browser logs, and focused cancellation tests.
-  - Current local evidence: 2026-07-13 Codex in-app browser Expo web at 390 x 844 uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match` plus a 1.5 s dev-only delay. It starts `different cleanser`, confirms Search is disabled while pending, taps Back, remains on `/shelf` after waiting beyond the delay with no stale result publication, then re-enters `/shelf/search`, completes `recovery`, and sees Search re-enabled with the expected no-match state and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-13/opt-118-catalog-request-cancellation/`; native camera blur/interruption and live controlled-network evidence remain device/backend QA.
-- Branch: catalog typing isolation and superseded-query cancellation
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Load a bounded multi-result fixture, establish content-free render counters, rapidly replace the catalog draft with an 80-character query without submitting, then submit a delayed query, edit it before completion, and issue two rapid Return actions for the same replacement.
-  - Expected result: Draft edits stay immediate and start no live lookup; result-region commits and result-card renders do not change while typing. The 80-character client bound and server-equivalent punctuation/length eligibility apply before transport. Editing a pending query aborts it, the obsolete response never publishes beneath the replacement draft, and near-simultaneous duplicate submission starts only one replacement request. `Add by hand` preserves the latest bounded draft. Diagnostics contain counts and durations only, never query or product content.
-  - Evidence: Phone-width Expo-web screenshots, exact input length/hash, content-free commit/request counter snapshots, delayed cancellation/publication samples, manual-add destination snapshot, control geometry, horizontal-overflow measurement, browser-session dialog/log summary, and focused query/client/route tests. Production-Hermes keystroke duration, native keyboard/accessibility, and live-network timing remain iOS/device QA.
-  - Current local evidence: 2026-07-16 Codex in-app browser Expo web at requested 390 x 844 / observed 390 x 845 loaded 12 bounded fixture results. Eighty individual key actions produced 80 composer commits and zero result-region commits, card renders, request starts, or publications; the 81st character was rejected. Editing a five-second pending query incremented cancellation once and left publication at zero after 5.2 seconds. Two rapid Return actions started one request and hit the duplicate guard once; a replacement then published 12 cards. `Add by hand` preserved the latest synthetic draft, controls remained 50/56 px high, and horizontal overflow stayed zero. A fresh desktop Expo-web regression after the coordinator refactor repeated cancellation, duplicate, supersession, and 12-card recovery with the same lifecycle outcome; its sanitized console artifact contains zero errors and zero unexpected warnings. Capture attempts `02-80-character-draft.png`, `05-cancelled-draft.png`, and `06-replacement-12-results.png` contain opaque occlusion, are excluded as standalone visual proof, and are intentionally not committed, while their numeric DOM metrics remain usable. The sanitized-short `a%` eligibility case is source/unit evidence, not durable browser evidence. This slice did not rerun blur/unmount/back/re-entry, no-match/empty/reporting, wrong-match/use-match, the visible Search button, refresh/relaunch, or accessibility/native-keyboard branches, and it does not claim full checklist acceptance. Evidence is in `test-results/human-e2e/2026-07-16/catalog-search-input-isolation-current/`, with the checkpoint at `docs/optimization/evidence/2026-07-16_catalog-search-input-isolation-checkpoint.md` and bug report at `docs/e2e-bug-reports/2026-07-16-catalog-search-stale-publication.md`. Production Hermes, native keyboard/VoiceOver, live-network, and query-plan evidence remain open.
+  - Historical missing-product report evidence: 2026-07-09 Codex in-app browser Expo web uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match` at 390 x 844 to search `definitely missing sunscreen`, verifies `Report missing product` is a 155 x 48 px hit-testable action, taps it, sees inline `Report not sent` feedback with no JavaScript dialog or current-route warn/error logs, and continues through `Add by hand` with the missing query preserved in Product name. A 360 x 640 support-floor spot check verifies Back, Search, Report missing product, and Add by hand remain fully visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`. It predates the current confirmation/disclosure step and remains stress evidence only; live Supabase report insertion remains environment QA.
 - Branch: wrong catalog match before add
   - Priority: Critical
   - Automate later: Yes
   - Action: Search for a fixture product that returns an incorrect catalog match, tap `Not this product`, then continue through `Add by hand`.
-  - Expected result: Search results make `Use this match` and `Not this product` equally clear before the product is added; reporting an incorrect match uses inline `Report not sent` recovery when the catalog backend is unavailable, never opens a native/JavaScript dialog, and preserves the search query through manual add.
+  - Expected result: Search results make `Use this match` and `Not this product` equally clear before the product is added. `Not this product` opens a separate confirmation that displays the exact catalog product identity and recipient/data-rights treatment; Cancel sends nothing. A failed submission uses truthful inline `Report not sent` recovery, never opens a native/JavaScript dialog, and preserves the search query through manual add.
   - Evidence: Search result screenshot, inline feedback snapshot, manual recovery snapshot, 360 x 640 support-floor geometry spot check, and browser logs.
-  - Current local evidence: 2026-07-09 headless Chrome Expo web uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match` with the dev-web `e2eQuery` seed to search `ceramide cleanser`, verifies `Use this match` and `Not this product` are 48 px hit-testable actions, reports the wrong match, sees inline `Report not sent` feedback with no dialog, then opens `/shelf/manual` with `Product name` preserved as `ceramide cleanser`. A 360 x 640 support-floor spot check verifies Back, Search, Use this match, Not this product, and Add by hand remain visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-search-wrong-match-current/`; live Supabase report insertion remains environment QA.
-- Branch: unreadable Shelf private state and recovery
+  - Historical local evidence: 2026-07-09 headless Chrome Expo web uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match` with the dev-web `e2eQuery` seed to search `ceramide cleanser`, verifies `Use this match` and `Not this product` are 48 px hit-testable actions, reports the wrong match, sees inline `Report not sent` feedback with no dialog, then opens `/shelf/manual` with `Product name` preserved as `ceramide cleanser`. A 360 x 640 support-floor spot check verifies Back, Search, Use this match, Not this product, and Add by hand remain visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-search-wrong-match-current/`. It predates the current confirmation/disclosure step and remains stress evidence only; live Supabase report insertion remains environment QA.
+- Branch: stale search response, thrown request, and retry
   - Priority: Critical
   - Automate later: Yes
-  - Action: Seed multiple Shelf products, force the dev-only Shelf storage-failure fixture, and open the Shelf tab plus representative Shelf detail/intake/archive/replenish, Today, Plan, Ask, Recommendations, conflict, and share routes. Retry while the fixture remains active, then relaunch with the one-shot fixture or with the fixture removed and revisit the saved Shelf.
-  - Expected result: Every authoritative Shelf consumer shows one accessible recovery state and fails closed. No route claims the Shelf is empty, products were removed, the user is all clear or set, or a fabricated routine/recommendation is safe; add, edit, remove, re-add, share, conflict choices, checkoffs, and routine start remain unavailable. Retry is at least 56 px high, persistent failure stays unavailable, recovery returns the exact seeded products, and unreadable bytes are never cleared or rewritten. No replenishment notification is derived from unavailable state.
-  - Evidence: Recovery screenshots at supported phone sizes, visible role/text and control-geometry snapshots, route and browser-log snapshots, exact-product recovery evidence, and focused store/consumer tests.
-  - Current local evidence: 2026-07-13 Codex in-app browser Expo web at requested 390 x 844 and 375 x 667 uses two seeded products plus `EXPO_PUBLIC_E2E_SHELF_STORAGE_FAILURE=always|once`. Twelve Shelf-derived direct entries preserve their URLs, render one shared accessible recovery state, hide saved names/false-empty and reassuring guidance/actions, keep a 56 px retry and zero horizontal overflow, and persistent retry remains unavailable without altering saved data. A one-shot retry restores exactly `Optimization Glycolic Toner` and `Optimization Retinol Serum` plus their conflict. Human E2E found and fixed a nested-navigator update loop by keeping each `Stack` mounted and gating via `screenLayout`; evidence and the report are in `test-results/human-e2e/2026-07-13/shelf-storage-recovery-current/` and `docs/e2e-bug-reports/2026-07-13-shelf-data-gate-navigator-loop.md`. Native secure-store interruption, notification delivery, and VoiceOver behavior remain device QA.
+  - Action: Start one slow search, immediately submit a different query, resolve the newer request first and the older request last; separately force a thrown/offline request and retry without retyping.
+  - Expected result: The older response cannot replace the newer query/result or clear its state. A rejected request leaves the last submitted text intact, ends the busy state, shows route-owned raw-error-free recovery, and allows another Search action. No unmounted route receives a late state update.
+  - Evidence: Deterministic deferred-promise integration contract, supported-viewport search screenshots, step JSON, and browser console/network logs.
+- Branch: malformed or identifier-free catalog report
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the no-match route directly without a normalized barcode, and separately attempt wrong-match reporting with a malformed/non-UUID product ID or missing product identity.
+  - Expected result: No report action appears without actionable identity, and the service rejects malformed or identity-free missing/wrong reports before its service-only RPC. A valid report is always a separate explicit action, never an automatic consequence of search, scan, manual add, or retry.
+  - Evidence: Direct-entry screenshot, route contract, Edge privacy test, and request/RPC ordering assertion.
+- Branch: scan match and wrong-product recovery before add
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Scan a deterministic reviewed match, choose it once, then repeat and choose the exact `Not this product` action. Separately exercise `Product not found` from a genuine no-match result.
+  - Expected result: The exact reviewed UUID and normalized barcode are preserved into the intake or wrong-match confirmation path. The confirmation displays that identity and the recipient/data-rights boundary before `Send report`; Cancel sends nothing. An external, unreviewed, malformed, extra-field, or barcode-mismatched candidate is treated as no match. No Shelf row exists until opened/freshness intake is deliberately saved.
+  - Evidence: Matched and wrong-product screenshots at 375 x 667, 390 x 844, and 430 x 932; decoder tests; route and report payload assertions; native camera remains a separate physical-iPhone gate.
+- Branch: offline/error scan and explicit retry-when-online
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Produce offline and server-error scan outcomes, inspect all immediate fallbacks, explicitly tap `Retry when online`, repeat the tap, background/foreground, and reconnect.
+  - Expected result: Nothing is queued automatically. The explicit action stores one deduplicated normalized barcode in encrypted, account/health-epoch-bound device storage; it exposes clear saved/already-saved/failure feedback, preserves manual/search/label fallbacks, uses bounded backoff and a seven-day expiry, and never sends lookup content to analytics or an external catalog source.
+  - Evidence: Supported-viewport screenshots and step JSON, encrypted queue/foreground tests, analytics payload assertions, and network logs. SecureStore/Keychain, process-death, account switch, and real reconnect remain native/hosted gates.
+- Branch: reconnect candidate review, accept, reject, or changed result
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: From Shelf, open a ready reconnect match linked to an existing Shelf row and compare both cards. Accept once with catalog identity unchecked, repeat with the identity checkbox checked, reject another candidate, and force gone/changed/offline revalidation. Repeat with an unlinked candidate and save/cancel/fail its new-product intake.
+  - Expected result: Shelf visibly presents every ready candidate for review. Confirmation rechecks the first-party lookup and exact eligible product. The default preserves user-entered name, brand, category, ingredients, and all freshness data; opting into catalog identity changes only name, brand, and category. Ingredients and freshness never come from the queued candidate. A linked mutation uses stale-write protection; an unlinked result remains queued until one idempotent Shelf save succeeds. Reject removes only that candidate. Gone, changed, offline, canceled, failed, or stale outcomes change nothing and keep or remove the queue item only as the visible action promises.
+  - Evidence: Candidate/current comparison screenshots, checkbox/accessibility state, accepted/rejected/changed step JSON, queue/store atomicity tests, reload trace, and browser/network logs.
+- Branch: manual barcode formatting and checksum recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Type a complete checksum-bearing GTIN-8, UPC-A/GTIN-12, EAN-13, GTIN-14, or eight-digit UPC-E with spaces or hyphens where applicable; then try incomplete six/seven-digit UPC-E data, a recognized value with a bad checksum, arbitrary letters/punctuation, too few/many digits, and a valid optional blank.
+  - Expected result: Permitted separators normalize without changing identity; a complete eight-digit UPC-E expands deterministically to the catalog UPC-A key; incomplete manual UPC-E, recognized bad checksums, undefined GTIN lengths, and lossy/non-numeric input block Continue with inline guidance; optional blank remains valid. The normalized value, not the presentation string, is persisted.
+  - Evidence: Form screenshots, keyboard/accessibility inspection, barcode unit tests, and saved Shelf record assertion.
+- Branch: uncertain or repeated Shelf save
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Submit opened/freshness intake, simulate an uncertain response, and retry the same submission before and after relaunch.
+  - Expected result: A stable operation UUID returns the existing created row rather than duplicating it; choices remain available after failure; a reconnect candidate is consumed only after the same successful Shelf result is durably associated with it.
+  - Evidence: Store/idempotency/queue tests, final Shelf row count, and reload trace.
 - Branch: empty Shelf compact phone overflow
   - Priority: Important
   - Automate later: Yes
@@ -828,29 +881,21 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Shelf manual add in a 320 px phone viewport, enter product and brand, open the category picker, scroll through all category options, and select the lower "Something else" option.
   - Expected result: The category picker opens as a named bottom sheet instead of an inline list, category rows remain at least 48 px targets, lower options are reachable by scroll, visible option taps are not intercepted by the fixed Continue footer, and the collapsed category field stays polished on compact phones.
   - Evidence: Screenshot sequence and hit-test geometry.
-  - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 opens `/shelf/manual`, enters `Barrier Balm` / `RoutineKind Test`, opens the category picker, scrolls the modal sheet to `Something else`, verifies the row is visible and center-tappable, selects it, confirms the collapsed field reads `Other`, and continues to `/shelf/opened` with zero horizontal overflow and no clipped or sub-44 px visible controls.
+  - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 opens `/shelf/manual`, enters `Barrier Balm` / `Layerwell Test`, opens the category picker, scrolls the modal sheet to `Something else`, verifies the row is visible and center-tappable, selects it, confirms the collapsed field reads `Other`, and continues to `/shelf/opened` with zero horizontal overflow and no clipped or sub-44 px visible controls.
   - 2026-07-08 current safe-area follow-up: Source contracts now require the route-local sheet to own its viewport height, reserve a 48 px outside-dismiss space, add native bottom-inset padding only when present, expose a named web dialog, pad the internal category list, and keep the collapsed category accessibility label aligned with the visible compact label. Codex in-app browser Expo web at 320 x 480 opens `/shelf/manual`, fills product and brand, opens the named `Choose product category` dialog, verifies no open-state control issues or horizontal overflow, scrolls to fully visible `Something else`, selects it, confirms the collapsed field exposes `Category, Other`, continues to `/shelf/opened`, and records zero unexpected warn/error logs. Evidence is in `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-320x480-postfix/`; native iOS/Android safe-area, Dynamic Type, keyboard, and screen-reader traversal remain open QA.
   - 2026-07-08 320 x 430 / 320 x 440 follow-up: a shortest-height route sweep found `/shelf/manual` Ingredients hit-blocked by the sticky Continue footer, `/shelf/ocr` clipping `Continue with manual text`, and `/shelf/no-match` clipping and blocking `Add it by hand`. Post-fix Codex in-app browser evidence verifies `/shelf/manual`, `/shelf/ocr`, and `/shelf/no-match` have zero user-facing clipped controls, hit-blocked controls, tiny targets, horizontal overflow, or unexpected route logs. A later 320 x 440 pass added extra ultra-short category-sheet bottom padding so `Something else` scrolls fully into view before selection, verified OCR capture-failure/manual-text continuation into `/shelf/manual`, and added explicit no-match row accessibility labels. The 320 x 430 / 120% text-pressure pass then hid no-match subtitles below 460 px so all three recovery rows remain complete under enlarged text. The broader 49-route post-fix sweep confirms shelf routes are no longer in the failure list. Evidence and bug reports are in `test-results/human-e2e/2026-07-08/shelf-short-phone-430-clearance/`, `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postfix-sweep/`, `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`, `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/`, `docs/e2e-bug-reports/2026-07-08-shelf-short-phone-430-intake-clearance.md`, and `docs/e2e-bug-reports/2026-07-08-text-pressure-short-phone-430-clearance.md`; native iOS/Android safe-area, keyboard, Dynamic Type, barcode camera, and OCR capture remain open QA.
   - 2026-07-08 320 x 370 / 320 x 360 / 130% micro-short text-pressure follow-up: the initial route sweep found `/shelf/manual` exposing the optional Ingredients textarea under the sticky Continue footer. Post-fix, manual add reserves extra split-short spacing below 410 px before optional ingredients and the final 49-route sweeps report zero failed routes. Evidence and bug report are in `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`, `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`, `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`, and `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`; native iOS/Android safe-area, keyboard, Dynamic Type, barcode camera, and OCR capture remain open QA.
   - 2026-07-09 layout-constant follow-up: Codex in-app browser Expo web on `localhost:8255` reverified `/shelf/manual` after split-short manual spacing calibration. The retained 320 x 480 stress viewport keeps Cancel, Add by hand, Product name, Brand, Category, and Continue complete with zero clipped controls, zero sub-44 visible controls, zero blocked hit centers, zero horizontal overflow, zero JavaScript dialogs, and zero unexpected current-origin logs. A 320 x 400 non-blocking resilience stress pass keeps the same first-viewport controls complete while Ingredients remains below the first viewport. Evidence and report are in `test-results/human-e2e/2026-07-09/support-floor-layout-constant-followup-current/`.
   - 2026-07-09 supported-phone 120% text-pressure follow-up: the route audits found `/shelf/manual` optional Ingredients entering the sticky Continue footer zone and `/shelf/no-match` manual recovery clipping on supported compact heights. Post-fix, manual add defers optional Ingredients below the first viewport and no-match keeps the manual recovery row complete or scroll-reachable. The 320 x 568, 320 x 480, 390 x 844, and 430 x 932 final sweeps report zero failed routes with evidence in `test-results/human-e2e/2026-07-09/text-pressure-120-route-audit-current/`, `test-results/human-e2e/2026-07-09/text-pressure-120-support-floor-480-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-120-modern-390-postfix/`, and `test-results/human-e2e/2026-07-09/text-pressure-120-modern-430-postfix/`.
-- Branch: barcode terminal result pauses scanning until deliberate re-arm
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Hold one valid barcode in the camera frame through a matched, no-match, offline, or failed lookup and wait longer than the duplicate-read window; repeat with a checksum-invalid read. Then choose `Scan again` and hold the same barcode in frame.
-  - Expected result: The first genuine read starts exactly one lookup/log/analytics outcome. Lookup and every terminal result pause camera frames and torch; held or different frames cannot start another request or replace the visible result, regardless of elapsed time. `Scan again` is a complete 48 pt+ named action that clears the prior duplicate identity, resumes the camera only while the route is focused, and permits exactly one new lookup for the same barcode. Late completion or cancellation from an older lookup cannot publish into or reopen the current session.
-  - Responsive/accessibility branch: On Expo-web-compatible terminal fixtures at 375 x 667 and 390 x 844, terminal copy, `Scan again`, and search/OCR/manual fallbacks remain complete, center-hit-testable, and at zero horizontal overflow; user-like reset returns to the idle scan surface without navigation. The camera/torch and held-frame request-count proof remains signed-native QA.
-  - Evidence: The pure session and route contracts pass, including same-barcode stale-attempt fencing. Expo web at 375 x 667 and 390 x 844 retained no-match and matched terminal results for 2.8 seconds, exposed exactly one 49.94 px-high `Scan again` action, reset in place, retained zero horizontal overflow, and kept all fallbacks reachable. The denser matched card kept Add this, Wrong, Scan again, OCR, search, and manual controls complete and center-hit-testable while exposing a concise paused-state alert. The first 390 x 844 pass found idle guidance overlapping the terminal result; terminal states now hide that stale guidance and the repeated pass is clean. The paused native reticle is also suppressed, and accepted reads restore the documented selection haptic. Evidence is in `test-results/human-e2e/2026-07-25/shelf-scanner-terminal-session-current/`, `docs/optimization/evidence/2026-07-25_shelf-scanner-terminal-session.md`, and the two 2026-07-25 scanner bug reports. Final signed-native camera request-count, torch, lifecycle, VoiceOver, and Dynamic Type proof remains open.
 - Branch: barcode no-match or offline lookup
   - Priority: Critical
   - Automate later: Yes
-  - Action: Scan a barcode that returns no catalog match, an external candidate, or an offline/failed lookup; from no-match recovery, report the missing product and continue by search, OCR, or manual add.
-  - Expected result: The scan sheet never dead-ends; it shows a matched candidate, no-match copy, privacy-safe `Report missing product` recovery, or manual/search/OCR fallbacks, durably queues the owner-scoped `shelf_scans` outcome for authenticated convergence, and tracks only privacy-safe scan-funnel metadata.
-  - Evidence: Screenshot, console/network or Supabase/mock insert evidence, inline report-feedback snapshot, and analytics payload assertion.
-  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT=offline`, verifies `/shelf/scan` shows offline catalog copy plus Scan ingredient label, Search catalog, and Add it by hand fallbacks, and verifies `/shelf/no-match` exposes search, label-scan, and manual routes without promising contribution-back or showing unsafe source claims. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; live Supabase `shelf_scans`, real OBF lookup, native barcode camera, and OCR device capture remain device/backend QA.
-  - 2026-07-18 durable-intake follow-up: Codex in-app browser Expo web at 390 x 844 uses the offline scan fixture and verifies `/shelf/scan` exposes three complete, center-hit-testable 76 px recovery rows; user-like taps reach `/shelf/ocr`, `/shelf/search`, and `/shelf/manual`, while Close returns to `/shelf`. The route has zero horizontal overflow and zero route warning/error logs. Focused tests prove authenticated scans append one owner-fenced encrypted outbox event, confirm ambiguous local commits before scheduling, never bind external candidates to internal product IDs, cap durable numeric barcodes at 6-14 digits, and never emit raw barcode analytics. The static RPC contract removes direct authenticated INSERT/UPDATE and retains only a payload hash in receipts. Evidence is in `docs/optimization/evidence/2026-07-18_shelf-scan-outbox-checkpoint.md`; hosted RPC/RLS/concurrency and signed-native offline/reconnect/process-kill proof remain open.
+  - Action: Scan a barcode that returns no catalog match, an external/unreviewed candidate, or an offline/failed lookup; from no-match recovery, explicitly report the identified missing/wrong product or continue by search, label capture/manual transcription, or manual add.
+  - Expected result: The scan sheet never dead-ends. It shows a matched candidate, no-match copy, identity-bound report recovery with confirmation before `Send report`, explicit encrypted `Retry when online` for offline/error states, or manual/search/label fallbacks. Legacy `shelf_scans` is purged and sealed; retained server analytics contains only owner-linked lookup type/result/timestamps, while the general analytics event contains only a bounded result bucket.
+  - Evidence: Supported-viewport screenshots, step/network logs, inline report-feedback snapshot, migration/Edge assertions, encrypted-queue proof, and analytics payload assertion.
+  - Historical local evidence: 2026-07-08 in-app browser Expo web at the stress-only 320 x 568 viewport used `EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT=offline`, verified `/shelf/scan` showed offline catalog copy plus label, search, and manual fallbacks, and verified `/shelf/no-match` exposed the same recovery paths without contribution-back or unsafe source claims. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`. It predates the encrypted retry/review lane and is not CAT-04 acceptance evidence. There is no request-time OBF lookup.
   - 2026-07-09 retained stress-floor spacing follow-up: before the current 360 x 640 launch floor was accepted, Codex in-app browser Expo web on `localhost:8255` verified `/shelf/no-match` at 320 x 480 and 390 x 844. On the 320 x 480 stress viewport, Search catalog, Scan ingredients, and Add it by hand are all visible 264 x 48 px recovery controls with passing center hit-tests, zero horizontal overflow, no JavaScript dialog, and zero current-origin warn/error logs; clicking them routes to `/shelf/search`, `/shelf/ocr`, and `/shelf/manual`. The 390 x 844 pass keeps the full `Scan the ingredient list` label and all three 334 x 68 px recovery controls visible and hit-testable. Evidence and report are in `test-results/human-e2e/2026-07-09/shelf-no-match-supported-floor-spacing/`; native barcode camera and OCR capture remain device QA.
-  - 2026-07-09 missing-product report follow-up: Codex in-app browser Expo web opens `/shelf/no-match?barcode=012345678905` at 390 x 844, verifies Search catalog, Scan ingredients, Add it by hand, and Report missing product are distinct 48 px+ recovery controls with no overlap, taps Report missing product, sees inline `Report not sent` feedback with no JavaScript dialog and zero current-route warn/error logs, then continues to `/shelf/manual`. A 360 x 640 support-floor spot check verifies Close, Search catalog, Scan ingredients, Add it by hand, and Report missing product are fully visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`; native barcode camera and live Supabase insert QA remain open.
+  - Historical 2026-07-09 missing-product report follow-up: Codex in-app browser Expo web opens `/shelf/no-match?barcode=012345678905` at 390 x 844, verifies Search catalog, Scan ingredients, Add it by hand, and Report missing product are distinct 48 px+ recovery controls with no overlap, taps Report missing product, sees inline `Report not sent` feedback with no JavaScript dialog and zero current-route warn/error logs, then continues to `/shelf/manual`. A 360 x 640 support-floor spot check verifies Close, Search catalog, Scan ingredients, Add it by hand, and Report missing product are fully visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`. It predates the confirmation/disclosure step and is not current CAT-04 report evidence; native barcode camera and live Supabase insert QA remain open.
   - 2026-07-08 shortest-phone follow-up: a 320 x 480 audit found `/shelf/no-match` clipping the `Add it by hand` fallback below the viewport. Post-fix Codex in-app browser evidence at 320 x 481 verifies all three recovery rows are visible, the manual row is a 54 px hit target with no blocked hit-test, clipped controls, horizontal overflow, JavaScript dialog, or current-route warning/error logs, and tapping its visible center routes to `/shelf/manual`. Evidence and bug report are in `test-results/human-e2e/2026-07-08/shelf-no-match-short-phone-480/` and `docs/e2e-bug-reports/2026-07-08-shelf-no-match-short-phone-fallback.md`.
   - 2026-07-08 320 x 430 / 120% text-pressure follow-up: the route audit found `/shelf/scan` fallback content could block the top `Close` button and `torch` switch centers when the camera preview was unavailable. Post-fix, the scan route reserves the header strip, omits the unavailable preview on sub-460 px fallback screens, compacts fallback rows, and the final 49-route sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-short-phone-430-clearance.md`; native camera and torch behavior remain device QA.
   - 2026-07-08 320 x 370 / 130% micro-short text-pressure follow-up: `/shelf/no-match` now switches to a sub-380 px recovery layout that keeps Close in the top-right hit zone, removes the decorative question mark from the first viewport, and moves the manual fallback fully below the first viewport rather than letting it peek as a partial target. The final 49-route sweep reports zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`; native camera and torch behavior remain device QA.
@@ -867,6 +912,73 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot, visible-text snapshot, route snapshot, control-geometry snapshot, and browser logs.
   - Current local evidence: 2026-07-09 focused `shelfRoutes` contract coverage verifies the fallback copy says `Capture label, then type from it`, preserves the full accessibility label, and contains no `Review editable OCR` copy. The 320 x 480 full-route rerun also verifies `/shelf/scan` has zero clipped controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and report are in `test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun/`.
   - Current focused evidence: 2026-07-09 Codex in-app browser Expo web at 360 x 640 opens `/shelf/scan`, verifies the compact `Scan label` fallback exposes the honest accessibility label `Scan ingredient label. Capture label, then type from it`, verifies the old `Review editable OCR` copy is absent, taps the fallback, reaches `/shelf/ocr`, and verifies `On-device OCR is not enabled in this build yet` with zero horizontal overflow and zero current-route warning/error logs. Evidence is in `test-results/human-e2e/2026-07-09/shelf-scan-native-ocr-disabled-copy-current/`.
+- Branch: CAT-05 staging-only source-candidate gate
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Inspect and exercise the label-recognition route from the exact EAS profile under test.
+  - Expected result: Only the internal `staging` profile sets `EXPO_PUBLIC_NATIVE_OCR_ENABLED=true`; `development` and `production` remain false. A missing, unavailable, or contract-mismatched native module fails into explicit manual-entry recovery rather than implying OCR works. Enabling the flag alone does not satisfy the gate.
+  - Evidence: Exact source/profile/build binding, native-module availability result, signed-archive inspection, and physical-iPhone route capture. The deterministic Expo-web fixture below may mirror enabled UI states but is not an EAS staging binary.
+- CAT-05 evidence freshness note: every CAT-05 deterministic Expo-web artifact
+  below is retained historical evidence bound to
+  `fec382eddd0e79f73b4c38b5de30d996928a8fc9`. CAT-06 subsequently changed
+  `/shelf/ocr` camera admission and Progress shutter ownership, so those
+  artifacts are stale for the current source until regenerated. The recorded
+  UI observations remain useful for comparison, but they are not current
+  exact-source evidence and never prove native behavior.
+- Branch: CAT-05 deterministic recognized review, Retake, and Continue
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: At 375 x 667, 390 x 844, and 430 x 932, use the development-only `recognized` fixture, tap Capture label, wait through the reading state, inspect the Unicode transcript and uncertainty/truncation cues, Retake, capture again, and Continue.
+  - Expected result: Reading stays visibly busy without blocking typing; the Unicode transcript is preserved exactly; ambiguous/review lines are named in words; incomplete output is disclosed; no confidence is called percent accurate; Retake returns to capture; and Continue carries only the reviewed editable text to manual entry.
+  - Evidence: Governed exact-source `recognized-review-retake-continue` artifacts at all three viewports, including accessible-name/alert/live-region snapshots, text-field value, control geometry, sanitized browser logs, and manual-route handoff, are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. The 375 x 667 manual-handoff PNG does not show the Ingredients field or prefill, so compact visual handoff is not proven by that screenshot.
+- Branch: CAT-05 edit fence and explicit suggestion adoption
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Type a Unicode correction while the deterministic recognized result is still pending, then inspect and explicitly adopt the recognized suggestion.
+  - Expected result: A late result never overwrites the user's text. The route says the edits were kept and exposes `Use recognized text`; only that explicit action replaces the edit, and the suggestion action then disappears.
+  - Evidence: Governed exact-source `edit-fence-suggestion-adoption` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`, alongside review-state/coordinator tests. Native cancellation and late-result races remain physical-device/exact-build evidence.
+- Branch: CAT-05 no-readable-text manual recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the deterministic `no_text` fixture, then type multilingual Unicode ingredient text and Continue.
+  - Expected result: `No readable text found` is an alert; Retake and the editable manual field remain available; the user-entered Unicode text reaches manual add without a fake match or automatic Shelf mutation.
+  - Evidence: Governed exact-source `no-text-manual-recovery` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`.
+- Branch: CAT-05 timeout manual recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the deterministic `timed_out` fixture, then type multilingual Unicode ingredient text and Continue.
+  - Expected result: A stable `Label reading took too long` alert appears; Retake and manual entry remain usable; no native error or transcript is logged or shown; and manual handoff succeeds.
+  - Evidence: Governed exact-source `timeout-manual-recovery` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. Exact native 12-second timeout/cancellation evidence on physical iPhones remains open.
+- Branch: CAT-05 generic failure manual recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the deterministic `failed` fixture, then type multilingual Unicode ingredient text and Continue.
+  - Expected result: A stable generic label-not-read alert appears; Retake and manual entry remain usable; raw native failure detail stays hidden; and manual handoff succeeds.
+  - Evidence: Governed exact-source `failure-manual-recovery` artifacts at all three supported viewports are retained in `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. Exact-build native failure and missing/misconfigured-module checks remain open.
+- Branch: CAT-05 navigation, cancellation, and temporary-photo cleanup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Leave during capture and recognition through the visible Back action and every supported navigation-removal gesture/action; separately Retake, Continue, force cleanup failure/retry, terminate after raw camera capture, cold relaunch, and attempt both Shelf-label and Progress shutters around a failed/then-successful startup listing.
+  - Expected result: The route guard is armed before capture, waits for capture completion, drains OCR cancellation, awaits idempotent deletion, and only then redispatches the original navigation action. Failed drain/deletion leaves the route blocked with retry instead of authorizing departure. Retake and Continue use the same drain-before-delete order. Both repository shutters await the shared startup drain before `takePictureAsync`. Snapshot acquisition may retry only while both shutters remain gated and before the first successful listing. That first app-boot snapshot is immutable; bounded deletion retries use only its remaining names and never relist a post-boot capture as stale. App exit/process death is outside `usePreventRemove` and therefore requires cold-relaunch cleanup proof.
+  - Evidence: Source lifecycle/navigation and Progress-capture tests plus exact-build Back/swipe/pop/reset, both-shutter startup gating, failed-listing retry, immutable-snapshot, interruption, process-death, bounded-delete retry, managed-cache, Expo Camera cache, and Expo Image/SDWebImage path/digest/signature reports. Expo web cannot prove this branch.
+- Branch: CAT-05 deterministic-web evidence boundary
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the five CAT-05 deterministic scenarios across 375 x 667, 390 x 844, and 430 x 932 after the source checkpoint is committed.
+  - Expected result: The governed run has 15 scenario executions and four consent bootstraps, records `nativeDeviceProof=false`, and labels itself development-only Expo-web UI-state evidence. It must not be cited as Apple Vision, Swift, camera, iOS binary, physical-iPhone, OCR accuracy/latency, privacy, zero-network, cleanup, VoiceOver, archive, App Review, legal, or release proof.
+  - Evidence: The retained packet at `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/` is bound to source `fec382eddd0e79f73b4c38b5de30d996928a8fc9` and passed 15/15 scenarios plus 4/4 consent bootstraps with zero browser failures, 139 non-summary artifacts, and 55 PNGs. It is stale for the current source after CAT-06 and must be regenerated. It records `nativeDeviceProof=false`; the macOS compile remains unverified/pending, the 375 x 667 manual-handoff PNG does not show Ingredients/prefill, and the multilingual fixture has no Arabic/Hebrew RTL sample. It is not Vision, Swift, camera, iOS-binary, physical-device, native privacy-cleanup, accuracy, latency, native-accessibility, archive, App Review, legal, release, or revenue proof.
+- Branch: CAT-06 shared permission, foreground, and preview lifecycle
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On each camera route, begin from undetermined permission, deny and retry, permanently deny and open Settings, make Settings opening fail once, grant in Settings, background/foreground, blur/refocus, trigger a native interruption, fail camera mount/ready, retry, and deliver a queued native callback from the invalidated camera generation.
+  - Expected result: No preview mounts before verified grant or while the app/route/business gate is inactive. The OS permission prompt can finish normally, but its explicit request result is invalidated when iOS reports `inactive`; the camera stays closed and a fresh foreground query is authoritative before remount. Only one preview is active; operations remain blocked until camera-ready; mount retry creates a fresh keyed generation; stale permission, ready, mount, barcode, and still-photo callbacks cannot navigate or mutate. Permanent denial exposes one Settings action, failure is visible/retryable, and Scan/OCR keep non-camera recovery reachable.
+  - Evidence: Shared lifecycle unit tests and route contracts; then the exact signed-archive CAT-06 packet with both required physical iPhones, permission-state timestamps, interruption video/logs, fresh-query ordering, mount-generation proof, and VoiceOver/Dynamic Type results. Expo web can cover only deterministic UI state and cannot close this branch.
+- Branch: CAT-06 exact-build evidence boundary
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete the schema-v1 camera-lifecycle artifact for `/shelf/scan`, `/shelf/ocr`, and `/progress/capture` on the supported-floor iOS 17.x and current flagship physical iPhones.
+  - Expected result: All nine governed suites run on every route/device: permission, Settings, lifecycle, mount, camera operation, offline, interruption, accessibility, and privacy. The two-phone floor contains 54 unique runs and proofs. The artifact binds the exact committed source, EAS build, signed archive, final `Info.plist` camera purpose string, device/install receipts, network and cleanup reports, accessibility report, scenario index, and three named signoffs. `PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored.
+  - Evidence: `docs/phase-5/camera-lifecycle-evidence-runbook.md`, one validated evidence JSON under `docs/phase-5/evidence/camera-lifecycle/`, its hash-verified attachments, and passing strict camera/device packet commands. No completed artifact exists yet.
 - Branch: camera permission denied
   - Priority: Important
   - Automate later: Yes
@@ -878,48 +990,42 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Shelf OCR on a device where the camera cannot start, or force the label photo capture call to reject.
-  - Expected result: The user sees stable camera-unavailable or label-not-captured copy and can continue with manual ingredient text instead of being returned to an unexplained camera state. A successful native label capture is moved immediately into an opaque journal-owned staging file, displayed with sensitive-image caching disabled, and deleted before Back or Continue can navigate; cleanup failure stays on the route with a retry instead of hiding retained plaintext. Unmount, relaunch, and account isolation retain journal ownership for scavenging. On short phones, the manual review text area and final Continue action do not overlap.
+  - Expected result: The user sees stable camera-unavailable or label-not-captured copy and can continue with manual ingredient text instead of being returned to an unexplained camera state. On short phones, the manual review text area and final Continue action do not overlap.
   - Evidence: Alert text, visible fallback state, and route snapshot.
   - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE=once` to force `/shelf/ocr` label capture rejection. The route shows inline `Label wasn't captured` recovery copy with no dialog, exposes a visible 48 px `Try label photo again` action, keeps the manual text field and final `Looks right. Continue` action non-overlapping after scroll/focus, carries `Aqua, Glycerin, Niacinamide` into `/shelf/manual`, hides the raw fixture error, and logs no current-origin browser errors. Evidence and report are in `test-results/human-e2e/2026-07-08/shelf-ocr-capture-failure-current/`; physical iOS/Android camera mount, permission-denied, and real capture-rejection QA remain open.
-- Branch: OCR review input isolation, bounded preview, and exact submit
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Enter Shelf OCR manual review, establish content-free render and parse counters, load a bounded long synthetic INCI draft, rapidly type the final characters, then submit while the debounced preview is still pending and inspect the carried ingredients on `/shelf/manual`.
-  - Expected result: Raw input remains immediate and is bounded at 4,000 UTF-16 code units. Draft typing does not rerender the route-owned camera/capture surface, and continuous typing is coalesced into one preview parse after quiescence instead of parsing on every key. The preview may cap expensive active-token rows without capping submission parsing. Continue synchronously parses the exact latest bounded draft even when the preview is stale, and `/shelf/manual` receives the complete canonical token list. Supported-phone controls remain complete, 44 px+, center-hit-testable, non-overlapping, and at zero horizontal overflow. Diagnostics contain counts and durations only, never ingredient, image, or label content.
-  - Evidence: Supported-phone Expo-web screenshots, synthetic input length and SHA-256, content-free render/parse counter snapshots, preview-row count, exact-submit/manual-carryover snapshot, control geometry, horizontal-overflow measurement, browser dialog/log summary, and focused route/helper/diagnostic tests. Production-Hermes keystroke duration, native keyboard/IME and VoiceOver behavior, real camera/OCR recognition, and physical-device performance remain iOS/device QA.
-  - Current local evidence: 2026-07-16 Codex in-app browser Expo web at requested 390 x 844 / observed 390 x 845 entered a 3,852-code-unit synthetic draft, then issued 128 individual key actions. The 128-key window produced 128 editor commits/draft changes and zero route renders, capture-panel renders, preview parses, or preview renders; after 300 ms, one preview parse/render occurred. The preview showed 64 of 96 active rows, the 4,001st code unit was rejected, and submitting the final marker while the preview was pending produced the exact expected 3,938-code-unit canonical manual value. A requested 375 x 667 / observed 376 x 668 spot check found no partial or blocked controls, no textarea/footer overlap, and zero horizontal overflow. Human E2E found and fixed an editor-owned `useMemo` parse re-execution by moving parsing into the memoized preview leaf. Evidence is in `test-results/human-e2e/2026-07-16/ocr-input-isolation-current/`, the checkpoint is `docs/optimization/evidence/2026-07-16_ocr-input-isolation-checkpoint.md`, and the bug report is `docs/e2e-bug-reports/2026-07-16-ocr-preview-parse-replayed-during-raw-typing.md`. Production Hermes, native keyboard/IME/VoiceOver, real camera/OCR, and physical-device frame/energy/memory evidence remain open.
 - Branch: opened date or replenish edge case
   - Priority: Important
   - Automate later: Yes
   - Action: Set an opened date or replenish state at a boundary date.
   - Expected result: The app explains expiration/replenish status clearly, and the opened-date sheet shows all three core opened-state choices without clipping on short phones before the user scrolls to PAO or save actions.
   - Evidence: Screenshot.
-  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 adds `Boundary Vitamin C Serum`, verifies `/shelf/opened` shows `Just opened it`, `Pick a date`, and `Not opened yet` before scrolling to PAO/save actions, sets `3 months ago` plus `3 mo` PAO, and confirms Shelf shows `0 days left`. The first pass found replenish copy manufactured scarcity (`running low` / `nearly finished`) for a PAO boundary; post-fix, `/shelf/replenish` explains the trigger as `PAO or printed date`, says it is `not an alarm`, shows no scarcity copy, and `Re-add the same one` creates a fresh active unit with `opened Jul`, `3 mo PAO`, `Oct 2026`, and one archived prior unit. Evidence and report are in `test-results/human-e2e/2026-07-08/shelf-opened-replenish-boundary-current/`; native bottom-sheet, screen-reader, Dynamic Type, and restart-persistence QA remain open.
+  - Historical evidence only: The 2026-07-08 Expo-web packet at `test-results/human-e2e/2026-07-08/shelf-opened-replenish-boundary-current/` proved the then-current three opening choices and corrected manufactured-scarcity copy, but its replacement action automatically opened the new unit. CAT-07 now requires a fresh explicit replacement opening choice, so this packet is stale for replacement semantics and cannot support current acceptance. Native bottom-sheet, screen-reader, Dynamic Type, and restart-persistence QA remain open.
   - Current ultra-short direct-entry evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 430 reproduced the no-draft `/shelf/opened` backdrop `Dismiss` control being reported as a clipped visible control in the post-Recommendations route sweep. Post-fix, the no-draft opened-date recovery sheet hides the backdrop from accessibility, keeps the visible Close and `Add product by hand` controls complete, and tapping `Add product by hand` routes to `/shelf/manual` with no clipped controls, no sub-44 controls, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/` and the fresh 49-route zero-failure sweep `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
 - Branch: complete Shelf freshness and replacement provenance lifecycle
   - Priority: Critical
   - Automate later: Yes
   - Entry state: Reset local app state at `/onboarding/products`, with no product draft or Shelf rows.
-  - Action: Add a product from onboarding; confirm the app requires `Just opened it`, an exact past date, or `Not opened yet`; enter an impossible or future date; save a valid exact date; explicitly confirm a PAO value from the open-jar label; edit opened date, PAO, and printed best-before from product detail; reload; then re-add the unit.
-  - Expected result: Onboarding cannot bypass freshness capture and returns to onboarding after save. Invalid/future dates cannot start a PAO clock. Unopened units keep `opened_at=null`. PAO provenance changes to `label` only behind the explicit open-jar prompt. The surfaced expiry source follows whichever date actually wins. Reload preserves the lifecycle. Re-add archives the prior unit with its printed expiry and creates a new UUID opened today with the retained product/PAO provenance but no inherited printed expiry. No freshness signal claims the product is running low or nearly finished.
-  - Invalid/empty/recovery branches: Exact date input rejects malformed, impossible, and future dates; `Not on label` clears PAO/source; direct `/shelf/opened` without a draft recovers safely; Back/Close from an onboarding-origin sheet returns to onboarding; unknown or unopened-without-printed products produce no automatic replenishment signal.
+  - Action: Add products covering every evidence row: unopened with/without a physical-package printed date entered by the user; opened with a winning user-entered printed date; opened with a winning direct label PAO; reviewed catalog-delivered product-specific `label`, `brand_label`, and `catalog` PAO rows; a reviewed catalog row that also carries `expiry_source='printed'`; a category-only catalog row; and unknown. Exercise one product-specific row plus a matching category row, same-month duplicate product-specific rows, exact PAO values `120` and `121`, printed-versus-PAO precedence, and an exact tie. Enter impossible/future opened dates, reload, then replace a unit and explicitly choose today, an exact past opening date, and unopened in separate runs. Seed a canonical v1 local envelope containing a catalog-linked date, read without mutation, perform one successful authorized mutation, force a failed mutation, and exercise explicit package-date reconfirmation.
+  - Expected result: Onboarding cannot bypass the opening-state choice and invalid/future dates cannot start a PAO clock. Unopened units retain `opened_at=null`; without a user-entered/reconfirmed package date they remain `unknown` with no app-derived date. Even an exact reviewed/source-bound/region-matched product-level catalog `expiry_date` does not populate Shelf because it lacks a lot/package binding. Ambiguous historical catalog-linked dates are retained only in the non-actionable legacy-unverified quarantine and never drive time-pressure UI or recommendations unless the user separately reconfirms the date from this physical package. Direct product-label entry persists Shelf `label`; exactly one reviewed matching-source/region catalog-delivered product-specific `label`, `brand_label`, or `catalog` row persists Shelf `catalog`, and actor-neutral label copy never claims who entered historical v1 data. Matching duplicate product-specific rows fail closed even when their months agree; a category row does not invalidate one product-specific winner. A category-only current payload and v1 upgrade fail to `unknown` because they cannot prove reviewed `product_categories` authority; `estimated` intake stays unavailable until an exact bounded server-attested category marker is retained locally and both the database guard and named chemistry review prove the exact non-sunscreen rule. The 120-month technical ceiling remains eligible and 121 fails closed without implying a typical or legally approved lifetime. `printed` and `pao_computed` states identify the actual winning evidence, and an exact tie resolves to `printed`. `estimated`, once supportable, stays visibly approximate; `unknown` shows neither a date nor estimate. Only physical-package `printed` or label/catalog-PAO states can drive countdown, expired, Expiring-filter, or replenishment UI. Replacement archives the prior unit, creates a new UUID, preserves product/PAO provenance, clears inherited printed expiry, and uses the user's explicit opening state rather than automatically opening today. Canonical v1 bytes remain byte-for-byte unchanged on read and failed mutation, then become canonical v2 only after a successful authorized atomic mutation.
+  - Invalid/empty/recovery branches: Exact date input rejects malformed, impossible, and future dates; `Not on label` clears PAO/source; direct `/shelf/opened` without a draft recovers safely; Back/Close from an onboarding-origin sheet returns to onboarding; category estimate and unknown produce no automatic replenishment signal; non-canonical or future-version local envelopes remain byte-preserved and reject mutation.
   - Responsive/accessibility branch: Verify 360 x 640 and 390 x 844 with zero horizontal overflow, complete 48 px controls, named exact-date fields, explicit radio states, route-owned inline validation, no JavaScript dialog, and clean current-origin browser logs.
-  - Evidence: Supported-phone screenshots, accessibility/geometry snapshots, reload assertions, browser logs, source contracts, focused lifecycle tests, and an E2E run report.
-  - Current local evidence: 2026-07-11 Codex in-app browser Expo web at 390 x 844 verifies onboarding handoff, impossible and future date rejection, exact opened date, explicit open-jar PAO, both expiry-source precedence directions, reload, archived package provenance, new-UUID replacement with cleared printed expiry, and unopened/no-label state. The 360 x 640 pass found the floating scan action covering a product card; post-fix the action remains in Shelf document flow, is scroll-reachable above the tab bar, and horizontal overflow is zero. Browser diagnostics report no dialogs or unexpected errors. Evidence and both post-fix bug records are in `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/` and `docs/e2e-bug-reports/2026-07-11-*.md`; native storage, notification, accessibility, migration/RLS, and reviewed-catalog proof remain external QA.
-- Branch: replenish similar options unavailable after commerce consent
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Set a product to a PAO boundary, open `/shelf/replenish`, tap `See similar options`, grant where-to-buy consent, and tap `See similar options` again while the catalogue/partner rail is unavailable.
-  - Expected result: No paid links or retailer telemetry are exposed before consent. After consent, the route stays in the replenish context and shows a visible, accessible inline unavailable-catalogue message instead of appearing inert or opening a native alert.
-  - Evidence: Screenshot sequence, dialog check, alert geometry, browser logs, and source contract.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app` adds `Similar Flow Serum`, sets `3 months ago` plus `3 mo` PAO, verifies Shelf shows `0 days left`, opens `/shelf/replenish`, grants `Allow where-to-buy links`, and retaps `See similar options`. Pre-fix evidence showed the consented tap left Expo web visually unchanged while the source path used `Alert.alert`. Post-fix, one route-owned `role="alert"` message appears at y=427-545, `tab.getJsDialog()` is null, `scrollWidth=320`, and warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/`; native iOS/Android announcement, Dynamic Type, and live similar-product rail QA remain open.
-- Branch: collection-scale Shelf filters and archive restoration
+  - Evidence: Supported-phone screenshots, accessibility/geometry snapshots, reload assertions, byte/digest assertions for v1→v2 migration, browser/device logs, source contracts, focused lifecycle tests, hosted migration/RLS/catalog readback, qualified chemistry/legal review, and an exact-build E2E report.
+  - Current evidence boundary: The 2026-07-11 Expo-web packet in `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/` remains useful historical UI evidence, but it predates CAT-07's explicit replacement opening choice, category-estimate exclusion, and v1→v2 byte-preservation contract. It is stale for current source acceptance and cannot prove native encrypted storage/relaunch, live migration/RLS/catalog truth, physical-device accessibility, notifications, or named chemistry/legal review. CAT-07 remains `in_progress`.
+- Branch: replenish remains commerce-free at COM-01A literal zero admission
   - Priority: Critical
   - Automate later: Yes
-  - Action: Load at least 100 deterministic mixed-height active Shelf rows and 100 finished/discarded archive rows; traverse every recycler window, set distinct All/Actives/Expiring positions, cycle filters twice, open Archive from the final Shelf boundary, traverse Archive, then press Back.
-  - Expected result: Every expected stable row ID is observed without a blank viewport; each filter restores a visible prior anchor without remounting the list; Archive reaches its unique final row; Back restores the Shelf final-row boundary after variable-height recycler settlement; no horizontal overflow, dialog, or unexpected warning/error occurs. Static headers/footers and memoized narrow rows remain outside speculative native window/clipping tuning.
-  - Evidence: Exact row-cardinality snapshots, mounted/visible row bounds, content-free Profiler counters, screenshots, browser logs, focused fixture/diagnostic/route tests, and a run report. Signed supported-iOS frame, memory, focus, Dynamic Type, and VoiceOver traces remain device QA.
-  - Current local evidence: 2026-07-21 headless system Chrome drove Expo web at 390 x 844 through 100 All rows, 34 Actives, 40 Expiring, and 100 Archive rows. All subsets and the semantic Archive-Back final boundary restored, sampled viewports were nonblank, horizontal overflow/dialogs/unexpected logs were zero, and the run found and fixed stale outgoing-filter callbacks plus numeric-bottom clamping during recycler rebuild. Evidence is in `test-results/human-e2e/2026-07-21/shelf-archive-stress-current/`, `docs/optimization/evidence/2026-07-21_shelf-archive-collection-stress.md`, and `docs/e2e-bug-reports/2026-07-21-shelf-filter-offset-restoration.md`. Native tuning and performance claims remain open.
+  - Action: Set a product to a PAO boundary and open `/shelf/replenish` while
+    positive-looking commerce flags and legacy consent exist.
+  - Expected result: The route exposes no commerce, retailer, consent,
+    where-to-buy, paid-link, or `See similar options` CTA. The user can complete
+    only the ordinary non-commerce replenish/replacement flow.
+  - Evidence: The 2026-07-29 Expo-web packet passed `/shelf/replenish` at
+    360 x 640, 390 x 844, and 430 x 932 with commerce and similar-options copy
+    absent and zero current-run console errors or warnings. Evidence is in
+    `test-results/human-e2e/2026-07-29/com01a-zero-commerce-current/`.
+  - Historical/stale evidence: The 2026-07-08 positive consent and
+    `See similar options` packet predates COM-01A and cannot support current
+    acceptance or a future positive commerce successor.
 - Branch: active shelf empty with archive history
   - Priority: Critical
   - Automate later: Yes
@@ -930,10 +1036,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: direct-entry back or close navigation
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/shelf/add` (compatibility alias to `/shelf/manual`), `/shelf/search`, `/shelf/ocr`, `/shelf/no-match`, `/shelf/opened`, `/shelf/archive`, `/shelf/[id]`, and `/shelf/replenish` directly, including stale `/shelf/replenish?id=[missing]`, then use the visible Back, Close, Cancel, Not now, Back to Shelf, Add a product, or backdrop Dismiss control.
-  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. `/shelf/add` must open the manual-add intake instead of being captured by the dynamic product-detail route. Stale `/shelf/[id]` entries must explain that the product is unavailable and provide `Back to Shelf` plus `Add a product` recovery actions. Stale `/shelf/replenish` entries must explain that the replacement prompt is no longer active, avoid reusing freshness or shopping prompts, and provide `Back to Shelf` plus `Add a product`. Direct `/shelf/opened` without an intake draft must recover to manual add instead of saving a generic product. Visible route exits meet the 44 pt phone touch target, `/shelf/search` keeps its manual fallback buffered above the phone bottom edge, add/replenish sheets keep their actions reachable by scrolling on short phones, and sheets that can fill the viewport expose a visible Close control and dialog semantics instead of relying on a tiny backdrop.
+  - Action: Open `/shelf/add` (compatibility alias to `/shelf/manual`), `/shelf/search`, `/shelf/ocr`, `/shelf/scan`, `/shelf/no-match`, `/shelf/opened`, `/shelf/catalog-recovery`, `/shelf/archive`, `/shelf/[id]`, and `/shelf/replenish` directly, including stale/malformed catalog-recovery parameters and stale `/shelf/replenish?id=[missing]`, then use the visible Back, Close, Cancel, Not now, Back to Shelf, Add a product, or backdrop Dismiss control.
+  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. `/shelf/add` must open the manual-add intake instead of being captured by the dynamic product-detail route. A missing/expired/malformed `/shelf/catalog-recovery` candidate must show `Match unavailable`, state that Shelf is unchanged, and expose retry when the encrypted read failed plus Back to Shelf. Stale `/shelf/[id]` entries must explain that the product is unavailable and provide `Back to Shelf` plus `Add a product` recovery actions. Stale `/shelf/replenish` entries must explain that the replacement prompt is no longer active, avoid reusing freshness or shopping prompts, and provide `Back to Shelf` plus `Add a product`. Direct `/shelf/opened` without an intake draft must recover to manual add instead of saving a generic product. Visible route exits meet the 44 pt phone touch target, `/shelf/search` keeps its manual fallback buffered above the phone bottom edge, add/replenish/recovery content stays scroll-reachable on supported phones, and sheets that can fill the viewport expose a visible Close control and dialog semantics instead of relying on a tiny backdrop.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone touch target measurements.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 and 390 x 568 covers direct `/shelf/add`, `/shelf/manual`, `/shelf/search`, `/shelf/ocr`, `/shelf/scan`, `/shelf/no-match`, `/shelf/opened`, `/shelf/archive`, stale `/shelf/[id]`, and stale `/shelf/replenish`. `/shelf/search` keeps the 56 px `Add by hand` fallback 32 px above the bottom edge, recovery clicks route to `/shelf/manual` or `/shelf`, every checked route has zero horizontal overflow, and focused `shelfRoutes.test.ts` route contracts pass.
+  - Current governed evidence and remaining gate: The 2026-07-18 deterministic web matrix covers missing/malformed `/shelf/catalog-recovery` route state at 375 x 667, 390 x 844, and 430 x 932. Because the checked-in runner deliberately does not fabricate a production offline lookup becoming ready across restart, linked, unlinked, expired, changed, offline-revalidation, accept, reject, cancel, and failed-save states still require a real hosted ready-candidate cycle plus native persistence/account-boundary evidence.
   - Current shared-sheet evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 verifies `/shelf/no-match` exposes exactly one modal dialog, a 48 px Close action, zero horizontal overflow, no sub-44 exposed controls, and a non-accessible 12 px backdrop strip with `aria-hidden=true` and `tabIndex=-1`; Close returns to `/shelf`. Shared `Sheet` safe-area padding now only overrides bottom padding when a real native bottom inset exists, preserving compact web sheet density.
 
 ## Flow: Photo Progress
@@ -964,35 +1071,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
-- Branch: accessible comparison actions and non-gesture presentation
-  - Priority: Important
-  - Automate later: Yes, after the native accessibility harness is selected.
-  - Action: Open populated Progress in Compare mode; focus the before/after divider; invoke decrement and increment screen-reader actions; activate Side-by-side; change the first date; return to draggable comparison.
-  - Expected result: The divider names both selected dates, exposes a 0-100 value and calm visible-before percentage, moves by deterministic bounded steps, and occupies the full practical handle target. Side-by-side is a named non-gesture presentation that removes the divider and shows both photos; its return action is also named. Date selection updates the divider label. No announcement grades, scores, or judges the user's skin.
-  - Evidence: Native VoiceOver/TalkBack action transcript and focus recording, accessible-tree/range snapshot, target geometry, comparison screenshots, and focused policy/route tests.
-  - Current local evidence (2026-07-16): Codex in-app browser Expo web with the populated local fixture exposes one date-aware slider with min 0, max 100, now 52, and `52 percent of the before photo visible`; the final semantic target measures about 46 x 46 px. The named Side-by-side action removes the slider and renders both photos, its name changes to `Use draggable comparison`, and the named first-photo dialog updates Apr 1 to May 12 before returning to the date-aware slider. The run found and fixed missing Expo-web range attributes plus a 46 x 24 semantic target. Focused 25-test and full 3,928-test suites pass. Evidence is in `test-results/human-e2e/2026-07-16/progress-comparison-accessibility-current/` and `docs/e2e-bug-reports/2026-07-16-progress-comparison-accessibility-semantics.md`. The available browser was 1281 x 720 and did not expose device emulation; native VoiceOver/TalkBack invocation, focus announcements, and new supported-phone evidence remain open.
-- Branch: Reduce Motion across onboarding, navigation, and photo review
-  - Priority: Important
-  - Automate later: Yes, after the native accessibility harness is selected.
-  - Action: Enable the platform Reduce Motion preference before launch; complete the onboarding analyzing save; navigate through stack and modal surfaces; open populated Progress Timeline and the quiet time-lapse; wait beyond one normal frame interval; step photos manually; open the comparison date picker and Side-by-side presentation. Repeat while changing the OS preference with the app mounted.
-  - Expected result: Unknown or enabled preference state never starts the analyzing pulse, time-lapse autoplay, animated programmatic scroll, or slide/fade presentation. Profile completion advances immediately after durable save without an artificial minimum wait. The time-lapse remains on its first frame until Previous/Next is deliberately used, announces the reduced-motion state, and exposes no automatic-play action. Date selection and the named Side-by-side non-gesture presentation remain usable. Changing the preference does not duplicate durable work or lose route/modal state.
-  - Evidence: Supported-iOS device-setting video, VoiceOver focus transcript, route/modal state sequence, and automated motion-owner inventory. Expo web may prove the fixture-driven semantic and interaction path but cannot close the native device-setting gate.
-  - Current local evidence (2026-07-16): Actual Expo web at 1281 x 720 with the populated local fixture and `EXPO_PUBLIC_E2E_REDUCE_MOTION=enabled` kept the time-lapse on Apr 1 / `1 of 3` after 2,200 ms, beyond its normal 1,800 ms interval; announced the reduced-motion state; exposed no Play/Pause control; and allowed manual Next to May 12 / `2 of 3`. The named first-photo picker updated the comparison date, Side-by-side remained usable, and no JavaScript dialog opened. Focused policy, inventory, route, and time-lapse tests pass. Evidence is in `test-results/human-e2e/2026-07-16/reduce-motion-current/`. Physical iOS preference changes, VoiceOver focus, and platform transition behavior remain release QA.
-- Branch: inactive sensitive photo-query cache eviction
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Open populated Progress Timeline, mount two consumers of the same photo query, release them one at a time, complete a delayed storage read after the final release, commit a photo mutation while no observer exists, then switch Progress -> Today -> Progress twice.
-  - Expected result: Full photo records, notes, and local/encrypted/thumbnail URIs remain cached only while at least one observer exists. Releasing the last observer evicts immediately; a late non-cancellable read is removed as soon as it settles; an unobserved mutation does not recreate cache data. Each Progress return performs one fresh encrypted-store read and restores Timeline without stale owner content, storage error, overflow, or duplicated query execution. Account and lock boundaries still perform their stronger global cancellation/clear operations.
-  - Evidence: Real TanStack `QueryObserver` lifecycle tests, owner-bound mutation tests, one-integer content-free query-execution diagnostics, supported-phone tab-cycle screenshots/metrics/logs, and native process-kill/memory inspection before release.
-  - Current local evidence: 2026-07-21 headless system Chrome drove Expo web at 390 x 844 with 10 deterministic photos through two visible Progress -> Today -> Progress cycles. Query executions advanced exactly `1 -> 2 -> 3`; Timeline mode and all 10 photo actions returned both times; private-storage error, horizontal overflow, dialogs, and unexpected logs were zero. Focused tests prove shared-observer retention, last-observer eviction, late-completion cleanup, and mutation non-recreation. Evidence is in `test-results/human-e2e/2026-07-21/progress-query-cache-eviction-current/` and `docs/optimization/evidence/2026-07-21_progress-sensitive-query-cache-eviction.md`; native SecureStore/filesystem/process-kill/memory proof remains open.
 - Branch: sensitive image cache and lifecycle boundary
   - Priority: Critical
   - Automate later: Yes, with a native filesystem/memory harness after the native E2E decision.
   - Action: Open populated Progress, show encrypted photos in Compare and Timeline, background/foreground, lock/unlock, delete a visible photo, and cross an account boundary. Relaunch and inspect the application cache/temp directories on a supported physical device.
-  - Expected result: Private `PhotoImage` sources use no Expo Image disk or memory cache and no crossfade. Current v1 decrypt demand is owner-generation-bound, serialized, deduplicated only while in flight, and prioritized for interactive/actually-viewable images. Queued work is removed when a virtualized cell leaves viewability; a running non-cancellable native/JS operation is detached so its late completion cannot publish. No completed data URI is retained by the coordinator. The compare pair pauses below its picker modal and Timeline rows pause below the time-lapse modal, while only opaque pair IDs survive Progress blur. Mounted views drop resolved data URIs on inactive/background, memory warning, app lock, photo-timeline lock, deletion, and account isolation; an inactive mount cannot start decrypting, and foreground demand resumes only after the purge cache clear settles. Unlocked foreground views decrypt again without showing the previous owner or deleted photo. A retry-safe startup scrub clears possible native Expo Image disk residue from older builds before encrypted display. No recoverable plaintext remains in Expo Image, SDWebImage, Coil, application cache, or temporary directories after relaunch. Functional web/simulator evidence may prove interaction, selection retention, visibility, and relock behavior, but only encrypted native fixtures plus physical-device filesystem and memory inspection can close the native privacy gate.
-  - Capture handoff invariant: The camera result is adopted into a reserved journal-owned file before the capture route can navigate. The review route receives only an opaque capture-session ID, resolves it for the initiating owner generation, and deletes it on explicit discard or after encrypted commit. A cleanup failure blocks navigation and offers retry; an A-to-B boundary drains capture/analysis work and scavenges journal, Camera, and ImageManipulator ingress before B can mount.
-  - Current capture-handoff evidence: strict journal/coordinator, delayed A-to-B, cleanup-failure, route-contract, photo-store, and Shelf label-capture tests pass locally. Physical iOS/Android camera capture, process kill/relaunch, File Activity/filesystem inspection, and cleanup-failure interaction remain native device QA and are not claimed by web evidence.
-  - Evidence: Before/background/locked/resumed screenshots or video; populated Compare/Timeline picker, blur/return, and modal-pause sequence; coordinator concurrency/cancellation/late-result tests; lifecycle logs containing only fixed event enums; native filesystem inventory, memory trace, and account-boundary/delete sequence.
+  - Expected result: Private `PhotoImage` sources use no Expo Image disk or memory cache and no crossfade. Mounted views drop resolved data URIs on inactive/background, memory warning, app lock, photo-timeline lock, and account isolation; unlocked foreground views decrypt again without showing the previous owner or deleted photo. No recoverable plaintext remains in Expo Image, SDWebImage, Coil, application cache, or temporary directories after relaunch. Functional web/simulator evidence may prove visibility and relock behavior, but only physical-device filesystem and memory inspection can close the native privacy gate.
+  - Evidence: Before/background/locked/resumed screenshots or video, lifecycle logs containing only fixed event enums, native filesystem inventory, memory trace, and account-boundary/delete sequence.
 
 - Branch: camera/photo permission denied
   - Priority: Critical
@@ -1000,22 +1084,20 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Deny camera or photo permission.
   - Expected result: User sees a clear recovery path and no broken UI, including a visible alert if the OS Settings handoff fails.
   - Evidence: Screenshot, alert text, and permission state.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`, `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies `/progress/capture` starts on the local-only consent gate, consent reaches the denied/no-retry permission gate with one `Open settings` action, no `Capture photo` control, and no JavaScript dialog, failed Settings handoff renders inline `Camera settings unavailable` alert copy with no dialog or raw fixture text, visible alert/actions are 48 px+ with zero horizontal overflow, and `Not now` returns to `/progress`. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`.
-- Branch: photo consent proof unavailable, corrupt, or from an unsupported version
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`, `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verified `/progress/capture` started on the local-only consent gate, consent reached the denied/no-retry permission gate with one `Open settings` action, no `Capture photo` control, and no JavaScript dialog, failed Settings handoff rendered inline `Camera settings unavailable` alert copy with no dialog or raw fixture text, visible alert/actions were 48 px+ with zero horizontal overflow, and `Not now` returned to `/progress`. Evidence is retained in `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`, but it predates CAT-06 and is stale for the current source. It does not prove the native iOS permission sheet or Settings round trip.
+- Branch: Progress shutter, gate replacement, and exact raw-photo cleanup
   - Priority: Critical
   - Automate later: Yes
-  - Action: Direct-open `/progress/capture` and legacy `/photos/capture` after entitlement and lock gates, then force the structured photo-consent proof read with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_READ_FAILURE=always|once|hang`. Retry, refresh/relaunch, and exit to Progress. Repeat with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_STATE=stale_version|wrong_hash|legacy_true|malformed|future`.
-  - Expected result: Only an exact current proof whose photo-specific version and SHA-256 hash match the disclosure rendered on screen can open the permission/camera path. Legacy true, stale version, and wrong hash require an explicit new choice. Unavailable, corrupt, and future proof shows retry/back recovery and never appears as ordinary first use; no consent CTA, permission request, camera preview, shutter, raw storage error, repair, deletion, or read-time rewrite occurs. Persistent retry stays blocked, while one-shot retry reveals the exact underlying consent or reconsent state. The initial read has an accessible loading/exit surface and a bounded transition to recovery. Retry and Back remain at least 48 pt with no horizontal overflow on supported compact and modern phones.
-  - Evidence: Persistent and one-shot failure/recovery screenshots, accessible role/text and control geometry, refresh/relaunch sequence, absence-of-camera/permission markers, browser logs/dialog/network checks, byte-preservation tests, and physical-device camera-permission ordering before launch.
-  - Current local evidence: 2026-07-14 Codex in-app browser Expo web at supported 375 x 667 and 390 x 844 plus stress-only 320 x 568 covers persistent, one-shot, and hung unreadable reads; stale version, wrong hash, legacy true, malformed, and future proof; canonical and legacy routes; refresh, retry, and explicit exit. Persistent/corrupt/future states expose only 56 px Retry and 48 px Back actions with zero horizontal overflow and no ordinary grant/camera markers; stale/wrong/legacy states show the explicit re-consent notice; one-shot refresh plus Retry recovers an already stored exact-current proof. A hung read exposes the named loading progress state with a 48 px Back action, keeps the camera closed, and transitions to retry/back recovery 10,025 ms after consent loading appeared. Raw action/URL/accessible-tree/geometry records, browser logs, dialog results, and capture scope accompany the screenshots in `test-results/human-e2e/2026-07-14/photo-consent-typed-read-current/`; network traffic was not captured. Native protected storage and permission ordering remain device QA.
+  - Action: Start a Progress shutter, then request Back/Close or replace the capture content with entitlement, app-lock, or storage recovery. Separately force raw-file deletion failure after capture, retry cleanup, background/foreground during capture, and transfer one successful still to review and encrypted save.
+  - Expected result: First-use photo consent is saved before the OS permission request. The route-level owner survives child-gate replacement, blocks route removal while the shutter or exact raw-file lifecycle is pending, invalidates the camera lease, drains the native operation, and then deletes or atomically transfers the same trusted URI. A deletion failure keeps a route-owned cleanup alert/retry reachable outside every replacing gate; navigation remains blocked until cleanup succeeds; retry does not duplicate encrypted storage. The preview remains mounted during an admitted shutter but unmounts on focus/background/consent/cleanup invalidation. No late callback navigates or mutates.
+  - Evidence: Progress capture privacy/routes/navigation contracts and shared lifecycle tests; exact signed-build Back/swipe/pop/reset, app-lock and storage-gate replacement, foreground/interruption, raw-file path/digest, cleanup-failure retry, encrypted-store count, network capture, and cold-relaunch evidence on both required physical iPhones. No completed CAT-06 artifact exists.
 - Branch: first-use photo consent save failure
   - Priority: Critical
   - Automate later: Yes
-  - Action: In a dev build started with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once`, open Progress capture without prior `photo_capture` consent and tap the first-use photo consent CTA. Repeat with `uncertain_once`, which performs the local proof write before simulating a lost write response and unreadable readback.
-  - Expected result: The camera does not open, the app shows stable photo-choice-not-saved copy for an ordinary failure or distinct photo-choice-not-confirmed retry/back recovery for an uncertain write, `Not now` or Back remains visible and tappable on a 320 x 568 phone, and no camera permission prompt appears before exact current consent is proven. Retry follows the authoritative read: an uncommitted failure returns to the real choice, while a committed exact-current proof reaches the normal permission/capture path without asking for consent again.
+  - Action: In a dev build started with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once`, open Progress capture without prior `photo_capture` consent and tap the first-use photo consent CTA.
+  - Expected result: The camera does not open, the app shows stable photo-choice-not-saved copy, the consent CTA is retryable, `Not now` remains visible and tappable on a 320 x 568 phone, no camera permission prompt appears before consent is saved, and the next CTA tap consumes the one-shot failure and opens the normal permission/capture path.
   - Evidence: Failure screenshot/text, `role="alert"` copy, no pre-consent camera copy, compact button-geometry snapshot, retry into the normal permission/capture path, and browser warn/error logs.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once` and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies direct `/progress/capture` starts on the local-only consent gate, a forced consent-save failure keeps the camera and permission path closed, renders route-owned `Photo choice not saved` feedback with `role="alert"`, opens no JavaScript dialog, keeps the retry CTA 52 px and `Not now` 48 px inside the viewport, has zero horizontal overflow, shows no raw fixture error, and retry reaches the normal web camera-permission path. The same slice removed the leftover native `Alert.alert` call from the consent persistence failure path while leaving camera-capture failure alerts unchanged. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-consent-failure-current/`.
-  - Current write-uncertain evidence: 2026-07-14 Expo web at stress-only 320 x 568 with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=uncertain_once` performs the real local proof write before simulating lost confirmation, then verifies `Photo choice not confirmed` recovery, camera and permission closure, 56 px Retry and 48 px Back controls, no dialog or overflow, and Retry reading the committed exact-current proof and reaching the normal web permission gate directly without re-consent. Raw steps and browser logs accompany the screenshot in `test-results/human-e2e/2026-07-14/photo-consent-typed-read-current/`.
 - Branch: first-use local-only device-loss tradeoff
   - Priority: Critical
   - Automate later: Yes
@@ -1037,14 +1119,15 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress capture on a device where the camera cannot start, or force the still photo capture call to reject.
   - Expected result: The app shows stable camera-unavailable or photo-not-captured copy, keeps the timeline unchanged, and does not leave a tappable shutter that appears inert.
   - Evidence: Alert text, visible fallback state, and route snapshot.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` forces `/progress/capture` still-photo rejection from the capture surface. The route opens no dialog, renders inline `Photo wasn't captured` copy with `role="alert"`, foregrounds 56 px `Try photo again` and 48 px `Not now` controls while the background shutter is disabled, hides the raw fixture error, and logs no current-origin browser errors. Tapping retry consumes the fixture and shows the normal web permission gate with readable wrapped heading copy; `Not now` returns to `/progress`. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`; physical iOS/Android camera mount, permission-denied, real `takePictureAsync` rejection, and encrypted image persistence QA remain open.
+  - Historical local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` forced `/progress/capture` still-photo rejection from the capture surface. The route opened no dialog, rendered inline `Photo wasn't captured` copy with `role="alert"`, foregrounded 56 px `Try photo again` and 48 px `Not now` controls while the background shutter was disabled, hid the raw fixture error, and logged no current-origin browser errors. Tapping retry consumed the fixture and showed the normal web permission gate with readable wrapped heading copy; `Not now` returned to `/progress`. Evidence and report are retained in `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`, but they predate CAT-06 and are stale for the current source. Physical-iPhone camera mount, permission, real `takePictureAsync` rejection, raw cleanup, and encrypted persistence remain open.
 - Branch: measured post-capture framing and lighting review
   - Priority: Critical
   - Automate later: Yes, with native image fixtures after the development build is installed on supported physical devices.
   - Action: Capture one front-facing photo, then repeat with the face off-center, no face, multiple faces, poor/uneven light, and the local analyzer unavailable or timed out.
-  - Expected result: The live camera never claims alignment, lighting quality, or automatic readiness from generated values. Review analyzes only the captured local file on-device, retains no landmark, contour, face template, or image analytics, and reports one-face framing separately from exposure/light balance. No-face, multiple-face, analyzer error, timeout, and unavailable results remain explicit instead of falling back to a positive score. Low or unavailable quality never disables Save; a failed encrypted save stays on review with inline recovery and never fires capture-success analytics. Encrypted local save makes no automatic Supabase photo image or metadata request under any current UI state. Pre-migration scores never drive a reference comparison or positive detail label. Web uses an unavailable adapter and cannot load the native ML Kit module. Visible review controls remain 44 pt or larger, copy remains no-score and non-diagnostic, and Retake/Close recover safely.
+  - Expected result: The live camera never claims alignment, lighting quality, or automatic readiness from generated values. Review analyzes only the captured local file on-device, immediately reduces native output to bounding-box coordinates plus finite Euler angles, retains no landmark, contour, tracking ID, face template, or image analytics, and reports one-face framing separately from exposure/light balance. Missing, partial, or nonfinite pose cannot match. No-face, multiple-face, analyzer error, timeout, and unavailable results remain explicit instead of falling back to a positive score. Low or unavailable quality never disables Save; only unresolved plaintext derivative cleanup blocks Save/Retake/Close, retains the raw still, and exposes an exact retry. Timeout, URI replacement, navigation, save, unmount, and account change drain analyzer work before raw persistence/deletion; native results cannot publish after an account/URI abort. A gate/account-forced unmount retains the exact failed analyzer/raw disposal in a process owner, and the next shutter retries it before creating another still. Process death continues to rely on startup raw-cache and plaintext-journal scavenging. A failed encrypted save stays on review with inline recovery and never fires capture-success analytics. Encrypted local save makes no automatic Supabase photo image or metadata request under any current UI state. Composite quality scores never claim directional darkness. Web uses an unavailable adapter and cannot load the native ML Kit module. Visible review controls remain 44 pt or larger, copy remains no-score and non-diagnostic, and Retake/Close recover safely after cleanup.
   - Evidence: Measured, adjustment, no-face, and unavailable review screenshots; visible-text and control-geometry snapshots; no-dialog and browser-log checks; native module autolinking output; focused measurement tests; and supported physical-device framing/lighting calibration evidence before launch.
   - Current local evidence: 2026-07-10 bundled system Chrome Expo web at the supported 390 x 844 viewport uses the development-only analysis fixture to render matched, adjustment, no-face, and unavailable post-capture review states around a real 48 x 64 bitmap. Each state keeps Close, Retake, and Save enabled at 48-56 px with successful center hit-tests, zero horizontal overflow, no dialogs, state-appropriate good/adjust/neutral treatment, and clear non-score copy; Retake recovers to `/progress/capture` and Close to `/progress`. At the 360 x 640 support floor, a real web persistence rejection remains on review, renders inline `Photo not saved` recovery, and keeps Retake/Save reachable and center-hit-testable after user-like scroll. Browser logs contain no native-module error or other disallowed warning/error, and no PostHog/Sentry request occurs. Android and iOS autolinking both resolve ML Kit face detection plus image manipulation. Evidence and the web/native boundary bug record are in `test-results/human-e2e/2026-07-10/progress-capture-analysis-current/` and `docs/e2e-bug-reports/2026-07-10-progress-capture-analysis-web-native-boundary.md`. This proves the review-state UI, web failure recovery, and platform boundary, not real-device ML Kit output, threshold calibration, native encrypted save, or assistive-technology behavior.
+  - Current source checkpoint (2026-09-26): focused executable tests cover native-result minimization, missing/partial/nonfinite pose, journal-before-generation ordering, generated-file adoption failure, retained cleanup retry, startup-recovery retry wiring, URI replacement/timeout abort and drain, post-native-await account abort, forced-unmount lifecycle retention/retry, and analyzer-before-raw-delete ordering. This does not complete PHOTO-03 or replace the physical-device, signed-archive, filesystem-residue, latency, accessibility, and zero-egress evidence above.
 - Branch: empty timeline
   - Priority: Important
   - Automate later: Yes
@@ -1052,13 +1135,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Empty state gives a clear next action.
   - Evidence: Screenshot.
   - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced the empty-state `Take my first photo` CTA sitting visually under the floating tab bar with only about 2 px of clearance. Post-fix, the CTA is 272 x 52 px at y=315-367, has 33.6 px clearance above the floating tab bar, center hit-tests to itself, has zero horizontal overflow, and tapping it opens the `/progress/capture` local-only photo consent gate. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-empty-short-phone-clearance/` and `docs/e2e-bug-reports/2026-07-08-progress-empty-short-phone-clearance.md`.
-- Branch: large local Progress collection traversal
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Open deterministic 50- and 100-photo local collections, switch to Timeline, traverse to the oldest photo, return to Compare, traverse the first-photo picker to its oldest boundary, and choose a different old photo.
-  - Expected result: Metadata reflects the exact collection cardinality; virtualized lists retain stable identity, reach one unique oldest row without a blank viewport, keep document-level horizontal overflow at zero, and do not eagerly mount every image. The picker reaches the oldest choice, closes after selection, and updates exactly one date control without exposing a score. Production storage behavior is unchanged because the fixture is explicit and development-only.
-  - Evidence: Sanitized cardinality/recycler/geometry metrics; oldest timeline and picker screenshots; accessible-name snapshots; selection state; focused fixture/timeline/route tests; native signed encrypted-photo frame/memory/filesystem/lifecycle evidence before final verification.
-  - Current local evidence: 2026-07-18 Codex in-app Browser Expo web at 390 x 844 traverses deterministic 50- and 100-photo timelines through their unique oldest rows with no blank viewport and zero horizontal overflow. The 100-photo run keeps 34-51 photo rows mounted during traversal, settles with 42 rows and six images, reaches the comparison picker's oldest boundary with 15 cards and three images mounted, and selects Aug 7 exactly once while closing the dialog. The 50-photo run settles with 44 rows and eight images around the visible oldest boundary. The pure matrix covers 0/1/2/10/50/100/250 cardinalities and complete 100/250 derivations. The attempted 250-photo browser reload was blocked by the browser local-URL security policy before the surface loaded, so no 250-photo UI claim is made. Evidence is in `test-results/human-e2e/2026-07-18/progress-100-photo-stress-current/`, `test-results/human-e2e/2026-07-18/progress-collection-stress-current/`, and `docs/optimization/evidence/2026-07-18_progress-collection-stress-checkpoint.md`. Signed native encrypted-photo frame, memory, filesystem, OS-kill, lowest-device, Dynamic Type, and VoiceOver proof remains open.
 - Branch: local timeline time-lapse playback
   - Priority: Important
   - Automate later: Yes
@@ -1066,6 +1142,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The Timeline opens a named full-screen local player, renders real local photo bytes oldest to newest, advances through a finite sequence, stops on the latest frame, and exposes 48 pt or larger close, previous, pause/play/replay, and next controls without a native or JavaScript dialog. Closing returns to the populated Timeline with no state loss. When the OS requests reduced motion, automatic playback is suppressed and the previous/next controls remain available for frame-by-frame review. The player sends no image, file-path, date, or photo identifier analytics and keeps the no-score/local-only boundary visible.
   - Evidence: Opening, mid-playback, completion, close-recovery, and reduced-motion screenshots; accessible-name/control snapshot; route state; dialog check; browser logs; and geometry snapshot.
   - Current local evidence: 2026-07-10 bundled Chromium Expo web at the supported 390 x 844 viewport opens the populated local Timeline, renders a real bitmap frame, and opens one named `Quiet photo time-lapse` modal dialog. The sequence starts on Apr 1, advances oldest to newest, pauses stably on May 12, steps to Jun 24, stops at `3 of 3` with Next disabled, replays to the first frame, and closes back to `/progress`. Close, Previous, Play/Pause/Replay, and Next are 48-56 px with clean center hit-tests and zero horizontal overflow. A separate OS reduced-motion context remains on Apr 1 after more than one frame interval, exposes no automatic-play control, and supports manual Next/Previous. The run records no unexpected browser logs, no PostHog/Sentry request, and no native/JavaScript dialog. Evidence and report are in `test-results/human-e2e/2026-07-10/progress-timelapse-current/`; the dialog-semantic finding and fix are in `docs/e2e-bug-reports/2026-07-10-progress-timelapse-dialog-semantics.md`. Physical iOS/Android encrypted-photo loading, app backgrounding, and VoiceOver/TalkBack adjustable actions remain device QA.
+- Current source checkpoint (2026-09-26): the player now uses a deterministic controller that waits for the encrypted image view to report a successful display before starting each dwell, cancels active and pending playback on backgrounding, and does not resume when foregrounded. The shared live Reduce Motion preference cancels automatic playback, while normal-motion autoplay and manual replay remain available. Rendered-component tests cover frame-ready gating, background/foreground behavior, a real `PhotoImage` request resolving only to a memory data URI with native cache disabled, no fetch call, accessibility escape, and scrollable large-text content; separate source contracts exclude direct share/file-write/analytics/observability dependencies and cover modal focus entry/restoration plus localized dates. This is not archive-level no-egress evidence and supersedes neither the 2026-07-10 screenshots nor the still-required current physical-device checks for encrypted frame rendering, background timer behavior, VoiceOver/TalkBack focus/actions, extreme Dynamic Type geometry, and zero-egress traffic/filesystem residue.
+- PHOTO-07 source-copy checkpoint (2026-09-27): the welcome claim now matches the explicit-share exception already disclosed at capture: photos stay encrypted on the phone unless the user chooses to share one. Capture still states no automatic upload, no cloud backup, no faceprint/template, and possible loss with the phone. Current exact-source UI, policy, accessibility, deletion, export, key-loss, and signed-device evidence remains open.
   - Previous local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, and app lock disabled covered the earlier unavailable-state affordance. That evidence is retained in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/` but no longer proves the implemented playback contract.
 - Branch: contextual photo-timeline paywall on short phones
   - Priority: Important
@@ -1102,13 +1180,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app shows stable share-unavailable copy, leaves the user on the photo detail, deletes any temporary decrypted export, and does not include notes or promise redaction.
   - Evidence: Alert text, route state, share helper cleanup assertion, and native share-sheet log when available.
   - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and `EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1` opens `/progress/e2e-front-2026-04-01`, verifies the photo detail actions are fully visible 48 px controls, taps the share icon, shows a route-owned confirmation panel with fully visible Cancel and Share photo controls, confirms share failure, stays on the same photo route, and renders the share-unavailable copy as an accessible alert with zero horizontal overflow and no browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`.
-- Branch: fast single-photo note typing, save, and recovery
-  - Priority: Important
-  - Automate later: Yes, after the native harness is selected.
-  - Action: Open a populated single-photo detail, focus the note field, type a long note quickly while the photo remains visible, verify the dirty `Save note` action, and save. Force one pre-write failure, verify the exact draft and retry remain, retry, then fresh-load the direct detail route. Open a different photo detail and repeat before returning to the first photo.
-  - Expected result: Each keystroke rerenders only the note-editor leaf, not the full detail image shell or `PhotoImage`. Blur and end-editing request a best-effort save, while a 48 pt explicit action remains available whenever the draft differs from the last confirmed persisted value. All triggers use one single-flight coordinator, duplicate delivery is safe, a second request coalesces the newest draft, and failure retains the exact text plus accessible retry. Successful persistence publishes saved feedback and an exact encrypted-store reload. The editor is keyed by photo ID so an unsaved draft cannot leak to another photo; a started owner-A write drains across an account boundary but cannot publish owner-A text into owner B's cache. The note wrapper, input geometry, focus, placeholder, multiline behavior, and visible photo remain unchanged.
-  - Evidence: React Profiler keystroke commits, supported-iPhone keyboard/focus screenshots or video, deterministic failed-write/retry sequence, persisted-note fresh load, account-boundary publication test, and focused source/store contracts.
-  - Current local evidence: 2026-07-21 Codex in-app Browser Expo web at an observed 390 x 845 viewport (390 x 844 requested) traversed the real photo-metadata encryption/write/read path using the exact development-only web content-key harness into the Jul 21 detail, rapidly entered the exact note, observed the dirty `Save note` action, retained the exact text and a 47.9976 px (approximately 48 CSS px) `Try save again` action after a deterministic pre-write failure, retried to `Saved on this device`, and restored the exact note after a fresh direct load with no dirty action or alert. All checked states had zero horizontal overflow and no JavaScript dialog. The run found and fixed unreliable Expo-web blur/end-edit callback delivery by retaining those hooks and adding the explicit save action through the same coordinator. Evidence is in `test-results/human-e2e/2026-07-21/progress-note-persistence-current/`; the finding is in `docs/e2e-bug-reports/2026-07-21-progress-note-web-blur-feedback.md`. Native iOS keyboard/focus, VoiceOver announcement order, process-kill recovery, and production-Hermes React Profiler/frame/memory proof remain open.
 - Branch: single-photo delete confirmation failure
   - Priority: Important
   - Automate later: Yes
@@ -1116,13 +1187,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app shows a route-owned confirmation panel, never opens a native or JavaScript dialog, keeps the user on the same photo detail after failure, renders stable local-delete recovery copy, hides raw fixture errors, keeps the photo private on-device, and keeps visible controls at least 44 pt.
   - Evidence: Screenshot sequence, route state, dialog check, browser logs, and 320 px geometry snapshot.
   - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and `EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE=1` opens `/progress/e2e-front-2026-04-01`, verifies the detail actions are visible 48 px controls, taps Delete photo, shows a route-owned confirmation panel with 48 px Cancel and Delete photo controls, cancels back to the action row, repeats delete, forces local deletion failure, stays on the same detail route, renders stable inline recovery copy with `role="alert"`, hides the raw fixture error, keeps horizontal overflow at zero, and opens no JavaScript dialog. Current-run warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-detail-delete-inline-recovery-current/`.
-- Branch: locally completed deletion awaiting account cleanup
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Delete an authenticated UUID-backed photo, return to Progress, and exercise saved-local, syncing, needs-attention, and unreadable deletion-queue states. Repeat after deleting the last photo and with a populated timeline. For presentation evidence, use the development-web `EXPO_PUBLIC_E2E_PHOTO_DELETE_SYNC_STATUS=saved_local|syncing|needs_attention` fixture at 360 x 640 and 390 x 844; use the real outbox contract for owner/retry behavior.
-  - Expected result: The local image disappears immediately and never returns. Only the already-entitled, timeline-unlocked, storage-readable Progress scroll content names `Deletion saved`, `Finishing deletion`, or `Deletion needs attention`; Settings, Diagnostics, and the deleted detail route expose no photo-deletion activity. Copy distinguishes the already-complete on-phone deletion from removal of any matching account record and explicitly says Progress photo images are not uploaded in this build. Status is aggregate and contains no photo ID, date, filename, count, account value, or raw error. Signed-out and authenticated non-UUID local-only deletion shows no status. Syncing exposes one named progress state; needs-attention exposes one alert and a single-flight `Try deletion again` action at least 44 pt; an unreadable queue exposes non-destructive `Check again`. No state blocks Progress, restores a photo, resets the queue, opens a dialog, leaks across account generations, clips under the floating tab bar, or introduces horizontal overflow.
-  - Evidence: Empty and populated Progress screenshots for saved-local, syncing, and needs-attention, accessibility role/text snapshot, retry control geometry and duplicate-activation result, center hit tests, horizontal-overflow and partial-control audit, browser dialog/warn/error logs, content inspection for forbidden metadata, plus focused current-owner status/retry and account-generation tests.
-  - Current local evidence: 2026-07-26 Codex in-app browser Expo web rendered saved-local, syncing, and needs-attention in both empty Progress at a requested 360 x 640 viewport and populated Progress at a requested 390 x 844 viewport. All six presentations had zero horizontal overflow, partial visible controls, sub-44 visible controls, forbidden UUID/date/filename/raw-error content, or JavaScript dialogs. Syncing exposed exactly one named progressbar; needs-attention exposed exactly one alert and a 55.99 px-high retry action. Activating the empty-state retry by its exact accessible name opened no dialog. The first narrow attention run found and fixed a partially off-viewport primary capture action; the exact rerun placed both actions completely above the floating tab bar. Evidence is in `test-results/human-e2e/2026-07-26/progress-photo-delete-recovery-current/`. A same-day typed-reader fault-injection follow-up called the real current-owner status reader, replaced only its first result with `unavailable`, and exercised `Check again` through the production single-flight/refetch path on empty 360 x 640 and populated 390 x 844 Progress. Both initial states exposed one alert and a 56 px action; rapid double activation cleared the notice, preserved the empty/populated content, and produced zero overflow, clipping, short controls, failed center hits, dialogs, page errors, or forbidden metadata. A populated remount repeated one-alert to zero-alert recovery, proving cache-instance isolation. Evidence is in `test-results/human-e2e/2026-07-26/progress-photo-delete-unreadable-recovery-current/`. The focused 8-file / 154-test matrix proves real-reader invocation, byte-preserving unavailable recovery, static-fixture non-mutation, duplicate activation single-flight, null/blank-owner hiding without hash/storage reads, and signed-out or authenticated legacy/non-UUID local-only deletion without an outbox row. A real authenticated delete/reconnect/account-switch flow and native behavior remain open.
 - Branch: app-lock coverage for direct Progress routes
   - Priority: Critical
   - Automate later: Yes
@@ -1161,8 +1225,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Launch-Blocked Direct Entry
 
 1. Action: Open `/trend/optin` and `/trend/fairness` directly, including a build with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
-   Expected result: Both routes remain deferred, show no toggle or `photo_trend_insights` consent request, and expose a `Back to Progress` action.
-   Evidence: Screenshot sequence, visible-text snapshot, and confirmation that no consent ledger mutation occurs. The former enabled Trend evidence is historical and does not describe the current launch contract.
+   Expected result: Both routes remain deferred, show no toggle or `photo_trend_insights` consent request, and expose a `Back to Progress` action. Literal `phase7Capabilities.trendEngine=false`, `phase7Flags.trend=false`, and machine `trendInsightAdmission` zero admission win over every environment, development, E2E, domain, or QA input.
+   Evidence: Screenshot sequence, visible-text snapshot, exact route identity, and confirmation that no consent ledger mutation, photo/profile/Monk/Trend-store read, simulated metric, result copy, content analytics, network request, native call, or file side effect occurs. The former enabled Trend evidence is historical and does not describe the current launch contract.
 
 ### Branches
 
@@ -1173,6 +1237,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Both deferred routes return to the Progress tab without exposing an opt-in, consent save, score, or engine claim. The recovery action meets the 44 pt phone touch target.
   - Evidence: Screenshot sequence and visible route snapshot.
   - Current local evidence: 2026-07-12 Codex in-app browser Expo web at the 375 x 667 launch floor reproduced `/trend/optin` being canonicalized to `/trend/fairness` by the layout-level fallback. After moving the hard capability gate into each child, direct `/trend/optin` and `/trend/fairness` preserve their exact URLs, render zero inputs or switches, expose 55.99 px `Back to Progress` controls, have zero horizontal overflow, and recover to `/progress`. Evidence and the bug report are in `test-results/human-e2e/2026-07-12/required-surface-honesty-rerun/` and `docs/e2e-bug-reports/2026-07-12-trend-direct-route-layout-redirect.md`.
+  - Current navigator/privacy evidence: 2026-07-13 Codex in-app browser plus human-driven Chrome Expo web at the 375 x 667 launch floor caught an attempted early-return group guard reintroducing the same `/trend/optin` to `/trend/fairness` canonicalization. Post-fix, the layout always mounts its `Stack` and uses a navigator-preserving `screenLayout` gate; both exact direct URLs survive refresh, disabled child scenes and the fairness Monk-band hook do not mount, both routes visibly show the complete truthful unavailable surface with zero inputs/switches and zero horizontal overflow, and the 55.99 px recovery controls replace to `/progress` even when another Trend route is already in history. Unexpected browser warn/error count is zero. Evidence and the bug report are in `test-results/human-e2e/2026-07-13/trend-route-group-gate-current/` and `docs/e2e-bug-reports/2026-07-13-trend-layout-guard-route-canonicalization.md`.
 - Branch: installed-base reconsent
   - Priority: Critical
   - Automate later: Yes
@@ -1186,51 +1251,23 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Start a dev build with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, then open `/trend/optin` and `/trend/fairness`.
   - Expected result: The frozen missing-engine capability wins over the environment flag; both routes stay deferred and no Trend consent control mounts.
   - Evidence: Screenshot sequence plus Phase 7 launch-flag and route-contract tests.
-
-## Flow: Satisfaction-Timed Native Review Prompt
-
-- Goal: A user may receive the native store-review prompt only after a real value moment and never because unreadable local history was treated as empty.
-- Persona: A returning user who completes seven check-off days or reviews a real conflict.
-- Entry state: The Phase 8 review-prompt flag is enabled in an internal build; the local attempt history may be absent, valid legacy/current, unavailable, malformed, future-version, or delayed across an account change.
-- Start screen/URL/window: Today after the qualifying check-off, or a reviewed conflict flow after the result is committed.
-- Success state: A valid eligible state reserves one durable attempt before native handoff; capped, cooldown, non-value, unavailable, corrupt, future, failed-write, or stale-owner states never present the prompt and never replace private bytes.
-- Priority: Important
-- Automate later: Yes, for policy/storage/account-boundary logic; native presentation remains physical-device QA.
-- Surface: Physical iPhone/TestFlight for `StoreReview` presentation; deterministic mobile integration tests for storage and account-generation branches. Expo web is not evidence for the native prompt.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/native-review-prompt/`
-
-### Path A: Eligible Value Moment
-
-1. Action: In an internal signed build with review prompting enabled, reach one approved value moment with absent or valid in-policy attempt history.
-   Expected result: The app atomically records the attempt, then hands off once to the OS-owned review surface. No custom rating request, sentiment gate, or five-star language appears.
-   Evidence: Physical-device video/screenshot where the OS permits presentation, private-record snapshot, and content-free analytics log.
-
-### Branches
-
-- Branch: unreadable or unrecognized history
+- Branch: forged positive inputs and historical state
   - Priority: Critical
   - Automate later: Yes
-  - Action: Repeat the value moment with unavailable encryption, malformed/oversized legacy or current bytes, or a future application/storage envelope.
-  - Expected result: No platform-availability check, reservation, analytics attempt, or native prompt occurs; exact stored bytes remain unchanged.
-  - Evidence: Deterministic adapter/codec tests plus native protected-storage fault evidence when available.
-- Branch: reservation failure or lost response
+  - Action: Populate historical local/database Trend state, caller consent, positive delta, Monk tone, fixture and E2E overrides, then open Progress and both direct Trend routes.
+  - Expected result: Progress shows no Trend card or opt-in, direct routes remain truthful unavailable recovery, and no `consistent`, `change_observed`, `inconclusive_lighting`, or `insufficient_data` result is produced. The private photo timeline and no-score explanation remain usable.
+  - Evidence: Screenshot and route snapshots; seeded-state before/after; no positive consent mutation; no Trend-result write; and network, analytics, console, and native/file side-effect absence.
+- Branch: explicit legacy withdrawal cleanup
   - Priority: Critical
   - Automate later: Yes
-  - Action: Fail the private write before commit, then repeat with a committed write whose response is lost.
-  - Expected result: A pre-commit failure remains retryable and does not present. A lost response proceeds only when same-lease readback exactly matches the intended canonical bytes; mismatch or unavailable readback fails closed without a native handoff.
-  - Evidence: Failure-injection tests and exact stored-record snapshots.
-- Branch: account changes while eligibility work is delayed
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Delay the private read, platform check, and atomic reservation in separate runs, then switch from account A to B.
-  - Expected result: No account-A write, analytics publication, or native handoff is attributed to account B; same-generation delays remain valid.
-  - Evidence: Delayed account-generation tests plus physical-device prompt timing QA.
-- Branch: platform declines to present
-  - Priority: Important
-  - Automate later: Partially
-  - Action: Run when the OS says review actions are unavailable or silently suppresses the system prompt.
-  - Expected result: The product flow remains uninterrupted and shows no fake success/failure UI; the app respects the platform-owned presentation policy.
-  - Evidence: Native log and continuation screenshot.
+  - Action: Seed legacy Trend consent/state, invoke the explicit revoke/health-withdrawal path, interrupt and retry where supported, then revisit Progress and direct Trend routes.
+  - Expected result: Cleanup remains available and idempotent, legacy state is deleted according to the governed data-rights lifecycle, no new grant or result is created, and all Trend presentation remains unavailable.
+  - Evidence: Before/after consent and state snapshots, cleanup receipt, interruption/retry transcript, and no Trend-result/content-analytics output.
+
+PHOTO-05A source-refusal evidence is not human-simulated E2E. The next current
+run must retain all branch evidence at the supported iPhone viewports and bind
+it to the exact source/archive under test. See
+[`PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`](./hugeToDo/PHOTO-05-TREND-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
 
 ## Flow: Pro Feature Gating
 
@@ -1308,18 +1345,22 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; lifecycle purchase actions such as paid-expiry renewal explain why the action is disabled; it must never render `Unavailable` as if it were the billed amount, and visible fallback copy must not expose infrastructure names, package setup detail, or production-build diagnostics.
   - Evidence: Screenshot and visible-text snapshot.
   - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 verifies Progress, `/routine/plan`, `/onboarding/paywall`, and `/paywall/upsell?feature=full_routine` keep the monthly equivalent on a one-line `$4.16/mo` label instead of a cramped `$4.16 /mo` split, preserve the annual amount as the most conspicuous price, keep zero horizontal overflow, and expose no sub-44 px visible controls. Evidence is in `test-results/human-e2e/2026-07-07/paywall-monthly-equivalent-compact-line/`.
-- Branch: purchase success compact-phone confirmation
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Open `/paywall/success` after a trial start or paid purchase on a 320 px wide phone viewport.
-  - Expected result: The success badge renders a clean checkmark, the title and renewal terms are readable, the renewal metadata does not orphan `yr` onto its own line, and the Today CTA remains visible with a clear bottom buffer.
-  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 after local reverse trial verified `/paywall/success` renders a clean checkmark, readable title/body, contained renewal metadata, and a visible 56 px `See tonight's routine` CTA with zero horizontal overflow.
-- Branch: direct paywall entitlement and receipt safety
+- Branch: PAY-08 closed iOS win-back admission and ordinary-Pro recovery
+  - Priority: Critical
+  - Automate later: Yes; keep the source contract and add signed-build native automation when the iOS harness is selected.
+  - Action: With the versioned no-offer admission and `EXPO_PUBLIC_IOS_WIN_BACK_ENABLED=false`, open `/paywall/winback` directly, refresh it, activate its primary and decline actions, and open Subscription settings with an expired paid entitlement. Repeat at 375 x 667, 390 x 844, and 430 x 932. Separately inject eligible, ineligible, malformed, missing, and failed provider results in tests, and exercise StoreKit messages on a physical iPhone.
+  - Expected result: Disabled, ineligible, malformed, missing, and failed paths never present a welcome-back discount, crossed-out amount, percentage savings, urgency, or an offer purchase action. The deep route truthfully says no welcome-back offer is available, shows only the standard annual Pro option, and its primary action reaches the ordinary contextual Pro paywall. Expired Subscription settings likewise routes directly to ordinary Pro options unless both the reviewed source authority and exact SDK `canPurchase` evidence are positive. Ordinary Pro offering retrieval may still configure RevenueCat and fetch localized standard-plan terms, but it skips win-back eligibility discovery. The dedicated disabled win-back purchase returns before RevenueCat configuration, offering retrieval, eligibility, or native purchase calls. RevenueCat automatic messages remain disabled; the explicit message list retains billing issue, price-increase-consent, and generic messages but excludes `WIN_BACK_OFFER`. Only a separately versioned positive admission plus exact native eligibility may show localized offer price, original price, discount, and purchase. App Store Connect and Manage Subscriptions surfaces remain an external exact-product/storefront evidence gate because app source cannot suppress an offer already configured by Apple.
+  - Evidence: Supported-phone screenshots, visible-text/control and route snapshots, browser console observations, PAY-08 adversarial contract output, provider call-count assertions, final bundle/config binding, exact App Store Connect and RevenueCat configuration captures, and physical-iPhone sandbox/TestFlight StoreKit-message and purchase traces.
+  - Current source and local web evidence: The 2026-08-04 PAY-08 source checkpoint adds a literal no-offer launch admission, two-key runtime resolution, all-profile build refusal, zero-call disabled win-back eligibility and purchase tests, explicit StoreKit message filtering, neutral UI routing, and rejection of the retired hardcoded `$34.99` / 30% discount. Codex in-app browser Expo web at the configured 375 x 667, 390 x 844, and 430 x 932 supported-phone profiles verifies the direct route and refresh retain only the neutral standard-Pro presentation; forbidden welcome-back availability, `$34.99`, percentage-off, and eligible-offer strings remain absent; horizontal overflow is zero; every visible control is at least 47.99 CSS px tall; the primary action reaches `/paywall/upsell?feature=full_routine`; and `Not now` reaches `/today`. Browser logs contain only the known development-only Supabase-placeholder, Expo notifications, pointer-events, and repeated-context GoTrue warnings, with no new route error. The run also found and bounded an uninterruptible HTTP/CDP readiness path in the checked-in text-pressure harness; the final controlled recheck fails with an actionable deadline and cleans both ports instead of hanging, as recorded in `docs/e2e-bug-reports/2026-08-04-text-pressure-runner-unbounded-readiness.md`. This environment still cannot complete that headless-CDP sweep, and Expo web cannot prove App Store Connect state, native StoreKit messaging, eligibility, purchase, renewal, or signed-build behavior.
+- Branch: PAY-07 purchase-success entitlement authority, direct-entry recovery, and compact confirmation
   - Priority: Critical
   - Automate later: Yes
-  - Action: Deep-link to `/onboarding/paywall`, `/paywall/upsell`, `/paywall/winback`, `/paywall/downgrade`, `/paywall/reoffer`, and `/paywall/success` as authoritative Free, active paid Pro, active reverse trial, expired paid, expired reverse trial, loading, unreadable/stale evidence, and after an A-to-B account boundary. Repeat lifecycle routes with a prompt ID for the wrong route; exercise iOS RevenueCat trial eligibility statuses eligible, ineligible, unknown, and error plus Android unknown; return native-completed-but-unverified and store-pending purchase results; and open success with a missing, expired, replayed, or prior-owner receipt.
-  - Expected result: Store offerings, purchase handlers, presentation analytics, and lifecycle acknowledgement remain inert until the exact route is eligible. Upsell/onboarding accept only resolved Free or expired access; win-back/downgrade accept only lapsed store-backed paid proof; re-offer accepts only active or expired reverse-trial proof. Every mutation carries the route kind and exact starting evidence identity so a state change before native dispatch blocks the action. An exact owned stale lifecycle prompt can be settled as superseded without being recorded as presented; an ID belonging to the other lifecycle route is never acknowledged, presented, or forwarded by the current route, and navigation does not wait for a hung supersede write. Loading and uncertain evidence show retry recovery, active/ineligible states leave for the correct surface, and the ordinary upsell independently re-gates every fallback. Trial CTA, price intro, reassurance, and conversion disclosure appear only for exact iOS `eligible`; Android, unknown, malformed, and lookup-error results use neutral subscription copy. Native-completed-but-unverified and store-pending actions keep success closed, disable repeat purchase, and explain verification/Restore recovery instead of inviting another charge. Success renders only once from a short-lived opaque receipt minted when that action's store-backed proof wins ordered publication; direct Free, app-granted, pre-existing active, replayed, expired, and account-A receipts show no success copy. A finite win-back receipt and screen keep its per-cycle offer price and total offer duration separate from the standard renewal price and period, and omit percent-off when the billing periods are not exactly comparable.
-  - Evidence: Pure direct-paywall policy, lifecycle journal, receipt-vault, action-result, and source-contract tests. Human Expo web and native store-sheet/account-switch evidence remains open under `test-results/human-e2e/YYYY-MM-DD/direct-paywall-entitlement-safety/`.
+  - Action: Open `/paywall/success` directly as a fresh free user, with an expired or stale entitlement, while the current entitlement check is loading, and after a failed refresh. Use `Check access again` and `Subscription options`. Separately reach the route after a current active exact-owner trial or paid entitlement is confirmed, and repeat on a 320 px wide phone viewport.
+  - Expected result: Direct or stale entry without current active exact entitlement evidence shows only safe recovery. While checking, the route says that purchase details wait for verified active access; after an unconfirmed result, it states that the page did not charge the user or unlock Pro. It makes no purchase-success, renewal, billing, trial, price, or premium-unlock claim, exposes a retry action and a `Subscription options` action, and never flashes the confirmed-success surface. The confirmed state may render only after a post-mount exact-owner query succeeds with freshly verified authority metadata and its own active, future `expiresAt`; cached, pending, failed, wall-clock-expired, stale-verification, or incomplete-authority states stay closed. The route revalidates at the earliest expiry/verification boundary and on foreground. Renewal and price copy requires an exact billing store, `willRenew=true`, the entitlement's own price, and cadence derived from the configured product ID. App-granted reverse trials, RevenueCat-granted out-of-store/non-billing promotions, non-renewing access, and incomplete billing facts use separate no-charge/no-renewal or billing-unknown copy. Trial copy on every paywall requires an exact eligible per-product result for the current iOS customer; unknown/ineligible/no-offer/error results use ordinary subscription copy. The success badge renders a clean checkmark, renewal metadata stays readable without duplicate `/year` or orphaned `yr`, and the Today CTA remains visible with a clear bottom buffer.
+  - Fixture boundary: Positive `EXPO_PUBLIC_E2E_ENTITLEMENT` fixtures are permitted only for Expo web in a browser development build used for human-simulated visual evidence. They are not native entitlement authority, must resolve to no grant in iOS and Android bundles even when the environment value is present, and cannot satisfy StoreKit, RevenueCat, TestFlight, physical-iPhone, purchase, restore, or release acceptance.
+  - Evidence: Direct/stale/loading/retry screenshots and navigation results; a visible-text and no-confirmed-content-flash trace; browser network/provider-call notes; exact expiry/authority state snapshot; 320 px control-geometry snapshot; native source/bundle contract proving the positive fixture is absent; and separate native sandbox purchase/restore evidence before release.
+  - Current source and local web evidence: On 2026-08-04, PAY-07 pure behavior tests cover cached-pre-mount, pending, failed, expired, malformed, stale-verification, exact active, app-granted, RevenueCat-granted promotional, renewing store, non-renewing store, missing-price, duplicate-cadence, live-clock, verification-mismatch, legacy-cache, and introductory-eligibility lanes. Codex in-app browser Expo web at 390 x 844 opens a fresh/free direct route with no entitlement fixture, confirms only `Pro access not confirmed` plus the explicit no-charge/no-unlock alert, verifies zero confirmed/billing copy, zero horizontal overflow, and two 56 px recovery controls, then proves `Check access again` stays closed and `Subscription options` reaches `/settings/subscription`. The refreshed isolated web-only `store_pro` visual fixture renders `$49.99/year` and `set to renew $49.99/yr`, with the Today CTA reaching `/today`. With no store eligibility result, onboarding and contextual upsell render `Subscribe to Pro` rather than a trial claim; the onboarding free-plan action and upsell dismiss both reach Today, while unavailable checkout returns inline recovery. The run found and fixed the duplicate `$49.99/year/year` bug and later removed the development fallback's synthesized trial eligibility. The gitignored `test-results/human-e2e/2026-08-04/pay07-entitlement-admission-current/` screenshots/summary and iOS export bundle are local, volatile diagnostic artifacts, not retained release proof; refreshed semantic interactions were not promoted into retained proof. The bug-report candidate is `docs/e2e-bug-reports/2026-08-04-paywall-success-annual-price-duplication.md`. The export excludes all six positive-fixture markers, but this proves Metro native JavaScript source exclusion only; current 320 px, signed archive, StoreKit/RevenueCat, Trusted Entitlements, sandbox/TestFlight, physical-iPhone, and App Review evidence remain open.
+  - Historical layout evidence only: A 2026-07-07 fresh Chrome context at 320 x 568 after a local reverse-trial fixture verified `/paywall/success` rendered a clean checkmark, readable title/body, contained renewal metadata, and a visible 56 px `See tonight's routine` CTA with zero horizontal overflow. That browser fixture predates the current PAY-07 authority boundary and proves layout only; it does not prove a charge, native entitlement, active renewal, StoreKit/RevenueCat result, exact-owner authority, or current acceptance.
 - Branch: policy and billing link handoff failure
   - Priority: Important
   - Automate later: Yes
@@ -1327,49 +1368,56 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Policy and billing links show clear unavailable feedback instead of silently doing nothing; Restore still reports success/failure through the purchase state and leaves visible status on the current surface.
   - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
   - Current local evidence: 2026-07-08 System Chrome CDP Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` verifies direct `/paywall/upsell?feature=full_routine` renders row-local `Link unavailable` after Terms/Privacy failure and `No active subscription was found for this account.` after Restore. The Start free trial control is 264 x 54, Terms/Privacy/Restore controls are 48 px+ tall, and horizontal overflow is zero. Follow-up Codex in-app browser evidence at 320 x 568 verifies the same direct paywall restore branch opens no JavaScript dialog, renders exactly one route-owned `role="alert"` restore message, exposes no raw RevenueCat/provider text, keeps all controls 48 px+ tall, and keeps horizontal overflow at zero. Latest evidence also verifies the web-preview store-unavailable state keeps purchase disabled with honest preview copy while compliance restore remains reachable. Evidence is in `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/`, `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/`, and `test-results/human-e2e/2026-07-08/paywall-inline-recovery-current/`. Native RevenueCat purchase-sheet failure, native restore, and OS billing-management handoff remain Phase 5/6 device QA.
+- Branch: Store transaction completion becomes unconfirmed
+  - Priority: Critical
+  - Automate later: Yes, with a native iOS harness after the release harness is selected; retain the pure behavioral tests for owner binding and admission.
+  - Action: Exercise four durable states: generic completion-unconfirmed, RevenueCat `PAYMENT_PENDING_ERROR`, a foreign-owner record, and the ownerless tombstone created only after server-verified terminal account deletion. Force account-publication closure/caller detachment before and after the awaited write-ahead hook; force-quit during Restore; navigate, lock/unlock, background/foreground, reload, sign out, and switch accounts. Attempt another purchase, verified-empty Restore, verified-active Restore, Manage subscription, Support, and a later unsolicited active CustomerInfo listener write.
+  - Expected result: The write-ahead record commits and is read back immediately before the native SDK call; configuration/offering/admission failures before that hook leave no false block, and failed, dropped, corrupt, or unreadable persistence prevents the native sheet. After native invocation, generic uncertainty stays blocked until an exact-owner, user-initiated Restore durably persists either empty or active provider evidence; an unsolicited listener result is not correlated to that action and never clears the warning. A fulfilled purchase with no active entitlement remains generic-unconfirmed. `PAYMENT_PENDING_ERROR` has explicit store-instruction copy, survives verified-empty Restore and process death with its original timestamp, and clears only when an exact-owner, user-initiated Restore durably persists active provider evidence; its anchored 30-day `expiresAt` value is a review marker that mutable device time never uses to reopen checkout. RevenueCat's no-new-charge cancellation code clears this attempt and visible feedback directs users who expected existing access to Restore (the SDK's deprecated `userCancelled` flag is derived from the same code). Every unresolved record blocks device-wide purchase admission; the durable exact-owner schema retains only the owner binding, state, reason, creation timestamp, and optional payment-pending review marker—not action or acknowledgement—and a foreign account sees no owner/reason detail. Acknowledgement is process-local, performs no storage write, and hides only for the current foreground. The alert is above routes but behind App Lock, renders only while `AppState` is active, and scrolls at large Dynamic Type. Malformed/unavailable storage fails closed.
+  - Account-deletion branch: Deletion intake is never conditioned on resolving a valid commerce warning. Terminal server-verified finalization atomically replaces matching exact-owner commerce records with one fresh ownerless bit containing only `kind`, `createdAt`, and `expiresAt`; it contains no old owner binding, action, provider/product ID, or original timestamp. `expiresAt` is a 30-day review marker only: mutable device time never removes the bit or reopens admission. Any authenticated user sees generic deleted-account copy plus user-initiated Restore, Manage store subscription, and configured Support actions. Manage/Support, verified-empty Restore, and unsolicited listener updates never clear it; only an exact-owner, user-initiated Restore that durably persists active provider evidence clears it without touching other owners' exact records. Resolution-bound retention and any future provider-trusted release rule remain counsel/native gates. A malformed or unavailable journal still blocks intake/finalization and therefore remains an explicit Apple/counsel recovery gate rather than launch-ready deletion evidence.
+  - Development-only web fixtures: Start Expo web with `EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry` and one of `EXPO_PUBLIC_E2E_STORE_TRANSACTION_NOTICE=purchase_unconfirmed|payment_pending|deleted_account_pending|foreign_pending`. These fixtures are accepted only in a `__DEV__` development runtime and use the real redacted schema. They prove only root-alert copy/actions, lock/background hiding, acknowledgement, route-unmount, reload, geometry, and generic isolation—not StoreKit, RevenueCat, deletion-provider, or Restore behavior.
+  - Evidence plan: `test-results/human-e2e/2026-07-13/store-transaction-unconfirmed-web/` for the Expo web-compatible subset at 375 x 667 (optional 360 x 640 resilience). Redacted physical-iPhone/TestFlight evidence remains required for write-ahead/SDK ordering, caller-detached and force-quit recovery, Ask-to-Buy approval and decline, forward/rollback device-clock tests proving the review marker never releases the block, exact/foreign Apple-ID combinations, active/empty Restore, proof that an unsolicited active listener cannot resolve the journal, one App Store subscription group, App Lock/background snapshots, Dynamic Type, and VoiceOver. Counsel approval of the retention/liveness policy and live RevenueCat transfer/alias configuration remain launch gates.
 - Branch: Pro entitlement state
   - Priority: Critical
   - Automate later: Yes
   - Action: Open the same routes with an active Pro or reverse-trial entitlement.
   - Expected result: The intended Pro surface renders and remains usable.
-  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies local reverse-trial entitlement unlocks `/cycle/settings`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/phased-intro`, `/cycle/procedure`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, `/routine/adaptation`, `/routine/streak`, and `/routine/welcome-back`: scheduler routes render their intended nested surfaces instead of the scheduler paywall, full-routine routes render their intended Pro surfaces, streak shows the calm adherence surface, and welcome-back shows the earn-back surface with `Tonight's step`. Widgets are no longer an entitlement-controlled surface; they stay deferred for every account state. Earlier 2026-07-07 evidence also verifies local reverse-trial entitlement unlocks `/routine/plan`.
-- Branch: unreviewed cycle-cadence production gate
+  - Historical entitlement-routing evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verified that local reverse-trial entitlement passed the subscription gate for `/cycle/settings`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/phased-intro`, `/cycle/procedure`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, `/routine/adaptation`, `/routine/streak`, and `/routine/welcome-back`. That packet predates the independent cadence, recovery/stop-refer, and explainability-copy admission gates, so it proves only subscription routing and historical geometry—not that sensitive nested guidance is currently available. Widgets are no longer an entitlement-controlled surface; they stay deferred for every account state. Earlier 2026-07-07 evidence similarly verifies only the subscription route into `/routine/plan`.
+- Branch: unreviewed routine-cadence production gate
   - Priority: Critical
   - Automate later: Yes
-  - Action: With an active Pro or reverse-trial entitlement in a non-dev build while routine cadence review is still closed, open `/cycle/week`, `/cycle/settings`, and `/cycle/why-tonight` directly.
-  - Expected result: Cycle week, settings, and explainability surfaces show review-gate copy, keep the daily AM/PM routine available, hide cadence-specific controls or pause/recovery banners, and do not promise that adding an active will build a cycle until dermatologist and cosmetic-chemist review opens the gate.
-  - Evidence: Route screenshots or UI snapshots plus the cadence-gate contract test output.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed` verifies direct `/cycle/week`, `/cycle/settings`, and `/cycle/why-tonight` stay on review-gate copy for an active Pro fixture while cadence review is closed. Week and settings keep the AM/daily-routine reassurance visible, hide Settings/variant/night controls, hide cycle night rows, hide pause/recovery banners, avoid `add an active/build your cycle` promises, keep visible controls 48 px+ (56 px on `Got it`), and have zero horizontal overflow. `Got it` on direct `/cycle/why-tonight` returns to `/today`. Evidence is in `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`; native iOS/Android bottom-sheet, safe-area, screen-reader, and reviewer-signoff QA remain open.
-- Branch: unreadable active-ramp cadence and non-destructive recovery
+  - Action: With an active Pro or reverse-trial entitlement in a development build forced to the production-closed state through `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed`, directly open `/cycle/week`, `/cycle/settings`, `/cycle/why-tonight`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/phased-intro`, `/cycle/procedure`, `/routine/ramp`, and `/routine/tolerance`. Refresh each route, use every visible safe exit, and repeat at 375 x 667, 390 x 844, and 430 x 932.
+  - Expected result: Every route shows only neutral review-gate copy before cadence data or mutation hooks mount. Daily AM/PM routine availability may be stated, but draft frequencies, nights, ramp pace, tolerance choices, recovery duration, procedure controls, phased-introduction timing, pause/skip/travel controls, mutation success analytics, and promises that adding an active will build a cycle remain absent. Direct refresh stays closed, safe exits return to a non-sensitive route, all exposed controls are at least 44 pt, and no supported viewport has horizontal overflow or clipped controls.
+  - Evidence: Per-route supported-phone screenshots or UI snapshots, visible-text and control-geometry snapshots, safe-exit route results, refresh results, browser console/dialog/network observations, cadence route-contract output, and proof that protected hooks/mutations do not mount or execute.
+  - Historical outer-gate evidence: 2026-07-26 Codex in-app browser Expo web at confirmed 375 x 666, 390 x 844, and 430 x 932 CSS-pixel viewports with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed` verified all nine direct-entry routes remained on neutral review-gate copy across 27 of 27 route/viewport observations. All nine refreshes remained closed; 11 of 11 screen, sheet, and CTA exits returned to `/today`; visible controls were at least 48 px; and horizontal-overflow, clipped-control, forbidden-draft-copy, JavaScript-dialog, and browser-error counts were zero. Visual review found and fixed the repo-local Metro `.tmp` package collision and unreviewed `moisturizer → SPF` copy on the closed Week card. The local ignored packet and two tracked `2026-07-26-core03-*` bug reports record that pass. The 375 x 666 observation is a one-pixel-shorter stress boundary because the selected controller could not produce exact 375 x 667. The packet predates later source-artifact, recovery, explainability, ramp-cache, notification, and stale-state hardening and therefore is not exact-current-source proof. It is working-tree-bound and not manifest-registered. Current-exact-source partial-admission, exact 375 x 667, compact/text-pressure, native safe-area/Dynamic Type/VoiceOver, physical-iPhone, archive-identical, and reviewer-signoff evidence remain open. The earlier three-route 320 x 568 packet remains historical evidence only.
+- Branch: independently closed recovery and explainability authority
   - Priority: Critical
   - Automate later: Yes
-  - Action: With Pro, the reviewed-cadence development gate open, a real retinoid/acid routine, and a persisted cadence below the reviewed class cap, make `onskin.ramp.v1` unavailable, corrupt, or future-versioned. Open Today AM/PM, `/routine/plan`, `/routine/ramp`, product detail, and direct `/cycle/*` routes; retry once while unavailable, then restore the original bytes and retry. Also open the same surfaces with a simple daily routine that has no ramp inputs.
-  - Expected result: Ramp reads distinguish absent, available, unavailable, corrupt, and unsupported state without rewriting bytes. Pending or failed authoritative input never reaches scheduler orchestration and never falls back to the higher class cap. Today retains only daily basics and shows one generic retry notice; Plan blocks Start Today only when the real plan needs active scheduling; Ramp hides step-up/empty-state claims; nested cycle routes share the non-destructive recovery gate; product detail labels active-night timing unavailable; notifications emit no step-up nudge; and the cycle milestone is not calculated or recorded while cadence is pending/unreadable. Retry restores the exact saved cadence. A cleanser/moisturiser-only simple routine succeeds without reading an unrelated retained ramp record. A failed Add-a-night write stays on Ramp, emits no accepted analytics, and retries idempotently to one exact desired frequency.
-  - Evidence: Supported-phone screenshots at 375 x 667 and 390 x 844; original/restored private-state hashes or byte snapshots; Today basics-only, Ramp, Plan, product-detail, and direct-cycle recovery snapshots; retry/restored cadence snapshot; notification/analytics absence logs; 44 pt geometry, overflow, dialog, and browser console audits; focused typed-store, scheduler, route-contract, and mutation tests.
-  - Current local evidence: 2026-07-12 Codex in-app browser Expo web at 390 x 844 with Pro, cadence review open, two real Shelf actives, a persisted 2-of-3-night Ramp cadence, and `EXPO_PUBLIC_E2E_RAMP_STORAGE_FAILURE=always` verifies Today hides the 7-night cycle strip and Glycolic Toner active step, renders the saved-cadence recovery alert, and remains fail closed after a user-pressed retry. Ramp hides its ordinary empty state and all step-up controls; direct `/cycle/week` hides simple-daily/no-active claims; Plan disables Start Today; and product detail labels active-night timing unavailable. Visible recovery controls are 48-56 px, all audited screens have zero horizontal overflow, no dialog appeared, and browser diagnostics contain no app error. Removing the fixture and fully relaunching restores the exact 7-night Today cycle, Glycolic Toner on night 1, and `2 of 3 nights a week` Ramp state; the restored Ramp surface also passes a 375 x 667 overflow/48-px-control check. The focused 91-test contract suite and full 233-file/2,634-test mobile suite pass. Evidence is in `test-results/human-e2e/2026-07-12/ramp-storage-recovery-current/`; native Keychain interruption, notification delivery suppression, and physical-device byte snapshots remain open.
-  - Evidence folder: `test-results/human-e2e/2026-07-12/ramp-storage-recovery-current/`
+  - Action: In a development build with cadence available, first leave `EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE` and `EXPO_PUBLIC_E2E_ROUTINE_EXPLAINABILITY_COPY_GATE` closed. Open recovery, procedure, tolerance, Why Tonight, and Phased Introduction directly; seed stale recovery/ramp state; and invoke ramp-up plus de-escalation notification paths. Repeat only in a non-production test fixture with the individually named `open_fixture` gate required for the specific path under test.
+  - Expected result: Cadence availability alone cannot expose recovery/irritation controls or claim-bearing explainability copy. Closed recovery state publishes neutral values without rewriting stored bytes. Closed ramp state is not read or cached. Direct ramp-up/de-escalation notification calls return before preferences, leases, scheduling, logging, or analytics. Ordinary streak behavior remains available, but no cycle milestone is synthesized without a real admitted cycle. Fixture-open results are clearly development-only and never constitute professional review or publication authority.
+  - Evidence: Current focused unit tests and the mandatory CORE-03 source contract cover the code boundary. Current-exact-source supported-phone screenshots, storage byte snapshots, notification side-effect spies/logs, refresh/relaunch behavior, and a manifest/commit-bound packet remain open.
 - Branch: cycle disruption persistence and deterministic resume
   - Priority: Critical
   - Automate later: Yes
-  - Action: With Pro and the reviewed-cadence development gate open, pause from `/cycle/disruption`, reopen the disruption sheet from Today or Week, resume, start procedure recovery, finish recovery early, and repeat a mutation with `EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE=once` before retrying.
+  - Action: With Pro, the cadence development fixture available, and the separately named recovery fixture `EXPO_PUBLIC_E2E_ROUTINE_RECOVERY_REVIEW_GATE=open_fixture`, pause from `/cycle/disruption`, reopen the disruption sheet from Today or Week, resume, start procedure recovery, finish recovery early, and repeat a mutation with `EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE=once` before retrying.
   - Expected result: Pause, travel, skip, recovery, phased-introduction, and variant changes write the encrypted current-owner cycle configuration before navigation or success analytics. A paused cycle exposes a reachable `Resume my routine` action and resumes on the same cycle night by shifting the anchor only by elapsed paused days. Starting recovery settles any prior pause; finishing or expiring recovery shifts only the elapsed or configured recovery interval once. Pause and recovery never remain active together. While saving, competing controls are disabled. A failed write stays on the current route, shows one inline alert, keeps the previous cycle and schedule active, emits no success analytics, and succeeds on retry. Reloaded Today, Week, Why Tonight, and cycle settings consume the same reconciled projection. Visible controls remain at least 44 pt with no clipping or horizontal overflow on supported phone sizes.
   - Evidence: Supported-phone screenshots for pause, resume, active recovery, failed write, and retry; cycle-config snapshots before/after; visible accessibility state and control geometry; browser warn/error logs; focused store and route-contract tests.
   - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/cycle-disruption-reconciliation-current/`
-  - Current local evidence: 2026-07-10 Codex in-app browser Expo web at supported 390 x 844 and 360 x 640 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=open`, and `EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE=once` verifies failed pause, recovery, variant, Start Today, and irritation-recovery writes stay on their source route with one inline alert and no dialog; retry succeeds; pending controls including the sheet backdrop are disabled; pause survives reload and exposes `Resume my routine`; resume updates Today immediately; procedure and irritation recovery show day 1 of 7 and finish early; variant survives reload; and Start Today re-anchors Today to cycling night 1. The first pass found and fixed the AM Today preview contradicting paused state; post-fix it renders `Tonight · Paused`, `Your cycle resumes when you are ready`, and a direct `Manage paused cycle` action before returning to the normal week preview after resume. The 360 x 640 sheet keeps all four 78 px disruption choices visible; its 96 px failure alert becomes fully visible through the intended scroll region; all measured controls are at least 48 px, horizontal overflow is zero, browser diagnostics contain zero unexpected warnings/errors, and no JavaScript dialog opens. Evidence is in `test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`; native encrypted-storage relaunch, timezone-change, VoiceOver/TalkBack, and iOS/Android Dynamic Type verification remain release-device QA.
+  - Historical persistence/geometry evidence: 2026-07-10 Codex in-app browser Expo web at supported 390 x 844 and 360 x 640 with the then-current cadence fixture verified failed pause, recovery, variant, Start Today, and irritation-recovery writes stayed on their source route with one inline alert and no dialog; retry succeeded; pending controls including the sheet backdrop were disabled; pause survived reload and exposed `Resume my routine`; and the recovery/variant/anchor flows reconciled. The pass also fixed the AM Today preview contradicting paused state and verified 48 px controls, scroll recovery, zero overflow, and clean diagnostics. It predates the independent recovery/stop-refer admission gate and therefore does not prove that recovery is available or exact-current-source behavior. Evidence is in `test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`; a current run must use the named recovery fixture. Native encrypted-storage relaunch, timezone-change, VoiceOver/TalkBack, and iOS/Android Dynamic Type verification remain release-device QA.
 - Branch: full authored cycle settings and deterministic reconciliation
   - Priority: Critical
   - Automate later: Yes
-  - Action: With Pro and the reviewed-cadence development gate open, open `/cycle/settings`, enter Custom, change the 1-14-night length, add/remove an eligible active, change its frequency, assign nights, Cancel once, then Save. Reload, inspect Settings, Week, Why Tonight, Plan, and Today; switch to a preset and back to Custom; repeat Save with `EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE=once`.
-  - Expected result: Custom starts from the Auto-recommended projection once, then persists one stable product ID or recovery per night without changing the anchor or ramp. Cancel is non-mutating. Save commits the whole versioned definition before cache publication, navigation, or success analytics; repeated Custom edits do not emit a false variant-change event. Visible controls, Android/system Back, swipe removal, and browser Back cannot leave while persistence is pending, but committed success can exit normally. One product per night, at least one recovery night, safety filtering, phased introduction, and the shared length-aware ramp/reviewed weekly budget remain authoritative. A closed cadence-review gate withholds Custom rather than labeling known products missing. Cadence-excess or temporarily ineligible intent remains saved and does not block unrelated Save/length edits, while the preview shows requested versus currently scheduled cadence and projects withheld occurrences as recovery with an exact Why Tonight reason. New shelf products are not silently inserted; explicitly selected staged products preview and save as introduced; removed products become recovery and prune on explicit save. Presets recalculate without deleting Custom, and returning to Custom restores it. A valid legacy cycle migrates to isolated `routinekind.cycle.v2`; current v2 requires an explicit schema; malformed, unreadable, missing-schema, and future-schema current data is preserved and fails closed. Device export uses v2 as authoritative and labels the retained v1 value as legacy. A failed write leaves the previous projection active, keeps the complete draft and retry visible, and disables competing edits/exits while pending. Every downstream surface consumes the same committed projection with no stale intermediate frame, and paused/skipped/recovery-only PM completions do not advance the active-cycle milestone.
+  - Action: With Pro and the cadence development fixture available, open `/cycle/settings`, enter Custom, change the 1-14-night length, add/remove an eligible active, change its frequency, assign nights, Cancel once, then Save. Reload, inspect Settings, Week, Plan, and Today; switch to a preset and back to Custom; repeat Save with `EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE=once`. Inspect Why Tonight only under the separately named `EXPO_PUBLIC_E2E_ROUTINE_EXPLAINABILITY_COPY_GATE=open_fixture` development fixture.
+  - Expected result: Custom starts from the Auto-recommended projection once, then persists one stable product ID or recovery per night without changing the anchor or ramp. Cancel is non-mutating. Save commits the whole versioned definition before cache publication, navigation, or success analytics; repeated Custom edits do not emit a false variant-change event. Visible controls, Android/system Back, swipe removal, and browser Back cannot leave while persistence is pending, but committed success can exit normally. One product per night, at least one recovery night, safety filtering, phased introduction, and the shared length-aware ramp/reviewed weekly budget remain authoritative. A closed cadence-review gate withholds Custom rather than labeling known products missing. Cadence-excess or temporarily ineligible intent remains saved and does not block unrelated Save/length edits, while the preview shows requested versus currently scheduled cadence and projects withheld occurrences as recovery with an exact Why Tonight reason. New shelf products are not silently inserted; explicitly selected staged products preview and save as introduced; removed products become recovery and prune on explicit save. Presets recalculate without deleting Custom, and returning to Custom restores it. A valid legacy cycle migrates to isolated `layerwell.cycle.v2`; current v2 requires an explicit schema; malformed, unreadable, missing-schema, and future-schema current data is preserved and fails closed. Device export uses v2 as authoritative and labels the retained v1 value as legacy. A failed write leaves the previous projection active, keeps the complete draft and retry visible, and disables competing edits/exits while pending. Every downstream surface consumes the same committed projection with no stale intermediate frame, and paused/skipped/recovery-only PM completions do not advance the active-cycle milestone.
   - Evidence: Supported-phone screenshots at 360 x 640 and 390 x 844; Save/Cancel/reload/preset-round-trip state snapshots; failed-write and pending-control snapshots; Settings/Week/Why Tonight/Plan/Today agreement; 44 pt geometry, overflow, selected/disabled accessibility state, dialog count, and browser logs; focused customization/store/route tests.
   - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/cycle-customization-current/`
-  - Current local evidence: 2026-07-10 to 2026-07-11 Codex in-app browser Expo web at supported 390 x 844 and 360 x 640 verifies Auto-to-Custom initialization, assignment, cadence-safe extension to 14 nights, non-mutating Cancel, encrypted reload, retained over-cap intent after shortening, requested/applied cadence copy, preset round trip, one-shot failed save with full draft retention, browser Back prevention while pending, successful retry exit, review-gate closure, and Settings/Week/Why Tonight/Plan/Today agreement. Why Tonight distinguishes authored recovery from cadence-cap recovery. The 360 x 640 audit measured 360 px client/scroll width, zero horizontal overflow, and no interactive dimension below 48 px; no JavaScript dialog opened. The pass found and fixed a Metro runtime import cycle, a wrapped `CUSTOM` trace label, and an Expo web pending-Back escape. Evidence and the run report are in `test-results/human-e2e/2026-07-10/cycle-customization-current/`. Physical iOS/Android secure-storage relaunch, process death, native Back/swipe gestures, timezone/DST, Dynamic Type, and VoiceOver/TalkBack proof remains Tas-owned.
+  - Historical persistence/geometry evidence: 2026-07-10 to 2026-07-11 Codex in-app browser Expo web at supported 390 x 844 and 360 x 640 verified Auto-to-Custom initialization, assignment, cadence-safe extension to 14 nights, non-mutating Cancel, encrypted reload, retained over-cap intent, preset round trip, one-shot failed save with draft retention, pending Back prevention, retry, and downstream agreement. It also historically observed Why Tonight, but predates the independent explainability-copy admission gate and is not current proof that this route may open. The 360 x 640 audit found zero overflow and no interactive dimension below 48 px, and the pass fixed a Metro import cycle, wrapped trace label, and web pending-Back escape. Evidence is in `test-results/human-e2e/2026-07-10/cycle-customization-current/`. A current Why Tonight run must use the named explainability fixture. Physical iOS/Android secure-storage relaunch, process death, native Back/swipe gestures, timezone/DST, Dynamic Type, and VoiceOver/TalkBack proof remains Tas-owned.
 - Branch: Pro direct-entry route exits
   - Priority: Important
   - Automate later: Yes
   - Action: With an active Pro or reverse-trial entitlement, open scheduler and routine routes such as `/cycle/week`, `/cycle/why-tonight`, `/routine/reorder`, `/routine/tolerance`, and `/routine/widgets` directly, then use the visible Back, Done, Got it, Skip, Dismiss, Not yet, or sheet backdrop Dismiss control.
   - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface or modal sheet with no navigation history. Deferred widget routes use a destination-specific `Back to Today` CTA instead of generic Back copy. Visible Pro route exits and the Widgets recovery action meet the 44 pt phone touch target, empty Pro states still expose an exit, `/routine/welcome-back` keeps its primary action fully visible with a rendered bottom buffer on short phones, projected cycle-night rows open the selected night's explainability sheet instead of an inert haptic-only button, projected row labels and settings active-night labels use wrapped, user-facing cycle-night copy such as `Night 1`, `Night 2`, and `Nights 3-4` instead of terse or impossible row numbers such as `N0`, `N5`, or `N3-4`, repeated retinoid or repeated exfoliant-slot nights are separated by recovery instead of appearing back-to-back, cycle safety/fallback notes render as readable text instead of inert buttons, phased-introduction cycle notes are the only tappable note CTA and meet the 44 pt phone touch target, and modal Pro sheets remain scrollable on short phones.
   - Evidence: Screenshot sequence, visible route snapshot, cycle-night spacing snapshot, and small-phone button-geometry snapshot.
+  - Evidence applicability: The sensitive scheduler/recovery/explainability/ramp/tolerance packets below predate the independent CORE-03 cadence, recovery/stop-refer, and explainability-copy gates. They remain historical geometry and navigation evidence only. They do not prove present availability, current exact-source behavior, or publication authority; a current fixture-open run must name every independently required development gate.
   - Current cycle-label evidence (2026-07-07): In-app browser E2E at 320 x 568 with local reverse trial and two shelf actives reproduced terse `/cycle/week` and `/cycle/settings` labels (`N1`, `N2`, etc.), then verified the fix. Post-fix `/cycle/week` and `/cycle/settings` render `Night 1`, `Night 2`, etc., contain no `N#` visible labels, keep zero horizontal overflow, and expose no clipped or sub-44 px visible controls. Evidence is in `test-results/human-e2e/2026-07-07/cycle-night-labels-current/`.
   - Current shared-sheet evidence (2026-07-07): Codex in-app browser Expo web at 320 x 568 verifies direct `/cycle/disruption` renders one compact modal dialog with all four disruption choices, zero horizontal overflow, no sub-44 exposed controls, a non-focusable hidden backdrop, and the intended compact 24 px web bottom padding after the shared `Sheet` safe-area hardening.
   - Current shortest-phone disruption evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced `/cycle/disruption` clipping `I had a facial or peel` to a 42.6 px visible bottom sliver. Post-fix the same route renders all four disruption choices fully visible with 56 px+ hit targets, zero horizontal overflow, zero blocked controls, and zero sub-44 visible controls; tapping `I had a facial or peel` routes to `/cycle/procedure`. Evidence and report are in `test-results/human-e2e/2026-07-08/cycle-disruption-short-phone-480/` and `docs/e2e-bug-reports/2026-07-08-cycle-disruption-short-phone-choice-clipping.md`.
@@ -1377,7 +1425,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current nested scheduler recovery evidence (2026-07-08): Codex in-app browser Expo web at 320 x 568 verifies `/cycle/procedure` starts a 5-day recovery window, redirects to active `/cycle/recovery`, shows both retinol and glycolic as paused, keeps visible controls 48 px+, has zero horizontal overflow, and `Ease back in` returns to `/today`. Evidence is in `test-results/human-e2e/2026-07-08/nested-scheduler-routes-current/`.
   - Current reminders/widgets exit evidence (2026-07-08): Codex in-app browser Expo web at 320 x 568 verifies `/routine/welcome-back` keeps a fully visible `Tonight's step` action and returns direct entries to `/today`; deferred `/routine/widgets` uses `Back to Today` and returns to `/today`; both routes keep visible controls 48 px+ with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`.
   - Current full-routine exit evidence (2026-07-08): Codex in-app browser Expo web at 320 x 568 opens direct `/routine/reorder`, `/routine/tolerance`, `/routine/adaptation`, and `/routine/ramp` in fresh tabs with local reverse-trial entitlement. `Done`, `Skip`, `Looks good`, and `Back` each return to `/today`, with zero horizontal overflow and no sub-44 px visible controls. Evidence is in `test-results/human-e2e/2026-07-08/full-routine-intelligence-current/`.
-  - Current routine-order atomic-save evidence (2026-07-16): Codex in-app browser Expo web at supported 390 x 844 added two local fixture products through the visible manual Shelf flow, changed Morning order while leaving Evening untouched, saved to `/today`, and reopened `/routine/reorder`. Morning reloaded in the edited order while Evening retained its canonical order. The route kept 390 px client/scroll width, exposed 48-56 px controls, produced no JavaScript dialog, and recorded no browser warnings/errors. Evidence is in `test-results/human-e2e/2026-07-16/routine-order-atomic-current/`.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
@@ -1396,7 +1443,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current 320 x 390 / 320 x 360 / 200% contextual upsell follow-up: 2026-07-08 headless Chrome Expo web passed the 320 x 390 sweep, then found the 320 x 360 direct upsell CTA and contextual Progress CTA could land as partial or blocked targets under 200% text pressure. Post-fix, direct upsell and contextual ProGate use micro-short fitted titles, one-line price/CTA treatments, compact compliance, and a tappable store-unavailable CTA path so the user receives route-owned feedback instead of a dead disabled control. The final 49-route 320 x 360 sweep reports zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-200-micro-short-360-postfix-8/` and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-micro-short-360-clearance.md`; native iOS/Android safe-area, Dynamic Type, and store-sheet behavior remain release QA.
   - Current 320 x 568 / 140% contextual upsell follow-up: 2026-07-08 headless Chrome Expo web reproduced direct upsell CTA clipping and routine/cycle ProGate header overlap at 140% text pressure. Post-fix, narrow 320 px short paywalls use an icon dismiss, omit nonessential body copy, hide the monthly-equivalent price, and keep annual price, store-unavailable reason, compliance links, dismiss, and Start free trial complete and hit-testable. The final 49-route sweep reports zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-140-compact-568-clearance.md`; native iOS/Android Dynamic Type behavior remains release QA.
   - Current 390 x 740 / 200% direct-upsell follow-up: 2026-07-09 headless Chrome Expo web found direct `/paywall/upsell?feature=full_routine` exposing `Start free trial` as a 19 px partial target whose center hit the surrounding sheet instead of the button. Post-fix, the 390-wide 700-779 px text-pressure band uses the short paywall layout with header compliance, compact action spacing, complete `Start free trial`, and no partial bottom-edge purchase target. The focused upsell rerun and final 49-route 390 x 740 sweep report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-740-upsell-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-740-postfix2/`, and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-android-390-740-clearance.md`; native iOS/Android safe-area, Dynamic Type, and store-sheet behavior remain release QA.
-  - Current shortest-phone contextual upsell evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 opens direct `/paywall/upsell?feature=full_routine` and `/paywall/upsell?feature=reminders_widgets`, verifies RoutineKind Pro copy, preview-store fallback copy, `Start free trial`, Terms, Privacy, Restore, and `Maybe later` are visible without scrolling, visible user-facing controls are 48 px+, horizontal overflow is zero, no center hit-test is blocked, no JavaScript dialog appears, and `Maybe later` recovers to `/today`. The only sub-44 geometry node in the follow-up run was an `aria-hidden="true"` / `tabindex="-1"` sheet spacer, not a user-facing target. Evidence is in `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`, `test-results/human-e2e/2026-07-08/commerce-attribution-and-short-phone-ui/`, and `docs/e2e-bug-reports/2026-07-08-shelf-paywall-short-phone-bottom-actions.md`.
+  - Current shortest-phone contextual upsell evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 opens direct `/paywall/upsell?feature=full_routine` and `/paywall/upsell?feature=reminders_widgets`, verifies Layerwell Pro copy, preview-store fallback copy, `Start free trial`, Terms, Privacy, Restore, and `Maybe later` are visible without scrolling, visible user-facing controls are 48 px+, horizontal overflow is zero, no center hit-test is blocked, no JavaScript dialog appears, and `Maybe later` recovers to `/today`. The only sub-44 geometry node in the follow-up run was an `aria-hidden="true"` / `tabindex="-1"` sheet spacer, not a user-facing target. Evidence is in `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`, `test-results/human-e2e/2026-07-08/commerce-attribution-and-short-phone-ui/`, and `docs/e2e-bug-reports/2026-07-08-shelf-paywall-short-phone-bottom-actions.md`.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes
@@ -1404,13 +1451,278 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Controls have roles, labels, and visible feedback without trapping focus.
   - Evidence: UI snapshot or accessibility notes.
 
+## Flow: IOS-02 Native Widgets And Layerwell Live Activity
+
+- Goal: A supported iPhone user can glance at current routine state, deep-link
+  safely into Today, and complete an eligible step from an interactive widget
+  without cross-account disclosure, lost actions, or stale Live Activity
+  residue.
+- Persona: A signed-in iOS 17+ user with current health-data authority, plus
+  users whose authority expires or changes while a widget or Live Activity is
+  still installed.
+- Entry state: A signed QA build containing the exact reviewed app, WidgetKit
+  extension, App Group, App Intent, and ActivityKit target; test accounts A and
+  B; App Lock and device-lock fixtures; and controllable current, stale,
+  malformed, oversized, foreign, and unclaimed native state.
+- Start screen/URL/window: `LayerwellToday` in `systemSmall`,
+  `systemMedium`, `accessoryInline`, and `accessoryRectangular`; the
+  `LayerwellEvening` Live Activity on the Lock Screen/Dynamic Island; and
+  the app in warm, cold, killed, signed-out, switching-account, and
+  post-reboot states.
+- Success state: Every valid action converges exactly once through the
+  canonical completion path; every invalid or obsolete state fails generic;
+  every authority-ending transition purges/redacts shared state and ends the
+  Live Activity; and no route or assistive-technology announcement bypasses
+  authentication, App Lock, or health-data authority.
+- Priority: Critical
+- Automate later: Yes. Retain source contract/model tests, then add signed
+  native harness assertions and human physical-iPhone evidence.
+- Surface: Signed iOS 17+ physical-device builds only. Simulator, unit,
+  snapshot, Expo web, and unsigned source inspection cannot satisfy this flow.
+- Evidence folder:
+  `docs/phase-5/evidence/widget-lifecycle/<source-sha>/<build-id>/` plus the
+  human run under
+  `test-results/human-e2e/YYYY-MM-DD/ios-02-widget-lifecycle/`.
+- Current source status (2026-07-16): An implemented source candidate now
+  includes the generation-bound app lifecycle host/native bridge and an App
+  Group SQLite owner/snapshot/outbox lifecycle protected by a POSIX lock and
+  immediate transactions, with native compare-and-swap reconciliation and
+  lock-held lease-close quiescence. Quiescence durably captures the exact final
+  outbox and permits one exact receipt-bound commit for a nonempty capture; an
+  empty capture revokes its structured receipt under the same lock before
+  returning. Typed `outbox_pending`/stale-Activity outcomes retry without
+  purging accepted actions. A parse-independent, boundary-first privacy lane
+  durably verifies `privacy-closing-v1` and returns a closed-admission receipt
+  before its queued purge. Live Activity stale/recovery/end-request paths exist,
+  but a close receipt does not prove ActivityKit removed the presentation. The
+  source has not been compiled or signed on macOS and has no physical-iPhone
+  proof.
+  `LayerwellWidgetInteractivePublicationEnabled` and
+  `LayerwellLiveActivityStartEnabled` remain literal generated-Info.plist
+  `false`; `ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED` and
+  `phase7Capabilities.nativeWidgets` also remain literal `false`. Ordinary
+  shipping config does not generate the extension or advertise Live
+  Activities. The five-minute health-status lease also makes personalized
+  display short-lived pending a reviewed longer local-display authorization,
+  and synchronous exclusive-`flock`/read-write-SQLite rendering still requires
+  Instruments evidence. No branch below is currently passed.
+
+### IOS-02 Critical Branches
+
+- Branch: four declared WidgetKit families
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add `LayerwellToday` as `systemSmall`, `systemMedium`,
+    `accessoryInline`, and `accessoryRectangular`. Exercise current,
+    partially completed, completed, stale, and generic/redacted timelines in
+    light/dark mode on the oldest-supported and current iPhone classes.
+  - Expected result: All four—and only the four declared launch
+    families—render family-appropriate, bounded content without clipping,
+    placeholder leakage, user/owner identifiers, or unsupported controls.
+    Stale or unauthorised state renders generic rather than last-known private
+    detail.
+  - Evidence: Signed-target family declaration, one timestamped screenshot per
+    family/state/device class, timeline receipt, source/build/identity hashes,
+    and device console excerpt with no extension crash.
+- Branch: health-authority display lifetime
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Publish immediately after a fresh health-status verification and
+    again late in the same lease; observe every family through the
+    30-second-headroom boundary and lease expiry. Repeat after background,
+    foreground, relaunch, clock change, withdrawal, and re-consent. Separately
+    exercise any proposed longer purpose-limited local-display authorization.
+  - Expected result: Current source never presents personalized detail beyond
+    the exact health-authority deadline and becomes generic no later than the
+    five-minute lease less reconciliation headroom. A longer display lifetime
+    ships only if its distinct purpose, duration, withdrawal behavior, copy,
+    and local-only data handling are implemented and approved; no status lease
+    is silently repurposed into indefinite home-screen authority.
+  - Evidence: Server-status/lease receipt, publication/stale timestamps,
+    frame-by-frame family recording, background/relaunch log, proposed
+    authorization contract, and named privacy/legal/release decision.
+- Branch: WidgetKit SQLite render performance under contention
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Use Instruments and extension diagnostics on the oldest supported
+    and current iPhone while provider/render reads overlap App Intent append,
+    app publication, quiescence, cleanup, process relaunch, and device lock.
+  - Expected result: Synchronous exclusive-`flock` acquisition, read-write
+    SQLite open/schema/read work, memory, and fallback behavior stay inside
+    predeclared extension budgets with no watchdog termination, blank/private
+    fallback, unbounded wait, or interaction loss.
+  - Evidence: Instruments traces, signposts, raw duration/memory samples,
+    contention matrix, extension/watchdog logs, predeclared thresholds, and
+    named performance signoff bound to source/build/device identity.
+- Branch: warm, cold, and killed-app deep links
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Tap every widget and Live Activity link with the app foregrounded,
+    terminated from memory, and cold after reboot; repeat while signed out,
+    App Lock is engaged, and health-data authority is resolving or closed.
+  - Expected result: The link reaches the canonical Today destination only
+    after the normal session, App Lock, and private-data gates. It never
+    flashes another owner's routine, exposes a stale step, lands on a dead
+    modal, or treats `/routine/widgets` as a native management screen.
+  - Evidence: Uncut warm/cold/killed screen recording, launch/deep-link logs,
+    final route snapshot, App Lock focus order, and process-state timestamps.
+- Branch: concurrent and repeated interactive actions
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With the app killed and then while app reconciliation overlaps,
+    press two distinct valid actions concurrently and repeat the same action
+    rapidly before and after a timeline reload. Relaunch and repeat after a
+    forced process kill between native append and app reconciliation. Finally,
+    race a valid tap immediately before, during, and after health-lease
+    quiescence.
+  - Expected result: Each App Intent durably appends before returning; distinct
+    eligible actions are retained, the repeated token is idempotent, canonical
+    completions occur exactly once, and the replacement snapshot/outbox
+    acknowledgement commits natively before the private registry is
+    acknowledged. Quiescence takes the same native lock, captures every append
+    that won the boundary and rejects every later append, then permits exactly
+    one receipt/authority/owner/snapshot/revision-bound final commit for a
+    nonempty capture before ordinary closed admission resumes. An empty capture
+    revokes the receipt under the lock before returning. No whole-timeline or
+    lease-close race loses or resurrects an accepted action.
+  - Evidence: Redacted native SQLite/outbox receipts, canonical completion-log
+    diff, intent/reconciliation ordering log, pre/post-relaunch widget
+    screenshots, and an exact-once assertion report.
+- Branch: unknown, stale, expired, and foreign actions
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Invoke an unknown action token; a token from an older snapshot; a
+    token exactly at and after `staleAtMs`; an already acknowledged token;
+    and a token bound to another owner generation or invalidated authority.
+  - Expected result: None creates or mutates a canonical completion. The
+    extension and app fail closed, obsolete outbox state is redacted or
+    rejected, the current owner's valid state is not overwritten, and no token,
+    owner, product, or step detail appears in feedback or logs.
+  - Evidence: One redacted native/canonical before-and-after report per case,
+    boundary-time trace, visible generic state, and log privacy audit.
+- Branch: malformed, future-schema, and oversized shared payload
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Inject truncated JSON, wrong types, duplicate/overlong fields, a
+    future schema version, an oversized timeline/outbox/props payload, corrupt
+    SQLite bytes, and a malformed bridge response; then trigger render,
+    interaction, reconciliation, and privacy cleanup.
+  - Expected result: Rendering and interaction fail generic with no crash,
+    partial private render, canonical completion, or fallback acceptance.
+    Present-but-malformed/future native state is not mistaken for
+    not-configured state. The privacy kill lane can durably verify the
+    `privacy-closing-v1` sentinel, return a closed-admission receipt, rotate
+    authority, purge raw shared state, reload timelines, and end activities
+    without first decoding the corrupt payload; any cleanup failure remains
+    closed and retryable. The receipt alone does not prove ActivityKit finished
+    dismissal.
+  - Evidence: Fault-injection manifest and hashes, extension/app crash logs,
+    generic-state screenshots, cleanup receipt, post-cleanup App Group
+    inspection, and retry proof.
+- Branch: locked-state and shared-surface redaction
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Lock the device and engage App Lock while current routine details
+    exist; inspect all four widget families and every Live Activity region
+    before unlock, during unlock, after backgrounding, and after authority
+    becomes unavailable.
+  - Expected result: Lock Screen, shared, unavailable-authority, and transition
+    frames reveal only approved generic copy—never product, active, condition,
+    step, adherence, account, user ID/hash, owner generation, or action token.
+    Unlock republishes detail only after current authority is recaptured; no
+    stale frame bridges owners or foreground sessions.
+  - Evidence: Lock/unlock recording, screenshots of every shared region,
+    frame-by-frame privacy review, and shared-container/log string audit.
+- Branch: expiry, sign-out, switch, deletion, withdrawal, foreign, and unclaimed cleanup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Separately trigger health-lease expiry, sign-out, A→B and B→A
+    account switches, server-confirmed account deletion, health-data consent
+    withdrawal, a foreign owner generation, and native state with no claimable
+    owner. Interrupt each path before/during cleanup and relaunch.
+  - Expected result: The account/privacy boundary closes native admission and
+    encrypted action capabilities before JavaScript writer drains or
+    replacement-owner publication. The process-global serialized lifecycle
+    then rotates native authority, destroys snapshot/outbox/private token
+    mappings, reloads WidgetKit, and requests immediate generic ActivityKit end
+    before ownership proofs are released. Account B never sees A's state;
+    foreign and unclaimed state is purged/redacted rather than adopted. A
+    cleanup failure retains the minimum quarantine/owner proofs needed for safe
+    retry, exposes no private content, and cannot be bypassed by relaunch or a
+    new sign-in. Evidence must separately prove when ActivityKit actually
+    removes the presentation; a closed-admission receipt is insufficient.
+  - Evidence: Separate before/after App Group and private-registry reports for
+    all seven cases, activity enumeration, timeline reload log, forced-failure
+    retry trace, cross-account screenshots, and zero-residual assertion.
+- Branch: `LayerwellEvening` lifecycle, process death, and reboot
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: In an explicitly enabled signed QA build, opt in and start the
+    evening activity; update every step; let it become stale; complete early;
+    disable it; kill the app during each phase; and reboot with active, stale,
+    malformed, and already-completed instances.
+  - Expected result: Start/update accepts only current strict props with a
+    deterministic bounded `staleDate` and the exact signed Layerwell deep
+    link, then reauthorizes after the ActivityKit operation and immediately
+    requests generic end if the boundary changed. Post-start typed stale
+    handling rereads current JS instances and awaits their end requests before
+    retry. Global push-to-start token observation/emission remains absent;
+    per-activity push remains signed `false` and current-authority-gated.
+    Recovery enumerates and reconciles existing instances after process death;
+    completion, stale timeout, disablement, invalid authority, cleanup, and
+    withdrawal request immediate approved generic final content/end. Device
+    evidence proves the actual dismissal interval and eventual zero-instance
+    state. Reboot cannot revive private or completed state, create duplicates,
+    or leave an orphaned activity.
+  - Evidence: Full lifecycle/reboot recordings, ActivityKit instance reports,
+    stale-date timestamps, start/update/end ordering logs, lock-screen/Dynamic
+    Island screenshots, and zero-orphan assertion.
+- Branch: VoiceOver and Dynamic Type
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With VoiceOver enabled, traverse and activate every exposed widget
+    and Live Activity control. Repeat every family/state at all supported
+    Dynamic Type sizes, including accessibility sizes, in light/dark mode and
+    with generic redaction active.
+  - Expected result: Reading order, labels, values, hints, and action outcomes
+    are concise and unambiguous; private hidden text is neither visible nor
+    announced; controls remain operable; and important state is not conveyed
+    only by colour. Text may simplify within WidgetKit's fixed geometry but
+    never clips into misleading or privacy-revealing fragments.
+  - Evidence: VoiceOver transcript and uncut activation recording, screenshot
+    grid for every family/type-size/state combination, contrast audit, and
+    named accessibility signoff.
+- Branch: customer flags and unavailable web route remain closed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Build ordinary development, preview, and production configs without
+    the explicit native QA opt-in; try environment overrides; then open
+    `/routine/widgets` on Expo web as free, reverse-trial, and Pro users.
+  - Expected result: Ordinary builds omit the widget extension and Live
+    Activity advertisement, interactive publication and public capability stay
+    false, and production rejects an unsafe override. Expo web always shows the
+    same explicit unavailable surface with no preview, check-off, Activity
+    control, or purchase solicitation; `Back to Today` remains usable. This
+    branch stays closed until the signed IOS-02 evidence gate intentionally
+    changes the product contract.
+  - Evidence: Generated-config diffs, flag/route contract tests, production
+    rejection output, and the existing/current 375 x 667 web route recording.
+
 ## Flow: Personalized Recommendations
 
-- Goal: A user can review independent For You recommendations, tune recommendation preferences, and escape stale/direct recommendation links without getting trapped.
+- Goal: A user can review only positively admitted, independent For You
+  guidance, see an honest no-product state when product-specific authority is
+  absent, tune recommendation preferences, and escape stale/direct
+  recommendation links without getting trapped.
 - Persona: Returning user deciding what to add, replace, or skip.
 - Entry state: User has completed onboarding or has seeded profile/shelf/routine state.
 - Start screen/URL/window: You tab, Today recommendation teaser, or direct recommendation routes.
-- Success state: Recommendations remain calm and explainable, and direct-entry recommendation screens recover to the correct parent surface.
+- Success state: Current-source output is limited to admitted type-first or
+  Shelf-context provenance; product-specific and goal-active content remains
+  absent while its positive gates are closed; unavailable profiles and
+  unreadable preference/dismissal records withhold suggestions; commerce
+  admission remains unconditionally false and makes no retailer request; and
+  direct-entry recommendation screens recover to the correct parent surface.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native commerce/share surfaces.
@@ -1424,6 +1736,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`
 - Current ultra-short evidence: `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-spf-gap-prompt-current/`
+- Evidence qualification: all listed packets predate the CORE-06A positive
+  recommendation-admission boundary. They remain useful geometry/navigation
+  history, but they do not establish exact-current admission, product-specific
+  suppression, goal provenance, commerce network absence, native behavior, or
+  launch acceptance.
 
 ### Path A: For You Hub
 
@@ -1433,6 +1750,81 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: product-specific mode closed with zero admitted products
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the hub, a recommendation detail, and the Today teaser with an
+    empty Shelf, one-product Shelf, and a forged/full local catalog candidate
+    while product-specific mode is closed.
+  - Expected result: No catalog product name, product image, candidate fit
+    score, buy action, retailer availability, price, or affiliate disclosure is
+    rendered. The surface may show admitted structural type guidance or an
+    honest no-product/review-pending state. A forged candidate, mutable review
+    string, quality score, absent correction, feature flag, or caller-supplied
+    recommendation-type/copy collection cannot create product provenance.
+  - Evidence: Exact-source/build identity, screenshots and accessibility
+    snapshots for all three Shelf states, recommendation/provenance snapshot,
+    negative catalog-name query, and browser/network log proving zero retailer
+    requests.
+- Branch: goal-active admission remains closed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise the goal recommendation path with the Phase 7 flag off,
+    flag on but missing/stale health consent, missing/stale profile or goal
+    provenance, and current inputs but an empty review-clearance set.
+  - Expected result: Every state withholds the goal-active suggestion and shows
+    calm unavailable/review-pending recovery without substituting another
+    active or implying product safety. Only a later exact-current positive
+    clearance plus a server-minted, server-verified receipt bound to the exact
+    account, health-processing lifecycle, profile completion, goal set, review
+    scope, and expiry may admit the reviewed output. The current structured
+    goal-provenance envelope alone is not authorization.
+  - Evidence: Gate-state matrix, screenshots, exact local record snapshots, and
+    absence of goal-active analytics/product/retailer traffic.
+- Branch: no-product and product lookup failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open a type-first recommendation when there is no admitted matching
+    product, then simulate candidate service unavailable, timeout, malformed
+    response, owner/market mismatch, stale serving receipt, and an open
+    correction/hold.
+  - Expected result: The type explanation remains truthful if independently
+    admitted, but no product is invented, cached as current, or described as
+    reviewed/available. The user sees an honest no-product state and can return
+    to For You or add their own Shelf item.
+  - Evidence: Screenshot sequence, bounded error-state transcript, cache
+    snapshot, serving-receipt checks, and absence of leaked raw errors.
+- Branch: commerce fetch is impossible for current provenance
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Enable the commerce environment flag and grant local commerce
+    consent, then open every current `type_first` and `shelf_context` detail and
+    attempt direct where-to-buy routes. Separately inject unavailable, timeout,
+    malformed, redirect, non-HTTPS, and wrong-product retailer responses into a
+    later product-provenance test fixture.
+  - Expected result: Current provenance never renders or invokes where-to-buy,
+    regardless of shape, flag, or consent, because current commerce admission
+    returns `false` unconditionally, and generates zero retailer/affiliate
+    traffic. The later fixture requires an exact SKU/market/admission receipt
+    and fails closed without changing ranking, product identity, or
+    recommendation provenance while giving a calm retry/back path.
+  - Evidence: Source-bound provenance matrix, network log with a zero-retailer
+    assertion, screenshot/accessibility snapshots, and ranking equality before
+    and after all commerce fixtures.
+- Branch: recommendation inputs are unavailable or unreadable
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the hub, Today teaser, and a detail route with an unavailable
+    profile, unreadable preference envelope, and unreadable dismissal envelope;
+    relaunch each state and then restore the exact original bytes.
+  - Expected result: Every state withholds all suggestions, renders the calm
+    suggestions-unavailable recovery, does not replace unreadable bytes with
+    defaults or an empty set, and emits no product, goal-active, analytics, or
+    retailer traffic. Restoring valid input permits only the independently
+    admitted current output.
+  - Evidence: Before/after encrypted-byte hashes, screenshots and accessibility
+    snapshots, reload transcript, recommendation snapshot, and network/analytics
+    log.
 - Branch: Today recommendation teaser and SPF gap prompt
   - Priority: Important
   - Automate later: Yes
@@ -1479,20 +1871,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The dismissed card does not flash or reappear before local private state is loaded.
   - Evidence: Visible loading/result state and local dismissed recommendation state.
   - Current local evidence: 2026-07-07 Expo web reload poll captured 25 startup samples after dismissal; the dismissed moisturiser card never reappeared, the remaining cleanser card stayed visible, and `scrollWidth` equaled `clientWidth` throughout.
-- Branch: unreadable recommendation preferences or dismissed choices
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Seed real recommendation preferences and a dismissed suggestion, then open `/recommendations`, `/recommendations/preferences`, a current or stale recommendation detail, Today, and Ask while the private preference or dismissal read is persistently unavailable, corrupt, or from a future schema. Retry while failure remains, refresh/direct-enter the routes, then repeat with a one-shot failure and choose Retry.
-  - Expected result: Only genuine absence can produce default preferences or an empty dismissal set. Unreadable state shows named loading/recovery UI before recommendation cards, preference chips, the reassuring "you're set" state, stale-detail copy, or recommendation mutation actions. Today publishes no teaser or SPF prompt, Ask exposes its complete private-guidance recovery, persistent Retry remains blocked without changing bytes, and no raw storage reason or dialog appears. A successful one-shot Retry restores the exact seeded preference selections and keeps the dismissed suggestion absent without a flash or resurrection. Retry is at least 56 points, Back is at least 48 points, and both remain readable and center-hit-testable on supported compact phones.
-  - Evidence: Supported-phone screenshots, accessible-role/text snapshot, control geometry, browser console/dialog log, and exact persisted preference/dismissal snapshot before failure and after Retry.
-  - Current local evidence: 2026-07-14 Codex in-app browser Expo web at 375 x 667 and 390 x 844 seeded Vegan, Premium, and Gel through the visible controls and dismissed `A ceramide moisturiser` through its detail action. Persistent recommendation-read failure kept the hub, Preferences, stale detail, and Ask behind named recovery; Today exposed no recommendation output; persistent Retry retained failure copy; a bounded delay exposed the named loading state; future-schema recovery leaked no raw code. One-shot preference Retry restored the exact three selected controls and one-shot dismissal Retry kept the moisturiser absent. Evidence is in `test-results/human-e2e/2026-07-14/recommendation-typed-state-current/`; native encrypted-storage interruption remains device QA.
-- Branch: failed or delayed recommendation dismissal
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Build a real routine without SPF, open Today, simulate a one-shot local dismissal-write failure, choose `Not now`, wait through the strict recommendation-cache reread, choose `Reload suggestion`, then choose `Not now` again. Separately, open a recommendation detail with the strict private-state read delayed for three seconds, choose `Not for me`, and use For You Back while the reread is still pending.
-  - Expected result: The first failed action does not look successful: an accessible `Suggestion not dismissed` alert remains visible with the SPF prompt and a 48-point recovery action until explicit recovery. Reload removes only the alert and leaves the prompt actionable. A committed dismissal synchronously removes its action surface, keeps competing recommendation actions single-flight, and starts strict revalidation without delaying terminal navigation. Leaving during pending work cannot suppress current-owner fail-closed containment, publish React state after unmount, or cause a late second navigation. No dialog or raw storage error appears.
-  - Evidence: Before/after UI snapshots, supported-phone screenshot, browser console/dialog log, and source/unit contract.
-  - Current local evidence: 2026-07-14 Codex in-app browser Expo web at 390 x 844 found the first implementation lost its child-local failure alert when the strict cache reset remounted the teaser. The route-owned state fix kept the alert and `Not now` prompt present after a 4.8-second wait; `Reload suggestion` cleared the alert but retained the prompt, and the second committed dismissal removed it. A follow-up at the effective 390 x 845 mobile viewport forced a three-second reread: the committed detail action surface reached For You in 43 ms, `Add to shelf` was already absent, and choosing Back during revalidation remained on Today after an additional 3.6-second wait with no late navigation. Evidence and bug report are in `test-results/human-e2e/2026-07-14/recommendation-typed-state-current/` and `docs/e2e-bug-reports/2026-07-14-recommendation-dismissal-failure-alert-remount.md`.
 - Branch: mobile recommendation card width
   - Priority: Important
   - Automate later: Yes
@@ -1525,67 +1903,101 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Chips are disabled while saving, the new state is applied only after persistence succeeds, failures show stable route-owned copy without a blocking native dialog, and the For You hub does not recompute from an unsaved preference.
   - Evidence: Alert-region text, absence of a JS/system dialog, disabled chip state, and local preference state.
   - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE=once` and `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS=1200` verifies `Vegan` stays `aria-selected=false` and disabled while the failed save is pending, shows stable `Preference not saved` copy after rejection with no JS/system dialog, disables again during retry, becomes `aria-selected=true` only after the successful save, persists after reload, keeps zero horizontal overflow, and keeps visible controls 48 px tall. Evidence is in `test-results/human-e2e/2026-07-08/recommendation-preference-save-failure-current/`.
-- Branch: recommendation preference convergence status
-  - Priority: Important
-  - Automate later: Yes
-  - Action: At 390 x 844, edit a recommendation value and reload, then inspect the development-web fixtures for a locally saved change, an in-flight change, and a change that needs attention; activate the retry control in the attention state.
-  - Expected result: The committed preference survives reload and remains immediately usable. Sync presentation is a non-blocking leaf that distinctly names `Saved locally`, `Syncing recommendation choices`, and `Recommendation sync needs attention`; the retry control is at least 44 points, every visible control is center-hit-testable, accessibility semantics remain named, and the route has zero horizontal overflow. No status implies that an uncommitted local save succeeded.
-  - Evidence: Supported-phone screenshots for all three states, preference before/reload state, retry interaction, accessibility snapshot, control geometry, horizontal-overflow measurement, and browser console/dialog log.
-  - Current verification status (2026-07-18): Actual Expo web builds in the Codex in-app browser at a requested 390 x 844 viewport (observed 390 x 845) verified the saved-local, syncing, and needs-attention states. Selecting `Vegan` persisted after reload; syncing exposed one named progress bar; attention exposed one alert and an enabled 308.37 x 55.99 px retry action; all post-fix fixtures had zero horizontal overflow, partial controls, sub-44 controls, blocked center hit tests, or JavaScript dialogs. The run found and fixed a 3.18 px bottom-edge budget-control peek caused by the new status height. The fixture retry proves presentation and interaction only; the runtime outbox suite proves actual current-owner dead-row retry. Evidence and report are in `test-results/human-e2e/2026-07-18/recommendation-outbox-status-current/` and `docs/e2e-bug-reports/2026-07-18-recommendation-sync-status-partial-controls.md`. Hosted duplicate/replay/RLS and signed-native process-kill/offline/reconnect proof remain open.
 
-## Flow: Commerce Trust And Shoppable Routines
+## Flow: COM-01A Commerce Literal Zero Admission
 
-- Goal: A user can inspect where-to-buy transparency, manage commerce consent, and browse shoppable routines without getting trapped on trust-critical direct-entry surfaces.
-- Persona: Returning user reviewing commerce independence before tapping a paid link or browsing a curated routine.
-- Entry state: User has completed onboarding; commerce feature flag may be enabled or deferred.
-- Start screen/URL/window: You tab, For You recommendation detail, stack list, stack detail, transparency page, consent sheet, or direct commerce routes.
-- Success state: Commerce remains secondary to recommendations, disclosures are visible, consent stays separate and revocable, and direct-entry commerce exits recover to the correct parent surface.
+- Goal: A user who reaches a stale or direct commerce URL sees truthful unavailable recovery while the app performs no commerce read, grant, click, navigation, attribution, polling, or analytics side effect.
+- Persona: Returning user following a stale commerce link or checking a surface that formerly exposed where-to-buy behavior.
+- Entry state: User has completed onboarding; adversarial commerce flags, final-looking domains, legacy consent, fixtures, and provider credentials may be present but cannot create authority.
+- Start screen/URL/window: You tab, For You recommendation detail, Shelf/replenishment, `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, or `/commerce/stack/[slug]`.
+- Success state: Every direct commerce route presents the same analytics-free unavailable surface and replaces to You; You, recommendations, and Shelf expose no commerce entry, consent grant, retailer row, creator stack, or similar-options handoff; no catalog/click/order/provider side effect occurs.
 - Priority: Critical
 - Automate later: Yes
-- Surface: Expo web for route recovery; iOS and Android for native outbound-link and modal behavior.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/commerce-routes/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/commerce-routes-current/`
+- Surface: Expo web for route recovery, visible-state, layout, and console
+  observation; supported physical iPhones remain required for any future
+  positive external-link or consent successor.
+- Evidence folder:
+  `test-results/human-e2e/2026-07-29/com01a-zero-commerce-current/`
+- Source authority: [COM-01A checkpoint](hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+- Current evidence: 2026-07-29 human-simulated Expo web passed at
+  360 x 640, 390 x 844, and 430 x 932 with zero current-run console errors and
+  zero warnings. This packet did not retain a network capture and is not native,
+  legal, privacy, App Review, or launch clearance.
+- Historical evidence notice: Every positive commerce, consent, paid-link,
+  development-stack, retailer, attribution, and direct-route observation from
+  2026-07-06 through 2026-07-08 is historical/stale. It predates COM-01A, does
+  not describe current behavior, and cannot satisfy COM-01 through COM-07.
 
-### Path A: Transparency And Consent
+### Path A: Direct Commerce Route Refusal
 
-1. Action: Open the You tab commerce rows, open "How we stay honest", then return. Open a recommendation where-to-buy consent gate and choose Allow or Not now.
-   Expected result: The transparency page explains church-and-state commerce clearly; the consent gate is separate, calm, and dismisses back to the originating surface when there is navigation history.
-   Evidence: 2026-07-07 Expo web at 320 x 568 verified direct `/commerce/transparency` recovery, recommendation where-to-buy locked state with consent off, separate `/commerce/consent` sheet entry, `Not now`, `Dismiss`, `Allow where-to-buy links`, return to the originating recommendation after Allow, and catalog-blocked empty state while live links remain unavailable.
+1. Action: With every commerce-related environment input set to a plausible
+   positive value, open `/commerce/stacks`, `/commerce/transparency`,
+   `/commerce/consent`, and
+   `/commerce/stack/sensitive-skin-starter-set` directly; activate
+   `Back to You`.
+   Expected result: Every route retains that exact URL until the user acts,
+   renders one shared unavailable surface with exactly one `Back to You`, and
+   contains no stack, transparency, consent-allow, paid-link, retailer, price,
+   commission, external-link, or positive commerce copy. `Back to You` replaces
+   the route with `/you`.
+   Evidence: The 2026-07-29 three-viewport packet passed all four exact routes,
+   exact pre-action URLs, one `Back to You` per route, absence of positive copy,
+   and post-action `/you`. Console capture reports zero errors and zero warnings.
 
-### Path B: Shoppable Routines
+### Path B: No Indirect Commerce Entry
 
-1. Action: Open `/commerce/stacks`, open an available stack in development, tap "How this works", and return through the visible Back controls.
-   Expected result: The stack remains ordered by routine sequence, paid-link disclosure stays visible, transparency remains reachable through a 44 pt phone target, and Back returns through the stack hierarchy.
-   Evidence: 2026-07-07 Expo web at 320 x 568 verified `/commerce/stacks` to `/commerce/stack/sensitive-skin-starter-set`, visible paid-link disclosure, 48 px `How stack paid links work`, `/commerce/transparency`, Back to stack detail, and Back to `/commerce/stacks` with zero horizontal overflow.
+1. Action: Inspect You and Shelf/replenishment with legacy consent and
+   positive-looking flags, then trigger ordinary non-commerce controls.
+   Expected result: You exposes neither commerce nor Trend. Shelf/replenishment
+   exposes no commerce or similar-options CTA. Ordinary non-commerce navigation
+   remains usable.
+   Evidence: The 2026-07-29 packet passed You and Shelf/replenishment at all
+   three viewports with those positive labels and actions absent.
 
 ### Branches
 
-- Branch: direct-entry commerce exits
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Open `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/[slug]` directly, then use the visible Back, Dismiss, Allow, Not now, or scrim control.
-  - Expected result: Top-level commerce direct entries return to the You tab; stack details return to `/commerce/stacks`; deferred commerce routes also return to the You tab instead of a no-history dead end. Visible Back and Dismiss controls meet the 44 pt phone touch target, and the consent sheet keeps Dismiss reachable while its content scrolls on short phones.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified default deferred `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` return to `/you`; commerce-enabled direct `/commerce/transparency`, `/commerce/stacks`, `/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` recover to `/you` or `/commerce/stacks` as appropriate, with 44+ px visible controls and no browser errors.
-  - 2026-07-08 safe-area follow-up: With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`, Codex in-app browser verified `/commerce/consent` at 320 px renders one named `Before we show where to buy` dialog with `aria-modal=true`, a 44 px top reserve, zero horizontal overflow, 48 x 48 Dismiss, 264 x 54 Allow, 264 x 48 Not now, and no mojibake. Source contracts now require native bottom-inset padding when present and hide the scrim from accessibility traversal; native iOS/Android safe-area and screen-reader QA remain open.
-- Branch: unavailable stack
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Open `/commerce/stack/[slug]` for a slug that is not currently shippable.
-  - Expected result: The app shows a calm unavailable state, explains the stack may have been updated while disclosures or product availability are reviewed, provides a visible `Back to stacks` path to `/commerce/stacks`, and keeps `How paid links work` available without exposing retailer links.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified `/commerce/stack/missing-stack-e2e` unavailable copy, no retailer links, 56 px `Back to stacks`, 56 px `How paid links work`, recovery to `/commerce/stacks`, and transparency recovery.
-- Branch: no commerce consent
+- Branch: route-group layout canonicalization
   - Priority: Critical
   - Automate later: Yes
-  - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
-  - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state, and the Allow where-to-buy plus shelf alternative controls meet the 44 pt phone touch target.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified the recommendation where-to-buy block shows locked copy with no retailer rows, no paid-link disclosure, 48 px `Allow where-to-buy`, 50 px shelf alternative to `/shelf/manual`, and stack item taps open the separate consent sheet instead of retailer links.
-  - Current locking evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with commerce enabled and a final-domain flag reproduced a stack regression where `/commerce/stack/sensitive-skin-starter-set` exposed `Paid link`, `Paid links`, external glyphs, and paid-link accessibility labels before consent. Post-fix, the stack shows `Consent needed` locked rows, no paid-link text, no external glyph, zero horizontal overflow, no sub-44 visible controls, and locked item taps open `/commerce/consent`. The same run adds a cleanser through `/shelf/manual`, opens `/recommendations/gap:mineral_spf`, verifies the locked where-to-buy block has no paid-link text/glyph, 48 px `Allow where-to-buy`, 50 px shelf alternative, the Allow control opens the consent sheet, and the shelf alternative routes to `/shelf/manual`. Evidence and report are in `test-results/human-e2e/2026-07-08/commerce-no-consent-locking/` and `docs/e2e-bug-reports/2026-07-08-commerce-stack-paid-links-before-consent.md`.
-- Branch: retailer link handoff failure
-  - Priority: Important
+  - Action: Open each direct commerce URL from a fresh browser navigation,
+    inspect the address before interaction, and activate the only recovery CTA.
+  - Expected result: The route-group layout is a transparent `Slot`; it neither
+    redirects nor renders a competing deferred surface. The leaf route owns the
+    unavailable state, retains the exact direct URL, and replaces to `/you`.
+  - Current evidence: The initial 2026-07-29 run exposed a layout
+    canonicalization defect. Replacing the commerce layout body with a
+    transparent `Slot` fixed it. The same three-viewport rerun passed all four
+    exact direct URLs and the `/you` replacement.
+- Branch: positive commerce copy stays absent
+  - Priority: Critical
   - Automate later: Yes
-  - Action: With commerce consent on and a real HTTPS retailer URL available, simulate the OS refusing to open the external URL.
-  - Expected result: The app shows a calm Link unavailable message, does not appear inert, and the user remains in the recommendation context.
-  - Evidence: Partial. The 2026-07-07 local run reaches the consent-allowed catalog-blocked empty state because source-cleared retailer links and affiliate partner rails are not approved yet. 2026-07-08 Codex in-app browser Expo web at 320 x 568 with commerce enabled verified the stack paid-link stub path stays on `/commerce/stack/sensitive-skin-starter-set`, opens no dialog, renders a visible route-owned `role="alert"` message at viewport y=242-408 before the paid-link rows, keeps the paid-link row touchable, and keeps zero horizontal overflow. Source contracts now reject native `Alert` calls in `WhereToBuy` and stack paid-link recovery. Real retailer URL OS-refusal remains open until approved HTTPS retailer links are available.
+  - Action: Inspect visible text, roles, links, and controls on all four direct
+    routes with positive-looking commerce inputs.
+  - Expected result: Each route contains one `Back to You` and no allow/consent,
+    paid-link, retailer, price, commission, external-link, stack, or
+    transparency content.
+  - Current evidence: All four routes passed at 360 x 640, 390 x 844, and
+    430 x 932. The retained console report contains zero errors and zero
+    warnings.
+- Branch: indirect commerce entry remains absent
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Inspect You and Shelf/replenishment at all three viewports.
+  - Expected result: You contains no commerce or Trend entry. Shelf/replenishment
+    contains no commerce, retailer, consent, or similar-options CTA.
+  - Current evidence: The 2026-07-29 packet passed both surfaces at all three
+    viewports.
+- Branch: evidence boundary
+  - Priority: Critical
+  - Automate later: No
+  - Action: Review the retained packet and state only what it captured.
+  - Expected result: The packet is described as Expo-web human-simulated
+    visible-state, route, layout, and console evidence. It is not described as a
+    network capture, native iOS behavior, physical-iPhone proof, provider or
+    hosted proof, legal/privacy approval, App Review clearance, launch
+    clearance, or revenue evidence.
+  - Current evidence:
+    `test-results/human-e2e/2026-07-29/com01a-zero-commerce-current/`.
 
 ## Flow: Skin Notes Community Trust Layer
 
@@ -1628,12 +2040,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
-- Branch: unreadable local `This helped` state
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Open a valid Skin Note after a reaction has been stored, force the encrypted reaction record to return unavailable/corrupt/future state, then retry after restoring read access.
-  - Expected result: The expert note and Share action remain usable, but the app never presents unreadable reaction data as an ordinary unselected heart. It explains that the saved choice was not reset, replaces the mutation control with one 48 pt retry action, emits no reaction analytics, and restores the durable selected/unselected state after retry. A failed desired-state write does not publish an unconfirmed state; route-owned retry copy remains honest about ambiguous completion, and retry idempotently converges to the requested state.
-  - Evidence: Typed reaction-store tests, note-route contract, supported-phone screenshot/role snapshot, analytics log, and byte-preservation assertion under `test-results/human-e2e/YYYY-MM-DD/community-reaction-storage-recovery-current/`.
 - Branch: direct-entry Community exits
   - Priority: Important
   - Automate later: Yes
@@ -1664,20 +2070,130 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The frozen missing-submission capability wins over the environment flag. No 16+ or community consent is solicited, no text input or `Submit for review` action mounts, and no `question_submitted` analytics event can fire.
   - Evidence: Screenshot/control snapshot plus Phase 7 launch-flag, route-contract, and analytics-registry tests. The 2026-07-08 enabled-composer evidence is historical and intentionally superseded.
 
-## Flow: Shelf Conflict Checks And Share Cards
+## Flow: Shelf Conflict Checks And Zero-Admission Sharing
 
-- Goal: A user can inspect conflict guidance and share reviewed conflict cards without getting stuck on direct-entry surfaces.
-- Persona: User checking whether two shelf products can be used together, or sharing a reviewed shelf check.
+- Goal: A user can inspect only admitted private conflict guidance while every
+  conflict-card export and public-link path remains truthfully unavailable
+  until separate publication authority exists.
+- Persona: User checking whether two shelf products can be used together or
+  attempting to open/share a conflict path.
 - Entry state: User has completed onboarding or has seeded local shelf state.
 - Start screen/URL/window: Shelf tab or direct conflict/share routes.
-- Success state: Conflict guidance remains claim-safe, exact-pair/current-rule choices persist only after a successful encrypted write, downstream surfaces stop repeating the resolved advisory, the guided schedule never weakens a safety invariant, and direct-entry exits recover to the Shelf tab.
+- Success state: Production never turns an unreviewed or uncovered pair into a
+  compatibility result. Interaction-specific guidance, choices, scheduling,
+  Ask answers, recommendations, and detail exist only for the exact admitted
+  corpus/rule hash. Even admitted private guidance does not authorize sharing.
+  Share and public-link admissions remain separately false; denied paths create
+  no capture/file/link/network/native-share/analytics side effect, reveal no
+  private field or record-existence bit, and recover safely.
 - Priority: Critical
 - Automate later: Yes
-- Surface: Expo web for route recovery; iOS and Android for native share sheet behavior.
-- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/conflict-routes/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`
+- Surface: Expo web for current route recovery; iOS for any future admitted
+  native share-sheet behavior. Android is outside the current release contract.
+- Current human-E2E evidence folder:
+  `test-results/human-e2e/2026-07-26/core02-conflict-admission-current/`
+- Historical geometry/navigation evidence:
+  `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`.
+  It predates the exact-corpus admission boundary and is not current CORE-02
+  acceptance evidence.
+- Current verified source boundary: the CORE-02 source contract is 16/16
+  passing, and the focused intelligence/recommendation regression suite is
+  81/81 passing. A local, folder-specific 390 x 844 Expo-web observation records
+  Shelf, Ask, typed-pair refusal, stale detail, invalid public share, and paywall
+  non-sale/disclosure states against commit
+  `c78208ef1da9dd4b3c5f385d421541f8741dba3c`. No CORE-02 packet contract is
+  registered in `e2e:human:manifest`, which also stops first on the pre-existing
+  absent 2026-07-22 CAT07 packet. The exhaustive database replay and
+  native/physical-iPhone acceptance remain separate gates.
 
-### Path A: Conflict Detail
+### Path A: Fail-Closed Production Coverage
+
+1. Action: In an ordinary development build with no reviewed-content fixture,
+   add two active products whose parsed tags form a candidate interaction pair.
+   Expected result: Shelf shows a generic `Interaction guidance is unavailable`
+   state and says it will not show a compatibility result until review is
+   complete. It exposes no rule, ingredient-pair, severity, evidence,
+   reproductive-status, resolution, override, detail, or share action.
+2. Action: Inspect Plan, Today, Week, Recommendations, and Ask for the same
+   products, then reload and relaunch.
+   Expected result: No surface invents interaction timing, compatibility,
+   reassurance, safety exclusion, replacement, or a "you're set" result. Ask
+   returns a generic unavailable/refusal response, does not proactively lead
+   with conflict guidance, and does not offer the conflict suggested prompt.
+   Routine/fit prompts may remain where the layout supports them. The same
+   fail-closed state survives reload without storing an active legacy choice.
+3. Action: Open an old or fabricated conflict/share link directly.
+   Expected result: The route shows a non-claim stale/unavailable recovery and
+   returns to Shelf or Add a product. It does not render candidate corpus copy,
+   product names, or a share card.
+4. Action: Repeat with the current combined `Pregnant or trying` profile
+   choice, breastfeeding, prefer-not-to-answer, and unavailable/unknown
+   profile states.
+   Expected result: Breastfeeding, prefer-not, and unavailable/unknown remain
+   distinct and never borrow pregnancy-only candidate copy. The current
+   combined selection is never represented as a separately proven pregnancy or
+   trying-to-conceive fact; any future safety corpus must explicitly review the
+   combined state or wait for a separately versioned profile split.
+
+The current zero-admission Shelf/Ask behavior is source- and unit-verified. A
+folder-specific human-simulated Expo-web observation at 390 x 844 is tracked in
+`test-results/human-e2e/2026-07-26/core02-conflict-admission-current/`.
+The screenshots record stale/public-link and paywall non-sale/disclosure states;
+the tester observed `Back to Shelf` return to `/shelf`, but no post-click trace
+or screenshot is retained. Compact-phone text pressure, process relaunch, native
+sharing, VoiceOver, Dynamic Type, signed-archive, and physical-iPhone behavior
+remain open.
+
+### Path B: CORE-07A Literal Zero Share And Public Links
+
+1. Action: In a development fixture, make every Phase 7/8 share/public-link
+   flag and final-domain input look enabled while the machine admission remains
+   false. Open `/share/conflict/[ruleId]`.
+   Expected result: The independent admission wins. No private conflict object
+   reaches the renderer, no exact or generic card is captured, no temporary
+   file or URL is created, no network or native share API runs, and no share,
+   link, sheet, destination, or payload analytics fires. The route explains
+   unavailability and offers a safe Shelf exit.
+2. Action: Open `/s/not-valid`, an unknown valid-looking identifier, and any
+   legacy identifier; refresh, relaunch, and use back/forward.
+   Expected result: Every value reaches one neutral unavailable state. Copy
+   does not say a reviewed card exists, distinguish malformed from unknown,
+   reveal product/rule/profile data, or emit landing/store-click/`share_id`
+   telemetry. Static public HTML behaves the same and makes no record-derived
+   request.
+3. Action: Attempt to pass a raw `DetectedConflict`, product, Shelf, profile,
+   pregnancy/safety, reviewer, receipt, provenance, or unknown key across the
+   card boundary.
+   Expected result: The boundary refuses it. Only a deliberately constructed
+   exact allowlist projection type can be accepted by the renderer, and zero
+   admission prevents even that projection from reaching export.
+4. Action: Repeat after setting legacy `reviewedBy`, exact owned-product match,
+   final domain, and all broad QA evidence flags.
+   Expected result: None is publication or token authority. Phase 7, Phase 8,
+   and Phase 9 packets remain blocked by the machine admissions.
+
+Evidence required now: source contract, focused unit/route tests, browser text
+and navigation snapshots at supported/compact/text-pressure sizes, and network/
+analytics/native-call spies proving zero side effects. This source checkpoint
+does not replace future positive-path native or professional evidence.
+
+### Future Path C: Admitted Conflict Detail
+
+This path is a required future acceptance flow, not a currently available
+production path. It may be exercised only after the exact U.S. corpus, source
+registry, applicability, user copy, market-scope policy, and per-rule hashes
+have independent dermatologist and chemistry/pharmacy approvals, separate
+regulatory-counsel clearance, trusted authority/signature verification, and a
+passing exact-build review gate.
+
+Remaining launch gates include signed review artifacts for the exact corpus
+hash from the required independent professional roles; counsel review of U.S.
+intended use, claims/classification, privacy/App Privacy disclosures, terms,
+store metadata, reviewer-access instructions, and material connections; a
+native detached-signature verifier with a release trust root and packaged
+artifact; archive verification; physical-iPhone accessibility, persistence,
+share, and failure-path E2E; and Apple's independent App Review outcome.
+Passing source tests does not satisfy any of those gates.
 
 1. Action: Add a real retinoid and AHA, open the conflict from Shelf, and verify the detail URL carries the rule plus both product IDs regardless of detection order.
    Expected result: The conflict sheet names the exact pair, stays calm and claim-safe, gives timing advice without claiming shelf-only placement, and never substitutes another pair that happens to use the same rule.
@@ -1685,75 +2201,134 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: The exact pair remains accepted after reload, the Shelf banner and downstream conflict recommendation/Ask prompt do not repeat it, product detail says the schedule keeps the pair apart, and the guided checklist still contains at most one potent active per night.
 3. Action: Reopen the exact pair from product detail, change to Use together anyway, reload, and inspect Shelf, Recommendations, Ask, Today, Week, and Why Tonight.
    Expected result: The changed choice persists without a duplicate record or repeat advisory; Today/Week do not keep presenting the rejected separation rationale; Why Tonight/product detail explain that guided check-offs still use the reviewed one-potent-active schedule; retinoid and exfoliant never share a night.
-   Current local evidence: 2026-07-10 Codex in-app browser Expo web added Lactic Acid 5%, Glycolic 7%, and Retinol 0.3% through the real onboarding/Shelf UI, exercised two independent exact pairs under the same rule, persisted Keep and Use together through reload, suppressed only resolved prompts across Shelf/Recommendations/Ask, retained one potent active per night across Plan/Today/Week, and showed exact-pair APART/CHOICE explanations in Why Tonight and product detail. Evidence is in `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/`.
-   Current outbox checkpoint evidence: On 2026-07-18 Codex in-app browser ran Expo web at 390 x 844, added Optimization Retinol Serum and Optimization Glycolic Toner through `/shelf/manual`, opened the generated exact-pair conflict, chose Use together anyway, observed the prompt disappear on Shelf, and reloaded with the resolved prompt still suppressed. This proves the user-visible local-first path; authenticated queue/RPC behavior is covered by focused tests, while hosted and signed-device replay remain open.
+   Historical/superseded evidence: the 2026-07-10 Expo-web run used starter
+   content before the current exact-corpus admission boundary. Its geometry and
+   navigation observations may be retained, but its conflict claims, choices,
+   and schedule behavior are not production-content or launch evidence.
 
 ### Branches
 
+- Branch: untrusted corpus, receipt, reviewer, or applicability data
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Attempt to mark the candidate corpus approved; add three
+    self-asserted reviewer identities/receipts; tamper a source, rule, copy,
+    market-scope, policy-file, or per-rule hash; omit one professional role;
+    use an expired/rejected receipt; leave any applicability dimension
+    review-required; and satisfy an exact fact on the wrong product side.
+  - Expected result: Admission remains null, production rules remain empty, and
+    no UI/schedule/choice/share surface renders the candidate. Swapping product
+    detection order does not change exact participant applicability.
+  - Evidence: CORE-02 source contract, corpus/admission unit tests, engine
+    wrong-side/swapped-order fixtures. Ordinary-build app-surface evidence is
+    still required.
+- Branch: mixed shelf with an unparsed product
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add two tagged products plus one product whose ingredient parser
+    produces no supported tags, then repeat with an active reproductive context.
+  - Expected result: Every physical pair involving the unparsed product has a
+    distinct non-identifying `unassessable_pair` coverage key, and the unparsed
+    product has a separate active-safety-context key. These keys are unioned
+    with parsed-pair coverage, so a parsed pair cannot hide an unassessable pair
+    or cause `compatible`/`not_applicable`.
+  - Evidence: Current focused engine regression and 16/16 source-contract
+    checks. Human-simulated mixed-shelf E2E remains required.
+- Branch: overlapping or incomplete reviewed severity branches
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise an admitted-rule fixture in which more than one reviewed
+    severity branch matches, then one in which required branch facts are absent.
+  - Expected result: Overlap returns `unsupported_ambiguous_branches`; missing
+    facts return `unsupported_missing_facts`. Array order never chooses a
+    severity, coverage stays unsupported, and Recommendations exclude the
+    affected type even if another known conflict exists.
+  - Evidence: Current focused engine/recommendation regression and 16/16
+    source-contract checks. Admitted-corpus UI E2E remains required.
+- Branch: exact typed Ask pair resolution
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On a shelf of at least three products, type a conflict question
+    containing exactly two complete stored product names. Repeat with a
+    duplicate name, a partial name, and more or fewer than two resolved names.
+  - Expected result: Only the exact unambiguous pair can reach its admitted
+    conflict. Duplicate, partial, ambiguous, or wrong-cardinality input fails
+    closed. The canned shelf-wide conflict prompt is available only when
+    admitted coverage exists.
+  - Evidence: Current focused Ask regression and 16/16 source-contract checks.
+    Human-simulated typed-input E2E remains required.
+- Branch: reproductive-context replacement withholding
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Create finished/expiring retinoid, hydroquinone, and BHA products
+    under exact pregnant/combined, breastfeeding, trying, unknown, and
+    prefer-not profile states; repeat with an unrelated vitamin C product and
+    with only the legacy coarse `pregnancySafety: caution` field.
+  - Expected result: Repurchase/replenishment copy for the three gated active
+    classes is withheld unless the exact context has admitted clearance.
+    Unrelated replenishment remains eligible. The legacy coarse field alone
+    never invents a reproductive status or a clearance/exclusion.
+  - Evidence: Current focused recommendation regression and 16/16
+    source-contract checks. Native persistence and UI E2E remain required.
+- Branch: development preview isolation
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise any explicit preview-only rule fixture in a development
+    test, then run the ordinary app path without that fixture.
+  - Expected result: Preview data cannot enter production consumers, write an
+    active choice, mirror to the server, render a share card, or change a
+    release flag. Preview screenshots are labeled fixture-only and cannot be
+    cited as content approval.
+  - Evidence: Source-import scan, release-flag tests, negative presentation and
+    choice tests, and separate fixture/ordinary-build transcripts.
 - Branch: encrypted choice write fails
   - Priority: Critical
   - Automate later: Yes
   - Action: With the one-shot conflict-choice failure fixture enabled, choose either action, inspect the inline state, then retry.
-  - Expected result: The sheet stays open, exposes an accessibility alert that OnSkin could not confirm whether the choice was saved, emits no success navigation/analytics, prevents duplicate submits while pending, drops any retained Shelf success snapshot, and succeeds or restores the exact persisted choice only after a strict recovery read. The copy does not claim the previous schedule is unchanged because a rejected storage call cannot prove whether bytes landed.
-  - Evidence: Screenshot, encrypted-storage snapshot, route state, strict recovery-query result, and analytics/network log.
-  - Historical local evidence: The earlier one-shot private-KV run retained the exact route, exposed the former `Choice not saved` copy, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Fresh evidence is required for the uncertainty-safe copy and cache containment. The local run does not replace native encrypted-storage or live analytics/network QA.
-- Branch: unreadable conflict-choice private state and recovery
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Seed a current-version exact-pair choice, force the dev-only conflict-choice read fixture, and open Shelf plus representative conflict detail, product detail, Plan/Today/cycle, Recommendations, and Ask consumers. Retry while failure remains, then relaunch with the one-shot fixture or remove it and retry.
-  - Expected result: The complete owner-bound Shelf derivation fails closed behind one accessible private-Shelf recovery state. No consumer treats unreadable choices as an empty map, re-surfaces a resolved advisory, claims the pair is all clear, or publishes a routine/recommendation from partial private data. Persistent retry remains unavailable without rewriting the stored choice; successful retry restores the exact pair, rule version, and choice and resumes every downstream consumer consistently.
-  - Evidence: Supported-phone recovery screenshots, accessible role/text and control geometry, representative route/URL snapshots, exact-choice recovery snapshot, browser logs, and focused typed-read/consumer tests.
-  - Current verification status: Typed-read, byte-preservation, 100-writer, strict-consumer, cache-containment, mirror-order, and owner-boundary tests pass. The mapped Expo-web pass was attempted on 2026-07-13, but the required in-app Browser runtime reported no available browser after its prescribed troubleshooting check. No standalone browser or Computer Use substitute was used, so supported-phone screenshots and user-driven retry remain open rather than being inferred from source tests.
-- Branch: free conflict quota claim or storage failure
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: As a free user, open the first unresolved exact-pair conflict, return to Shelf and reopen it, then repeat with conflict-quota storage forced unavailable.
-  - Expected result: The first detail is not revealed until the single free claim is durably reserved; reopening the claimed exact pair remains allowed; corrupt, future, or unavailable quota state never becomes a fresh free allowance and never reveals private conflict detail; the fail-closed Pro gate can exit to Shelf.
-  - Evidence: First-claim and reopen screenshots, failure-fixture screenshot, destination snapshot, control geometry, focused 100-way atomic-claim tests, and browser logs.
-  - Current local evidence: 2026-07-13 Codex in-app browser Expo web at 390 x 844 adds Retinol 0.3% and Lactic Acid 5% through the real manual Shelf flow, opens and reopens the exact Retinoid × AHA detail with 48 px+ resolution actions, then restarts with `EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE=unavailable`. The unavailable branch hides all exact-pair guidance, shows the Pro gate at zero horizontal overflow, and `Maybe later` returns to `/shelf`. Evidence is in `test-results/human-e2e/2026-07-13/conflict-quota-atomic-claim/`; native encrypted-storage/restart and live entitlement evidence remain device/backend QA.
+  - Expected result: The sheet stays open, exposes an accessibility alert that the choice was not saved, emits no success navigation/analytics, leaves the previous schedule and prompt state unchanged, prevents duplicate submits while pending, and succeeds on retry.
+  - Evidence: Screenshot, encrypted-storage snapshot, route state, and analytics/network log.
+  - Historical fixture evidence: The one-shot private-KV fixture retained the exact route, exposed `Choice not saved`, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Pending-state disabling was observed before the delayed rejection. The local run predates current CORE-02 acceptance and does not replace native encrypted-storage or live analytics/network QA.
 - Branch: stale version, safety row, or mismatched pair identity
   - Priority: Critical
   - Automate later: Yes
   - Action: Exercise a newer rule version, a safety-class row, an incomplete/mismatched product-pair URL, and two pairs governed by the same rule.
   - Expected result: An old choice does not suppress new guidance; safety has no timing-override actions; a mismatched pair fails to the non-stale recovery state; each real pair has an independent choice and route identity.
   - Evidence: Unit/integration fixtures plus direct-route screenshots.
-  - Current local evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. Live rule-only and incomplete-pair URLs with two matching pairs failed closed to `Timing note unavailable`; exact-pair routes remained independent.
+  - Current evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. The current 390 x 844 Expo-web screenshot records a stale canonical rule URL and the generic `Timing note unavailable` dialog without product/rule claims. The tester observed `Back to Shelf` return to `/shelf`, but no post-click screenshot or trace is retained. Admitted exact-pair routing still requires a future professionally reviewed fixture and native acceptance evidence.
 - Branch: supported-phone geometry and text pressure
   - Priority: Critical
   - Automate later: Yes
   - Action: Run the unresolved, saving, failed, accepted, and use-together states at 360 x 640 and 390 x 844, including 200% text pressure where supported.
   - Expected result: No horizontal/text overflow, clipped actions, blocked hit targets, sub-44 px controls, dialog escape, or incoherent overlap; the exact-pair and safety-boundary copy remains readable.
   - Evidence: Geometry JSON, screenshots, browser logs, and interaction transcript.
-  - Current local evidence: Post-fix 360 x 640 and 390 x 844 Expo web evidence reports zero horizontal/text overflow, 55.99 px and 48 px actions, successful center hit-tests, initial dialog focus, Tab/Shift+Tab containment, and Escape to Shelf. The run found and fixed a 4 px partial action plus missing web Escape/initial-focus traversal. Exact populated-pair native Dynamic Type remains release-device QA.
+  - Current evidence: The current screenshots visually record the ordinary 390 x 844 zero-admission Shelf, Ask, typed-refusal, stale-detail, public-share, and paywall states. No current DOM geometry or text-pressure measurement is retained. Historical populated-pair evidence reported 55.99 px and 48 px actions plus focus trapping, but admitted populated-pair native Dynamic Type remains release-device QA.
 
 - Branch: direct-entry conflict and share exits
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` directly, then use the visible Close, Done, Keep, or Use together control.
-  - Expected result: The user returns to the Shelf tab instead of remaining on a direct-entry conflict or share-card screen with no navigation history.
-  - Evidence: 2026-07-07 Expo web at 320 x 568 verified `/conflict/missing-rule-e2e` `Back to Shelf`, default `/share/conflict/missing-rule-e2e` deferred `Back to Shelf`, and share-card-enabled unshareable `Done` all return to `/shelf`, with zero horizontal overflow and no browser console errors.
+  - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` directly. Use the visible recovery action; exercise private conflict choices only in an exact admitted private-content fixture.
+  - Expected result: The zero-admission share route always exposes only `Back to Shelf` and returns to `/shelf`, with no card, product, rule, capture, link, or native-share action. The user never remains trapped on a direct-entry route with no navigation history.
+  - Historical evidence: 2026-07-07 Expo web at 320 x 568 verified `/conflict/missing-rule-e2e` `Back to Shelf`, default `/share/conflict/missing-rule-e2e` deferred `Back to Shelf`, and the former share-card-enabled unshareable `Done` path. The latter is superseded and is not current share-route acceptance evidence.
+  - Current evidence: The 2026-07-26 Expo-web screenshot at 390 x 844 records the stale detail route before recovery, and the tester observed `Back to Shelf` return to `/shelf`; no post-click screenshot or trace is retained. The same packet records a product-free invalid public share state. Native sharing and admitted populated-pair exits remain release-device QA.
 - Branch: missing or unshareable conflict
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` for a rule that is not present in the current shelf; use Back to Shelf from the missing detail state and the add-product escape hatch.
   - Expected result: The missing conflict detail explains that the timing note is no longer active because the shelf or safety setting changed, never falsely says a product pair was removed, never reuses stale routine advice, Back to Shelf returns to `/shelf`, Add a product opens `/shelf/manual`, and the share-card fallback still returns to Shelf without exposing private shelf details.
   - Evidence: 2026-07-07 Expo web at 320 x 568 verified the missing state copy, stale-routine warning, `/shelf` recovery, `/shelf/manual` escape hatch, default share-card fallback, and enabled unshareable share-card state without private product names.
-  - Current local evidence: 2026-07-08 in-app browser at 320 x 568 rechecked direct `/conflict/missing-rule-e2e` after a compact-sheet fallback fix. Pre-fix evidence captured `maxHeight: 0px` with the actions below the viewport; post-fix evidence confirms a 524 px dialog, `aria-modal`, `Timing note unavailable` accessibility label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px actions. Evidence is in `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`.
-  - Current support-floor text-pressure evidence: 2026-07-09 headless Chrome Expo web found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
-- Branch: native share unavailable
+  - Historical partial evidence: A 2026-07-08 in-app-browser run at 320 x 568 rechecked direct `/conflict/missing-rule-e2e` after a compact-sheet fallback fix. Pre-fix evidence captured `maxHeight: 0px` with the actions below the viewport; post-fix evidence confirms a 524 px dialog, `aria-modal`, `Timing note unavailable` accessibility label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px actions. Evidence is in `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it is not current-head CORE-02 acceptance.
+  - Historical support-floor text-pressure evidence: A 2026-07-09 headless Chrome Expo-web run found the missing conflict sheet clipped `Back to Shelf` at the bottom of the 320 x 480 / 170% skipped-route sweep. Post-fix, short missing-conflict sheets put recovery actions before the explanatory card, and the same 21-route sweep reported zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`. Compact/text-pressure and native reruns are still required; the supported 390 x 844 packet currently records the stale-detail and product-free invalid-share states only.
+- Future branch: native share unavailable
   - Priority: Important
   - Automate later: Yes
-  - Action: Attempt to export a reviewed share card on a surface without native sharing support.
-  - Expected result: The app explains sharing is unavailable without losing the user or exposing sensitive shelf details.
+  - Action: After a positive exact-content receipt, reviewed projection, and
+    exact-payload confirmation exist, attempt export on a surface without native
+    sharing support.
+  - Expected result: The app explains sharing is unavailable without losing
+    the user, exposing private Shelf details, leaving a temporary file, or
+    emitting success/link/sheet analytics.
   - Evidence: Screenshot or platform log.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED=true`, `EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED=true`, `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED=true`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, `EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING=true`, and `EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT=unavailable` adds real Retinol 0.3% and Glycolic 7% products through manual shelf intake, opens the reviewed conflict share route, verifies the share card is present with a 272 x 56 Share to Stories control and 272 x 48 Done control, taps Share to Stories, renders inline `Sharing unavailable` recovery, opens no JavaScript/native dialog, leaks no raw native/provider text, and keeps horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 opened a seeded reviewed conflict share card, tapped `Share to Stories` with native sharing forced unavailable, verified no native/browser dialog, kept the branded card and controls visible, and rendered inline `Sharing unavailable` feedback above the export action. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
-- Branch: account or route changes during conflict-card export
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Delay view capture, start `Share to Stories` as owner A, then switch accounts before capture resolves. Repeat by navigating away during capture and by starting an account switch while the native share sheet is open.
-  - Expected result: A delayed capture is memory-only and discarded without creating a file, journal entry, share sheet, analytics event, or late route feedback. Blur/unmount clears or reconciles the visible busy state without enabling a second in-flight share. Once an owner-A native share sheet has opened, the account boundary remains fail-closed until the sheet settles and its exact journal-owned PNG is cleaned; only then may owner B publish.
-  - Evidence: Owner-generation/action-coordinator and plaintext-staging tests plus Expo-web blur/recovery interaction evidence. Native iOS share-sheet/account-switch interruption, process-kill cleanup, and physical file inspection remain required.
+  - Historical fixture evidence: A 2026-07-08 Expo-web run with explicit preview/share fixtures exercised the unavailable-share recovery and retained the card and controls. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`. Because it used seeded candidate content before the current admission boundary, it is geometry/recovery evidence only and cannot establish reviewed content, native sharing, or current CORE-02 acceptance.
 
 ## Flow: Settings Account Controls
 
@@ -1764,7 +2339,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Success state: Settings changes, feedback handoffs, and exits are clear, and direct-entry settings screens recover to the You tab.
 - Priority: Important
 - Automate later: Yes
-- Surface: Expo web for route recovery; iOS and Android for native subscription and notification settings behavior.
+- Surface: Expo web for route recovery; iOS for release-native subscription and
+  notification settings behavior. Android remains compatibility follow-up.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/settings/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/` and `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`
 - Current policy-link evidence: `test-results/human-e2e/2026-07-08/settings-policy-link-failure/`
@@ -1778,13 +2354,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
-- Branch: development-only content-free local diagnostics
-  - Priority: Important
-  - Automate later: Yes
-  - Action: In a development build, open You, scroll to Help, tap `Local diagnostics`, inspect every section, tap `Refresh diagnostics`, then use Back. Repeat by direct-opening `/settings/diagnostics`. Run once with every diagnostics source forced to fail. Attempt the same direct route in a non-development/production environment.
-  - Expected result: Development and development-compiled staging builds show one fixed-schema snapshot containing only version strings, an eight-hex account-generation prefix or safe absence/unavailability, enums, counts, timestamps, bounded timing aggregates, and the fixed content-free startup milestone enum with bounded elapsed milliseconds. Refresh remains single-result/latest-request safe and Back returns to You. Pointer and touch input can record the first admitted route interaction without recording its target or content. A source failure affects only its own field and renders `unavailable`, `unknown`, `not run`, zero, or the fixed epoch without raw errors. The screen and You link are absent from production, and direct production entry redirects to You. No keys, tokens, complete user IDs, filenames, record values, search strings, photo identifiers, operation identifiers, route values, or raw query keys are rendered or serialized.
-  - Evidence: `test-results/human-e2e/2026-07-17/local-diagnostics-healthy-current/`, `test-results/human-e2e/2026-07-17/local-diagnostics-failure-drill-current/`, `test-results/human-e2e/2026-07-17/local-diagnostics-production-gate-current/`, and `test-results/human-e2e/2026-07-18/secure-startup-diagnostics-current/`; accessible visible-text snapshots; refresh/back/entry/interaction checks; browser warning/error review; fixed-schema privacy/failure/timeout/startup tests; `docs/e2e-bug-reports/2026-07-17-local-diagnostics-web-storage-warning.md`; and `docs/e2e-bug-reports/2026-07-18-secure-startup-pointer-observation.md`.
-  - Open Question: Native iOS proof of disk-space, notification-schedule, build-number/runtime-version, and app-lock/vault values remains required before treating those adapters as release-device diagnostics.
 - Branch: direct-entry settings exits
   - Priority: Important
   - Automate later: Yes
@@ -1818,17 +2387,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Seed a store-backed Pro entitlement, open `/settings/subscription`, then tap Manage in App Store, Restore purchases, Terms, and Privacy while external handoffs fail.
   - Expected result: The screen keeps the user in Subscription Settings, exposes visible row-local feedback for billing-management and policy-link failure, Restore reports an empty/success/failure state, and all rows remain at least 44 px tall on compact phones.
   - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
-  - Current local evidence: 2026-07-08 System Chrome CDP Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` verifies `/settings/subscription` shows `RoutineKind Pro`, `Manage in App Store`, Restore, Terms, and Privacy. Manage failure renders `We could not open subscription management...`, Terms/Privacy failure renders `Link unavailable`, Restore renders `No active subscription was found for this account.`, controls are 52-53 px tall, and horizontal overflow is zero. Follow-up Codex in-app browser evidence on the same fixture verifies Manage, Terms, and Restore all render route-owned `role="alert"` feedback, open no JavaScript dialog, keep the route on `/settings/subscription`, keep current-run warn/error logs empty after expected local placeholder warnings, and keep horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/` and `test-results/human-e2e/2026-07-08/paywall-inline-recovery-current/`. Native iOS/Android RevenueCat restore and store-management sheet evidence remain Phase 5/6 QA.
+  - Current local evidence: 2026-07-08 System Chrome CDP Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` verifies `/settings/subscription` shows `Layerwell Pro`, `Manage in App Store`, Restore, Terms, and Privacy. Manage failure renders `We could not open subscription management...`, Terms/Privacy failure renders `Link unavailable`, Restore renders `No active subscription was found for this account.`, controls are 52-53 px tall, and horizontal overflow is zero. Follow-up Codex in-app browser evidence on the same fixture verifies Manage, Terms, and Restore all render route-owned `role="alert"` feedback, open no JavaScript dialog, keep the route on `/settings/subscription`, keep current-run warn/error logs empty after expected local placeholder warnings, and keep horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/` and `test-results/human-e2e/2026-07-08/paywall-inline-recovery-current/`. Native iOS RevenueCat Restore and App Store management-sheet evidence remain Phase 5/6 launch QA; Android is a later compatibility pass.
   - Current ultra-short evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 430 reproduced the free-plan `Privacy` compliance row clipping in the post-Recommendations route sweep. Post-fix, `/settings/subscription` uses a sub-460 px density for the free-plan card and compliance rows while keeping Restore, Terms, and Privacy as complete 48 px controls; tapping Restore purchases stays on Subscription Settings, renders route-owned feedback, and opens no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/` and the fresh 49-route zero-failure sweep `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
   - Current split-short text-pressure evidence: 2026-07-08 headless Chrome Expo web at 320 x 390 / 130% verifies `/settings/subscription` keeps the free-state card, Restore, Terms, Privacy, and upgrade action complete without clipping or blocked hit centers after dropping lower-priority free-plan body copy below 410 px. The 49-route sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-130-split-short-390-postfix-4/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-130-split-short-390-route-clearance.md`; native Dynamic Type remains device QA.
-- Branch: You section mutation render isolation
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Direct-open `/settings/privacy`, wait for consent and direct-entry layout state to settle, capture content-free development render counters, then exercise an app-lock failure, a policy-link failure, a delayed data export, and both destructive-action confirmation/cancel paths. Rapidly activate delayed export twice; for destructive actions, rapidly request and cancel only the safe confirmation UI without activating its destructive confirm control. Verify destructive execution single-flight with pure state-machine and source-order tests, not live account deletion or consent withdrawal.
-  - Expected result: Account, subscription, routine/For You overview, and the You route shell do not rerender for section-owned pending, confirmation, or feedback state. Consent state remains serialized across both data-sharing surfaces; its coordinator plus Commerce/Privacy consumers may rerender to publish the shared disabled state. Withdraw, Export, and Delete retain one shared exact single-flight boundary; its coordinator plus Privacy/Data consumers may rerender to publish cross-action exclusion. Delayed export starts exactly once, app-lock feedback rerenders only Security, and policy feedback rerenders only Policies. Inline feedback, switch truth, direct-entry scroll position, card order, 44 px+ controls, and zero horizontal overflow remain intact, with no dialog or raw provider/backend content.
-  - Evidence: Supported-phone screenshots, before/immediate/settled numeric counter snapshots, exact action-start counts, alert and switch state, direct-entry scroll/geometry measurements, browser dialog/log summary, focused section/controller/diagnostic tests, and a scoped report under `test-results/human-e2e/YYYY-MM-DD/you-mutation-isolation-current/`.
-  - Current local evidence: 2026-07-16 Codex in-app browser Expo web direct-opens `/you?section=privacy` and verifies consent, app-lock, policy, and delayed export double-activation each starts exactly once; app-lock and policy rerender only their section; shared consent/data-right actions rerender only their coordinator/consumers; route, layout shell, Account, Subscription, and static overview deltas stay zero. Withdrawal/Delete prompt double-open plus Cancel produces zero destructive starts, no destructive confirm activation, and complete ~56 px controls at the compact supported viewport. The tall direct entry retains Privacy → Policies → Data order, all measured viewports have zero horizontal overflow, and no dialog or browser error appears. Evidence is in `test-results/human-e2e/2026-07-16/you-mutation-isolation-current/` and `docs/optimization/evidence/2026-07-16_you-mutation-isolation-checkpoint.md`; native execution and production profiling remain external QA.
-  - Claim boundary: Expo-web development counters can prove the measured ownership path only. Production Hermes commit duration, native LocalAuthentication/SecureStore behavior, authenticated consent success, native share sheets, successful live export/deletion/withdrawal, VoiceOver/TalkBack, and physical-device frame/CPU/memory behavior remain device/backend QA.
 - Branch: policy link handoff failure
   - Priority: Important
   - Automate later: Yes
@@ -1853,14 +2414,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The switch uses a real 44 pt or larger touch target, failed persistence does not silently flip visible state, no native or JavaScript dialog blocks the user, row-local `Choice not saved` recovery copy appears near the changed control, no raw backend/provider error leaks, and the layout keeps zero horizontal overflow.
   - Evidence: Screenshot sequence, dialog-state check, switch state, alert-region geometry, and horizontal-overflow snapshot.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with local Supabase placeholders unavailable verifies `/settings/privacy` redirects to `/you?section=privacy`, the Marketing emails switch is 52 x 48 px and unchecked before interaction, pointer tap and keyboard activation both render an inline `role="alert"` message (`Choice not saved` / retry copy), the switch remains unchecked, no JS dialog appears, the alert is 232 x 68 px between the marketing row and the next privacy row, raw backend text is hidden, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/settings-privacy-choice-inline-feedback/`. Native iOS/Android switch and consent-service evidence remain device QA.
-- Branch: partner data-sharing withdrawal cleanup and recovery
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Open the You tab with partner data sharing enabled, turn `Share data with partners` off, and force the consent-withdrawal cleanup request to fail after the encrypted local revocation is saved. Activate the visible retry twice rapidly, refresh/relaunch the route, and retry again. Repeat with an account-generation change before the delayed cleanup resolves.
-  - Expected result: The effective commerce gate and switch turn off immediately after the durable local revocation, prior paid-link sharing cannot reopen from a stale server grant, and the general consent cache is not falsely marked cleanup-complete. Row-local `Choice not saved` feedback exposes one accessible same-choice `Try again` action; rapid activation remains single-flight. The encrypted pending state survives refresh/relaunch, blocks regrant, and clears only after an exact successful withdrawal acknowledgement. Feedback and retry from account A never render or execute for account B. No raw backend/provider error, native/JavaScript dialog, sub-44 px control, or horizontal overflow appears.
-  - Evidence: Before/failure/retry/relaunch screenshots, switch and alert state, exact withdrawal-call count, local pending-marker state, owner-boundary transcript, dialog/log summary, control geometry, and focused persistence/query/response-contract tests.
-  - Current local evidence: 2026-07-26 installed-Chrome Playwright drove actual Expo web `/you` at 390 x 844 through the exact attempt sequence `0 -> 1 -> 2 -> 2 after reload -> 3 -> 3 after final reload`. The 52 x 48 px switch granted locally, then a failed withdrawal saved encrypted local `false`, unchecked the switch, exposed one alert and one 113.91 x 56 px retry, and blocked regrant. Two same-frame retry activations made exactly one additional call. Reload retained the pending marker and made no automatic call; one retry accepted the exact third acknowledgement and cleared the alert; final reload made no fourth call and regrant succeeded. A separate held run began sign-out before cleanup resolved: the account boundary removed You, deliberately failed the first protected-data clear, and stayed locked behind `Unavailable`; late release published no account-A feedback or state, and boundary retry completed to signed-out Welcome. All target controls were 44 px+, horizontal overflow stayed zero, and dialogs, page errors, unexpected logs, and raw fixture/backend text stayed absent. Evidence is in `test-results/human-e2e/2026-07-26/settings-data-sharing-withdrawal-recovery-current/`. The focused 9-file / 129-test matrix covers fixture isolation, exact response validation, restricted session storage, never-resolving hash detachment, held-response owner fencing, and success-only marker clearing.
-  - Open external evidence: Expo web can prove the local failure/retry/relaunch surface. Authenticated staging must still prove that the deployed withdrawal endpoint appends the caller-scoped false ledger row, removes commerce click events, detaches order attributions, and returns the exact acknowledgement; native VoiceOver and physical-device process-kill recovery remain required.
 - Branch: combined account and local-device data export
   - Priority: Critical
   - Automate later: Yes
@@ -1871,7 +2424,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with placeholder Supabase unavailable verifies `/settings/privacy` resolves to `/you?section=privacy`, tapping `Export my data` renders inline `Export failed` recovery with `role="alert"`, opens no JavaScript/native dialog, leaks no raw backend/provider text, keeps visible controls 56 px tall, and keeps horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`.
   - Prior scope-only evidence: 2026-07-10 headless Chrome Expo web verified the earlier complete `YOUR DATA` card at 360 x 640 and 390 x 844, its explicit image-file exclusion, route-owned backend-unavailable failure, 56 px Export action, zero dialogs/analytics/requests/overflow, and non-default footer copy. That evidence predates the combined local-device export and remains in `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`; the current combined scope requires fresh evidence below.
   - Current local evidence: 2026-07-10 headless Chrome Expo web verifies the combined account/current-device disclosure and backend-free action at 360 x 640 and 390 x 844. The full `YOUR DATA` card visibly names profile, shelf, routine settings, completion history, preferences, and Progress notes; separately excludes photo files/thumbnails; keeps Export/Delete at 56 px; and has zero overflow. Tapping Export emits no Edge or analytics request and shows route-owned raw-error-free `Export failed` recovery because Expo web lacks the native cache/share handoff, with zero dialogs, page errors, or unexpected logs. Focused tests prove exhaustive private-key coverage, representative local record/note inclusion, media/path/ciphertext/key redaction, explicit `backend_not_configured` scope, configured-server fail-closed behavior, and temporary-file cleanup. Evidence is in `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`; bug record is `docs/e2e-bug-reports/2026-07-10-account-export-omitted-local-first-data.md`. Seeded staging artifact and native share/cache evidence remain assigned to Tas.
-  - Current incremental-writer evidence: 2026-07-21 Codex in-app browser Expo web at 390 x 844 rechecks the combined scope disclosure after bounded mobile JSON assembly replaced the one-shot string write. The unique 56 px Export action keeps the route on `/you?section=privacy`, renders sanitized route-owned `Export failed` feedback with `role="alert"`, leaks no writer error code, opens no dialog, records zero browser warn/error logs, and retains zero horizontal overflow. Focused tests prove exact pretty-JSON parity, fixed chunk ceilings, native create/open/write/close failure handling, account-boundary interruption, journal publication ordering, cleanup, and relaunch scavenging of a partial `reserved` file. Evidence is in `test-results/human-e2e/2026-07-21/mobile-export-incremental-writer-current/`; native FileHandle/share-sheet and supported-iPhone heap/residue proof remain release-device QA.
 - Branch: account change interrupts an in-flight export
   - Priority: Critical
   - Automate later: Yes
@@ -1879,13 +2431,25 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: One cancellable account-generation lease covers authenticated-owner capture, local snapshot, Edge request, plaintext write, native availability check, share sheet, and unconditional deletion. A real account boundary aborts the Edge request, blocks new exports, waits for the full operation and cache deletion, and never publishes account B while account A export work remains. The server `user_id` must exactly equal the initiating authenticated user. A stale generation cannot write or share, a file written just before invalidation is deleted, and same-user refresh does not invalidate an otherwise current export.
   - Evidence: Delayed-operation and nested-boundary tests, exact-owner mismatch test, cache-write race assertion, root session-boundary source contract, supported-phone transition/recovery screenshots, browser logs, and configured staging A-to-B/native share-sheet proof with redacted account IDs.
   - Open external evidence: Live Supabase A-to-B transition and native share-sheet interruption remain staging/device QA under `B-VERIFY-AUTH-LINKING` and `B-SUPABASE`.
-- Branch: destructive data-rights confirmation and failure
+- Branch: non-destructive health-consent withdrawal, paused shell, and fresh reconsent
   - Priority: Critical
   - Automate later: Yes
-  - Action: Tap Withdraw health-data consent and Delete account on a compact phone viewport, cancel the first confirmation, then confirm each action while the data-rights backend is unavailable.
-  - Expected result: Each destructive action requires an inline second confirmation with visible Cancel and destructive confirm controls, opens no native or JavaScript dialog, keeps the route usable after backend failure, renders raw-error-free route-owned recovery near the initiating section, and keeps controls at least 44 px tall with zero horizontal overflow.
-  - Evidence: Confirmation screenshots, post-failure screenshots, dialog-state check, control-geometry snapshot, and browser logs.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies `Delete account` opens an inline confirmation, `Cancel` removes it, confirming with the backend unavailable renders inline `Deletion failed`, `Withdraw health-data consent` opens a section-local inline confirmation, confirming renders inline `Withdrawal failed`, no JavaScript/native dialog opens, raw backend/provider text is hidden, confirmation buttons are 200 x 56 and nudged above the floating tab bar, the route remains `/you?section=privacy`, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`.
+  - Action: From an active health-processing epoch with a signed-in account, seeded health-purpose local/server data, a store-backed or no-card entitlement, and owned photo Storage objects, open Privacy, review and cancel the first withdrawal confirmation, then confirm. Interrupt separately before server acceptance, after the local freeze, during database cleanup, during Storage deletion, and after terminal server completion but before local commit. Relaunch offline/online, background/foreground, retry status/work, attempt direct health routes and stale writes, export, manage/restore subscription, sign out, and account deletion. After terminal `withdrawn`, review the fresh disclosure and opt in again.
+  - Expected result: Confirmation states plainly that health-purpose data and personalization are deleted/reset while the account, sign-in, billing, entitlements, and App Store subscription remain. A durable local marker closes health reads/writes and unmounts the health-data app tree before cleanup; the server appends withdrawal, establishes the barrier, and rejects current/stale-epoch writes. The paused shell exposes status/retry, privacy/support, export when the lifecycle permits a complete truthful artifact, account deletion, sign-out, and truthful App Store subscription manage/restore controls. It never calls full account deletion, Apple revocation, RevenueCat identity reset, or subscription cancellation. Nonterminal states cannot reconsent. Terminal absence is committed only after relational, local, Storage, and the operation-bound processor inventory reconcile. Fresh reconsent uses current version/hash copy, creates a strictly newer processing epoch, starts at goals with empty health state, and cannot restore deleted answers, shelf, routines, completions, conflicts, recommendations, photos, Ask/trend/community health state, or reminders.
+  - Error/legacy outcomes: Unknown status, invalid/mismatched owner, account-deletion barrier, worker exhaustion, unsafe legacy Storage path, inventory version/hash mismatch, legacy unconsented health residue, local key failure, and network outage stay fail-closed with retry/support or `action_required`; no state is reported as withdrawn while residue remains. A separately initiated full account deletion may supersede and cascade the health lifecycle without being blocked by it.
+  - Evidence: Source processor-inventory hash audit; two-reset migration/pgTAP/lint/shadow proof; Edge/mobile unit and concurrency tests; local private-key/photo/cache/notification absence; account/billing/entitlement/store-journal preservation assertions; exact server row and Storage zero counts; two-user/two-session stale-writer denial; worker-without-requesting-device continuation; export lifecycle result; screenshots/video for every pause/retry/terminal/reconsent state; physical-iPhone process-death, background, StoreKit, keychain, Dynamic Type, VoiceOver, and notification evidence; final privacy/legal/security review tied to exact hashes.
+  - Source-candidate references: `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md`, `docs/hugeToDo/health-processor-inventory-v1.json`, migration `20260715000054`, `supabase/functions/consent-withdrawal/healthLifecycleCore.ts`, `supabase/functions/health-consent-worker/`, and `supabase/ops/health-consent-work-lane.sql`.
+  - Current local evidence: `test-results/human-e2e/2026-07-15/health-consent-withdrawal-current/` records the 390 x 844 active-privacy confirmation/cancel/confirm flow, the account-preserving paused shell (`Status: withdrawn. Local cleanup complete.`), paused reload, fresh-disclosure refusal, terminal reconsent, goals stability through 100 ms sampling to 1.9 seconds plus 6.5 seconds, and goals reload. A 360 x 640 replay keeps agree, decline, and policy controls reachable. This placeholder-Supabase run made no hosted destructive call.
+  - Current external evidence gap: Hosted worker/Cron/Vault/Storage and version-2 zero-residue proof, two-device and process-death behavior, physical-iPhone/TestFlight/VoiceOver/Dynamic Type, production processor/backup controls, approved final copy, and privacy/legal/security/App Review approval remain open. All 15 installed legal-copy tuples are `draft_blocked`; local web evidence does not close this launch gate. Historical Settings screenshots that used account-closing behavior remain predecessor geometry/failure evidence only.
+- Branch: durable account deletion, restart recovery, Apple fallback, and failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Tap Delete account on a compact phone viewport, inspect and cancel the first confirmation, then confirm while the data-rights backend is unavailable. On native iOS, test exact accepted, lost-response, relaunch, delayed, invalid, expired, terminal-completed, Apple-manual-notice, A-to-B account-switch, second-device active-barrier, an already active/withdrawn health lifecycle, and legacy support-only branches against authorized non-production fixture accounts. For credential-free Expo web evidence, use only the development-gated `EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY=pending_then_completed_manual|invalid|expired|invalid_support_only` fixtures; never perform a real destructive request from those fixtures.
+  - Expected result: Account deletion requires an inline second confirmation with visible Cancel and destructive confirm controls, explains before deletion that an Apple fallback may require iPhone Settings, and opens no native or JavaScript dialog. Native v2 intake captures and server-verifies the initiating session, binds independent 256-bit idempotency and status-capability tokens to that exact owner before sending the exact `begin` body, and uses only the captured bearer. Only an exact HTTP 202 commits `accepted`; a response-lost transport result commits `ambiguous`. Both wake the capability-only pre-Auth recovery gate, which verifies retained Auth and the complete private-cleanup/owner/retained/quarantine proof tuple before any destructive cleanup. For the exact owner, ambiguous intake retains only the verified Supabase session for one idempotent retry while isolated/vendor/query cleanup runs; accepted or pending intake clears that session too. An exact verified foreign, missing, or authoritatively rejected session is removed with auth-derived/vendor/query state, but a durable retained-owner marker prevents immediate or later cold-start erasure of another owner's private data. Ownerless data receives a durable no-adoption quarantine before forced sign-out, so every later login wipes before claiming it. A separate auth-derived-cleanup marker is committed before session removal and cold restore retries it before reading Auth until all session/vendor/ephemeral resets succeed. Transient, storage, malformed, or unclassified Auth proof failures instead retain the retry session behind the gate. A matching local owner can finish cleanup after Auth disappears, and legacy ownerless/nonterminal state is support-only. Every cross-device `clear` or `active` preflight carries its authenticated owner subject in the same response; a cached-session subject mismatch is rejected, exact `clear` uses the response subject as the publication target, exact `active` clears matching local state, and valid foreign state is durably retained before sign-out while unreadable proof stays retry-gated. Pending or delayed status keeps account activity paused. Exact completion is first committed locally and then retries owner-authorized cleanup idempotently, so a prior partial or preterminal cleanup cannot be mistaken for terminal proof. An attested `remove_apple_authorization` notice is queued and shown while the completed capability remains durable; only explicit notice acknowledgement removes that secure state. Invalid, expired, malformed, offline, ownership-mismatch, or cleanup-failure outcomes retain recovery evidence and show a raw-error-free Check status / retry / support state instead of silently reopening account activity. An active or terminal health-withdrawal record cascades with the Auth account and cannot preserve health data or block full deletion.
+  - Evidence: Confirmation screenshots, pending/delayed/recovery screenshots, manual-revocation completion and failed-handoff screenshots, a relaunch transcript, dialog-state check, control-geometry snapshot, browser/network logs proving no destructive request in fixture mode, SecureStore/native device evidence, and focused intake/status/state/finalization unit contracts.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies `Delete account` opens an inline confirmation, `Cancel` removes it, confirming with the backend unavailable renders inline `Deletion failed`, no JavaScript/native dialog opens, raw backend/provider text is hidden, confirmation buttons are 200 x 56 and nudged above the floating tab bar, the route remains `/you?section=privacy`, and horizontal overflow is zero. The same run's health-withdrawal interaction is historical geometry/failure evidence only and is not evidence for the new non-destructive branch. Evidence is in `test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`.
+  - Current durable-contract evidence: 2026-07-13 focused mobile tests pass exact owner-bound intake, captured-bearer dispatch, A-to-B interruption, foreign-owner no-overwrite/no-erasure, transport ambiguity, capability-only status, terminal local commit, invalid/expired and ownerless-legacy preservation, owner-proof-last cleanup, SecureStore registry, and pre-Auth provider-order contracts. Codex in-app Chromium then exercised the non-destructive Expo-web fixtures on the saved 1279 x 720 capture surface: pending recovery, manual `Check status now`, the durable Apple-manual completion notice, signed-out continuation, invalid recovery with retained retry controls, expired recovery with support guidance, and ownerless legacy recovery with support-only controls. No destructive request is permitted in fixture mode. Six screenshots and the run report are in `test-results/human-e2e/2026-07-13/account-deletion-durable-recovery-current/`; compact-phone and physical-iPhone reruns remain open.
+  - Current source evidence and open native gates: The server/client two-phase publication fence now reserves before session publication, activates only after exact-session preparation, renews bounded authority, and drains before account boundaries. Account deletion takes a synchronous temporary hold, verifies the exact owner's store-safety journal, starts exact-subject RevenueCat quiescence as the final generation action, and waits for full closure before creating a deletion capability; durable deletion barriers remain distinct from the temporary hold. Focused race tests cover fresh/closed, foreign subject, delayed native operation, timeout/quarantine, retry, and A-to-B admission. This closes the prior source-only lease gap, but it does not prove provider behavior. Physical-iPhone Keychain persistence, process-kill/relaunch recovery, real background polling cadence, live staging capability-only status, transport interruption after committed intake, local cleanup retry, Sign in with Apple revocation/manual fallback, second-device/provider recreation/late settlement, RevenueCat live lease behavior, and VoiceOver/Dynamic Type focus remain required. Expo web fixture evidence proves UI/state routing only and cannot satisfy these native/live gates.
 - Branch: device-only photo-storage status
   - Priority: Important
   - Automate later: Yes
@@ -1893,26 +2457,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Both surfaces describe photo storage as device-only and cloud backup as unavailable. No backup switch, disclosure dialog, settings handoff, backup analytics event, or automatic photo/metadata network request is exposed. The device-loss tradeoff remains readable without crowding the app-lock control or Progress actions.
   - Evidence: Surface screenshots, absence-of-control query, dialog-state check, control geometry, network requests, and browser logs.
   - Current local evidence: 2026-07-10 headless Chrome Expo web verifies the visible Security card and locked Progress surface at 360 x 640 and 390 x 844 with zero backup controls, dialogs, navigation handoffs, analytics/photo-backend requests, unexpected logs, or horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`.
-- Branch: notification private-state recovery
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Open `/settings/notifications` and `/settings/timing` from a cold local-only session with absent, available, persistently unavailable, corrupt, future-version, and one-shot unavailable preference state. Retry the one-shot read, exercise a one-shot write failure and retry, and repeat the failed-choice path on `/onboarding/notifications`.
-  - Expected result: Genuine absence renders explicit all-off choices without implying consent. Loading and unreadable state keep the route title and Back control visible, expose one accessible retry surface, hide every synthetic switch/time/quiet-hours value, preserve exact private bytes, and cannot authorize behavioural or native schedules. A one-shot retry restores the exact durable choices. Failed preference writes or native reconciliation keep the initiating route visible, show generic raw-error-free feedback, disable duplicate edits while pending, and retry the same desired patch. Failed onboarding persistence never advances silently and offers a visible same-choice retry. Local reads and writes remain runnable while offline.
-  - Evidence: Supported-phone screenshots for both routes and onboarding failure/recovery, exact preference snapshot or byte hash before/after failure, retry interaction log, switch/time geometry, URL/Back checks, horizontal-overflow and browser-console audit, plus focused typed-store/scheduling/route tests. Native schedule cancellation, OS permission, and protected-storage interruption remain device QA.
-  - Current local evidence: Code SHA `ff500ef13127482b6ebe575a940c86d7484da16e` passes the final 249-file / 2,978-test mobile suite, typecheck, lint, fixed-ID schedule health/retry tests, and an Expo-web bundle/HTTP smoke. The final human recovery matrix is `blocked-external`: in-app browser discovery returned no browser and no Android SDK/emulator was installed, so no post-fix screenshot or interaction pass is claimed. See `docs/optimization/evidence/2026-07-14_notification-private-state_checkpoint.md`.
-  - Current outbox evidence: 2026-07-18 Codex in-app browser Expo web at the requested 390 x 844 viewport (observed 390 x 845) verifies notification preference saved-local, syncing, and needs-attention states. Saved local has zero alerts/progress bars; syncing has exactly one named progress bar; needs-attention has exactly one alert and a 316 x 56 px `Try sync again` action that responds without a JavaScript dialog. All states have zero horizontal overflow. A real Morning preference toggle and a Timing quiet-hours edit both survive reload. Evidence is in `test-results/human-e2e/2026-07-18/notification-outbox-status-current/` and `docs/optimization/evidence/2026-07-18_notification-preferences-outbox-checkpoint.md`.
-- Branch: notification OS-permission recovery
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: With at least one saved notification preference enabled, open `/settings/notifications` under granted, undetermined, denied/can-ask-again, denied/settings-only, and permission-unavailable states. Accept only from the explicit Allow action, retry an unavailable read, open device settings when another prompt is unavailable, return to the app, and exercise a Settings-opener failure.
-  - Expected result: No OS prompt appears before the user action. Saved switches remain enabled when delivery is paused. Granted access hides the recovery card and reconciles fixed and active-trial schedules from authoritative saved state, including after cold restart or when notification preferences are absent/unreadable. Undetermined or retryable denial exposes `Allow notifications`; settings-only denial exposes `Open settings`; unavailable exposes `Try again`. Unchanged requests, prompt failures, and Settings-handoff failures remain in one inline accessible, content-free alert and release the busy state. Native reconciliation failures use bounded retry and safe diagnostics; they do not reserve behavioural cap slots or schedule any notification. Foreground recovery refetches even fresh preference state through the shared focus lifecycle and suppresses stale action results after blur/account change.
-  - Evidence: Permission-state unit matrix, exact native-call/ledger ordering tests, supported-phone screenshots, action geometry/hit tests, reload preference snapshot, URL/dialog/overflow/log checks, and signed-device cancellation/restoration/banner/tap proof.
-  - Current local evidence: 2026-07-25 Codex in-app browser Expo web at 390 x 844 and 320 x 568 verifies explicit Allow, unavailable Retry, settings-only denial, one inline Settings-opener failure alert, unchanged-request inline recovery, grant/reload recovery, preserved Morning intent, 55.99 px recovery actions, zero horizontal overflow, released busy state, and no JavaScript dialog. The focused 140-test changed-surface suite, mobile typecheck, and full mobile lint pass. Root tests additionally cover terminal denial cleanup, absent-preference/cold-generation trial auditing, bounded unavailable retries, same/new-generation trial restoration, unreadable entitlement preservation, and account-generation isolation. Web does not prove native scheduling or OS presentation; signed iOS/Android proof remains open. Evidence is in `test-results/human-e2e/2026-07-25/notification-permission-recovery-current/` and `docs/optimization/evidence/2026-07-25_notification-permission-recovery.md`.
 - Branch: reminder timing and discretion
   - Priority: Important
   - Automate later: Yes
-  - Action: Open notification settings, toggle reminder tiers, edit AM/PM timing and quiet hours, then return to settings.
-  - Expected result: User-set times, contextual timing-control and picker-row labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a single named modal dialog, a named dismiss action, and no unlabeled inert sheet-body controls.
+  - Action: Open notification settings, observe the current OS authorization state, toggle reminder purposes, edit AM/PM timing and quiet hours, then return to settings.
+  - Expected result: Fresh notification purposes are off. Stored toggles render effectively off when OS authorization is unavailable or denied. A denied state names the device Settings block and offers an Open Settings recovery action; a failed native handoff renders inline recovery, and foreground return refreshes the observed state. User-set times, contextual timing-control and picker-row labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a single named modal dialog, a named dismiss action, and no unlabeled inert sheet-body controls. Matching quiet-hour start/end is explicitly described as off. Scheduled routine and weekly-photo reminders inside the quiet window move to its end; immediate event-triggered suggestions are skipped. Trial billing reminders are explicitly identified as following the checkout date instead.
   - Evidence: Screenshot sequence, local preference snapshot, and small-phone accessibility/geometry snapshot.
   - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies `/settings/notifications` tier rows and switches, `/settings/timing` time pills, the Morning reminder time-picker sheet, AM time update from 7:30 AM to 8:00 AM, return to the notifications hub with the updated time, quiet-hours copy, generic lock-screen preview, zero horizontal overflow, and 48 px visible controls. Focused notification tests cover quiet-hours scheduling, delivery caps, lock-screen discreet copy, preference persistence, and route/touch-target contracts; native OS permission/scheduling QA remains external.
   - Current safe-area evidence: 2026-07-07 Codex in-app browser Expo web verifies the hand-built `/settings/timing` Morning picker keeps 40 px zero-inset web bottom padding, zero horizontal overflow, 48 px visible picker rows, one named dialog, and a 44 px named dismiss target in the compact observed viewport after sheet-height capping; selecting `8:00 AM` closes the modal and updates the Morning pill. Evidence is in `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area-current/`. Native iOS/Android home-indicator and screen-reader verification remains device QA.
@@ -1921,64 +2470,86 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current compact 120% text-pressure evidence: 2026-07-09 headless Chrome Expo web found `/settings/notifications` still peeking the lower promotional switch section at retained 320 x 480 stress and 320 x 568 compact heights. Post-fix, the promotional section starts fully below the first viewport while the visible reminder switches remain complete and 48 px+, and the 320 x 568 and 320 x 480 final sweeps report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-120-route-audit-current/`, `test-results/human-e2e/2026-07-09/text-pressure-120-support-floor-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-text-pressure-120-supported-phone-clearance.md`.
   - Current 320 x 370 / 320 x 360 / 130% micro-short text-pressure evidence: 2026-07-08 headless Chrome Expo web reproduced `/settings/notifications` peeking the lower-priority `Progress-photo nudge` switch by a few pixels at the viewport bottom. Post-fix, notifications use a split-short band below 410 px that keeps visible switches complete and moves `Progress-photo nudge` fully below the first viewport, while `/settings/timing` compacts the header, time rows, quiet-hours card, and helper copy for the sub-380 px envelope. A 2026-07-09 rerun corrected the micro-short nudge spacer so `Streak & adherence` and `Replenishment` stay complete instead of one row peeking at 320 x 360. The final 49-route sweeps report zero failed routes. Evidence and bug report are in `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`, `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`, `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`, `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-postfix-3/`, `test-results/human-e2e/2026-07-09/text-pressure-130-micro-short-370-postfix-2/`, and `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`; native iOS/Android notification permission, scheduling, safe-area, and Dynamic Type QA remain external.
   - Current stress/modern layout-constant evidence: 2026-07-09 Codex in-app browser Expo web on `localhost:8255` reverified `/settings/notifications` after promotional section spacer calibration. The retained 320 x 480 stress and 390 x 844 modern-phone viewports keep visible notification controls complete and hit-testable, with zero clipped controls, zero sub-44 visible controls, zero blocked hit centers, zero horizontal overflow, zero JavaScript dialogs, and zero unexpected current-origin logs. Evidence and report are in `test-results/human-e2e/2026-07-09/support-floor-layout-constant-followup-current/`.
-  - Current transactional-sync evidence: 2026-07-18 Codex in-app browser Expo web at the requested 390 x 844 viewport (observed 390 x 845) verifies the shared saved-local status on both `/settings/notifications` and `/settings/timing`, a Morning switch edit that survives reload, and quiet-hours Off state that survives reload. The routes remain usable while cloud sync is pending, have zero horizontal overflow, and preserve local/native change feedback separately from cloud-sync status. Evidence is in `test-results/human-e2e/2026-07-18/notification-outbox-status-current/`.
-  - Current immediate-delivery durability evidence: 2026-07-18 focused source/runtime tests prove a unique cap-ledger reservation precedes the native call; native rejection creates no server event; OS schedule acceptance atomically confirms the exact authenticated ledger event plus a non-coalescing, payload-bound outbox row; signed-out work remains local-only; owner changes fence work before and inside the commit; successful immutable rows reclaim their bounded revision entries; and the RPC source contract denies legacy direct inserts, validates exact content-free fields, drops telemetry older than 30 days, and reconciles concurrent exact receipts. This background-only change adds no visible UI branch. The migration test is static inspection, not hosted PostgreSQL/RLS proof, and an accepted native schedule is not proof of banner presentation; signed iOS offline/reconnect/process-kill/presentation and hosted replay/concurrency remain open. Evidence is in `docs/optimization/evidence/2026-07-18_notification-delivery-outbox-checkpoint.md`.
   - Current retained stress-floor nudge evidence: 2026-07-09 Codex in-app browser Expo web found the non-micro split-short `/settings/notifications` spacer still let `Progress-photo nudge` peek by roughly 5 px at 320 x 480. Post-fix, 320 x 480, 320 x 568, and 390 x 844 all report zero clipped controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero current-run unexpected warn/error logs; tapping `Replenishment` changes `aria-checked`. Evidence and report are in `test-results/human-e2e/2026-07-09/settings-notifications-support-floor-current/` and `docs/e2e-bug-reports/2026-07-09-settings-notifications-support-floor-nudge.md`.
+  - Current CORE-05 local-contract evidence: 2026-07-26 Codex in-app browser development Expo web displays the exact 7:30 AM / 9:30 PM onboarding proposal, verifies `Not now`, observes six effectively-off switches when browser notification authorization is unavailable, and renders the scheduled-shift/event-skip/billing-exception quiet-hours scope plus the matching-time off state. The run found `WEB-NOTIF-001`, a denied-toggle attempt to call native `Linking.openSettings()` on web; the guarded source was replayed in a clean tab, the Morning switch remained `aria-checked="false"`, and no current-run browser error appeared. Evidence is in `test-results/human-e2e/2026-07-26/core05-notification-local-contract/` and `docs/e2e-bug-reports/2026-07-26-notification-settings-web-open-settings-crash.md`. Screenshots are 1279 x 720 rasters, not retained CSS-viewport proof. Compact/text-pressure, native authorization/Settings handoff, scheduled inventory, foreground revocation, relaunch/offline/DST, accessibility, network, physical-iPhone, and signed-archive evidence remain open.
   - Current 360 x 640 / 200% and 390 x 640 / 170% supported text-pressure evidence: 2026-07-09 headless Chrome Expo web found `/settings/notifications` let the lower-priority `Streak & adherence` switch peek into the first viewport by 5 px at 360 x 640 / 200% and by 30 px at 390 x 640 / 170%. Post-fix, the route pushes Gentle Nudges below the first viewport for 360/390-class supported text-pressure layouts while preserving complete utility reminder controls. The 49-route reruns at both sizes report zero failed routes, zero clipped controls, zero sub-44 visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs. Evidence and reports are in `test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-390-640-notifications-postfix/`, `docs/e2e-bug-reports/2026-07-09-settings-notifications-360-640-text-pressure.md`, and `docs/e2e-bug-reports/2026-07-09-settings-notifications-support-band-text-pressure.md`.
   - Current 360 x 740 / 200% Android-class text-pressure evidence: 2026-07-09 headless Chrome Expo web found `/settings/notifications` exposing only 4 px of `Replenishment` at the first viewport bottom. Post-fix, the 700-779 px dense Android band moves Gentle Nudges below the first viewport while keeping Morning and Evening reminder controls complete; the focused route rerun and full 49-route sweep report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-notifications-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix/`, and `docs/e2e-bug-reports/2026-07-09-settings-notifications-android-360-740-text-pressure.md`.
   - Current 390 x 740 / 200% Android-class text-pressure evidence: 2026-07-09 headless Chrome Expo web found `/settings/notifications` exposing only 1 px of `Streak & adherence` at the first viewport bottom. Post-fix, the same 700-779 px dense Android band moves Gentle Nudges below the first viewport at 390-wide wrapping while keeping Morning and Evening reminder controls complete; the focused route rerun, full 390 x 740 sweep, and 360 x 740 regression sweep report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-740-notifications-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-390-740-postfix2/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-regression-postfix/`, and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-android-390-740-clearance.md`.
   - Current 430 x 740 / 200% Android-class privacy evidence: 2026-07-09 headless Chrome Expo web found `/settings/privacy` exposing the `Privacy policy` row under the floating tab bar, with its center resolving to the Shelf tab. Post-fix, the 430-wide 700-779 px privacy direct-entry guard moves policy rows below the first viewport while keeping Marketing emails and Withdraw health-data consent complete and hit-testable above the bar. The focused privacy rerun, full 430 x 740 route sweep, and 430 x 932 privacy regression report zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-740-privacy-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-740-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-android-430-932-privacy-regression-postfix/`, and `docs/e2e-bug-reports/2026-07-09-settings-privacy-430-740-text-pressure.md`.
   - Current 375 x 812 / 200% text-pressure evidence: 2026-07-09 headless Chrome Expo web reproduced a partial `Progress-photo nudge` switch on the supported iPhone-class viewport. Post-fix, Notification Settings defers that lower-priority row on iPhone-height text-pressure layouts, the focused 360 x 780 and 390 x 812 reruns pass, and the full 49-route 375 x 812 sweep reports zero failed routes while keeping visible utility reminder controls complete. Evidence and bug report are in `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`, `test-results/human-e2e/2026-07-09/text-pressure-200-mid-supported-prefs-notifications-current/`, `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-height-prefs-notifications-current/`, and `docs/e2e-bug-reports/2026-07-09-text-pressure-200-iphone-375-clearance.md`.
+- Branch: exact-time notification onboarding and permission outcomes
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: On a fresh install, open the notification onboarding step; verify both proposed times are visible before pressing the affirmative action. Exercise authorized, provisional/ephemeral where available, denied, permanently blocked, unchanged, native-error, and Not now branches. Reopen notification settings after OS revocation and foreground return.
+  - Expected result: The surface visibly proposes Morning at 7:30 AM and Evening at 9:30 PM and labels the action Use these times. Accepting persists and schedules only those exact AM/PM purposes after a deliverable OS state; every optional nudge purpose remains off. Not now, denial, blocked, unchanged, and error outcomes leave every purpose off and do not report a system prompt as shown or an API failure as a denial. No reminder is scheduled after authorization revocation. Settings exposes recovery without requiring notifications for ordinary app access.
+  - Evidence: Compact and modern-phone screenshots before the OS request, OS authorization-state transcript, scheduled-notification inventory, local preference snapshot, foreground-revocation sequence, and absence-of-analytics/network proof.
+- Branch: device-local notification cap and privacy boundary
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Seed two event-triggered scheduling-attempt reservations, fire ten simultaneous eligible triggers, relaunch, and repeat while offline. Separately enable the weekly progress-photo reminder and inspect network traffic.
+  - Expected result: Exactly one further event-triggered suggestion is admitted on that device within the rolling seven-day cap; malformed or unavailable encrypted ledger state schedules nothing. A reservation remains cap-counted across relaunch even if native scheduling fails. The weekly progress-photo reminder is described separately from the event-triggered cap. Reminder times, timezone, quiet hours, purpose toggles, and scheduling-attempt metadata remain device-local; no `notification_preferences`, `notification_log`, or analytics request is emitted.
+  - Evidence: Atomic-ledger snapshot, concurrency transcript, scheduled-notification inventory, relaunch/offline transcript, and network log.
+- Branch: notification tap, cold-launch response, and account-boundary cleanup
+  - Action: Schedule each enabled local purpose, tap it from foreground, background, and a terminated signed build, then sign out or complete account deletion while scheduled and delivered notifications exist. Repeat with a malformed payload, a mismatched purpose/destination, an unknown category, and a non-default action.
+  - Expected result: Each valid first-party notification opens only its fixed non-parameterized destination after the account, private-data, age, and health gates are ready. A cold response is consumed once; a recognized response arriving during an account boundary is consumed without navigation; malformed, extended, mismatched, or custom-action payloads do not navigate. Sign-out and account deletion cancel pending notifications, dismiss delivered notifications, clear Expo's retained last response, and clear the app badge before another account can publish. Remote push and token collection remain unavailable while the reviewed local-only contract is active.
+  - Evidence: Focused source tests cover the exact payload/category allowlist, warm/cold response de-duplication, custom-action rejection, zero-badge startup, and account-boundary cancellation/dismissal/badge cleanup. Native foreground/background/terminated routing, Notification Center inventory, sign-out race, signed-archive behavior, and physical-iPhone proof remain open.
 
-## Flow: Ask RoutineKind Deterministic Advisor
+## Flow: Ask Layerwell Deterministic Advisor
 
-- Goal: A user can open the free deterministic Ask advisor without cloud consent, while unavailable cloud Ask controls stay honestly deferred.
+- Goal: A user can open the free deterministic Ask advisor without cloud
+  consent, while unavailable cloud Ask and unadmitted interaction guidance stay
+  honestly deferred.
 - Persona: Free user exploring shelf/routine guidance.
 - Entry state: Fresh local app state or seeded shelf state; `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=false`.
 - Start screen/URL/window: Direct route `/ask`, or Today Ask teaser when available.
-- Success state: `/ask` renders the Ask RoutineKind advisor surface; `/ask/consent` renders the cloud Ask deferred screen while the cloud flag is off.
+- Success state: `/ask` renders the Ask Layerwell advisor surface and hides
+  its proactive conflict lead and conflict suggested prompt while exact
+  interaction coverage is unavailable. `/ask/consent` renders the cloud Ask
+  deferred screen while the cloud flag is off.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route parity; iOS and Android for native app confirmation.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/ask-deterministic/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`
+- Historical geometry/navigation evidence:
+  `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`. It predates
+  zero-admission prompt hiding and is not current acceptance evidence.
 
 ### Path A: Deterministic Ask Opens
 
 1. Action: Open `/ask` directly with cloud Ask disabled.
-   Expected result: The Ask RoutineKind advisor renders with deterministic/free copy and suggested prompts. It must not show the cloud Ask deferred beta screen.
+   Expected result: The Ask Layerwell advisor renders with
+   deterministic/free copy. At zero admission it shows neither a proactive
+   conflict turn nor `Is there a conflict on my shelf?`; routine/fit prompts
+   may remain where the supported-phone layout permits. It must not show the
+   cloud Ask deferred beta screen or imply interaction review is active.
    The composer disclosure footer stays fully visible and legible above the bottom edge on a 320 x 568 phone.
    Evidence: Screenshot and visible-text snapshot.
-   Current local evidence: 2026-07-07 Expo web 320 x 568 renders `Ask RoutineKind`, the deterministic shelf answer, a visible 48 px composer input plus 48 px Send control, the disclosure footer, and zero horizontal overflow.
+   Current evidence: The 16/16 CORE-02 source contract verifies both
+   zero-admission conflict-prompt gates. The supported 390 x 844 Expo-web pass
+   confirms the proactive turn and conflict prompt are absent, while routine
+   and fit prompts plus the local-only disclosure remain visible.
 
 ### Branches
 
-- Branch: cold-offline deterministic Ask remains usable
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Disable connectivity before launch, cold-open `/ask`, submit a deterministic shelf/routine prompt, background and foreground the app, then repeat as free and fully paid users with an unreadable trial-quota record present.
-  - Expected result: The on-device advisor loads and answers from local state without waiting for dormant entitlement or quota requests. Free and fully paid users never read or depend on the trial journal; only trial/reverse-trial access fails closed when that private journal is required and unreadable. No network request, false unsourced refusal, or private-data recovery appears for a disabled cloud layer.
-  - Evidence: Offline QueryClient/readiness tests, visible prompt/answer snapshots, request log, and native cold-launch/background transcript.
-  - Current local evidence (2026-07-14): behavioral readiness coverage sets TanStack Query offline, leaves disabled cloud queries pending, and still produces a deterministic tonight answer; local routine-order and grounded-turn reads use `networkMode: 'always'`. Native iOS/Android cold-launch proof remains external.
-- Branch: unreadable grounded-turn quota private state
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Start Expo web with `EXPO_PUBLIC_E2E_ASK_TURNS_STORAGE_FAILURE=always`, open `/ask`, choose Retry, refresh/direct-enter the route, then repeat with `once` and `future`.
-  - Expected result: Genuine absence alone permits a zero-used trial allowance. Unavailable, corrupt, future, or stale-period quota state never becomes a fresh allowance or permits grounded delivery, but production cloud state never blocks the always-free deterministic advisor. The explicit development fault fixture replaces the route with the shared named private-guidance recovery so Retry and `Back to Today` can be exercised; it preserves private bytes and leaks no raw storage code. Persistent Retry stays blocked, a one-shot Retry restores deterministic Ask, and future state stays recoverable rather than silently resetting. Read and quota-reservation work remain bound to the initiating account generation; a delayed account-A result cannot publish to account B. Distinct durable operation identities count independently, exact response-loss replays no-op, and the shipped app refuses any unexpected grounded answer until a future provider can await reservation before delivery.
-  - Evidence: Supported-phone screenshot sequence, retained visible-text snapshots, control geometry/hit tests, current-origin browser warn/error logs, exact-byte unit assertions, and delayed account-generation unit evidence.
-  - Current evidence (2026-07-14): `test-results/human-e2e/2026-07-14/ask-grounded-turns-private-state-current/`; persistent, one-shot, and future-version Expo-web fixtures passed at 390 x 844, including retry, direct-route reload, `Back to Today`, restored typed input/send, deterministic answer, hit targets, overflow, dialog, and current-origin log checks. Native protected-storage interruption remains external.
 - Branch: cloud consent direct route while cloud Ask is disabled
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/ask/consent` directly with cloud Ask disabled.
   - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its `Back to Ask` deferred CTA returns to `/ask` on direct entry.
   - Evidence: Screenshot and visible-text snapshot.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask RoutineKind is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask Layerwell is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
   - Current navigation evidence: 2026-07-08 system Chrome Expo web at 320 x 568 directly opens `/ask/consent`, verifies the cloud Ask deferred beta surface with a 272 x 56 `Back to Ask` CTA, then taps it and recovers to `/ask` with zero horizontal overflow and no browser errors. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
+- Branch: exact Ask grant and withdrawal disclosure in development/staging
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With the cloud Ask development flag enabled and a controlled authenticated staging fixture, open `/ask/consent` at 375 x 667 and 390 x 844. Before turning the switch on, read the complete canonical grant text; after an authoritative successful grant, read the complete canonical withdrawal text before turning it off. Retry with a failed status lookup, then direct-entry refresh. Repeat a production-mode build with the same flag and draft-blocked registry.
+  - Expected result: The exact text whose UTF-8 SHA-256 is recorded is visible and accessible before each explicit switch choice; pending or failed status cannot enable the switch; a failed mutation does not flip visible state; production remains on the deferred surface while the grant copy is draft-blocked. The older pre-rebrand hash tuples remain historical database records and are never relabeled as current approval.
+  - Evidence: Supported-phone screenshots, visible-text/accessibility snapshots, switch state and network/consent receipt, reload result, and production deferred-route screenshot. Source and unit tests alone are not human-simulated UI or hosted consent evidence.
+  - Current status: Source candidate only. Exact migration, Edge, and mobile hash tests pass; current-revision Expo web, native, hosted, and professional review evidence remains open.
 - Branch: cloud consent save or withdrawal failure
   - Priority: Critical
   - Automate later: Yes
-  - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`, open `/ask/consent`, toggle `Enable Ask RoutineKind` on, retry the grant, toggle it off, then retry the withdrawal.
+  - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`, open `/ask/consent`, toggle `Enable Ask Layerwell` on, retry the grant, toggle it off, then retry the withdrawal.
   - Expected result: Failed grant and withdrawal attempts do not open a native or JavaScript dialog, do not flip the visible consent state before persistence, render persistent route-owned `Choice not saved` feedback with `role="alert"`, keep retry possible on a 320 x 568 phone viewport, clear the alert after successful retry, and show no raw backend/provider error.
   - Evidence: Screenshot sequence, dialog count, compact control geometry, route text snapshot, and browser warn/error logs.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only` verifies the switch starts off, failed grant keeps it off with route-owned `Choice not saved` alert and no JavaScript dialog, retry turns it on and clears the alert, failed withdrawal keeps it on with the same inline alert, retry turns it off and clears the alert, visible controls remain 48 px+, horizontal overflow is zero, no raw fixture/provider error appears, and current-run browser warn/error logs are empty. The first pass found the shared web `ToggleSwitch` was inert because web disabled `onPress`; `docs/e2e-bug-reports/2026-07-08-toggle-switch-web-inert.md` records the bug and fix. Evidence is in `test-results/human-e2e/2026-07-08/ask-consent-failure-current/`.
@@ -1986,31 +2557,39 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/ask` with no shelf products stored.
-  - Expected result: The advisor still renders with honest empty-state guidance and safe suggested prompts.
+  - Expected result: The advisor still renders with honest empty-state
+    guidance. At zero admission it omits the conflict prompt; routine/fit
+    prompts may remain when the layout has room.
   - Evidence: Screenshot.
-- Branch: first suggested prompt on a short phone
+- Branch: first available zero-admission prompt on a short phone
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/ask` at 320 x 568 and 320 x 480 with an empty shelf, tap `Is there a conflict on my shelf?`, and inspect the first conversation state without manually scrolling.
-  - Expected result: The user question, deterministic badge, empty-shelf answer, report control, fixed composer, and disclosure footer remain readable; the first user message is not auto-scrolled under the header, and no prompt or report control peeks partially underneath the fixed composer on compact or shortest phones.
+  - Action: Open `/ask` at 320 x 568 and 320 x 480 with an empty shelf and zero
+    admission. Confirm `Is there a conflict on my shelf?` is absent, tap the
+    available routine prompt, and inspect the first conversation state without
+    manually scrolling.
+  - Expected result: The available routine question, deterministic badge,
+    empty-shelf answer, report control, fixed composer, and disclosure footer
+    remain readable; the first user message is not auto-scrolled under the
+    header, and no prompt or report control peeks partially underneath the
+    fixed composer. At the 320 x 430 ultra-short layout, no prompt is preferable
+    to exposing the unavailable conflict prompt.
   - Evidence: Screenshot, scroll-position snapshot, and small-phone control-geometry snapshot.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 taps `Is there a conflict on my shelf?`, keeps the user question, deterministic `$0` badge, empty-shelf answer, report control, composer, and disclosure footer readable with zero horizontal overflow and no sub-44 px controls. The same pass typed `Should I use retinol every night?`; before the fix it misrouted to product-fit recommendation copy, and after the fix it escalates safely with no fit-engine, SPF, or vitamin-C recommendation text. Evidence is in `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`, with additional Node REPL Playwright/system Chrome evidence in `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/`.
-  - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced lower empty-state prompt buttons being intercepted by the fixed composer. Post-fix `/ask` hides decorative pills on the shortest phones, shows the top two prompt buttons above the composer, verifies both prompt centers hit their own buttons, taps `Is there a conflict on my shelf?`, and confirms the empty-shelf answer plus report control, input, Send, and disclosure have zero hit-blocked controls, zero sub-44 px controls, zero horizontal overflow, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`.
-  - Current 320 x 430 / 120% text-pressure evidence: 2026-07-08 headless Chrome Expo web verifies `/ask` uses the single safest empty prompt, hides nonessential intro copy, keeps the prompt center clear of the fixed composer, and reports zero clipped controls, blocked hit-tests, sub-44 visible controls, or horizontal overflow in the final 49-route sweep. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/` and `docs/e2e-bug-reports/2026-07-08-text-pressure-short-phone-430-clearance.md`.
-- Branch: fast typing with a 100-turn history and transient recovery
-  - Priority: Important
-  - Automate later: Yes
-  - Action: Seed 100 completed Ask turns, type a long question quickly, trigger and recover from the private-guidance unavailable state before submitting, then submit equivalent drafts once with the keyboard Return/Send key and once with the visible Send control; also try an all-whitespace draft and a near-simultaneous Return plus Send press.
-  - Expected result: Raw typing stays responsive without rerendering the 100-turn history, the unsent draft reappears unchanged after Retry, whitespace-only input publishes nothing, both submission controls use the same trimmed-question path, each accepted draft produces exactly one analytics turn and one user/assistant message pair, and the accepted draft clears without changing composer geometry, accessibility labels, or disclosure copy.
-  - Evidence: React Profiler keystroke commits, visible draft/recovery snapshots, analytics-event capture, message-count snapshot, and supported-phone keyboard/control geometry.
-  - Current verification status (2026-07-18): Focused source contracts cover leaf ownership, draft preservation, stable virtualized rows, bounded chronological presentation paging, shared Return/Send submission, synchronous duplicate suppression, exact measured web prepend restoration, and native maintained-position routing. The earlier 100-turn run proved zero history work during rapid typing, exact duplicate suppression, no delayed top rebound, whitespace no-op, and recycled report acknowledgement. The current mixed-height 202-message Expo-web run at 390 x 844 traversed all 12 exact start indexes to zero with one unique prior anchor per page, zero blanks, a 1.244 px range across prior-anchor top deltas, and at most 0.428 px commanded-offset error. The oldest row was visible at scroll top zero while about 16 message rows remained mounted near the viewport. Typing a sanitized 51-character draft at the oldest boundary changed zero history commits, row renders, or logical messages; keyboard Return produced exactly one pair, cleared the draft, reset to the latest 16-message presentation, and settled within 0.583 px of the latest edge. A separate one-shot private-storage fixture restored Ask after Retry; the combined populated-draft/recovery sequence remains open. Analytics-transport capture, native keyboard/Dynamic Type/VoiceOver, background lifecycle, production Hermes frame/memory evidence, and representative native Shelf/archive/Ask/Progress stress traces remain open. See `docs/optimization/evidence/2026-07-15_ask-100-turn-keystroke-checkpoint.md`, `docs/optimization/evidence/2026-07-18_ask-history-prepend-anchor-checkpoint.md`, and `test-results/human-e2e/2026-07-18/ask-history-prepend-anchor-current/`.
+  - Historical/superseded evidence: The 2026-07-07 and 2026-07-08 short-phone
+    runs tapped the conflict prompt before zero-admission prompt hiding. Their
+    geometry observations may be retained, but the prompt behavior is
+    superseded and not current acceptance. Evidence is in
+    `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`,
+    `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`,
+    and
+    `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/`.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
   - Action: Refresh `/ask`, directly open `/ask` and use the Back control, then directly open `/ask/consent` and use the deferred Back CTA.
   - Expected result: Deterministic Ask remains reachable, only the cloud consent route is deferred while the flag is off, and direct-entry Back controls return to a safe app surface instead of no-oping. Visible Ask Back, report-answer, CTA, and send controls meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence and small-phone button-geometry snapshot.
-  - Current local evidence: 2026-07-08 system Chrome Expo web at 320 x 568 verifies direct `/ask` renders Ask RoutineKind, reload preserves the deterministic advisor, the 48 px Back control routes to `/today`, direct `/ask/consent` shows the deferred cloud surface, and its 272 x 56 `Back to Ask` CTA routes to `/ask`. Ask Back, composer, and Send controls are 48 px tall, horizontal overflow is zero in all five states, and no browser errors were recorded. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
+  - Current local evidence: 2026-07-08 system Chrome Expo web at 320 x 568 verifies direct `/ask` renders Ask Layerwell, reload preserves the deterministic advisor, the 48 px Back control routes to `/today`, direct `/ask/consent` shows the deferred cloud surface, and its 272 x 56 `Back to Ask` CTA routes to `/ask`. Ask Back, composer, and Send controls are 48 px tall, horizontal overflow is zero in all five states, and no browser errors were recorded. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes
@@ -2018,6 +2597,104 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, suggested prompts and the disclosure footer do not sit underneath or clip against the fixed composer on short phones, and keyboard focus does not trap the user.
   - Evidence: UI snapshot or accessibility notes.
   - Current shortest-phone evidence: 2026-07-08 `/ask` at 320 x 480 verifies the visible prompt buttons, report control, input, and Send are 48 px or taller/wider where applicable, their center hit-tests resolve to the intended controls, and the disclosure footer remains visible without intercepting prompts. Evidence is in `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`.
+
+## Flow: CAT-08 Internal Catalog Operator Console
+
+- Goal: A named operator can review catalog sources/reports without direct
+  database editing, and a held product can return to serving only after current
+  repair authority and independent release.
+- Persona: Trained catalog triage, decision, repair-attestation, or release
+  operator. Schema v1 has no console audit-reader role.
+- Entry state: Separate internal-console origin; approved nonproduction project;
+  nonanonymous named account; email OTP; verified TOTP; current capability grant;
+  synthetic correction/source fixtures; server-authoritative incident/freeze
+  admission open.
+- Start screen/URL/window: `apps/catalog-operator-console/` deployment, never a
+  consumer Expo route.
+- Success state: The requested decision is durably audited, any required product
+  hold is visible and serving-fail-closed, and the operator is shown the current
+  version/next permitted step without raw database access.
+- Priority: Critical.
+- Automate later: Yes.
+- Surface: Separate internal web console plus hosted Supabase/Edge/database.
+- Evidence folder:
+  `test-results/human-e2e/YYYY-MM-DD/cat08-catalog-operator-console/`
+- Current evidence: Source candidate, deterministic tests, and a current local
+  ignored synthetic-fixture browser packet at
+  `test-results/human-e2e/2026-07-25/cat08-catalog-operator-console-current/`.
+  It visually covers email OTP -> `aal1` -> TOTP -> `aal2`, invalid TOTP,
+  claim-before-detail screens, a displayed optimistic conflict, a later
+  correction-success screen, hold-release/empty screens, source
+  acknowledgement, sign-out, and 375 x 667 plus 430 x 932 production-preview
+  layouts. The screenshots predate deeper fixture-authority hardening and are
+  not exact-source-bound browser evidence. They do not prove backend auth
+  ordering or token binding, live claim/version enforcement, conflict-to-
+  reclaim linkage, independent release against a current repair, durable source
+  state, or server-side token invalidation. A separate post-capture Node
+  adversarial contract passes those synthetic fixture checks, but the browser
+  flow was not rerun against that exact source. This packet therefore remains
+  fixture-only visual evidence, is not current governed acceptance evidence,
+  and covers only a subset of the required branches below. No hosted, real-MFA,
+  named-operator human-simulated evidence exists. The candidate still lacks a
+  verified named-operator/build/capability display and server-authoritative
+  incident/freeze state, so this acceptance flow is not currently executable
+  end to end.
+
+### Required paths and branches
+
+1. **Admission and denial.** Enter a named email, complete OTP and verified TOTP,
+   start the operator session, then repeat with anonymous, `aal1`, unverified-
+   factor, revoked/stale Auth session, expired grant, wrong capability, expired
+   ten-minute work session, and direct URL states. Only the exact live authority
+   reaches a queue; every denial clears sensitive state and offers a safe
+   reauthentication path. Verify the surface displays the authenticated named
+   operator, exact effective capabilities, environment, deployed revision, and
+   server-authoritative incident/freeze state. A client-only banner fails.
+2. **Queue and claim.** Exercise empty, loading, bounded cursor next-page, error,
+   five-minute claim, claim-before-detail, duplicate response-loss retry,
+   expired claim, reclaim, and two-operator collision. The database clock and
+   CAS version control authority; a stale client cannot read sensitive detail or
+   overwrite newer work.
+3. **Triage hold.** Claim an `open` correction and triage it. The console shows
+   the independent hold, and barcode/search/recommendation/product/child probes
+   all suppress the product. An unreviewed open report does not suppress it.
+4. **Independent disposition.** A different decision operator records
+   `accepted` and, in a separate fixture, `rejected`. Both leave the existing
+   hold active. The triage actor cannot decide or release the same issue.
+5. **Reporter erasure.** Withdraw/delete the reporter's consent/account fixture.
+   Personal correction intake and ephemeral claim state disappear; the
+   reporter-free product hold, served-state mutation event, and minimized
+   operator audit remain. No erased field appears in UI, logs, or network
+   responses.
+6. **Repair and release.** Complete a synthetic non-fixture CAT-02 repair and a
+   signed structurally valid staged CAT-03 successor over the active-hold
+   mutation root. Reject an unchanged pre-hold projection, unresolved triaged
+   correction work, stale, wrong-product, fixture, retired, pre-hold,
+   missing-dependency, competing-hold, or self-authored receipts. A third person
+   performs repair attestation; a fourth distinct person releases. Verify
+   release advances the root and serving stays closed. CAT-03 owners must then
+   review/release/activate a fresh post-release record/campaign, obtain signed
+   readback, and only then see serving recover.
+7. **Source/import review.** Review a catalog source/import item and record an
+   immutable recommendation. Confirm the operator cannot call migration-owner
+   CAT-02/CAT-03 promotion, rollback, activation, or release authority.
+8. **Session and navigation.** Refresh, use browser back/forward, idle for 15
+   minutes, cross the one-hour absolute client limit, expire the ten-minute
+   server session, sign out, and relaunch. No operator session is restored from
+   durable browser storage.
+9. **Accessibility and recovery.** Complete the flow by keyboard and screen
+   reader at supported desktop zoom/text settings. Verify focus order, status/
+   error announcements, non-color-only state, destructive confirmation, offline
+   recovery, and no reporter identity or unallowlisted report field in the
+   accessibility tree. Purpose-limited correction detail is visible only after
+   the live claim and must clear with that claim/session.
+
+Required evidence includes screenshots/video, accessibility snapshot, browser
+console/network logs, exact source/build/origin, redacted database/Edge
+transcripts, two-session race results, serving probes, separately authorized
+backend audit/erasure proof, and named reviewer signoff. This flow cannot be
+marked complete with mocked UI,
+source tests, or fixture-only screenshots.
 
 ## Open Questions
 
@@ -2052,3 +2729,10 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Scroll Today, Progress, Shelf or You: the dock moves at most 4px and scales to 99%, then settles after scrolling stops or reverses. It never hides; the resting position includes additional clearance so motion cannot enter the bottom safe area. Existing Shelf scroll/filter restoration and You privacy-scroll coordination remain intact.
 - With Reduce Motion enabled or unresolved, transforms stay still; hover/press/focus color feedback remains available.
 - Browser evidence: `test-results/human-e2e/2026-09-27/navigation-motion/verified/` and `reduced-verified/`. Actual wheel scrolling, pointer movement, navigation clicks, transform snapshots, screenshots and logs are retained. Native touch/VoiceOver verification remains pending on an Apple device.
+
+## Current-main floating navigation integration (2026-09-27)
+
+- Complete the real development-fixture age and health-consent UI before tab testing; direct protected routes remain gated.
+- Keep main's account-generation, health and private-data admission boundaries. Navigate Today, Progress, Shelf and You at all supported sizes, hover/focus/press tabs, scroll and allow motion to settle; repeat with Reduce Motion.
+- Old scan/search/catalog-recovery links resolve to manual entry within the mounted Shelf navigator. Deferred Ask/community/recommendation children never mount and return to Today.
+- Accepted evidence: `test-results/human-e2e/2026-09-27/main-integration/navigation-accepted/`, `navigation-reduced/`, and `onboarding-375/`, `onboarding-390/`, `onboarding-430/`. This is Expo web fixture evidence, not native release approval.

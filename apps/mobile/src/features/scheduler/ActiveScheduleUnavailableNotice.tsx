@@ -17,7 +17,7 @@ export function ActiveScheduleUnavailableNotice({
       tone={tone}
       className={className}
       title="Active schedule unavailable"
-      body="Your saved cadence wasn't reset. Active-night guidance is paused until OnSkin can read it safely. Your daily basics are still available."
+      body="Your saved cadence wasn't reset. Active-night guidance is paused until Layerwell can read it safely. Your daily basics are still available."
     >
       <Button
         accessibilityLabel="Retry loading active schedule"

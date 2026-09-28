@@ -69,77 +69,17 @@ describe('sensitive image memory lifecycle', () => {
     unsubscribe();
   });
 
-  it('fails closed when the first image subscriber mounts while already inactive', async () => {
-    mocks.appState = 'inactive';
-    const events: string[] = [];
-
-    expect(isSensitiveImageLifecycleActive()).toBe(false);
-    const unsubscribe = subscribeToSensitiveImageLifecycle((event) => events.push(event));
-
-    await vi.waitFor(() => expect(mocks.clearMemoryCache).toHaveBeenCalledOnce());
-    expect(events).toEqual(['purge']);
-    expect(isSensitiveImageLifecycleActive()).toBe(false);
-
-    mocks.change?.('active');
-    await vi.waitFor(() => expect(events).toEqual(['purge', 'resume']));
-    expect(isSensitiveImageLifecycleActive()).toBe(true);
-    unsubscribe();
-  });
-
-  it('does not resume foreground demand until the background cache clear settles', async () => {
-    let resolveClear!: (value: boolean) => void;
-    mocks.clearMemoryCache.mockImplementationOnce(
-      () =>
-        new Promise<boolean>((resolve) => {
-          resolveClear = resolve;
-        }),
-    );
+  it('stays fail-closed when the native decoded-memory cache cannot be cleared', async () => {
     const events: string[] = [];
     const unsubscribe = subscribeToSensitiveImageLifecycle((event) => events.push(event));
-
-    mocks.change?.('background');
-    mocks.change?.('active');
-    expect(events).toEqual(['purge']);
-    expect(isSensitiveImageLifecycleActive()).toBe(false);
-
-    await Promise.resolve();
-    resolveClear(true);
-    await vi.waitFor(() => expect(events).toEqual(['purge', 'resume']));
-    expect(isSensitiveImageLifecycleActive()).toBe(true);
-    unsubscribe();
-  });
-
-  it('stays fail-closed after a failed memory clear and recovers on a later purge', async () => {
-    mocks.clearMemoryCache.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
-    const events: string[] = [];
-    const unsubscribe = subscribeToSensitiveImageLifecycle((event) => events.push(event));
-
-    await expect(purgeSensitiveImageMemory()).resolves.toBe(false);
-    expect(events).toEqual(['purge']);
-    expect(isSensitiveImageLifecycleActive()).toBe(false);
-
-    await expect(purgeSensitiveImageMemory()).resolves.toBe(true);
-    await vi.waitFor(() => expect(events).toEqual(['purge', 'purge', 'resume']));
-    expect(isSensitiveImageLifecycleActive()).toBe(true);
-    unsubscribe();
-  });
-
-  it('continues privacy teardown through listener and synchronous native failures', async () => {
-    const throwingUnsubscribe = subscribeToSensitiveImageLifecycle(() => {
-      throw new Error('BROKEN_IMAGE_LISTENER');
-    });
-    const events: string[] = [];
-    const observingUnsubscribe = subscribeToSensitiveImageLifecycle((event) => events.push(event));
-    mocks.clearMemoryCache.mockImplementationOnce(() => {
-      throw new Error('SYNC_NATIVE_CLEAR_FAILURE');
-    });
+    mocks.clearMemoryCache.mockResolvedValueOnce(false);
 
     await expect(purgeSensitiveImageMemory()).resolves.toBe(false);
 
     expect(events).toEqual(['purge']);
-    expect(mocks.purgeCoordinator).toHaveBeenCalledOnce();
     expect(isSensitiveImageLifecycleActive()).toBe(false);
-    throwingUnsubscribe();
-    observingUnsubscribe();
+    expect(mocks.purgeCoordinator).toHaveBeenCalledTimes(1);
+
+    unsubscribe();
   });
 });

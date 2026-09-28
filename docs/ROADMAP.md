@@ -20,8 +20,11 @@ Features:
 
 Done criteria:
 
-- final name chosen or counsel-cleared
-- bundle/package/scheme/domain decided
+- final name is both founder-approved and covered by qualified trademark
+  counsel's written clearance decision for the approved countries and actual
+  goods/services
+- bundle/package/scheme/domain and public handle variants are authenticated,
+  reserved under authorized accounts, and evidenced
 - no production account is created under conflicted identity
 
 Risks:
@@ -100,6 +103,50 @@ Risks:
 - store product setup delayed by brand
 - entitlement edge cases
 
+### COM-01A: Commerce Literal-Zero Source Checkpoint
+
+COM-01A currently enforces **literal zero admission**. Commerce authority,
+affiliate/retailer rail availability, publication authority, reviewed catalog
+and Stacks, positive commerce-consent grant, provider/order polling, catalog or
+attribution reads, click/order recording, external purchase navigation, and
+commerce analytics are unconditionally false or inert. Refusal, withdrawal,
+cleanup, and deletion may remain. This is a source checkpoint only: COM-01
+through COM-07 are incomplete and launch-blocked, and older positive commerce
+or demo text is a future requirement only.
+
+Before a positive successor:
+
+- execute and review provider terms and exact rail/publication authority;
+- approve exact first- and third-party data flows, recipients, contracts, App
+  Privacy answers, and the ATT determination;
+- admit only reviewed catalog and Stacks while proving commission-independent
+  product, retailer, Stack, and recommendation ranking;
+- put clear, conspicuous affiliate/native-ad disclosure next to each commercial
+  action and substantiate product, ranking, and health-related claims;
+- complete FTC Health Breach Notification Rule, Washington and Nevada
+  consumer-health privacy, and applicable California reviews, including any
+  distinct sharing consent or sale authorization;
+- prove live attribution/order reconciliation, withdrawal/deletion, abuse and
+  security controls, and exact archive/network/accessibility/performance/
+  supported-iPhone behavior.
+
+[Apple App Review Guideline 5.1.2(vi)](https://developer.apple.com/app-store/review/guidelines/)
+bars data gathered from depth/facial-mapping tools, including Camera and Photo
+APIs, from marketing, advertising, or use-based mining. Photo-derived product,
+retailer, Stack, replenishment, paid-link, or attribution behavior therefore
+remains excluded unless qualified counsel and Apple review the exact release;
+consent or an opaque token does not cure prohibited upstream use. Section
+2.5.18 separately bars health-data-based targeted or behavioral display ads.
+Primary implementation-review inputs include the
+[FTC affiliate guidance](https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking),
+[FTC native-ad guidance](https://www.ftc.gov/business-guidance/resources/native-advertising-guide-businesses),
+[FTC HBNR guidance](https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0),
+[Washington RCW 19.373](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true),
+[Nevada NRS 603A](https://www.leg.state.nv.us/nrs/nrs-603a.html), and
+[applicable California law](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.140.).
+Passing these gates cannot guarantee App Store acceptance, legal compliance,
+safety, product-market fit, or revenue.
+
 ## Phase 4: Closed Beta
 
 Goal: prove the production-real all-features iOS candidate before public scale.
@@ -111,10 +158,16 @@ Features:
 - catalog miss reporting
 - churn interviews
 - support workflow
-- native OCR and catalog coverage
-- photos and trend calibration
+- staging-only Apple Vision OCR source candidate, exact-build native evidence,
+  and catalog coverage
+- photos and Trend: PHOTO-05A currently proves only literal zero admission;
+  build the real on-device result issuer, then complete predeclared
+  diverse-condition calibration/fairness and exact consent/data-lifecycle,
+  archive, network, accessibility, performance, and supported-iPhone evidence
 - cloud Ask safety and cost
-- commerce and creator handoff
+- COM-01A literal-zero commerce remains the current state; complete COM-01
+  through COM-07 and the reviewed rail/publication-authority gates before
+  commerce or creator handoff can become a positive beta flow
 - community posting, moderation, and expert workflow
 - widgets, Live Activities, notifications, links, and sharing
 - admin/operator queues and launch dashboards
@@ -125,12 +178,31 @@ Done criteria:
 - D7/D14 data
 - catalog miss/wrong-match report
 - willingness-to-pay signal
+- CAT-05 passes its exact signed-build two-iPhone, 25-label/50-run accuracy,
+  RTL, zero-network, cleanup, accessibility, and performance contracts before
+  production OCR is enabled
+- PHOTO-05/06/07 pass against one exact signed archive: no simulated result or
+  environment override, validated within-person measurement and abstention
+  behavior, separate current consent, signed fairness/legal/privacy review,
+  zero image/feature-vector egress, and supported-iPhone evidence
+- commerce passes the positive-successor gates above against one exact signed
+  archive with no photo/health-derived marketing path, hidden activation input,
+  ranking influence, remote side effect before consent/authority, or unmatched
+  click/order attribution
 
 Risks:
 
 - weak first insight
 - low product-add completion
 - trust objections
+- source-only or deterministic web OCR evidence is mistaken for native privacy,
+  accuracy, accessibility, or release proof
+- a deterministic Trend classifier, Apple Vision/vImage primitive, source
+  refusal test, or historical enabled fixture is mistaken for a validated
+  skin-change engine, fairness proof, legal clearance, or Apple acceptance
+- COM-01A source refusal, a consent screen, opaque token, affiliate disclosure,
+  environment flag, credential, or demo catalog is mistaken for a reviewed
+  rail, publication authority, lawful data flow, Apple acceptance, or revenue
 
 ## Phase 5: Public Launch
 

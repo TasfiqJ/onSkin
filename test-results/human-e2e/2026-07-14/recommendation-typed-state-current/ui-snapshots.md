@@ -7,7 +7,7 @@ alert
   Private data
   Guidance unavailable
   We couldn't safely read the private data this guidance needs.
-  The private data is still unavailable. OnSkin did not reset or remove it.
+  The private data is still unavailable. Layerwell did not reset or remove it.
 button "Retry loading private data"
 button "Back to You"
 ```

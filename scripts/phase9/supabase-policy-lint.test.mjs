@@ -10,15 +10,19 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const LINTER = join(ROOT, 'scripts/phase9/supabase-policy-lint.mjs');
 const MIGRATIONS = join(ROOT, 'supabase/migrations');
 const TARGET_MIGRATION = '20260713000043_account_deletion_resumable.sql';
+const SEARCH_BOUNDARY_MIGRATION = '20260921000073_catalog_search_promotion_boundary.sql';
+const OUTBOX_MIGRATION = '20260718000046_shelf_outbox_rpc.sql';
+const PHOTO_MIGRATION = '20260726000058_photo_delete_outbox_rpc.sql';
+const PHOTO_OWNER_MIGRATION = '20260612000008_photos.sql';
 const COMPLETION_KEY = 'account_deletion_completion_status(text)';
 
-function runFixture(transform = (sql) => sql) {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'onskin-policy-lint-'));
+function runFixture(transform = (sql) => sql, targetMigration = TARGET_MIGRATION) {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'layerwell-policy-lint-'));
   try {
     const fixtureMigrations = join(fixtureRoot, 'supabase/migrations');
     mkdirSync(fixtureMigrations, { recursive: true });
     cpSync(MIGRATIONS, fixtureMigrations, { recursive: true });
-    const target = join(fixtureMigrations, TARGET_MIGRATION);
+    const target = join(fixtureMigrations, targetMigration);
     const original = readFileSync(target, 'utf8');
     const changed = transform(original);
     assert.notEqual(changed.length, 0, 'fixture transform produced an empty migration.');
@@ -39,6 +43,12 @@ function replaceRequired(source, before, after) {
   assert.ok(source.includes(before), `fixture source is missing ${JSON.stringify(before)}.`);
   return source.replace(before, after);
 }
+
+test('policy lint accepts the complete checked-in migration ACL and RLS inventory', () => {
+  const output = runFixture();
+  assert.match(output, /Phase 9 Supabase policy lint passed code gates/);
+  assert.doesNotMatch(output, /FAIL /);
+});
 
 test('policy lint accepts the narrow anonymous terminal completion capability', () => {
   const output = runFixture();
@@ -153,5 +163,100 @@ test('policy lint rejects a capability that can reveal an incomplete receipt', (
     new RegExp(
       `${COMPLETION_KEY.replace(/[()]/g, '\\$&')} must validate a high-entropy capability and reveal complete receipts only`,
     ),
+  );
+});
+
+test('policy lint rejects a terminal capability predicate widened with OR', () => {
+  const output = runFixture((sql) =>
+    replaceRequired(
+      sql,
+      "and deletion.next_step = 'complete';",
+      "and deletion.next_step = 'complete' or true;",
+    ),
+  );
+
+  assert.match(output, /must validate a high-entropy capability and reveal complete receipts only/);
+});
+
+test('policy lint requires final catalog search to stay service-only SECURITY DEFINER', () => {
+  const output = runFixture(
+    (sql) =>
+      replaceRequired(
+        sql,
+        'stable\nsecurity definer\nset search_path',
+        'stable\nsecurity invoker\nset search_path',
+      ),
+    SEARCH_BOUNDARY_MIGRATION,
+  );
+
+  assert.match(output, /search_catalog_products\(text, integer\) must remain SECURITY DEFINER/);
+});
+
+test('policy lint rejects raw-product search replacing the final CAT-03 view', () => {
+  const output = runFixture(
+    (sql) =>
+      replaceRequired(
+        sql,
+        'from public.catalog_servable_products as product',
+        'from public.products as product',
+      ),
+    SEARCH_BOUNDARY_MIGRATION,
+  );
+  assert.match(output, /catalog search must read the exact current CAT-03 servable projection/);
+});
+
+test('policy lint rejects reinstating the service-role one-argument catalog promotion RPC', () => {
+  const output = runFixture(
+    (sql) => replaceRequired(sql, 'drop function public.promote_catalog_import(uuid);', ''),
+    SEARCH_BOUNDARY_MIGRATION,
+  );
+  assert.match(output, /one-argument catalog promotion RPC must remain retired/);
+});
+
+test('policy lint rejects an anonymous outbox RPC grant', () => {
+  const output = runFixture(
+    (sql) =>
+      replaceRequired(
+        sql,
+        'grant execute on function public.apply_shelf_outbox_batch(jsonb) to authenticated;',
+        'grant execute on function public.apply_shelf_outbox_batch(jsonb) to authenticated, anon;',
+      ),
+    OUTBOX_MIGRATION,
+  );
+
+  assert.match(output, /apply_shelf_outbox_batch\(jsonb\) must not grant execute to anon/);
+});
+
+test('policy lint accepts only the restrictive owner-scoped photo rewrite exception', () => {
+  const output = runFixture(
+    (sql) =>
+      replaceRequired(
+        sql,
+        'as restrictive for update to authenticated\n  using (true)',
+        'for update to authenticated\n  using (true)',
+      ),
+    PHOTO_MIGRATION,
+  );
+
+  assert.match(
+    output,
+    /photos_no_outbox_delete_rewrite on public.photos uses using \(true\) outside/,
+  );
+});
+
+test('policy lint requires the photo rewrite exception to retain owner UPDATE RLS', () => {
+  const output = runFixture(
+    (sql) =>
+      replaceRequired(
+        sql,
+        'for update to authenticated using ((select auth.uid()) = user_id)\n  with check ((select auth.uid()) = user_id);',
+        'for update to authenticated using (true)\n  with check ((select auth.uid()) = user_id);',
+      ),
+    PHOTO_OWNER_MIGRATION,
+  );
+
+  assert.match(
+    output,
+    /photos_no_outbox_delete_rewrite requires the owner-scoped photos_update_own policy/,
   );
 });

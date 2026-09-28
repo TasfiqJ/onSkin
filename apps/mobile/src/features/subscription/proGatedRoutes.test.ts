@@ -56,13 +56,6 @@ describe('Pro-gated route contracts', () => {
 
     expect(route).toContain('conflictCheckAccess');
     expect(route).toContain('recordFreeConflictCheckRuleId');
-    expect(route).toContain("setConflictQuota({ status: 'unavailable', ruleIds: null })");
-    expect(route).toContain('const quotaClaimPending =');
-    expect(route).toContain('access?.shouldRecord === true');
-    expect(route).toContain('isEntitlementEvidenceUncertain(entitlement.data)');
-    expect(route).toContain('!entitlementUncertain &&');
-    expect(route).toContain('if (conflict && entitlementUncertain)');
-    expect(route).not.toContain('queueMicrotask');
     expect(route).toContain('<ProGate feature="conflict_checks">');
   });
 
@@ -143,9 +136,8 @@ describe('Pro-gated route contracts', () => {
     const plan = readAppRoute('routine/plan.tsx');
     expect(plan).toContain('APP_YOU_ROUTE');
     expect(plan).toContain('backOrReplace(router, APP_YOU_ROUTE)');
-    expect(plan).toContain("import { useCycleMutations } from '@/features/scheduler/useCycle';");
     expect(plan).toContain(
-      "import { useRoutinePlanViewModel } from '@/features/routine/useRoutinePlanViewModel';",
+      "import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';",
     );
     expect(plan).toContain('async function startToday()');
     expect(plan).toContain('await cycleMutations.start();');
@@ -166,8 +158,7 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('onReviewSafety={');
     expect(plan).toContain("? () => router.push('/settings/skin-profile?returnTo=plan')");
     expect(plan).toContain('Review pregnancy and breastfeeding setting');
-    expect(plan).toContain('const { planQuery, cycleQuery } = useRoutinePlanViewModel();');
-    expect(plan).toContain('const { data: cycleData } = cycleQuery;');
+    expect(plan).toContain('const { data: cycleData } = useCycle();');
     expect(plan).toContain(
       'const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;',
     );
@@ -178,8 +169,7 @@ describe('Pro-gated route contracts', () => {
     );
     expect(plan).toContain("const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser')");
     expect(plan).toContain("{hasCycle ? 'Evening skin cycling' : 'Evening'}");
-    expect(plan).toContain('{scheduleUnavailable ? (');
-    expect(plan).toContain(') : hasCycle ? (');
+    expect(plan).toContain('{hasCycle ? (');
     expect(plan).toContain('data?.isExample ? (');
     expect(plan).toContain('cycleSummaries.map((summary) =>');
     expect(plan).toContain('key={summary.productId}');
@@ -278,7 +268,13 @@ describe('Pro-gated route contracts', () => {
     expect(disruption).toContain('short={shortSheet}');
     expect(disruption).toContain('accessibilityLabel={`${title}. ${sub}`}');
     expect(disruption).toContain('compact={compactSheet}');
-    expect(disruption).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
+    const disruptionContent = disruption.slice(
+      disruption.indexOf('function DisruptionScreenContent()'),
+      disruption.indexOf('function CadenceReviewGate()'),
+    );
+    expect(disruptionContent).toContain('<Sheet');
+    expect(disruptionContent).toContain('fallbackRoute={APP_HOME_ROUTE}');
+    expect(disruptionContent).toContain('scroll');
 
     const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
     expect(phasedIntro).toContain('useWindowDimensions');
@@ -301,7 +297,13 @@ describe('Pro-gated route contracts', () => {
     expect(phasedIntro).toContain('short={shortSheet}');
     expect(phasedIntro).toContain("'min-h-[48px]'");
     expect(phasedIntro).not.toContain("'min-h-[44px]'");
-    expect(phasedIntro).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
+    const phasedIntroContent = phasedIntro.slice(
+      phasedIntro.indexOf('function PhasedIntroScreenContent()'),
+      phasedIntro.indexOf('function CadenceReviewGate()'),
+    );
+    expect(phasedIntroContent).toContain('<Sheet');
+    expect(phasedIntroContent).toContain('fallbackRoute={APP_HOME_ROUTE}');
+    expect(phasedIntroContent).toContain('scroll');
 
     const recovery = readAppRoute('cycle/recovery.tsx');
     expect(recovery).toContain('useWindowDimensions');

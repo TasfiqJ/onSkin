@@ -1,17 +1,23 @@
 #!/usr/bin/env node
-import { createHmac, randomBytes, randomUUID } from 'node:crypto';
+import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
+  authUserMissing,
   block,
   envSnapshot,
+  HarnessAssertionError,
+  harnessErrorDetail,
   placeholderEnvValue,
   printResult,
   readScriptAppEnvironment,
   redactedErrorKind,
+  resolveHostedSupabaseProjectTarget,
+  stableErrorCode,
+  storageObjectMissing,
+  strict,
   write,
 } from './lib.mjs';
-import { cleanupLiveTestAccounts } from './live-account-cleanup.mjs';
 
 const errors = [];
 const warnings = [];
@@ -20,8 +26,13 @@ const samples = [];
 const env = envSnapshot();
 
 const runLive = env.PHASE9_RUN_LIVE_DATA_RIGHTS === 'true';
+const allowDestructiveAccountDeletion = env.PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION === 'true';
 const appEnv = readScriptAppEnvironment();
-const supabaseUrl = env.SUPABASE_URL ?? env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseUrl = env.SUPABASE_URL;
+const supabaseTarget = resolveHostedSupabaseProjectTarget(
+  supabaseUrl,
+  env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF,
+);
 const publishableKey =
   env.SUPABASE_PUBLISHABLE_KEY ?? env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? env.SUPABASE_ANON_KEY;
 const secretKey = env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
@@ -32,7 +43,7 @@ const dataExportRateLimitWindowSeconds = intEnv(
   60,
   86400,
 );
-const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
+const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 60, 30, 60);
 const dataExportProbeBudget = intEnv(
   'PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX',
   Math.min(dataExportRateLimitMax + 2, 102),
@@ -46,31 +57,52 @@ const signedUrlExpiryWaitSeconds = intEnv(
   0,
   3900,
 );
+const accountDeletionPollTimeoutSeconds = intEnv(
+  'PHASE9_ACCOUNT_DELETION_POLL_TIMEOUT_SECONDS',
+  900,
+  30,
+  3600,
+);
+const accountDeletionMaxPolls = intEnv('PHASE9_ACCOUNT_DELETION_MAX_POLLS', 300, 1, 1000);
+const accountDeletionRequestTimeoutSeconds = intEnv(
+  'PHASE9_ACCOUNT_DELETION_REQUEST_TIMEOUT_SECONDS',
+  20,
+  1,
+  60,
+);
+const evidenceContext = readEvidenceContext();
 
 const artifact = {
   status: runLive ? 'running' : 'not-run',
+  sourceSha: evidenceContext.sourceSha,
+  workflowRunId: evidenceContext.workflowRunId,
+  workflowRunAttempt: evidenceContext.workflowRunAttempt,
+  ref: evidenceContext.ref,
+  actor: evidenceContext.actor,
+  triggeringActor: evidenceContext.triggeringActor,
+  repository: evidenceContext.repository,
+  workflow: evidenceContext.workflow,
+  event: evidenceContext.event,
+  buildIds: evidenceContext.buildIds,
   appEnvironment: appEnv,
-  supabaseHost: safeHost(supabaseUrl),
+  expectedSupabaseProjectRef: supabaseTarget.expectedProjectRef,
+  actualSupabaseProjectRef: supabaseTarget.actualProjectRef,
+  supabaseHost: supabaseTarget.safeHost,
   dataExportRateLimitMax,
   dataExportRateLimitWindowSeconds,
   dataExportPhotoUrlTtlSeconds,
   dataExportProbeBudget,
   signedUrlExpiryCheck: runSignedUrlExpiryCheck,
   signedUrlExpiryWaitSeconds,
+  destructiveAccountDeletionAuthorized: allowDestructiveAccountDeletion,
+  accountDeletionPollTimeoutSeconds,
+  accountDeletionMaxPolls,
+  accountDeletionRequestTimeoutSeconds,
   checks,
   samples,
   warnings,
   errors,
 };
-
-function safeHost(value) {
-  if (!value) return null;
-  try {
-    return new URL(value).host;
-  } catch {
-    return 'invalid-url';
-  }
-}
 
 const placeholder = placeholderEnvValue;
 
@@ -80,12 +112,72 @@ function intEnv(name, fallback, min, max) {
   return value;
 }
 
-function resultError(error) {
-  return error instanceof Error ? error.message : String(error);
+function readEvidenceContext() {
+  const sourceSha = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_SOURCE_SHA ?? env.GITHUB_SHA,
+    /^[a-f0-9]{40}$/i,
+  );
+  const workflowRunId = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_WORKFLOW_RUN_ID ?? env.GITHUB_RUN_ID,
+    /^[1-9][0-9]{0,19}$/,
+  );
+  const workflowRunAttempt = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_WORKFLOW_RUN_ATTEMPT ?? env.GITHUB_RUN_ATTEMPT,
+    /^[1-9][0-9]{0,5}$/,
+  );
+  const ref = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_REF ?? env.GITHUB_REF,
+    /^refs\/(?:heads|tags|pull)\/[A-Za-z0-9._/-]{1,240}$/,
+  );
+  const actor = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_ACTOR ?? env.GITHUB_ACTOR,
+    /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})|[A-Za-z0-9](?:[A-Za-z0-9-]{0,32})\[bot\])$/,
+  );
+  const triggeringActor = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_TRIGGERING_ACTOR ?? env.GITHUB_TRIGGERING_ACTOR,
+    /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})|[A-Za-z0-9](?:[A-Za-z0-9-]{0,32})\[bot\])$/,
+  );
+  const repository = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_REPOSITORY ?? env.GITHUB_REPOSITORY,
+    /^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/,
+  );
+  const workflow = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_WORKFLOW ?? env.GITHUB_WORKFLOW,
+    /^[A-Za-z0-9][A-Za-z0-9 ._/-]{0,99}$/,
+  );
+  const event = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_EVENT ?? env.GITHUB_EVENT_NAME,
+    /^workflow_dispatch$/,
+  );
+  const buildPattern =
+    /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|https:\/\/expo\.dev\/accounts\/[A-Za-z0-9._-]+\/projects\/[A-Za-z0-9._-]+\/builds\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/?)$/i;
+  const rawIosBuildId = String(env.PHASE5_IOS_BUILD_ID ?? '').trim();
+  return {
+    sourceSha,
+    workflowRunId,
+    workflowRunAttempt,
+    ref,
+    actor,
+    triggeringActor,
+    repository,
+    workflow,
+    event,
+    buildIds: {
+      ios: exactEvidenceValue(rawIosBuildId, buildPattern),
+    },
+    invalidBuildIds: [
+      rawIosBuildId && !buildPattern.test(rawIosBuildId) ? 'PHASE5_IOS_BUILD_ID' : null,
+    ].filter(Boolean),
+  };
+}
+
+function exactEvidenceValue(value, pattern) {
+  const text = String(value ?? '').trim();
+  return text && pattern.test(text) ? text : null;
 }
 
 function assert(condition, message) {
-  if (!condition) throw new Error(message);
+  if (!condition) throw new HarnessAssertionError(message);
 }
 
 function record(name, status, detail = '') {
@@ -93,6 +185,7 @@ function record(name, status, detail = '') {
 }
 
 function writeArtifacts(status) {
+  if (status === 'pass' && strict && warnings.length > 0) status = 'fail';
   artifact.status = status;
   if (status === 'pass' || status === 'fail') artifact.ranAt = new Date().toISOString();
   write('docs/phase-9/generated/live-data-rights.json', `${JSON.stringify(artifact, null, 2)}\n`);
@@ -102,7 +195,19 @@ function writeArtifacts(status) {
       '# Live data rights evidence',
       '',
       `- Status: ${artifact.status}`,
+      `- Source SHA: ${artifact.sourceSha ?? 'not supplied'}`,
+      `- Workflow run: ${artifact.workflowRunId ?? 'not supplied'}`,
+      `- Workflow attempt: ${artifact.workflowRunAttempt ?? 'not supplied'}`,
+      `- Ref: ${artifact.ref ?? 'not supplied'}`,
+      `- Actor: ${artifact.actor ?? 'not supplied'}`,
+      `- Triggering actor: ${artifact.triggeringActor ?? 'not supplied'}`,
+      `- Repository: ${artifact.repository ?? 'not supplied'}`,
+      `- Workflow: ${artifact.workflow ?? 'not supplied'}`,
+      `- Event: ${artifact.event ?? 'not supplied'}`,
+      `- iOS build ID: ${artifact.buildIds.ios ?? 'not supplied'}`,
       `- Environment: ${artifact.appEnvironment}`,
+      `- Expected Supabase project ref: ${artifact.expectedSupabaseProjectRef ?? 'not configured'}`,
+      `- Actual Supabase project ref: ${artifact.actualSupabaseProjectRef ?? 'not canonical'}`,
       `- Supabase host: ${artifact.supabaseHost ?? 'not configured'}`,
       `- Data export configured max: ${artifact.dataExportRateLimitMax}`,
       `- Data export configured window: ${artifact.dataExportRateLimitWindowSeconds}s`,
@@ -110,6 +215,12 @@ function writeArtifacts(status) {
       `- Data export probe budget: ${artifact.dataExportProbeBudget}`,
       `- Signed URL expiry check: ${artifact.signedUrlExpiryCheck ? 'enabled' : 'disabled'}`,
       `- Signed URL expiry wait: ${artifact.signedUrlExpiryWaitSeconds}s`,
+      `- Destructive synthetic-account deletion: ${
+        artifact.destructiveAccountDeletionAuthorized ? 'explicitly authorized' : 'not authorized'
+      }`,
+      `- Account deletion polling timeout: ${artifact.accountDeletionPollTimeoutSeconds}s`,
+      `- Account deletion maximum polls: ${artifact.accountDeletionMaxPolls}`,
+      `- Account deletion request timeout: ${artifact.accountDeletionRequestTimeoutSeconds}s`,
       '',
       '## Checks',
       checks.length
@@ -127,6 +238,9 @@ function writeArtifacts(status) {
             .map((sample) => {
               if (sample.scope === 'data-export-photo-url-expiry') {
                 return `- ${sample.scope}: ttl=${sample.ttlSeconds}s, waited=${sample.waitSeconds}s, before=${sample.beforeStatus}, after=${sample.afterStatus}`;
+              }
+              if (sample.scope === 'account-deletion') {
+                return `- ${sample.scope}: polls=${sample.polls}, terminal_http=${sample.terminalHttpStatus}, auth_absent=${sample.authAbsent}, post_auth_receipt_replay=${sample.postAuthReceiptReplay}`;
               }
               return `- ${sample.scope}: count=${sample.requestCount}, window=${sample.windowSeconds}s, key=${sample.keyHashRedacted}`;
             })
@@ -148,7 +262,7 @@ async function runCheck(name, fn) {
     await fn();
     record(name, 'pass');
   } catch (error) {
-    const message = resultError(error);
+    const message = harnessErrorDetail(error);
     record(name, 'fail', message);
     errors.push(`${name}: ${message}`);
   }
@@ -156,14 +270,16 @@ async function runCheck(name, fn) {
 
 function publicClient() {
   return createClient(supabaseUrl, publishableKey, {
+    global: { headers: { 'x-health-processing-epoch': '1' } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
 }
 
-function staleJwtClient(accessToken) {
-  return createClient(supabaseUrl, publishableKey, {
+function serviceHealthClient(epoch) {
+  assert(Number.isSafeInteger(epoch) && epoch >= 1, 'service health epoch is invalid.');
+  return createClient(supabaseUrl, secretKey, {
+    global: { headers: { 'x-health-processing-epoch': String(epoch) } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
-    global: { headers: { Authorization: `Bearer ${accessToken}` } },
   });
 }
 
@@ -171,7 +287,7 @@ function functionUrl(name) {
   return `${supabaseUrl.replace(/\/+$/g, '')}/functions/v1/${name}`;
 }
 
-async function createLiveUser(admin, label) {
+async function createLiveUser(admin, label, trackCreatedUser) {
   const suffix = `${Date.now()}-${randomUUID().slice(0, 8)}`;
   const email = `phase9-data-${label}-${suffix}@example.invalid`;
   const password = `Phase9Data-${suffix}-Password!`;
@@ -183,6 +299,7 @@ async function createLiveUser(admin, label) {
   });
   if (error) throw error;
   if (!data.user) throw new Error(`Supabase did not return a user for ${label}.`);
+  trackCreatedUser({ id: data.user.id });
 
   const client = publicClient();
   const signedIn = await client.auth.signInWithPassword({ email, password });
@@ -198,6 +315,12 @@ async function insertOne(client, table, payload, select = '*') {
   return data;
 }
 
+async function selectOne(client, table, column, value, select = '*') {
+  const { data, error } = await client.from(table).select(select).eq(column, value).single();
+  if (error) throw error;
+  return data;
+}
+
 async function upsertOne(client, table, payload, select = '*') {
   const { data, error } = await client.from(table).upsert(payload).select(select).single();
   if (error) throw error;
@@ -208,6 +331,120 @@ function rows(bundle, key) {
   const value = bundle[key];
   assert(Array.isArray(value), `export field ${key} is not an array.`);
   return value;
+}
+
+const subscriptionIdentityFields = [
+  'user_id',
+  'resolved_user_id',
+  'app_user_id',
+  'original_app_user_id',
+  'aliases',
+  'transferred_from',
+  'transferred_to',
+];
+const subscriptionArrayIdentityFields = ['aliases', 'transferred_from', 'transferred_to'];
+const catalogCorrectionExportFields = [
+  'id',
+  'user_id',
+  'product_id',
+  'barcode',
+  'correction_type',
+  'status',
+  'description',
+  'proposed_payload',
+  'client_context',
+  'source_id',
+  'created_at',
+  'updated_at',
+];
+const catalogCorrectionInternalFields = [
+  'assigned_to',
+  'resolved_by',
+  'resolution_note',
+  'operator_reviewed_at',
+  'operator_reviewed_by',
+  'operator_review_note',
+  'intake_request_id',
+  'intake_health_epoch',
+  'intake_request_digest',
+];
+const shelfIdentityExportFields = [
+  'id',
+  'user_id',
+  'created_at',
+  'deleted_effective_at',
+  'deleted_received_at',
+];
+const shelfSyncReceiptExportFields = [
+  'operation_id',
+  'user_id',
+  'state',
+  'result_code',
+  'created_at',
+  'finalized_at',
+];
+const routineCompletionSyncReceiptExportFields = [
+  'event_id',
+  'user_id',
+  'state',
+  'result_code',
+  'created_at',
+  'finalized_at',
+];
+
+function dateInTimezone(instant, timezone) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(instant);
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  assert(
+    /^\d{4}$/.test(value.year ?? '') &&
+      /^\d{2}$/.test(value.month ?? '') &&
+      /^\d{2}$/.test(value.day ?? ''),
+    'could not derive the completion fixture date in its declared timezone.',
+  );
+  return `${value.year}-${value.month}-${value.day}`;
+}
+
+function subscriptionEventContainsIdentity(row, userId) {
+  return (
+    row?.user_id === userId ||
+    row?.resolved_user_id === userId ||
+    row?.app_user_id === userId ||
+    row?.original_app_user_id === userId ||
+    subscriptionArrayIdentityFields.some(
+      (field) => Array.isArray(row?.[field]) && row[field].includes(userId),
+    )
+  );
+}
+
+function assertNoSubscriptionIdentity(row, userId, label) {
+  assert(row && typeof row === 'object', `${label}: subscription event row is missing.`);
+  assert(
+    !subscriptionEventContainsIdentity(row, userId),
+    `${label}: deleted account remains in a subscription identity field.`,
+  );
+}
+
+function assertExactArray(actual, expected, label) {
+  assert(
+    JSON.stringify(actual) === JSON.stringify(expected),
+    `${label}: retained array order or membership changed.`,
+  );
+}
+
+async function subscriptionEventById(admin, id, label) {
+  const { data, error } = await admin
+    .from('subscriptions_events')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  assert(data, `${label}: subscription event row is missing.`);
+  return data;
 }
 
 function expectBundleHasOnlyUser(bundle, key, column, userId, otherUserId) {
@@ -233,8 +470,11 @@ async function expectAdminRows(admin, table, column, value, expectedCount, label
 }
 
 async function userExists(admin, userId) {
-  const { data, error } = await admin.auth.admin.getUserById(userId);
-  return !error && Boolean(data.user);
+  const result = await admin.auth.admin.getUserById(userId);
+  if (authUserMissing(result)) return false;
+  if (result.error) throw result.error;
+  if (!result.data?.user) throw new Error('AUTH_USER_LOOKUP_INVALID');
+  return true;
 }
 
 async function postDataExport(token) {
@@ -266,6 +506,258 @@ function parseJson(text) {
   }
 }
 
+const ACCOUNT_DELETION_RESPONSE_MAX_BYTES = 4096;
+const ACCOUNT_DELETION_TOKEN_PATTERN = /^[a-f0-9]{64}$/;
+
+function exactObjectKeys(value, expectedKeys) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const actual = Object.keys(value).sort();
+  const expected = [...expectedKeys].sort();
+  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+function accountDeletionToken() {
+  return randomBytes(32).toString('hex');
+}
+
+async function readBoundedResponseText(response, maximumBytes) {
+  const declaredLength = Number(response.headers.get('content-length'));
+  if (Number.isFinite(declaredLength) && declaredLength > maximumBytes) {
+    if (response.body) await response.body.cancel().catch(() => {});
+    throw new HarnessAssertionError('account-deletion response exceeded the declared size limit.');
+  }
+  if (!response.body) return '';
+
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maximumBytes) {
+      await reader.cancel().catch(() => {});
+      throw new HarnessAssertionError(
+        'account-deletion response exceeded the streamed size limit.',
+      );
+    }
+    chunks.push(value);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new HarnessAssertionError('account-deletion response was not valid UTF-8.');
+  }
+}
+
+async function accountDeletionResponse(response) {
+  const text = await readBoundedResponseText(response, ACCOUNT_DELETION_RESPONSE_MAX_BYTES);
+  const body = parseJson(text);
+  assert(body !== null, 'account-deletion returned malformed or empty JSON.');
+  return { status: response.status, body };
+}
+
+async function postAccountDeletionBegin(token, request) {
+  const response = await fetch(functionUrl('account-deletion'), {
+    method: 'POST',
+    headers: {
+      apikey: publishableKey,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+    credentials: 'omit',
+    signal: AbortSignal.timeout(accountDeletionRequestTimeoutSeconds * 1000),
+  });
+  return accountDeletionResponse(response);
+}
+
+async function postAccountDeletionPreflight(token) {
+  const response = await fetch(functionUrl('account-deletion'), {
+    method: 'POST',
+    headers: {
+      apikey: publishableKey,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action: 'preflight' }),
+    credentials: 'omit',
+    signal: AbortSignal.timeout(accountDeletionRequestTimeoutSeconds * 1000),
+  });
+  return accountDeletionResponse(response);
+}
+
+// Deliberately capability-only: this request must remain usable after Auth is gone.
+async function postAccountDeletionStatus(capability) {
+  const response = await fetch(functionUrl('account-deletion'), {
+    method: 'POST',
+    headers: {
+      apikey: publishableKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action: 'status', capability }),
+    credentials: 'omit',
+    signal: AbortSignal.timeout(accountDeletionRequestTimeoutSeconds * 1000),
+  });
+  return accountDeletionResponse(response);
+}
+
+function parseAccountDeletionBegin(response) {
+  assert(
+    response.status === 202,
+    `account-deletion begin expected HTTP 202, got ${response.status}.`,
+  );
+  assert(
+    exactObjectKeys(response.body, ['status', 'phase', 'nextPollAfterSeconds']) &&
+      response.body.status === 'accepted' &&
+      (response.body.phase === 'queued' || response.body.phase === 'delayed') &&
+      Number.isSafeInteger(response.body.nextPollAfterSeconds) &&
+      response.body.nextPollAfterSeconds >= 2 &&
+      response.body.nextPollAfterSeconds <= 60,
+    'account-deletion begin did not return the exact accepted receipt contract.',
+  );
+  return {
+    phase: response.body.phase,
+    nextPollAfterSeconds: response.body.nextPollAfterSeconds,
+  };
+}
+
+const ACCOUNT_OWNER_SUBJECT_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+function assertActiveAccountDeletionPreflight(response, expectedOwnerSubject) {
+  assert(
+    response.status === 200 &&
+      exactObjectKeys(response.body, ['status', 'ownerSubject']) &&
+      response.body.status === 'active' &&
+      typeof response.body.ownerSubject === 'string' &&
+      ACCOUNT_OWNER_SUBJECT_PATTERN.test(response.body.ownerSubject) &&
+      response.body.ownerSubject === expectedOwnerSubject,
+    'account-deletion did not return the exact authenticated active-owner preflight contract.',
+  );
+}
+
+function parseAccountDeletionStatus(response) {
+  if (response.status === 200) {
+    const hasNotice = Object.hasOwn(response.body, 'notice');
+    assert(
+      exactObjectKeys(response.body, hasNotice ? ['status', 'notice'] : ['status']) &&
+        response.body.status === 'completed' &&
+        (!hasNotice || response.body.notice === 'remove_apple_authorization'),
+      'account-deletion returned an invalid completed receipt.',
+    );
+    return {
+      kind: 'completed',
+      httpStatus: 200,
+      notice: hasNotice ? response.body.notice : null,
+    };
+  }
+  if (response.status === 202) {
+    assert(
+      exactObjectKeys(response.body, ['status', 'phase', 'nextPollAfterSeconds']) &&
+        (response.body.status === 'pending' || response.body.status === 'delayed') &&
+        ['queued', 'processing', 'local_erasing', 'provider_verifying', 'delayed'].includes(
+          response.body.phase,
+        ) &&
+        (response.body.status === 'delayed') === (response.body.phase === 'delayed') &&
+        Number.isSafeInteger(response.body.nextPollAfterSeconds) &&
+        response.body.nextPollAfterSeconds >= 2 &&
+        response.body.nextPollAfterSeconds <= 60,
+      'account-deletion returned an invalid pending receipt.',
+    );
+    return {
+      kind: 'pending',
+      httpStatus: 202,
+      phase: response.body.phase,
+      nextPollAfterSeconds: response.body.nextPollAfterSeconds,
+    };
+  }
+  if (
+    response.status === 404 &&
+    exactObjectKeys(response.body, ['status']) &&
+    response.body.status === 'invalid'
+  ) {
+    return { kind: 'invalid', httpStatus: 404 };
+  }
+  if (
+    response.status === 410 &&
+    exactObjectKeys(response.body, ['status']) &&
+    response.body.status === 'expired'
+  ) {
+    return { kind: 'expired', httpStatus: 410 };
+  }
+  throw new HarnessAssertionError(
+    `account-deletion status returned an unexpected HTTP/body contract (${response.status}).`,
+  );
+}
+
+async function pollAccountDeletionToTerminal(admin, userId, capability, firstPollAfterSeconds) {
+  const deadlineAt = Date.now() + accountDeletionPollTimeoutSeconds * 1000;
+  let nextPollAfterSeconds = firstPollAfterSeconds;
+  let authAbsent = false;
+
+  for (let poll = 1; poll <= accountDeletionMaxPolls; poll += 1) {
+    const delayMs = nextPollAfterSeconds * 1000;
+    assert(
+      Date.now() + delayMs <= deadlineAt,
+      'account-deletion polling reached its configured wall-clock deadline.',
+    );
+    await wait(delayMs);
+
+    const outcome = parseAccountDeletionStatus(await postAccountDeletionStatus(capability));
+    if (!(await userExists(admin, userId))) authAbsent = true;
+
+    if (outcome.kind === 'completed') {
+      assert(
+        authAbsent,
+        'completed deletion receipt was returned while the Auth user still existed.',
+      );
+
+      // A second capability-only request after exact Auth absence proves that
+      // the finite terminal receipt survives the account/JWT boundary.
+      const replay = parseAccountDeletionStatus(await postAccountDeletionStatus(capability));
+      assert(
+        replay.kind === 'completed' && replay.notice === outcome.notice,
+        'post-Auth capability replay did not return the same completed receipt.',
+      );
+      const terminal = {
+        ...outcome,
+        polls: poll + 1,
+        authAbsent: true,
+        postAuthReceiptReplay: true,
+      };
+      samples.push({
+        scope: 'account-deletion',
+        polls: terminal.polls,
+        terminalHttpStatus: terminal.httpStatus,
+        authAbsent: terminal.authAbsent,
+        postAuthReceiptReplay: terminal.postAuthReceiptReplay,
+      });
+      return terminal;
+    }
+    if (outcome.kind === 'expired' || outcome.kind === 'invalid') {
+      samples.push({
+        scope: 'account-deletion',
+        polls: poll,
+        terminalHttpStatus: outcome.httpStatus,
+        authAbsent,
+        postAuthReceiptReplay: false,
+      });
+      return { ...outcome, polls: poll, authAbsent, postAuthReceiptReplay: false };
+    }
+    nextPollAfterSeconds = outcome.nextPollAfterSeconds;
+  }
+
+  throw new HarnessAssertionError('account-deletion polling reached its configured poll limit.');
+}
+
 function assertLocalPhotoExportDisclosure(bundle) {
   assert(
     typeof bundle?.local_only_photo_note === 'string' &&
@@ -285,18 +777,32 @@ function assertLocalPhotoExportDisclosure(bundle) {
       ),
     'data-export does not distinguish device-only photo files from server-side photo metadata.',
   );
+  const lifecycle = bundle?.health_consent_lifecycle;
+  assert(
+    lifecycle &&
+      typeof lifecycle === 'object' &&
+      ['unconsented', 'active', 'withdrawn'].includes(lifecycle.state) &&
+      Number.isSafeInteger(lifecycle.processing_epoch) &&
+      lifecycle.processing_epoch >= 0 &&
+      !Object.hasOwn(lifecycle, 'operation_id') &&
+      typeof lifecycle.server_verified_at === 'string' &&
+      !Number.isNaN(Date.parse(lifecycle.server_verified_at)),
+    'data-export is missing a sanitized terminal/active health lifecycle status.',
+  );
+  const lifecycleManifest = bundle?.manifest?.sources?.health_consent_lifecycle;
+  assert(
+    lifecycleManifest?.kind === 'derived' &&
+      lifecycleManifest?.count === 1 &&
+      lifecycleManifest?.complete === true &&
+      /^sha256:[a-f0-9]{64}$/.test(lifecycleManifest?.checksum ?? ''),
+    'data-export health lifecycle manifest is incomplete.',
+  );
 }
 
 function assertDataExportRateLimited(response) {
   const body = parseJson(response.text);
-  assert(
-    response.status === 429,
-    `data-export expected HTTP 429, got ${response.status} (${response.text.slice(0, 120)}).`,
-  );
-  assert(
-    body?.error === 'RATE_LIMITED',
-    `data-export expected RATE_LIMITED body, got ${response.text.slice(0, 120)}.`,
-  );
+  assert(response.status === 429, `data-export expected HTTP 429, got ${response.status}.`);
+  assert(body?.error === 'RATE_LIMITED', 'data-export expected stable RATE_LIMITED body.');
   assert(
     /^\d+$/.test(response.retryAfter ?? ''),
     'data-export expected numeric Retry-After header.',
@@ -341,12 +847,9 @@ async function exhaustDataExportRateLimit(user) {
       response.status === 200,
       `data-export before limit expected 200, got ${response.status}.`,
     );
+    assert(body?.user_id === user.id, 'data-export before limit returned the wrong user_id.');
     assert(
-      body?.user_id === user.id,
-      `data-export before limit returned wrong user_id: ${response.text.slice(0, 120)}.`,
-    );
-    assert(
-      body?.export_schema_version === 2,
+      body?.export_schema_version === 4,
       'data-export before limit returned the wrong export schema version.',
     );
     assertLocalPhotoExportDisclosure(body);
@@ -358,6 +861,12 @@ async function exhaustDataExportRateLimit(user) {
 
 function keyHashFor(scope, userId) {
   return createHmac('sha256', secretKey).update(`${scope}|${userId}`).digest('hex');
+}
+
+function accountDeletionStatusRateLimitKey(capability) {
+  return createHash('sha256')
+    .update(`onskin-account-deletion-status-capability:v1:${capability}`)
+    .digest('hex');
 }
 
 async function assertDataExportLimiterRow(admin, userId, attempts) {
@@ -410,8 +919,24 @@ async function main() {
 
   block(
     errors,
-    !placeholder(supabaseUrl),
-    'SUPABASE_URL or EXPO_PUBLIC_SUPABASE_URL is missing or placeholder.',
+    env.APP_ENV === 'staging',
+    'Live data-rights requires the exact server-side APP_ENV=staging contract.',
+  );
+  block(
+    errors,
+    appEnv === 'staging',
+    'Live data-rights requires the effective app environment to be staging.',
+  );
+  block(errors, !placeholder(supabaseUrl), 'SUPABASE_URL is missing or placeholder.');
+  block(
+    errors,
+    Boolean(supabaseTarget.expectedProjectRef),
+    'PHASE9_EXPECTED_SUPABASE_PROJECT_REF must be the reviewed 20-character lowercase alphanumeric project ref.',
+  );
+  block(
+    errors,
+    supabaseTarget.valid,
+    'SUPABASE_URL must exactly equal the canonical HTTPS origin for PHASE9_EXPECTED_SUPABASE_PROJECT_REF.',
   );
   block(
     errors,
@@ -425,14 +950,19 @@ async function main() {
   );
   block(
     errors,
+    allowDestructiveAccountDeletion,
+    'Refusing the live durable account-deletion run without PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION=true.',
+  );
+  block(
+    errors,
     dataExportProbeBudget > dataExportRateLimitMax,
     'PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX must be greater than DATA_EXPORT_RATE_LIMIT_MAX.',
   );
   if (runSignedUrlExpiryCheck) {
     block(
       errors,
-      dataExportPhotoUrlTtlSeconds <= 120,
-      'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be 120 or lower for the live signed URL expiry check.',
+      dataExportPhotoUrlTtlSeconds <= 60,
+      'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be 60 or lower for the live signed URL expiry check.',
     );
     block(
       errors,
@@ -442,8 +972,28 @@ async function main() {
   }
   block(
     errors,
-    appEnv !== 'production' || env.PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS === 'true',
-    'Refusing production live data-rights tests without PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS=true.',
+    Boolean(evidenceContext.sourceSha),
+    'Live data-rights evidence requires an exact 40-character PHASE9_EVIDENCE_SOURCE_SHA or GITHUB_SHA.',
+  );
+  block(
+    errors,
+    env.GITHUB_ACTIONS !== 'true' ||
+      Boolean(
+        evidenceContext.workflowRunId &&
+        evidenceContext.workflowRunAttempt &&
+        evidenceContext.ref &&
+        evidenceContext.actor &&
+        evidenceContext.triggeringActor &&
+        evidenceContext.repository &&
+        evidenceContext.workflow &&
+        evidenceContext.event,
+      ),
+    'GitHub live data-rights evidence requires exact workflow run, attempt, and ref metadata.',
+  );
+  block(
+    errors,
+    evidenceContext.invalidBuildIds.length === 0,
+    `Live data-rights evidence rejected invalid build identifiers: ${evidenceContext.invalidBuildIds.join(', ')}.`,
   );
   if (errors.length > 0) {
     writeArtifacts('fail');
@@ -456,20 +1006,79 @@ async function main() {
   });
   const users = [];
   const storagePaths = [];
-  const externalOrderIds = [];
+  const subscriptionEventIds = [];
+  const accountDeletionRateLimitKeys = [];
 
   try {
-    const userA = await createLiveUser(admin, 'a');
-    const userB = await createLiveUser(admin, 'b');
-    users.push(userA, userB);
+    const userA = await createLiveUser(admin, 'a', (user) => users.push(user));
+    const userB = await createLiveUser(admin, 'b', (user) => users.push(user));
     let callerPhotoSignedUrl = null;
 
     const seed = async (user, label) => {
-      await upsertOne(user.client, 'profiles', {
-        id: user.id,
-        display_name: `Phase 9 Data ${label}`,
-        units: 'metric',
-      });
+      const { error: profileError } = await user.client
+        .from('profiles')
+        .update({
+          display_name: `Phase 9 Data ${label}`,
+          units: 'metric',
+        })
+        .eq('id', user.id);
+      if (profileError) throw profileError;
+      const healthConsentVersion = 'draft-v1-2026-07-10';
+      const healthConsentHash = '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
+      const { data: consentRows, error: consentError } = await user.client.rpc(
+        'grant_health_data_consent',
+        {
+          p_expected_epoch: 0,
+          p_version: healthConsentVersion,
+          p_consent_text_hash: healthConsentHash,
+        },
+      );
+      if (consentError) throw consentError;
+      const consent = Array.isArray(consentRows) ? consentRows[0] : null;
+      assert(
+        consent?.user_id === user.id && consent?.state === 'active' && consent?.epoch === 1,
+        `health consent activation failed for ${label}.`,
+      );
+      const catalogCorrectionFixture = {
+        user_id: user.id,
+        product_id: null,
+        barcode: label === 'a' ? '012345678905' : '036000291452',
+        correction_type: 'missing_product',
+        description: `Phase 9 data-rights ${label} catalog correction`,
+        proposed_payload: {
+          productName: `Phase 9 Data ${label} Catalog Product`,
+          brand: 'Data Rights Smoke',
+        },
+        client_context: { route: 'phase9_live_data_rights' },
+        source_id: null,
+      };
+      const catalogCorrectionRequestId = randomUUID();
+      const correctionWriter = serviceHealthClient(consent.epoch);
+      const { data: correctionRows, error: correctionError } = await correctionWriter.rpc(
+        'submit_catalog_correction',
+        {
+          p_user_id: user.id,
+          p_expected_health_epoch: consent.epoch,
+          p_report_request_id: catalogCorrectionRequestId,
+          p_product_id: catalogCorrectionFixture.product_id,
+          p_barcode: catalogCorrectionFixture.barcode,
+          p_correction_type: catalogCorrectionFixture.correction_type,
+          p_description: catalogCorrectionFixture.description,
+          p_proposed_payload: catalogCorrectionFixture.proposed_payload,
+          p_client_context: catalogCorrectionFixture.client_context,
+        },
+      );
+      if (correctionError) throw correctionError;
+      const correctionReceipt = Array.isArray(correctionRows) ? correctionRows[0] : null;
+      assert(
+        correctionRows?.length === 1 &&
+          typeof correctionReceipt?.id === 'string' &&
+          correctionReceipt.status === 'open' &&
+          correctionReceipt.created === true &&
+          Number.isFinite(Date.parse(correctionReceipt.created_at)),
+        `sealed catalog-correction RPC failed for ${label}.`,
+      );
+      const catalogCorrection = { ...catalogCorrectionFixture, ...correctionReceipt };
       const skinProfile = await insertOne(user.client, 'skin_profiles', {
         user_id: user.id,
         oily_dry: label === 'a' ? 1 : 2,
@@ -478,54 +1087,99 @@ async function main() {
         goals: [`phase9-data-${label}`],
         completed_at: new Date().toISOString(),
       });
-      const product = await insertOne(user.client, 'user_products', {
-        user_id: user.id,
+      const productId = randomUUID();
+      const shelfOperationId = randomUUID();
+      const shelfEnqueuedAt = new Date(Date.now() - 1_000).toISOString();
+      const shelfPayload = {
+        id: productId,
+        catalog_product_id: null,
+        catalog_source_id: null,
+        catalog_match_quality: 'manual',
+        catalog_source_snapshot_date: null,
         manual_name: `Phase 9 ${label} Cleanser`,
         manual_brand: 'Data Rights Smoke',
-        opened_at: new Date().toISOString().slice(0, 10),
-        pao_months: 12,
-      });
-      const routine = await insertOne(user.client, 'routines', {
-        user_id: user.id,
-        type: 'AM',
-        name: `Phase 9 ${label} AM`,
-      });
-      const step = await insertOne(user.client, 'routine_steps', {
-        routine_id: routine.id,
-        user_product_id: product.id,
-        step_order: 1,
-        frequency: 'daily',
-        instructions: `Phase 9 ${label} step`,
-      });
-      const consent = await insertOne(user.client, 'consents', {
-        user_id: user.id,
-        consent_type: 'health_data_collection',
-        granted: true,
-        version: `phase9-data-${label}`,
-        consent_text_hash: `phase9-data-${label}`,
-      });
+        barcode: null,
+        opened_at: null,
+        pao_months: null,
+        expiry_date: null,
+        is_opened: false,
+        pao_source: 'unknown',
+        expiry_source: 'unknown',
+        added_via: 'manual',
+        source_disclosure_ack_at: null,
+        status: 'active',
+        finished_at: null,
+      };
+      const { data: shelfSyncResponse, error: shelfSyncError } = await user.client.rpc(
+        'sync_shelf_product',
+        {
+          p_operation_id: shelfOperationId,
+          p_operation_kind: 'upsert',
+          p_enqueued_at: shelfEnqueuedAt,
+          p_product_id: productId,
+          p_payload: shelfPayload,
+        },
+      );
+      if (shelfSyncError) throw shelfSyncError;
+      assert(
+        shelfSyncResponse?.version === 1 &&
+          shelfSyncResponse?.operation_id === shelfOperationId &&
+          shelfSyncResponse?.status === 'accepted' &&
+          shelfSyncResponse?.code === null,
+        `Shelf sync fixture was not accepted for ${label}.`,
+      );
+      const product = await selectOne(user.client, 'user_products', 'id', productId);
+
+      const routineId = randomUUID();
+      const stepId = randomUUID();
+      const completionEventId = randomUUID();
+      const completedAt = new Date().toISOString();
+      const completedDate = dateInTimezone(new Date(completedAt), 'America/Toronto');
+      const { data: completionSyncResponse, error: completionSyncError } = await user.client.rpc(
+        'record_routine_completion',
+        {
+          p_event_id: completionEventId,
+          p_routine_id: routineId,
+          p_routine_type: 'AM',
+          p_step_id: stepId,
+          p_user_product_id: productId,
+          p_step_order: 1,
+          p_completed_at: completedAt,
+          p_completed_date: completedDate,
+          p_timezone: 'America/Toronto',
+        },
+      );
+      if (completionSyncError) throw completionSyncError;
+      assert(
+        completionSyncResponse?.version === 1 &&
+          completionSyncResponse?.event_id === completionEventId &&
+          completionSyncResponse?.status === 'accepted' &&
+          completionSyncResponse?.code === null,
+        `completion sync fixture was not accepted for ${label}.`,
+      );
+      const routine = await selectOne(user.client, 'routines', 'id', routineId);
+      const step = await selectOne(user.client, 'routine_steps', 'id', stepId);
+      const completion = await selectOne(
+        user.client,
+        'routine_completions',
+        'id',
+        completionEventId,
+      );
       await insertOne(user.client, 'consents', {
         user_id: user.id,
         consent_type: 'photo_cloud_backup',
         granted: true,
         version: `phase9-data-${label}`,
-        consent_text_hash: `phase9-data-${label}`,
+        consent_text_hash: healthConsentHash,
       });
       await insertOne(user.client, 'consents', {
         user_id: user.id,
         consent_type: 'data_sharing',
         granted: true,
         version: `phase9-data-${label}`,
-        consent_text_hash: `phase9-data-${label}`,
+        consent_text_hash: healthConsentHash,
       });
-      const completion = await insertOne(user.client, 'routine_completions', {
-        user_id: user.id,
-        routine_id: routine.id,
-        step_id: step.id,
-        completed_date: new Date().toISOString().slice(0, 10),
-      });
-
-      const photoPath = `${user.id}/phase9-data-${label}-${randomUUID()}.bin`;
+      const photoPath = `${user.id}/e1/phase9-data-${label}-${randomUUID()}.bin`;
       storagePaths.push(photoPath);
       const upload = await user.client.storage
         .from('photos')
@@ -541,41 +1195,65 @@ async function main() {
         face_region_redacted: true,
       });
 
-      const clickToken = `phase9-data-${label}-${randomUUID()}`;
-      const click = await insertOne(user.client, 'commerce_click_events', {
+      const blockedClickToken = `phase9-data-closed-${label}-${randomUUID()}`;
+      const blockedCommerceWrite = await user.client.from('commerce_click_events').insert({
         user_id: user.id,
-        click_token: clickToken,
+        click_token: blockedClickToken,
         product_type: 'cleanser',
         source: 'direct',
         consented: true,
       });
-      const externalOrderId = `phase9-data-${label}-${randomUUID()}`;
-      externalOrderIds.push(externalOrderId);
-      const orderWrite = await admin.from('order_attributions').insert({
-        external_order_id: externalOrderId,
-        click_token: clickToken,
-        order_amount_cents: 1299,
-        commission_cents: 123,
-        currency: 'USD',
-        status: 'locked',
-        transaction_date: new Date().toISOString(),
-        record_updated_at: new Date().toISOString(),
-      });
-      if (orderWrite.error) throw orderWrite.error;
+      assert(
+        stableErrorCode(blockedCommerceWrite.error) === '42501',
+        `COM-01A commerce click publication was not rejected for ${label}: ${redactedErrorKind(
+          blockedCommerceWrite.error,
+        )}.`,
+      );
+      const { data: closedCommerceRows, error: closedCommerceReadError } = await user.client
+        .from('commerce_click_events')
+        .select('id')
+        .eq('click_token', blockedClickToken);
+      if (closedCommerceReadError) throw closedCommerceReadError;
+      assert(
+        Array.isArray(closedCommerceRows) && closedCommerceRows.length === 0,
+        `COM-01A rejected commerce fixture nevertheless persisted for ${label}.`,
+      );
 
-      const entitlementWrite = await admin.from('entitlements').upsert({
-        user_id: user.id,
-        entitlement: 'pro',
-        is_active: true,
-        product_id: `phase9_data_${label}`,
-        expires_at: new Date(Date.now() + 7 * 86_400_000).toISOString(),
-        rc_event_id: `phase9-data-${label}-${randomUUID()}`,
-        store: 'app_granted',
-        period_type: 'reverse_trial',
-        will_renew: false,
-        original_purchase_at: new Date().toISOString(),
+      const grantExpiresAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
+      const { error: grantError } = await admin.rpc('grant_app_granted_reverse_trial', {
+        p_user_id: user.id,
+        p_expires_at: grantExpiresAt,
+        p_environment: appEnv === 'production' ? 'production' : 'development',
       });
-      if (entitlementWrite.error) throw entitlementWrite.error;
+      if (grantError) throw grantError;
+      const { data: reverseTrialGrant, error: reverseTrialGrantError } = await admin
+        .from('reverse_trial_grants')
+        .select('user_id, granted_at, expires_at, source, metadata')
+        .eq('user_id', user.id)
+        .single();
+      if (reverseTrialGrantError) throw reverseTrialGrantError;
+
+      const snapshotAt = new Date();
+      const { error: entitlementError } = await admin.rpc(
+        'reconcile_revenuecat_entitlement_snapshot',
+        {
+          p_user_id: user.id,
+          p_snapshot_at: snapshotAt.toISOString(),
+          p_entitlement: 'pro',
+          p_is_active: false,
+          p_product_id: `phase9_data_${label}`,
+          p_expires_at: new Date(snapshotAt.getTime() - 3_600_000).toISOString(),
+          p_store: 'app_store',
+          p_period_type: 'normal',
+          p_will_renew: false,
+          p_original_purchase_at: new Date(snapshotAt.getTime() - 30 * 86_400_000).toISOString(),
+          p_offering_id: null,
+          p_environment: 'sandbox',
+          p_management_url: null,
+          p_package_id: null,
+        },
+      );
+      if (entitlementError) throw entitlementError;
 
       return {
         skinProfile,
@@ -584,15 +1262,96 @@ async function main() {
         step,
         consent,
         completion,
+        shelfOperationId,
+        completionEventId,
         photo,
-        click,
-        clickToken,
-        externalOrderId,
+        blockedClickToken,
+        reverseTrialGrant,
+        catalogCorrection,
       };
     };
 
     const seededA = await seed(userA, 'a');
     const seededB = await seed(userB, 'b');
+
+    const seedSubscriptionEvent = async (label, identities) => {
+      const now = new Date().toISOString();
+      const event = await insertOne(admin, 'subscriptions_events', {
+        rc_event_id: `phase9-data-rights-${label}-${randomUUID()}`,
+        event_type: 'PHASE9_DATA_RIGHTS_FIXTURE',
+        payload: { fixture: label, ingress_shape: 'sanitized' },
+        received_at: now,
+        environment: 'sandbox',
+        store: 'app_store',
+        product_id: 'phase9_data_rights_fixture',
+        processed_at: now,
+        processing_status: 'processed',
+        signature_verified: true,
+        auth_verified: true,
+        provider_event_at: now,
+        projection_applied: false,
+        processing_attempts: 1,
+        ...identities,
+      });
+      subscriptionEventIds.push(event.id);
+      return event;
+    };
+
+    // The 0046 root/payload.event legacy sanitizer is a deployment-time
+    // backfill and is covered by the migration contract test. These live rows
+    // use the current sanitized ingress shape so the harness never recreates a
+    // forbidden legacy payload after the migration has already run.
+    const subscriptionFixtures = {
+      aOnlyScalar: await seedSubscriptionEvent('a-only-scalar', {
+        user_id: userA.id,
+        resolved_user_id: userA.id,
+        app_user_id: userA.id,
+        original_app_user_id: userA.id,
+      }),
+      aliasOnly: await seedSubscriptionEvent('a-only-alias', {
+        aliases: [userA.id],
+      }),
+      transferOnly: await seedSubscriptionEvent('a-only-transfer', {
+        transferred_from: [userA.id],
+        transferred_to: [userA.id],
+      }),
+      repeatedA: await seedSubscriptionEvent('repeated-a-shared', {
+        resolved_user_id: userB.id,
+        aliases: [userA.id, 'repeat-alias-1', userA.id, userB.id, userA.id, 'repeat-alias-2'],
+        transferred_from: [userA.id, userA.id, 'repeat-from', userB.id, userA.id],
+        transferred_to: ['repeat-to', userA.id, userB.id, userA.id, userA.id],
+      }),
+      sharedAB: await seedSubscriptionEvent('shared-a-b', {
+        user_id: userA.id,
+        resolved_user_id: userB.id,
+        app_user_id: userA.id,
+        original_app_user_id: userB.id,
+        aliases: ['shared-alias-before', userA.id, userB.id, userA.id, 'shared-alias-after'],
+        transferred_from: [userB.id, 'shared-from-before', userA.id, 'shared-from-after'],
+        transferred_to: ['shared-to-before', userA.id, userB.id, 'shared-to-after', userA.id],
+      }),
+      bOnly: await seedSubscriptionEvent('b-only', {
+        user_id: userB.id,
+        resolved_user_id: userB.id,
+        app_user_id: userB.id,
+        original_app_user_id: userB.id,
+        aliases: ['b-alias-before', userB.id, 'b-alias-after'],
+        transferred_from: [userB.id, 'b-from-after'],
+        transferred_to: ['b-to-before', userB.id],
+      }),
+    };
+    const bOnlySubscriptionSnapshot = JSON.stringify(
+      await subscriptionEventById(
+        admin,
+        subscriptionFixtures.bOnly.id,
+        'B-only pre-deletion snapshot',
+      ),
+    );
+    const providerAuditEventPrefix = `account_deletion_${createHash('sha256')
+      .update(userA.id)
+      .digest('base64url')
+      .slice(0, 20)}_`;
+
     const malformedPhoto = await insertOne(
       admin,
       'photos',
@@ -608,11 +1367,12 @@ async function main() {
     await runCheck('data-export returns only caller data and safe service-role rows', async () => {
       const { data, error } = await userA.client.functions.invoke('data-export', {
         method: 'POST',
+        body: { user_id: userB.id },
       });
       if (error) throw error;
       assert(data && typeof data === 'object', 'data-export did not return a JSON bundle.');
       assert(data.user_id === userA.id, 'data-export returned the wrong user_id.');
-      assert(data.export_schema_version === 2, 'data-export schema version mismatch.');
+      assert(data.export_schema_version === 4, 'data-export schema version mismatch.');
       assertLocalPhotoExportDisclosure(data);
 
       expectBundleHasOnlyUser(data, 'skin_profiles', 'user_id', userA.id, userB.id);
@@ -622,16 +1382,215 @@ async function main() {
       expectBundleHasOnlyUser(data, 'consents', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'photos', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'commerce_click_events', 'user_id', userA.id, userB.id);
+      assert(
+        rows(data, 'commerce_click_events').length === 0,
+        'COM-01A data export returned a commerce click row after zero-admission fixture rejection.',
+      );
       expectBundleHasOnlyUser(data, 'entitlements', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'reverse_trial_grants', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'catalog_corrections', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'shelf_product_identities', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'shelf_sync_receipts', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(
+        data,
+        'routine_completion_sync_receipts',
+        'user_id',
+        userA.id,
+        userB.id,
+      );
+
+      const sealedSyncSources = [
+        ['shelf_product_identities', shelfIdentityExportFields, 'id', seededA.product.id],
+        [
+          'shelf_sync_receipts',
+          shelfSyncReceiptExportFields,
+          'operation_id',
+          seededA.shelfOperationId,
+        ],
+        [
+          'routine_completion_sync_receipts',
+          routineCompletionSyncReceiptExportFields,
+          'event_id',
+          seededA.completionEventId,
+        ],
+      ];
+      for (const [source, fields, idField, expectedId] of sealedSyncSources) {
+        const sourceRows = rows(data, source);
+        assert(
+          sourceRows.length === 1 &&
+            sourceRows[0]?.[idField] === expectedId &&
+            sourceRows[0]?.user_id === userA.id &&
+            exactObjectKeys(sourceRows[0], fields) &&
+            !Object.hasOwn(sourceRows[0], 'request_sha256'),
+          `${source} omitted the exact caller receipt or exposed an internal field.`,
+        );
+        const sourceManifest = data.manifest?.sources?.[source];
+        assert(
+          sourceManifest?.scope === 'caller_rpc_owner' &&
+            sourceManifest.complete === true &&
+            sourceManifest.count === 1 &&
+            sourceManifest.count_before === 1 &&
+            sourceManifest.count_after === 1 &&
+            /^sha256:[a-f0-9]{64}$/.test(sourceManifest.checksum),
+          `${source} export manifest is incomplete or misclassified.`,
+        );
+        assert(
+          !data.export_coverage?.caller_rls_tables?.includes(source) &&
+            !data.export_coverage?.service_role_filtered_exports?.includes(source) &&
+            data.export_coverage?.caller_rpc_owner_exports?.filter(
+              (candidate) => candidate === source,
+            ).length === 1,
+          `${source} export coverage is incomplete, duplicated, or misclassified.`,
+        );
+      }
+      assert(
+        Array.isArray(data.exclusion_register) &&
+          data.exclusion_register.some(
+            (entry) =>
+              entry?.data_class === 'health_sync_request_fingerprints' &&
+              typeof entry.reason === 'string' &&
+              entry.reason.includes('request_sha256'),
+          ),
+        'data-export omitted the reviewed sync-fingerprint exclusion.',
+      );
+
+      const catalogCorrectionRows = rows(data, 'catalog_corrections');
+      assert(
+        catalogCorrectionRows.length === 1,
+        'catalog-correction export returned an unexpected row count.',
+      );
+      const catalogCorrection = catalogCorrectionRows.find(
+        (row) => row.id === seededA.catalogCorrection.id,
+      );
+      assert(catalogCorrection, 'catalog-correction export omitted the caller correction.');
+      assert(
+        !catalogCorrectionRows.some((row) => row.id === seededB.catalogCorrection.id),
+        'catalog-correction export leaked the other user correction.',
+      );
+      assert(
+        exactObjectKeys(catalogCorrection, catalogCorrectionExportFields),
+        'catalog-correction export returned a non-allowlisted column or omitted a required field.',
+      );
+      assert(
+        catalogCorrectionRows.every((row) =>
+          catalogCorrectionInternalFields.every((field) => !Object.hasOwn(row, field)),
+        ),
+        'catalog-correction export returned an internal operator field.',
+      );
+      assert(
+        catalogCorrection.user_id === userA.id &&
+          catalogCorrection.product_id === null &&
+          catalogCorrection.barcode === seededA.catalogCorrection.barcode &&
+          catalogCorrection.correction_type === seededA.catalogCorrection.correction_type &&
+          catalogCorrection.status === 'open' &&
+          catalogCorrection.description === seededA.catalogCorrection.description &&
+          catalogCorrection.source_id === null &&
+          catalogCorrection.created_at === seededA.catalogCorrection.created_at &&
+          Number.isFinite(Date.parse(catalogCorrection.updated_at)),
+        'catalog-correction export changed the caller correction fields.',
+      );
+      assert(
+        exactObjectKeys(catalogCorrection.proposed_payload, ['productName', 'brand']) &&
+          catalogCorrection.proposed_payload.productName ===
+            seededA.catalogCorrection.proposed_payload.productName &&
+          catalogCorrection.proposed_payload.brand ===
+            seededA.catalogCorrection.proposed_payload.brand &&
+          exactObjectKeys(catalogCorrection.client_context, ['route']) &&
+          catalogCorrection.client_context.route === seededA.catalogCorrection.client_context.route,
+        'catalog-correction export changed the sanitized reporter payload.',
+      );
+      const catalogCorrectionManifest = data.manifest?.sources?.catalog_corrections;
+      assert(
+        catalogCorrectionManifest?.scope === 'caller_rpc_owner' &&
+          catalogCorrectionManifest.complete === true &&
+          catalogCorrectionManifest.count === 1 &&
+          catalogCorrectionManifest.count_before === 1 &&
+          catalogCorrectionManifest.count_after === 1 &&
+          /^sha256:[a-f0-9]{64}$/.test(catalogCorrectionManifest.checksum),
+        'catalog-correction export manifest is incomplete or misclassified.',
+      );
+      assert(
+        !data.export_coverage?.caller_rls_tables?.includes('catalog_corrections') &&
+          !data.export_coverage?.service_role_filtered_exports?.includes('catalog_corrections') &&
+          data.export_coverage?.caller_rpc_owner_exports?.filter(
+            (table) => table === 'catalog_corrections',
+          ).length === 1,
+        'catalog-correction export coverage is incomplete, duplicated, or misclassified.',
+      );
+
+      const reverseTrialRows = rows(data, 'reverse_trial_grants');
+      assert(
+        reverseTrialRows.length === 1,
+        'export returned an unexpected reverse-trial row count.',
+      );
+      assert(
+        reverseTrialRows[0]?.granted_at === seededA.reverseTrialGrant.granted_at,
+        'export returned the wrong caller reverse-trial grant.',
+      );
+      assert(
+        Object.keys(reverseTrialRows[0] ?? {}).every((key) =>
+          ['user_id', 'granted_at', 'expires_at', 'source', 'metadata'].includes(key),
+        ),
+        'reverse-trial export returned a non-allowlisted column.',
+      );
+      const reverseTrialManifest = data.manifest?.sources?.reverse_trial_grants;
+      assert(
+        reverseTrialManifest?.scope === 'service_role_filtered' &&
+          reverseTrialManifest.complete === true &&
+          reverseTrialManifest.count === 1 &&
+          reverseTrialManifest.count_before === 1 &&
+          reverseTrialManifest.count_after === 1 &&
+          /^sha256:[a-f0-9]{64}$/.test(reverseTrialManifest.checksum),
+        'reverse-trial export manifest is incomplete or misclassified.',
+      );
+      assert(
+        !data.export_coverage?.caller_rls_tables?.includes('reverse_trial_grants') &&
+          data.export_coverage?.service_role_filtered_exports?.filter(
+            (table) => table === 'reverse_trial_grants',
+          ).length === 1,
+        'reverse-trial export coverage is incomplete, duplicated, or misclassified.',
+      );
+
+      const subscriptionRows = rows(data, 'subscriptions_events');
+      const expectedCallerSubscriptionIds = [
+        subscriptionFixtures.aOnlyScalar.id,
+        subscriptionFixtures.aliasOnly.id,
+        subscriptionFixtures.transferOnly.id,
+        subscriptionFixtures.repeatedA.id,
+        subscriptionFixtures.sharedAB.id,
+      ];
+      for (const id of expectedCallerSubscriptionIds) {
+        assert(
+          subscriptionRows.some((row) => row.id === id),
+          'subscription-event export omitted a caller-linked service row.',
+        );
+      }
+      assert(
+        !subscriptionRows.some((row) => row.id === subscriptionFixtures.bOnly.id),
+        'subscription-event export leaked a B-only service row.',
+      );
+      const forbiddenSubscriptionExportFields = [...subscriptionIdentityFields, 'payload'];
+      assert(
+        subscriptionRows.every((row) =>
+          forbiddenSubscriptionExportFields.every((field) => !Object.hasOwn(row, field)),
+        ),
+        'subscription-event export returned an identity or payload field.',
+      );
+      const subscriptionManifest = data.manifest?.sources?.subscriptions_events;
+      assert(
+        subscriptionManifest?.scope === 'service_role_filtered' &&
+          subscriptionManifest.complete === true &&
+          subscriptionManifest.count === subscriptionRows.length &&
+          subscriptionManifest.count_before === subscriptionRows.length &&
+          subscriptionManifest.count_after === subscriptionRows.length &&
+          /^sha256:[a-f0-9]{64}$/.test(subscriptionManifest.checksum),
+        'subscription-event export manifest is incomplete or misclassified.',
+      );
 
       const orderRows = rows(data, 'order_attributions');
       assert(
-        orderRows.some((row) => row.external_order_id === seededA.externalOrderId),
-        'export missing caller order attribution.',
-      );
-      assert(
-        !orderRows.some((row) => row.external_order_id === seededB.externalOrderId),
-        'export leaked another user order attribution.',
+        orderRows.length === 0,
+        'COM-01A data export returned order attribution without an admitted legacy click.',
       );
       assert(
         orderRows.every((row) => !Object.hasOwn(row, 'commission_cents')),
@@ -699,18 +1658,78 @@ async function main() {
       );
     });
 
+    const deletionRequest = {
+      action: 'begin',
+      idempotencyKey: accountDeletionToken(),
+      statusCapability: accountDeletionToken(),
+    };
+    accountDeletionRateLimitKeys.push({
+      scope: 'account-deletion-status',
+      keyHash: accountDeletionStatusRateLimitKey(deletionRequest.statusCapability),
+    });
+    assert(
+      ACCOUNT_DELETION_TOKEN_PATTERN.test(deletionRequest.idempotencyKey) &&
+        ACCOUNT_DELETION_TOKEN_PATTERN.test(deletionRequest.statusCapability) &&
+        deletionRequest.idempotencyKey !== deletionRequest.statusCapability,
+      'account-deletion harness did not generate independent 256-bit intake secrets.',
+    );
+    let acceptedDeletion = null;
+    let terminalDeletion = null;
+    let deletionBeginDispatched = false;
+    let activeDeletionBarrierAttested = false;
+
+    await runCheck('account-deletion accepts an authenticated durable begin request', async () => {
+      // Once dispatch starts, even a lost response may follow a committed
+      // intake. The next check must use the pre-generated capability either way.
+      deletionBeginDispatched = true;
+      const response = await postAccountDeletionBegin(userA.token, deletionRequest);
+      acceptedDeletion = parseAccountDeletionBegin(response);
+    });
+
     await runCheck(
-      'account-deletion deletes caller account/data without touching another user',
+      'account-deletion active preflight binds the same authenticated owner before Auth deletion',
       async () => {
-        const completionToken = randomBytes(32).toString('hex');
-        const { data, error } = await userA.client.functions.invoke('account-deletion', {
-          method: 'POST',
-          body: { completionToken },
-        });
-        if (error) throw error;
+        const response = await postAccountDeletionPreflight(userA.token);
+        assertActiveAccountDeletionPreflight(response, userA.id);
+        activeDeletionBarrierAttested = true;
+      },
+    );
+
+    await runCheck(
+      'capability-only account-deletion polling crosses Auth deletion and reaches a finite receipt',
+      async () => {
         assert(
-          data?.deleted === true,
-          `account-deletion did not report success: ${JSON.stringify(data)}`,
+          deletionBeginDispatched,
+          'account-deletion begin was never dispatched; status polling was not run.',
+        );
+        assert(
+          activeDeletionBarrierAttested,
+          'active owner-bound preflight was not attested before status polling.',
+        );
+        terminalDeletion = await pollAccountDeletionToTerminal(
+          admin,
+          userA.id,
+          deletionRequest.statusCapability,
+          acceptedDeletion?.nextPollAfterSeconds ?? 2,
+        );
+        assert(
+          terminalDeletion.kind === 'completed',
+          terminalDeletion.kind === 'expired'
+            ? 'account-deletion capability returned the exact terminal 410 expired contract before completion could be proven.'
+            : 'account-deletion capability did not return a completed terminal receipt.',
+        );
+      },
+    );
+
+    await runCheck(
+      'completed account-deletion receipt gates caller erasure and other-user isolation checks',
+      async () => {
+        assert(
+          terminalDeletion?.kind === 'completed' &&
+            terminalDeletion.httpStatus === 200 &&
+            terminalDeletion.authAbsent === true &&
+            terminalDeletion.postAuthReceiptReplay === true,
+          'residual checks are forbidden until terminal HTTP 200 completion is attested after Auth deletion.',
         );
 
         assert(!(await userExists(admin, userA.id)), 'deleted user still exists in auth.');
@@ -739,6 +1758,14 @@ async function main() {
         await expectAdminRows(admin, 'photos', 'user_id', userA.id, 0, 'deleted photo metadata');
         await expectAdminRows(
           admin,
+          'edge_rate_limits',
+          'owner_user_id',
+          userA.id,
+          0,
+          'deleted owner rate limits',
+        );
+        await expectAdminRows(
+          admin,
           'commerce_click_events',
           'user_id',
           userA.id,
@@ -746,6 +1773,22 @@ async function main() {
           'deleted commerce click',
         );
         await expectAdminRows(admin, 'entitlements', 'user_id', userA.id, 0, 'deleted entitlement');
+        await expectAdminRows(
+          admin,
+          'reverse_trial_grants',
+          'user_id',
+          userA.id,
+          0,
+          'deleted reverse-trial grant',
+        );
+        await expectAdminRows(
+          admin,
+          'catalog_corrections',
+          'id',
+          seededA.catalogCorrection.id,
+          0,
+          'deleted catalog correction',
+        );
 
         await expectAdminRows(admin, 'profiles', 'id', userB.id, 1, 'other user profile retained');
         await expectAdminRows(
@@ -764,81 +1807,237 @@ async function main() {
           1,
           'other user photo metadata retained',
         );
+        await expectAdminRows(
+          admin,
+          'reverse_trial_grants',
+          'user_id',
+          userB.id,
+          1,
+          'other user reverse-trial grant retained',
+        );
+        await expectAdminRows(
+          admin,
+          'catalog_corrections',
+          'id',
+          seededB.catalogCorrection.id,
+          1,
+          'other user catalog correction retained',
+        );
+
+        const accountOnlySubscriptionIds = [
+          subscriptionFixtures.aOnlyScalar.id,
+          subscriptionFixtures.aliasOnly.id,
+          subscriptionFixtures.transferOnly.id,
+        ];
+        const { data: accountOnlyEvents, error: accountOnlyEventsError } = await admin
+          .from('subscriptions_events')
+          .select('id')
+          .in('id', accountOnlySubscriptionIds);
+        if (accountOnlyEventsError) throw accountOnlyEventsError;
+        assert(
+          (accountOnlyEvents ?? []).length === 0,
+          'account-deletion retained an account-only subscription event.',
+        );
+
+        const repeatedAEvent = await subscriptionEventById(
+          admin,
+          subscriptionFixtures.repeatedA.id,
+          'repeated-A shared event retained',
+        );
+        assertNoSubscriptionIdentity(repeatedAEvent, userA.id, 'repeated-A shared event');
+        assert(
+          subscriptionEventContainsIdentity(repeatedAEvent, userB.id),
+          'repeated-A shared event lost the retained B owner.',
+        );
+        assertExactArray(
+          repeatedAEvent.aliases,
+          ['repeat-alias-1', userB.id, 'repeat-alias-2'],
+          'repeated-A aliases',
+        );
+        assertExactArray(
+          repeatedAEvent.transferred_from,
+          ['repeat-from', userB.id],
+          'repeated-A transferred_from',
+        );
+        assertExactArray(
+          repeatedAEvent.transferred_to,
+          ['repeat-to', userB.id],
+          'repeated-A transferred_to',
+        );
+
+        const sharedEvent = await subscriptionEventById(
+          admin,
+          subscriptionFixtures.sharedAB.id,
+          'shared A/B event retained',
+        );
+        assertNoSubscriptionIdentity(sharedEvent, userA.id, 'shared A/B event');
+        assert(
+          sharedEvent.user_id === null &&
+            sharedEvent.resolved_user_id === userB.id &&
+            sharedEvent.app_user_id === null &&
+            sharedEvent.original_app_user_id === userB.id,
+          'shared A/B event did not preserve only the expected scalar B owners.',
+        );
+        assertExactArray(
+          sharedEvent.aliases,
+          ['shared-alias-before', userB.id, 'shared-alias-after'],
+          'shared A/B aliases',
+        );
+        assertExactArray(
+          sharedEvent.transferred_from,
+          [userB.id, 'shared-from-before', 'shared-from-after'],
+          'shared A/B transferred_from',
+        );
+        assertExactArray(
+          sharedEvent.transferred_to,
+          ['shared-to-before', userB.id, 'shared-to-after'],
+          'shared A/B transferred_to',
+        );
+
+        const bOnlyAfterDeletion = await subscriptionEventById(
+          admin,
+          subscriptionFixtures.bOnly.id,
+          'B-only post-deletion snapshot',
+        );
+        assert(
+          JSON.stringify(bOnlyAfterDeletion) === bOnlySubscriptionSnapshot,
+          'account-deletion changed the byte-equivalent B-only subscription snapshot.',
+        );
+
+        const { data: providerAuditEvents, error: providerAuditEventsError } = await admin
+          .from('subscriptions_events')
+          .select('id')
+          .like('rc_event_id', `${providerAuditEventPrefix}%`);
+        if (providerAuditEventsError) throw providerAuditEventsError;
+        for (const event of providerAuditEvents ?? []) subscriptionEventIds.push(event.id);
+        assert(
+          (providerAuditEvents ?? []).length === 0,
+          'account-deletion created a synthetic provider audit subscription row.',
+        );
 
         const ownerPhoto = await admin.storage.from('photos').download(seededA.photo.storage_path);
-        assert(Boolean(ownerPhoto.error), 'deleted user photo object was still downloadable.');
+        assert(
+          storageObjectMissing(ownerPhoto.error),
+          'deleted user photo object absence was not proven by an exact not-found result.',
+        );
         const otherPhoto = await admin.storage.from('photos').download(seededB.photo.storage_path);
         if (otherPhoto.error)
           throw new Error('account-deletion removed another user photo object.');
 
-        // Access JWTs remain cryptographically valid until exp even after the
-        // auth row is gone. Exercise Storage with that exact stale bearer and
-        // prove the retained lookup tombstone still rejects durable writes.
-        const stalePath = `${userA.id}/post-delete-stale-${randomUUID()}.bin`;
-        storagePaths.push(stalePath);
-        const staleUpload = await staleJwtClient(userA.token)
-          .storage.from('photos')
-          .upload(stalePath, new Blob(['stale deleted-owner write']), {
-            contentType: 'application/octet-stream',
-            upsert: false,
-          });
-        assert(
-          Boolean(staleUpload.error),
-          'a still-valid deleted-owner JWT recreated photo storage after deletion.',
-        );
-
-        const { data: ownerOrder, error: ownerOrderError } = await admin
-          .from('order_attributions')
-          .select('click_token')
-          .eq('external_order_id', seededA.externalOrderId)
-          .single();
-        if (ownerOrderError) throw ownerOrderError;
-        assert(
-          ownerOrder.click_token === null,
-          'deleted user order attribution click token was not scrubbed.',
-        );
-
-        const { data: otherOrder, error: otherOrderError } = await admin
-          .from('order_attributions')
-          .select('click_token')
-          .eq('external_order_id', seededB.externalOrderId)
-          .single();
-        if (otherOrderError) throw otherOrderError;
-        assert(
-          otherOrder.click_token === seededB.clickToken,
-          'account-deletion scrubbed another user order attribution.',
-        );
       },
     );
   } finally {
     if (storagePaths.length > 0) {
-      await admin.storage
-        .from('photos')
-        .remove(storagePaths)
-        .catch((error) => warnings.push(`Storage cleanup warning: ${redactedErrorKind(error)}`));
+      const { error } = await admin.storage.from('photos').remove(storagePaths);
+      if (error) errors.push(`Storage cleanup failed: ${redactedErrorKind(error)}`);
+      for (const path of storagePaths) {
+        const remaining = await admin.storage.from('photos').download(path);
+        if (!remaining.error) errors.push('Storage cleanup left a residual object.');
+        else if (!storageObjectMissing(remaining.error)) {
+          errors.push(`Storage cleanup verification failed: ${redactedErrorKind(remaining.error)}`);
+        }
+      }
     }
-    for (const externalOrderId of externalOrderIds) {
+    const trackedSubscriptionEventIds = [...new Set(subscriptionEventIds)];
+    if (trackedSubscriptionEventIds.length > 0) {
       const { error } = await admin
-        .from('order_attributions')
+        .from('subscriptions_events')
         .delete()
-        .eq('external_order_id', externalOrderId);
-      if (error) warnings.push(`Order cleanup warning: ${redactedErrorKind(error)}`);
+        .in('id', trackedSubscriptionEventIds);
+      if (error) {
+        errors.push(`Subscription-event cleanup failed: ${redactedErrorKind(error)}`);
+      } else {
+        const { count, error: verifyError } = await admin
+          .from('subscriptions_events')
+          .select('*', { count: 'exact', head: true })
+          .in('id', trackedSubscriptionEventIds);
+        if (verifyError) {
+          errors.push(
+            `Subscription-event cleanup verification failed: ${redactedErrorKind(verifyError)}`,
+          );
+        } else if (count !== 0) {
+          errors.push('Subscription-event cleanup left a residual row.');
+        }
+      }
     }
-    await cleanupLiveTestAccounts({
-      admin,
-      users,
-      errors,
-      label: 'Data-rights user cleanup',
-      errorKind: redactedErrorKind,
-    });
+    for (const user of users) {
+      if (!user?.id) continue;
+      const keyHash = keyHashFor('data-export', user.id);
+      const { error } = await admin
+        .from('edge_rate_limits')
+        .delete()
+        .eq('scope', 'data-export')
+        .eq('key_hash', keyHash);
+      if (error) {
+        errors.push(`Rate-limit cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      const { count, error: verifyError } = await admin
+        .from('edge_rate_limits')
+        .select('*', { count: 'exact', head: true })
+        .eq('scope', 'data-export')
+        .eq('key_hash', keyHash);
+      if (verifyError) {
+        errors.push(`Rate-limit cleanup verification failed: ${redactedErrorKind(verifyError)}`);
+      } else if (count !== 0) {
+        errors.push('Rate-limit cleanup left a residual row.');
+      }
+    }
+    for (const entry of accountDeletionRateLimitKeys) {
+      const { error } = await admin
+        .from('edge_rate_limits')
+        .delete()
+        .eq('scope', entry.scope)
+        .eq('key_hash', entry.keyHash);
+      if (error) {
+        errors.push(`Account-deletion rate-limit cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      const { count, error: verifyError } = await admin
+        .from('edge_rate_limits')
+        .select('*', { count: 'exact', head: true })
+        .eq('scope', entry.scope)
+        .eq('key_hash', entry.keyHash);
+      if (verifyError) {
+        errors.push(
+          `Account-deletion rate-limit cleanup verification failed: ${redactedErrorKind(
+            verifyError,
+          )}`,
+        );
+      } else if (count !== 0) {
+        errors.push('Account-deletion rate-limit cleanup left a residual row.');
+      }
+    }
+    for (const user of users) {
+      if (!user?.id) continue;
+      let exists = false;
+      try {
+        exists = await userExists(admin, user.id);
+      } catch (error) {
+        errors.push(`User cleanup preflight failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      if (!exists) continue;
+      const { error } = await admin.auth.admin.deleteUser(user.id);
+      if (error) {
+        errors.push(`User cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      try {
+        if (await userExists(admin, user.id))
+          errors.push('User cleanup left a residual Auth user.');
+      } catch (verifyError) {
+        errors.push(`User cleanup verification failed: ${redactedErrorKind(verifyError)}`);
+      }
+    }
   }
 
-  writeArtifacts(errors.length > 0 ? 'fail' : 'pass');
+  writeArtifacts(errors.length > 0 || (strict && warnings.length > 0) ? 'fail' : 'pass');
   printResult('Phase 9 live data rights', errors, warnings);
 }
 
 main().catch((error) => {
-  errors.push(resultError(error));
+  errors.push(harnessErrorDetail(error));
   writeArtifacts('fail');
   printResult('Phase 9 live data rights', errors, warnings);
 });

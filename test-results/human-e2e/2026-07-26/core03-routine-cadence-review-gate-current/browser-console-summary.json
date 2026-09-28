@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "captureScope": "Calibrated 27-route-viewport run plus final corrected Cycle Week recapture and refresh",
+  "windowStart": "2026-07-26T14:19:55.088Z",
+  "windowEnd": "2026-07-26T14:29:17.190Z",
+  "errors": [],
+  "javascriptDialogCount": 0,
+  "warnings": [
+    {
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "count": 33,
+      "classification": "expected local fail-closed development warning"
+    },
+    {
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "count": 33,
+      "classification": "expected local fail-closed development warning"
+    },
+    {
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "count": 33,
+      "classification": "expected Expo web capability warning"
+    },
+    {
+      "message": "props.pointerEvents is deprecated. Use style.pointerEvents",
+      "count": 33,
+      "classification": "known development deprecation warning"
+    }
+  ],
+  "provenanceLimit": "This is a retained aggregate of the browser diagnostics API, not a raw console export or Playwright trace."
+}

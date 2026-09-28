@@ -44,7 +44,7 @@ semantic view occupied only half the visual target height.
 ## Deterministic Evidence
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/features/photos/compareAccessibility.test.ts \
   src/features/photos/progressRoutes.test.ts
 2 files / 25 tests PASS

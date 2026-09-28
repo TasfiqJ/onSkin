@@ -5,7 +5,7 @@
 - Date: 2026-07-16 (America/Toronto)
 - Codex task: Maximum React Native optimization plan, PERF-P0-005 / OPT-007 routine-order atomic phase patch
 - App surface: Expo web, supported-phone responsive implementation surface
-- Build/start command: PowerShell `$env:EXPO_PUBLIC_E2E_ENTITLEMENT='store_pro'`, then `npm --workspace @onskin/mobile run web -- --port 8290 --host localhost --clear`
+- Build/start command: PowerShell `$env:EXPO_PUBLIC_E2E_ENTITLEMENT='store_pro'`, then `npm --workspace @layerwell/mobile run web -- --port 8290 --host localhost --clear`
 - Browser/device/simulator/OS: Codex in-app browser on Windows, explicit 390 x 844 phone viewport (reported CSS viewport 390 x 845)
 - Feature tested: populated `/routine/reorder` save, route exit, direct reload, and independent AM/PM persistence
 - Overall verdict: Pass
@@ -50,7 +50,7 @@ The in-app browser screenshot backend returned blank PNG buffers during this run
 ## Commands Run
 
 ```text
-npm --workspace @onskin/mobile test -- --run src/features/routine/orderStore.test.ts src/features/routine/orderRoutes.test.ts src/features/routine/usePlan.test.ts src/lib/storage/privateKV.test.ts
+npm --workspace @layerwell/mobile test -- --run src/features/routine/orderStore.test.ts src/features/routine/orderRoutes.test.ts src/features/routine/usePlan.test.ts src/lib/storage/privateKV.test.ts
 # PASS: 4 files / 92 tests
 
 npm run typecheck

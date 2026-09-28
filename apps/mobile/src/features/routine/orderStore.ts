@@ -1,12 +1,14 @@
-import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import type { GeneratedPlan, PlanStep } from './generate';
 
-const STORAGE_KEY = 'routinekind.routineOrder.v1';
+const STORAGE_KEY = 'layerwell.routineOrder.v1';
 
 export const ROUTINE_ORDER_INVALID = 'ROUTINE_ORDER_INVALID';
 export const ROUTINE_ORDER_UNSUPPORTED_VERSION = 'ROUTINE_ORDER_UNSUPPORTED_VERSION';
-export const ROUTINE_ORDER_UNAVAILABLE = 'ROUTINE_ORDER_UNAVAILABLE';
+
+export const ROUTINE_ORDER_QUERY_KEY = ['routineOrder', 'v1'] as const;
 
 export type RoutineOrderPhase = 'am' | 'pm';
 
@@ -16,18 +18,10 @@ export type RoutineOrderOverrides = {
   pm: string[];
 };
 
-export type RoutineOrderOverridePatch = Partial<
-  Record<RoutineOrderPhase, readonly string[]>
->;
-
-export type RoutineOrderStateRead =
-  | { status: 'absent'; overrides: RoutineOrderOverrides }
-  | {
-      status: 'available';
-      overrides: RoutineOrderOverrides;
-      format: 'current' | 'legacy';
-    }
-  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; overrides: null };
+export type RoutineOrderSaveTransaction = {
+  previous: RoutineOrderOverrides;
+  next: RoutineOrderOverrides;
+};
 
 type NormalizedOverrides = {
   value: RoutineOrderOverrides;
@@ -40,13 +34,6 @@ function emptyOverrides(): RoutineOrderOverrides {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
-}
-
-function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
-  return (
-    Object.keys(value).length === keys.length &&
-    keys.every((key) => Object.prototype.hasOwnProperty.call(value, key))
-  );
 }
 
 function normalizeIds(value: unknown): { ids: string[]; changed: boolean } | null {
@@ -78,9 +65,7 @@ function normalizeIds(value: unknown): { ids: string[]; changed: boolean } | nul
 
 function normalizeOverrides(value: unknown): NormalizedOverrides | null {
   if (!isRecord(value)) return null;
-  if (value.schemaVersion !== undefined && value.schemaVersion !== 0 && value.schemaVersion !== 1) {
-    return null;
-  }
+  if (value.schemaVersion !== undefined && value.schemaVersion !== 1) return null;
 
   const am = normalizeIds(value.am ?? []);
   const pm = normalizeIds(value.pm ?? []);
@@ -98,7 +83,58 @@ function normalizeOverrides(value: unknown): NormalizedOverrides | null {
       am.changed ||
       pm.changed ||
       value.schemaVersion !== 1 ||
-      !hasExactKeys(value, ['schemaVersion', 'am', 'pm']),
+      JSON.stringify(value) !== JSON.stringify(normalized),
+  };
+}
+
+function validateIdsForWrite(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null;
+
+  const ids: string[] = [];
+  const seen = new Set<string>();
+  for (const item of value) {
+    if (typeof item !== 'string' || item.length === 0 || item.trim() !== item || seen.has(item)) {
+      return null;
+    }
+    seen.add(item);
+    ids.push(item);
+  }
+  return ids;
+}
+
+function validateOverridesForWrite(value: unknown): RoutineOrderOverrides {
+  if (isRecord(value) && typeof value.schemaVersion === 'number' && value.schemaVersion > 1) {
+    throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+  }
+  if (!isRecord(value)) throw new Error(ROUTINE_ORDER_INVALID);
+
+  const keys = Object.keys(value).sort();
+  if (
+    keys.length !== 3 ||
+    keys[0] !== 'am' ||
+    keys[1] !== 'pm' ||
+    keys[2] !== 'schemaVersion' ||
+    value.schemaVersion !== 1
+  ) {
+    throw new Error(ROUTINE_ORDER_INVALID);
+  }
+
+  const am = validateIdsForWrite(value.am);
+  const pm = validateIdsForWrite(value.pm);
+  if (!am || !pm) throw new Error(ROUTINE_ORDER_INVALID);
+
+  return { schemaVersion: 1, am, pm };
+}
+
+function validateSaveTransaction(value: unknown): RoutineOrderSaveTransaction {
+  if (!isRecord(value)) throw new Error(ROUTINE_ORDER_INVALID);
+  const keys = Object.keys(value).sort();
+  if (keys.length !== 2 || keys[0] !== 'next' || keys[1] !== 'previous') {
+    throw new Error(ROUTINE_ORDER_INVALID);
+  }
+  return {
+    previous: validateOverridesForWrite(value.previous),
+    next: validateOverridesForWrite(value.next),
   };
 }
 
@@ -106,43 +142,14 @@ function hasOverrides(value: RoutineOrderOverrides): boolean {
   return value.am.length > 0 || value.pm.length > 0;
 }
 
-function sameIds(left: readonly string[], right: readonly string[]): boolean {
-  return left.length === right.length && left.every((id, index) => id === right[index]);
-}
-
-function normalizeOverridePatch(patch: RoutineOrderOverridePatch): RoutineOrderOverridePatch {
-  if (!isRecord(patch)) throw new Error(ROUTINE_ORDER_INVALID);
-  const keys = Object.keys(patch);
-  if (keys.some((key) => key !== 'am' && key !== 'pm')) {
-    throw new Error(ROUTINE_ORDER_INVALID);
-  }
-
-  const normalized: RoutineOrderOverridePatch = {};
-  for (const phase of ['am', 'pm'] as const) {
-    if (!Object.prototype.hasOwnProperty.call(patch, phase)) continue;
-    const ids = normalizeIds(patch[phase]);
-    if (!ids || ids.changed) throw new Error(ROUTINE_ORDER_INVALID);
-    normalized[phase] = ids.ids;
-  }
-  return normalized;
-}
-
-function decodeOverrides(raw: string): {
-  overrides: RoutineOrderOverrides;
-  format: 'current' | 'legacy';
-} {
+function decodeOverrides(raw: string): RoutineOrderOverrides {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch {
     throw new Error(ROUTINE_ORDER_INVALID);
   }
-  if (
-    isRecord(parsed) &&
-    typeof parsed.schemaVersion === 'number' &&
-    Number.isSafeInteger(parsed.schemaVersion) &&
-    parsed.schemaVersion > 1
-  ) {
+  if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
     throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
   }
   const normalized = normalizeOverrides(parsed);
@@ -150,83 +157,55 @@ function decodeOverrides(raw: string): {
   if (isRecord(parsed) && parsed.schemaVersion === 1 && normalized.changed) {
     throw new Error(ROUTINE_ORDER_INVALID);
   }
-  return {
-    overrides: normalized.value,
-    format: isRecord(parsed) && parsed.schemaVersion === 1 ? 'current' : 'legacy',
-  };
+  return normalized.value;
 }
 
-/** Classifies routine-order bytes without repairing, deleting, or migrating them. */
-export async function readRoutineOrderState(): Promise<RoutineOrderStateRead> {
-  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
-  try {
-    stored = await readPrivateItem(STORAGE_KEY);
-  } catch {
-    return { status: 'unavailable', overrides: null };
-  }
-
-  if (stored.status === 'absent') return { status: 'absent', overrides: emptyOverrides() };
-  if (stored.status === 'unavailable') return { status: 'unavailable', overrides: null };
-  if (stored.status === 'corrupt') return { status: 'corrupt', overrides: null };
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', overrides: null };
-  }
-
-  try {
-    const decoded = decodeOverrides(stored.value);
-    return { status: 'available', ...decoded };
-  } catch (error) {
-    return error instanceof Error && error.message === ROUTINE_ORDER_UNSUPPORTED_VERSION
-      ? { status: 'unsupported_version', overrides: null }
-      : { status: 'corrupt', overrides: null };
-  }
-}
-
-export async function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
-  const state = await readRoutineOrderState();
-  if (state.status === 'available' || state.status === 'absent') return state.overrides;
-  if (state.status === 'unsupported_version') {
-    throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
-  }
-  if (state.status === 'corrupt') throw new Error(ROUTINE_ORDER_INVALID);
-  throw new Error(ROUTINE_ORDER_UNAVAILABLE);
-}
-
-/**
- * Atomically apply only the phases edited by this caller. A whole-record
- * replacement can serialize correctly and still erase a concurrent edit to
- * the other phase when it was computed from an older UI snapshot.
- */
-export async function saveRoutineOrderOverridePatch(
-  patch: RoutineOrderOverridePatch,
-): Promise<RoutineOrderOverrides> {
-  const normalizedPatch = normalizeOverridePatch(patch);
-  let saved: RoutineOrderOverrides | null = null;
-  await updatePrivateItem(STORAGE_KEY, (current) => {
-    const decoded = current === null ? null : decodeOverrides(current);
-    const previous = decoded?.overrides ?? emptyOverrides();
-    const next: RoutineOrderOverrides = {
-      schemaVersion: 1,
-      am: normalizedPatch.am ? [...normalizedPatch.am] : previous.am,
-      pm: normalizedPatch.pm ? [...normalizedPatch.pm] : previous.pm,
-    };
-    saved = next;
-
-    if (
-      decoded?.format === 'current' &&
-      sameIds(previous.am, next.am) &&
-      sameIds(previous.pm, next.pm)
-    ) {
-      return current;
-    }
-    return hasOverrides(next) ? JSON.stringify(next) : null;
+export function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const raw = await getPrivateItem(STORAGE_KEY);
+    lease.assertCurrent();
+    const overrides = raw === null ? emptyOverrides() : decodeOverrides(raw);
+    lease.assertCurrent();
+    return overrides;
   });
-  if (!saved) throw new Error('ROUTINE_ORDER_WRITE_FAILED');
-  return saved;
+}
+
+export async function saveRoutineOrderOverrides(
+  transaction: RoutineOrderSaveTransaction,
+): Promise<RoutineOrderOverrides> {
+  const { previous, next } = validateSaveTransaction(transaction);
+  const changed = {
+    am: !sameIds(previous.am, next.am),
+    pm: !sameIds(previous.pm, next.pm),
+  };
+
+  return runCurrentHealthDataOperation(async (lease) => {
+    let committed: RoutineOrderOverrides | null = null;
+    lease.assertCurrent();
+    await updatePrivateItem(STORAGE_KEY, (current) => {
+      lease.assertCurrent();
+      const latest = current === null ? emptyOverrides() : decodeOverrides(current);
+      committed = {
+        schemaVersion: 1,
+        am: changed.am ? next.am : latest.am,
+        pm: changed.pm ? next.pm : latest.pm,
+      };
+      lease.assertCurrent();
+      return hasOverrides(committed) ? JSON.stringify(committed) : null;
+    });
+    lease.assertCurrent();
+    if (!committed) throw new Error(ROUTINE_ORDER_INVALID);
+    return committed;
+  });
 }
 
 function stepIds(steps: readonly PlanStep[]): string[] {
   return steps.map((step) => step.productId);
+}
+
+function sameIds(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((id, index) => id === right[index]);
 }
 
 /**

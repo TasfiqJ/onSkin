@@ -1,7 +1,214 @@
 {
-  "generatedAt": "2026-07-11T18:49:12.740Z",
+  "generatedAt": "2026-08-10T01:49:41.868Z",
   "status": "blocked",
-  "gitSha": "de9bee6b829c97a89c2f0e08a83e59c788baffa9",
+  "launchContract": {
+    "schemaVersion": 1,
+    "programId": "ios-all-features-2026",
+    "effectiveDate": "2026-07-12",
+    "releaseMode": "all-features",
+    "platforms": [
+      "ios"
+    ],
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false,
+    "requiredFeatureIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "requiredFeatureKeys": [
+      "brand_identity",
+      "onboarding_consent",
+      "shelf_intake",
+      "catalog",
+      "conflict_engine",
+      "routine_builder",
+      "today_adherence",
+      "cycle_scheduler",
+      "photo_progress",
+      "reminders",
+      "subscriptions",
+      "reverse_trial",
+      "recommendations",
+      "ask_advisor",
+      "conflict_share",
+      "commerce",
+      "community",
+      "trend_insights",
+      "widgets_live_activities",
+      "admin_tooling"
+    ],
+    "requiredSurfaces": [
+      "commerce",
+      "community_posting",
+      "community_aggregates",
+      "trend_insights",
+      "cloud_ask",
+      "widgets",
+      "live_activities",
+      "share_cards",
+      "reviewed_conflict_sharing",
+      "goal_active_recommendations",
+      "public_links",
+      "review_prompts",
+      "creator_links",
+      "paid_measurement"
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
+    }
+  },
+  "platformStatus": {
+    "ios": "required",
+    "android": "not_applicable"
+  },
+  "gitSha": "b5faf07fa73b39a9b5f009e8ddaeb7fb29fd538a",
   "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "phase10PacketStatus": "blocked",
@@ -32,40 +239,42 @@
   },
   "signedOffBy": "",
   "sourceHashes": {
-    "package.json": "5714a4b7bd35cffa77b9951ebfcad3b090cc707a89bf0e0f6001ae7ad49c81b3",
+    "package.json": "af6cec1697c363daf266bcd4032a184aa9a994a51cc6a8c0991da4c67b0d8c8e",
+    "docs/hugeToDo/launch-contract.json": "ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb",
+    "scripts/launch/contract.mjs": "7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b",
     "turbo.json": "66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57",
-    ".env.example": "2e389243c757aee40769b8a15718d601160687cfdbd84517aecb34c8834255ba",
-    "scripts/phase9/lib.mjs": "af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083",
-    "scripts/phase9/evidence-normalization-smoke.mjs": "2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5",
-    "scripts/phase10/lib.mjs": "3d326b6f8589e7157f9def40c2b3cd17c31bda9b4b3746f35f7ffd5f3d4deb0c",
-    "scripts/phase10/beta-readiness.mjs": "ee984adb6c04f24ec4643d6a8dadc507d18173cf1fe0f7f57ec872324941abc7",
-    "scripts/phase10/beta-analytics-audit.mjs": "b53f5f09236eac44112e145c818cd845e8593a48821e80a3ac96697f88a3570e",
-    "scripts/phase10/build-support-handoff-packet.mjs": "ea5ded8fefa3a0258b71c7cf26f16365cab41add4882a90bc12b8601805cc20a",
-    "scripts/phase10/build-beta-packet.mjs": "ddebd3541d92a9f4e53ddbb41b8c1aebefb1ac915d536b60e334fd50f738df61",
-    "scripts/phase10-11/public-contact-smoke.mjs": "630ad5c5ff818df209ef7bfa990f2bf64fb22a257ca22acb0fd09fad782801e4",
-    "scripts/phase11/lib.mjs": "bebfbefc19a6ec445ab36dfaa02a65b74e12e72587832dbdcbb78bc2f9f11ce1",
-    "scripts/phase11/launch-readiness.mjs": "93dae2c3e9157435fad4db3b99f81d4f2be949b46b8629f6729dda9c59b1991e",
-    "scripts/phase11/launch-ring-gates.mjs": "90455da8c749dac0dc3d08ff48782870bade649995378f9a3d74b778ef51ec05",
-    "scripts/phase11/build-launch-packet.mjs": "03c1349b78dbc7aeada67505c47a82c4e3fae5592903e0915416ee693ed5231c",
-    "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",
-    "apps/mobile/app.config.js": "1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec",
-    "apps/mobile/src/lib/env.ts": "268bf5903053c48b3663f61139452deebe10da046e779eef000c1dfeb385d7a4",
-    "apps/mobile/src/lib/iap/revenuecat.ts": "f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105",
-    "docs/phase-9/generated/release-engineering-qa-packet.json": "b7367489a63d3fd54ffca6392850a9d13e40096714f4f5f1cfe2dc8e0c38cb9c",
-    "docs/phase-9/generated/release-engineering-qa-packet.md": "feaa9d185a976d6d6cdb0949c561b5c404dde6e226df159931e6b5a2fb429209",
-    "docs/phase-10/generated/support-handoff-packet.json": "bffd88f89fcc705975f888673b84e37c79c2690bbab08b068e2c9f69216f8802",
-    "docs/phase-10/generated/support-handoff-packet.md": "80e025bcc0d6e708a2383604e883fa54080dca245b4276b16f86cb4622e270a1",
-    "docs/phase-10/generated/closed-beta-packet.json": "898cfc82883ba99e5eb65c632194d57e4714a36a474653620671afe84f0b12f2",
-    "docs/phase-10/generated/closed-beta-packet.md": "71494c48c812efd16bb0c2b1efd195433e6ec386d8e42977fcdc13cf89056471",
-    "docs/phase-11/launch-command-center.md": "a79b3668683345d5846aace9d8c33a1debcd3a1057520f57ecc5e431201b394d",
+    ".env.example": "d9825f22149f8d15e491d4f1d97fbc8311ce739564a36e1f0ed0ecc64464e091",
+    "scripts/phase9/lib.mjs": "2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c",
+    "scripts/phase9/evidence-normalization-smoke.mjs": "9dcb0f7924e75a73d213129453d4cfd7f2f991d0ab6ff75993ad273737060b06",
+    "scripts/phase10/lib.mjs": "8aadf10a2f267366b2d23166793476ed4cb7c3511856f27858801c43884b98e3",
+    "scripts/phase10/beta-readiness.mjs": "a766be5eae56fd6416cf26219d7937fd4261768653ef12ae84d7828a0de0555a",
+    "scripts/phase10/beta-analytics-audit.mjs": "6b59019b485e4e2eb9dfed6d34cf4e6362e8b62728ece9567f9974e74836fa9b",
+    "scripts/phase10/build-support-handoff-packet.mjs": "504e2eb26fbbb612b321d9e636d8d5d5038aab4f3f9ea0fcb7c9c92ba806be7e",
+    "scripts/phase10/build-beta-packet.mjs": "bb789bb5a40f00a8d2f14e265b538b31a90c7269e84d069d71f99b0946d7ca60",
+    "scripts/phase10-11/public-contact-smoke.mjs": "c2677edb5f441c0822749b6643e8016266cf4a7c981455ad569d155289073af0",
+    "scripts/phase11/lib.mjs": "fd43bdd477fd6474ed33bc4303404dd64ed226c5004b8288b06f254a067773ef",
+    "scripts/phase11/launch-readiness.mjs": "d4479aa379658a76488ca7de06907b1fbaf1dbfc603a27f0ca0103d9b79113dd",
+    "scripts/phase11/launch-ring-gates.mjs": "04c368e0061761b844700f21670aed9ba767f873487860bbd7125f51a307689f",
+    "scripts/phase11/build-launch-packet.mjs": "fe740c712c5be6ecd7df20895f4ac6c76f681a20d3f0b169bebd8c0da16fa4e9",
+    "apps/mobile/eas.json": "c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04",
+    "apps/mobile/app.config.js": "81851010e4eb58d23f8e61ca270d979776390f3607d4a6afdf6106936756eb5c",
+    "apps/mobile/src/lib/env.ts": "d01f2db0a98f0537663312adc42bb375ca8523cdec282f2548a610b1f98383f1",
+    "apps/mobile/src/lib/iap/revenuecat.ts": "8eec8ea1c909208d44552a1d417728027eaef2bc8a6738d43f81a150bdef1a67",
+    "docs/phase-9/generated/release-engineering-qa-packet.json": "cc83219da9023dda10a464b62609e379131bcf310e664d2e9387d548464e0379",
+    "docs/phase-9/generated/release-engineering-qa-packet.md": "8d1f5019cf44d2f077d9d3ff279b3116f29f7780aaf67cc9133c024dfbda6dd9",
+    "docs/phase-10/generated/support-handoff-packet.json": "16cefc9aff5b8cc299a8a3b03bfc59b356b8131ca8a3e260db4af32be5b34f98",
+    "docs/phase-10/generated/support-handoff-packet.md": "43f8ebc929a075fef645f871b8013ce40394cbb21ad3886b84ad8efcca0ed271",
+    "docs/phase-10/generated/closed-beta-packet.json": "018318c4269e309a0ae187365feb2796a7525f2c78e7c71867ea3dd8c7961e7f",
+    "docs/phase-10/generated/closed-beta-packet.md": "41fa228095b7846ebb00bff14be9c9c0d1e97c2ccbf758807993b254863296e2",
+    "docs/phase-11/launch-command-center.md": "e66413fc7ee822ec260d1a2248b01f3e186440378d7a1d83211cb34051fbd17b",
     "docs/phase-11/phase-10-exit-review.md": "a345491b5f604ac835cc60827ff33a7b10a34ca95d3b9f8774d5b63114ea7c69",
-    "docs/phase-11/store-release-plan.md": "3ef1ecef69af5f4d82405a96a3670ccf1c58801e802192c8c6e5e942f292997c",
+    "docs/phase-11/store-release-plan.md": "e18f16b00a0103cccb1c67f1ee2fe61760f539bda674de3d44438b6ba24a019e",
     "docs/phase-11/production-environment-check.md": "c4c181312c6cda680db469b7a8718da68ac4487b8cbb70cfbeaa1fe98a511753",
     "docs/phase-11/revenuecat-production-verification.md": "32e5ff2b39678d8cdc55156fbdfa2164479d978d61e0b0f2c68734067d524323",
-    "docs/phase-11/monitoring-dashboards.md": "5b401ceb6e5cfadc60da9f09bb2daec2b16041d5a66f781d2c9ba9ee56f20363",
+    "docs/phase-11/monitoring-dashboards.md": "6daed3fde944440ec20802d944d8f02bf562cd568395da4d5a04b7d37a882b10",
     "docs/phase-11/support-launch-readiness.md": "956ba69a7967bd389aa8b5657609d9f5b2e201251a6da468df64c38ca70b2a36",
-    "docs/phase-11/incident-rollback-drill.md": "45e7ee21c81cf8b51030d9c4c99baef43788cae1f2f4ebdea4ed0e594335129a",
-    "docs/phase-11/ring-0-release-checklist.md": "ffae9f4f271c9ec0f8dfa81e1571470734a8b00f204daa620b6dfa5479e7a264",
+    "docs/phase-11/incident-rollback-drill.md": "b1ab09fc538b3763dc780a437fba731a47f50198bd0da255db8e1cbe607ed972",
+    "docs/phase-11/ring-0-release-checklist.md": "7100138e038fb376805b9152026aa373caac73602b4f138ef7c06b2b50bc686b",
     "docs/phase-11/ring-1-soft-launch.md": "37f09b108d6dd9f7c8506378d00a6a4868f08b27ae6d1a7c34452a8ee6425f7a",
     "docs/phase-11/aso-store-conversion-review.md": "134bb75bf3f39d0678df6c3dd63b94ec17ea50f047625b1ea871cf0d8a1d24eb",
     "docs/phase-11/creator-disclosure-pack.md": "0aeb441f617f54405d74c46a633fd0229bce70bb5828a8dfa63085da851c69c7",

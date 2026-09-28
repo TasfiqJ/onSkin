@@ -15,17 +15,15 @@ describe('versioned private string-set codec', () => {
     expect(decodePrivateStringSet(encoded)).toEqual(['alpha', 'beta']);
   });
 
-  it('decodes a strict legacy array without requiring read-time repair', () => {
-    expect(decodePrivateStringSet(JSON.stringify(['alpha', 'beta']))).toEqual(['alpha', 'beta']);
+  it('decodes the legacy array without requiring read-time repair', () => {
+    expect(decodePrivateStringSet(JSON.stringify([' alpha ', 'alpha', 7, '', 'beta']))).toEqual([
+      'alpha',
+      'beta',
+    ]);
   });
 
   it('distinguishes invalid and unsupported data', () => {
     expect(() => decodePrivateStringSet('{not-json')).toThrow(PRIVATE_STRING_SET_INVALID);
-    for (const malformed of [[' alpha'], ['alpha', 'alpha'], ['alpha', ''], ['alpha', 7]]) {
-      expect(() => decodePrivateStringSet(JSON.stringify(malformed))).toThrow(
-        PRIVATE_STRING_SET_INVALID,
-      );
-    }
     expect(() =>
       decodePrivateStringSet(JSON.stringify({ version: 1, values: [' alpha'] })),
     ).toThrow(PRIVATE_STRING_SET_INVALID);

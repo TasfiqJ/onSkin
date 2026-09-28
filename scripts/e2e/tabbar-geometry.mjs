@@ -141,6 +141,9 @@ function startExpoServer() {
     env: {
       ...process.env,
       BROWSER: 'none',
+      EXPO_NO_DOTENV: '1',
+      EXPO_PUBLIC_APP_ENV: 'development',
+      EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner',
       CI: '1',
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
       EXPO_PUBLIC_E2E_ENTITLEMENT: 'store_pro',
@@ -389,6 +392,191 @@ function collectProblemLogs(events) {
     .map((event) => ({ method: event.method, params: event.params }));
 }
 
+function textCondition(text) {
+  return `document.body && document.body.innerText.includes(${JSON.stringify(text)})`;
+}
+
+async function waitForText(client, text, timeoutMs = 30_000) {
+  await waitForExpression(client, textCondition(text), timeoutMs, `text "${text}"`);
+}
+
+async function waitForPath(client, pathOrPrefix, timeoutMs = 30_000) {
+  await waitForExpression(
+    client,
+    `window.location.pathname.startsWith(${JSON.stringify(pathOrPrefix)})`,
+    timeoutMs,
+    `path ${pathOrPrefix}`,
+  );
+}
+
+function rectByTextExpression(label, exact) {
+  return `(() => {
+    const label = ${JSON.stringify(label)};
+    const exact = ${JSON.stringify(exact)};
+    const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
+    const visible = (node) => {
+      if (!(node instanceof Element)) return false;
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
+    };
+    const textMatches = (text) => exact ? text === label : text.includes(label);
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label'));
+    const matches = [];
+    for (const node of nodes) {
+      if (!visible(node)) continue;
+      const values = [
+        node.getAttribute('aria-label'),
+        node.getAttribute('accessibilitylabel'),
+        node.textContent,
+        node.getAttribute('title'),
+      ].map(normalize).filter(Boolean);
+      if (!values.some(textMatches)) continue;
+      const rect = node.getBoundingClientRect();
+      matches.push({
+        ariaDisabled: node.getAttribute('aria-disabled'),
+        disabled: Boolean(node.disabled),
+        height: rect.height,
+        label: values[0],
+        text: normalize(node.textContent),
+        width: rect.width,
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      });
+    }
+    matches.sort((a, b) => {
+      const aIn = a.x >= 0 && a.x <= innerWidth && a.y >= 0 && a.y <= innerHeight ? 0 : 1;
+      const bIn = b.x >= 0 && b.x <= innerWidth && b.y >= 0 && b.y <= innerHeight ? 0 : 1;
+      if (aIn !== bIn) return aIn - bIn;
+      return a.width * a.height - b.width * b.height;
+    });
+    return matches[0] ?? null;
+  })()`;
+}
+
+async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+  const startedAt = Date.now();
+  let rect = null;
+
+  while (Date.now() - startedAt < timeoutMs) {
+    rect = await evaluate(client, rectByTextExpression(label, exact));
+    if (rect && rect.disabled !== true && rect.ariaDisabled !== 'true') break;
+    await delay(250);
+  }
+
+  assert(rect, `Could not find visible clickable text: ${label}`);
+  assert(
+    rect.disabled !== true && rect.ariaDisabled !== 'true',
+    `Clickable text is disabled: ${label}`,
+  );
+
+  await client.send('Input.dispatchTouchEvent', {
+    touchPoints: [{ force: 1, id: 1, radiusX: 2, radiusY: 2, x: rect.x, y: rect.y }],
+    type: 'touchStart',
+  });
+  await client.send('Input.dispatchTouchEvent', {
+    touchPoints: [],
+    type: 'touchEnd',
+  });
+  await delay(250);
+  return rect;
+}
+
+function scrollTextIntoViewExpression(label, exact) {
+  return `(() => {
+    const label = ${JSON.stringify(label)};
+    const exact = ${JSON.stringify(exact)};
+    const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
+    const visible = (node) => {
+      if (!(node instanceof Element)) return false;
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
+    };
+    const textMatches = (text) => exact ? text === label : text.includes(label);
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label'));
+    const target = nodes.find((node) => {
+      if (!visible(node)) return false;
+      const values = [
+        node.getAttribute('aria-label'),
+        node.getAttribute('accessibilitylabel'),
+        node.textContent,
+        node.getAttribute('title'),
+      ].map(normalize).filter(Boolean);
+      return values.some(textMatches);
+    });
+    if (!target) return null;
+    target.scrollIntoView({ block: 'center', inline: 'nearest' });
+    const rect = target.getBoundingClientRect();
+    return {
+      height: rect.height,
+      label: normalize(target.getAttribute('aria-label') || target.textContent),
+      text: normalize(target.textContent),
+      width: rect.width,
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    };
+  })()`;
+}
+
+async function scrollTextIntoView(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+  const startedAt = Date.now();
+  let rect = null;
+
+  while (Date.now() - startedAt < timeoutMs) {
+    rect = await evaluate(client, scrollTextIntoViewExpression(label, exact));
+    if (rect) break;
+    await delay(250);
+  }
+
+  assert(rect, `Could not find text to scroll into view: ${label}`);
+  await delay(350);
+  return rect;
+}
+
+function fillExpression(label, value) {
+  return `(() => {
+    const label = ${JSON.stringify(label)};
+    const value = ${JSON.stringify(value)};
+    const normalize = (next) => String(next ?? '').replace(/\\s+/g, ' ').trim();
+    const visible = (node) => {
+      if (!(node instanceof Element)) return false;
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
+    };
+    const controls = Array.from(document.querySelectorAll('input,textarea'));
+    const target = controls.find((node) => {
+      if (!visible(node)) return false;
+      const values = [
+        node.getAttribute('aria-label'),
+        node.getAttribute('accessibilitylabel'),
+        node.getAttribute('placeholder'),
+      ].map(normalize);
+      return values.includes(label);
+    });
+    if (!target) return null;
+    target.focus();
+    const prototype = target instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+    const setter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+    if (setter) setter.call(target, value);
+    else target.value = value;
+    target.dispatchEvent(new InputEvent('input', { bubbles: true, data: value, inputType: 'insertText' }));
+    target.dispatchEvent(new Event('change', { bubbles: true }));
+    const rect = target.getBoundingClientRect();
+    return { height: rect.height, value: target.value, width: rect.width, x: rect.left, y: rect.top };
+  })()`;
+}
+
+async function fillByLabel(client, label, value) {
+  const result = await evaluate(client, fillExpression(label, value));
+  assert(result, `Could not find input with label or placeholder: ${label}`);
+  assert(result.value === value, `Input "${label}" did not receive expected value.`);
+  await delay(150);
+  return result;
+}
+
+
 async function run() {
   let server = null;
   let browser = null;
@@ -411,6 +599,21 @@ async function run() {
     browser = startBrowser(browserPath, userDataDir);
     await readJson(`http://127.0.0.1:${debugPort}/json/version`);
     client = await connectToPage();
+
+    await client.send('Emulation.setDeviceMetricsOverride', { deviceScaleFactor: 2, height: 844, width: 390, mobile: false });
+    await client.send('Page.navigate', { url: baseUrl });
+    await waitForText(client, 'Begin', 60_000);
+    await scrollTextIntoView(client, 'Begin');
+    await clickByText(client, 'Begin');
+    await waitForText(client, 'First, your');
+    await fillByLabel(client, 'Day of birth', '01');
+    await fillByLabel(client, 'Month of birth', '01');
+    await fillByLabel(client, 'Year of birth', '1990');
+    await clickByText(client, 'Continue');
+    await waitForText(client, 'Before the quiz');
+    await clickByText(client, 'I agree. Continue');
+    await waitForText(client, 'What brings you here?');
+    await screenshot(client, 'setup-age-and-consent-complete');
 
     for (const viewport of viewports) {
       await client.send('Emulation.setDeviceMetricsOverride', {
@@ -554,6 +757,8 @@ async function run() {
     const unexpectedLogs = problemLogs.filter((log) => {
       const serialized = JSON.stringify(log);
       return !(
+        // Existing SDK 57/RN Web deprecation, also allowed by the onboarding harness.
+        serialized.includes('props.pointerEvents is deprecated. Use style.pointerEvents') ||
         serialized.includes('EXPO_PUBLIC_SUPABASE') ||
         serialized.includes('Notifications') ||
         serialized.includes('expo-notifications') ||

@@ -1,19 +1,7 @@
-import type { CuratorKind } from '@onskin/types';
+import type { CuratorKind } from '@layerwell/types';
 
-import { BRAND } from '@/lib/brand';
-
-// Expert/derm-reviewed shoppable Stacks (docs/10 §4, Phase 2 concept; UI shipped now
-// with in-house curated content). The research is decisive: expert/derm-curated
-// content is more trusted than anonymous influencer content, and influencer stacks
-// are a trust liability. So the app's stacks are EDITORIAL/derm-reviewed, never
-// anonymous. Ordered by the routine SEQUENCE (docs/03), never by commission (church
-// and state). Stack content is medical-adjacent → launch-gated under B-DERM-REVIEW,
-// exactly like the conflict matrix (rules.ts) and the rec types (catalog.ts).
-//
-// *** BLOCKED: B-DERM-REVIEW. ReviewedBy is null on every stack. In production only
-// *** reviewed stacks surface; in dev the demo stack is available so the surface is
-// *** buildable/demoable. Product items reuse the docs/09 type catalog (type-first;
-// *** specific products + retailers arrive with B-CATALOG-SEED).
+// Dormant stack shapes remain for compatibility, but COM-01A admits no stack
+// corpus, including development or injected fixtures.
 
 export type StackItem = {
   position: number;
@@ -35,58 +23,18 @@ export type CreatorStack = {
   items: StackItem[];
 };
 
-export const STARTER_STACKS: CreatorStack[] = [
-  {
-    slug: 'sensitive-skin-starter-set',
-    title: 'The sensitive-skin starter set',
-    subtitle: 'Four products, in order.',
-    curator: `${BRAND.appName} editorial`,
-    curatorKind: 'derm',
-    reviewedBy: null,
-    items: [
-      {
-        position: 1,
-        productType: 'fragrance_free_cleanser',
-        label: 'Gentle gel cleanser',
-        roleLabel: 'Cleanse · fragrance-free',
-      },
-      {
-        position: 2,
-        productType: 'niacinamide_serum',
-        label: 'Niacinamide 5%',
-        roleLabel: 'Treat · barrier-friendly',
-      },
-      {
-        position: 3,
-        productType: 'ceramide_moisturiser',
-        label: 'Ceramide moisturiser',
-        roleLabel: 'Moisturise · seals it in',
-      },
-      {
-        position: 4,
-        productType: 'mineral_spf',
-        label: 'Mineral SPF 30',
-        roleLabel: 'Protect · the AM finish',
-      },
-    ],
-  },
-];
+export const STARTER_STACKS: CreatorStack[] = [];
 
-/**
- * Launch gate (B-DERM-REVIEW), mirroring shippableRules() / shippableRecTypes(). In
- * production only stacks with a recorded clinical sign-off (reviewedBy) surface; in
- * dev the full set is used so the layer is demoable.
- */
+/** Legacy review state retained without creating commerce admission. */
 export const STACKS_REVIEWED = false;
 
-export function shippableStacks(stacks: CreatorStack[] = STARTER_STACKS): CreatorStack[] {
-  const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-  return isDev ? stacks : stacks.filter((s) => s.reviewedBy != null);
+export function shippableStacks(_stacks: CreatorStack[] = STARTER_STACKS): CreatorStack[] {
+  return [];
 }
 
 export function stackBySlug(
-  slug: string,
-  stacks: CreatorStack[] = STARTER_STACKS,
+  _slug: string,
+  _stacks: CreatorStack[] = STARTER_STACKS,
 ): CreatorStack | undefined {
-  return shippableStacks(stacks).find((s) => s.slug === slug);
+  return undefined;
 }

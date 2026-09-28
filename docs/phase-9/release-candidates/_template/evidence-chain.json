@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 2,
+  "kind": "layerwell_governed_evidence_chain",
+  "sourceGitSha": "REPLACE_BY_RUNNING_THE_LEDGER_BUILDER",
+  "releaseCandidateDir": "docs/phase-9/release-candidates/rc-YYYY-MM-DD-bNNN",
+  "publicationPolicy": "REPLACE_BY_RUNNING_THE_LEDGER_BUILDER",
+  "entries": []
+}

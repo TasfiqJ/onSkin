@@ -55,7 +55,7 @@ below the plan's required 100-way proof.
 Focused matrix:
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- --run \
+npm.cmd --workspace @layerwell/mobile test -- --run \
   src/lib/offline/completionQueue.test.ts \
   src/lib/storage/privateKV.test.ts \
   src/features/today/completionsStore.test.ts \

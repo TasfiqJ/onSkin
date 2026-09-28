@@ -59,10 +59,13 @@ assert.equal(contract.commerceAdmission.commerceAdmitted, false);
 assert.equal(contract.iosWinBackOfferAdmission.winBackOfferAdmitted, false);
 assert.deepEqual(Object.keys(contract.featureProfessionalReviewRequirements).sort(), [
   'conflict_engine',
+  'conflict_share',
   'cycle_scheduler',
+  'recommendations',
   'routine_builder',
 ]);
-for (const requirements of Object.values(contract.featureProfessionalReviewRequirements)) {
+for (const key of ['conflict_engine', 'routine_builder', 'cycle_scheduler']) {
+  const requirements = contract.featureProfessionalReviewRequirements[key];
   assert.deepEqual(
     requirements.map((item) => item.taskId),
     ['H-03', 'H-03', 'H-03'],
@@ -107,3 +110,10 @@ assert.match(
 );
 
 console.log('Lean V1 launch contract smoke tests passed.');
+
+// Deferral never erases the professional review boundary for a future successor.
+for (const key of ['recommendations', 'conflict_share']) {
+  const weakened = structuredClone(contract);
+  weakened.featureProfessionalReviewRequirements[key].pop();
+  assert.match(validateLaunchContract(weakened).join('\n'), /exact reviewer roles/);
+}

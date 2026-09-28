@@ -1,13 +1,29 @@
-// Neutral age gate (docs/01 §4): PURE age math. We collect a date of birth, never
-// "are you over X?" (which invites falsification), and block under-threshold users
-// before any health-data collection. Minimum age is 16 globally: the doc's
-// recommendation given health-data processing (GDPR digital-consent age; COPPA
-// floor is 13). The exact threshold + any parental-consent path is a counsel
-// decision (BLOCKERS: minors / B-PRIVACY). No RN/Supabase imports so this is
-// unit-testable in the Node vitest env; the device flag lives in ageGateStore.ts.
+// Neutral age gate (docs/01 section 4): pure age math with no storage imports.
+// The current 16+ behavior remains a draft launch assumption, not an approved
+// legal conclusion. The exact threshold and any parental-consent path remain
+// blocked on the documented founder/counsel decision.
 
 export const MINIMUM_AGE = 16;
 export const INVALID_DOB_MESSAGE = 'Enter a real birth date that is not in the future.';
+export const AGE_POLICY_REVIEW_STATUS = 'draft_blocked' as const;
+export const AGE_POLICY_RECEIPT_KEY = 'layerwell.ageVerified' as const;
+
+/**
+ * Canonical semantic policy tuple. Its order and newline encoding are part of
+ * the receipt contract; changing any policy decision requires a new pinned hash.
+ */
+export const AGE_POLICY_TUPLE = Object.freeze([
+  'policy=neutral_dob_eligibility',
+  'version=draft-v1',
+  'scope=global',
+  `minimum_years=${MINIMUM_AGE}`,
+  'parental_consent_path=none',
+  `review_status=${AGE_POLICY_REVIEW_STATUS}`,
+] as const);
+
+export const AGE_POLICY_CANONICAL = AGE_POLICY_TUPLE.join('\n');
+export const AGE_POLICY_SHA256 =
+  '213a9fa27a479d336ca74edb858d780d568abf4166a43b586dd8bdc48f62fb1e' as const;
 
 export type Dob = { year: number; month: number; day: number };
 

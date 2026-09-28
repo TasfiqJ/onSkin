@@ -1,6 +1,11 @@
-import type { CycleVariant, FunctionalTag, GoalId, IngredientSubflag } from '@onskin/types';
+import type { CycleVariant, FunctionalTag, GoalId, IngredientSubflag } from '@layerwell/types';
 
-import { detectConflicts, type SensitivityLevel } from '@/features/intelligence/engine';
+import {
+  evaluateConflicts,
+  type ConflictEvaluationStatus,
+  type DetectedConflict,
+  type SensitivityLevel,
+} from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import {
   choiceForConflict,
@@ -8,12 +13,14 @@ import {
   type ConflictUserChoice,
 } from '@/features/intelligence/conflictChoices';
 import {
-  pregnancySafetyReasonForProduct,
   type PregnancySafetyMode,
   type PregnancySafetyStatus,
 } from '@/features/intelligence/pregnancySafety';
-import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import type { ConflictRule } from '@/features/intelligence/rules';
+import {
+  shippableRoutineCadencePolicy,
+  shippableRoutineGuidanceCopy,
+} from '@/features/routine/sequencing';
 
 import {
   classifyActiveClass,
@@ -77,6 +84,8 @@ export type OrchestrationResult = {
   cycleActives: CycleEditorActive[];
   notes: string[];
   conflictChoices: ScheduledConflictChoice[];
+  conflictCoverageStatus: ConflictEvaluationStatus;
+  unsupportedConflictPairs: string[];
 };
 
 export type SchedulerActive = {
@@ -105,14 +114,6 @@ export type SchedulerProfile = {
   conflictChoices?: ConflictChoices;
 };
 
-// Recovery density per variant: nights inserted between pushes + trailing.
-const RECOVERY: Record<CycleVariant, { between: number; trailing: number }> = {
-  classic: { between: 0, trailing: 2 }, // the Bowe 4-night rhythm
-  gentle: { between: 1, trailing: 1 }, // more rest, for sensitive / barrier-repair
-  advanced: { between: 0, trailing: 1 }, // tighter, for resistant skin
-  custom: { between: 1, trailing: 1 },
-};
-
 /** Auto-pick a variant from the profile (mirrors the docs/02 §5 personalisation). */
 export function pickVariant(profile: SchedulerProfile): CycleVariant {
   if (profile.sensitivity === 'sensitive' || profile.goals.includes('barrier_repair'))
@@ -137,6 +138,7 @@ function needsRecoveryBetween(a: Classified, b: Classified): boolean {
 
 function weeklyFrequencyFor(active: Classified, profile: SchedulerProfile): number {
   const cap = reviewedFrequencyCap(active.cls, profile.sensitivity);
+  if (cap === null) return 0;
   const storedRamp = profile.freqByProductId?.[active.id];
   const requested =
     typeof storedRamp === 'number' && Number.isFinite(storedRamp) ? Math.floor(storedRamp) : cap;
@@ -177,24 +179,10 @@ function recoveryNight(index: number): NightSlot {
 }
 
 function scheduledConflictChoices(
-  actives: readonly SchedulerActive[],
-  profile: SchedulerProfile,
-  rules: ConflictRule[],
+  detected: readonly DetectedConflict[],
+  choices: ConflictChoices,
 ): ScheduledConflictChoice[] {
-  const choices = profile.conflictChoices ?? {};
   if (Object.keys(choices).length === 0) return [];
-
-  const detected = detectConflicts(
-    actives.map((active) => ({
-      id: active.id,
-      name: active.name,
-      tags: active.tags,
-      subflags: active.subflags,
-      concentration: active.concentration,
-    })),
-    { sensitivity: profile.sensitivity, pregnancy: profile.pregnancy },
-    rules,
-  );
 
   return detected.flatMap((conflict) => {
     const choice = choiceForConflict(choices, conflict);
@@ -225,16 +213,39 @@ function scheduledConflictChoices(
 export function orchestrate(
   actives: SchedulerActive[],
   profile: SchedulerProfile,
-  rules: ConflictRule[] = shippableRules(),
 ): OrchestrationResult {
-  const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
-  const safetyExclusions = actives.flatMap((active) => {
-    const reason = pregnancySafetyReasonForProduct(active, pregnancySafety, rules);
-    return reason ? [{ active, reason }] : [];
+  const reproductiveStatus = profile.pregnancyStatus ?? (profile.pregnancy ? 'pregnant' : 'none');
+  const engineProducts = actives.map((active) => ({
+    id: active.id,
+    name: active.name,
+    tags: active.tags,
+    subflags: active.subflags,
+    concentration: active.concentration,
+  }));
+  const conflictEvaluation = evaluateConflicts(engineProducts, {
+    sensitivity: profile.sensitivity,
+    reproductiveStatus,
   });
-  const excludedIds = new Set(safetyExclusions.map(({ active }) => active.id));
+  const safetyConflicts = conflictEvaluation.conflicts.filter(
+    (conflict) => conflict.rule.interactionType === 'safety',
+  );
+  const excludedIds = new Set(
+    safetyConflicts.flatMap((conflict) =>
+      [conflict.productAId, conflict.productBId].filter(
+        (id): id is string => typeof id === 'string',
+      ),
+    ),
+  );
   const eligibleActives = actives.filter((active) => !excludedIds.has(active.id));
-  const conflictChoices = scheduledConflictChoices(eligibleActives, profile, rules);
+  const eligibleIds = new Set(eligibleActives.map((active) => active.id));
+  const conflictChoices = scheduledConflictChoices(
+    conflictEvaluation.conflicts.filter(
+      (conflict) =>
+        (!conflict.productAId || eligibleIds.has(conflict.productAId)) &&
+        (!conflict.productBId || eligibleIds.has(conflict.productBId)),
+    ),
+    profile.conflictChoices ?? {},
+  );
   const allClassified: Classified[] = actives.map((a) => ({
     id: a.id,
     name: a.name,
@@ -245,18 +256,31 @@ export function orchestrate(
 
   const notes: string[] = [];
 
-  if (safetyExclusions.length > 0) {
-    const knownStatus =
-      profile.pregnancyStatus === 'pregnant' || profile.pregnancyStatus === 'breastfeeding';
+  if (
+    conflictEvaluation.status === 'unsupported_unreviewed' &&
+    conflictEvaluation.unsupportedPairs.length > 0
+  ) {
     notes.push(
-      knownStatus || (profile.pregnancy && profile.pregnancyStatus == null)
-        ? 'Products with pregnancy cautions are paused. Worth a word with your doctor.'
-        : 'Products with pregnancy cautions stay paused until you confirm this safety setting.',
+      'Interaction checking requires completed independent professional review for some product pairs; no compatibility result is shown.',
     );
   }
 
-  if (!canUseRoutineCadence()) {
-    return { cycle: null, amDaily: [], cycleActives: [], notes, conflictChoices };
+  if (safetyConflicts.length > 0) {
+    notes.push(...new Set(safetyConflicts.map((conflict) => conflict.rule.copy.resolution)));
+  }
+
+  const cadencePolicy = shippableRoutineCadencePolicy();
+  const guidanceCopy = shippableRoutineGuidanceCopy();
+  if (!cadencePolicy || !guidanceCopy) {
+    return {
+      cycle: null,
+      amDaily: [],
+      cycleActives: [],
+      notes,
+      conflictChoices,
+      conflictCoverageStatus: conflictEvaluation.status,
+      unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
+    };
   }
 
   // AM / daily block (stable morning): vitamin C, BP, flexible niacinamide.
@@ -278,7 +302,10 @@ export function orchestrate(
     for (const active of staged) stagedIds.add(active.id);
     potent = potent.filter((c) => !c.isNew);
     notes.push(
-      `We'll add your ${staged.map((s) => s.name).join(' and ')} next week, once your routine settles.`,
+      guidanceCopy.phasedIntroductionNoteTemplate.replace(
+        '{productNames}',
+        staged.map((s) => s.name).join(' and '),
+      ),
     );
   }
 
@@ -297,7 +324,15 @@ export function orchestrate(
     .sort((left, right) => left.id.localeCompare(right.id));
 
   if (potent.length === 0) {
-    return { cycle: null, amDaily, cycleActives, notes, conflictChoices };
+    return {
+      cycle: null,
+      amDaily,
+      cycleActives,
+      notes,
+      conflictChoices,
+      conflictCoverageStatus: conflictEvaluation.status,
+      unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
+    };
   }
 
   const variant = profile.preferredVariant ?? pickVariant(profile);
@@ -307,7 +342,7 @@ export function orchestrate(
   const withFreq = potent.map((active) => ({ active, freq: weeklyFrequencyFor(active, profile) }));
 
   const pushes = buildPushes(withFreq);
-  const rec = RECOVERY[variant];
+  const rec = cadencePolicy.cycleRecoveryNights[variant];
 
   const nights: NightSlot[] = [];
   pushes.forEach((p, i) => {
@@ -321,11 +356,21 @@ export function orchestrate(
     const isLast = i === pushes.length - 1;
     const nextPush = pushes[i + 1];
     const repeatPotentSlot = nextPush ? needsRecoveryBetween(p.active, nextPush.active) : false;
-    const gaps = isLast ? rec.trailing : Math.max(rec.between, repeatPotentSlot ? 1 : 0);
+    const gaps = isLast
+      ? rec.trailing
+      : Math.max(
+          rec.betweenPushes,
+          repeatPotentSlot ? cadencePolicy.minimumBetweenRepeatedPotentSlotNights : 0,
+        );
     for (let g = 0; g < gaps; g++) nights.push(recoveryNight(nights.length));
   });
   // Guarantee at least one recovery night so the barrier always gets rest.
-  if (!nights.some((n) => n.slot === 'recover')) nights.push(recoveryNight(nights.length));
+  while (
+    nights.filter((night) => night.slot === 'recover').length <
+    cadencePolicy.minimumRecoveryNightsPerCycle
+  ) {
+    nights.push(recoveryNight(nights.length));
+  }
 
   // `freq` is a weekly ceiling, not a raw per-cycle count. Short generated
   // cycles are padded until their repeated projection obeys the same
@@ -345,5 +390,7 @@ export function orchestrate(
     cycleActives,
     notes,
     conflictChoices,
+    conflictCoverageStatus: conflictEvaluation.status,
+    unsupportedConflictPairs: conflictEvaluation.unsupportedPairs,
   };
 }

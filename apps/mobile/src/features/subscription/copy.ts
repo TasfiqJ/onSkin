@@ -1,7 +1,8 @@
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 import { BRAND } from '@/lib/brand';
-import type { SubscriptionPackageView } from '@/lib/iap/revenuecat';
+
+import { priceWithCadence, type BillingCadence } from './billingCadence';
 
 /**
  * Centralised, honest-by-design paywall + lifecycle copy (docs/08 §9/§12, the
@@ -10,7 +11,8 @@ import type { SubscriptionPackageView } from '@/lib/iap/revenuecat';
  * laws, AND because trust monetises (the Yuka thesis), so this copy carries: NO
  * manufactured urgency ("Don't miss out!", fake countdowns), NO guilt, NO drug/
  * disease claims, and it DOES carry the honest auto-renew disclosure, the
- * 2-day-before reminder promise, and "cancel anytime." `claimsafety.test.ts` scans
+ * conditional reminder wording and App Store management instructions.
+ * `claimsafety.test.ts` scans
  * the marketing/disclosure copy in THIS module on every edit (keep all persuasive
  * paywall copy here, not inline in screens, so the guard sees it; screen-inline text
  * is limited to prices/labels, which are data). Prices shown here are FALLBACK labels
@@ -24,25 +26,28 @@ export const PAYWALL_COPY = {
     headlineFallback: 'Your personalized plan is ready.',
     subhead: `Everything below is part of ${BRAND.proName}.`,
     valueProps: [
-      'Routine intelligence. Order, timing, skin cycling',
-      'Ingredient conflict checks, with evidence grades',
+      'Routine builder. Your products and missing steps',
+      'Ingredient and shelf details, with source status',
       'Private photo timeline. On-device only',
       'Reminders and a forgiving streak',
     ],
     annualBadge: 'Annual · best value',
     cta: 'Start free trial',
     subscribeCta: 'Subscribe to Pro',
-    trialReassurance: 'We’ll remind you 2 days before the trial ends · cancel anytime',
-    purchaseReassurance:
-      'The App Store confirms the price and renewal terms before purchase · cancel anytime',
+    trialReassurance:
+      'Optional reminder with notifications enabled · manage or cancel in App Store',
+    subscriptionReassurance: 'Manage or cancel the subscription in App Store',
     // The honest auto-renew disclosure (Apple 3.1.2 / ARLs). Plain, below the CTA.
     autoRenewDisclosure:
       'Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings.',
-    standardAutoRenewDisclosure:
-      'Your annual plan starts after App Store confirmation and auto-renews unless cancelled at least 24 hours before the renewal date. Cancel anytime in your account settings.',
+    subscriptionDisclosure:
+      'Payment is charged to your App Store account at confirmation. The annual plan auto-renews unless cancelled at least 24 hours before the current period ends. Manage or cancel in App Store.',
     exploreTitle: 'Explore first. 7 days of Pro',
     exploreBody: 'No credit card. See your routine work, then decide.',
-    trustBlock: 'Reviewed by dermatologists · photos stay on your device · no data sales',
+    continueFreeTitle: 'Continue with the free plan',
+    continueFreeBody: 'No purchase. Pro features stay locked until you choose a plan.',
+    trustBlock:
+      'Health-related guidance requires independent professional review before availability · photos stay on your device · no data sales',
   },
   // Reverse trial in flight (design 02, docs/08 §6).
   reverseTrial: {
@@ -52,7 +57,7 @@ export const PAYWALL_COPY = {
     keepPill: 'No card on file',
     keepTitle: 'Keep Pro after your week.',
     keepBody:
-      'You are exploring Pro now. Nothing renews unless you choose a plan. Selecting a plan keeps your routine, checks, photos, and reminders unlocked after the free week.',
+      'You are exploring Pro now. Nothing renews unless you choose a plan. Selecting a plan keeps your routine, shelf tools, photos, and reminders unlocked after the free week.',
     keepCta: 'Keep Pro after your week',
     keepDeclineCta: 'Keep exploring for now',
     settingsNote: (date: string) =>
@@ -64,8 +69,8 @@ export const PAYWALL_COPY = {
     title: 'Keep the routine you just built.',
     body: 'You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week:',
     continues: [
-      'The full scheduler & skin-cycling',
-      'Unlimited conflict checks',
+      'Your routine builder & check-offs',
+      'Your shelf details & tracked dates',
       'Your photo timeline & reminders',
     ],
     keepCta: 'Keep my full routine',
@@ -74,59 +79,44 @@ export const PAYWALL_COPY = {
   // Purchase success (design 05, docs/08 §3.3).
   success: {
     titleFor: (name: string | null) => (name ? `You’re all set, ${name}.` : 'You’re all set.'),
-    bodyForTrial: (
-      willRenew: boolean,
-      renewalPrice: string | null,
-      renewalPeriod: string | null,
-    ) =>
-      willRenew && renewalPrice && renewalPeriod
-        ? `Your Pro trial is active now. We’ll remind you 2 days before it renews at ${renewalPrice}/${renewalPeriod}. Cancel anytime.`
-        : 'Your Pro trial is active now and will not renew.',
-    metaRowsForTrial: (
-      endDate: string,
-      willRenew: boolean,
-      renewalPrice: string | null,
-      renewalPeriod: string | null,
-    ) => [
+    bodyFor: (endDate: string, price: string, cadence: BillingCadence) =>
+      `Your trial is active through ${endDate}. Current subscription status shows it will renew at ${priceWithCadence(price, cadence)} unless canceled. Manage or cancel in App Store.`,
+    metaFor: (endDate: string, price: string, cadence: BillingCadence) =>
+      `trial ends ${endDate} · set to renew ${priceWithCadence(price, cadence, 'short')}`,
+    metaRowsFor: (endDate: string, price: string, cadence: BillingCadence) => [
       `trial ends ${endDate}`,
-      willRenew && renewalPrice && renewalPeriod
-        ? `renews at ${renewalPrice}/${renewalPeriod}`
-        : 'does not renew',
+      `set to renew ${priceWithCadence(price, cadence, 'short')}`,
     ],
-    bodyForPaid: (
-      action: 'purchase' | 'winback',
-      purchasePrice: string,
-      purchasePeriod: string,
-      offerDuration: string | null,
-      willRenew: boolean,
-      renewalPrice: string | null,
-      renewalPeriod: string | null,
-    ) => {
-      const opening =
-        action === 'winback'
-          ? `Your welcome-back offer is active at ${purchasePrice}/${purchasePeriod} for ${offerDuration}.`
-          : `Pro is active now at ${purchasePrice}/${purchasePeriod}.`;
-      return willRenew && renewalPrice && renewalPeriod
-        ? `${opening} After that, it renews at ${renewalPrice}/${renewalPeriod}. Cancel anytime.`
-        : `${opening} It will not renew.`;
-    },
-    metaRowsForPaid: (
-      action: 'purchase' | 'winback',
-      endDate: string,
-      purchasePrice: string,
-      purchasePeriod: string,
-      offerDuration: string | null,
-      willRenew: boolean,
-      renewalPrice: string | null,
-      renewalPeriod: string | null,
-    ) => [
-      action === 'winback'
-        ? `welcome-back price ${purchasePrice}/${purchasePeriod} for ${offerDuration}`
-        : `plan price ${purchasePrice}/${purchasePeriod}`,
+    // Paid path (win-back / direct purchase): there is no trial, so do not promise
+    // a trial conversion. The amount the user actually paid is the one shown.
+    bodyForPaid: (price: string, cadence: BillingCadence) =>
+      `Pro is active now. Current subscription status shows renewal at ${priceWithCadence(price, cadence)}. Manage or cancel in App Store.`,
+    metaForPaid: (endDate: string, price: string, cadence: BillingCadence) =>
+      `active until ${endDate} · set to renew ${priceWithCadence(price, cadence, 'short')}`,
+    metaRowsForPaid: (endDate: string, price: string, cadence: BillingCadence) => [
       `active until ${endDate}`,
-      willRenew && renewalPrice && renewalPeriod
-        ? `then renews at ${renewalPrice}/${renewalPeriod}`
-        : 'does not renew',
+      `set to renew ${priceWithCadence(price, cadence, 'short')}`,
+    ],
+    bodyForAppGrant: (endDate: string) =>
+      `No-card Pro access is active through ${endDate}. You will not be charged automatically.`,
+    metaRowsForAppGrant: (endDate: string) => [`access through ${endDate}`, 'no card on file'],
+    bodyForPromotion: (endDate: string) =>
+      `Promotional Pro access is active through ${endDate}. This grant does not charge or renew.`,
+    metaRowsForPromotion: (endDate: string) => [
+      `access through ${endDate}`,
+      'no purchase or renewal',
+    ],
+    bodyForNonRenewing: (endDate: string) =>
+      `Pro is active through ${endDate}. No renewal is scheduled.`,
+    metaRowsForNonRenewing: (endDate: string) => [
+      `access through ${endDate}`,
+      'no renewal scheduled',
+    ],
+    bodyForBillingUnknown: (endDate: string) =>
+      `Pro is active through ${endDate}. Check Subscription for current billing details.`,
+    metaRowsForBillingUnknown: (endDate: string) => [
+      `access through ${endDate}`,
+      'billing details in Subscription',
     ],
     cta: 'See tonight’s routine',
   },
@@ -138,12 +128,12 @@ export const PAYWALL_COPY = {
     restoreRow: 'Restore purchases',
     termsRow: 'Terms & Privacy',
     cancelNote: (date: string) =>
-      `Cancelling is one tap in your App Store settings, and you keep Pro until ${date}. No maze, no calls.`,
+      `You keep Pro until ${date}. Manage or cancel the subscription in App Store settings.`,
     appGrantedNote: (date: string) =>
       `No card is on file for this access. You keep Pro until ${date}; choose a plan only if you want Pro to continue after that.`,
     freeTitle: 'You’re on the free plan',
     freeBody:
-      'The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.',
+      'The quiz result and shelf view are always free. Interaction-specific guidance requires completed independent professional review before it can be available.',
     upgradeCta: `See ${BRAND.proName}`,
   },
   // Graceful downgrade after a paid expiry (design 08, docs/08 §6).
@@ -153,60 +143,39 @@ export const PAYWALL_COPY = {
     body: 'Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up.',
     kept: ['Your routine & cycle. Kept', 'Your photos. On your phone', 'Your shelf & streak. Kept'],
     floorNote:
-      'On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do.',
+      'On free, you keep the quiz result and shelf view. Interaction-specific guidance requires completed independent professional review before it can be available.',
     renewCta: 'Renew Pro',
     declineCta: 'Keep using free',
   },
-  // Honest win-back (design 09, docs/08 §6).
+  // PAY-08 current-plan fallback plus separately admitted native offer copy.
   winback: {
-    eyebrow: 'A month later',
-    title: 'Here’s what your timeline could show by autumn.',
-    body: 'Skin rewards consistency. If you’d like to pick it back up, we kept your place.',
-    offerLabel: 'A welcome-back offer',
-    termsFor: (offerDuration: string, renewalPrice: string, renewalPeriod: string) =>
-      `for ${offerDuration} · then renews at ${renewalPrice}/${renewalPeriod}`,
-    cta: 'Come back to Pro',
-    declineCta: 'No thanks',
+    currentPlan: {
+      eyebrow: 'Pro options',
+      title: 'See the standard Pro options.',
+      body: 'Review the annual Pro option. App Store confirms the final price before purchase.',
+      priceLabel: 'Annual Pro option',
+      cta: 'See standard Pro options',
+      settingsCta: 'See standard Pro options',
+      declineCta: 'Not now',
+    },
+    offer: {
+      eyebrow: 'Welcome back',
+      title: 'A welcome-back offer is available.',
+      body: 'Review your eligible App Store offer before choosing whether to return to Pro.',
+      priceLabel: 'Eligible App Store offer',
+      cta: 'Continue with this offer',
+      settingsCta: 'See your welcome-back offer',
+      declineCta: 'Not now',
+    },
   },
   // The trial-end pre-charge reminder content (delivered by doc 7; docs/08 §6).
   trialReminder: {
     title: 'Your free trial ends in 2 days',
-    bodyFor: (date: string, price: string | null) =>
-      price
-        ? `On ${date} you’ll move to ${price}/year. Happy to stay? Nothing to do. Not for you? Cancel in one tap. No hard feelings.`
-        : `Your free trial ends on ${date}. Check the App Store for the current renewal price. You can manage or cancel there anytime.`,
-    footnote: 'we remind you before we ever charge. Apple sends one too',
+    bodyFor: (date: string, price: string, cadence: BillingCadence) =>
+      `On ${date}, the subscription renews at ${priceWithCadence(price, cadence)} unless canceled. Manage or cancel it in App Store.`,
+    footnote: 'Reminder delivery requires notification permission and device availability.',
   },
 } as const;
-
-type TrialCopyPackage = Pick<SubscriptionPackageView, 'trialDays' | 'trialEligibility'>;
-
-/** Never present trial language unless the store proves this exact package is eligible. */
-export function paywallPurchasePresentation(pack: TrialCopyPackage | null | undefined): {
-  cta: string;
-  reassurance: string;
-  autoRenewDisclosure: string;
-  hasEligibleTrial: boolean;
-} {
-  const hasEligibleTrial =
-    pack?.trialEligibility === 'eligible' &&
-    Number.isInteger(pack.trialDays) &&
-    (pack.trialDays ?? 0) > 0;
-
-  return hasEligibleTrial
-    ? {
-        cta: PAYWALL_COPY.offer.cta,
-        reassurance: PAYWALL_COPY.offer.trialReassurance,
-        autoRenewDisclosure: PAYWALL_COPY.offer.autoRenewDisclosure,
-        hasEligibleTrial,
-      }
-    : {
-        cta: PAYWALL_COPY.offer.subscribeCta,
-        reassurance: PAYWALL_COPY.offer.purchaseReassurance,
-        autoRenewDisclosure: PAYWALL_COPY.offer.standardAutoRenewDisclosure,
-        hasEligibleTrial,
-      };
-}
 
 /** Contextual upsell copy, framed around the specific gated feature (design 04). */
 export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> = {
@@ -215,12 +184,12 @@ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> 
     body: `Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of ${BRAND.proName}.`,
   },
   scheduler: {
-    title: 'Unlock your full skin-cycling scheduler.',
-    body: `Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of ${BRAND.proName}.`,
+    title: 'Build and track your routine.',
+    body: `Organize the products you chose and keep daily check-offs together. Part of ${BRAND.proName}.`,
   },
   conflict_checks: {
-    title: 'Check every product, every time.',
-    body: `Unlimited ingredient-conflict checks with evidence grades and calm resolutions. Part of ${BRAND.proName}.`,
+    title: 'Interaction guidance is unavailable.',
+    body: `Independent professional review of the exact rules and copy is required before product-interaction claims can be sold, unlocked, or shown.`,
   },
   reminders_widgets: {
     title: 'Reminders and a forgiving streak.',
@@ -228,13 +197,13 @@ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> 
   },
   full_routine: {
     title: 'Unlock your full routine.',
-    body: `The complete builder, sequencing and ramp. Built around your skin. Part of ${BRAND.proName}.`,
+    body: `Build and edit daily routine steps around the products you chose. Part of ${BRAND.proName}.`,
   },
-  // docs/13 §15: only the deeper, cloud-grounded advisor is gated. The on-device,
-  // evidence-grounded answers about your own shelf stay free. Honest, never "AI" hype.
+  // Cloud Ask has no approved provider or exact-release privacy contract.
+  // Keep the upsell unavailable rather than marketing an unconfigured service.
   ask: {
-    title: 'A deeper advisor, grounded in your shelf.',
-    body: `Ask follow-ups in your own words and get fluent, evidence-grounded answers about your routine. Private, and never a substitute for your dermatologist. Part of ${BRAND.proName}.`,
+    title: 'Cloud Ask is unavailable.',
+    body: `It is not included in this release. It requires an approved provider, exact data and retention disclosures, explicit permission, safety validation, and professional review before it can be offered.`,
   },
 };
 

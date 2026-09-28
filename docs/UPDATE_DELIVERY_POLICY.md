@@ -24,12 +24,12 @@ instructions do not authorize publication.
 
 ## Current Recovery Paths
 
-| Incident class | Client recovery path |
-| -------------- | -------------------- |
+| Incident class                             | Client recovery path                                                                                                                                    |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | JavaScript, asset, or native client defect | halt release/marketing expansion, use an applicable server-side kill switch when reviewed, build and test a new binary, then submit an App Store hotfix |
-| Server or database defect | contain through the reviewed function, flag, job, or migration recovery path while supported binaries remain compatible |
-| Payment or entitlement defect | freeze affected purchase entry points and use the reviewed RevenueCat/store/backend recovery path |
-| Privacy or data-rights defect | contain the affected surface, preserve operation evidence, and follow privacy/legal incident review before client release resumes |
+| Server or database defect                  | contain through the reviewed function, flag, job, or migration recovery path while supported binaries remain compatible                                 |
+| Payment or entitlement defect              | freeze affected purchase entry points and use the reviewed RevenueCat/store/backend recovery path                                                       |
+| Privacy or data-rights defect              | contain the affected surface, preserve operation evidence, and follow privacy/legal incident review before client release resumes                       |
 
 No incident may select `eas update`, `eas update:rollback`, republish, branch
 remapping, or an OTA console action under the current policy.
@@ -69,3 +69,11 @@ node scripts/optimization/store-only-release-audit.mjs
 This audit is content-free and read-only. It verifies the repository contract;
 it does not substitute for signed-build, App Store, owner, or live incident
 evidence.
+
+IOS-11 source and retained-drill verification are separate by design. Run
+`node scripts/phase9/ios11-release-containment-contract.mjs --source-check` for
+the repository boundary. A completed staging drill must copy the Phase 9
+template, retain the underlying content-free receipts, and pass
+`--evidence <path> --expected-source-sha <S>` in the governed release-candidate
+chain. The source check always reports `ios11Complete: false`; it cannot be used
+as hosted or signed-binary evidence.

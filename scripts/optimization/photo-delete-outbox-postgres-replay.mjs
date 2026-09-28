@@ -6,8 +6,8 @@ import { resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const IMAGE = process.env.PHOTO_DELETE_OUTBOX_POSTGRES_IMAGE ?? 'postgres:15-alpine';
-const CONTAINER = `onskin-photo-delete-${process.pid}`;
-const DATABASE = 'onskin_photo_delete';
+const CONTAINER = `layerwell-photo-delete-${process.pid}`;
+const DATABASE = 'layerwell_photo_delete';
 const OWNER_A = '00000000-0000-4000-8000-000000000001';
 const OWNER_B = '00000000-0000-4000-8000-000000000002';
 const PHOTO_A = '00000000-0000-4000-8000-000000000101';

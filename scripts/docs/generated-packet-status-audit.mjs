@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, extname, relative, resolve } from 'node:path';
 
 const root = process.cwd();
@@ -149,12 +156,13 @@ function collectHashRefs(value, path = []) {
     return value.flatMap((item, index) => collectHashRefs(item, [...path, String(index)]));
   }
 
+  const normalizedSelfPath = typeof value.path === 'string' ? normalizeRepoPath(value.path) : '';
   const self =
-    typeof value.path === 'string' && typeof value.sha256 === 'string'
+    normalizedSelfPath.length > 0 && typeof value.sha256 === 'string'
       ? [
           {
             jsonPath: formatJsonPath(path),
-            path: normalizeRepoPath(value.path),
+            path: normalizedSelfPath,
             expectedExists: value.exists,
             expectedSha256: value.sha256,
           },
@@ -237,6 +245,23 @@ const fileResults = generatedFiles.map((path) => {
       continue;
     }
     if (currentExists) {
+      let fileStat;
+      try {
+        fileStat = lstatSync(abs(ref.path));
+      } catch {
+        staleHashRefs.push({
+          ...ref,
+          reason: 'recorded path could not be inspected as a regular file',
+        });
+        continue;
+      }
+      if (!fileStat.isFile()) {
+        staleHashRefs.push({
+          ...ref,
+          reason: 'recorded path is not a direct regular file',
+        });
+        continue;
+      }
       const actualSha256 = hashFile(ref.path);
       if (actualSha256 !== ref.expectedSha256) {
         staleHashRefs.push({

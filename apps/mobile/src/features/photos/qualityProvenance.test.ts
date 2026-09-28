@@ -28,16 +28,15 @@ describe('Progress quality provenance contract', () => {
       migration.indexOf('photos_quality_metadata_requires_source'),
     );
 
-    expect(databaseTypes).toContain('quality_source: string | null;');
-    expect(databaseTypes).toContain('quality_source?: string | null;');
+    expect(databaseTypes).toContain('quality_source: string | null');
+    expect(databaseTypes).toContain('quality_source?: string | null');
     expect(store).toContain("value.qualitySource === 'post_capture_measurement'");
     expect(store).not.toContain("supabase.from('photos').insert");
     expect(store).not.toContain('getCloudBackupEnabled');
     expect(consent).toContain('PHOTO_CLOUD_BACKUP_AVAILABLE = false');
-    expect(consent).not.toContain('clearUnavailableCloudBackupPreference');
+    expect(consent).toContain('clearUnavailableCloudBackupPreference');
     expect(consent).not.toContain('setCloudBackupEnabled');
-    expect(rootLayout).not.toContain('clearUnavailableCloudBackupPreference');
-    expect(rootLayout).not.toContain('onskin.photos.cloudBackup');
+    expect(rootLayout).toContain('void clearUnavailableCloudBackupPreference();');
     expect(settings).toContain('Cloud backup is not available in this build.');
     expect(settings).not.toContain('cloud_backup_opted_in');
     expect(settings).not.toContain('accessibilityLabel="Encrypted cloud backup"');

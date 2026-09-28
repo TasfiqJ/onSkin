@@ -1,5 +1,26 @@
 #!/usr/bin/env node
-import { block, evidenceFlagEnabled, listFiles, printResult, read, warn } from './lib.mjs';
+import {
+  AUTHENTICATED_CATALOG_TABLES,
+  OWNER_LINKED_PRIVATE_TABLES,
+  PRIVATE_PUBLIC_TABLES,
+  RPC_ONLY_INTERNAL_TABLES,
+  SEALED_CATALOG_AUTHORITY_TABLES,
+  SEALED_GLOBAL_CONTENT_TABLES,
+  SEALED_OWNER_RPC_EXPORT_SOURCES,
+  SEALED_OWNER_RPC_EXPORT_TABLES,
+  SEALED_PUBLIC_TABLES,
+  SEALED_SERVICE_PRIVATE_TABLES,
+  SERVICE_OPERATED_INTERNAL_TABLES,
+  SERVICE_ONLY_PRIVATE_TABLES,
+  block,
+  evidenceFlagEnabled,
+  listFiles,
+  printResult,
+  read,
+  sqlPolicyStatement,
+  tableClassificationIssues,
+  warn,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -8,10 +29,40 @@ const migrations = listFiles('supabase/migrations')
   .filter((file) => file.endsWith('.sql'))
   .map((file) => read(file))
   .join('\n');
-const exportSource = read('supabase/functions/data-export/index.ts');
-const dataInventory = read('docs/phase-9/data-inventory.md');
+const exportRegistrySource = read('supabase/functions/data-export/exportRegistry.ts');
+const exportSource = `${read('supabase/functions/data-export/index.ts')}\n${exportRegistrySource}`;
 const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-supabase-adversarial.mjs');
+const contractSmoke = read('scripts/phase9/rls-adversarial-smoke.mjs');
+const phase2Smoke = read('scripts/phase2/supabase-rls-smoke.mjs');
+const anonymousPhotoStorageGuard = read(
+  'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
+);
+const catalogLaunchCuration = read(
+  'supabase/migrations/20260717000058_catalog_launch_curation.sql',
+);
+const legacyClinicalContentSeal = read(
+  'supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql',
+);
+const routineCompletionSyncBridge = read(
+  'supabase/migrations/20260726000069_routine_completion_sync_bridge.sql',
+);
+const photoMetadataInsertPolicy = sqlPolicyStatement(
+  migrations,
+  'photos_no_anon_cloud_backup_insert',
+);
+const photoMetadataUpdatePolicy = sqlPolicyStatement(
+  migrations,
+  'photos_no_anon_cloud_backup_update',
+);
+const photoStorageInsertPolicy = sqlPolicyStatement(
+  anonymousPhotoStorageGuard,
+  'photos_objects_insert_own',
+);
+const photoStorageUpdatePolicy = sqlPolicyStatement(
+  anonymousPhotoStorageGuard,
+  'photos_objects_update_own',
+);
 
 const createdTables = new Set(
   [...migrations.matchAll(/create table(?: if not exists)? public\.([a-z_]+)/gi)].map(
@@ -30,102 +81,276 @@ for (const match of migrations.matchAll(
   if (/references auth\.users/i.test(match[2])) dynamicUserTables.add(match[1]);
 }
 
-const requiredUserOrLinkedTables = [
-  'profiles',
-  'skin_profiles',
-  'user_products',
-  'routines',
-  'routine_steps',
-  'routine_completions',
-  'routine_conflicts',
-  'active_ramp',
-  'shelf_scans',
-  'cycles',
-  'cycle_nights',
-  'streak_freezes',
-  'notification_preferences',
-  'notification_log',
-  'consents',
-  'photos',
-  'entitlements',
-  'reverse_trial_grants',
-  'recommendation_preferences',
-  'recommendations',
-  'catalog_corrections',
-  'catalog_lookup_events',
-  'commerce_click_events',
-  'community_blocks',
-  'community_questions',
-  'community_reactions',
-  'community_reports',
-  'photo_trend',
-  'ask_sessions',
-  'ask_turn_audit',
-  'ask_safety_audit',
+const tableClassifications = [
+  ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
+  ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
+  ['service-operated internal', SERVICE_OPERATED_INTERNAL_TABLES],
+  ['RPC-only internal', RPC_ONLY_INTERNAL_TABLES],
+  ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
+  ['sealed global clinical/editorial', SEALED_GLOBAL_CONTENT_TABLES],
+  ['sealed catalog authority', SEALED_CATALOG_AUTHORITY_TABLES],
+  ['authenticated catalog/editorial', AUTHENTICATED_CATALOG_TABLES],
 ];
 
-const serviceOnlyTables = [
-  'subscriptions_events',
-  'order_attributions',
-  'obf_contribution_queue',
-  'catalog_import_batches',
-  'catalog_quality_reports',
-  'community_moderation_events',
-];
-
-const internalOutboxCoordinationTables = [
-  'shelf_mirror_versions',
-  'conflict_choice_mirror_versions',
-  'mobile_outbox_receipts',
-];
-
-const publicCatalogTables = [
-  'ingredients',
-  'ingredient_synonyms',
-  'ingredient_tags',
-  'products',
-  'product_ingredients',
-  'conflict_rules',
-  'ingredient_pao_defaults',
-  'sequencing_rules',
-  'affiliate_links',
-  'creator_stacks',
-  'creator_stack_items',
-  'community_topics',
-  'community_notes',
-  'catalog_sources',
-  'brands',
-  'product_categories',
-  'product_barcodes',
-  'ingredient_tag_definitions',
-  'ingredient_tag_assignments',
-  'product_ingredient_lists',
-  'product_ingredient_tokens',
-  'product_active_bands',
-  'product_pao_expiry',
-];
-
-for (const table of [
-  ...requiredUserOrLinkedTables,
-  ...serviceOnlyTables,
-  ...internalOutboxCoordinationTables,
-  ...publicCatalogTables,
+block(
+  errors,
+  OWNER_LINKED_PRIVATE_TABLES.length === 28,
+  `Owner-linked private-table inventory must contain 28 tables; found ${OWNER_LINKED_PRIVATE_TABLES.length}.`,
+);
+block(
+  errors,
+  SERVICE_ONLY_PRIVATE_TABLES.length === 8,
+  `Service-only private-table inventory must contain 8 tables; found ${SERVICE_ONLY_PRIVATE_TABLES.length}.`,
+);
+block(
+  errors,
+  SERVICE_OPERATED_INTERNAL_TABLES.length === 7,
+  `Service-operated internal-table inventory must contain 7 tables; found ${SERVICE_OPERATED_INTERNAL_TABLES.length}.`,
+);
+block(
+  errors,
+  RPC_ONLY_INTERNAL_TABLES.length === 2,
+  `RPC-only internal-table inventory must contain 2 tables; found ${RPC_ONLY_INTERNAL_TABLES.length}.`,
+);
+block(
+  errors,
+  SEALED_SERVICE_PRIVATE_TABLES.length === 24,
+  `Sealed service-only private-table inventory must contain 24 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
+);
+block(
+  errors,
+  SEALED_GLOBAL_CONTENT_TABLES.length === 4,
+  `Sealed global clinical/editorial inventory must contain 4 tables; found ${SEALED_GLOBAL_CONTENT_TABLES.length}.`,
+);
+block(
+  errors,
+  SEALED_CATALOG_AUTHORITY_TABLES.length === 4,
+  `Sealed catalog-authority inventory must contain 4 tables; found ${SEALED_CATALOG_AUTHORITY_TABLES.length}.`,
+);
+block(
+  errors,
+  SEALED_PUBLIC_TABLES.length === 34,
+  `Combined sealed public-schema inventory must contain 34 tables; found ${SEALED_PUBLIC_TABLES.length}.`,
+);
+block(
+  errors,
+  AUTHENTICATED_CATALOG_TABLES.length === 14,
+  `Authenticated catalog/editorial inventory must contain 14 tables; found ${AUTHENTICATED_CATALOG_TABLES.length}.`,
+);
+block(
+  errors,
+  PRIVATE_PUBLIC_TABLES.length === 77,
+  `Combined private-table inventory must contain 77 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+);
+block(
+  errors,
+  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_PUBLIC_TABLES.includes(table)).length === 43,
+  'Directly queryable private-table inventory must contain 43 tables.',
+);
+block(
+  errors,
+  SEALED_OWNER_RPC_EXPORT_SOURCES.length === 3 &&
+    SEALED_OWNER_RPC_EXPORT_TABLES.length === 3 &&
+    new Set(SEALED_OWNER_RPC_EXPORT_SOURCES).size === 3 &&
+    new Set(SEALED_OWNER_RPC_EXPORT_TABLES).size === 3,
+  'Sealed owner-RPC export inventory must contain three unique source/table pairs.',
+);
+for (const [index, source] of SEALED_OWNER_RPC_EXPORT_SOURCES.entries()) {
+  const table = SEALED_OWNER_RPC_EXPORT_TABLES[index];
+  block(
+    errors,
+    new RegExp(`${source}:\\s*'${table}'`, 'u').test(exportRegistrySource),
+    `Caller owner-RPC export mapping must bind ${source} to sealed table ${table}.`,
+  );
+}
+block(
+  errors,
+  /revoke all on table private\.shelf_sync_operations[\s\S]*?from public, anon, authenticated, service_role/i.test(
+    routineCompletionSyncBridge,
+  ) &&
+    /revoke all on table private\.routine_completion_sync_operations[\s\S]*?from public, anon, authenticated, service_role/i.test(
+      routineCompletionSyncBridge,
+    ) &&
+    /revoke all on table public\.shelf_product_identities[\s\S]*?from public, anon, authenticated, service_role/i.test(
+      routineCompletionSyncBridge,
+    ),
+  'Every owner-RPC export source must remain sealed from direct table access by all API roles.',
+);
+for (const functionName of [
+  'export_shelf_product_identities_for_subject',
+  'export_shelf_sync_receipts_for_subject',
+  'export_routine_completion_sync_receipts_for_subject',
 ]) {
-  block(errors, createdTables.has(table), `Migration missing table ${table}.`);
-  block(errors, rlsTables.has(table), `RLS is not enabled for ${table}.`);
+  block(
+    errors,
+    new RegExp(
+      `revoke all on function public\\.${functionName}\\([\\s\\S]*?\\) from public, anon, authenticated, service_role;[\\s\\S]*?grant execute on function public\\.${functionName}\\([\\s\\S]*?\\) to authenticated;`,
+      'i',
+    ).test(routineCompletionSyncBridge),
+    `Owner-RPC export ${functionName} must deny direct anon/service execution and grant only authenticated.`,
+  );
+}
+
+for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
+  block(
+    errors,
+    new RegExp(`alter table public\\.${table} force row level security`, 'i').test(migrations),
+    `Sealed service-only table must force RLS: ${table}.`,
+  );
+  block(
+    errors,
+    new RegExp(`revoke all on table public\\.${table}[\\s\\S]{0,160}service_role`, 'i').test(
+      migrations,
+    ),
+    `Sealed service-only table must revoke direct service_role access: ${table}.`,
+  );
+}
+
+for (const table of RPC_ONLY_INTERNAL_TABLES) {
+  block(
+    errors,
+    new RegExp(
+      `revoke all on table public\\.${table}[\\s\\S]{0,160}from public, anon, authenticated, service_role`,
+      'i',
+    ).test(migrations),
+    `RPC-only internal table must revoke every direct API role: ${table}.`,
+  );
+  block(
+    errors,
+    !new RegExp(`grant[^;]*on table public\\.${table}[^;]*;`, 'i').test(migrations),
+    `RPC-only internal table must not regain a direct table grant: ${table}.`,
+  );
+  block(
+    errors,
+    !new RegExp(`create policy[^;]*on public\\.${table}[^;]*;`, 'i').test(migrations),
+    `RPC-only internal table must not gain a direct RLS policy: ${table}.`,
+  );
+}
+
+for (const table of SERVICE_OPERATED_INTERNAL_TABLES) {
+  block(
+    errors,
+    !new RegExp(`create policy [\\s\\S]{0,160} on public\\.${table}`, 'i').test(migrations),
+    `Service-operated internal table must not expose a direct client RLS policy: ${table}.`,
+  );
+}
+
+const globalContentPolicyNames = new Map([
+  ['conflict_rules', 'conflict_rules_read_active'],
+  ['sequencing_rules', 'sequencing_rules_read_active'],
+  ['creator_stacks', 'creator_stacks_select_active'],
+  ['creator_stack_items', 'creator_stack_items_select_all'],
+]);
+const legacyClinicalContentTables = ['conflict_rules', 'sequencing_rules'];
+const selectRevokes = [
+  ...catalogLaunchCuration.matchAll(
+    /revoke\s+select\s+on(?:\s+table)?\s+([\s\S]*?)\s+from\s+([^;]+);/gi,
+  ),
+];
+for (const table of SEALED_GLOBAL_CONTENT_TABLES) {
+  const policyName = globalContentPolicyNames.get(table);
+  block(
+    errors,
+    new RegExp(
+      `drop\\s+policy\\s+if\\s+exists\\s+"${policyName}"\\s+on\\s+public\\.${table}\\s*;`,
+      'i',
+    ).test(catalogLaunchCuration),
+    `Migration 0058 must drop the broad ${policyName} policy on ${table}.`,
+  );
+}
+
+for (const table of [...SEALED_GLOBAL_CONTENT_TABLES, ...SEALED_CATALOG_AUTHORITY_TABLES]) {
+  block(
+    errors,
+    selectRevokes.some((match) => {
+      const objects = match[1];
+      const roles = new Set(match[2].split(',').map((role) => role.trim().toLowerCase()));
+      return (
+        new RegExp(`(?:^|[,\\s])public\\.${table}(?:$|[,\\s])`, 'i').test(objects) &&
+        ['public', 'anon', 'authenticated', 'service_role'].every((role) => roles.has(role))
+      );
+    }),
+    `Migration 0058 must revoke ${table} SELECT from PUBLIC and every API role.`,
+  );
+}
+
+const legacyClinicalAllRevokes = [
+  ...legacyClinicalContentSeal.matchAll(
+    /revoke\s+all(?:\s+privileges)?\s+on\s+table\s+([\s\S]*?)\s+from\s+([^;]+);/gi,
+  ),
+];
+for (const table of legacyClinicalContentTables) {
+  block(
+    errors,
+    new RegExp(
+      `alter\\s+table\\s+public\\.${table}\\s+force\\s+row\\s+level\\s+security`,
+      'i',
+    ).test(legacyClinicalContentSeal),
+    `Migration 0066 must FORCE RLS on the legacy public.${table} relation.`,
+  );
+  block(
+    errors,
+    legacyClinicalAllRevokes.some((match) => {
+      const roles = new Set(match[2].split(',').map((role) => role.trim().toLowerCase()));
+      return (
+        new RegExp(`(?:^|[,\\s])public\\.${table}(?:$|[,\\s])`, 'i').test(match[1]) &&
+        ['public', 'anon', 'authenticated', 'service_role'].every((role) => roles.has(role))
+      );
+    }),
+    `Migration 0066 must revoke every table privilege on public.${table} from PUBLIC and every API role.`,
+  );
+  block(
+    errors,
+    new RegExp(
+      `create\\s+trigger\\s+${table}_legacy_immutable\\s+before\\s+insert\\s+or\\s+update\\s+or\\s+delete\\s+or\\s+truncate\\s+on\\s+public\\.${table}\\s+for\\s+each\\s+statement\\s+execute\\s+function\\s+private\\.guard_legacy_clinical_content_immutable\\(\\)`,
+      'i',
+    ).test(legacyClinicalContentSeal),
+    `Migration 0066 must attach the statement-level four-operation immutability guard to public.${table}.`,
+  );
+}
+
+block(
+  errors,
+  /create\s+or\s+replace\s+function\s+private\.guard_legacy_clinical_content_immutable\(\)[\s\S]*?security\s+definer[\s\S]*?set\s+search_path\s*=\s*''[\s\S]*?raise\s+exception\s+'LEGACY_CLINICAL_CONTENT_IMMUTABLE'[\s\S]*?errcode\s*=\s*'55000'/i.test(
+    legacyClinicalContentSeal,
+  ),
+  'Migration 0066 legacy clinical-content guard must be a pinned SECURITY DEFINER with a deterministic 55000 rejection.',
+);
+block(
+  errors,
+  /revoke\s+all\s+on\s+function\s+private\.guard_legacy_clinical_content_immutable\(\)\s+from\s+public,\s*anon,\s*authenticated,\s*service_role\s*;/i.test(
+    legacyClinicalContentSeal,
+  ),
+  'Migration 0066 legacy clinical-content guard must revoke execute from PUBLIC and every API role.',
+);
+
+for (const issue of tableClassificationIssues({
+  createdTables,
+  rlsTables,
+  classifications: tableClassifications,
+})) {
+  if (issue.kind === 'unclassified') {
+    errors.push(`Discovered public table without Phase 9 classification: ${issue.table}.`);
+  } else if (issue.kind === 'duplicate') {
+    errors.push(
+      `Public table appears in multiple Phase 9 classifications: ${issue.table} (${issue.classifications.join(', ')}).`,
+    );
+  } else if (issue.kind === 'stale') {
+    errors.push(`Migration missing classified table ${issue.table}.`);
+  } else if (issue.kind === 'rls-disabled') {
+    errors.push(`RLS is not enabled for ${issue.table}.`);
+  }
 }
 
 for (const table of dynamicUserTables) {
   block(
     errors,
-    requiredUserOrLinkedTables.includes(table) ||
-      serviceOnlyTables.includes(table) ||
-      internalOutboxCoordinationTables.includes(table),
+    PRIVATE_PUBLIC_TABLES.includes(table),
     `Discovered auth.users-linked table without Phase 9 RLS classification: ${table}.`,
   );
 }
 
-for (const table of requiredUserOrLinkedTables) {
+for (const table of OWNER_LINKED_PRIVATE_TABLES) {
   block(
     errors,
     exportSource.includes(table),
@@ -133,34 +358,54 @@ for (const table of requiredUserOrLinkedTables) {
   );
 }
 
-for (const table of serviceOnlyTables) {
-  if (
-    table === 'catalog_import_batches' ||
-    table === 'catalog_quality_reports' ||
-    table === 'community_moderation_events'
-  )
-    continue;
+const callerRegistryStart = exportRegistrySource.indexOf('export const CALLER_RLS_EXPORT_TABLES');
+const callerRegistryEnd = exportRegistrySource.indexOf(
+  'export const SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES',
+  callerRegistryStart,
+);
+const callerRegistryTables = [
+  ...exportRegistrySource
+    .slice(callerRegistryStart, callerRegistryEnd)
+    .matchAll(/table:\s*'([^']+)'/g),
+].map((match) => match[1]);
+block(
+  errors,
+  callerRegistryStart >= 0 &&
+    callerRegistryEnd > callerRegistryStart &&
+    callerRegistryTables.length === OWNER_LINKED_PRIVATE_TABLES.length &&
+    JSON.stringify([...new Set(callerRegistryTables)].sort()) ===
+      JSON.stringify([...OWNER_LINKED_PRIVATE_TABLES].sort()),
+  'Caller-RLS export registry must exactly match the 28 owner-linked private tables without duplicates.',
+);
+block(
+  errors,
+  callerRegistryTables.every((table) => !SERVICE_ONLY_PRIVATE_TABLES.includes(table)),
+  'Caller-RLS export registry contains a service-only private table.',
+);
+
+const serviceOnlyExportExclusions = new Set([
+  'community_moderation_events',
+  'waitlist_signups',
+  'growth_events',
+  'edge_rate_limits',
+]);
+
+for (const table of serviceOnlyExportExclusions) {
+  block(
+    errors,
+    SERVICE_ONLY_PRIVATE_TABLES.includes(table),
+    `Unknown service-only export exclusion: ${table}.`,
+  );
+}
+
+for (const table of SERVICE_ONLY_PRIVATE_TABLES) {
+  if (serviceOnlyExportExclusions.has(table)) continue;
   block(
     errors,
     exportSource.includes(table),
     `Service-only user-linked table is missing from data-export or exclusion coverage: ${table}.`,
   );
 }
-
-for (const table of internalOutboxCoordinationTables) {
-  block(
-    errors,
-    exportSource.includes(`'${table}'`) && dataInventory.includes(`\`${table}\``),
-    `Internal outbox coordination table is missing from the explicit data-export exclusion: ${table}.`,
-  );
-}
-block(
-  errors,
-  /service-only outbox coordination state/.test(dataInventory) &&
-    /owner-derived RPCs/.test(dataInventory) &&
-    /on delete cascade/.test(dataInventory),
-  'Phase 9 data inventory must document outbox coordination access, export exclusion, and deletion.',
-);
 
 block(
   errors,
@@ -171,6 +416,51 @@ block(
   errors,
   /photos_objects_insert_own/.test(migrations),
   'Storage RLS policy missing for photos insert.',
+);
+block(
+  errors,
+  Boolean(photoMetadataInsertPolicy) &&
+    /on\s+public\.photos/i.test(photoMetadataInsertPolicy) &&
+    /as\s+restrictive/i.test(photoMetadataInsertPolicy) &&
+    /for\s+insert/i.test(photoMetadataInsertPolicy) &&
+    /to\s+authenticated/i.test(photoMetadataInsertPolicy) &&
+    /with\s+check/i.test(photoMetadataInsertPolicy) &&
+    /is_anonymous/i.test(photoMetadataInsertPolicy) &&
+    Boolean(photoMetadataUpdatePolicy) &&
+    /on\s+public\.photos/i.test(photoMetadataUpdatePolicy) &&
+    /as\s+restrictive/i.test(photoMetadataUpdatePolicy) &&
+    /for\s+update/i.test(photoMetadataUpdatePolicy) &&
+    /to\s+authenticated/i.test(photoMetadataUpdatePolicy) &&
+    /with\s+check/i.test(photoMetadataUpdatePolicy) &&
+    /is_anonymous/i.test(photoMetadataUpdatePolicy),
+  'Photo metadata insert and update policies must deny cloud persistence to signed anonymous Auth users.',
+);
+block(
+  errors,
+  Boolean(photoStorageInsertPolicy) &&
+    /on\s+storage\.objects/i.test(photoStorageInsertPolicy) &&
+    /for\s+insert/i.test(photoStorageInsertPolicy) &&
+    /to\s+authenticated/i.test(photoStorageInsertPolicy) &&
+    /with\s+check/i.test(photoStorageInsertPolicy) &&
+    /bucket_id\s*=\s*'photos'/i.test(photoStorageInsertPolicy) &&
+    /storage\.foldername\(name\)/i.test(photoStorageInsertPolicy) &&
+    /has_current_consent\('photo_cloud_backup'\)/i.test(photoStorageInsertPolicy) &&
+    /is_anonymous/i.test(photoStorageInsertPolicy),
+  'Photo Storage insert policy must deny signed anonymous Auth users after validating owner prefix and current consent.',
+);
+block(
+  errors,
+  Boolean(photoStorageUpdatePolicy) &&
+    /on\s+storage\.objects/i.test(photoStorageUpdatePolicy) &&
+    /for\s+update/i.test(photoStorageUpdatePolicy) &&
+    /to\s+authenticated/i.test(photoStorageUpdatePolicy) &&
+    /using\s*\(/i.test(photoStorageUpdatePolicy) &&
+    /with\s+check/i.test(photoStorageUpdatePolicy) &&
+    /bucket_id\s*=\s*'photos'/i.test(photoStorageUpdatePolicy) &&
+    /storage\.foldername\(name\)/i.test(photoStorageUpdatePolicy) &&
+    /has_current_consent\('photo_cloud_backup'\)/i.test(photoStorageUpdatePolicy) &&
+    /is_anonymous/i.test(photoStorageUpdatePolicy),
+  'Photo Storage update policy must deny signed anonymous Auth users after validating owner prefix and current consent.',
 );
 block(
   errors,
@@ -194,10 +484,15 @@ block(
 );
 block(
   errors,
-  /drop policy if exists "routine_steps_insert_own"[\s\S]*create policy "routine_steps_insert_own"[\s\S]*owns_user_product\(user_product_id\)/i.test(
-    migrations,
-  ),
-  'Routine step RLS must block cross-user product references.',
+  /drop policy if exists "routine_steps_insert_own"/i.test(routineCompletionSyncBridge) &&
+    /grant execute on function public\.record_routine_completion\([\s\S]*?\)\s+to authenticated/i.test(
+      routineCompletionSyncBridge,
+    ) &&
+    /revoke insert, update, delete, truncate, references, trigger[\s\S]*?on table public\.routine_steps[\s\S]*?authenticated/i.test(
+      routineCompletionSyncBridge,
+    ) &&
+    /ROUTINE_STEP_PRODUCT_OWNER_INVALID/i.test(routineCompletionSyncBridge),
+  'Routine-step writes must use the authenticated completion RPC behind a same-owner invariant and direct-DML seal.',
 );
 block(
   errors,
@@ -249,12 +544,11 @@ block(
 for (const [type, tablePolicy] of [
   ['photo_cloud_backup', 'photos_cloud_backup_consent_insert'],
   ['photo_cloud_backup', 'photos_objects_insert_own'],
-  ['data_sharing', 'commerce_click_events_consent_insert'],
   ['photo_trend_insights', 'photo_trend_consent_insert'],
   ['community_participation', 'community_reactions_consent_insert'],
-  ['ask_onskin', 'ask_sessions_consent_insert'],
-  ['ask_onskin', 'ask_turn_audit_consent_insert'],
-  ['ask_onskin', 'ask_safety_audit_consent_insert'],
+  ['ask_layerwell', 'ask_sessions_consent_insert'],
+  ['ask_layerwell', 'ask_turn_audit_consent_insert'],
+  ['ask_layerwell', 'ask_safety_audit_consent_insert'],
 ]) {
   block(
     errors,
@@ -264,8 +558,53 @@ for (const [type, tablePolicy] of [
 }
 block(
   errors,
+  /drop policy if exists "commerce_click_events_insert_own"[\s\S]*drop policy if exists "commerce_click_events_consent_insert"/i.test(
+    migrations,
+  ) &&
+    /revoke all on table public\.commerce_click_events[\s\S]*grant select, delete on table public\.commerce_click_events\s+to authenticated/i.test(
+      migrations,
+    ),
+  'COM-01A must remove commerce click publication policy and privilege while preserving installed-base owner reads and deletion.',
+);
+block(
+  errors,
+  /create trigger commerce_click_events_admission_closed[\s\S]*before insert or update[\s\S]*guard_commerce_click_publication/i.test(
+    migrations,
+  ) && /raise exception 'COMMERCE_ADMISSION_CLOSED'[\s\S]*errcode = '55000'/i.test(migrations),
+  'COM-01A must fail every commerce click insert/update closed at the database boundary.',
+);
+block(
+  errors,
   Boolean(packageJson.scripts?.['phase9:live-supabase-adversarial']),
   'package.json is missing phase9:live-supabase-adversarial.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:rls-adversarial-smoke']),
+  'package.json is missing phase9:rls-adversarial-smoke.',
+);
+block(
+  errors,
+  /phase9:rls-adversarial-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:rls-adversarial-smoke/.test(packageJson.scripts?.['launch:verify'] ?? ''),
+  'Phase 9 and launch verification must execute the RLS adversarial contract smoke.',
+);
+block(
+  errors,
+  /tableClassificationIssues/.test(contractSmoke) &&
+    /deniedReadOrMutationResult/.test(contractSmoke) &&
+    /storageDeniedResult/.test(contractSmoke) &&
+    /harnessErrorDetail/.test(contractSmoke),
+  'RLS adversarial contract smoke must execute classification, PostgREST, Storage, and evidence-redaction predicates.',
+);
+block(
+  errors,
+  /deniedInsertResult/.test(phase2Smoke) &&
+    /deniedReadOrMutationResult/.test(phase2Smoke) &&
+    /signIn\.data\.user\?\.id === createdUser\.id/.test(phase2Smoke) &&
+    /pao_source: 'unknown'/.test(phase2Smoke) &&
+    /expiry_source: 'unknown'/.test(phase2Smoke),
+  'Phase 2 RLS smoke must share exact denial predicates, verify signed-in identity, and use coherent Shelf fixtures.',
 );
 block(
   errors,
@@ -273,47 +612,141 @@ block(
     /PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL/.test(liveHarness),
   'Live Supabase adversarial harness must test private photo storage and require an explicit run flag.',
 );
-block(
-  errors,
-  /routine conflict direct owner insert/.test(liveHarness) &&
-    /apply_conflict_choice_outbox_batch/.test(liveHarness),
-  'Live Supabase adversarial harness must deny direct routine-conflict DML and prove the owner-derived outbox RPC.',
-);
 
-const requiredLiveHarnessTables = [
-  'routine_conflicts',
-  'active_ramp',
-  'shelf_scans',
-  'cycles',
-  'cycle_nights',
-  'streak_freezes',
-  'notification_preferences',
-  'notification_log',
-  'recommendation_preferences',
-  'recommendations',
-  'photo_trend',
-  'catalog_corrections',
-  'catalog_lookup_events',
-  'commerce_click_events',
-  'community_blocks',
-  'community_questions',
-  'community_reports',
-  'community_reactions',
-  'ask_sessions',
-  'ask_turn_audit',
-  'ask_safety_audit',
-  'reverse_trial_grants',
-];
+const staticProbeCounts = new Map();
+for (const match of liveHarness.matchAll(/registerPrivateTableProbe\(\s*['"]([a-z_]+)['"]/g)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
+for (const match of liveHarness.matchAll(
+  /registerSealedPrivateTableProbe\(\s*['"]([a-z_]+)['"]/g,
+)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
+for (const match of liveHarness.matchAll(
+  /registerClosedPrivateTableProbe\(\s*['"]([a-z_]+)['"]/g,
+)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
+for (const match of liveHarness.matchAll(
+  /registerServiceOperatedTableProbe\(\s*['"]([a-z_]+)['"]/g,
+)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
 
-for (const table of requiredLiveHarnessTables) {
+for (const table of PRIVATE_PUBLIC_TABLES) {
+  const count = staticProbeCounts.get(table) ?? 0;
   block(
     errors,
-    liveHarness.includes(`'${table}'`),
-    `Live Supabase adversarial harness is missing ${table} coverage.`,
+    count === 1,
+    `Live Supabase adversarial harness must register exactly one access-control probe for ${table}; found ${count}.`,
   );
 }
 
+for (const table of SERVICE_OPERATED_INTERNAL_TABLES) {
+  block(
+    errors,
+    !new RegExp(
+      `registerServiceOperatedTableProbe\\(\\s*['"]${table}['"][\\s\\S]{0,120}(?:absentUuid|__phase9_absent__)`,
+    ).test(liveHarness),
+    `Service-operated live probe must use a positive-control row, not an absent key: ${table}.`,
+  );
+}
+
+for (const requiredSource of [
+  "userA.client.rpc('apply_shelf_outbox_batch'",
+  "userA.client.rpc('apply_conflict_choice_outbox_batch'",
+  "admin.rpc('begin_catalog_import'",
+  "admin.rpc('stage_catalog_import_batch'",
+  "appEnv === 'production'",
+  'client.from(table).select(probe.column).eq(probe.column, probe.value)',
+  "'42501'",
+]) {
+  block(
+    errors,
+    liveHarness.includes(requiredSource),
+    `Live adversarial harness is missing the row-positive/direct-denial contract: ${requiredSource}.`,
+  );
+}
+
+for (const table of staticProbeCounts.keys()) {
+  block(
+    errors,
+    PRIVATE_PUBLIC_TABLES.includes(table),
+    `Live Supabase adversarial harness registers an unknown private-table probe: ${table}.`,
+  );
+}
+
+for (const table of SERVICE_ONLY_PRIVATE_TABLES) {
+  const cleanupMarker = `trackServiceCleanup('${table}'`;
+  const probeMarker = `registerPrivateTableProbe('${table}'`;
+  if (table === 'order_attributions') {
+    block(
+      errors,
+      !liveHarness.includes(cleanupMarker) &&
+        liveHarness.includes("registerClosedPrivateTableProbe('order_attributions'"),
+      'Live harness must verify COM-01A order-attribution closure without creating a synthetic positive fixture.',
+    );
+    continue;
+  }
+  if (table === 'reverse_trial_grants' || table === 'catalog_corrections') {
+    const guardedRpc =
+      table === 'reverse_trial_grants'
+        ? /admin\.rpc\('grant_app_granted_reverse_trial'/
+        : /admin\.rpc\('submit_catalog_correction'/;
+    block(
+      errors,
+      !liveHarness.includes(cleanupMarker) &&
+        guardedRpc.test(liveHarness) &&
+        liveHarness.indexOf(probeMarker) >= 0 &&
+        /admin\.auth\.admin\.deleteUser\(user\.id\)[\s\S]*owner-cascade cleanup left a residual row/.test(
+          liveHarness,
+        ),
+      `Live harness must create ${table} only through its guarded RPC and verify Auth-owner cascade cleanup.`,
+    );
+    continue;
+  }
+  block(
+    errors,
+    liveHarness.indexOf(cleanupMarker) >= 0 &&
+      liveHarness.indexOf(cleanupMarker) < liveHarness.indexOf(probeMarker),
+    `Live harness must track ${table} cleanup before its first fallible probe assertion.`,
+  );
+}
+
+block(
+  errors,
+  /cleanupUsers\.push\(\{ id: createdUser\.id \}\)[\s\S]*signInWithPassword/.test(liveHarness) &&
+    /cleanupUsers\.push\(\{ id: data\.user\.id \}\)[\s\S]*is_anonymous === true/.test(liveHarness),
+  'Live harness must track created permanent and signed-anonymous users before post-create assertions.',
+);
+block(
+  errors,
+  !/warnings\.push\([^\n]*cleanup/i.test(liveHarness) &&
+    /errors\.push\([^\n]*cleanup/i.test(liveHarness) &&
+    /getUserById\(user\.id\)/.test(liveHarness) &&
+    /authUserMissing\(remaining\)/.test(liveHarness) &&
+    /owner-cascade cleanup left a residual row/.test(liveHarness) &&
+    /cleanup left a residual row/.test(liveHarness) &&
+    /Storage cleanup left a residual object/.test(liveHarness),
+  'Live cleanup must block on failures and verify Auth users, private/global rows, and Storage objects are absent.',
+);
+
 const requiredLiveHarnessChecks = [
+  'all 77 private tables have access-control probes',
+  'recommendation preferences owner direct update',
+  'recommendation preferences service-role direct insert',
+  'recommendation cache service-role zero-admission read',
+  'recommendation owner insert while admission is closed',
+  'recommendation service-role insert while admission is closed',
+  'routine conflict swapped canonical pair',
+  'routine conflict duplicate canonical identity',
+  'Shelf provenance matrix',
+  "for (const paoSource of ['label', 'catalog'])",
+  'Shelf non-null PAO with unknown provenance',
+  'Shelf unlinked category estimate without catalog provenance',
+  'consent append-only admin update',
+  'community moderation event client insert',
+  'community question signed-anonymous insert',
   'photo quality metadata without provenance',
   'photo quality metadata with invalid provenance',
   'photo metadata cross-user storage path insert',
@@ -322,13 +755,25 @@ const requiredLiveHarnessChecks = [
   'community reaction unpublished note insert',
   'community reaction null note insert',
   'photo trend revoked consent insert',
+  'commerce click owner insert while admission is closed',
   'commerce click revoked consent insert',
   'community question revoked consent insert',
   'community reaction revoked consent insert',
   'Ask session revoked consent insert',
   'Ask safety revoked consent insert',
   'photo metadata revoked cloud consent insert',
-  'storage upload after photo_cloud_backup revocation unexpectedly succeeded',
+  'photo metadata revoked cloud consent update',
+  'photo metadata signed-anonymous cloud insert',
+  'photo metadata signed-anonymous cloud update',
+  'photo metadata signed-anonymous local-only insert',
+  'signed-anonymous local-only photo update returned unexpected state',
+  'consenting owner cloud photo metadata update returned unexpected state',
+  'storage signed-anonymous cloud upload',
+  'storage signed-anonymous cloud update',
+  'storage consenting owner cloud update',
+  'storage cross-user object update',
+  'storage object update after photo_cloud_backup revocation',
+  'storage upload after photo_cloud_backup revocation',
 ];
 
 for (const check of requiredLiveHarnessChecks) {
@@ -338,6 +783,55 @@ for (const check of requiredLiveHarnessChecks) {
     `Live Supabase adversarial harness is missing: ${check}.`,
   );
 }
+
+block(
+  errors,
+  /PRIVATE_PUBLIC_TABLES/.test(liveHarness) && /privateTableProbes/.test(liveHarness),
+  'Live Supabase adversarial harness must compare its probe registry with the canonical private-table inventory.',
+);
+block(
+  errors,
+  /function expectPostgresCode/.test(liveHarness) &&
+    /'23505'/.test(liveHarness) &&
+    /'23514'/.test(liveHarness) &&
+    /'42501'/.test(liveHarness),
+  'Live Supabase adversarial harness must assert stable PostgreSQL codes for constraints and moderation denial.',
+);
+block(
+  errors,
+  /function resultError[\s\S]*return harnessErrorDetail\(error\)/.test(liveHarness) &&
+    /deniedInsertResult/.test(liveHarness) &&
+    /deniedReadOrMutationResult/.test(liveHarness) &&
+    /exactPostgresErrorResult/.test(liveHarness) &&
+    /storageDeniedResult/.test(liveHarness),
+  'Live Supabase adversarial evidence must retain stable assertion/code details without raw provider or database messages.',
+);
+block(
+  errors,
+  /const unauthenticated = publicClient\(\)/.test(liveHarness) &&
+    !/const anonymous = publicClient\(\)/.test(liveHarness),
+  'Publishable-key client must be named unauthenticated, not confused with a signed anonymous Auth user.',
+);
+block(
+  errors,
+  /function createSignedAnonymousUser/.test(liveHarness) &&
+    /signInAnonymously/.test(liveHarness) &&
+    /is_anonymous === true/.test(liveHarness) &&
+    /signed-anonymous cross-user read/.test(liveHarness),
+  'Live RLS harness must distinguish and exhaustively test a signed anonymous Auth user.',
+);
+block(
+  errors,
+  liveHarness.indexOf('photo metadata signed-anonymous local-only insert') >= 0 &&
+    liveHarness.indexOf('photo metadata signed-anonymous local-only insert') <
+      liveHarness.indexOf(
+        "grantConsent(signedAnonymous.client, signedAnonymous.id, 'photo_cloud_backup')",
+      ) &&
+    liveHarness.indexOf(
+      "grantConsent(signedAnonymous.client, signedAnonymous.id, 'photo_cloud_backup')",
+    ) < liveHarness.indexOf('photo metadata signed-anonymous cloud update'),
+  'Signed-anonymous local photo positives must run without cloud consent before consent-backed cloud denials.',
+);
 
 warn(
   warnings,

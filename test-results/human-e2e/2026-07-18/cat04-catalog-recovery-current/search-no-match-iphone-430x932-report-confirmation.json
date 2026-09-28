@@ -1,0 +1,96 @@
+{
+  "alerts": [],
+  "bodyText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. No catalog match yet. Add it by hand for now. Report missing product Confirm catalog report Confirm or edit the name printed on the product. Report details to send Selected issue : missing_product Product name : Confirmed missing product Report reason : missing_product reported from catalog search Intake method : search Platform : web Intake route : shelf_search Your current RoutineKind account ID links this report to you. It is stored in RoutineKind's Supabase backend and is available to RoutineKind's catalog-review team and authorized operators. It is included in your RoutineKind data export. Account deletion or health-data consent withdrawal starts deletion from active RoutineKind systems; backup or legally required retention may not be immediate. Nothing is sent to Open Beauty Facts or any other third-party catalog provider. The list above is the sanitized product and report detail. A separate random retry ID with no product or account content prevents duplicate submissions. Your signed-in session and current health-data consent are checked separately to authorize it. Send report Cancel Add by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Catalog search query",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 299.91,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Search",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 74.09,
+      "x": 331.91,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Send report",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 169,
+      "x": 57,
+      "y": 727
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 139,
+      "x": 234,
+      "y": 727
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add by hand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 844
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Catalog search query",
+      "value": "ceramide cleanser"
+    },
+    {
+      "label": "Product name for report",
+      "value": "Confirmed missing product"
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8480/shelf/search?cat04Audit=search-no-match-iphone-430x932-1784409577907&e2eQuery=ceramide+cleanser",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

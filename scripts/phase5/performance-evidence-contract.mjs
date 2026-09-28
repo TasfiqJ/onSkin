@@ -1,4 +1,4 @@
-import { resolve } from 'node:path';
+import { isAbsolute, posix, resolve } from 'node:path';
 
 import { normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
 import {
@@ -7,7 +7,8 @@ import {
   requiredReleasePlatforms,
 } from '../launch/contract.mjs';
 
-export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 3;
+export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 4;
+export const PERFORMANCE_EVIDENCE_ROOT = 'docs/phase-5/evidence/performance/';
 export const PERFORMANCE_MIN_SAMPLE_COUNT = 5;
 
 export const PERFORMANCE_METRICS = [
@@ -20,6 +21,7 @@ export const PERFORMANCE_METRICS = [
   { id: 'barcode_decode_ms', unit: 'ms' },
   { id: 'barcode_lookup_ms', unit: 'ms' },
   { id: 'barcode_no_match_recovery_ms', unit: 'ms' },
+  { id: 'native_ocr_recognition_ms', unit: 'ms' },
   { id: 'routine_generation_three_products_ms', unit: 'ms' },
   { id: 'routine_generation_five_products_ms', unit: 'ms' },
   { id: 'routine_generation_ten_products_ms', unit: 'ms' },
@@ -42,6 +44,35 @@ function isObject(value) {
 
 function isPositiveNumber(value) {
   return typeof value === 'number' && Number.isFinite(value) && value > 0;
+}
+
+export function normalizePerformanceEvidencePath(value) {
+  if (
+    typeof value !== 'string' ||
+    value !== value.trim() ||
+    !value ||
+    value.includes('\\') ||
+    value.includes('\0') ||
+    value.includes('%') ||
+    /\s/u.test(value) ||
+    isAbsolute(value) ||
+    /^[A-Za-z]:/u.test(value) ||
+    /^[a-z][a-z0-9+.-]*:/iu.test(value)
+  ) {
+    return null;
+  }
+  const normalized = posix.normalize(value);
+  if (
+    normalized !== value ||
+    normalized.startsWith('../') ||
+    normalized.includes('/../') ||
+    normalized.split('/').some((segment) => !segment || segment === '.' || segment === '..') ||
+    !normalized.startsWith(PERFORMANCE_EVIDENCE_ROOT) ||
+    !normalized.endsWith('.json')
+  ) {
+    return null;
+  }
+  return normalized;
 }
 
 export function nearestRankPercentile(samples, percentile) {

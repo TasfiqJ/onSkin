@@ -15,69 +15,6 @@ function readAppRoute(path: string): string {
 }
 
 describe('paywall mobile contracts', () => {
-  it('keeps the subscription hook graph unmounted while a contextual gate is unfocused', () => {
-    const proGate = readSource('features/subscription/ProGate.tsx');
-    const shellStart = proGate.indexOf('export function ProGate(');
-    const focusedStart = proGate.indexOf('function FocusedProGate(');
-    const hocStart = proGate.indexOf('/** HOC to gate a whole screen behind Pro');
-    const focusShell = proGate.slice(shellStart, focusedStart);
-    const focusedGate = proGate.slice(focusedStart, hocStart);
-
-    expect(shellStart).toBeGreaterThanOrEqual(0);
-    expect(focusedStart).toBeGreaterThan(shellStart);
-    expect(hocStart).toBeGreaterThan(focusedStart);
-    expect(focusShell).toContain('const isFocused = useIsFocused();');
-    expect(focusShell).toContain('if (!isFocused) return null;');
-    expect(focusShell).toContain('return <FocusedProGate {...props} />;');
-
-    for (const focusedOnlyHook of [
-      'useWindowDimensions(',
-      'usePathname(',
-      'useOwnerQueryScope(',
-      'useEntitlement(',
-      'useEntitlementActions(',
-      'useSubscriptionOffering(',
-      'usePaidActionHold(',
-      'useState<',
-      'useEffect(',
-    ]) {
-      expect(focusShell).not.toContain(focusedOnlyHook);
-      expect(focusedGate).toContain(focusedOnlyHook);
-    }
-
-    expect(focusedGate).not.toContain('useIsFocused(');
-    expect(focusedGate).toContain('const entitlementChecking = isLoading || (!data && !isError);');
-    expect(focusedGate).toContain('if (!locked) return <>{children}</>;');
-    expect(focusedGate).toContain("if (locked) track('contextual_paywall_shown', { feature });");
-  });
-
-  it('acknowledges durable lifecycle prompts only from their mounted target surfaces', () => {
-    const tabs = readAppRoute('(tabs)/_layout.tsx');
-    const reoffer = readAppRoute('paywall/reoffer.tsx');
-    const downgrade = readAppRoute('paywall/downgrade.tsx');
-
-    expect(tabs).toContain('pathname: prompt.route');
-    expect(tabs).toContain('params: { lifecyclePromptId: prompt.promptId }');
-    expect(tabs).toContain('const storeUserId = user?.id ?? null;');
-    expect(tabs).toContain('if (!storeUserId) return;');
-    expect(tabs).toContain('expectedStoreUserId: storeUserId');
-    expect(tabs).toContain('!isOwnerQueryScopeCurrent(ownerScope)');
-    expect(tabs).toContain('mounted = false');
-
-    for (const route of [reoffer, downgrade]) {
-      expect(route).toContain('useLocalSearchParams<{ lifecyclePromptId?: string | string[] }>()');
-      expect(route).toContain('acknowledgeLifecyclePromptPresented');
-      expect(route).toContain('promptId: lifecyclePromptId');
-      expect(route).toContain('supersedeLifecyclePrompt');
-    }
-    expect(reoffer).toContain("directPaywallDecision('reoffer'");
-    expect(reoffer).toContain("decision.lifecycleDisposition === 'present'");
-    expect(reoffer).toContain("route: '/paywall/reoffer'");
-    expect(downgrade).toContain("directPaywallDecision('downgrade'");
-    expect(downgrade).toContain("decision.lifecycleDisposition !== 'present'");
-    expect(downgrade).toContain("route: '/paywall/downgrade'");
-  });
-
   it('keeps lifecycle paywall bodies scrollable above fixed actions on short phones', () => {
     for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx', 'paywall/winback.tsx']) {
       const source = readAppRoute(route);
@@ -225,10 +162,8 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain(
       "microShortPaywall\n            ? 'mt-0 h-[48px] items-center justify-center rounded-pill'",
     );
-    expect(upsell).toContain(
-      '!decision.allowPurchase || !offeringResolved || paidAction.isHeld || purchase.isPending',
-    );
-    expect(upsell).not.toContain('disabled={!canPurchase || purchase.isPending}');
+    expect(upsell).toContain('disabled={startTrial.isPending}');
+    expect(upsell).not.toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(upsell).toContain('fontSize: microShortPaywall ? 15.5 : 17');
     expect(upsell).toContain(
       '{shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
@@ -340,7 +275,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('style={[');
     expect(proGate).toContain('microShortDeferredCtaStyle,');
     expect(proGate).toContain(
-      'canPurchase && !paidAction.isHeld ? colors.clay : colors.mutedLight',
+      '{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight },',
     );
     expect(proGate).toContain('accessibilityLabel={primaryCtaLabel}');
     expect(proGate).toContain('numberOfLines={1}');
@@ -350,10 +285,8 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'lineHeight: microShortPaywall ? 18 : denseTextPressurePaywall ? 19 : undefined',
     );
-    expect(proGate).toContain(
-      'disabled={!offeringResolved || paidAction.isHeld || purchase.isPending}',
-    );
-    expect(proGate).not.toContain('disabled={!canPurchase || purchase.isPending}');
+    expect(proGate).toContain('disabled={startTrial.isPending}');
+    expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(proGate).toContain('!supportedTextPressurePaywall');
     expect(proGate).toContain('!tallPhoneTextPressurePaywall');
     expect(proGate).toContain('style={{ flexShrink: 1, minWidth: 0 }}');
@@ -394,9 +327,11 @@ describe('paywall mobile contracts', () => {
 
     expect(proGate).toContain("import { router, useIsFocused, usePathname } from 'expo-router';");
     expect(proGate).toContain('const isFocused = useIsFocused();');
-    expect(proGate).toContain("if (locked) track('contextual_paywall_shown', { feature });");
+    expect(proGate).toContain(
+      "if (isFocused && locked) track('contextual_paywall_shown', { feature });",
+    );
     expect(proGate.indexOf('if (!isFocused) return null;')).toBeLessThan(
-      proGate.indexOf('if (entitlementChecking)'),
+      proGate.indexOf('if (isLoading || !data)'),
     );
     expect(proGate).toContain('if (!isFocused) return null;');
     expect(proGate).toContain('const pathname = usePathname();');
@@ -479,21 +414,29 @@ describe('paywall mobile contracts', () => {
     expect(onboardingPaywall).toContain('minWidth: compactPaywall ? 104 : 92');
   });
 
-  it('keeps contextual routine paywalls value-first for first-time free users', () => {
+  it('keeps contextual custom grants closed in lean V1', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const entitlement = readSource('features/subscription/entitlement.ts');
+    const onboarding = readAppRoute('onboarding/paywall.tsx');
 
     expect(proGate).toContain('canStartContextualReverseTrial(data)');
+    expect(proGate).toContain('env.customProGrantEnabled && data');
     expect(proGate).toContain('startReverseTrial.mutate');
     expect(proGate).toContain('PAYWALL_COPY.offer.exploreTitle');
     expect(proGate).toContain('PAYWALL_COPY.offer.exploreBody');
+    expect(entitlement).toContain('Lean V1 never offers a custom grant');
     expect(entitlement).toMatch(/canStartContextualReverseTrial[\s\S]*?return false;/);
-    expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
+    expect(onboarding).toContain("router.replace('/(tabs)/today')");
+    expect(onboarding).toContain('PAYWALL_COPY.offer.continueFreeTitle');
+    expect(onboarding).toContain('PAYWALL_COPY.offer.continueFreeBody');
+    expect(onboarding).not.toContain('startReverseTrial.mutate');
   });
 
   it('keeps lapsed contextual paywalls on paid recovery copy', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const useEntitlement = readSource('features/subscription/useEntitlement.ts');
+    const webFixture = readSource('features/subscription/entitlementE2EFixture.web.ts');
+    const nativeFixture = readSource('features/subscription/entitlementE2EFixture.native.ts');
 
     expect(proGate).toContain('const lapsedEntitlement = data?.expired === true;');
     expect(proGate).toContain(
@@ -505,76 +448,56 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const primaryCtaLabel = lapsedEntitlement');
     expect(proGate).toContain('PAYWALL_COPY.reoffer.keepCta');
     expect(proGate).toContain('PAYWALL_COPY.downgrade.renewCta');
-    expect(proGate).toContain('paywallPurchasePresentation(annual)');
-    expect(proGate).toContain('purchasePresentation.cta');
+    expect(proGate).toContain('PAYWALL_COPY.offer.cta');
+    expect(proGate).toContain('PAYWALL_COPY.offer.subscribeCta');
     expect(proGate).toContain('{priceIntroLabel}');
     expect(proGate).toContain('{primaryCtaLabel}');
     expect(proGate).toContain('if (!canPurchase) {');
     expect(proGate).toContain('PAYWALL_FEEDBACK.storePricingUnavailable');
-    expect(proGate).toContain(
-      'disabled={!offeringResolved || paidAction.isHeld || purchase.isPending}',
-    );
-    expect(proGate).not.toContain('disabled={!canPurchase || purchase.isPending}');
-    expect(useEntitlement).toContain("fixture !== 'expired_store'");
-    expect(useEntitlement).toContain("fixture !== 'expired_reverse_trial'");
-    expect(useEntitlement).toContain("if (fixture === 'expired_store')");
-    expect(useEntitlement).toContain("if (fixture === 'expired_reverse_trial')");
-    expect(useEntitlement).toContain("if (env.appEnvironment !== 'development') return null;");
-    expect(useEntitlement).toContain(
+    expect(proGate).toContain('disabled={startTrial.isPending}');
+    expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
+    expect(useEntitlement).toContain("from './entitlementE2EFixture'");
+    expect(webFixture).toContain("fixture !== 'expired_store'");
+    expect(webFixture).toContain("fixture !== 'expired_reverse_trial'");
+    expect(webFixture).toContain("if (fixture === 'expired_store')");
+    expect(webFixture).toContain("if (fixture === 'expired_reverse_trial')");
+    expect(webFixture).toContain("if (env.appEnvironment !== 'development') return null;");
+    expect(webFixture).toContain(
       'const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();',
     );
+    expect(nativeFixture).not.toContain('EXPO_PUBLIC_E2E_ENTITLEMENT');
+    expect(nativeFixture).not.toContain("tier: 'pro'");
+    expect(nativeFixture).toContain('return null;');
   });
 
-  it('defers fail-soft trial reminder reconciliation from the ordered published winner', () => {
-    const source = readSource('features/subscription/useEntitlement.ts');
-    const reminder = readSource('features/subscription/entitlementReminder.ts');
-    const delivery = readSource('features/notifications/deliver.ts');
-    const helperStart = source.indexOf('async function persistRevenueCatResult');
-    const helperEnd = source.indexOf('\nexport function useEntitlement', helperStart);
+  it('advertises a free trial only when the exact store offering says this customer is eligible', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const onboarding = readAppRoute('onboarding/paywall.tsx');
+    const upsell = readAppRoute('paywall/upsell.tsx');
 
-    expect(helperStart).toBeGreaterThanOrEqual(0);
-    expect(helperEnd).toBeGreaterThan(helperStart);
-
-    const helper = source.slice(helperStart, helperEnd);
-    const emptyStart = helper.indexOf('if (!entitlement) {');
-    const emptyEnd = helper.indexOf('const attributed =', emptyStart);
-    const emptyBranch = helper.slice(emptyStart, emptyEnd);
-
-    expect(emptyStart).toBeGreaterThanOrEqual(0);
-    expect(emptyEnd).toBeGreaterThan(emptyStart);
-    expect(emptyBranch).toContain('if (!classified.emptyEvidence) return null;');
-    expect(emptyBranch).toContain('await acceptRevenueCatVerifiedEmpty(classified.emptyEvidence)');
-    expect(emptyBranch).toContain('const published = publishAcceptance(acceptance);');
-    expect(emptyBranch).toContain('deferEntitlementTrialReminder(ownerScope, published);');
-    expect(emptyBranch).toContain('acceptedEntitlement: acceptance.entitlement');
-    expect(emptyBranch).toContain('publishedState: published');
-    expect(helper.match(/deferEntitlementTrialReminder\(ownerScope, published\);/g)).toHaveLength(
-      2,
-    );
-    expect(helper).not.toContain('scheduleTrialReminder');
-    expect(helper).not.toContain('cancelTrialReminder');
-    expect(reminder).toContain("import('@/features/notifications/deliver')");
-    expect(reminder).toContain('advanceEntitlementStateAtBoundary(');
-    expect(reminder).toContain('publishedState,');
-    expect(reminder).toContain(
-      'void reconcileEntitlementTrialReminder(ownerScope, publishedState)',
-    );
-    expect(reminder).toContain('.catch(() => undefined)');
-    expect(source).toContain('advanceEntitlementStateAtBoundary(current, Date.now(), event)');
-    expect(delivery).toContain('export async function scheduleTrialReminder(');
-    expect(delivery).toContain('input: TrialReminderInput,');
-    expect(delivery).toContain('lifecycle?: NotificationScheduleLifecycle,');
-    expect(delivery).toContain('scheduleNativeNotificationExact(guardedLease.signal');
-    expect(delivery).not.toContain('loadEntitlement');
+    for (const [name, source] of [
+      ['ProGate', proGate],
+      ['onboarding paywall', onboarding],
+      ['contextual upsell', upsell],
+    ] as const) {
+      expect(source, `${name} needs the eligible-intro gate`).toContain(
+        'const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;',
+      );
+      expect(source, `${name} needs a truthful non-trial checkout CTA`).toContain(
+        'PAYWALL_COPY.offer.subscribeCta',
+      );
+    }
+    expect(upsell).not.toContain('>\n          Start free trial\n        </Text>');
   });
 
   it('keeps gated content hidden while entitlement is still resolving', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const useEntitlement = readSource('features/subscription/useEntitlement.ts');
+    const webFixture = readSource('features/subscription/entitlementE2EFixture.web.ts');
+    const nativeFixture = readSource('features/subscription/entitlementE2EFixture.native.ts');
     const offering = readSource('features/subscription/useSubscriptionOffering.ts');
 
-    expect(proGate).toContain('const entitlementChecking = isLoading || (!data && !isError);');
-    expect(proGate.indexOf('if (entitlementChecking)')).toBeLessThan(
+    expect(proGate.indexOf('if (isLoading || !data)')).toBeLessThan(
       proGate.indexOf('if (!locked) return <>{children}</>;'),
     );
     expect(proGate).toContain('Checking your access');
@@ -582,232 +505,17 @@ describe('paywall mobile contracts', () => {
       'We will keep Pro-only screens hidden until your subscription status is confirmed.',
     );
     expect(proGate).toContain('if (!locked) return <>{children}</>;');
-    expect(useEntitlement).toContain('EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS');
-    expect(useEntitlement).toContain('const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;');
-    expect(useEntitlement).toContain("if (env.appEnvironment !== 'development') return 0;");
-    expect(useEntitlement).toContain(
-      'await awaitAccountGenerationLease(lease, () => wait(e2eDelay));',
+    expect(webFixture).toContain('EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS');
+    expect(webFixture).toContain('const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;');
+    expect(webFixture).toContain("if (env.appEnvironment !== 'development') return 0;");
+    expect(nativeFixture).not.toContain('EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS');
+    expect(nativeFixture).toContain('return 0;');
+    expect(useEntitlement).toContain('if (e2eDelay > 0) await wait(e2eDelay);');
+    expect(proGate).toContain(
+      'useSubscriptionOffering({ enabled: shouldLoadContextualOffering(data) })',
     );
-    expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
     expect(offering).toContain('enabled?: boolean;');
     expect(offering).toContain('enabled,');
-  });
-
-  it('recovers uncertain entitlement evidence without showing or loading a paywall', () => {
-    const proGate = readSource('features/subscription/ProGate.tsx');
-    const entitlement = readSource('features/subscription/entitlement.ts');
-    const uncertainBranch = proGate.indexOf('if (entitlementUncertain)');
-    const unlockedBranch = proGate.indexOf('if (!locked) return <>{children}</>;');
-
-    expect(proGate).toContain('isEntitlementEvidenceUncertain,');
-    expect(proGate).toContain(
-      'const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);',
-    );
-    expect(proGate).toContain(
-      'const locked = data ? !data.isPro && !entitlementUncertain : false;',
-    );
-    expect(uncertainBranch).toBeGreaterThan(proGate.indexOf('if (entitlementChecking)'));
-    expect(uncertainBranch).toBeLessThan(unlockedBranch);
-    expect(proGate).toContain('Access temporarily unavailable');
-    expect(proGate).toContain('accessibilityLabel="Retry plan verification"');
-    expect(proGate).toContain('onPress={() => void retryVerification()}');
-    expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
-    expect(entitlement).toContain("s?.evidenceStatus === 'stale'");
-    expect(entitlement).toContain("s?.evidenceStatus === 'unsupported_version'");
-  });
-
-  it('keeps the reverse-trial reoffer inert until entitlement evidence resolves', () => {
-    const reoffer = readAppRoute('paywall/reoffer.tsx');
-    const policy = readSource('features/subscription/directPaywallPolicy.ts');
-    const resolution = readSource('features/subscription/DirectPaywallResolution.tsx');
-    const trackEffect = reoffer.slice(
-      reoffer.indexOf("track('paywall_shown'") - 120,
-      reoffer.indexOf("track('paywall_shown'") + 180,
-    );
-    const acknowledgementEffect = reoffer.slice(
-      reoffer.indexOf('void acknowledgeLifecyclePromptPresented') - 180,
-      reoffer.indexOf('void acknowledgeLifecyclePromptPresented') + 220,
-    );
-
-    expect(policy).toContain('if (!state) return input.isError ? INERT_RECOVERY : INERT_LOADING;');
-    expect(policy).toContain('isEntitlementEvidenceUncertain(state)');
-    expect(reoffer).toContain("const decision = directPaywallDecision('reoffer'");
-    expect(reoffer).toContain('useSubscriptionOffering({ enabled: decision.loadOffering })');
-    expect(trackEffect).toContain('if (!decision.trackPresentation) return;');
-    expect(acknowledgementEffect).toContain("if (decision.lifecycleDisposition === 'present')");
-    expect(reoffer).toContain('if (!decision.allowPurchase || paidAction.isHeld) return;');
-    expect(reoffer).toContain('if (!decision.allowPurchase) return;');
-    expect(reoffer.indexOf("if (decision.phase === 'recovery')")).toBeLessThan(
-      reoffer.indexOf('function renderPriceSummary'),
-    );
-    expect(resolution).toContain('Plan status unavailable');
-    expect(resolution).toContain('accessibilityLabel="Retry plan verification"');
-    expect(reoffer).toContain('onRetry={() => void entitlement.retryVerification()}');
-    expect(policy).toContain("return offer('active_reverse_trial'");
-    expect(policy).toContain("return offer('expired_reverse_trial'");
-    expect(policy).toContain("if (isLapsedPaid(state)) return redirect('downgrade'");
-  });
-
-  it('keeps forced provider refresh explicit and covers the full Retry flight', () => {
-    const source = readSource('features/subscription/useEntitlement.ts');
-    const passiveStart = source.indexOf('reconcile: () =>');
-    const passiveEnd = source.indexOf('selectCurrentState:', passiveStart);
-    const passiveReconciliation = source.slice(passiveStart, passiveEnd);
-    const retryStart = source.indexOf('const verificationRetry = useMutation');
-    const retryEnd = source.indexOf('\n  useEffect(', retryStart);
-    const explicitRetry = source.slice(retryStart, retryEnd);
-
-    expect(passiveStart).toBeGreaterThanOrEqual(0);
-    expect(passiveEnd).toBeGreaterThan(passiveStart);
-    expect(passiveReconciliation).toContain('entitlementServerCoordinator.reconcile');
-    expect(passiveReconciliation).not.toContain('refreshCustomerInfo');
-    expect(passiveReconciliation).not.toContain('entitlementRevenueCatRefreshCoordinator');
-
-    expect(retryStart).toBeGreaterThanOrEqual(0);
-    expect(retryEnd).toBeGreaterThan(retryStart);
-    expect(explicitRetry).toContain('entitlementVerificationRetryCoordinator.retry');
-    expect(explicitRetry).toContain('await query.refetch();');
-    expect(explicitRetry).toContain('entitlementRevenueCatRefreshCoordinator.refresh');
-    expect(explicitRetry).toContain('const customerInfo = await refreshCustomerInfo({');
-    expect(explicitRetry).toContain('entitlementServerCoordinator.reconcile');
-    expect(explicitRetry).toContain('force: true');
-    expect(explicitRetry).not.toContain('useSubscriptionOffering');
-    expect(source).toContain('isVerificationRetrying: verificationRetry.isPending');
-    expect(source).toContain('retryVerification: () => verificationRetry.mutateAsync()');
-
-    const recoverySurfaces = [
-      readSource('features/subscription/ProGate.tsx'),
-      readAppRoute('settings/subscription.tsx'),
-      readAppRoute('onboarding/paywall.tsx'),
-      readAppRoute('paywall/downgrade.tsx'),
-      readAppRoute('paywall/reoffer.tsx'),
-      readAppRoute('paywall/upsell.tsx'),
-      readAppRoute('paywall/winback.tsx'),
-    ];
-    for (const recoverySurface of recoverySurfaces) {
-      expect(recoverySurface).toContain('isVerificationRetrying');
-      expect(recoverySurface).toContain('retryVerification');
-    }
-  });
-
-  it('binds every direct paywall side effect to the shared entitlement decision', () => {
-    for (const [route, policyRoute] of [
-      ['paywall/upsell.tsx', 'upsell'],
-      ['paywall/winback.tsx', 'winback'],
-      ['paywall/downgrade.tsx', 'downgrade'],
-      ['paywall/reoffer.tsx', 'reoffer'],
-      ['onboarding/paywall.tsx', 'onboarding'],
-    ] as const) {
-      const source = readAppRoute(route);
-      expect(source).toContain(`directPaywallDecision('${policyRoute}'`);
-      expect(source).toContain('useSubscriptionOffering({ enabled: decision.loadOffering })');
-      expect(source).toContain('if (!decision.allowPurchase');
-      expect(source).toContain("if (decision.phase === 'loading')");
-      expect(source).toContain("if (decision.phase === 'recovery')");
-      expect(source).toContain("if (decision.phase === 'redirect')");
-      expect(source).toContain('isOwnerQueryScopeCurrent(ownerScope)');
-    }
-
-    const upsell = readAppRoute('paywall/upsell.tsx');
-    const winback = readAppRoute('paywall/winback.tsx');
-    const reoffer = readAppRoute('paywall/reoffer.tsx');
-    const onboarding = readAppRoute('onboarding/paywall.tsx');
-    expect(upsell).toContain('if (!decision.trackPresentation) return;');
-    expect(winback).toContain('if (!decision.trackPresentation) return;');
-    expect(reoffer).toContain('if (!decision.trackPresentation) return;');
-    expect(onboarding).toContain('if (!decision.trackPresentation) return;');
-    expect(onboarding).toContain('label="Continue free"');
-    expect(onboarding).not.toContain('startReverseTrial');
-
-    for (const route of [
-      readAppRoute('paywall/reoffer.tsx'),
-      readAppRoute('paywall/downgrade.tsx'),
-    ]) {
-      expect(route).toContain('void supersedeLifecyclePrompt({');
-      expect(route).not.toContain('await supersedeLifecyclePrompt({');
-      expect(route).not.toContain('params: { lifecyclePromptId');
-    }
-  });
-
-  it('binds paid mutations to rendered evidence and receipt-only success navigation', () => {
-    const hold = readSource('features/subscription/usePaidActionHold.ts');
-    const feedback = readSource('features/subscription/PaywallFeedback.tsx');
-    for (const [route, kind] of [
-      ['paywall/upsell.tsx', 'upsell_purchase'],
-      ['paywall/winback.tsx', 'winback_purchase'],
-      ['paywall/downgrade.tsx', 'downgrade_purchase'],
-      ['paywall/reoffer.tsx', 'reoffer_purchase'],
-      ['onboarding/paywall.tsx', 'onboarding_purchase'],
-    ] as const) {
-      const source = readAppRoute(route);
-      expect(source).toContain(`kind: '${kind}'`);
-      expect(source).toContain('expectedEvidenceIdentity:');
-      expect(source).toContain('paidAction.resolve(result)');
-      expect(source).toContain("outcome.kind === 'success'");
-      expect(source).toContain('params: { receipt: outcome.receiptId }');
-      expect(source).not.toContain("if (result.active) router.replace('/paywall/success')");
-      expect(source).toContain('paidAction.feedback ?? actionFeedback');
-      expect(source).toContain('paidAction.isHeld');
-    }
-
-    const reoffer = readAppRoute('paywall/reoffer.tsx');
-    expect(reoffer).toContain("kind: 'decline_expired_reverse_trial'");
-
-    const proGate = readSource('features/subscription/ProGate.tsx');
-    for (const kind of ['upsell_purchase', 'downgrade_purchase', 'reoffer_purchase']) {
-      expect(proGate).toContain(`'${kind}'`);
-    }
-    expect(proGate).toContain("kind: 'reverse_trial'");
-    expect(proGate).toContain('expectedEvidenceIdentity: data?.evidenceIdentity ?? null');
-    expect(proGate).toContain('isOwnerQueryScopeCurrent(ownerScope)');
-    expect(hold).toContain('const paidActionHoldStore = createPaidActionHoldStore()');
-    expect(hold).toContain('useSyncExternalStore');
-    expect(hold).not.toContain('useState');
-    expect(hold).not.toContain('currentEvidenceIdentity');
-    expect(feedback).toContain('The store result could not be verified yet.');
-    expect(feedback).not.toContain('Purchase received');
-  });
-
-  it('does not abandon win-back while native offering metadata is unresolved', () => {
-    const winback = readAppRoute('paywall/winback.tsx');
-    const policy = readSource('features/subscription/winBackOfferingPolicy.ts');
-
-    expect(policy).toContain("if (!offering) return 'loading';");
-    expect(policy).toContain("offering.status === 'available'");
-    expect(winback).toContain('const offeringDecision = winBackOfferingDecision(offering.data);');
-    expect(winback).toContain("if (offeringDecision === 'loading') return;");
-    expect(winback).toContain("offeringDecision === 'loading' ||");
-    expect(winback).toContain("offeringDecision === 'fallback' ? (");
-    expect(winback.indexOf("if (offeringDecision === 'loading') return;")).toBeLessThan(
-      winback.indexOf("router.replace('/paywall/upsell?feature=full_routine')"),
-    );
-  });
-
-  it('renders purchase success only from a current-owner one-use receipt', () => {
-    const success = readAppRoute('paywall/success.tsx');
-    const receipts = readSource('features/subscription/purchaseSuccessReceipt.ts');
-
-    expect(success).toContain('useLocalSearchParams<{ receipt?: string | string[] }>()');
-    expect(success).toContain('consumePurchaseSuccessReceipt(ownerScope, receiptId)');
-    expect(success).toContain('const redemptionKey = `${ownerScope.generation}:${receiptId');
-    expect(success).toContain('attemptedRedemptionKey.current === redemptionKey');
-    expect(success).toContain('redemption.key === redemptionKey');
-    expect(success).toContain('!isOwnerQueryScopeCurrent(ownerScope)');
-    expect(success).toContain('No recent purchase to confirm');
-    expect(success).not.toContain('useEntitlement()');
-    expect(success).not.toContain('useSubscriptionOffering()');
-    expect(success).not.toContain('PLANS.annual.trialDays');
-    expect(success).not.toContain('?? true');
-    expect(success).not.toContain("'the store price'");
-    expect(receipts).toContain(
-      'acceptedState.evidenceIdentity === publishedState.evidenceIdentity',
-    );
-    expect(receipts).toContain("action: 'purchase' | 'winback';");
-    expect(receipts).toContain('completed: boolean;');
-    expect(receipts).toContain('purchasePriceLabel?: string;');
-    expect(receipts).toContain('offerDurationLabel?: string;');
-    expect(receipts).toContain('storedPriceLabel !== publishedPriceLabel');
-    expect(receipts).toContain('this.receipts.delete(normalized);');
   });
 
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {
@@ -829,9 +537,8 @@ describe('paywall mobile contracts', () => {
 
   it('keeps paywall compliance handoff and restore feedback visible', () => {
     const source = readSource('features/subscription/ComplianceRow.tsx');
-    const restoreFeedback = readSource('features/subscription/restoreFeedback.ts');
-    const entitlement = readSource('features/subscription/useEntitlement.ts');
-    const settings = readAppRoute('settings/subscription.tsx');
+    const webFixture = readSource('features/subscription/entitlementE2EFixture.web.ts');
+    const nativeFixture = readSource('features/subscription/entitlementE2EFixture.native.ts');
 
     expect(source).toContain('const [feedback, setFeedback] = useState<string | null>(null);');
     expect(source).toContain('export function openPolicy(url: string): Promise<boolean>');
@@ -841,42 +548,27 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('onPress={() => void onPolicy(TERMS_URL)}');
     expect(source).toContain('onPress={() => void onPolicy(PRIVACY_URL)}');
     expect(source).toContain("import { restoreFeedbackMessage } from './restoreFeedback';");
-    expect(restoreFeedback).toContain('if (result.storePurchaseFound && result.active)');
-    expect(restoreFeedback).toContain(
-      'result.verificationPending || result.purchaseMayHaveCompleted',
-    );
-    expect(restoreFeedback).toContain('Do not purchase again');
-    expect(restoreFeedback).toContain(
-      'No store purchase was found. Your existing Pro access remains active.',
-    );
     expect(source).toContain('setFeedback(message);');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain("'pb-1 pr-2 text-left'");
     expect(source).toContain("'px-4 pb-2 text-center'");
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
-    expect(entitlement).toContain("fixture !== 'expired_store'");
-    expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
-    expect(entitlement).toContain("periodType: 'normal'");
-    expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
-    expect(entitlement).toContain('storePurchaseFound: result.restored');
-    expect(settings).toContain('setSubscriptionFeedback(restoreFeedbackMessage(result));');
-    expect(settings).toContain(
-      'const exactEntitlementPriceLabel = currentPlan ? data?.priceLabel : null;',
-    );
-    expect(settings).not.toContain('offering.data.annual.priceLabel');
+    expect(webFixture).toContain("fixture !== 'expired_store'");
+    expect(webFixture).toContain("fixture !== 'expired_reverse_trial'");
+    expect(webFixture).toContain("periodType: 'normal'");
+    expect(webFixture).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
+    expect(nativeFixture).not.toContain('EXPO_PUBLIC_E2E_ENTITLEMENT');
+    expect(nativeFixture).not.toContain("periodType: 'normal'");
   });
 
-  it('keeps purchase and restore recovery route-owned instead of native alerts', () => {
+  it('keeps purchase and restore feedback inline while durable uncertainty is root-owned', () => {
     const feedback = readSource('features/subscription/PaywallFeedback.tsx');
-    const stateNotice = readSource('components/ui/StateNotice.tsx');
     const externalOpen = readSource('lib/navigation/externalOpen.ts');
 
     expect(feedback).toContain('export function PaywallFeedback');
-    expect(feedback).toContain('<StateNotice');
-    expect(feedback).toContain('kind={feedback.kind}');
+    expect(feedback).toContain('accessibilityRole="alert"');
     expect(feedback).toContain('PAYWALL_FEEDBACK');
-    expect(stateNotice).toContain("alert ? 'alert' : undefined");
     expect(externalOpen).toContain('alertOnFailure?: boolean');
     expect(externalOpen).not.toContain('Alert.alert');
     expect(externalOpen).not.toContain('import { Alert');
@@ -914,10 +606,10 @@ describe('paywall mobile contracts', () => {
 
     const subscriptionSettings = readAppRoute('settings/subscription.tsx');
     expect(subscriptionSettings).toContain('alertOnFailure: false');
+    expect(subscriptionSettings).toContain('setSubscriptionFeedback(message);');
     expect(subscriptionSettings).toContain(
-      'setSubscriptionFeedback(restoreFeedbackMessage(result));',
+      "storeTransactionRecoveryMessage(error, 'restore') ?? RESTORE_UNAVAILABLE_MESSAGE",
     );
-    expect(subscriptionSettings).toContain('setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);');
     expect(subscriptionSettings).not.toContain('Alert.alert');
     expect(subscriptionSettings).not.toContain('import { Alert');
   });
@@ -1001,8 +693,11 @@ describe('paywall mobile contracts', () => {
     expect(compactReason).toBeLessThan(purchaseCta);
   });
 
-  it('keeps unavailable win-back offer copy next to the fallback action', () => {
+  it('admits win-back presentation only for an enabled exact eligible SDK offer', () => {
     const winback = readAppRoute('paywall/winback.tsx');
+    const subscription = readAppRoute('settings/subscription.tsx');
+    const copy = readSource('features/subscription/copy.ts');
+    const plans = readSource('features/subscription/plans.ts');
 
     expect(winback).toContain('useWindowDimensions');
     expect(winback).toContain(
@@ -1016,16 +711,60 @@ describe('paywall mobile contracts', () => {
     expect(winback).toContain('const compactPaywall = height < 640 || tallTextPressurePaywall;');
     expect(winback).toContain("style={{ overflow: 'hidden' }}");
     expect(winback).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
-    expect(winback).toContain('const unavailableOfferCopy =');
+    expect(winback).toContain("import { env } from '@/lib/env';");
+    expect(winback).toContain('const eligibleOffer =');
+    expect(winback).toContain('env.iosWinBackEnabled &&');
+    expect(winback).toContain("offering.data?.status === 'available' &&");
+    expect(winback).toContain('offering.data.winBack?.canPurchase === true');
+    expect(winback).toContain('? offering.data.winBack');
+    expect(winback).toContain(': null;');
+    expect(winback).toContain('const canWinBack = eligibleOffer !== null;');
+    expect(winback).toContain('? PAYWALL_COPY.winback.offer');
+    expect(winback).toContain(': PAYWALL_COPY.winback.currentPlan;');
+    expect(winback).toContain('{winBackCopy.eyebrow.toUpperCase()}');
+    expect(winback).toContain('{winBackCopy.title}');
+    expect(winback).toContain('{winBackCopy.body}');
+    expect(winback).toContain('{winBackCopy.priceLabel}');
+    expect(winback).toContain('{eligibleOffer?.priceLabel ?? annualDisplay.priceLabel}');
+    expect(winback).toContain('{eligibleOffer?.originalPriceLabel ? (');
+    expect(winback).toContain('{eligibleOffer?.percentOff ? (');
+    expect(winback).toContain('{winBackCopy.cta}');
+    expect(winback).toContain('{winBackCopy.declineCta}');
+    expect(winback).toContain('const fallbackActionCopy =');
     expect(winback).toContain('className="gap-2.5"');
     expect(winback).toContain(
       'style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}',
     );
     expect(winback).toContain('className="px-2 text-center"');
-    expect(winback).toContain('{unavailableOfferCopy}');
-    expect(winback).toContain("? 'Checking offer…'");
-    expect(winback).toContain('? PAYWALL_COPY.winback.cta');
-    expect(winback).toContain(": 'See current Pro plan'");
+    expect(winback).toContain('{fallbackActionCopy}');
+
+    expect(subscription).toContain("import { env } from '@/lib/env';");
+    expect(subscription).toContain('const eligibleWinBackOffer =');
+    expect(subscription).toContain('env.iosWinBackEnabled &&');
+    expect(subscription).toContain("offering.data?.status === 'available' &&");
+    expect(subscription).toContain('offering.data.winBack?.canPurchase === true;');
+    expect(subscription).toContain('? PAYWALL_COPY.winback.offer.settingsCta');
+    expect(subscription).toContain(': PAYWALL_COPY.winback.currentPlan.settingsCta;');
+    expect(subscription).toContain('function openExpiredPlanOptions()');
+    expect(subscription).toContain("? '/paywall/winback'");
+    expect(subscription).toContain(": '/paywall/upsell?feature=full_routine'");
+    expect(subscription).toContain('onPress={openExpiredPlanOptions}');
+    expect(subscription).toContain('{expiredPlanCta} →');
+    expect(subscription).not.toContain('See your welcome-back offer →');
+
+    expect(copy).toContain('currentPlan: {');
+    expect(copy).toContain("priceLabel: 'Annual Pro option'");
+    expect(copy).toContain("settingsCta: 'See standard Pro options'");
+    expect(copy).toContain('App Store confirms the final price before purchase.');
+    expect(copy).toContain('offer: {');
+    expect(copy).toContain("priceLabel: 'Eligible App Store offer'");
+    expect(copy).toContain("settingsCta: 'See your welcome-back offer'");
+
+    for (const source of [winback, subscription, copy, plans]) {
+      expect(source).not.toContain('$34.99');
+      expect(source).not.toContain('percentOff: 30');
+      expect(source).not.toContain('30%-off');
+    }
   });
 
   it('keeps active reverse-trial keep options distinct from the expired re-offer', () => {
@@ -1078,13 +817,36 @@ describe('paywall mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPhone = height < 640');
-    expect(copy).toContain('metaRowsForTrial:');
+    expect(copy).toContain('metaRowsFor:');
     expect(copy).toContain('metaRowsForPaid:');
-    expect(source).toContain('const metaRows = inTrial');
-    expect(source).toContain('PAYWALL_COPY.success.metaRowsForTrial(');
-    expect(source).toContain('PAYWALL_COPY.success.metaRowsForPaid(');
-    expect(source).toContain('currentReceipt.offerDurationLabel');
-    expect(source).toContain('metaRows.map((row)');
+    expect(copy).toContain('metaRowsForAppGrant:');
+    expect(copy).toContain('metaRowsForPromotion:');
+    expect(source).toContain("useEntitlement({ refetchOnMount: 'always' })");
+    expect(source).toContain(
+      'const confirmedState = admittedSuccessState(entitlement, liveNowMs);',
+    );
+    expect(source).toContain('const evidenceBoundaryMs = successEvidenceBoundaryMs(data);');
+    expect(source).not.toMatch(/\[evidenceBoundaryMs,\s*dataUpdatedAt/u);
+    expect(source).toContain("AppState.addEventListener('change'");
+    expect(source).toContain('const liveNowMs = monotonicSuccessClockMs(nowMs, dataUpdatedAt);');
+    expect(source).toContain(
+      'const schedulingNowMs = monotonicSuccessClockMs(clockRef.current, observedNowMs);',
+    );
+    expect(source).toContain('Math.max(Date.now(), boundaryMs + 1)');
+    expect(source.match(/clockRef\.current = advanced;/gu)).toHaveLength(2);
+    expect(source).toContain('if (!confirmedState)');
+    expect(source).toContain("'Pro access not confirmed'");
+    expect(source).toContain('This page did not charge you or unlock Pro.');
+    expect(source).toContain('onPress={() => void refetch()}');
+    expect(source).toContain("router.replace('/settings/subscription')");
+    expect(source).toContain('return <ConfirmedSuccessScreen state={confirmedState} />;');
+    expect(source).toContain('const endDate = fmt(state.expiresAt!);');
+    expect(source).toContain('buildPaywallSuccessPresentation(state, endDate)');
+    expect(source).not.toContain('useSubscriptionOffering');
+    expect(source).not.toContain('offering.data');
+    expect(source).not.toContain('fallbackDays');
+    expect(source).not.toContain('PLANS.annual.trialDays');
+    expect(source).toContain('presentation.metaRows.map((row)');
     expect(source).toContain('max-w-[272px]');
     expect(source).toContain('lineHeight: 18');
     expect(source).toContain('includeFontPadding: false');
@@ -1093,66 +855,5 @@ describe('paywall mobile contracts', () => {
     expect(source).not.toContain('{meta}');
     expect(source).not.toContain(`>${String.fromCharCode(0x2713)}</Text>`);
     expect(source).not.toContain(`>${String.fromCharCode(0x00e2, 0x0153, 0x201c)}</Text>`);
-  });
-
-  it('binds every RevenueCat store action to one exact owner lease without mutation retries', () => {
-    const actions = readSource('features/subscription/useEntitlement.ts');
-    const offering = readSource('features/subscription/useSubscriptionOffering.ts');
-    const revenuecat = readSource('lib/iap/revenuecat.ts');
-    const settings = readAppRoute('settings/subscription.tsx');
-
-    expect(actions).toContain('const revenueCatOwner = (lease: AccountGenerationLease) =>');
-    expect(actions).toContain("if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');");
-    expect(actions).toContain('const result = await purchasePackage(');
-    expect(actions).toMatch(
-      /\(\)\s*=>\s*assertActionAtCommit\(lease, input, \['onboarding_purchase'\]\),/,
-    );
-    expect(actions).toMatch(/\(\)\s*=>\s*assertActionAtCommit\(lease, input, allowedKinds\),/);
-    expect(actions).toContain('restorePurchases(revenueCatOwner(lease))');
-    expect(actions).toContain('const result = await purchaseWinBackPackage(');
-    expect(actions).toMatch(
-      /\(\)\s*=>\s*assertActionAtCommit\(lease, input, \['winback_purchase'\]\),/,
-    );
-    expect(actions).toContain('showNativeManageSubscriptions(revenueCatOwner(lease))');
-    expect(actions.match(/retry: 0,/g)?.length).toBeGreaterThanOrEqual(5);
-
-    expect(offering).toContain('const owner = { appUserId: user.id, lease } as const;');
-    expect(offering).toContain('await configureRevenueCat(owner);');
-    expect(offering).toContain('return getSubscriptionOffering(owner);');
-
-    expect(revenuecat).toContain('context: RevenueCatOperationContext');
-    expect(revenuecat).toContain('type OwnerTaggedOfferings');
-    expect(revenuecat).toContain('ownerCoordinator.runHazard(');
-    expect(settings).toContain('const { manage, restore } = useEntitlementActions();');
-    expect(settings).toContain('openedNative = await manage.mutateAsync();');
-    expect(settings).not.toContain('showNativeManageSubscriptions()');
-  });
-
-  it('keeps the ownerless reverse-trial fixture development-only and Supabase-unconfigured', () => {
-    const actions = readSource('features/subscription/useEntitlement.ts');
-
-    expect(actions).toContain("import { env, isSupabaseConfigured } from '@/lib/env';");
-    expect(actions).toContain('const reverseTrialStoreUserId = () => {');
-    expect(actions).toContain('if (user?.id) return user.id;');
-    expect(actions).toContain(
-      "if (env.appEnvironment === 'development' && !isSupabaseConfigured) return undefined;",
-    );
-    expect(actions).toMatch(
-      /const reverseTrialStoreUserId = \(\) => \{[\s\S]*?throw new Error\('REVENUECAT_OWNER_REQUIRED'\);[\s\S]*?\};/,
-    );
-    const reverseTrialBlock = actions.match(
-      /const startReverseTrial = useMutation\(\{[\s\S]*?const startTrial = useMutation/,
-    )?.[0];
-    expect(reverseTrialBlock).toBeDefined();
-    expect(reverseTrialBlock).toContain('const storeUserId = reverseTrialStoreUserId();');
-    expect(reverseTrialBlock).toMatch(
-      /startReverseTrialOnServer\(\s*lease\.assertCurrent,\s*storeUserId,\s*\(\) =>/,
-    );
-    expect(
-      reverseTrialBlock?.match(/assertActionAtCommit\(lease, input, \['reverse_trial'\]\)/g),
-    ).toHaveLength(2);
-    expect(actions).not.toMatch(
-      /assertActionAtCommit\(lease, input, \['reverse_trial'\]\);\s+const owner = revenueCatOwner\(lease\);/,
-    );
   });
 });

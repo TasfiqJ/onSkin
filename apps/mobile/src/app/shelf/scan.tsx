@@ -1,12 +1,10 @@
-import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
+import { CameraView, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
-import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import {
   catalogIntakeProvenance,
   lookupBarcode,
@@ -20,78 +18,98 @@ import {
   shouldSuppressDuplicate,
   type DuplicateBarcodeGate,
 } from '@/features/native/camera/barcode';
-import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
-import { trackProductAddStarted } from '@/features/shelf/analytics';
 import {
-  canAcceptBarcodeFrame,
-  isBarcodeScannerActive,
-  isBarcodeScanTerminal,
-  reduceBarcodeScanSession,
-  type BarcodeScanAction,
-  type BarcodeScanState,
-} from '@/features/shelf/barcodeScanSession';
+  CAMERA_FAILURE_COPY,
+  CAMERA_PERMISSION_FAILURE_COPY,
+} from '@/features/native/camera/failureCopy';
+import { useCameraAccessLifecycle } from '@/features/native/camera/useCameraAccessLifecycle';
+import { labelOcrNativeAvailability } from '@/features/native/ocr';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';
 import { track } from '@/lib/analytics/track';
-import { useAuth } from '@/lib/auth/AuthProvider';
+import { BRAND } from '@/lib/brand';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
-import { isRequestCancellation } from '@/lib/network/requestPolicy';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { enqueueCatalogLookup } from '@/lib/offline/catalogLookupQueue';
 import { haptics } from '@/theme/haptics';
 
-function devShelfScanFixtureState(): BarcodeScanState<CatalogProductSummary> | null {
+type ScanState =
+  | { kind: 'idle' }
+  | { kind: 'invalid'; reason: string }
+  | { kind: 'looking_up'; barcode: string }
+  | { kind: 'matched'; barcode: string; product: CatalogProductSummary }
+  | { kind: 'no_match'; barcode: string }
+  | { kind: 'offline'; barcode: string }
+  | { kind: 'error'; barcode: string; reason: string };
+
+type QueueFeedback =
+  | { kind: 'idle' }
+  | { kind: 'saving'; barcode: string }
+  | { kind: 'saved'; barcode: string; alreadyQueued: boolean }
+  | { kind: 'error'; barcode: string };
+
+type TorchSession = Readonly<{
+  cameraGeneration: number;
+  enabled: boolean;
+}>;
+
+type DuplicateScanSession = Readonly<{
+  cameraGeneration: number;
+  gate: DuplicateBarcodeGate;
+}>;
+
+function devShelfScanFixtureState(): ScanState | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
   const fixture = process.env.EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT?.trim().toLowerCase();
   const barcode = process.env.EXPO_PUBLIC_E2E_SHELF_SCAN_BARCODE?.trim() || '012345678905';
 
   switch (fixture) {
     case 'matched':
-    case 'external_candidate':
       return {
         kind: 'matched',
         barcode,
-        external: fixture === 'external_candidate',
         product: {
-          id: fixture === 'external_candidate' ? 'e2e-external-product' : 'e2e-catalog-product',
+          id: '00000000-0000-4000-8000-000000000044',
           barcode,
           name: 'Mineral SPF 50',
-          brand: 'RoutineKind Fixture',
+          brand: 'Layerwell Fixture',
           category: 'sunscreen',
           region: 'US',
           default_pao_months: 12,
-          source: fixture === 'external_candidate' ? 'open_beauty_facts' : 'routinekind_fixture',
-          catalog_source_id:
-            fixture === 'external_candidate' ? null : '00000000-0000-4000-8000-000000000043',
+          source: 'layerwell_fixture',
+          catalog_source_id: '00000000-0000-4000-8000-000000000043',
           source_ref: fixture,
           source_url: null,
           source_snapshot_date: null,
-          quality_grade: fixture === 'external_candidate' ? 'unverified' : 'usable',
-          review_status: fixture === 'external_candidate' ? 'external_candidate' : 'reviewed',
-          data_quality_score: fixture === 'external_candidate' ? 45 : 82,
+          quality_grade: 'usable',
+          review_status: 'reviewed',
+          data_quality_score: 82,
           ingredient_parse_status: 'empty',
           ingredient_parse_confidence: null,
-          product_pao_expiry:
-            fixture === 'external_candidate'
-              ? []
-              : [
-                  {
-                    pao_months: 12,
-                    pao_source: 'catalog',
-                    expiry_date: null,
-                    expiry_source: 'unknown',
-                    region: 'US',
-                    source_id: '00000000-0000-4000-8000-000000000043',
-                    review_status: 'reviewed',
-                    created_at: '2026-07-09T00:00:00.000Z',
-                  },
-                ],
+          product_pao_expiry: [
+            {
+              pao_months: 12,
+              pao_source: 'catalog',
+              expiry_date: null,
+              expiry_source: 'unknown',
+              region: 'US',
+              source_id: '00000000-0000-4000-8000-000000000043',
+              review_status: 'reviewed',
+              created_at: '2026-07-09T00:00:00.000Z',
+            },
+          ],
           rawIngredientsText: null,
-          external: fixture === 'external_candidate',
         },
+      };
+    case 'external_candidate':
+      return {
+        kind: 'error',
+        barcode,
+        reason: 'This catalog response is not eligible. Add it another way.',
       };
     case 'no_match':
       return { kind: 'no_match', barcode };
@@ -134,79 +152,124 @@ function activeIngredients(product: CatalogProductSummary): {
   };
 }
 
-function noMatchRoute(barcode: string) {
-  return { pathname: '/shelf/no-match' as const, params: { barcode } };
+function noMatchRoute(barcode: string, wrongProductId?: string | null) {
+  return {
+    pathname: '/shelf/no-match' as const,
+    params: {
+      barcode,
+      ...(wrongProductId ? { wrongProductId } : {}),
+    },
+  };
 }
 
 export default function ScanScreen() {
-  const { user } = useAuth();
-  const ownerScope = useOwnerQueryScope();
   const isFocused = useIsFocused();
   const { height, width } = useWindowDimensions();
-  const [permission, requestPermission] = useCameraPermissions();
-  const { reset } = useIntake();
-  const [torch, setTorch] = useState(false);
-  const [state, setState] = useState<BarcodeScanState<CatalogProductSummary>>(
-    () => devShelfScanFixtureState() ?? { kind: 'idle' },
-  );
-  const stateRef = useRef(state);
-  const [cameraReady, setCameraReady] = useState(false);
-  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
-  const lastScan = useRef<DuplicateBarcodeGate | null>(null);
-  const activeLookup = useRef<AbortController | null>(null);
-  const nextLookupAttemptId = useRef(0);
-  const mounted = useRef(true);
-
   const cameraPermissionMode = devShelfCameraPermissionMode();
   const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
-  const permissionGranted = forceDeniedCameraPermission ? false : Boolean(permission?.granted);
-  const canAskCameraPermission = forceDeniedCameraPermission
-    ? false
-    : (permission?.canAskAgain ?? true);
+  const {
+    permission,
+    permissionBusy,
+    permissionFailure,
+    permissionGranted: lifecyclePermissionGranted,
+    canAskAgain: lifecycleCanAskAgain,
+    shouldMountCamera,
+    cameraActive,
+    cameraReady,
+    cameraUnavailable,
+    canCapture,
+    cameraGeneration,
+    cameraKey,
+    refreshCameraPermission,
+    requestCameraPermission,
+    retryCameraMount,
+    onCameraReady,
+    onCameraMountError,
+    beginCameraOperation,
+    isCameraOperationCurrent,
+  } = useCameraAccessLifecycle({
+    available: cameraEnabled && !forceDeniedCameraPermission,
+    isFocused,
+    mountAllowed: cameraEnabled && !forceDeniedCameraPermission,
+    autoRequestOnUndetermined: true,
+  });
+  const { reset } = useIntake();
+  const [torchSession, setTorchSession] = useState<TorchSession>({
+    cameraGeneration: -1,
+    enabled: false,
+  });
+  const [scanState, setState] = useState<ScanState>(
+    () => devShelfScanFixtureState() ?? { kind: 'idle' },
+  );
+  const [lookupCameraGeneration, setLookupCameraGeneration] = useState<number | null>(null);
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
+  const [queueFeedback, setQueueFeedback] = useState<QueueFeedback>({ kind: 'idle' });
+  const lastScan = useRef<DuplicateScanSession | null>(null);
+  const queueRequestId = useRef(0);
+  const lookupRequestId = useRef(0);
+
+  const permissionGranted = forceDeniedCameraPermission ? false : lifecyclePermissionGranted;
+  const canAskCameraPermission = forceDeniedCameraPermission ? false : lifecycleCanAskAgain;
+  const permissionRecoveryFailed = permissionFailure !== null;
+  const canRetryCameraPermission = permissionFailure === 'refresh_failed' || canAskCameraPermission;
   const canShowPermissionRecovery =
-    !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
+    forceDeniedCameraPermission ||
+    (cameraEnabled && (permissionRecoveryFailed || (!permissionGranted && Boolean(permission))));
+  const permissionFailureCopy =
+    permissionFailure === null ? null : CAMERA_PERMISSION_FAILURE_COPY[permissionFailure];
   const canShowCamera = cameraEnabled && permissionGranted;
+  const canUseCameraControls = canShowCamera && canCapture;
+  const labelOcrAvailable = env.nativeOcrEnabled && labelOcrNativeAvailability() === 'configured';
   const supportFloorTextPressureScan = width <= 430 && height >= 640 && height <= 700;
   const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
   const showScanPreview = !splitShortScanSurface || canShowCamera;
-  const scannerActive = isBarcodeScannerActive(state, canShowCamera, isFocused);
-  const scanTerminal = isBarcodeScanTerminal(state);
+  const torch =
+    cameraActive && torchSession.cameraGeneration === cameraGeneration && torchSession.enabled;
+  // A lookup belongs to the exact camera generation that decoded it. Route
+  // blur/background invalidates that generation in the shared lifecycle, so
+  // stale work becomes idle without an effect-driven state cascade.
+  const state: ScanState =
+    scanState.kind === 'looking_up' &&
+    (!cameraActive || lookupCameraGeneration !== cameraGeneration)
+      ? { kind: 'idle' }
+      : scanState;
+  const recoveryBarcode = 'barcode' in state && state.barcode ? state.barcode : null;
+  const canQueueRetry =
+    recoveryBarcode !== null && (state.kind === 'offline' || state.kind === 'error');
 
-  const transitionScanSession = (action: BarcodeScanAction<CatalogProductSummary>) => {
-    const current = stateRef.current;
-    const next = reduceBarcodeScanSession(current, action);
-    if (next === current) return false;
-    stateRef.current = next;
-    if (!canAcceptBarcodeFrame(next)) setTorch(false);
-    if (mounted.current) setState(next);
-    return true;
+  const cancelActiveLookup = () => {
+    lookupRequestId.current += 1;
+    setState((current) => (current.kind === 'looking_up' ? { kind: 'idle' } : current));
   };
 
   const goManual = () => {
+    cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_manual');
-    reset({ addedVia: 'manual' });
-    router.push('/shelf/manual');
+    const intakeId = reset({ addedVia: 'manual', barcode: recoveryBarcode });
+    router.push({ pathname: '/shelf/manual', params: { intakeId } });
   };
   const goOcr = () => {
+    cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_label');
-    reset({ addedVia: 'ocr' });
-    router.push('/shelf/ocr');
+    const intakeId = reset({ addedVia: 'ocr', barcode: recoveryBarcode });
+    router.push({ pathname: '/shelf/ocr', params: { intakeId } });
   };
   const goSearch = () => {
+    cancelActiveLookup();
     haptics.select();
     trackProductAddStarted('scan_search');
-    reset({ addedVia: 'search' });
-    router.push('/shelf/search');
+    const intakeId = reset({ addedVia: 'search', barcode: recoveryBarcode });
+    router.push({ pathname: '/shelf/search', params: { intakeId } });
   };
 
   const applyProduct = (product: CatalogProductSummary, barcode: string) => {
     const parsed = activeIngredients(product);
     const provenance = catalogIntakeProvenance(product);
-    reset({
+    const intakeId = reset({
       name: product.name,
       brand: product.brand,
       category: (product.category as ProductCategory | null) ?? null,
@@ -231,169 +294,129 @@ export default function ScanScreen() {
       addedVia: 'barcode',
     });
     haptics.success();
-    router.replace('/shelf/opened');
+    router.replace({ pathname: '/shelf/opened', params: { intakeId } });
+  };
+
+  const queueRetryWhenOnline = async () => {
+    if (!canQueueRetry || !recoveryBarcode || queueFeedback.kind === 'saving') return;
+    haptics.select();
+    const requestId = ++queueRequestId.current;
+    setQueueFeedback({ kind: 'saving', barcode: recoveryBarcode });
+    try {
+      const ownerUserId = activeHealthProcessingOwnerUserId();
+      if (!ownerUserId) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      const result = await enqueueCatalogLookup({ ownerUserId, barcode: recoveryBarcode });
+      if (requestId !== queueRequestId.current) return;
+      setQueueFeedback({
+        kind: 'saved',
+        barcode: result.barcode,
+        alreadyQueued: !result.enqueued,
+      });
+      if (result.enqueued) void recordShelfScan({ result: 'offline_queued' });
+      track('catalog_lookup_retry_saved', {
+        result: result.enqueued ? 'queued' : 'already_queued',
+      });
+      haptics.success();
+    } catch {
+      if (requestId !== queueRequestId.current) return;
+      setQueueFeedback({ kind: 'error', barcode: recoveryBarcode });
+      track('catalog_lookup_retry_saved', { result: 'failed' });
+    }
   };
 
   const onBarcodeScanned = (result: BarcodeScanningResult) => {
-    if (!canAcceptBarcodeFrame(stateRef.current)) return;
+    // Native callbacks can already be queued when AppState/focus invalidates
+    // the rendered closure. Acquire the ref-fenced session before parsing,
+    // analytics, duplicate bookkeeping, or any visible state mutation.
+    const cameraOperation = beginCameraOperation();
+    if (cameraOperation === null) return;
     const normalized = normalizeScannedBarcode(result.data, result.type);
     if (!normalized) return;
     const now = Date.now();
-    if (shouldSuppressDuplicate(lastScan.current, normalized.lookupValue, now)) return;
+    const duplicateGate =
+      lastScan.current?.cameraGeneration === cameraOperation.cameraGeneration
+        ? lastScan.current.gate
+        : null;
+    if (shouldSuppressDuplicate(duplicateGate, normalized.lookupValue, now)) return;
+    lastScan.current = {
+      cameraGeneration: cameraOperation.cameraGeneration,
+      gate: { barcode: normalized.lookupValue, atMs: now },
+    };
+    queueRequestId.current += 1;
+    setQueueFeedback({ kind: 'idle' });
 
     if (normalized.validChecksum === false) {
-      if (
-        !transitionScanSession({
-          type: 'invalid',
-          reason: 'That read failed the barcode checksum. Try holding steady in brighter light.',
-        })
-      ) {
-        return;
-      }
-      lastScan.current = { barcode: normalized.lookupValue, atMs: now };
+      setState({
+        kind: 'invalid',
+        reason: 'That read failed the barcode checksum. Try holding steady in brighter light.',
+      });
       track('barcode_decode_rejected', { reason: 'checksum', barcode_type: normalized.type });
       return;
     }
 
-    const attemptId = nextLookupAttemptId.current + 1;
-    if (
-      !transitionScanSession({
-        type: 'lookup_started',
-        barcode: normalized.lookupValue,
-        attemptId,
-      })
-    ) {
-      return;
-    }
-    nextLookupAttemptId.current = attemptId;
-    haptics.select();
-    lastScan.current = { barcode: normalized.lookupValue, atMs: now };
-    track('barcode_decode_success', { barcode_type: normalized.type });
-    activeLookup.current?.abort();
-    const controller = new AbortController();
-    activeLookup.current = controller;
-    void lookupBarcode(normalized.lookupValue, { signal: controller.signal })
-      .then((response) => {
-        if (controller.signal.aborted || !isOwnerQueryScopeCurrent(ownerScope)) return;
-        const scanResult = shelfScanResultFromLookup(response.result);
-        void recordShelfScan(
-          ownerScope,
-          {
-            barcode: normalized.lookupValue,
-            result: scanResult,
-            matchedProductId: response.result === 'matched' ? response.product.id : null,
-          },
-          user?.id,
-        ).catch(() => undefined);
+    const requestId = ++lookupRequestId.current;
+    const lookupIsCurrent = () =>
+      requestId === lookupRequestId.current && isCameraOperationCurrent(cameraOperation);
 
-        if (response.result === 'matched' || response.result === 'external_candidate') {
-          transitionScanSession({
-            type: 'lookup_finished',
+    setLookupCameraGeneration(cameraOperation.cameraGeneration);
+    setState({ kind: 'looking_up', barcode: normalized.lookupValue });
+    track('barcode_decode_success', { barcode_type: normalized.type });
+    void lookupBarcode(normalized.lookupValue)
+      .then((response) => {
+        if (!lookupIsCurrent()) return;
+        const scanResult = shelfScanResultFromLookup(response.result);
+        if (scanResult !== null) void recordShelfScan({ result: scanResult });
+
+        if (response.result === 'matched') {
+          setState({
+            kind: 'matched',
             barcode: normalized.lookupValue,
-            attemptId,
-            outcome: {
-              kind: 'matched',
-              product: response.product,
-              external: response.result === 'external_candidate',
-            },
+            product: response.product,
           });
           return;
         }
         if (response.result === 'no_match' || response.result === 'too_short') {
-          transitionScanSession({
-            type: 'lookup_finished',
-            barcode: normalized.lookupValue,
-            attemptId,
-            outcome: { kind: 'no_match' },
-          });
+          setState({ kind: 'no_match', barcode: normalized.lookupValue });
           return;
         }
         if (response.result === 'offline') {
-          transitionScanSession({
-            type: 'lookup_finished',
-            barcode: normalized.lookupValue,
-            attemptId,
-            outcome: { kind: 'offline' },
-          });
+          setState({ kind: 'offline', barcode: normalized.lookupValue });
           return;
         }
-        transitionScanSession({
-          type: 'lookup_finished',
+        setState({
+          kind: 'error',
           barcode: normalized.lookupValue,
-          attemptId,
-          outcome: { kind: 'error', reason: 'Lookup failed. Add it another way.' },
+          reason: 'Lookup failed. Add it another way.',
         });
       })
-      .catch((error: unknown) => {
-        if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-        if (controller.signal.aborted || isRequestCancellation(error)) {
-          if (mounted.current && activeLookup.current === controller) {
-            transitionScanSession({
-              type: 'lookup_cancelled',
-              barcode: normalized.lookupValue,
-              attemptId,
-            });
-          }
-          return;
-        }
-        void recordShelfScan(
-          ownerScope,
-          {
-            barcode: normalized.lookupValue,
-            result: shelfScanResultFromLookup('lookup_error'),
-          },
-          user?.id,
-        ).catch(() => undefined);
-        transitionScanSession({
-          type: 'lookup_finished',
+      .catch(() => {
+        if (!lookupIsCurrent()) return;
+        setState({
+          kind: 'error',
           barcode: normalized.lookupValue,
-          attemptId,
-          outcome: { kind: 'error', reason: 'Lookup failed. Add it another way.' },
+          reason: 'Lookup failed. Add it another way.',
         });
-      })
-      .finally(() => {
-        if (activeLookup.current === controller) {
-          activeLookup.current = null;
-          if (
-            controller.signal.aborted &&
-            mounted.current &&
-            isOwnerQueryScopeCurrent(ownerScope)
-          ) {
-            transitionScanSession({
-              type: 'lookup_cancelled',
-              barcode: normalized.lookupValue,
-              attemptId,
-            });
-          }
-        }
       });
   };
 
-  const resetScanSession = () => {
-    haptics.select();
-    activeLookup.current?.abort();
-    activeLookup.current = null;
-    lastScan.current = null;
-    setTorch(false);
-    transitionScanSession({ type: 'reset' });
-  };
-
-  useEffect(() => {
-    if (!isFocused) activeLookup.current?.abort();
-  }, [isFocused]);
-
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-      activeLookup.current?.abort();
-    };
-  }, []);
-
-  const requestCamera = () => {
+  const requestCamera = async () => {
     haptics.select();
     setSettingsOpenFailed(false);
-    void requestPermission();
+    try {
+      if (permissionFailure === 'refresh_failed') {
+        await refreshCameraPermission();
+      } else {
+        await requestCameraPermission();
+      }
+    } catch {
+      // The shared lifecycle publishes claim-safe retry state; native details
+      // must never reach logs or route copy.
+    }
+  };
+
+  const retryCamera = () => {
+    haptics.select();
+    retryCameraMount();
   };
 
   const openShelfCameraSettings = async () => {
@@ -409,7 +432,6 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
-      <StatusBar style={statusBarStyleForSurface('night')} />
       <View
         className="flex-1 px-6"
         style={[
@@ -425,16 +447,24 @@ export default function ScanScreen() {
             accessibilityLabel="Close"
             glyph="x"
             tone="night"
-            onPress={() => router.replace(APP_SHELF_ROUTE)}
+            onPress={() => {
+              cancelActiveLookup();
+              router.replace(APP_SHELF_ROUTE);
+            }}
           />
           <Pressable
             accessibilityRole="switch"
-            accessibilityState={{ checked: scannerActive && torch, disabled: !scannerActive }}
-            disabled={!scannerActive}
-            onPress={() => setTorch((value) => !value)}
+            accessibilityState={{ checked: torch }}
+            disabled={!canUseCameraControls}
+            onPress={() =>
+              setTorchSession((current) => ({
+                cameraGeneration,
+                enabled: current.cameraGeneration === cameraGeneration ? !current.enabled : true,
+              }))
+            }
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
-            <Text variant="label" tone={scannerActive ? 'inverseMuted' : 'muted'}>
+            <Text variant="label" tone={canUseCameraControls ? 'inverseMuted' : 'muted'}>
               torch
             </Text>
           </Pressable>
@@ -446,48 +476,92 @@ export default function ScanScreen() {
               className={
                 splitShortScanSurface
                   ? 'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'
-                  : compactScanSurface
-                    ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
-                    : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                  : supportFloorTextPressureScan && canShowPermissionRecovery
+                    ? 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                    : compactScanSurface
+                      ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                      : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
               }
             >
-              {canShowCamera && scannerActive ? (
+              {cameraUnavailable && canShowCamera ? (
+                <View className="flex-1 items-center justify-center px-5">
+                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                    Camera couldn&apos;t start
+                  </Text>
+                </View>
+              ) : shouldMountCamera ? (
                 <CameraView
-                  active={scannerActive}
+                  key={cameraKey}
+                  active={cameraActive}
                   animateShutter={false}
                   barcodeScannerSettings={{ barcodeTypes: PRODUCT_BARCODE_TYPES }}
-                  enableTorch={scannerActive && torch}
+                  enableTorch={torch && cameraActive}
                   facing="back"
-                  onBarcodeScanned={scannerActive ? onBarcodeScanned : undefined}
-                  onCameraReady={() => setCameraReady(true)}
-                  onMountError={() =>
-                    transitionScanSession({
-                      type: 'camera_failed',
-                      reason: 'Camera could not start on this device.',
-                    })
+                  onBarcodeScanned={
+                    !canCapture || state.kind === 'looking_up' || state.kind === 'matched'
+                      ? undefined
+                      : onBarcodeScanned
                   }
+                  onCameraReady={onCameraReady}
+                  onMountError={onCameraMountError}
                   style={{ flex: 1 }}
                 />
               ) : (
                 <View className="flex-1 items-center justify-center px-7">
-                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
-                    Camera permission is needed for barcode scanning.
-                  </Text>
-                  <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
-                    You can still search, scan the label path, or add by hand.
-                  </Text>
+                  {permissionFailureCopy ? (
+                    <View accessibilityRole="alert">
+                      <Text
+                        variant="body"
+                        tone="inverse"
+                        className="text-center font-sans-semibold"
+                      >
+                        {permissionFailureCopy.title}
+                      </Text>
+                      <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                        {permissionFailureCopy.body}
+                      </Text>
+                    </View>
+                  ) : (
+                    <>
+                      <Text
+                        variant="body"
+                        tone="inverse"
+                        className="text-center font-sans-semibold"
+                      >
+                        {permissionGranted
+                          ? 'Checking camera access.'
+                          : 'Camera permission is needed for barcode scanning.'}
+                      </Text>
+                      <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                        You can still search, scan the label path, or add by hand.
+                      </Text>
+                    </>
+                  )}
                   {canShowPermissionRecovery ? (
                     <Pressable
                       accessibilityRole="button"
+                      accessibilityState={{
+                        busy: permissionBusy,
+                        disabled: permissionBusy,
+                      }}
+                      disabled={permissionBusy}
                       onPress={
-                        canAskCameraPermission
-                          ? requestCamera
+                        canRetryCameraPermission
+                          ? () => void requestCamera()
                           : () => void openShelfCameraSettings()
                       }
                       className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                     >
                       <Text className="font-sans-semibold text-night">
-                        {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
+                        {permissionBusy
+                          ? 'Checking...'
+                          : permissionFailure === 'refresh_failed'
+                            ? 'Try again'
+                            : permissionRecoveryFailed && canAskCameraPermission
+                              ? 'Try again'
+                              : canAskCameraPermission
+                                ? 'Continue'
+                                : 'Open settings'}
                       </Text>
                     </Pressable>
                   ) : null}
@@ -511,7 +585,7 @@ export default function ScanScreen() {
                   ) : null}
                 </View>
               )}
-              {canShowCamera ? (
+              {shouldMountCamera ? (
                 <View
                   className={
                     splitShortScanSurface
@@ -528,7 +602,7 @@ export default function ScanScreen() {
                 />
               ) : null}
             </View>
-            {!compactScanSurface && !scanTerminal ? (
+            {!compactScanSurface ? (
               <>
                 <Text variant="body" tone="inverseMuted" className="mt-5">
                   Line up the barcode
@@ -555,31 +629,38 @@ export default function ScanScreen() {
         }
         style={{ position: 'relative', zIndex: 1 }}
       >
+        {cameraUnavailable ? (
+          <View
+            accessibilityRole="alert"
+            className="mb-3 flex-row items-center gap-3 rounded-[14px] bg-paper/10 p-3"
+          >
+            <Text variant="bodySm" tone="inverseMuted" className="min-w-0 flex-1">
+              The camera did not start. Search, label scan, and manual add still work.
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Try barcode camera again"
+              onPress={retryCamera}
+              className="min-h-[48px] items-center justify-center rounded-pill bg-paper px-4 py-2"
+            >
+              <Text variant="bodySm" className="font-sans-semibold text-night">
+                Try camera again
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
+
         {state.kind === 'looking_up' ? (
           <View className="mb-4 flex-row items-center gap-3">
             <ActivityIndicator />
-            <Text
-              accessibilityLiveRegion="polite"
-              accessibilityRole="alert"
-              accessibilityLabel={`Looking up barcode ${state.barcode}. Scanner paused.`}
-              variant="bodySm"
-              tone="inverseMuted"
-            >
+            <Text variant="bodySm" tone="inverseMuted">
               Looking up barcode {state.barcode}
             </Text>
           </View>
         ) : state.kind === 'matched' ? (
           <View className="mb-4 rounded-[16px] bg-paper/10 p-4">
-            <Text
-              accessibilityLiveRegion="polite"
-              accessibilityRole="alert"
-              accessibilityLabel={`${
-                state.external ? 'External source candidate' : 'Catalog match'
-              }: ${state.product.brand ? `${state.product.brand} ` : ''}${state.product.name}. Scanner paused.`}
-              variant="label"
-              tone="inverseMuted"
-            >
-              {state.external ? 'External source candidate' : 'Catalog match'}
+            <Text variant="label" tone="inverseMuted">
+              Catalog match
             </Text>
             <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
               {state.product.brand ? `${state.product.brand} ` : ''}
@@ -589,55 +670,34 @@ export default function ScanScreen() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => applyProduct(state.product, state.barcode)}
-                className="flex-1 items-center rounded-pill bg-paper px-4 py-3"
+                className="min-h-[48px] flex-1 items-center justify-center rounded-pill bg-paper px-4 py-3"
               >
                 <Text className="font-sans-semibold text-night">Add this</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push(noMatchRoute(state.barcode))}
-                className="items-center rounded-pill px-4 py-3"
+                onPress={() => router.push(noMatchRoute(state.barcode, state.product.id))}
+                className="min-h-[48px] items-center justify-center rounded-pill px-4 py-3"
                 style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}
               >
                 <Text tone="inverseMuted" className="font-sans-semibold">
-                  Wrong
+                  Not this product
                 </Text>
               </Pressable>
             </View>
           </View>
         ) : state.kind === 'no_match' ? (
-          <Text
-            accessibilityLiveRegion="polite"
-            accessibilityRole="alert"
-            accessibilityLabel={`No catalog match for barcode ${state.barcode}. Scanner paused. Choose Scan again to try another read.`}
-            variant="bodySm"
-            tone="inverseMuted"
-            className="mb-4"
-          >
+          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
             Barcode {state.barcode} is not in the catalog yet. Add it another way, then report the
             miss if you want.
           </Text>
         ) : state.kind === 'offline' ? (
-          <Text
-            accessibilityLiveRegion="polite"
-            accessibilityRole="alert"
-            accessibilityLabel={`Product catalog unavailable for barcode ${state.barcode}. Scanner paused. Choose Scan again to retry.`}
-            variant="bodySm"
-            tone="inverseMuted"
-            className="mb-4"
-          >
+          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
             Couldn&apos;t reach the product catalog for barcode {state.barcode}. Search by name,
             scan the label, or add it by hand; the shelf still works offline.
           </Text>
         ) : state.kind === 'invalid' || state.kind === 'error' ? (
-          <Text
-            accessibilityLiveRegion="polite"
-            accessibilityRole="alert"
-            accessibilityLabel={`${state.reason} Scanner paused. Choose Scan again to retry.`}
-            variant="bodySm"
-            tone="inverseMuted"
-            className="mb-4"
-          >
+          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
             {state.reason}
           </Text>
         ) : state.kind === 'idle' && compactScanSurface ? null : (
@@ -647,25 +707,63 @@ export default function ScanScreen() {
           </Text>
         )}
 
-        {scanTerminal ? (
+        {canQueueRetry && queueFeedback.kind !== 'saved' ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Scan again"
-            onPress={resetScanSession}
-            className="mb-4 min-h-[48px] items-center justify-center rounded-pill border border-paper/20 px-5 py-3"
+            accessibilityLabel={`Retry barcode ${recoveryBarcode} when online`}
+            accessibilityHint="Saves an encrypted first-party catalog retry on this device"
+            accessibilityState={{
+              disabled: queueFeedback.kind === 'saving',
+              busy: queueFeedback.kind === 'saving',
+            }}
+            disabled={queueFeedback.kind === 'saving'}
+            onPress={() => void queueRetryWhenOnline()}
+            className="mb-3 min-h-[48px] items-center justify-center rounded-pill border border-paper/20 bg-paper/10 px-4 py-2.5"
           >
-            <Text tone="inverse" className="font-sans-semibold">
-              Scan again
+            <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+              {queueFeedback.kind === 'saving' ? 'Saving retry...' : 'Retry when online'}
             </Text>
           </Pressable>
+        ) : null}
+
+        {queueFeedback.kind === 'saved' && queueFeedback.barcode === recoveryBarcode ? (
+          <View
+            accessibilityRole="alert"
+            className="mb-3 rounded-[14px] px-3.5 py-2.5"
+            style={{ backgroundColor: 'rgba(157,177,138,0.18)' }}
+          >
+            <Text variant="bodySm" tone="inverse">
+              {queueFeedback.alreadyQueued
+                ? 'This barcode is already saved for retry. Review its match from Shelf when it is ready.'
+                : `Retry saved on this device. We will check the ${BRAND.appName} catalog when the app is online.`}
+            </Text>
+          </View>
+        ) : queueFeedback.kind === 'error' && queueFeedback.barcode === recoveryBarcode ? (
+          <View
+            accessibilityRole="alert"
+            className="mb-3 rounded-[14px] px-3.5 py-2.5"
+            style={{ backgroundColor: 'rgba(217,161,131,0.16)' }}
+          >
+            <Text variant="bodySm" tone="inverse">
+              Couldn&apos;t save this retry. Nothing was added or changed. Try again.
+            </Text>
+          </View>
         ) : null}
 
         <View className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}>
           <FallbackRow
             icon="="
             title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}
-            subtitle="Capture label, then type from it"
-            accessibilityLabel="Scan ingredient label. Capture label, then type from it"
+            subtitle={
+              labelOcrAvailable
+                ? 'Read on this iPhone, then review'
+                : 'Capture label, then type from it'
+            }
+            accessibilityLabel={
+              labelOcrAvailable
+                ? 'Scan ingredient label. Read text on this iPhone, then review it'
+                : 'Scan ingredient label. Capture label, then type from it'
+            }
             compact={compactScanSurface}
             hideSubtitle={compactScanSurface}
             onPress={goOcr}
@@ -690,7 +788,7 @@ export default function ScanScreen() {
         {state.kind === 'no_match' && (
           <Pressable
             accessibilityRole="button"
-            className="mt-5 items-center py-1"
+            className="mt-2.5 min-h-[48px] items-center justify-center py-1"
             onPress={() => {
               haptics.select();
               router.push(noMatchRoute(state.barcode));

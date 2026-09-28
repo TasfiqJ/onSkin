@@ -1,18 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
 import { goalConcern } from '@/features/recommendations/copy';
 import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
-import { useRecommendationsFromSources } from '@/features/recommendations/useRecommendations';
-import { usePlanFromSources } from '@/features/routine/usePlan';
+import { useRecommendations } from '@/features/recommendations/useRecommendations';
+import { usePlan } from '@/features/routine/usePlan';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { useShelf } from '@/features/shelf/useShelf';
-import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
+import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
-import { phase7Flags } from '@/lib/launch/phase7';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import {
   answerPrompt,
@@ -22,11 +19,9 @@ import {
   type AskAnswer,
   type AskContext,
 } from './answer';
-import { askGate, groundedReasonForCloudReadiness, requiresTrialGroundedQuota } from './gate';
-import { blockUnreservedGroundedAnswer } from './groundedDelivery';
-import { groundedTurnsQueryOptions } from './groundedTurnsQuery';
+import { askGate } from './gate';
 import { guardClaim } from './guard';
-import { deriveAskReadiness } from './readiness';
+import { getGroundedTurns, recordGroundedTurn } from './store';
 
 // The Ask data layer (docs/13). Assembles the deterministic AskContext from the user's
 // REAL state. The live shelf + its launch-gated conflicts (useShelf), tonight's plan
@@ -36,42 +31,23 @@ import { deriveAskReadiness } from './readiness';
 // fully on-device at $0. The orchestration runs every answer through the runtime claim-
 // safety guard and records CONTENT-FREE telemetry. *** No commercial input anywhere. ***
 
-export function useAskViewModel() {
-  const quotaFixtureEnabled =
-    typeof __DEV__ !== 'undefined' &&
-    __DEV__ &&
-    Boolean(process.env.EXPO_PUBLIC_E2E_ASK_TURNS_STORAGE_FAILURE?.trim());
-  const cloudGateEnabled = phase7Flags.cloudAsk || quotaFixtureEnabled;
+function billingPeriod(): string {
+  return localDateString().slice(0, 7); // 'YYYY-MM'
+}
+
+export function useAsk() {
   const shelf = useShelf();
+  const plan = usePlan();
+  const recs = useRecommendations();
   const profile = useProfileBits();
-  const plan = usePlanFromSources(shelf, profile);
-  const recs = useRecommendationsFromSources(shelf, profile);
-  const entitlement = useEntitlement({ enabled: cloudGateEnabled });
-  const { data: ent } = entitlement;
-  const entitlementUncertain = isEntitlementEvidenceUncertain(ent);
-  // TanStack retains the last successful data when a background refetch
-  // fails. Its explicit evidence boundary remains the access authority; a
-  // transport status must not discard a still-fresh local proof.
-  const entitlementResolved = ent !== undefined && !entitlementUncertain;
-  const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
-  const period = boundary.localDate.slice(0, 7);
-  const trialQuotaRequired =
-    quotaFixtureEnabled ||
-    (cloudGateEnabled && entitlementResolved && requiresTrialGroundedQuota(ent));
-  const turnsOptions = useMemo(
-    () => groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired),
-    [ownerScope, period, trialQuotaRequired],
-  );
-  const turns = useQuery(turnsOptions);
-  const readiness = deriveAskReadiness({
-    local: [shelf, plan, recs, profile],
-    quotaFixtureEnabled,
-    turns,
+  const { data: ent } = useEntitlement();
+  const qc = useQueryClient();
+  const period = billingPeriod();
+  const turns = useQuery({
+    queryKey: ['askGroundedTurns', period],
+    queryFn: () => getGroundedTurns(period),
+    retry: 0,
   });
-  const { isSuccess, isError } = readiness;
-  const cloudGroundingReady =
-    cloudGateEnabled && entitlementResolved && (!trialQuotaRequired || turns.isSuccess);
 
   const ctx = useMemo<AskContext>(() => {
     const gate = askGate({
@@ -83,45 +59,46 @@ export function useAskViewModel() {
     const goal = profile.data?.goals[0] ?? null;
     return {
       conflicts: shelf.data?.unresolvedConflicts ?? [],
+      shelfProducts:
+        shelf.data?.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+        })) ?? [],
       hasShelfProducts: (shelf.data?.items.length ?? 0) > 0,
+      shelfProductCount: shelf.data?.items.length ?? 0,
+      conflictCoverageStatus: shelf.data?.conflictCoverageStatus,
       pmSteps: (plan.data?.plan.pm ?? []).map((s) => ({ name: s.name, role: String(s.role) })),
       isExamplePlan: plan.data?.isExample ?? false,
       hasReplenish: hasReplenishmentSignal(shelf.data),
       topRec: pickFitRec(recs.result.recommendations),
       youreSet: recs.result.youreSet,
       goalConcernText: goal ? goalConcern(goal) : null,
-      groundedAllowed: cloudGroundingReady && gate.groundedAllowed,
-      groundedReason: groundedReasonForCloudReadiness(
-        gate.reason,
-        cloudGateEnabled,
-        cloudGroundingReady,
-      ),
+      groundedAllowed: gate.groundedAllowed,
+      groundedReason: gate.reason,
     };
-  }, [
-    shelf.data,
-    plan.data,
-    recs.result,
-    profile.data,
-    ent,
-    turns.data,
-    cloudGateEnabled,
-    cloudGroundingReady,
-  ]);
+  }, [shelf.data, plan.data, recs.result, profile.data, ent, turns.data]);
 
   // Run a question through the deterministic engine, the runtime guard, and telemetry.
   const finalise = useCallback(
     (answer: AskAnswer): AskAnswer => {
       const guard = guardClaim(answer.claim);
-      const guarded = guard.ok ? answer : safetyRefusal(answer.intent);
-      // No shipped provider can reserve a grounded turn before delivery. Refuse any
-      // unexpected grounded result until that provider keeps reservation, request,
-      // cache publication, and delivery inside runGroundedTurnForOwner; post-answer
-      // fire-and-forget accounting would permit quota and account-boundary races.
-      const final = blockUnreservedGroundedAnswer(guarded);
-      if (final.kind === 'refuse') {
-        track('ask_turn', { kind: final.kind, grounded: false, refused: true });
-      } else {
-        track('ask_turn', { kind: final.kind, grounded: false, refused: false });
+      const final = guard.ok ? answer : safetyRefusal(answer.intent);
+      track('ask_turn', {
+        // `grounded` is intentionally always false pre-vendor: no code path returns
+        // kind 'grounded' yet (concern questions honestly refuse). It flips true when
+        // the cloud layer ships. Do not "fix" the telemetry by guessing.
+        kind: final.kind,
+        grounded: final.kind === 'grounded',
+        refused: final.kind === 'refuse',
+      });
+      // Dormant until B-AI-ASSISTANT-VENDOR: no current code path produces a
+      // grounded answer, but this branch is wired so the trial counter engages as
+      // soon as the cloud layer ships. Server-side Edge enforcement is still
+      // mandatory; this is the local UX gate.
+      if (final.kind === 'grounded') {
+        void recordGroundedTurn(period)
+          .then(() => qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] }))
+          .catch(() => undefined);
       }
       if (final.kind === 'escalate') track('ask_escalated_to_clinician');
       // The grounded (cloud) layer was gated. The Pro / trial-cap upsell funnel (docs/13 §15).
@@ -130,38 +107,21 @@ export function useAskViewModel() {
       }
       return final;
     },
-    [ctx.groundedReason],
+    [ctx.groundedReason, period, qc],
   );
 
   const ask = useCallback(
     (question: string): AskAnswer => {
       if (question.trim().length === 0) return safetyRefusal('out_of_scope');
-      if (!isSuccess) return safetyRefusal('out_of_scope');
       return finalise(answerQuestion(question, ctx));
     },
-    [ctx, finalise, isSuccess],
+    [ctx, finalise],
   );
 
   const askSuggested = useCallback(
-    (prompt: 'conflict' | 'tonight' | 'fit'): AskAnswer =>
-      isSuccess ? finalise(answerPrompt(prompt, ctx)) : safetyRefusal('out_of_scope'),
-    [ctx, finalise, isSuccess],
+    (prompt: 'conflict' | 'tonight' | 'fit'): AskAnswer => finalise(answerPrompt(prompt, ctx)),
+    [ctx, finalise],
   );
-
-  async function retry(): Promise<{ isError: boolean }> {
-    const results = await Promise.all([
-      shelf.isError ? shelf.refetch() : Promise.resolve(),
-      plan.isError ? plan.retry() : Promise.resolve(),
-      recs.isError ? recs.retry() : Promise.resolve(),
-      profile.isError ? profile.refetch() : Promise.resolve(),
-      quotaFixtureEnabled && turns.isError ? turns.refetch() : Promise.resolve(),
-    ]);
-    return {
-      isError: results.some(
-        (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
-      ),
-    };
-  }
 
   return {
     ctx,
@@ -169,11 +129,7 @@ export function useAskViewModel() {
     askSuggested,
     // Whether the user has any products on their shelf, so the screen can lead
     // proactively only when there is something real to answer about (docs/13 §14).
-    hasShelf: isSuccess && ctx.hasShelfProducts,
-    isLoading: readiness.isLoading,
-    isError,
-    isFetching: readiness.isFetching,
-    isSuccess,
-    retry,
+    hasShelf: ctx.hasShelfProducts,
+    isLoading: shelf.isLoading || plan.isLoading || recs.isLoading,
   };
 }

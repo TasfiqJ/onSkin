@@ -51,8 +51,8 @@ const DEFAULT_REPORT = path.join(
 );
 const MIN_REALISTIC_ROWS = 250_000;
 const DEFAULT_STALE_ROWS = 2_500;
-const DATABASE = 'onskin_rate_limit_benchmark';
-const PASSWORD = 'onskin-local-opt119-only';
+const DATABASE = 'layerwell_rate_limit_benchmark';
+const PASSWORD = 'layerwell-local-opt119-only';
 const CLEANUP_PREDICATE = 'window_start < now() - make_interval(secs => greatest(60 * 4, 3600))';
 const CLEANUP_INDEX_NAME = 'edge_rate_limits_window_start_concurrent_idx';
 const LEGACY_CLEANUP_INDEX_NAME = 'edge_rate_limits_window_start_idx';
@@ -1284,7 +1284,7 @@ async function main() {
     return;
   }
 
-  const container = `onskin-opt119-${process.pid}-${Date.now()}`;
+  const container = `layerwell-opt119-${process.pid}-${Date.now()}`;
   const startedAt = new Date().toISOString();
   let started = false;
   try {

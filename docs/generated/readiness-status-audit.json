@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T04:29:38.968Z",
+  "generatedAt": "2026-07-19T03:48:19.853Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -76,22 +76,45 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "status": "pass",
+  "status": "blocked",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
-  "evidenceDate": "2026-07-12",
+  "evidenceDate": "2026-07-18",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 204,
-  "expectedMobileTests": 2137,
-  "actualMobileTestFiles": 204,
-  "expectedTestPhrase": "204 mobile test files / 2137 tests",
+  "expectedMobileTestFiles": 299,
+  "expectedMobileTests": 3486,
+  "actualMobileTestFiles": 299,
+  "expectedTestPhrase": "299 mobile test files / 3486 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-12",
-      "expectedDate": "2026-07-12",
+      "date": "2026-07-18",
+      "expectedDate": "2026-07-18",
       "hasExpectedTestPhrase": true,
+      "testBaselines": [
+        {
+          "testFiles": 299,
+          "tests": 3486,
+          "source": "299 mobile test files / 3486 tests"
+        },
+        {
+          "testFiles": 299,
+          "tests": 3486,
+          "source": "299 mobile test files / 3486 tests"
+        },
+        {
+          "testFiles": 299,
+          "tests": 3486,
+          "source": "299 mobile test files / 3486 tests"
+        },
+        {
+          "testFiles": 299,
+          "tests": 3486,
+          "source": "299 mobile test files / 3486 tests"
+        }
+      ],
+      "unexpectedTestBaselines": [],
       "missingManifestNeedles": [],
       "stalePatterns": [],
       "missingCommands": []
@@ -99,9 +122,17 @@
     {
       "path": "BLOCKERS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-12",
-      "expectedDate": "2026-07-12",
+      "date": "2026-07-18",
+      "expectedDate": "2026-07-18",
       "hasExpectedTestPhrase": true,
+      "testBaselines": [
+        {
+          "testFiles": 299,
+          "tests": 3486,
+          "source": "299 mobile test files / 3486 tests"
+        }
+      ],
+      "unexpectedTestBaselines": [],
       "missingManifestNeedles": [],
       "stalePatterns": [],
       "missingCommands": []
@@ -110,8 +141,32 @@
       "path": "docs/TESTING_STRATEGY.md",
       "requireCurrentEvidence": false,
       "date": null,
-      "expectedDate": "2026-07-12",
+      "expectedDate": "2026-07-18",
       "hasExpectedTestPhrase": false,
+      "testBaselines": [
+        {
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 test files / 3,026 tests"
+        },
+        {
+          "testFiles": 282,
+          "tests": 3251,
+          "source": "282 test files / 3251 tests"
+        }
+      ],
+      "unexpectedTestBaselines": [
+        {
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 test files / 3,026 tests"
+        },
+        {
+          "testFiles": 282,
+          "tests": 3251,
+          "source": "282 test files / 3251 tests"
+        }
+      ],
       "missingManifestNeedles": [
         "375 x 812",
         "390 x 844",
@@ -153,10 +208,19 @@
         "cycle-customization-current",
         "Shelf freshness and replacement provenance lifecycle",
         "shelf-freshness-provenance-current",
+        "CAT04 catalog search, scan, report, and recovery Expo-web pass",
+        "cat04-catalog-recovery-current",
+        "CAT05 native OCR review Expo-web pass",
+        "cat05-native-ocr-web-ui-current",
         "Required-surface honest direct-entry and recovery pass",
-        "required-surface-honesty-rerun"
+        "required-surface-honesty-rerun",
+        "Trend navigator privacy and exact-route recovery",
+        "trend-route-group-gate-current"
       ],
-      "stalePatterns": [],
+      "stalePatterns": [
+        "/\\b282\\s+(?:mobile\\s+)?test files?\\b/i",
+        "/\\b3,?251\\s+tests?\\b/i"
+      ],
       "missingCommands": []
     }
   ],
@@ -173,6 +237,8 @@
     "npm run e2e:human:manifest:check",
     "npm run docs:generated-packet-status-audit:check",
     "npm run phase5:check-native-config",
+    "npm run phase5:widget-runtime-contract:smoke",
+    "npm run phase5:widget-lifecycle-evidence",
     "npm run phase7:check-core-loop",
     "npm run phase8:check-growth-store",
     "npm run phase10:beta-analytics-audit",
@@ -193,7 +259,12 @@
     "docs:device-support-policy-audit:check",
     "docs:performance-readiness-audit",
     "docs:performance-readiness-audit:strict",
-    "docs:performance-readiness-audit:check"
+    "docs:performance-readiness-audit:check",
+    "phase5:widget-runtime-contract:smoke",
+    "phase5:widget-lifecycle-evidence",
+    "phase5:widget-lifecycle-evidence:strict",
+    "phase5:widget-lifecycle-evidence:smoke",
+    "phase5:widget-lifecycle-evidence:template:check"
   ],
   "requiredLaunchVerifyScriptParts": [
     "docs:source-packet-audit:check",
@@ -206,6 +277,10 @@
     "e2e:human:manifest:check",
     "phase3:review-signoff-template:smoke",
     "phase5:check-native-config",
+    "phase5:widget-runtime-contract:smoke",
+    "phase5:widget-lifecycle-evidence",
+    "phase5:widget-lifecycle-evidence:smoke",
+    "phase5:widget-lifecycle-evidence:template:check",
     "phase7:check-core-loop",
     "phase8:check-growth-store",
     "phase9:release-smoke",
@@ -218,10 +293,12 @@
     "test"
   ],
   "summary": {
-    "blockerCount": 0,
+    "blockerCount": 1,
     "warningCount": 0,
     "checkedDocCount": 3
   },
-  "blockers": [],
+  "blockers": [
+    "docs/e2e/generated/human-e2e-manifest.json status is blocked."
+  ],
   "warnings": []
 }

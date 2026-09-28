@@ -1,3 +1,9 @@
+import {
+  buildRevenueCatIdentityTombstoneLookup,
+  type RevenueCatIdentityTombstoneCandidate,
+  type RevenueCatIdentityTombstoneKeyring,
+} from '../_shared/revenueCatIdentityTombstone.ts';
+
 export type RevenueCatEvent = {
   id: string;
   type: string;
@@ -21,6 +27,24 @@ export type RevenueCatEvent = {
   presented_offering_id?: string;
 };
 
+export type RevenueCatStructuredIdentityFields = {
+  app_user_id: string | null;
+  original_app_user_id: string | null;
+  aliases: string[] | null;
+  transferred_from: string[] | null;
+  transferred_to: string[] | null;
+};
+
+export type RevenueCatIdentityFilterResult =
+  | {
+      outcome: 'persist';
+      userCandidates: string[];
+      identityFields: RevenueCatStructuredIdentityFields;
+    }
+  | {
+      outcome: 'suppressed_deleted_account';
+    };
+
 export type RevenueCatVerification = {
   signatureVerified: boolean;
   authVerified: boolean;
@@ -36,10 +60,20 @@ export type RevenueCatAtomicArgs = Record<string, unknown> & {
   p_projection_priority: number;
   p_is_active: boolean;
   p_will_renew: boolean;
+  p_identity_hmac_key_versions: number[];
+  p_identity_hmacs: string[];
+  p_identity_values: string[];
 };
 
 export type RevenueCatAtomicResult = {
-  outcome: 'processed' | 'stale' | 'duplicate' | 'ignored' | 'unresolved' | 'error';
+  outcome:
+    | 'processed'
+    | 'stale'
+    | 'duplicate'
+    | 'ignored'
+    | 'unresolved'
+    | 'suppressed_deleted_account'
+    | 'error';
   projection_applied: boolean;
   processing_status: string;
 };
@@ -85,11 +119,280 @@ const PRIORITY = {
   deactivate: 300,
 } as const;
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_SUBSTRING_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
+const ASCII_BOUNDARY_WHITESPACE = /^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g;
+
 export class RevenueCatAtomicProcessingError extends Error {
   constructor() {
     super('REVENUECAT_ATOMIC_PROCESSING_FAILED');
     this.name = 'RevenueCatAtomicProcessingError';
   }
+}
+
+export class RevenueCatIdentityInputError extends Error {
+  constructor(code: 'INVALID_REVENUECAT_IDENTITY_SHAPE' | 'INVALID_ACTIVE_ACCOUNT_SET') {
+    super(code);
+    this.name = 'RevenueCatIdentityInputError';
+  }
+}
+
+function normalizeRevenueCatEventType(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const normalized = value.replace(ASCII_BOUNDARY_WHITESPACE, '').toUpperCase();
+  return normalized || undefined;
+}
+
+type NormalizedIdentityValue = {
+  value: string;
+  accountUuid: string | null;
+  embeddedAccountUuids: string[];
+};
+
+type NormalizedRevenueCatIdentities = {
+  appUserId: NormalizedIdentityValue | null;
+  originalAppUserId: NormalizedIdentityValue | null;
+  aliases: NormalizedIdentityValue[];
+  transferredFrom: NormalizedIdentityValue[];
+  transferredTo: NormalizedIdentityValue[];
+  accountUuidCandidates: string[];
+};
+
+function invalidIdentityShape(): never {
+  throw new RevenueCatIdentityInputError('INVALID_REVENUECAT_IDENTITY_SHAPE');
+}
+
+function normalizeIdentityValue(value: unknown): NormalizedIdentityValue {
+  if (typeof value !== 'string') invalidIdentityShape();
+  const trimmed = value.replace(ASCII_BOUNDARY_WHITESPACE, '');
+  if (!trimmed) invalidIdentityShape();
+  const accountUuid = UUID_PATTERN.test(trimmed) ? trimmed.toLowerCase() : null;
+  const embeddedAccountUuids = [
+    ...new Set((trimmed.match(UUID_SUBSTRING_PATTERN) ?? []).map((uuid) => uuid.toLowerCase())),
+  ];
+  return {
+    value: accountUuid ?? value,
+    accountUuid,
+    embeddedAccountUuids,
+  };
+}
+
+function normalizeIdentityScalar(
+  record: Record<string, unknown>,
+  key: 'app_user_id' | 'original_app_user_id',
+): NormalizedIdentityValue | null {
+  const value = record[key];
+  if (value === undefined || value === null) return null;
+  return normalizeIdentityValue(value);
+}
+
+function normalizeIdentityArray(
+  record: Record<string, unknown>,
+  key: 'aliases' | 'transferred_from' | 'transferred_to',
+): NormalizedIdentityValue[] {
+  const value = record[key];
+  if (value === undefined || value === null) return [];
+  if (!Array.isArray(value)) invalidIdentityShape();
+  return value.map(normalizeIdentityValue);
+}
+
+function normalizeRevenueCatIdentities(event: unknown): NormalizedRevenueCatIdentities {
+  if (!event || typeof event !== 'object' || Array.isArray(event)) {
+    invalidIdentityShape();
+  }
+  const record = event as Record<string, unknown>;
+  const appUserId = normalizeIdentityScalar(record, 'app_user_id');
+  const originalAppUserId = normalizeIdentityScalar(record, 'original_app_user_id');
+  const aliases = normalizeIdentityArray(record, 'aliases');
+  const transferredFrom = normalizeIdentityArray(record, 'transferred_from');
+  const transferredTo = normalizeIdentityArray(record, 'transferred_to');
+  const accountUuidCandidates = [
+    appUserId,
+    originalAppUserId,
+    ...aliases,
+    ...transferredFrom,
+    ...transferredTo,
+  ].flatMap((identity) => identity?.embeddedAccountUuids ?? []);
+
+  return {
+    appUserId,
+    originalAppUserId,
+    aliases,
+    transferredFrom,
+    transferredTo,
+    accountUuidCandidates: [...new Set(accountUuidCandidates)].sort(),
+  };
+}
+
+/**
+ * Returns only canonical account UUIDs in global sort order. Callers may use
+ * this order for database advisory locks and active-account lookups; it is not
+ * the semantic RevenueCat owner resolution order.
+ */
+export function extractRevenueCatAccountUuidCandidates(event: unknown): string[] {
+  return normalizeRevenueCatIdentities(event).accountUuidCandidates;
+}
+
+function revenueCatTombstoneCandidates(
+  identities: NormalizedRevenueCatIdentities,
+): RevenueCatIdentityTombstoneCandidate[] {
+  const result: RevenueCatIdentityTombstoneCandidate[] = [];
+  const seen = new Set<string>();
+  for (const identity of [
+    identities.appUserId,
+    identities.originalAppUserId,
+    ...identities.aliases,
+    ...identities.transferredFrom,
+    ...identities.transferredTo,
+  ]) {
+    if (!identity) continue;
+    for (const hashIdentity of [identity.value, ...identity.embeddedAccountUuids]) {
+      const key = `${identity.value.length}:${identity.value}${hashIdentity.length}:${hashIdentity}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      result.push({ identityValue: identity.value, hashIdentity });
+    }
+  }
+  return result;
+}
+
+/**
+ * Adds aligned, keyed-HMAC lookup inputs after the synchronous event mapping.
+ * An empty/unattached lookup is rejected by migration 0051 whenever structured
+ * identities are present, so production cannot silently bypass tombstones.
+ */
+export async function attachRevenueCatIdentityTombstoneLookup(
+  args: RevenueCatAtomicArgs,
+  event: unknown,
+  projectId: unknown,
+  keyring: RevenueCatIdentityTombstoneKeyring,
+): Promise<RevenueCatAtomicArgs> {
+  const lookup = await buildRevenueCatIdentityTombstoneLookup(
+    projectId,
+    revenueCatTombstoneCandidates(normalizeRevenueCatIdentities(event)),
+    keyring,
+  );
+  return {
+    ...args,
+    p_identity_hmac_key_versions: lookup.keyVersions,
+    p_identity_hmacs: lookup.identityHmacs,
+    p_identity_values: lookup.identityValues,
+  };
+}
+
+function normalizeActiveAccountSet(value: unknown): Set<string> {
+  if (!Array.isArray(value)) {
+    throw new RevenueCatIdentityInputError('INVALID_ACTIVE_ACCOUNT_SET');
+  }
+  const active = new Set<string>();
+  for (const item of value) {
+    if (typeof item !== 'string') {
+      throw new RevenueCatIdentityInputError('INVALID_ACTIVE_ACCOUNT_SET');
+    }
+    const trimmed = item.replace(ASCII_BOUNDARY_WHITESPACE, '');
+    if (!UUID_PATTERN.test(trimmed)) {
+      throw new RevenueCatIdentityInputError('INVALID_ACTIVE_ACCOUNT_SET');
+    }
+    active.add(trimmed.toLowerCase());
+  }
+  return active;
+}
+
+function stableUnique(values: string[]): string[] {
+  return [...new Set(values)];
+}
+
+function stableSortedIdentityValues(values: NormalizedIdentityValue[]): string[] | null {
+  const normalized = [...new Set(values.map((identity) => identity.value))].sort();
+  return normalized.length > 0 ? normalized : null;
+}
+
+function containsInactiveAccountUuid(value: string, inactiveAccountUuids: string[]): boolean {
+  const normalized = value.toLowerCase();
+  return inactiveAccountUuids.some((accountUuid) => normalized.includes(accountUuid));
+}
+
+function retainedIdentity(
+  identity: NormalizedIdentityValue,
+  activeAccountUuids: Set<string>,
+  inactiveAccountUuids: string[],
+): boolean {
+  if (identity.accountUuid) return activeAccountUuids.has(identity.accountUuid);
+  return !containsInactiveAccountUuid(identity.value, inactiveAccountUuids);
+}
+
+function activeUuidValues(
+  identities: NormalizedIdentityValue[],
+  activeAccountUuids: Set<string>,
+): string[] {
+  return identities
+    .map((identity) => identity.accountUuid)
+    .filter(
+      (identity): identity is string => identity !== null && activeAccountUuids.has(identity),
+    );
+}
+
+/**
+ * Removes deleted-account UUIDs before an event is persisted. Anonymous
+ * provider identifiers remain audit-only and are never returned as owner
+ * candidates. A webhook containing account UUIDs but no active account is
+ * represented by a constant, identifier-free suppression outcome.
+ */
+export function filterRevenueCatIdentitiesForActiveAccounts(
+  event: unknown,
+  activeAccountIds: unknown,
+): RevenueCatIdentityFilterResult {
+  const normalized = normalizeRevenueCatIdentities(event);
+  const eventType = normalizeRevenueCatEventType((event as Record<string, unknown>).type) ?? '';
+  const activeAccountUuids = normalizeActiveAccountSet(activeAccountIds);
+  const eventActiveAccountUuids = normalized.accountUuidCandidates.filter((accountUuid) =>
+    activeAccountUuids.has(accountUuid),
+  );
+
+  if (normalized.accountUuidCandidates.length > 0 && eventActiveAccountUuids.length === 0) {
+    return { outcome: 'suppressed_deleted_account' };
+  }
+
+  const inactiveAccountUuids = normalized.accountUuidCandidates.filter(
+    (accountUuid) => !activeAccountUuids.has(accountUuid),
+  );
+  const aliases = normalized.aliases.filter((identity) =>
+    retainedIdentity(identity, activeAccountUuids, inactiveAccountUuids),
+  );
+  const transferredFrom = normalized.transferredFrom.filter((identity) =>
+    retainedIdentity(identity, activeAccountUuids, inactiveAccountUuids),
+  );
+  const transferredTo = normalized.transferredTo.filter((identity) =>
+    retainedIdentity(identity, activeAccountUuids, inactiveAccountUuids),
+  );
+  const appUserId =
+    normalized.appUserId &&
+    retainedIdentity(normalized.appUserId, activeAccountUuids, inactiveAccountUuids)
+      ? normalized.appUserId
+      : null;
+  const originalAppUserId =
+    normalized.originalAppUserId &&
+    retainedIdentity(normalized.originalAppUserId, activeAccountUuids, inactiveAccountUuids)
+      ? normalized.originalAppUserId
+      : null;
+  const userCandidates = stableUnique([
+    ...(eventType === 'TRANSFER' ? activeUuidValues(transferredTo, activeAccountUuids) : []),
+    ...(appUserId?.accountUuid ? [appUserId.accountUuid] : []),
+    ...(originalAppUserId?.accountUuid ? [originalAppUserId.accountUuid] : []),
+    ...activeUuidValues(aliases, activeAccountUuids),
+  ]);
+
+  return {
+    outcome: 'persist',
+    userCandidates,
+    identityFields: {
+      app_user_id: appUserId?.value ?? null,
+      original_app_user_id: originalAppUserId?.value ?? null,
+      aliases: stableSortedIdentityValues(aliases),
+      transferred_from: stableSortedIdentityValues(transferredFrom),
+      transferred_to: stableSortedIdentityValues(transferredTo),
+    },
+  };
 }
 
 function optionalString(value: unknown): string | undefined {
@@ -110,10 +413,6 @@ function optionalStringArray(value: unknown): string[] | undefined {
     (item): item is string => typeof item === 'string' && item.length > 0,
   );
   return filtered.length > 0 ? filtered : undefined;
-}
-
-function stableStrings(values: unknown): string[] {
-  return [...new Set(optionalStringArray(values) ?? [])].sort();
 }
 
 function compactRecord(record: Record<string, unknown>): Record<string, unknown> {
@@ -139,7 +438,10 @@ function mapStore(store: string | undefined): string | null {
   if (normalized.includes('APP_STORE') || normalized.includes('MAC_APP_STORE')) return 'app_store';
   if (normalized.includes('PLAY')) return 'play_store';
   if (normalized.includes('TEST_STORE')) return 'test_store';
-  if (normalized.includes('PROMOTIONAL')) return 'app_granted';
+  // RevenueCat promotional entitlements are still provider authority. The
+  // `app_granted` value is reserved for the app's independent reverse-trial
+  // lane and must never be emitted by a provider webhook.
+  if (normalized.includes('PROMOTIONAL')) return 'promotional';
   if (
     normalized.includes('STRIPE') ||
     normalized.includes('PADDLE') ||
@@ -164,7 +466,7 @@ function mapEnvironment(event: RevenueCatEvent): string {
 export function sanitizeRevenueCatEvent(event: RevenueCatEvent): Record<string, unknown> {
   return compactRecord({
     id: optionalString(event.id),
-    type: optionalString(event.type)?.toUpperCase(),
+    type: normalizeRevenueCatEventType(event.type),
     product_id: optionalString(event.product_id),
     store: optionalString(event.store),
     environment: optionalString(event.environment),
@@ -219,14 +521,30 @@ function projectionFor(eventType: string): {
   };
 }
 
-function deterministicUserCandidates(event: RevenueCatEvent, eventType: string): string[] {
-  const destinationCandidates = eventType === 'TRANSFER' ? stableStrings(event.transferred_to) : [];
+function sortedAccountUuids(identities: NormalizedIdentityValue[]): string[] {
+  return [
+    ...new Set(
+      identities
+        .map((identity) => identity.accountUuid)
+        .filter((identity): identity is string => identity !== null),
+    ),
+  ].sort();
+}
+
+function deterministicUserCandidates(
+  identities: NormalizedRevenueCatIdentities,
+  eventType: string,
+): string[] {
   const directCandidates = [
-    optionalString(event.app_user_id),
-    optionalString(event.original_app_user_id),
+    identities.appUserId?.accountUuid,
+    identities.originalAppUserId?.accountUuid,
   ].filter((value): value is string => Boolean(value));
   return [
-    ...new Set([...destinationCandidates, ...directCandidates, ...stableStrings(event.aliases)]),
+    ...new Set([
+      ...(eventType === 'TRANSFER' ? sortedAccountUuids(identities.transferredTo) : []),
+      ...directCandidates,
+      ...sortedAccountUuids(identities.aliases),
+    ]),
   ];
 }
 
@@ -236,7 +554,7 @@ export function buildRevenueCatAtomicArgs(
   receivedAt = new Date(),
 ): RevenueCatAtomicArgs {
   const eventId = optionalString(event.id);
-  const eventType = optionalString(event.type)?.toUpperCase();
+  const eventType = normalizeRevenueCatEventType(event.type);
   if (!eventId || eventId.length > 255 || !eventType || eventType.length > 100) {
     throw new Error('INVALID_REVENUECAT_EVENT');
   }
@@ -246,9 +564,10 @@ export function buildRevenueCatAtomicArgs(
 
   const providerEventAt = isoFromMs(event.event_timestamp_ms, true);
   if (!providerEventAt) throw new Error('INVALID_REVENUECAT_EVENT_TIMESTAMP');
-  const aliases = stableStrings(event.aliases);
-  const transferredFrom = stableStrings(event.transferred_from);
-  const transferredTo = stableStrings(event.transferred_to);
+  const identities = normalizeRevenueCatIdentities(event);
+  const aliases = stableSortedIdentityValues(identities.aliases) ?? [];
+  const transferredFrom = stableSortedIdentityValues(identities.transferredFrom) ?? [];
+  const transferredTo = stableSortedIdentityValues(identities.transferredTo) ?? [];
   const projection = projectionFor(eventType);
   const sanitizedEvent = sanitizeRevenueCatEvent(event);
   const entitlementIds = optionalStringArray(event.entitlement_ids) ?? [];
@@ -257,9 +576,9 @@ export function buildRevenueCatAtomicArgs(
   return {
     p_rc_event_id: eventId,
     p_event_type: eventType,
-    p_user_candidates: deterministicUserCandidates(event, eventType),
-    p_app_user_id: optionalString(event.app_user_id) ?? null,
-    p_original_app_user_id: optionalString(event.original_app_user_id) ?? null,
+    p_user_candidates: deterministicUserCandidates(identities, eventType),
+    p_app_user_id: identities.appUserId?.value ?? null,
+    p_original_app_user_id: identities.originalAppUserId?.value ?? null,
     p_aliases: aliases.length > 0 ? aliases : null,
     p_transferred_from: transferredFrom.length > 0 ? transferredFrom : null,
     p_transferred_to: transferredTo.length > 0 ? transferredTo : null,
@@ -283,6 +602,12 @@ export function buildRevenueCatAtomicArgs(
     p_payload: { event: sanitizedEvent },
     p_signature_verified: verification.signatureVerified,
     p_auth_verified: verification.authVerified,
+    // Migration 0051 rejects this fail-closed placeholder for any event that
+    // has structured identities. The handler must attach authenticated lookup
+    // inputs immediately before persistence.
+    p_identity_hmac_key_versions: [],
+    p_identity_hmacs: [],
+    p_identity_values: [],
   };
 }
 
@@ -291,6 +616,15 @@ function isAtomicResult(value: unknown): value is RevenueCatAtomicResult {
   const row = value as Record<string, unknown>;
   return (
     typeof row.outcome === 'string' &&
+    [
+      'processed',
+      'stale',
+      'duplicate',
+      'ignored',
+      'unresolved',
+      'suppressed_deleted_account',
+      'error',
+    ].includes(row.outcome) &&
     typeof row.projection_applied === 'boolean' &&
     typeof row.processing_status === 'string'
   );
@@ -300,10 +634,16 @@ export async function persistRevenueCatEvent(
   client: RevenueCatRpcClient,
   args: RevenueCatAtomicArgs,
 ): Promise<RevenueCatAtomicResult> {
-  const { data, error } = await client.rpc('process_revenuecat_webhook_event', args);
+  const { data, error } = await client.rpc('process_revenuecat_webhook_event_guarded', args);
   if (error) throw new RevenueCatAtomicProcessingError();
   const row = Array.isArray(data) ? data[0] : data;
-  if (!isAtomicResult(row) || row.outcome === 'error' || row.processing_status === 'error') {
+  if (
+    !isAtomicResult(row) ||
+    row.outcome === 'error' ||
+    row.processing_status === 'error' ||
+    (row.outcome === 'suppressed_deleted_account' &&
+      (row.projection_applied || row.processing_status !== 'suppressed_deleted_account'))
+  ) {
     throw new RevenueCatAtomicProcessingError();
   }
   return row;

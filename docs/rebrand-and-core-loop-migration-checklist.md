@@ -1,17 +1,15 @@
 # Rebrand And Core-Loop Migration Checklist
 
-> Active scope (2026-09-27): iOS lean V1 supersedes earlier all-features launch requirements. Required feature IDs: 1, 2, 3, 5, 6, 7, 8, 9, 10, 11. See `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md` and `docs/hugeToDo/launch-contract.json`. Manual Shelf/local ingredient parsing, reviewed guidance, routine/cycle, Today, private Progress, local reminders and standard subscriptions remain required. Catalog/search/barcode, custom grants/reverse trial/win-back, recommendations, Ask, public sharing, commerce, community, trends, widgets and growth experiments are post-launch and must stay closed. Existing Apple/email account functionality and all current privacy, payment, persistence, accessibility and owner-isolation safeguards are preserved. Historical sections below do not add deferred features back to the V1 launch gate.
-
-
-Date: 2026-07-12
+Date: 2026-08-09
 
 Purpose: turn the master plan into executable engineering slices without weakening launch gates.
 
 ## Current Strategic Position
 
-- Working brand candidate and engineering default: `RoutineKind`.
+- Founder-selected product identity and engineering default: `Layerwell`.
 - Final brand status: not legally cleared; production builds still require
-  explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`.
+  explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`. The
+  value is a fail-closed build assertion, not evidence of a legal opinion.
 - Public position: private skincare shelf and routine tracker, not generic scanner, AI beauty analyzer, or shopping marketplace.
 - Launch loop: add owned products -> get useful reviewed insight -> see AM/PM routine -> complete Today check-off -> understand private progress -> pay after value.
 - Release scope: iOS-only, every feature in `docs/FEATURE_INDEX.md` required;
@@ -19,7 +17,9 @@ Purpose: turn the master plan into executable engineering slices without weakeni
 
 ## Rebrand Migration Checklist
 
-Do not create production accounts or store records until final brand clearance exists.
+Do not create public production records until qualified counsel covers
+`Layerwell` in a written decision for the exact use, countries, classes, and
+conditions and the required identity assets are authenticated.
 
 1. Inventory public identity references.
 
@@ -36,9 +36,19 @@ Do not create production accounts or store records until final brand clearance e
    - Policy/support URL.
    - Share-card/deep-link asset.
    - Internal package name or historical doc.
+   - Reviewed cryptographic, migration, live-harness, or rehearsal
+     compatibility contract. These require an exact manifest entry and a
+     separately designed versioned migration; never rename them mechanically.
+
+   The compatibility manifest is
+   `scripts/brand-legacy-compatibility.json`. Each entry is bound to one exact
+   repository path, source literal, expected occurrence count, subtype, and
+   rationale. `npm run brand:audit:strict` fails on manifest drift or a new
+   unclassified legacy reference. A passing technical audit does not provide
+   legal clearance or approve the working candidate.
 
 3. Make identity values config-driven where safe. Status: native
-   development/staging defaults now use RoutineKind; production still fails
+   development/staging defaults now use Layerwell; production still fails
    closed without final identity evidence.
 
    - Display name.
@@ -50,9 +60,9 @@ Do not create production accounts or store records until final brand clearance e
    - Default local config reads must resolve to a development install identity;
      production identity must require `APP_VARIANT=production`.
 
-4. Prepare, but do not execute, final account/domain migration.
+4. Prepare, but do not execute, final production account/domain activation.
 
-   - Replace remaining public `OnSkin` references after final decision.
+   - Confirm every public identity reference resolves to `Layerwell`.
    - Keep historical docs honest if they refer to past state.
    - Update Supabase config, policy-link registry, store metadata source,
      share-link helpers, and public-site pages.

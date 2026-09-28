@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "environment": "staging",
+  "boundary": null,
+  "mode": "zero-cohort",
+  "projectRefFingerprint": null,
+  "sourceGitCommit": null,
+  "observedAt": null,
+  "operatorRole": null,
+  "assertion": "operator-attests-no-preexisting-user-cohort",
+  "counts": {
+    "authUsers": 0,
+    "authIdentities": 0,
+    "appleIdentities": 0,
+    "authSessions": 0,
+    "storageBuckets": 0,
+    "storageObjects": 0,
+    "relevantCronJobs": 0,
+    "allCronJobs": 0
+  }
+}

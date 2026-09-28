@@ -1,5 +1,5 @@
 export const OCR_REVIEW_RENDER_DIAGNOSTICS_GLOBAL =
-  '__ONSKIN_OCR_REVIEW_RENDER_DIAGNOSTICS__' as const;
+  '__LAYERWELL_OCR_REVIEW_RENDER_DIAGNOSTICS__' as const;
 
 export type OcrReviewRenderDiagnosticsSnapshot = Readonly<{
   screenRenders: number;
@@ -26,7 +26,7 @@ type MutableOcrReviewRenderDiagnostics = {
 };
 
 type OcrDiagnosticsGlobal = typeof globalThis & {
-  __ONSKIN_OCR_REVIEW_RENDER_DIAGNOSTICS__?: MutableOcrReviewRenderDiagnostics;
+  __LAYERWELL_OCR_REVIEW_RENDER_DIAGNOSTICS__?: MutableOcrReviewRenderDiagnostics;
 };
 
 const EMPTY_DIAGNOSTICS: OcrReviewRenderDiagnosticsSnapshot = Object.freeze({
@@ -48,8 +48,8 @@ function diagnosticsEnabled(): boolean {
 function mutableDiagnostics(): MutableOcrReviewRenderDiagnostics | null {
   if (!diagnosticsEnabled()) return null;
   const root = globalThis as OcrDiagnosticsGlobal;
-  root.__ONSKIN_OCR_REVIEW_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
-  return root.__ONSKIN_OCR_REVIEW_RENDER_DIAGNOSTICS__;
+  root.__LAYERWELL_OCR_REVIEW_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
+  return root.__LAYERWELL_OCR_REVIEW_RENDER_DIAGNOSTICS__;
 }
 
 function finiteDuration(durationMs: number): number {

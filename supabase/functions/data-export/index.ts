@@ -3,24 +3,49 @@
 // exported.
 // Deploy with JWT verification enabled: `supabase functions deploy data-export`
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
+import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
+  type HealthLifecycleExportSnapshot,
+  healthLifecycleExportSnapshot,
+  parseHealthLifecycleRow,
+} from '../consent-withdrawal/healthLifecycleCore.ts';
+import {
   boundedMap,
   checksumRows,
-  createExportMemoryBudget,
   derivedManifest,
-  encodeJsonWithinByteLimit,
   EXPORT_CONSISTENCY,
-  EXPORT_RETAINED_ITEM_OVERHEAD_BYTES,
   type ExportSourceManifest,
-  type ExportMemoryBudget,
+  healthLifecycleExportDecision,
+  healthReadEpochForExport,
   listStoragePathsVerified,
-  paginateRows,
   type PaginatedRows,
+  paginateRows,
 } from './exportCore.ts';
+import {
+  buildDirectExportPlans,
+  CALLER_RPC_OWNER_EXPORTS,
+  CALLER_RLS_EXPORT_TABLES,
+  type ExportTable,
+  SERVICE_ROLE_FILTERED_EXPORTS,
+  SUBSCRIPTION_EVENT_EXPORT_COLUMNS,
+  subscriptionEventOwnerFilter,
+} from './exportRegistry.ts';
+import {
+  type CatalogCorrectionExportCursor,
+  paginateCatalogCorrections,
+} from './catalogCorrectionExportCore.ts';
+import {
+  HEALTH_SYNC_EXPORT_SOURCES,
+  type HealthSyncExportCursor,
+  type HealthSyncExportSource,
+  paginateHealthSyncSource,
+} from './healthSyncExportCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
@@ -32,7 +57,7 @@ const dataExportRateLimitWindowSeconds = intEnv(
   60,
   86400,
 );
-const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
+const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 60, 30, 60);
 const dataExportPageSize = intEnv('DATA_EXPORT_PAGE_SIZE', 500, 100, 1000);
 const dataExportMaxRowsPerSource = intEnv('DATA_EXPORT_MAX_ROWS_PER_SOURCE', 50_000, 1000, 250_000);
 const dataExportStoragePageSize = intEnv('DATA_EXPORT_STORAGE_PAGE_SIZE', 500, 100, 1000);
@@ -44,35 +69,10 @@ const dataExportMaxStorageObjects = intEnv(
 );
 const dataExportConcurrency = intEnv('DATA_EXPORT_CONCURRENCY', 4, 1, 8);
 const dataExportFilterBatchSize = intEnv('DATA_EXPORT_FILTER_BATCH_SIZE', 50, 10, 100);
-const dataExportMaxResponseBytes = intEnv(
-  'DATA_EXPORT_MAX_RESPONSE_BYTES',
-  8 * 1024 * 1024,
-  1024 * 1024,
-  8 * 1024 * 1024,
-);
-const dataExportMaxRetainedBytes = intEnv(
-  'DATA_EXPORT_MAX_RETAINED_BYTES',
-  dataExportMaxResponseBytes,
-  1024 * 1024,
-  dataExportMaxResponseBytes,
-);
-const dataExportMaxRetainedItems = intEnv(
-  'DATA_EXPORT_MAX_RETAINED_ITEMS',
-  100_000,
-  1_000,
-  250_000,
-);
+const dataExportBodyMaxBytes = userEdgeBodyMaxBytes();
 const dataExportFileName = exportFileName();
 let rateLimitHmacKey: CryptoKey | null = null;
 
-type TableFilter = { column: string; value: string } | null;
-type ExportTable = {
-  table: string;
-  filter: TableFilter;
-  scope: 'caller_rls' | 'service_role_filtered';
-  orderBy: readonly string[];
-  note?: string;
-};
 // No generated database type is committed for Edge Functions, so the dynamic
 // table registry cannot be expressed through Supabase's schema generics here.
 // deno-lint-ignore no-explicit-any
@@ -80,214 +80,12 @@ type EdgeSupabaseClient = any;
 // deno-lint-ignore no-explicit-any
 type ExportQuery = any;
 
-export const CALLER_RLS_EXPORT_TABLES: ExportTable[] = [
-  {
-    table: 'profiles',
-    filter: { column: 'id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'skin_profiles',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'user_products',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'routines',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'routine_steps',
-    filter: null,
-    scope: 'caller_rls',
-    orderBy: ['id'],
-    note: 'Owned through routines.',
-  },
-  {
-    table: 'routine_completions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'routine_conflicts',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'active_ramp',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'shelf_scans',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'cycles',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'cycle_nights',
-    filter: null,
-    scope: 'caller_rls',
-    orderBy: ['cycle_id', 'night_index'],
-    note: 'Owned through cycles.',
-  },
-  {
-    table: 'streak_freezes',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'notification_preferences',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'notification_log',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'consents',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'photos',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'entitlements',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'reverse_trial_grants',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'recommendation_preferences',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'recommendations',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'catalog_corrections',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'catalog_lookup_events',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'commerce_click_events',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'community_blocks',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id', 'blocked_handle'],
-  },
-  {
-    table: 'community_questions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'community_reactions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'community_reports',
-    filter: { column: 'reporter_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'photo_trend',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'ask_sessions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'ask_turn_audit',
-    filter: null,
-    scope: 'caller_rls',
-    orderBy: ['id'],
-    note: 'Owned through ask_sessions.',
-  },
-  {
-    table: 'ask_safety_audit',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-];
-
-export const SERVICE_ROLE_FILTERED_EXPORTS = [
-  'subscriptions_events',
-  'obf_contribution_queue',
-  'order_attributions',
-] as const;
-
-// These owner-linked rows are implementation-only replay/version evidence.
-// Their user-facing source state is exported through user_products and
-// routine_conflicts; pending client operations are included by the encrypted
-// local-device collector. Keeping this registry explicit prevents a new
-// coordination table from silently falling outside the data inventory.
-export const INTERNAL_OUTBOX_COORDINATION_EXPORT_EXCLUSIONS = [
-  'shelf_mirror_versions',
-  'conflict_choice_mirror_versions',
-  'mobile_outbox_receipts',
-] as const;
+class ExportHealthLifecycleUnavailableError extends Error {
+  constructor() {
+    super('EXPORT_HEALTH_LIFECYCLE_UNAVAILABLE');
+    this.name = 'ExportHealthLifecycleUnavailableError';
+  }
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -301,8 +99,39 @@ function json(body: unknown, status = 200, headers: HeadersInit = {}): Response 
     headers: {
       ...corsHeaders,
       'Content-Type': typeof body === 'string' ? 'text/plain' : 'application/json',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
       ...headers,
     },
+  });
+}
+
+async function requireSameAccountAccess(
+  caller: Parameters<typeof preflightAccountAccess>[0],
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
+async function readExportHealthLifecycle(
+  client: EdgeSupabaseClient,
+  userId: string,
+): Promise<HealthLifecycleExportSnapshot> {
+  const { data, error } = await client.rpc('get_health_data_consent_status');
+  const row = error ? null : parseHealthLifecycleRow(data);
+  if (!row || row.user_id !== userId) {
+    throw new ExportHealthLifecycleUnavailableError();
+  }
+  return healthLifecycleExportSnapshot(row);
+}
+
+function healthLifecycleRetryResponse(
+  decision: Exclude<ReturnType<typeof healthLifecycleExportDecision>, { allowed: true }>,
+): Response {
+  return json({ error: decision.error, retryable: true }, 409, {
+    'Retry-After': String(decision.retryAfterSeconds),
   });
 }
 
@@ -316,7 +145,7 @@ function exportFileSlug(): string {
   const displayName =
     Deno.env.get('EXPO_PUBLIC_APP_DISPLAY_NAME') ??
     Deno.env.get('APP_DISPLAY_NAME') ??
-    'RoutineKind';
+    'Layerwell';
   const slug = displayName
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -324,16 +153,19 @@ function exportFileSlug(): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
-  return slug || 'routinekind';
+  return slug || 'layerwell';
 }
 
 function exportFileName(): string {
   return `${exportFileSlug()}-export.json`;
 }
 
-function applyFilter(query: ExportQuery, filter: TableFilter, userId: string): ExportQuery {
+function applyFilter(
+  query: ExportQuery,
+  filter: { column: string; value: string } | null,
+): ExportQuery {
   if (!filter) return query;
-  return query.eq(filter.column, filter.value === 'USER_ID' ? userId : filter.value);
+  return query.eq(filter.column, filter.value);
 }
 
 type QueryDecorator = (query: ExportQuery) => ExportQuery;
@@ -346,7 +178,9 @@ async function selectExactCount(
   const { count, error } = await decorate(
     client.from(table).select('*', { count: 'exact', head: true }),
   );
-  if (error) throw new Error(`EXPORT_TABLE_FAILED:${table}:COUNT:${error.message}`);
+  if (error) {
+    throw new Error(`EXPORT_TABLE_FAILED:${table}:COUNT:${error.message}`);
+  }
   return count;
 }
 
@@ -360,10 +194,16 @@ async function selectPage(
   limit: number,
 ): Promise<Record<string, unknown>[]> {
   let query = decorate(client.from(table).select(selectColumns));
-  for (const column of orderBy) query = query.order(column, { ascending: true });
+  for (const column of orderBy) {
+    query = query.order(column, { ascending: true });
+  }
   const { data, error } = await query.range(offset, offset + limit - 1);
-  if (error) throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:${error.message}`);
-  if (!Array.isArray(data)) throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:INVALID_DATA`);
+  if (error) {
+    throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:${error.message}`);
+  }
+  if (!Array.isArray(data)) {
+    throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:INVALID_DATA`);
+  }
   return data as Record<string, unknown>[];
 }
 
@@ -373,7 +213,6 @@ function paginateQuery(options: {
   scope: ExportTable['scope'];
   orderBy: readonly string[];
   decorate: QueryDecorator;
-  memoryBudget: ExportMemoryBudget;
   selectColumns?: string;
   note?: string;
 }): Promise<PaginatedRows> {
@@ -383,7 +222,6 @@ function paginateQuery(options: {
     orderBy: options.orderBy,
     pageSize: dataExportPageSize,
     maxRows: dataExportMaxRowsPerSource,
-    memoryBudget: options.memoryBudget,
     note: options.note,
     fetchCount: () => selectExactCount(options.client, options.table, options.decorate),
     fetchPage: (offset, limit) =>
@@ -396,6 +234,60 @@ function paginateQuery(options: {
         offset,
         limit,
       ),
+  });
+}
+
+async function exportCatalogCorrections(
+  caller: EdgeSupabaseClient,
+  userId: string,
+): Promise<PaginatedRows> {
+  return paginateCatalogCorrections({
+    expectedUserId: userId,
+    pageSize: Math.min(dataExportPageSize, 500),
+    maxRows: dataExportMaxRowsPerSource,
+    fetchPage: async (cursor: CatalogCorrectionExportCursor | null, limit: number) => {
+      const { data, error } = await caller.rpc('export_catalog_corrections_for_subject', {
+        p_user_id: userId,
+        p_after_created_at: cursor?.createdAt ?? null,
+        p_after_id: cursor?.id ?? null,
+        p_limit: limit,
+      });
+      if (error) {
+        throw new Error(`EXPORT_TABLE_FAILED:catalog_corrections:RPC:${error.message}`);
+      }
+      if (!Array.isArray(data)) {
+        throw new Error('EXPORT_TABLE_FAILED:catalog_corrections:RPC:INVALID_DATA');
+      }
+      return data as Record<string, unknown>[];
+    },
+  });
+}
+
+async function exportHealthSyncRecords(
+  caller: EdgeSupabaseClient,
+  userId: string,
+  source: HealthSyncExportSource,
+): Promise<PaginatedRows> {
+  const definition = HEALTH_SYNC_EXPORT_SOURCES[source];
+  return paginateHealthSyncSource({
+    source,
+    expectedUserId: userId,
+    pageSize: Math.min(dataExportPageSize, 500),
+    maxRows: dataExportMaxRowsPerSource,
+    fetchPage: async (cursor: HealthSyncExportCursor | null, limit: number) => {
+      const { data, error } = await caller.rpc(definition.rpc, {
+        p_after_created_at: cursor?.createdAt ?? null,
+        p_after_id: cursor?.id ?? null,
+        p_limit: limit,
+      });
+      if (error) {
+        throw new Error(`EXPORT_TABLE_FAILED:${source}:RPC:${error.message}`);
+      }
+      if (!Array.isArray(data)) {
+        throw new Error(`EXPORT_TABLE_FAILED:${source}:RPC:INVALID_DATA`);
+      }
+      return data as Record<string, unknown>[];
+    },
   });
 }
 
@@ -438,6 +330,7 @@ async function enforceRateLimit(
     p_key_hash: keyHash,
     p_limit: dataExportRateLimitMax,
     p_window_seconds: dataExportRateLimitWindowSeconds,
+    p_owner_user_id: userId,
   });
 
   if (error) {
@@ -453,8 +346,15 @@ async function enforceRateLimit(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
+  if (contentLengthTooLarge(req, dataExportBodyMaxBytes)) {
+    return json({ error: 'payload_too_large' }, 413);
+  }
 
   const authHeader = bearerAuthorizationHeader(req);
   if (!authHeader) return json('unauthorized', 401);
@@ -471,91 +371,139 @@ Deno.serve(async (req) => {
   const userId = userData.user?.id;
   if (userErr || !userId) return json('unauthorized', 401);
 
+  const initialAccountAccess = await preflightAccountAccess(supabase, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
+  const requestBody = await readLimitedJson(req, dataExportBodyMaxBytes, json, {
+    error: 'BAD_JSON',
+  });
+  if (requestBody instanceof Response) return requestBody;
+  if (requestBody === null || typeof requestBody !== 'object' || Array.isArray(requestBody)) {
+    return json({ error: 'INVALID_BODY' }, 400);
+  }
+
+  let initialHealthLifecycle: HealthLifecycleExportSnapshot;
+  try {
+    initialHealthLifecycle = await readExportHealthLifecycle(supabase, userId);
+  } catch {
+    return json({ error: 'HEALTH_DATA_LIFECYCLE_UNAVAILABLE' }, 503);
+  }
+  const initialHealthDecision = healthLifecycleExportDecision(
+    initialHealthLifecycle,
+    initialHealthLifecycle,
+  );
+  if (!initialHealthDecision.allowed) {
+    return healthLifecycleRetryResponse(initialHealthDecision);
+  }
+  const healthReadEpoch = healthReadEpochForExport(initialHealthLifecycle);
+  const healthSupabase = createClient(supabaseUrl, publishableKey, {
+    global: {
+      headers: {
+        Authorization: authHeader,
+        'x-health-processing-epoch': String(healthReadEpoch),
+      },
+    },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+
   const rateLimitError = await enforceRateLimit(admin, userId);
   if (rateLimitError) return rateLimitError;
 
+  const sourceAccountError = await requireSameAccountAccess(
+    supabase,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (sourceAccountError) return sourceAccountError;
+
   try {
-    const memoryBudget = createExportMemoryBudget(
-      dataExportMaxRetainedBytes,
-      dataExportMaxRetainedItems,
-    );
     const sourcePayloads: Record<string, Record<string, unknown>[]> = {};
     const sourceManifest: Record<string, ExportSourceManifest> = {};
 
+    const directPlans = buildDirectExportPlans(userId);
     const sourceTasks: Array<() => Promise<{ source: string; result: PaginatedRows }>> =
-      CALLER_RLS_EXPORT_TABLES.map((item) => async () => ({
+      directPlans.map((item) => async () => ({
         source: item.table,
         result: await paginateQuery({
-          client: supabase,
+          client: item.clientKind === 'caller' ? healthSupabase : admin,
           table: item.table,
           scope: item.scope,
           orderBy: item.orderBy,
-          decorate: (query) => applyFilter(query, item.filter, userId),
-          memoryBudget,
+          decorate: (query) => applyFilter(query, item.filter),
+          selectColumns: item.selectColumns,
           note: item.note,
         }),
       }));
 
-    sourceTasks.push(
-      async () => ({
-        source: 'subscriptions_events',
-        result: await paginateQuery({
-          client: admin,
-          table: 'subscriptions_events',
-          scope: 'service_role_filtered',
-          orderBy: ['id'],
-          memoryBudget,
-          decorate: (query) =>
-            query.or(
-              `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
-            ),
-          note: 'Matched to every owner identifier retained from RevenueCat events.',
-        }),
-      }),
-      async () => ({
-        source: 'obf_contribution_queue',
-        result: await paginateQuery({
-          client: admin,
-          table: 'obf_contribution_queue',
-          scope: 'service_role_filtered',
-          orderBy: ['id'],
-          memoryBudget,
-          decorate: (query) => query.eq('user_id', userId),
-        }),
-      }),
-    );
+    sourceTasks.push(async () => ({
+      source: 'catalog_corrections',
+      result: await exportCatalogCorrections(healthSupabase, userId),
+    }));
 
-    await boundedMap(sourceTasks, dataExportConcurrency, async (task) => {
-      const { source, result } = await task();
-      sourcePayloads[source] = result.rows;
-      sourceManifest[source] = result.manifest;
-    });
-
-    const clickTokenSet = new Set<string>();
-    for (const row of sourcePayloads.commerce_click_events ?? []) {
-      const token = row.click_token;
-      if (typeof token === 'string' && token.length > 0) clickTokenSet.add(token);
+    for (const source of Object.keys(HEALTH_SYNC_EXPORT_SOURCES) as HealthSyncExportSource[]) {
+      sourceTasks.push(async () => ({
+        source,
+        result: await exportHealthSyncRecords(healthSupabase, userId, source),
+      }));
     }
-    const clickTokens = [...clickTokenSet].sort();
-    const attributionBatches = chunks(clickTokens, dataExportFilterBatchSize);
-    const orderAttributions: Record<string, unknown>[] = [];
-    const attributionManifests: PaginatedRows['manifest'][] = [];
-    await boundedMap(attributionBatches, dataExportConcurrency, async (tokenBatch, batchIndex) => {
-      const result = await paginateQuery({
+
+    sourceTasks.push(async () => ({
+      source: 'subscriptions_events',
+      result: await paginateQuery({
         client: admin,
-        table: 'order_attributions',
+        table: 'subscriptions_events',
         scope: 'service_role_filtered',
         orderBy: ['id'],
-        memoryBudget,
-        selectColumns:
-          'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at',
-        decorate: (query) => query.in('click_token', tokenBatch),
-        note: 'Matched only through click tokens present in the exported commerce_click_events rows.',
-      });
-      attributionManifests[batchIndex] = result.manifest;
-      orderAttributions.push(...result.rows);
-    });
-    orderAttributions.sort(compareIds);
+        selectColumns: SUBSCRIPTION_EVENT_EXPORT_COLUMNS.join(', '),
+        decorate: (query) => query.or(subscriptionEventOwnerFilter(userId)),
+        note: 'Matched to every retained owner identifier; owner identifiers and internal processing fields are excluded from the exported row.',
+      }),
+    }));
+
+    const sourceResults = await boundedMap(sourceTasks, dataExportConcurrency, (task) => task());
+    for (const { source, result } of sourceResults) {
+      if (Object.hasOwn(sourcePayloads, source)) {
+        throw new Error(`EXPORT_SOURCE_DUPLICATE:${source}`);
+      }
+      sourcePayloads[source] = result.rows;
+      sourceManifest[source] = result.manifest;
+    }
+
+    const attributionAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (attributionAccountError) return attributionAccountError;
+
+    const clickTokens = [
+      ...new Set(
+        (sourcePayloads.commerce_click_events ?? [])
+          .map((row) => row.click_token)
+          .filter((token): token is string => typeof token === 'string' && token.length > 0),
+      ),
+    ].sort();
+    const attributionBatches = chunks(clickTokens, dataExportFilterBatchSize);
+    const attributionBatchResults = await boundedMap(
+      attributionBatches,
+      dataExportConcurrency,
+      (tokenBatch) =>
+        paginateQuery({
+          client: admin,
+          table: 'order_attributions',
+          scope: 'service_role_filtered',
+          orderBy: ['id'],
+          selectColumns:
+            'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at',
+          decorate: (query) => query.in('click_token', tokenBatch),
+          note: 'Matched only through click tokens present in the exported commerce_click_events rows.',
+        }),
+    );
+    const orderAttributions = attributionBatchResults
+      .flatMap((result) => result.rows)
+      .sort(compareIds);
     if (orderAttributions.length > dataExportMaxRowsPerSource) {
       throw new Error('EXPORT_SOURCE_INCOMPLETE:order_attributions:ROW_LIMIT_EXCEEDED');
     }
@@ -568,16 +516,16 @@ Deno.serve(async (req) => {
       scope: 'service_role_filtered',
       order_by: ['id'],
       count: orderAttributions.length,
-      count_before: attributionManifests.reduce(
-        (total, manifest) => total + manifest.count_before,
+      count_before: attributionBatchResults.reduce(
+        (total, result) => total + result.manifest.count_before,
         0,
       ),
-      count_after: attributionManifests.reduce(
-        (total, manifest) => total + manifest.count_after,
+      count_after: attributionBatchResults.reduce(
+        (total, result) => total + result.manifest.count_after,
         0,
       ),
-      page_requests: attributionManifests.reduce(
-        (total, manifest) => total + manifest.page_requests,
+      page_requests: attributionBatchResults.reduce(
+        (total, result) => total + result.manifest.page_requests,
         0,
       ),
       checksum: await checksumRows(orderAttributions),
@@ -586,35 +534,43 @@ Deno.serve(async (req) => {
       note: 'Matched only through bounded click-token batches from exported commerce_click_events; commission_cents is excluded as internal accounting.',
     };
 
+    const storageAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (storageAccountError) return storageAccountError;
+
     const photoBucket = admin.storage.from('photos');
     const storageInventory = await listStoragePathsVerified({
       userId,
       bucket: photoBucket,
       pageSize: dataExportStoragePageSize,
       maxObjects: dataExportMaxStorageObjects,
-      memoryBudget,
     });
     const storagePathSet = new Set(storageInventory.paths);
+    const cloudPhotos = (sourcePayloads.photos ?? []).filter(
+      (photo) => photo.local_only !== true && typeof photo.storage_path === 'string',
+    );
     const photoIdsByPath = new Map<string, string[]>();
     const photoUrlOmissions: Array<{ id: string | null; path: string | null; reason: string }> = [];
-    const retainPhotoUrlOmission = (omission: {
-      id: string | null;
-      path: string | null;
-      reason: string;
-    }) => {
-      memoryBudget.reserveJson('photo_download_url_omissions', omission);
-      photoUrlOmissions.push(omission);
-    };
-    for (const photo of sourcePayloads.photos ?? []) {
-      if (photo.local_only === true || typeof photo.storage_path !== 'string') continue;
+    for (const photo of cloudPhotos) {
       const id = typeof photo.id === 'string' ? photo.id : null;
       const path = photo.storage_path as string;
       if (!photoPathBelongsToUser(userId, path)) {
-        retainPhotoUrlOmission({ id, path: null, reason: 'INVALID_STORAGE_PATH' });
+        photoUrlOmissions.push({
+          id,
+          path: null,
+          reason: 'INVALID_STORAGE_PATH',
+        });
         continue;
       }
       if (!storagePathSet.has(path)) {
-        retainPhotoUrlOmission({ id, path, reason: 'STORAGE_OBJECT_NOT_LISTED' });
+        photoUrlOmissions.push({
+          id,
+          path,
+          reason: 'STORAGE_OBJECT_NOT_LISTED',
+        });
         continue;
       }
       const ids = photoIdsByPath.get(path) ?? [];
@@ -622,6 +578,13 @@ Deno.serve(async (req) => {
       photoIdsByPath.set(path, ids);
     }
     for (const ids of photoIdsByPath.values()) ids.sort();
+
+    const signingAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (signingAccountError) return signingAccountError;
 
     const photoUrls = await boundedMap(
       storageInventory.paths,
@@ -631,22 +594,20 @@ Deno.serve(async (req) => {
           path,
           dataExportPhotoUrlTtlSeconds,
         );
-        if (error || !signed?.signedUrl) throw new Error('EXPORT_PHOTO_URL_FAILED');
-        const result = {
+        if (error || !signed?.signedUrl) {
+          throw new Error('EXPORT_PHOTO_URL_FAILED');
+        }
+        return {
           id: photoIdsByPath.get(path)?.[0] ?? null,
           path,
           url: signed.signedUrl,
           expires_in_seconds: dataExportPhotoUrlTtlSeconds,
         };
-        memoryBudget.reserveJson('photo_download_urls', result);
-        return result;
       },
     );
-    const photoStorageObjects = storageInventory.paths.map((path) => {
-      const result = { path };
-      memoryBudget.reserveJson('photo_storage_objects', result);
-      return result;
-    });
+    const photoStorageObjects = storageInventory.paths.map((path) => ({
+      path,
+    }));
     sourcePayloads.photo_storage_objects = photoStorageObjects;
     sourcePayloads.photo_download_urls = photoUrls;
     sourcePayloads.photo_download_url_omissions = photoUrlOmissions;
@@ -662,9 +623,37 @@ Deno.serve(async (req) => {
       checksumFields: ['id', 'path', 'reason'],
     });
 
+    const finalHealthLifecycle = await readExportHealthLifecycle(supabase, userId);
+    const healthDecision = healthLifecycleExportDecision(
+      initialHealthLifecycle,
+      finalHealthLifecycle,
+    );
+    if (!healthDecision.allowed) {
+      return healthLifecycleRetryResponse(healthDecision);
+    }
+    const responseAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
+    sourceManifest.health_consent_lifecycle = await derivedManifest({
+      rows: [healthDecision.snapshot],
+      checksumFields: [
+        'state',
+        'processing_epoch',
+        'operation_state',
+        'result_code',
+        'consent_version',
+        'consent_text_hash',
+        'server_verified_at',
+      ],
+      note: 'Sanitized owner-derived health-purpose lifecycle status; internal operation identifiers, claim tokens, and lease state are excluded.',
+    });
+
     const exportedAt = new Date().toISOString();
     const bundle: Record<string, unknown> = {
-      export_schema_version: 2,
+      export_schema_version: 4,
       exported_at: exportedAt,
       user_id: userId,
       manifest: {
@@ -675,10 +664,6 @@ Deno.serve(async (req) => {
           database_page_size: dataExportPageSize,
           storage_page_size: dataExportStoragePageSize,
           max_concurrency: dataExportConcurrency,
-          max_retained_payload_bytes: dataExportMaxRetainedBytes,
-          max_retained_payload_items: dataExportMaxRetainedItems,
-          retained_item_overhead_bytes: EXPORT_RETAINED_ITEM_OVERHEAD_BYTES,
-          max_response_bytes: dataExportMaxResponseBytes,
           max_rows_per_database_source: dataExportMaxRowsPerSource,
           max_storage_objects: dataExportMaxStorageObjects,
         },
@@ -688,12 +673,17 @@ Deno.serve(async (req) => {
         'Progress photo files and thumbnails are not included in this account export. In the current build they stay encrypted on the device unless the user explicitly shares one from Progress; cloud backup is unavailable.',
       server_photo_object_note:
         'Any owner-prefixed server photo objects that already exist are inventoried and receive short-lived download URLs.',
+      health_consent_lifecycle: healthDecision.snapshot,
       export_coverage: {
         caller_rls_tables: CALLER_RLS_EXPORT_TABLES.map((item) => item.table),
+        caller_rpc_owner_exports: CALLER_RPC_OWNER_EXPORTS,
         service_role_filtered_exports: SERVICE_ROLE_FILTERED_EXPORTS,
-        internal_outbox_coordination_exclusions: INTERNAL_OUTBOX_COORDINATION_EXPORT_EXCLUSIONS,
         storage_sources: ['photo_storage_objects'],
-        derived_sources: ['photo_download_urls', 'photo_download_url_omissions'],
+        derived_sources: [
+          'photo_download_urls',
+          'photo_download_url_omissions',
+          'health_consent_lifecycle',
+        ],
       },
       exclusion_register: [
         {
@@ -707,34 +697,29 @@ Deno.serve(async (req) => {
             'order_attributions rows linked by an exported user click token omit commission_cents as internal business accounting.',
         },
         {
-          data_class: 'internal_outbox_coordination',
-          sources: INTERNAL_OUTBOX_COORDINATION_EXPORT_EXCLUSIONS,
+          data_class: 'health_sync_request_fingerprints',
           reason:
-            'Replay receipts and server mirror revision counters are internal coordination metadata. The underlying Shelf products and conflict choices are exported through user_products and routine_conflicts, while pending device operations are covered by the encrypted local-device export.',
+            'Shelf and routine-completion sync receipts include subject-facing identifiers, state, result, and timestamps. Domain-separated request_sha256 fingerprints remain excluded internal replay-integrity metadata because they can be tested against guessed deleted payloads and are not needed to interpret or port the receipt.',
         },
       ],
       ...sourcePayloads,
     };
 
-    const encoded = encodeJsonWithinByteLimit(bundle, dataExportMaxResponseBytes);
-    return new Response(encoded.body, {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        'Content-Disposition': `attachment; filename="${dataExportFileName}"`,
-        'Content-Length': String(encoded.byteLength),
-        'Content-Type': 'application/json',
-      },
+    const deliveryAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (deliveryAccountError) return deliveryAccountError;
+
+    return json(bundle, 200, {
+      'Content-Disposition': `attachment; filename="${dataExportFileName}"`,
     });
-  } catch (error) {
-    console.error('[data-export]', 'DATA_EXPORT_FAILED');
-    if (
-      error instanceof Error &&
-      (error.message.includes('MEMORY_BUDGET_EXCEEDED') ||
-        error.message === 'EXPORT_RESPONSE_BYTE_LIMIT_EXCEEDED')
-    ) {
-      return json({ error: 'DATA_EXPORT_TOO_LARGE' }, 413);
+  } catch (_error) {
+    if (_error instanceof ExportHealthLifecycleUnavailableError) {
+      return json({ error: 'HEALTH_DATA_LIFECYCLE_UNAVAILABLE' }, 503);
     }
+    console.error('[data-export]', 'DATA_EXPORT_FAILED');
     return json({ error: 'DATA_EXPORT_FAILED' }, 500);
   }
 });

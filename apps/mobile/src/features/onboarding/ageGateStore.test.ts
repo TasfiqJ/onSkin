@@ -1,190 +1,192 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { readAgeVerification, setAgeVerified } from './ageGateStore';
+import { AGE_POLICY_RECEIPT_KEY } from './ageGate';
+import {
+  AGE_POLICY_REVERIFICATION_TOMBSTONE,
+  AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES,
+  classifyAgePolicyReceipt,
+  CURRENT_AGE_POLICY_RECEIPT,
+  CURRENT_AGE_POLICY_RECEIPT_BYTES,
+  getAgePolicyReceiptStatus,
+  getAgeVerified,
+  setAgeVerified,
+} from './ageGateStore';
 
 const mocks = vi.hoisted(() => ({
   privateKV: new Map<string, string>(),
-}));
-
-vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.privateKV.get(key) ?? null),
-  readPrivateItem: vi.fn(async (key: string) => {
-    const value = mocks.privateKV.get(key);
-    return value === undefined ? { status: 'absent' } : { status: 'available', value };
-  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.privateKV.set(key, value);
   }),
-  updatePrivateItem: vi.fn(
-    async (key: string, updater: (current: string | null) => string | null) => {
-      const next = updater(mocks.privateKV.get(key) ?? null);
-      if (next === null) mocks.privateKV.delete(key);
-      else mocks.privateKV.set(key, next);
-    },
-  ),
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.privateKV.delete(key);
+  }),
 }));
 
-const KEY = 'onskin.ageVerified';
-const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
-const originalDev = runtime.__DEV__;
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: mocks.getPrivateItem,
+  setPrivateItem: mocks.setPrivateItem,
+  removePrivateItem: mocks.removePrivateItem,
+}));
 
-describe('age-gate local pass flag', () => {
+describe('age-policy receipt', () => {
   beforeEach(() => {
     mocks.privateKV.clear();
     vi.clearAllMocks();
-    runtime.__DEV__ = true;
-    delete process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE;
-    delete process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE;
   });
 
-  afterEach(() => {
-    if (originalDev === undefined) delete runtime.__DEV__;
-    else runtime.__DEV__ = originalDev;
-    delete process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE;
-    delete process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE;
+  it('stores the one exact current receipt without DOB, year, age, timestamp, or underage bytes', async () => {
+    await setAgeVerified(true);
+
+    await expect(getAgeVerified()).resolves.toBe(true);
+    const raw = mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY);
+    expect(raw).toBe(CURRENT_AGE_POLICY_RECEIPT_BYTES);
+    expect(raw).toBe(
+      `{"receipt_version":1,"policy_sha256":"${CURRENT_AGE_POLICY_RECEIPT.policy_sha256}","eligible":true}`,
+    );
+    expect(Object.keys(JSON.parse(raw!)).sort()).toEqual([
+      'eligible',
+      'policy_sha256',
+      'receipt_version',
+    ]);
+    expect(raw).not.toMatch(/birth|dob|year|age|timestamp|underage/i);
   });
 
-  it('stores a minimized pass flag without birth-date data', async () => {
-    await setAgeVerified();
-
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'available',
-      value: true,
-      format: 'current',
-    });
-    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
+  it('reports a missing receipt and fails closed', async () => {
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('missing');
+    await expect(getAgeVerified()).resolves.toBe(false);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('classifies a missing flag as absent instead of verified or unreadable', async () => {
-    await expect(readAgeVerification()).resolves.toEqual({ status: 'absent' });
+  it.each(['true', 'FALSE', 'v1:1', 'v1:0'])(
+    'classifies legacy receipt %s and fails closed without repair',
+    async (legacy) => {
+      mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, legacy);
+
+      await expect(getAgePolicyReceiptStatus()).resolves.toBe('legacy');
+      await expect(getAgeVerified()).resolves.toBe(false);
+      expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(legacy);
+      expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    'verified',
+    '',
+    '{',
+    'null',
+    '{"receipt_version":1,"policy_sha256":"not-a-sha","eligible":true}',
+    `{"receipt_version":1,"policy_sha256":"${CURRENT_AGE_POLICY_RECEIPT.policy_sha256}","eligible":false}`,
+    `{"receipt_version":1,"policy_sha256":"${CURRENT_AGE_POLICY_RECEIPT.policy_sha256}","eligible":true,"extra":"rejected"}`,
+  ])('classifies malformed receipt %s as invalid without repair', async (malformed) => {
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, malformed);
+
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('invalid');
+    await expect(getAgeVerified()).resolves.toBe(false);
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(malformed);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('classifies canonical false without rewriting it', async () => {
-    mocks.privateKV.set(KEY, 'v1:0');
+  it.each([
+    'v2:1',
+    `{"receipt_version":2,"policy_sha256":"${CURRENT_AGE_POLICY_RECEIPT.policy_sha256}","eligible":true}`,
+  ])('fails closed for unsupported future receipt %s without repair', async (future) => {
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, future);
 
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'available',
-      value: false,
-      format: 'current',
-    });
-    expect(mocks.privateKV.get(KEY)).toBe('v1:0');
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('unsupported');
+    await expect(getAgeVerified()).resolves.toBe(false);
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(future);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('reads known legacy boolean strings without repairing bytes', async () => {
-    mocks.privateKV.set(KEY, 'true');
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'available',
-      value: true,
-      format: 'legacy',
+  it('fails closed for a well-formed stale-policy receipt without repair', async () => {
+    const stale = JSON.stringify({
+      receipt_version: 1,
+      policy_sha256: '0'.repeat(64),
+      eligible: true,
     });
-    expect(mocks.privateKV.get(KEY)).toBe('true');
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, stale);
 
-    mocks.privateKV.set(KEY, 'FALSE');
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'available',
-      value: false,
-      format: 'legacy',
-    });
-    expect(mocks.privateKV.get(KEY)).toBe('FALSE');
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('policy_mismatch');
+    await expect(getAgeVerified()).resolves.toBe(false);
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(stale);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('preserves and classifies malformed stored values', async () => {
-    mocks.privateKV.set(KEY, 'verified');
+  it('allows a fresh eligible evaluation to replace a stale-policy receipt', async () => {
+    mocks.privateKV.set(
+      AGE_POLICY_RECEIPT_KEY,
+      JSON.stringify({
+        receipt_version: 1,
+        policy_sha256: '0'.repeat(64),
+        eligible: true,
+      }),
+    );
 
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'corrupt',
-      reason: 'invalid_value',
-    });
-    expect(mocks.privateKV.get(KEY)).toBe('verified');
+    await setAgeVerified(true);
+
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(CURRENT_AGE_POLICY_RECEIPT_BYTES);
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('current');
   });
 
-  it('preserves and classifies future application versions', async () => {
-    mocks.privateKV.set(KEY, 'v2:1');
+  it('stores only a minimized re-verification tombstone for a non-affirmative evaluation', async () => {
+    await setAgeVerified(false);
 
-    await expect(readAgeVerification()).resolves.toEqual({ status: 'unsupported_version' });
-    expect(mocks.privateKV.get(KEY)).toBe('v2:1');
+    expect(mocks.setPrivateItem).toHaveBeenCalledWith(
+      AGE_POLICY_RECEIPT_KEY,
+      AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES,
+    );
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(
+      AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES,
+    );
+    expect(JSON.parse(AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES)).toEqual(
+      AGE_POLICY_REVERIFICATION_TOMBSTONE,
+    );
+    expect(AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES).not.toMatch(
+      /birth|dob|year|age|threshold|underage|eligible|reason/i,
+    );
+    expect(classifyAgePolicyReceipt(AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES)).toBe(
+      'reverification_required',
+    );
+    await expect(getAgeVerified()).resolves.toBe(false);
   });
 
-  it('passes private-storage failures through without rewriting', async () => {
-    const privateKV = await import('@/lib/storage/privateKV');
-    vi.mocked(privateKV.readPrivateItem).mockResolvedValueOnce({
-      status: 'unavailable',
-      reason: 'storage_unavailable',
-    });
+  it('atomically overwrites an older affirmative receipt with the fail-closed tombstone', async () => {
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, CURRENT_AGE_POLICY_RECEIPT_BYTES);
 
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'unavailable',
-      reason: 'storage_unavailable',
-    });
-    vi.mocked(privateKV.readPrivateItem).mockResolvedValueOnce({
-      status: 'corrupt',
-      reason: 'envelope_invalid',
-    });
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'corrupt',
-      reason: 'envelope_invalid',
-    });
-    expect(mocks.privateKV.get(KEY)).toBeUndefined();
+    await setAgeVerified(false);
+
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(
+      AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES,
+    );
+    await expect(getAgeVerified()).resolves.toBe(false);
   });
 
-  it.each(['verified', 'v2:1'])('refuses to overwrite unreadable value %s', async (value) => {
-    mocks.privateKV.set(KEY, value);
+  it('atomically replaces a re-verification tombstone after a later eligible evaluation', async () => {
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, AGE_POLICY_REVERIFICATION_TOMBSTONE_BYTES);
 
-    await expect(setAgeVerified()).rejects.toThrow();
-    expect(mocks.privateKV.get(KEY)).toBe(value);
+    await setAgeVerified(true);
+
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(CURRENT_AGE_POLICY_RECEIPT_BYTES);
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('current');
   });
 
-  it('upgrades a valid legacy value only during an explicit write', async () => {
-    mocks.privateKV.set(KEY, 'false');
+  it('reports a failed tombstone overwrite and does not claim the old receipt was durably revoked', async () => {
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, CURRENT_AGE_POLICY_RECEIPT_BYTES);
+    mocks.setPrivateItem.mockRejectedValueOnce(new Error('private kv unavailable'));
 
-    await setAgeVerified();
-
-    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
+    await expect(setAgeVerified(false)).rejects.toThrow('private kv unavailable');
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(CURRENT_AGE_POLICY_RECEIPT_BYTES);
   });
 
-  it('provides non-destructive persistent and one-shot E2E read failures', async () => {
-    mocks.privateKV.set(KEY, 'v1:1');
-    process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE = 'always';
+  it('reports unavailable and fails closed without rewriting when private storage cannot be read', async () => {
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('private kv unavailable'));
 
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'unavailable',
-      reason: 'storage_unavailable',
-    });
-    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('unavailable');
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
 
-    process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE = 'once';
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'unavailable',
-      reason: 'storage_unavailable',
-    });
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'available',
-      value: true,
-      format: 'current',
-    });
-    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
-  });
-
-  it('provides a non-destructive write-failure E2E fixture', async () => {
-    mocks.privateKV.set(KEY, 'v1:0');
-    process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE = 'always';
-
-    await expect(setAgeVerified()).rejects.toThrow('E2E_AGE_VERIFICATION_WRITE_FAILURE');
-    expect(mocks.privateKV.get(KEY)).toBe('v1:0');
-  });
-
-  it('ignores every E2E failure fixture outside development', async () => {
-    runtime.__DEV__ = false;
-    mocks.privateKV.set(KEY, 'v1:0');
-    process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE = 'always';
-    process.env.EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE = 'always';
-
-    await expect(readAgeVerification()).resolves.toEqual({
-      status: 'available',
-      value: false,
-      format: 'current',
-    });
-    await setAgeVerified();
-    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('private kv unavailable'));
+    await expect(getAgeVerified()).resolves.toBe(false);
   });
 });

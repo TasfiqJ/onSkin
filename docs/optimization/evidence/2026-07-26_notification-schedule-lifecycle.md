@@ -69,7 +69,7 @@ native mutation, a cancellation sequence stops after its current identifier,
 and an in-flight schedule is exactly compensated without publishing a healthy
 signature. Trial-specific tests prove the same zero-work, stopped-cancellation,
 and exact cancel/dismiss compensation contract for
-`onskin-trial-reminder`, and wait until the native mutation fence is terminal.
+`layerwell-trial-reminder`, and wait until the native mutation fence is terminal.
 
 Independent adversarial review initially found the native fixed-schedule
 boundary, startup double-pass, and trial-reminder seam. After correction and

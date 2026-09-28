@@ -2,50 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
 import {
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
-import {
-  queryKeys,
-  runOwnerQueryOperation,
-  shouldRefetchCurrentLocalDayQuery,
-} from '@/lib/query/queryKeys';
-import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // The skin-cycle anchor (the date the cycle "started"), used to compute which
-// night tonight is (docs/02 section 5 / docs/03 section 5). New writes use a strict
-// versioned envelope; the historical bare ISO date stays readable until an
-// explicit Start Today mutation upgrades it.
-const KEY = 'onskin.cycleAnchor';
-const SCHEMA_VERSION = 1 as const;
-
-export const CYCLE_ANCHOR_INVALID = 'CYCLE_ANCHOR_INVALID';
-export const CYCLE_ANCHOR_UNSUPPORTED_VERSION = 'CYCLE_ANCHOR_UNSUPPORTED_VERSION';
-export const CYCLE_ANCHOR_UNAVAILABLE = 'CYCLE_ANCHOR_UNAVAILABLE';
-
-type CycleAnchorEnvelope = {
-  schemaVersion: typeof SCHEMA_VERSION;
-  anchorISO: string;
-};
-
-export type CycleAnchorRead =
-  | { status: 'missing'; anchorISO: null }
-  | { status: 'available'; anchorISO: string; format: 'current' | 'legacy' }
-  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; anchorISO: null };
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
-  const actual = Object.keys(value).sort();
-  const expected = [...keys].sort();
-  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
-}
+// night tonight is (docs/02 §5 / docs/03 §5). Set on "Start today"; defaults to
+// today so the cycle begins on night 1. (Persisting per-user belongs to the
+// routine-builder server persistence. B-SUPABASE.)
+const KEY = 'layerwell.cycleAnchor';
 
 function normalizeLocalDateISO(value: unknown): string | null {
   if (typeof value !== 'string') return null;
@@ -62,131 +28,66 @@ function normalizeLocalDateISO(value: unknown): string | null {
     : null;
 }
 
-function anchorError(code: string): Error {
-  return new Error(code);
-}
-
-function decodeCycleAnchor(raw: string): {
-  format: 'current' | 'legacy';
-  anchorISO: string;
-} {
-  const legacyAnchor = normalizeLocalDateISO(raw);
-  if (legacyAnchor) return { format: 'legacy', anchorISO: legacyAnchor };
-
-  let parsed: unknown;
+async function repairInvalidAnchor(
+  lease: HealthDataWriteOperationLease,
+  repair: () => Promise<void>,
+): Promise<void> {
   try {
-    parsed = JSON.parse(raw) as unknown;
+    lease.assertCurrent();
+    await repair();
+    lease.assertCurrent();
   } catch {
-    throw anchorError(CYCLE_ANCHOR_INVALID);
-  }
-  if (!isRecord(parsed)) throw anchorError(CYCLE_ANCHOR_INVALID);
-  if (parsed.schemaVersion !== SCHEMA_VERSION) {
-    if (
-      typeof parsed.schemaVersion === 'number' &&
-      Number.isSafeInteger(parsed.schemaVersion) &&
-      parsed.schemaVersion > SCHEMA_VERSION
-    ) {
-      throw anchorError(CYCLE_ANCHOR_UNSUPPORTED_VERSION);
-    }
-    throw anchorError(CYCLE_ANCHOR_INVALID);
-  }
-  if (!hasExactKeys(parsed, ['schemaVersion', 'anchorISO'])) {
-    throw anchorError(CYCLE_ANCHOR_INVALID);
-  }
-  const anchorISO = normalizeLocalDateISO(parsed.anchorISO);
-  if (!anchorISO || anchorISO !== parsed.anchorISO) throw anchorError(CYCLE_ANCHOR_INVALID);
-  return { format: 'current', anchorISO };
-}
-
-function encodeCycleAnchor(anchorISO: string): string {
-  return JSON.stringify({ schemaVersion: SCHEMA_VERSION, anchorISO } satisfies CycleAnchorEnvelope);
-}
-
-function classifyCycleAnchorError(error: unknown): CycleAnchorRead {
-  const message = error instanceof Error ? error.message : '';
-  if (message === CYCLE_ANCHOR_UNSUPPORTED_VERSION || message.includes('UNSUPPORTED')) {
-    return { status: 'unsupported_version', anchorISO: null };
-  }
-  if (
-    message === CYCLE_ANCHOR_INVALID ||
-    message === 'PRIVATE_KV_ENVELOPE_INVALID' ||
-    message === 'PRIVATE_KV_DECRYPTION_FAILED'
-  ) {
-    return { status: 'corrupt', anchorISO: null };
-  }
-  return { status: 'unavailable', anchorISO: null };
-}
-
-/** Read without repairing, deleting, or upgrading stored bytes. */
-export async function readCycleAnchorWithLease(
-  lease: AccountGenerationLease,
-): Promise<CycleAnchorRead> {
-  lease.assertCurrent();
-  let raw: string | null;
-  try {
-    raw = await awaitAccountGenerationLease(lease, () => getPrivateItem(KEY));
-  } catch (error) {
+    // Repairs are best-effort only for ordinary storage failures. A revoked,
+    // replaced, or account-stale operation must still reject.
     lease.assertCurrent();
-    return classifyCycleAnchorError(error);
   }
-  lease.assertCurrent();
-  if (raw === null) return { status: 'missing', anchorISO: null };
-  try {
-    const decoded = decodeCycleAnchor(raw);
-    lease.assertCurrent();
-    return { status: 'available', ...decoded };
-  } catch (error) {
-    lease.assertCurrent();
-    return classifyCycleAnchorError(error);
-  }
-}
-
-export function readCycleAnchor(): Promise<CycleAnchorRead> {
-  return runAccountGenerationOperation(readCycleAnchorWithLease);
-}
-
-/** Missing is a valid first-run state. Every unreadable state fails closed. */
-export async function getCycleAnchorWithLease(lease: AccountGenerationLease): Promise<string> {
-  lease.assertCurrent();
-  const result = await readCycleAnchorWithLease(lease);
-  lease.assertCurrent();
-  if (result.status === 'available') return result.anchorISO;
-  if (result.status === 'missing') return localDateString();
-  if (result.status === 'unsupported_version') {
-    throw anchorError(CYCLE_ANCHOR_UNSUPPORTED_VERSION);
-  }
-  if (result.status === 'corrupt') throw anchorError(CYCLE_ANCHOR_INVALID);
-  throw anchorError(CYCLE_ANCHOR_UNAVAILABLE);
 }
 
 export function getCycleAnchor(): Promise<string> {
-  return runAccountGenerationOperation(getCycleAnchorWithLease);
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      lease.assertCurrent();
+      const raw = await getPrivateItem(KEY);
+      lease.assertCurrent();
+      if (!raw) {
+        const fallback = localDateString();
+        lease.assertCurrent();
+        return fallback;
+      }
+      const normalized = normalizeLocalDateISO(raw);
+      if (!normalized) {
+        await repairInvalidAnchor(lease, () => removePrivateItem(KEY));
+        lease.assertCurrent();
+        return localDateString();
+      }
+      if (normalized !== raw) {
+        await repairInvalidAnchor(lease, () => setPrivateItem(KEY, normalized));
+      }
+      lease.assertCurrent();
+      return normalized;
+    } catch {
+      // Preserve the documented local fallback without turning authorization
+      // invalidation into a successful read under a replacement lease.
+      lease.assertCurrent();
+      return localDateString();
+    }
+  });
 }
 
-/** Explicit mutation: validate the request, reject unreadable existing bytes,
- * and atomically upgrade a valid legacy anchor. */
-export async function setCycleAnchor(iso = localDateString()): Promise<void> {
-  const anchorISO = normalizeLocalDateISO(iso);
-  if (!anchorISO) throw anchorError(CYCLE_ANCHOR_INVALID);
-
-  await updatePrivateItem(KEY, (current) => {
-    if (current === null) return encodeCycleAnchor(anchorISO);
-    const decoded = decodeCycleAnchor(current);
-    if (decoded.format === 'current' && decoded.anchorISO === anchorISO) return current;
-    return encodeCycleAnchor(anchorISO);
+export function setCycleAnchor(iso = localDateString()): Promise<void> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      lease.assertCurrent();
+      await setPrivateItem(KEY, normalizeLocalDateISO(iso) ?? localDateString());
+      lease.assertCurrent();
+    } catch {
+      // Best-effort applies only while the operation's original authority is
+      // current. Consent/account invalidation must propagate to the caller.
+      lease.assertCurrent();
+    }
   });
 }
 
 export function useCycleAnchor() {
-  const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
-  return useQuery({
-    ...deterministicLocalQueryPolicy,
-    queryKey: queryKeys.cycleAnchor(ownerScope, boundary),
-    queryFn: () => runOwnerQueryOperation(ownerScope, getCycleAnchorWithLease),
-    refetchOnReconnect: (query) =>
-      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
-    refetchOnWindowFocus: (query) =>
-      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
-  });
+  return useQuery({ queryKey: ['cycleAnchor'], queryFn: getCycleAnchor });
 }

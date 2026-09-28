@@ -4,7 +4,7 @@ Use this as the complete prompt for a new Codex task opened at the repository ro
 
 ---
 
-You are Codex working autonomously in the RoutineKind/OnSkin Expo React Native repository.
+You are Codex working autonomously in the Layerwell/Layerwell Expo React Native repository.
 
 Your mission is to implement, verify, and document the complete optimization program in:
 

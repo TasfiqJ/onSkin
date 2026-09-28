@@ -5,6 +5,18 @@
 > language is superseded by `docs/hugeToDo/launch-contract.json`; all legal,
 > privacy, source, ranking-isolation, operational, and device gates still apply.
 
+> **2026-07-29 COM-01A authority:** The current source checkpoint is
+> **literal zero admission**. Mobile/direct routes, catalog and creator-stack
+> reads, consent grants, click recording, external navigation, analytics, the
+> provider poll, and order attribution are inert and side-effect-free. Only
+> refusal, withdrawal, owner deletion, and account data-rights cleanup remain.
+> Every positive flow, development stack, retailer row, consent-allow action,
+> opaque-token path, provider-poll description, and browser-evidence statement
+> below is historical/stale and a future-design candidate only. It does not
+> describe current runtime authority. COM-01 through COM-07 remain
+> launch-blocked. See the
+> [COM-01A checkpoint](hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md).
+
 > Companion to `docs/10-compass-artifact.md` (the strategic spec). This file is the
 > implementation-grade specification: the validated verdict, then **every** detail of
 > how the commerce layer works, looks, and feels — minor and major. Authoritative for
@@ -14,6 +26,15 @@
 ---
 
 ## 0. The validated verdict (read first)
+
+The verdict below is retained as commercial research, not present-tense build
+authority. A future successor must pass the checkpoint's Apple 2.5.18,
+3.1.3(e), and 5.1.2(vi); App Privacy/ATT; FTC affiliate, native-advertising,
+health-claim, and HBNR; Washington RCW 19.373; Nevada NRS
+603A.400-.550; applicable CCPA/CPRA; provider, publication, hosted, native,
+and named-review gates. Consent or an opaque token does not cure a prohibited
+photo-derived marketing use. No source checkpoint guarantees Apple acceptance,
+legal compliance, product-market fit, seven-figure revenue, or any revenue.
 
 **Build it — phased, narrow, rail-agnostic — but as a SIX-figure supplement, not a
 seven-figure pillar.** The seven-figure business is the _subscription_ business.
@@ -105,7 +126,7 @@ divider**, never competing with the why.
     **`Paid link` mono chip** (greige `#F0EBE2` pill, 9px) + the `↗` external glyph.
     Row has a hairline inset border, 12px radius, 11×13 padding.
   - **The FTC disclosure line directly beneath the rows** (never collapsed, always
-    visible with the links — 16 CFR 255 "unavoidable"): _"Paid link — OnSkin may earn a
+    visible with the links — 16 CFR 255 "unavoidable"): _"Paid link — Layerwell may earn a
     commission. **It never affects what we recommend.**"_ (the independence clause
     bold-inked). A small `How this works →` opens the transparency page.
   - Footer (unchanged): _"Already own one? Add it to your shelf instead."_
@@ -146,7 +167,7 @@ in Doc 4 pending B-PRIVACY); now it shares the commerce module's gate + copy.
   role/role-note (_"Cleanse · fragrance-free"_, 11px muted), then a **`Paid link` chip +
   `↗`** on the right. Tapping an item → the same attribution + deep-link-out as §3,
   consent-gated.
-- **Footer disclosure** (always visible): _"Paid links — OnSkin may earn a commission.
+- **Footer disclosure** (always visible): _"Paid links — Layerwell may earn a commission.
   We picked these on merit; the commission never changed the list."_
 - **Trust guarantee in copy + data:** the stack is ordered by the **routine sequence**
   (Doc 3) and curated by merit; it carries **no rate/commission field** in its ordering
@@ -200,9 +221,14 @@ type catalog (type-first; specific products arrive with B-CATALOG-SEED).
 
 - The `Fetch Order Report` poll is a **Supabase pg_cron → Edge Function** keyed on
   `recordUpdatedStartDate`, daily, upserting `order_attributions`. v1 ships the schema +
-  an **Edge Function stub** that documents the poll shape; the live poll needs the brand
-  API key + approval (B-SHOPMY). 200 req/day, 500 records/page, 30–120-day pending
-  window → daily/weekly cadence is ample.
+  a fail-closed handler; the live poll still needs the brand API key + approval
+  (B-SHOPMY). The documented response has no click-token/click-ID field and no
+  commission lifecycle-status field. The adapter therefore keeps `click_token = null`
+  and the default `pending` status instead of guessing from `Click Date`, `Code`,
+  `Customer Status`, or any other unrelated field. B-SHOPMY remains blocking until
+  ShopMy approves a usable correlation and reconciliation contract. The API budget is
+  200 requests/day with at most 500 records/page; a full final page is treated as an
+  incomplete run, never a false success.
 
 ---
 
@@ -292,9 +318,12 @@ Centralised commerce copy (`features/commerce/copy.ts`) is scanned by
 ## 9. Data model (migration 0022 — commerce domain, church-and-state)
 
 All tables in `public` (consistent with prior migrations); **no commission/rate field in
-any ranking-path table.** Catalog-level commerce data is world-readable to
-`authenticated` (like `products`), service-role write; per-user telemetry is owner-RLS;
-order/commission data is service-role only (clients never read commission).
+any ranking-path table.** Generic active affiliate links are an independently governed
+commerce surface readable to `authenticated`; they are not product-fact or ranking
+authority. Migration `0058` supersedes the original broad creator-stack policies and
+revokes every API-role read of stacks/items until a separate evidence-bound B-DERM
+publication authority exists. Per-user telemetry is owner-RLS; order/commission data is
+service-role only (clients never read commission).
 
 - `affiliate_links` — catalog-level resolved links. `id`, `product_type`,
   `catalog_product_id?`, `retailer`, `label`, `url`, `price_cents?`, `currency?`,
@@ -304,10 +333,13 @@ order/commission data is service-role only (clients never read commission).
   only in `order_attributions`, service-role.)
 - `creator_stacks` — `id`, `slug` (unique), `title`, `subtitle`, `curator`,
   `curator_kind` (`editorial|derm|creator`), `reviewed_by?` (B-DERM-REVIEW), `is_active`,
-  `created_at`. SELECT → authenticated; write → service-role.
+  `created_at`. Direct SELECT → none of PUBLIC/anon/authenticated/service_role until the
+  evidence-bound review/publication contract is installed; operator writes do not make a
+  row publishable.
 - `creator_stack_items` — `id`, `stack_id` (fk), `position`, `product_type`,
-  `catalog_product_id?`, `role_label`, `note?`. SELECT → authenticated; write →
-  service-role.
+  `catalog_product_id?`, `role_label`, `note?`. Direct SELECT → none of
+  PUBLIC/anon/authenticated/service_role while the parent publication authority is
+  absent.
 - `commerce_click_events` — owner-scoped telemetry. `id`, `user_id` (fk auth.users),
   `click_token` (opaque), `product_type?`, `affiliate_link_id?`, `source`, `consented`
   (bool), `created_at`. Owner-only RLS (select/insert/delete own; no update). **No
@@ -318,7 +350,8 @@ order/commission data is service-role only (clients never read commission).
   **Service-role only** — RLS enabled, **no client policies** (clients can never read
   commission data; this is the church-and-state wall at the row level).
 
-`@onskin/types` + `database.types.ts` extended. No RLS weakened; no ranking table
+`@layerwell/types` + `database.types.ts` extended. The original 0022 policy description is
+historical; migration `0058` is the effective direct-read authority. No ranking table is
 touched.
 
 ---
@@ -338,7 +371,8 @@ touched.
   commission metrics tune ranking.
 - **B-SHOPMY (elevated)**: now also covers the **house-account question** (can a brand
   mint links on its own recs?) + the gated Create Link / URL-Rate / Order-Report
-  schemas + approval. **Blocking before any real link is minted.**
+  schemas + approval, including the absence of a documented Order Report correlation
+  field or commission lifecycle status. **Blocking before any real link is minted.**
 - **B-PRIVACY / B-PRIVACY-COPY**: final MHMDA data-sharing consent copy + DPIA for the
   commerce flow + FTC disclosure final wording (counsel).
 - **B-CATALOG-SEED**: real retailers/prices/links; until then where-to-buy is type-first

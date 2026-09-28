@@ -18,6 +18,7 @@ describe('PHOTO-05A Trend route contracts', () => {
       expect(source).toContain('surface="trend"');
       expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
       expect(source).toContain('fallbackLabel="Back to Progress"');
+      expect(source).toContain('fallbackBehavior="replace"');
       expect(source).toContain('trackView={false}');
 
       for (const forbidden of [
@@ -43,7 +44,10 @@ describe('PHOTO-05A Trend route contracts', () => {
   it('preserves both exact direct-entry URLs instead of a layout redirect', () => {
     const layout = readAppRoute('trend/_layout.tsx');
 
-    expect(layout).not.toContain('<DeferredSurface');
+    expect(layout).toContain('<DeferredSurface');
+    expect(layout).toContain('screenLayout={({ children }) =>');
+    expect(layout).toContain('trackView={false}');
+    expect(layout).not.toContain('phase7Flags');
     expect(layout).not.toContain('<Redirect');
     expect(layout).toContain('<Stack.Screen name="optin" />');
     expect(layout).toContain('<Stack.Screen name="fairness" />');

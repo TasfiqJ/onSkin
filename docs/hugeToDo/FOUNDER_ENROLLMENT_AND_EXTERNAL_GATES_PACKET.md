@@ -23,7 +23,7 @@ Choose one truthful seller form before creating production identifiers:
 | Organization                 | Exact verified legal-entity name | Legal entity, D-U-N-S number, binding authority, domain-matched work email, and functional public website | Preferred when a real operating entity is ready and the organization name should be the seller |
 
 Apple does not accept a DBA, trade name, branch, or fictitious business as an
-organization's legal entity. A brand recommendation such as `RoutineKind` is
+organization's legal entity. A brand recommendation such as `Layerwell` is
 not automatically an eligible seller name. Apple states that an organization
 enrollment may require notarized business records and a reference who can
 confirm binding authority. See [Apple program enrollment](https://developer.apple.com/help/account/membership/program-enrollment/)

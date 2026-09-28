@@ -19,7 +19,7 @@ Today opens with the routine cycle anchored to the current day, not paused or sk
 
 ## Actual Result
 
-`Start today` wrote only the legacy `cycleAnchor` key. If `onskin.cycle.v1` already existed, Today ignored that legacy key and kept the old cycle config.
+`Start today` wrote only the legacy `cycleAnchor` key. If `layerwell.cycle.v1` already existed, Today ignored that legacy key and kept the old cycle config.
 
 ## Evidence
 
@@ -30,7 +30,7 @@ Today opens with the routine cycle anchored to the current day, not paused or sk
 
 ## Frequency
 
-- Always when a saved `onskin.cycle.v1` config exists and conflicts with the legacy anchor.
+- Always when a saved `layerwell.cycle.v1` config exists and conflicts with the legacy anchor.
 
 ## Scope
 

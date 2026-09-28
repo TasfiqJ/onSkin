@@ -1,23 +1,16 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { memo, useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 import { REC_COPY } from './copy';
-import { runRecommendationDismissalMutation } from './dismissalMutation';
-import {
-  useRecommendations,
-  useRecommendationsFromSources,
-  type RecommendationProfileSource,
-  type RecommendationShelfSource,
-} from './useRecommendations';
+import { dismissRecommendation } from './store';
+import { useRecommendations } from './useRecommendations';
 
 // The recommendation surfaces ON Today (docs/09 §7.1/§7.2): a calm "For you" entry
 // card + the in-routine SPF gap prompt (design 04). Inline, dismissible, never
@@ -27,10 +20,12 @@ function ForYouCard({
   compact,
   count,
   youreSet,
+  statusBody,
 }: {
   compact?: boolean;
   count: number;
   youreSet: boolean;
+  statusBody: string | null;
 }) {
   return (
     <Pressable
@@ -60,14 +55,16 @@ function ForYouCard({
       </View>
       <View className="flex-1">
         <Text variant="body" className="font-sans-semibold text-[15px]">
-          {REC_COPY.todayCard.title}
+          {statusBody ? REC_COPY.todayCard.statusTitle : REC_COPY.todayCard.title}
         </Text>
         <Text variant="bodySm" tone="muted" className={compact ? 'text-[12.5px]' : 'text-[13px]'}>
-          {youreSet
-            ? REC_COPY.todayCard.bodySet
-            : count === 1
-              ? REC_COPY.todayCard.bodyOne
-              : REC_COPY.todayCard.bodyMany(count)}
+          {statusBody
+            ? statusBody
+            : youreSet
+              ? REC_COPY.todayCard.bodySet
+              : count === 1
+                ? REC_COPY.todayCard.bodyOne
+                : REC_COPY.todayCard.bodyMany(count)}
         </Text>
       </View>
       <Text style={{ color: colors.mutedLight, fontSize: 20 }}>›</Text>
@@ -75,52 +72,18 @@ function ForYouCard({
   );
 }
 
-function GapPrompt({
-  compact,
-  recId,
-  onDismissFailure,
-  onDismissSuccess,
-}: {
-  compact?: boolean;
-  recId: string;
-  onDismissFailure: () => void;
-  onDismissSuccess: () => void;
-}) {
+function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
-  const mountedRef = useRef(true);
-  const dismissInFlightRef = useRef(false);
-  const [dismissing, setDismissing] = useState(false);
   const compactTitle = 'No SPF this morning';
-
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
   // Persist the dismissal (docs/09 §7.2): writing it to the dismissed store means
   // the engine drops the rec, so a dismissed SPF nudge stays dismissed across
   // sessions, matching the hub. (Was local useState that reappeared on remount.)
   const dismiss = async () => {
-    if (dismissInFlightRef.current) return;
-    dismissInFlightRef.current = true;
-    setDismissing(true);
-    const outcome = await runRecommendationDismissalMutation(qc, ownerScope, recId, {
-      onFailure: onDismissFailure,
-      onSuccess: onDismissSuccess,
-    });
-    if (outcome === 'failed' && mountedRef.current) {
-      dismissInFlightRef.current = false;
-      setDismissing(false);
-    }
-    // The synchronous cache patch removes this prompt before the strict reread,
-    // so its actions stay unavailable until this component unmounts.
+    await dismissRecommendation(recId);
+    await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
   };
 
   const openRecommendation = () => {
-    if (dismissing) return;
     haptics.select();
     track('recommendation_expanded');
     router.push({ pathname: '/recommendations/[id]', params: { id: recId } });
@@ -139,8 +102,6 @@ function GapPrompt({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.cta}
-          accessibilityState={{ disabled: dismissing }}
-          disabled={dismissing}
           onPress={openRecommendation}
           className="min-h-[48px] flex-1 flex-row items-center gap-2"
         >
@@ -168,15 +129,12 @@ function GapPrompt({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.dismiss}
-          accessibilityState={{ disabled: dismissing }}
-          disabled={dismissing}
           onPress={() => void dismiss()}
           className="min-h-[48px] min-w-[72px] items-center justify-center rounded-full px-3"
           style={{
             backgroundColor: 'rgba(165,105,75,0.12)',
             borderWidth: 1,
             borderColor: 'rgba(165,105,75,0.14)',
-            opacity: dismissing ? 0.6 : 1,
           }}
         >
           <Text className="font-sans-bold text-[12.5px]" style={{ color: colors.clay }}>
@@ -199,15 +157,12 @@ function GapPrompt({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Dismiss SPF recommendation"
-        accessibilityState={{ disabled: dismissing }}
-        disabled={dismissing}
         onPress={() => void dismiss()}
         className="absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full"
         style={{
           backgroundColor: 'rgba(165,105,75,0.12)',
           borderWidth: 1,
           borderColor: 'rgba(165,105,75,0.14)',
-          opacity: dismissing ? 0.6 : 1,
         }}
       >
         <Text className="text-[14px]" style={{ color: colors.clay }}>
@@ -234,8 +189,6 @@ function GapPrompt({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.cta}
-          accessibilityState={{ disabled: dismissing }}
-          disabled={dismissing}
           onPress={openRecommendation}
           className="items-center justify-center rounded-pill px-5 py-2"
           style={{ minHeight: 48, backgroundColor: colors.clay }}
@@ -247,8 +200,6 @@ function GapPrompt({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.dismiss}
-          accessibilityState={{ disabled: dismissing }}
-          disabled={dismissing}
           onPress={() => void dismiss()}
           className="items-center justify-center rounded-pill px-4 py-2"
           style={{
@@ -256,7 +207,6 @@ function GapPrompt({
             borderWidth: 1,
             borderColor: 'rgba(165,105,75,0.22)',
             backgroundColor: 'rgba(255,255,255,0.18)',
-            opacity: dismissing ? 0.6 : 1,
           }}
         >
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.clay }}>
@@ -268,168 +218,41 @@ function GapPrompt({
   );
 }
 
-function DismissalFailureNotice({
-  compact,
-  retrying,
-  onRetry,
-}: {
-  compact: boolean;
-  retrying: boolean;
-  onRetry: () => Promise<{ isError: boolean }>;
-}) {
-  const [retryFailed, setRetryFailed] = useState(false);
-
-  async function retry(): Promise<void> {
-    if (retrying) return;
-    setRetryFailed(false);
-    const result = await onRetry();
-    if (result.isError) setRetryFailed(true);
-  }
-
-  return (
-    <View
-      accessibilityLiveRegion="polite"
-      accessibilityRole="alert"
-      className={compact ? 'mt-2 rounded-xl px-3 py-2.5' : 'mt-4 rounded-xl px-4 py-3.5'}
-      style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: colors.hairline }}
-    >
-      <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
-        Suggestion not dismissed
-      </Text>
-      <Text variant="bodySm" tone="muted" className="mt-1" style={{ lineHeight: 18 }}>
-        We couldn&apos;t save “Not now.” Nothing was removed. Reload your saved choices, then try
-        again.
-      </Text>
-      {retryFailed ? (
-        <Text variant="bodySm" className="mt-1.5" style={{ color: colors.ink, lineHeight: 18 }}>
-          Your saved recommendation choices are still unavailable.
-        </Text>
-      ) : null}
-      <Pressable
-        accessibilityLabel="Retry loading recommendation choices after dismissal failure"
-        accessibilityRole="button"
-        accessibilityState={{ disabled: retrying }}
-        disabled={retrying}
-        onPress={() => void retry()}
-        className="mt-2 min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
-        style={{ backgroundColor: colors.ink, opacity: retrying ? 0.68 : 1 }}
-      >
-        <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.paper }}>
-          {retrying ? 'Trying again…' : 'Reload suggestion'}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
-export type RecommendationsTeaserProps = {
-  compact?: boolean;
-  showGapPrompt?: boolean;
-  dismissFailed?: boolean;
-  onDismissFailure?: () => void;
-  onDismissSuccess?: () => void;
-};
-
-export type RecommendationsTeaserFromSourcesProps = RecommendationsTeaserProps & {
-  shelf: RecommendationShelfSource;
-  profile: RecommendationProfileSource;
-};
-
-type RecommendationsTeaserQuery = ReturnType<typeof useRecommendationsFromSources>;
-
-function RecommendationsTeaserContent({
-  recommendations,
+export function RecommendationsTeaser({
   compact = false,
   showGapPrompt = false,
-  dismissFailed: controlledDismissFailed,
-  onDismissFailure,
-  onDismissSuccess,
-}: RecommendationsTeaserProps & { recommendations: RecommendationsTeaserQuery }) {
-  const mountedRef = useRef(true);
-  const [localDismissFailed, setLocalDismissFailed] = useState(false);
-  const dismissFailed = controlledDismissFailed ?? localDismissFailed;
-  const { result, isError, isFetching, isSuccess, retry } = recommendations;
-
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  const markDismissFailure = () => {
-    if (mountedRef.current) setLocalDismissFailed(true);
-    onDismissFailure?.();
-  };
-  const clearDismissFailure = () => {
-    if (mountedRef.current) setLocalDismissFailed(false);
-    onDismissSuccess?.();
-  };
-  const retryAfterDismissFailure = async (): Promise<{ isError: boolean }> => {
-    const outcome = await retry();
-    if (!outcome.isError) clearDismissFailure();
-    return outcome;
-  };
-
-  if (dismissFailed && !isSuccess) {
-    return (
-      <DismissalFailureNotice
-        compact={compact}
-        retrying={isFetching}
-        onRetry={retryAfterDismissFailure}
-      />
-    );
-  }
-  if (!isSuccess || isError) return null;
+}: {
+  compact?: boolean;
+  showGapPrompt?: boolean;
+}) {
+  const { result, isLoading, isUnavailable } = useRecommendations();
+  if (isLoading || isUnavailable) return null;
 
   const spfGap = result.recommendations.find(
     (r) =>
       (r.trigger === 'gap' || r.trigger === 'routine_completion') && r.productType.includes('spf'),
   );
   const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap);
+  const statusBody =
+    result.recommendations.length > 0 || result.youreSet
+      ? null
+      : result.goalReviewPending || result.conflictCoverageStatus === 'unsupported_unreviewed'
+        ? REC_COPY.todayCard.bodyReviewPending
+        : result.conflictCoverageStatus === 'not_applicable'
+          ? REC_COPY.todayCard.bodyNoPairEvaluation
+          : REC_COPY.todayCard.bodyNoCurrentSuggestion;
 
   return (
     <>
-      {dismissFailed ? (
-        <DismissalFailureNotice
-          compact={compact}
-          retrying={isFetching}
-          onRetry={retryAfterDismissFailure}
-        />
-      ) : null}
-      {showGapPrompt && spfGap ? (
-        <GapPrompt
-          compact={compact}
-          recId={spfGap.id}
-          onDismissFailure={markDismissFailure}
-          onDismissSuccess={clearDismissFailure}
-        />
-      ) : null}
+      {showGapPrompt && spfGap ? <GapPrompt compact={compact} recId={spfGap.id} /> : null}
       {showCompactGapOnly ? null : (
         <ForYouCard
           compact={compact}
           count={result.recommendations.length}
           youreSet={result.youreSet}
+          statusBody={statusBody}
         />
       )}
     </>
   );
 }
-
-/** Standalone teaser consumer. Route view models should prefer shared sources. */
-export function RecommendationsTeaser(props: RecommendationsTeaserProps) {
-  const recommendations = useRecommendations();
-  return <RecommendationsTeaserContent {...props} recommendations={recommendations} />;
-}
-
-/** Render the Today teaser from route-owned Shelf and profile query snapshots. */
-function RecommendationsTeaserFromSourcesImpl({
-  shelf,
-  profile,
-  ...props
-}: RecommendationsTeaserFromSourcesProps) {
-  const recommendations = useRecommendationsFromSources(shelf, profile);
-  return <RecommendationsTeaserContent {...props} recommendations={recommendations} />;
-}
-
-export const RecommendationsTeaserFromSources = memo(RecommendationsTeaserFromSourcesImpl);

@@ -1,24 +1,40 @@
 import { useQuery } from '@tanstack/react-query';
-import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Screen, StateNotice, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
 import {
-  classifyOnboardingStatusFailure,
-  decideWelcomeOnboardingGate,
-  onboardingStatusQueryOptions,
-} from '@/features/onboarding/onboardingStatusQuery';
+  AGE_POLICY_STATUS_QUERY_KEY,
+  getAgePolicyReceiptStatus,
+} from '@/features/onboarding/ageGateStore';
 import {
-  decideAnonymousOnboardingHandoff,
-  isAnonymousOnboardingRequestSuperseded,
-} from '@/features/onboarding/welcomeSessionHandoff';
+  applyCurrentServerSkinProfileFilters,
+  CURRENT_SERVER_SKIN_PROFILE_SELECT,
+  isServerSkinProfileFallbackPermitted,
+  parseCurrentServerSkinProfile,
+} from '@/features/onboarding/serverSkinProfile';
+import { readStoredSkinProfile } from '@/features/onboarding/skinProfileStore';
+import {
+  acknowledgeAccountDeletionNotice,
+  peekAccountDeletionNotice,
+} from '@/features/settings/accountDeletionNotice';
+import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
+import {
+  LOCAL_PRIVATE_CONTROL_KEYS,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+} from '@/features/settings/localPrivateDataKeys';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { BRAND } from '@/lib/brand';
+import { runHealthDataWriteOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { isSupabaseConfigured } from '@/lib/env';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { markStartupPhase } from '@/lib/observability/operationTiming';
+import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
+import { queryClient } from '@/lib/query/queryClient';
+import { supabase } from '@/lib/supabase/client';
+import { colors } from '@/theme/tokens';
 
 function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
@@ -26,250 +42,282 @@ function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
   return value === 'local';
 }
 
-// 01 · Welcome. The anonymous session starts silently here (docs/01 §1/§2).
-// Also acts as the entry gate: a returning user who already finished onboarding
-// (a completed skin_profile exists) is sent straight to Today.
+async function clearE2ELocalControlState(): Promise<void> {
+  const storedKeys = await AsyncStorage.getAllKeys();
+  const prefixedControlKeys = storedKeys.filter((key) =>
+    LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES.some((prefix) => key.startsWith(prefix)),
+  );
+  await AsyncStorage.multiRemove([
+    ...LOCAL_PRIVATE_CONTROL_KEYS,
+    ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+    ...prefixedControlKeys,
+  ]);
+}
+
+function ValueRow({ title, detail }: { title: string; detail: string }) {
+  return (
+    <View className="flex-row items-start gap-3 py-2.5">
+      <View
+        className="mt-1 h-5 w-5 items-center justify-center rounded-full"
+        style={{ backgroundColor: colors.clayTint }}
+      >
+        <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+      </View>
+      <View className="flex-1">
+        <Text variant="bodySm" className="font-sans-semibold text-[14px]">
+          {title}
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-0.5 text-[12.5px] leading-[17px]">
+          {detail}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+// Welcome is both first impression and returning-user gate. The product pitch is
+// deliberately shelf -> routine -> private progress, not a generic scanner.
 export default function WelcomeScreen() {
   const params = useLocalSearchParams<{ e2eReset?: string }>();
-  const {
-    anonymousOnboardingHandoff,
-    completedSessionPublication,
-    ensureAnonymousSession,
-    initializing,
-    isAnonymousOnboardingHandoffCurrent,
-    registerAnonymousOnboardingConsumer,
-    resetLocalStateForE2E,
-    session,
-    settleAnonymousOnboardingHandoff,
-  } = useAuth();
-  const isFocused = useIsFocused();
-  const ownerScope = useOwnerQueryScope();
-  const activeWelcomeRef = useRef(false);
-  const beginRequestSeqRef = useRef(0);
-  const e2eResetRequestStartedRef = useRef(false);
+  const { ensureAnonymousSession, session, initializing } = useAuth();
+  const [accountDeletionNotice] = useState(peekAccountDeletionNotice);
+  const [appleInstructionsUnavailable, setAppleInstructionsUnavailable] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [beginError, setBeginError] = useState(false);
-  const resetting = shouldRunE2ELocalReset(params.e2eReset);
-  const accountActionPending = busy || anonymousOnboardingHandoff !== null;
-
-  useEffect(() => {
-    let effectActive = true;
-    const resetLocalBeginState = () => {
-      void Promise.resolve().then(() => {
-        if (!effectActive) return;
-        setBusy(false);
-        setBeginError(false);
-      });
-    };
-    if (!isFocused) {
-      activeWelcomeRef.current = false;
-      beginRequestSeqRef.current += 1;
-      resetLocalBeginState();
-      return () => {
-        effectActive = false;
-      };
-    }
-    activeWelcomeRef.current = true;
-    resetLocalBeginState();
-    const unregisterConsumer = registerAnonymousOnboardingConsumer();
-    return () => {
-      effectActive = false;
-      activeWelcomeRef.current = false;
-      beginRequestSeqRef.current += 1;
-      unregisterConsumer();
-    };
-  }, [isFocused, registerAnonymousOnboardingConsumer]);
+  const [startError, setStartError] = useState(false);
+  const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
 
   useEffect(() => {
     if (!shouldRunE2ELocalReset(params.e2eReset)) return;
-    if (e2eResetRequestStartedRef.current) return;
-    e2eResetRequestStartedRef.current = true;
-    // AuthProvider owns the destructive boundary. A rejection deliberately
-    // remains behind SessionBoundaryGate, whose accessible retry re-enters the
-    // same serialized reset instead of letting this route fail open.
-    void resetLocalStateForE2E().catch(() => undefined);
-  }, [params.e2eReset, resetLocalStateForE2E]);
+    let active = true;
 
-  // Onboarding-completion check as a query (no setState-in-effect). Reads the
-  // local-first completion record FIRST (the v1 source of truth, D-029): a
-  // returning onboarded user is recognized even with no backend, so a failed or
-  // absent server write never re-onboards them. Falls back to the server row.
+    async function resetLocalState() {
+      setResetting(true);
+      try {
+        await clearLocalPrivateData();
+      } catch {
+        // Dev-only fixture reset stays best-effort.
+      }
+      try {
+        await clearE2ELocalControlState();
+      } catch {
+        // Keep the fixture reachable so stale state can surface visibly.
+      }
+      queryClient.clear();
+      if (!active) return;
+      setResetting(false);
+      router.replace('/');
+    }
+
+    void resetLocalState();
+    return () => {
+      active = false;
+    };
+  }, [params.e2eReset]);
+
+  const agePolicy = useQuery({
+    queryKey: AGE_POLICY_STATUS_QUERY_KEY,
+    enabled: !resetting && !!session && !initializing,
+    retry: 0,
+    staleTime: Number.POSITIVE_INFINITY,
+    queryFn: getAgePolicyReceiptStatus,
+  });
+
   const onboarded = useQuery({
-    ...onboardingStatusQueryOptions(ownerScope),
-    enabled: isFocused && !resetting && !initializing && (!!session || !isSupabaseConfigured),
-  });
-
-  const checkingOnboarding = !!session || !isSupabaseConfigured;
-  const ownerScopeCurrent = isOwnerQueryScopeCurrent(ownerScope);
-  const onboardingGate = decideWelcomeOnboardingGate({
-    data: onboarded.data,
-    initializing,
-    isError: onboarded.isError,
-    isFetching: onboarded.isFetching,
-    isSuccess: onboarded.isSuccess,
-    ownerScopeCurrent,
-    resetting,
-    shouldCheck: checkingOnboarding,
+    queryKey: ['onboarded', session?.user.id],
+    enabled: !resetting && !!session && !initializing && agePolicy.data === 'current',
+    retry: 0,
+    queryFn: async () => {
+      const expectedOwnerUserId = session?.user.id;
+      if (!expectedOwnerUserId) return false;
+      return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+        const local = await readStoredSkinProfile();
+        lease.assertCurrent();
+        if (local.status === 'available') return true;
+        if (!isServerSkinProfileFallbackPermitted(local.status)) return false;
+        if (!isSupabaseConfigured) return false;
+        try {
+          lease.assertCurrent();
+          const { data, error } = await applyCurrentServerSkinProfileFilters(
+            supabase.from('skin_profiles').select(CURRENT_SERVER_SKIN_PROFILE_SELECT),
+          )
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          lease.assertCurrent();
+          return !error && parseCurrentServerSkinProfile(data) !== null;
+        } catch {
+          lease.assertCurrent();
+          return false;
+        }
+      });
+    },
   });
 
   useEffect(() => {
-    if (onboardingGate !== 'checking') {
-      markStartupPhase('first_critical_data_ready');
+    if (resetting || initializing || !session || agePolicy.isLoading) return;
+    if (agePolicy.data !== 'current' && agePolicy.data !== 'unavailable') {
+      router.replace('/onboarding/age');
     }
-  }, [onboardingGate]);
+  }, [agePolicy.data, agePolicy.isLoading, initializing, resetting, session]);
 
   useEffect(() => {
-    if (!isFocused || !activeWelcomeRef.current) return;
-    const pending = anonymousOnboardingHandoff;
-    if (onboardingGate === 'redirect_today') {
-      if (pending) settleAnonymousOnboardingHandoff(pending.requestId);
-      router.replace('/today');
-      return;
-    }
-    if (!pending || pending.phase === 'resolving') return;
+    if (agePolicy.data === 'current' && onboarded.data === true) router.replace('/today');
+  }, [agePolicy.data, onboarded.data]);
 
-    const decision = decideAnonymousOnboardingHandoff({
-      completedSessionPublication,
-      initializing,
-      mounted: activeWelcomeRef.current,
-      onboardingGate,
-      ownerScopeCurrent,
-      pending,
-      publishedUserId: session?.user.id ?? null,
-      requestIsLatest: isAnonymousOnboardingHandoffCurrent(pending.requestId),
-    });
-    if (decision === 'cancel') {
-      settleAnonymousOnboardingHandoff(pending.requestId);
+  async function begin() {
+    setBusy(true);
+    setStartError(false);
+    track('onboarding_started');
+    const agePolicyStatus = await getAgePolicyReceiptStatus();
+    queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, agePolicyStatus);
+    if (agePolicyStatus === 'unavailable') {
       setBusy(false);
       return;
     }
-    if (decision === 'navigate' && settleAnonymousOnboardingHandoff(pending.requestId)) {
+    if (agePolicyStatus !== 'current') {
+      setBusy(false);
       router.push('/onboarding/age');
+      return;
     }
-  }, [
-    anonymousOnboardingHandoff,
-    completedSessionPublication,
-    initializing,
-    isAnonymousOnboardingHandoffCurrent,
-    isFocused,
-    onboardingGate,
-    ownerScopeCurrent,
-    session?.user.id,
-    settleAnonymousOnboardingHandoff,
-  ]);
-
-  async function begin() {
-    const requestId = ++beginRequestSeqRef.current;
-    setBusy(true);
-    setBeginError(false);
-    track('onboarding_started');
     try {
-      const handoff = await ensureAnonymousSession();
-      if (!activeWelcomeRef.current || requestId !== beginRequestSeqRef.current) return;
-      if (handoff) return;
-    } catch (error) {
-      if (!activeWelcomeRef.current || requestId !== beginRequestSeqRef.current) return;
-      if (isAnonymousOnboardingRequestSuperseded(error)) {
-        setBusy(false);
-        return;
-      }
-      if (isSupabaseConfigured) {
-        setBusy(false);
-        setBeginError(true);
-        return;
-      }
+      await ensureAnonymousSession();
+    } catch {
+      setStartError(true);
+      setBusy(false);
+      return;
     }
     setBusy(false);
-    // Neutral DOB age gate (docs/01 §4) precedes any data collection; it self-skips
-    // to goals if this device already passed it.
-    router.push('/onboarding/age');
+    router.push('/onboarding/consent');
   }
 
-  // Stay on splash while deciding; render nothing while redirecting an onboarded user.
-  if (onboardingGate === 'checking' || onboardingGate === 'redirect_today') return null;
-
-  if (onboardingGate === 'error') {
-    const failureKind = classifyOnboardingStatusFailure(onboarded.error);
-    const title =
-      failureKind === 'unsupported_profile'
-        ? 'This saved profile needs a newer version of OnSkin.'
-        : failureKind === 'invalid_profile'
-          ? "We found saved profile data we can't safely read."
-          : "We couldn't safely check your progress.";
-    const body =
-      failureKind === 'unsupported_profile'
-        ? 'Your saved profile was preserved unchanged. Update OnSkin, then check again.'
-        : failureKind === 'invalid_profile'
-          ? 'Your saved profile was preserved unchanged. Try again, and contact support before resetting local data if this continues.'
-          : 'Your saved skincare data was not changed. Check your connection and private storage, then try again.';
-    return (
-      <Screen>
-        <View className="flex-1 justify-center">
-          <StateNotice
-            kind={failureKind === 'invalid_profile' ? 'corrupt' : 'unavailable'}
-            presentation="plain"
-            title={title}
-            body={body}
-          >
-            <Button
-              accessibilityLabel="Retry checking onboarding progress"
-              className="mt-7"
-              disabled={onboarded.isFetching}
-              label={onboarded.isFetching ? 'Trying again...' : 'Try again'}
-              onPress={() => void onboarded.refetch()}
-            />
-          </StateNotice>
-        </View>
-      </Screen>
-    );
+  async function openAppleInstructions() {
+    setAppleInstructionsUnavailable(false);
+    const opened = await openExternalHttpsUrl(accountDeletionNotice?.instructionUrl, {
+      mode: 'browser',
+      alertOnFailure: false,
+    });
+    if (!opened) setAppleInstructionsUnavailable(true);
   }
+
+  const deciding =
+    resetting ||
+    initializing ||
+    (!!session && (agePolicy.data !== 'current' || onboarded.isLoading));
+
+  useEffect(() => {
+    if (!accountDeletionNotice || deciding || onboarded.data === true) return;
+    acknowledgeAccountDeletionNotice(accountDeletionNotice);
+  }, [accountDeletionNotice, deciding, onboarded.data]);
+
+  if (deciding || onboarded.data === true) return null;
 
   return (
     <Screen>
-      <View className="flex-1 justify-center">
-        <Text variant="display">
-          A simpler routine, built around{' '}
-          <Text variant="display" italic tone="clay">
-            your
-          </Text>{' '}
-          shelf.
-        </Text>
-        <Text variant="body" tone="muted" className="mt-4">
-          Use the products you already own, follow your AM/PM plan, and keep progress photos private
-          on this device.
-        </Text>
-      </View>
-      <View className="pb-4">
-        {beginError ? (
-          <StateNotice
-            kind="error"
-            compact
-            align="center"
-            className="mb-4"
-            title="Private session not started"
-            body="We couldn't start your private session. Check your connection and try again."
-          />
-        ) : null}
-        <Button
-          label={beginError ? 'Try again' : 'Begin'}
-          onPress={begin}
-          disabled={accountActionPending}
-        />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ disabled: accountActionPending }}
-          className={`mt-3 items-center py-3 ${accountActionPending ? 'opacity-50' : ''}`}
-          disabled={accountActionPending}
-          onPress={() => router.push('/onboarding/account')}
-        >
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            I already have an account
-          </Text>
-        </Pressable>
-        <Text variant="label" tone="clay" className="mt-2 text-center">
-          No ads · no data sales · photos stay on device
-        </Text>
-      </View>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {accountDeletionNotice ? (
+          <View className="flex-1 justify-center py-6">
+            <Card>
+              <View
+                accessible
+                accessibilityLabel={`Account deleted. ${accountDeletionNotice.title}. ${accountDeletionNotice.message}`}
+                accessibilityLiveRegion="assertive"
+                accessibilityRole="alert"
+              >
+                <Text variant="label" tone="clay">
+                  ACCOUNT DELETED
+                </Text>
+                <Text variant="title" className="mt-2">
+                  {accountDeletionNotice.title}
+                </Text>
+                <Text variant="body" tone="muted" className="mt-3">
+                  {accountDeletionNotice.message}
+                </Text>
+              </View>
+              <Button
+                className="mt-4"
+                label="Open Apple instructions"
+                variant="ghost"
+                onPress={() => void openAppleInstructions()}
+              />
+              {appleInstructionsUnavailable ? (
+                <Text accessibilityRole="alert" variant="bodySm" tone="clay" className="mt-2">
+                  Apple Support could not open. Use the iPhone Settings steps above.
+                </Text>
+              ) : null}
+            </Card>
+          </View>
+        ) : (
+          <>
+            <View className="flex-1 justify-center py-8">
+              <View
+                className="mb-7 h-14 w-14 items-center justify-center rounded-[19px] bg-ink"
+                accessibilityElementsHidden
+                importantForAccessibility="no"
+              >
+                <View
+                  className="h-5 w-5 rounded-[7px]"
+                  style={{ backgroundColor: colors.clayBright }}
+                />
+              </View>
+              <Text variant="eyebrow" tone="clay">
+                {BRAND.appName.toUpperCase()} · YOUR ROUTINE
+              </Text>
+              <Text variant="display" className="mt-3">
+                Better skin starts with a routine you can actually{' '}
+                <Text variant="display" italic tone="clay">
+                  follow.
+                </Text>
+              </Text>
+              <Text variant="body" tone="muted" className="mt-4 max-w-[340px]">
+                Build around what you already own, know what to use today, and track progress
+                privately.
+              </Text>
+
+              <View className="mt-6 rounded-[22px] border border-hairline bg-paper-raised px-4 py-2">
+                <ValueRow
+                  title="Your shelf, organized"
+                  detail="Add products once. Keep everything in one place."
+                />
+                <View className="h-px bg-hairline" />
+                <ValueRow
+                  title="A clear AM/PM plan"
+                  detail="Open Today and see the next step—without re-researching."
+                />
+                <View className="h-px bg-hairline" />
+                <ValueRow
+                  title="Progress stays private"
+                  detail="Photos stay encrypted on your phone unless you choose to share one."
+                />
+              </View>
+            </View>
+
+            <View className="pb-4">
+              <Button label={busy ? 'Starting…' : 'Begin'} onPress={begin} disabled={busy} />
+              {startError ? (
+                <Text accessibilityRole="alert" variant="bodySm" tone="clay" className="mt-3">
+                  We couldn&apos;t start a private session. Nothing new was collected. Try again.
+                </Text>
+              ) : null}
+              <Pressable
+                accessibilityRole="button"
+                className="mt-2 min-h-[48px] items-center justify-center py-3"
+                onPress={() => router.push('/onboarding/account')}
+              >
+                <Text variant="body" tone="muted" className="font-sans-semibold">
+                  I already have an account
+                </Text>
+              </Pressable>
+              <Text variant="label" tone="muted" className="mt-1 text-center text-[10.5px]">
+                NO ADS · NO DATA SALES · PHOTOS STAY ON DEVICE
+              </Text>
+            </View>
+          </>
+        )}
+      </ScrollView>
     </Screen>
   );
 }

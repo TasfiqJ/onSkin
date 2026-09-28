@@ -1,6 +1,6 @@
-import { getAccountGeneration } from '@/lib/auth/accountGeneration';
+import { captureAccountIdentityGeneration } from '@/lib/auth/accountGeneration';
 
-import { decryptPhotoToDataUri } from './encryptedStorage';
+import { decryptPhotoToDataUri, type PhotoRenditionReadExpectation } from './encryptedStorage';
 import {
   SensitiveImageDecryptCoordinator,
   type SensitiveImageRequest,
@@ -8,18 +8,26 @@ import {
 } from './sensitiveImageCoordinatorCore';
 import { SENSITIVE_IMAGE_MAX_CONCURRENT_DECRYPTS } from './sensitiveImagePolicy';
 
-const coordinator = new SensitiveImageDecryptCoordinator(decryptPhotoToDataUri, {
+const expectations = new Map<string, PhotoRenditionReadExpectation>();
+const coordinator = new SensitiveImageDecryptCoordinator(
+  (uri) => {
+    const expected = expectations.get(uri);
+    if (!expected) throw new Error('PHOTO_RENDITION_IDENTITY_REQUIRED');
+    return decryptPhotoToDataUri(uri, expected);
+  }, {
   maxConcurrent: SENSITIVE_IMAGE_MAX_CONCURRENT_DECRYPTS,
-  getOwnerGeneration: getAccountGeneration,
-});
+  getOwnerGeneration: captureAccountIdentityGeneration,
+  });
 
 export function requestSensitiveImage(
   requestKey: string,
   uri: string,
   expectedOwnerGeneration: number,
+  expected: PhotoRenditionReadExpectation,
   priority: SensitiveImageRequestPriority = 'interactive',
 ): SensitiveImageRequest {
   try {
+    expectations.set(uri, expected);
     return coordinator.request(requestKey, uri, priority, expectedOwnerGeneration);
   } catch (error) {
     return Object.freeze({

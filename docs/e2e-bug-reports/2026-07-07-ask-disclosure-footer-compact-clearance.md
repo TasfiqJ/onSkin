@@ -3,7 +3,7 @@
 Severity: Low
 Surface: Expo web
 Environment: 320 x 568 phone viewport, Expo web
-Feature: Ask RoutineKind deterministic advisor
+Feature: Ask Layerwell deterministic advisor
 Date: 2026-07-07
 Tester: Codex
 

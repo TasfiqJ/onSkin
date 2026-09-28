@@ -3,9 +3,250 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
+import { GOVERNED_DOWNSTREAM_GENERATED_PATHS } from '../launch/governed-evidence-chain.mjs';
+
+export { GOVERNED_DOWNSTREAM_GENERATED_PATHS };
 
 export const root = process.cwd();
 export const strict = process.argv.includes('--strict');
+
+export const OWNER_LINKED_PRIVATE_TABLES = Object.freeze([
+  'profiles',
+  'skin_profiles',
+  'user_products',
+  'routines',
+  'routine_steps',
+  'routine_completions',
+  'routine_conflicts',
+  'active_ramp',
+  'cycles',
+  'cycle_nights',
+  'streak_freezes',
+  'notification_preferences',
+  'notification_log',
+  'consents',
+  'photos',
+  'entitlements',
+  'recommendation_preferences',
+  'recommendations',
+  'catalog_lookup_events',
+  'commerce_click_events',
+  'community_blocks',
+  'community_questions',
+  'community_reactions',
+  'community_reports',
+  'photo_trend',
+  'ask_sessions',
+  'ask_turn_audit',
+  'ask_safety_audit',
+]);
+
+// Owner/client tables whose rows are health-purpose data and therefore become
+// unreadable as soon as health processing is not active. `profiles` is the
+// retained account shell (its streak caches are synchronously zeroed), while
+// `consents` and `entitlements` are the preserved policy and billing lanes.
+export const HEALTH_PURPOSE_READ_FENCED_TABLES = Object.freeze([
+  'skin_profiles',
+  'user_products',
+  'shelf_product_identities',
+  'routines',
+  'routine_steps',
+  'routine_completions',
+  'routine_conflicts',
+  'active_ramp',
+  'cycles',
+  'cycle_nights',
+  'streak_freezes',
+  'notification_preferences',
+  'notification_log',
+  'photos',
+  'recommendation_preferences',
+  'recommendations',
+  'catalog_lookup_events',
+  'commerce_click_events',
+  'community_blocks',
+  'community_questions',
+  'community_reactions',
+  'community_reports',
+  'photo_trend',
+  'ask_sessions',
+  'ask_turn_audit',
+  'ask_safety_audit',
+]);
+
+export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
+  'catalog_corrections',
+  'reverse_trial_grants',
+  'subscriptions_events',
+  'order_attributions',
+  'community_moderation_events',
+  'waitlist_signups',
+  'growth_events',
+  'edge_rate_limits',
+]);
+
+// Internal lifecycle/import/sync state which is intentionally absent from the
+// subject data-export registries. The service-operated relations retain a
+// service_role inspection path; the RPC-only relations revoke every API role,
+// including service_role, and are reachable only through reviewed definer RPCs.
+export const SERVICE_OPERATED_INTERNAL_TABLES = Object.freeze([
+  'account_deletion_requests',
+  'account_deletion_click_tombstones',
+  'catalog_import_versions',
+  'catalog_import_staged_products',
+  'catalog_import_batch_receipts',
+  'catalog_active_imports',
+  'conflict_choice_mirror_versions',
+]);
+
+export const RPC_ONLY_INTERNAL_TABLES = Object.freeze([
+  'shelf_mirror_versions',
+  'mobile_outbox_receipts',
+]);
+
+// Owner-linked authority that remains sealed from direct PostgREST access but
+// has a reviewed, subject-facing projection in data-export. Source aliases are
+// deliberately distinct from the private ledger table names so the bundle
+// cannot imply that internal request fingerprints are part of the receipt.
+export const SEALED_OWNER_RPC_EXPORT_SOURCES = Object.freeze([
+  'shelf_product_identities',
+  'shelf_sync_receipts',
+  'routine_completion_sync_receipts',
+]);
+
+export const SEALED_OWNER_RPC_EXPORT_TABLES = Object.freeze([
+  'shelf_product_identities',
+  'shelf_sync_operations',
+  'routine_completion_sync_operations',
+]);
+
+// These tables are reachable only through narrowly granted security-definer
+// RPCs. Even service_role has no direct table privileges, so hosted PostgREST
+// evidence must prove they are sealed rather than pretending an admin client
+// can create or read a positive-control row.
+export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'shelf_product_identities',
+  'shelf_scans',
+  'obf_contribution_queue',
+  'catalog_sources',
+  'catalog_import_batches',
+  'catalog_quality_reports',
+  'health_processing_states',
+  'health_consent_withdrawal_operations',
+  'health_consent_withdrawal_steps',
+  'health_consent_copy_registry',
+  'health_consent_copy_review_events',
+  'health_consent_copy_staging_events',
+  'health_dependent_consent_operations',
+  'health_dependent_consent_states',
+  'account_publication_leases',
+  'account_deletion_operations',
+  'account_deletion_barriers',
+  'account_deletion_steps',
+  'account_deletion_receipts',
+  'account_deletion_operator_recovery_audit',
+  'revenuecat_identity_tombstones',
+  'apple_auth_lifecycles',
+  'apple_auth_capture_operations',
+  'apple_auth_server_events',
+]);
+
+// Global clinical/editorial content that has no reviewed publication authority.
+// These relations remain in the public schema for migration compatibility, but
+// migration 0058 removes every direct API-role SELECT path until a separate,
+// evidence-bound B-DERM release contract is installed.
+export const SEALED_GLOBAL_CONTENT_TABLES = Object.freeze([
+  'conflict_rules',
+  'sequencing_rules',
+  'creator_stacks',
+  'creator_stack_items',
+]);
+
+// Catalog dictionaries/legacy projections consumed only behind bounded serving
+// functions. Their historical RLS policies may remain for migration continuity,
+// but migration 0058 revokes SELECT from every API role, including service_role.
+export const SEALED_CATALOG_AUTHORITY_TABLES = Object.freeze([
+  'ingredient_tags',
+  'ingredient_pao_defaults',
+  'product_categories',
+  'ingredient_tag_definitions',
+]);
+
+export const SEALED_PUBLIC_TABLES = Object.freeze([
+  ...SEALED_SERVICE_PRIVATE_TABLES,
+  ...RPC_ONLY_INTERNAL_TABLES,
+  ...SEALED_GLOBAL_CONTENT_TABLES,
+  ...SEALED_CATALOG_AUTHORITY_TABLES,
+]);
+
+export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
+  'ingredients',
+  'ingredient_synonyms',
+  'products',
+  'product_ingredients',
+  'affiliate_links',
+  'community_topics',
+  'community_notes',
+  'brands',
+  'product_barcodes',
+  'ingredient_tag_assignments',
+  'product_ingredient_lists',
+  'product_ingredient_tokens',
+  'product_active_bands',
+  'product_pao_expiry',
+]);
+
+export const PRIVATE_PUBLIC_TABLES = Object.freeze([
+  ...OWNER_LINKED_PRIVATE_TABLES,
+  ...SERVICE_ONLY_PRIVATE_TABLES,
+  ...SERVICE_OPERATED_INTERNAL_TABLES,
+  ...RPC_ONLY_INTERNAL_TABLES,
+  ...SEALED_SERVICE_PRIVATE_TABLES,
+  ...SEALED_GLOBAL_CONTENT_TABLES,
+  ...SEALED_CATALOG_AUTHORITY_TABLES,
+]);
+
+export function tableClassificationIssues({ createdTables, rlsTables, classifications }) {
+  const created = new Set(createdTables);
+  const rls = new Set(rlsTables);
+  const classificationsByTable = new Map();
+
+  for (const [classification, tables] of classifications) {
+    for (const table of tables) {
+      const existing = classificationsByTable.get(table) ?? [];
+      existing.push(classification);
+      classificationsByTable.set(table, existing);
+    }
+  }
+
+  const issues = [];
+  for (const table of created) {
+    const matches = classificationsByTable.get(table) ?? [];
+    if (matches.length === 0) {
+      issues.push({ kind: 'unclassified', table, classifications: [] });
+    } else if (matches.length > 1) {
+      issues.push({ kind: 'duplicate', table, classifications: matches });
+    }
+  }
+
+  for (const [table, matches] of classificationsByTable) {
+    if (!created.has(table)) {
+      issues.push({ kind: 'stale', table, classifications: matches });
+    } else if (!rls.has(table)) {
+      issues.push({ kind: 'rls-disabled', table, classifications: matches });
+    }
+  }
+
+  return issues;
+}
+
+export function sqlPolicyStatement(source, policyName) {
+  const escapedName = String(policyName).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = String(source).match(
+    new RegExp(`create\\s+policy\\s+(?:"${escapedName}"|${escapedName})\\s+on\\s+[\\s\\S]*?;`, 'i'),
+  );
+  return match?.[0] ?? null;
+}
 
 export function abs(path) {
   return resolve(root, path);
@@ -60,6 +301,56 @@ export function readScriptAppEnvironment() {
   const candidate = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
   if (['development', 'staging', 'production'].includes(candidate)) return candidate;
   return 'production';
+}
+
+// Supabase documents PROJECT_REF as the 20-character unique identifier used
+// in the hosted API URL. Current generated refs are lowercase alphanumeric.
+const HOSTED_SUPABASE_PROJECT_REF = /^[a-z0-9]{20}$/;
+const HOSTED_SUPABASE_HOST = /^([a-z0-9]{20})\.supabase\.co$/;
+
+/**
+ * Resolve only the public, non-secret portions of a reviewed hosted Supabase
+ * target. A match requires the URL text itself to be the canonical origin;
+ * URL equivalence alone is deliberately insufficient because a port, path,
+ * credentials, query, fragment, case change, or trailing slash must fail the
+ * protected destructive harness before a Supabase client can be created.
+ */
+export function resolveHostedSupabaseProjectTarget(supabaseUrlValue, expectedProjectRefValue) {
+  const rawUrl = typeof supabaseUrlValue === 'string' ? supabaseUrlValue : '';
+  const rawExpectedRef = typeof expectedProjectRefValue === 'string' ? expectedProjectRefValue : '';
+  const expectedProjectRef =
+    rawExpectedRef === rawExpectedRef.trim() && HOSTED_SUPABASE_PROJECT_REF.test(rawExpectedRef)
+      ? rawExpectedRef
+      : null;
+
+  let parsedUrl = null;
+  try {
+    parsedUrl = new URL(rawUrl);
+  } catch {
+    // The caller receives only a fixed invalid marker, never the untrusted URL.
+  }
+
+  const hostMatch = parsedUrl?.hostname.match(HOSTED_SUPABASE_HOST) ?? null;
+  const actualProjectRef = hostMatch?.[1] ?? null;
+  const safeHost = parsedUrl?.host ?? (rawUrl ? 'invalid-url' : null);
+  const expectedOrigin = expectedProjectRef ? `https://${expectedProjectRef}.supabase.co` : null;
+
+  return Object.freeze({
+    valid:
+      Boolean(expectedOrigin) &&
+      rawUrl === expectedOrigin &&
+      parsedUrl?.protocol === 'https:' &&
+      parsedUrl.username === '' &&
+      parsedUrl.password === '' &&
+      parsedUrl.port === '' &&
+      parsedUrl.pathname === '/' &&
+      parsedUrl.search === '' &&
+      parsedUrl.hash === '' &&
+      actualProjectRef === expectedProjectRef,
+    expectedProjectRef,
+    actualProjectRef,
+    safeHost,
+  });
 }
 
 export function listFiles(dir = '.') {
@@ -219,14 +510,88 @@ export function productionSupportEmail(value) {
   return Boolean(normalizeProductionSupportEmail(value));
 }
 
+export function stableErrorCode(error) {
+  if (!error || typeof error !== 'object' || !('code' in error)) return null;
+  const code = String(error.code ?? '');
+  return /^(?:[0-9A-Z]{5}|PGRST[0-9]{3})$/.test(code) ? code : null;
+}
+
+export function exactEmptyRows(data) {
+  return Array.isArray(data) && data.length === 0;
+}
+
+export function deniedReadOrMutationResult({ data, error }) {
+  if (error) return stableErrorCode(error) === '42501';
+  return exactEmptyRows(data);
+}
+
+export function deniedInsertResult({ error }) {
+  return stableErrorCode(error) === '42501';
+}
+
+export function exactPostgresErrorResult({ error }, expectedCode) {
+  return stableErrorCode(error) === expectedCode;
+}
+
+export function authUserMissing({ data, error }) {
+  return (
+    !data?.user &&
+    error?.name === 'AuthApiError' &&
+    error.status === 404 &&
+    error.code === 'user_not_found'
+  );
+}
+
+export function storageAccessDenied(error, { allowNotFound = false } = {}) {
+  if (!error || typeof error !== 'object') return false;
+  if (error.name !== 'StorageApiError' || !Number.isInteger(error.status)) return false;
+  const statusCode = String(error.statusCode ?? '');
+  if (
+    error.status === 403 &&
+    (statusCode === 'AccessDenied' || /^unauthorized$/i.test(statusCode) || statusCode === '403')
+  ) {
+    return true;
+  }
+  return allowNotFound && storageObjectMissing(error);
+}
+
+export function storageObjectMissing(error) {
+  if (!error || typeof error !== 'object') return false;
+  if (error.name !== 'StorageApiError' || error.status !== 404) return false;
+  const statusCode = String(error.statusCode ?? '');
+  return statusCode === 'NoSuchKey' || statusCode === 'not_found' || statusCode === '404';
+}
+
+export function storageDeniedResult(
+  { data, error },
+  { allowNotFound = false, allowEmpty = false } = {},
+) {
+  if (error) return storageAccessDenied(error, { allowNotFound });
+  return allowEmpty && exactEmptyRows(data);
+}
+
+export class HarnessAssertionError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'HarnessAssertionError';
+  }
+}
+
 export function redactedErrorKind(error) {
-  if (error instanceof Error) return error.name || 'Error';
+  const code = stableErrorCode(error);
+  if (code) return `code:${code}`;
   if (error && typeof error === 'object') {
-    const code = 'code' in error ? String(error.code ?? '') : '';
-    if (/^[A-Za-z0-9_-]{1,40}$/.test(code)) return `code:${code}`;
+    const status = 'status' in error ? Number(error.status) : NaN;
+    if (Number.isInteger(status) && status >= 100 && status <= 599) return `http:${status}`;
+    const name = 'name' in error ? String(error.name ?? '') : '';
+    if (/^[A-Za-z][A-Za-z0-9_-]{0,39}$/.test(name)) return name;
     return 'object';
   }
   return typeof error;
+}
+
+export function harnessErrorDetail(error) {
+  return error instanceof HarnessAssertionError ? error.message : redactedErrorKind(error);
 }
 
 const PUBLIC_SECRET_NAME = /(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i;
@@ -260,71 +625,7 @@ export function command(commandName, args, options = {}) {
   });
 }
 
-export const generatedEvidenceOutputPaths = Object.freeze([
-  'docs/e2e/generated/human-e2e-manifest.json',
-  'docs/e2e/generated/human-e2e-manifest.md',
-  'docs/generated/generated-packet-status-audit.json',
-  'docs/generated/generated-packet-status-audit.md',
-  'docs/generated/device-support-policy-audit.json',
-  'docs/generated/device-support-policy-audit.md',
-  'docs/generated/performance-readiness-audit.json',
-  'docs/generated/performance-readiness-audit.md',
-  'docs/generated/readiness-status-audit.json',
-  'docs/generated/readiness-status-audit.md',
-  'docs/generated/source-packet-audit.json',
-  'docs/generated/source-packet-audit.md',
-  'docs/generated/tas-todo-audit.json',
-  'docs/generated/tas-todo-audit.md',
-  'docs/phase-3/generated/review-packet-manifest.json',
-  'docs/phase-3/generated/review-packet.md',
-  'docs/phase-3/generated/review-operator-queue.json',
-  'docs/phase-3/generated/review-operator-queue.md',
-  'docs/phase-3/generated/review-worklist.json',
-  'docs/phase-3/generated/review-worklist.md',
-  'docs/phase-4/generated/beta-coverage-report.json',
-  'docs/phase-4/generated/beta-coverage-report.md',
-  'docs/phase-4/generated/catalog-qa-report.json',
-  'docs/phase-4/generated/catalog-qa-report.md',
-  'docs/phase-4/generated/cosing-fixture-import.json',
-  'docs/phase-4/generated/obf-fixture-import.json',
-  'docs/phase-4/generated/source-worklist.json',
-  'docs/phase-4/generated/source-worklist.md',
-  'docs/phase-5/generated/device-qa-packet.json',
-  'docs/phase-5/generated/device-qa-packet.md',
-  'docs/phase-6/generated/payments-qa-packet.json',
-  'docs/phase-6/generated/payments-qa-packet.md',
-  'docs/phase-7/generated/core-loop-qa-packet.json',
-  'docs/phase-7/generated/core-loop-qa-packet.md',
-  'docs/phase-8/generated/growth-store-qa-packet.json',
-  'docs/phase-8/generated/growth-store-qa-packet.md',
-  'docs/phase-9/generated/dependency-inventory.json',
-  'docs/phase-9/generated/dependency-inventory.md',
-  'docs/phase-9/generated/live-catalog-rate-limit.json',
-  'docs/phase-9/generated/live-catalog-rate-limit.md',
-  'docs/phase-9/generated/live-consent-withdrawal.json',
-  'docs/phase-9/generated/live-consent-withdrawal.md',
-  'docs/phase-9/generated/live-data-rights.json',
-  'docs/phase-9/generated/live-data-rights.md',
-  'docs/phase-9/generated/live-edge-auth.json',
-  'docs/phase-9/generated/live-edge-auth.md',
-  'docs/phase-9/generated/live-order-report-poll.json',
-  'docs/phase-9/generated/live-order-report-poll.md',
-  'docs/phase-9/generated/live-public-forms.json',
-  'docs/phase-9/generated/live-public-forms.md',
-  'docs/phase-9/generated/live-revenuecat-webhook.json',
-  'docs/phase-9/generated/live-revenuecat-webhook.md',
-  'docs/phase-9/generated/live-supabase-adversarial.json',
-  'docs/phase-9/generated/live-supabase-adversarial.md',
-  'docs/phase-9/generated/release-engineering-qa-packet.json',
-  'docs/phase-9/generated/release-engineering-qa-packet.md',
-  'docs/phase-9/generated/store-build-inspection.json',
-  'docs/phase-10/generated/closed-beta-packet.json',
-  'docs/phase-10/generated/closed-beta-packet.md',
-  'docs/phase-10/generated/support-handoff-packet.json',
-  'docs/phase-10/generated/support-handoff-packet.md',
-  'docs/phase-11/generated/public-launch-packet.json',
-  'docs/phase-11/generated/public-launch-packet.md',
-]);
+export const generatedEvidenceOutputPaths = GOVERNED_DOWNSTREAM_GENERATED_PATHS;
 
 function normalizeRepoPath(path) {
   return String(path ?? '')
@@ -340,12 +641,15 @@ function gitStatusLinePaths(line) {
     .filter(Boolean);
 }
 
-export function gitStatusExcludingGeneratedEvidence(extraGeneratedPaths = []) {
-  const excluded = new Set(
-    [...generatedEvidenceOutputPaths, ...extraGeneratedPaths].map(normalizeRepoPath),
-  );
+export function gitStatusExcludingPaths(excludedPaths = []) {
+  const excluded = new Set(excludedPaths.map(normalizeRepoPath));
 
-  return command('git', ['status', '--short'])
+  return command('git', [
+    'status',
+    '--porcelain=v1',
+    '--untracked-files=all',
+    '--ignore-submodules=none',
+  ])
     .split(/\r?\n/)
     .map((line) => line.trimEnd())
     .filter(Boolean)
@@ -355,6 +659,10 @@ export function gitStatusExcludingGeneratedEvidence(extraGeneratedPaths = []) {
     })
     .join('\n')
     .trim();
+}
+
+export function gitStatusExcludingGeneratedEvidence(extraGeneratedPaths = []) {
+  return gitStatusExcludingPaths([...generatedEvidenceOutputPaths, ...extraGeneratedPaths]);
 }
 
 export function printResult(title, errors, warnings) {

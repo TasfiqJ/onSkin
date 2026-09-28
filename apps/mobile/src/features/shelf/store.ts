@@ -1,60 +1,49 @@
-import * as Crypto from 'expo-crypto';
+import { randomUUID } from 'expo-crypto';
 
-import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
+import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@layerwell/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
-import { hashOutboxOwner } from '@/lib/offline/outboxIdentity';
-import {
-  OUTBOX_STORAGE_KEY,
-  decodeOutboxEnvelope,
-  discardConflictChoiceOutboxDependencies,
-  encodeOutboxEnvelope,
-  enqueueShelfOutboxOperation,
-  type OutboxOperationKind,
-  type ShelfProductOutboxPayload,
-} from '@/lib/offline/outbox.pure';
-import {
-  readPrivateItem,
-  updatePrivateItem,
-  updatePrivateItemsTransactionally,
-} from '@/lib/storage/privateKV';
-import { readLocalDateBoundaryIdentity } from '@/lib/query/queryDateBoundaryCore';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
-import { normalizeShelfFreshness, validLocalDate } from './freshness';
+import {
+  currentLocalDate,
+  normalizeShelfFreshness,
+  normalizeShelfFreshnessV1,
+  validLocalDate,
+  type ShelfFreshness,
+  type ShelfFreshnessInput,
+} from './freshness';
+import {
+  SHELF_PRODUCT_BRAND_MAX_LENGTH,
+  SHELF_PRODUCT_NAME_MAX_LENGTH,
+  SHELF_PRODUCT_TEXT_MAX_BYTES,
+} from './limits';
+
+export {
+  SHELF_PRODUCT_BRAND_MAX_LENGTH,
+  SHELF_PRODUCT_NAME_MAX_LENGTH,
+  SHELF_PRODUCT_TEXT_MAX_BYTES,
+} from './limits';
 
 // Local-first shelf store (docs/04 §8: the shelf must work in a bathroom with no
-// signal. View, manual-add, and queued lookups remain offline. The encrypted
-// Shelf v3 record is local authority; authenticated mutations atomically append
-// a sanitized owner-bound outbox state mirror for deferred server convergence.
-export const SHELF_STORAGE_KEY = 'onskin.shelf.v1';
-const KEY = SHELF_STORAGE_KEY;
+// signal. View, manual-add, and queued lookups all offline). AsyncStorage is the
+// source of truth for the versioned shelf envelope (single-user,
+// last-write-wins is safe, DECISIONS D-029);
+// Each committed lifecycle mutation also appends owner-free Supabase replay
+// work inside this same encrypted envelope. The authenticated sync boundary
+// supplies the owner later, so a local commit cannot race a separate queue write.
+const KEY = 'layerwell.shelf.v1';
+const LEGACY_SCHEMA_VERSION = 1 as const;
+const PREVIOUS_SCHEMA_VERSION = 2 as const;
 const SCHEMA_VERSION = 3 as const;
-const LEGACY_ENVELOPE_VERSION = 1 as const;
-const LEGACY_ADD_OPERATION_ENVELOPE_VERSION = 2 as const;
-const MAX_ADD_OPERATION_MAPPINGS = 128;
-const ADD_OWNER_HASH_NAMESPACE = 'onskin:shelf-add-owner:v1:';
-const ADD_INPUT_HASH_NAMESPACE = 'onskin:shelf-add-input:v1:';
-const LOCAL_UNCLAIMED_ADD_OWNER = 'onskin:shelf-local-unclaimed-owner:v1';
-const ADD_INPUT_FINGERPRINT_MAX_LOCAL_DATE = '9999-12-31';
-const REPLENISHMENT_ID_NAMESPACE = 'onskin:shelf-replenishment:v1:';
 
 export const SHELF_STATE_INVALID = 'SHELF_STATE_INVALID';
 export const SHELF_STATE_UNSUPPORTED_VERSION = 'SHELF_STATE_UNSUPPORTED_VERSION';
-export const SHELF_STATE_UNAVAILABLE = 'SHELF_STATE_UNAVAILABLE';
-export const SHELF_REPLENISHMENT_ALREADY_REPLACED = 'SHELF_REPLENISHMENT_ALREADY_REPLACED';
-export const SHELF_ADD_OPERATION_OWNER_MISMATCH = 'SHELF_ADD_OPERATION_OWNER_MISMATCH';
-export const SHELF_ADD_OPERATION_INPUT_MISMATCH = 'SHELF_ADD_OPERATION_INPUT_MISMATCH';
-export const SHELF_ADD_OPERATION_LIMIT_REACHED = 'SHELF_ADD_OPERATION_LIMIT_REACHED';
 
 const PRODUCT_STATUSES = new Set<ProductStatus>(['active', 'finished', 'discarded']);
 const ADDED_VIA = new Set<AddedVia>(['barcode', 'search', 'ocr', 'manual', 'onboarding']);
-const FRESHNESS_PATCH_KEYS = [
-  'openedAt',
-  'isOpened',
-  'paoMonths',
-  'paoSource',
-  'expiryDate',
-  'expirySource',
-] as const;
+const PAO_SOURCES = new Set<PaoSource>(['label', 'catalog', 'category_default', 'unknown']);
+const EXPIRY_SOURCES = new Set<ExpirySource>(['printed', 'pao_computed', 'estimated', 'unknown']);
 const CATALOG_QUALITY_GRADES = new Set<CatalogQualityGrade | 'manual'>([
   'verified',
   'usable',
@@ -89,19 +78,28 @@ export type ShelfProduct = {
   isOpened: boolean; // false = unopened, no PAO clock (docs/04 §4.5)
   paoMonths: number | null;
   paoSource: PaoSource;
-  expiryDate: string | null; // printed expiry (ISO), if known
+  expiryDate: string | null; // date printed on the physical package, if known
   expirySource: ExpirySource;
+  /** Historical catalog-transferred package date. Non-actionable until the user
+   * reconfirms it from the exact package in hand. */
+  legacyUnverifiedExpiryDate: string | null;
   status: ProductStatus;
   finishedAt: string | null;
   addedVia: AddedVia;
   /** Repurchase history powering the archive + replenishment (docs/04 §5.7). */
   repurchaseCount: number;
+  /** Immutable local lineage. Optional only while authenticating historical v1 bytes. */
+  replacementRootId?: string;
+  replacesProductId?: string | null;
+  replacementLineageAmbiguous?: boolean;
   thumbnailPath: string | null; // LOCAL device path by default (docs/04 §7)
   createdAt: string;
   updatedAt: string;
 };
 
 export type NewShelfProduct = {
+  /** Stable for one intake submission so an uncertain retry cannot duplicate the shelf row. */
+  operationId?: string;
   name: string;
   brand?: string | null;
   category?: string | null;
@@ -129,68 +127,138 @@ export type NewShelfProduct = {
   addedVia: AddedVia;
 };
 
-export type ShelfAddOwner = Readonly<{
-  /** Raw owner identity is hashed before it enters encrypted Shelf state. */
-  ownerId?: string;
-  ownerGeneration?: number;
-  /** Captured account-generation assertion supplied by the public hook. */
-  assertCurrent?: () => void;
-  /** Stable caller-owned identity for one explicit add intent. */
-  operationId: string;
-}>;
+/** A replacement package must have an explicit opening state. Buying another
+ * unit alone never starts its PAO clock. */
+export type ReplacementOpeningState =
+  | { isOpened: true; openedAt: string }
+  | { isOpened: false; openedAt: null };
 
-type ShelfOperationOwner = Readonly<{
-  ownerId?: string;
-  ownerGeneration?: number;
-  assertCurrent?: () => void;
-}>;
-
-type ShelfOutboxChange = Readonly<
-  | { operationKind: 'delete'; entityId: string; payload: null }
-  | { operationKind: 'upsert'; entityId: string; payload: ShelfProductOutboxPayload }
->;
-
-type ShelfStorageUpdate = Readonly<{
-  nextShelf: string | null;
-  outboxChanges: readonly ShelfOutboxChange[];
-}>;
-
-type ShelfAddOperation = {
-  operationId: string;
-  ownerHash: string;
-  inputHash: string;
-  productId: string;
-  createdAt: string;
-  status: 'pending' | 'acknowledged';
-  acknowledgedAt: string | null;
+export type CatalogRecoveryProductUpdate = {
+  id: string;
+  expectedUpdatedAt: string;
+  useCatalogIdentity: boolean;
+  catalogProductId: string;
+  catalogSourceId: string;
+  catalogSource: string;
+  catalogSourceName: string;
+  catalogSourceRef: string | null;
+  catalogSourceUrl: string | null;
+  catalogSourceSnapshotDate: string | null;
+  catalogMatchQuality: 'verified' | 'usable';
+  dataQualityScore: number | null;
+  sourceDisclosureAckAt: string;
+  catalogName: string;
+  catalogBrand: string | null;
+  catalogCategory: string | null;
 };
+
+export type CatalogRecoveryProductUpdateResult =
+  | { status: 'updated'; product: ShelfProduct }
+  | { status: 'missing' | 'stale' };
+
+/**
+ * Owner-free Supabase `user_products` replay bytes. The sync boundary adds the
+ * currently authenticated owner from its health-data lease; an account
+ * identifier is never retained in this encrypted feature envelope.
+ */
+export type ShelfMirrorUpsertPayload = {
+  id: string;
+  catalog_product_id: string | null;
+  catalog_source_id: string | null;
+  catalog_match_quality: CatalogQualityGrade | 'manual' | null;
+  catalog_source_snapshot_date: string | null;
+  manual_name: string;
+  manual_brand: string | null;
+  barcode: string | null;
+  opened_at: string | null;
+  pao_months: number | null;
+  expiry_date: string | null;
+  is_opened: boolean;
+  pao_source: PaoSource;
+  expiry_source: ExpirySource;
+  added_via: AddedVia;
+  source_disclosure_ack_at: string | null;
+  status: ProductStatus;
+  finished_at: string | null;
+};
+
+type ShelfMirrorOperationBase = {
+  operationId: string;
+  enqueuedAt: string;
+};
+
+export type ShelfMirrorOperation =
+  | (ShelfMirrorOperationBase & {
+      kind: 'upsert';
+      payload: ShelfMirrorUpsertPayload;
+    })
+  | (ShelfMirrorOperationBase & {
+      kind: 'delete';
+      productId: string;
+    });
+
+export type ShelfMirrorTerminalCode =
+  | 'SHELF_PRODUCT_ID_INVALID'
+  | 'SHELF_PRODUCT_PAYLOAD_INVALID'
+  | 'SHELF_PRODUCT_PROVENANCE_INVALID'
+  | 'SHELF_PRODUCT_OWNERSHIP_CONFLICT';
+
+export type ShelfMirrorTerminal = Readonly<{
+  operation: ShelfMirrorOperation;
+  code: ShelfMirrorTerminalCode;
+}>;
+
+export type ShelfMirrorIncompatibilityCode =
+  | 'SHELF_MIRROR_PRODUCT_ID_REPAIR_REQUIRED'
+  | 'SHELF_MIRROR_NAME_REPAIR_REQUIRED'
+  | 'SHELF_MIRROR_BRAND_REPAIR_REQUIRED'
+  | 'SHELF_MIRROR_BARCODE_REPAIR_REQUIRED';
+
+export type ShelfMirrorIncompatibility = Readonly<{
+  productId: string;
+  codes: ShelfMirrorIncompatibilityCode[];
+}>;
 
 type ShelfEnvelope = {
   version: typeof SCHEMA_VERSION;
   products: ShelfProduct[];
-  addOperations: ShelfAddOperation[];
+  mirrorOutbox: ShelfMirrorOperation[];
+  terminal: ShelfMirrorTerminal[];
+  mirrorIncompatibilities: ShelfMirrorIncompatibility[];
 };
+
+type ShelfFreshnessNormalizer = (input: ShelfFreshnessInput, today?: string) => ShelfFreshness;
 
 type DecodedShelfState = {
   products: ShelfProduct[];
-  addOperations: ShelfAddOperation[];
-  format: ShelfStateFormat | 'absent';
+  mirrorOutbox: ShelfMirrorOperation[];
+  terminal: ShelfMirrorTerminal[];
+  mirrorIncompatibilities: ShelfMirrorIncompatibility[];
+  upgradeFrom: 'none' | 'legacy' | 'v2';
 };
 
-type ShelfStateFormat = 'current' | 'legacy';
+const SHELF_MIRROR_TERMINAL_CODES = new Set<ShelfMirrorTerminalCode>([
+  'SHELF_PRODUCT_ID_INVALID',
+  'SHELF_PRODUCT_PAYLOAD_INVALID',
+  'SHELF_PRODUCT_PROVENANCE_INVALID',
+  'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+]);
 
-export type ShelfStateRead =
-  | { status: 'absent'; products: ShelfProduct[] }
-  | { status: 'available'; products: ShelfProduct[]; format: ShelfStateFormat }
-  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; products: null };
-
-export type ReAddedShelfProduct = {
-  fresh: ShelfProduct;
-  archived: ShelfProduct;
-};
+const shelfMirrorOutboxListeners = new Set<() => void>();
 
 function nowISO(): string {
   return new Date().toISOString();
+}
+
+function utcCalendarDayPlusOne(isoTimestamp: string): string {
+  const date = new Date(isoTimestamp);
+  date.setUTCDate(date.getUTCDate() + 1);
+  return date.toISOString().slice(0, 10);
+}
+
+function preserveExistingOpenedDateToday(product: ShelfProduct): string {
+  const today = currentLocalDate();
+  return product.openedAt && product.openedAt > today ? product.openedAt : today;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -206,19 +274,77 @@ function hasExactKeys(value: Record<string, unknown>, expected: readonly string[
   return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
 }
 
-function canonicalJson(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
-  if (isRecord(value)) {
-    return `{${Object.keys(value)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
-      .join(',')}}`;
-  }
-  return JSON.stringify(value) ?? 'undefined';
-}
-
 function nonEmptyString(value: unknown): string | null {
   return typeof value === 'string' && value.trim().length > 0 ? value : null;
+}
+
+const SHELF_PRODUCT_CONTROL_CHARACTER = /[\u0000-\u001f\u007f]/u;
+const SHELF_PRODUCT_BARCODE = /^(?:\d{8}|\d{12}|\d{13}|\d{14})$/u;
+
+function utf8ByteLength(value: string): number {
+  let bytes = 0;
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)!;
+    bytes += codePoint <= 0x7f ? 1 : codePoint <= 0x7ff ? 2 : codePoint <= 0xffff ? 3 : 4;
+  }
+  return bytes;
+}
+
+function strictShelfProductText(value: unknown, maxCharacters: number): string | null {
+  return typeof value === 'string' &&
+    value.length > 0 &&
+    value.length <= maxCharacters &&
+    value === value.trim() &&
+    !SHELF_PRODUCT_CONTROL_CHARACTER.test(value) &&
+    utf8ByteLength(value) <= SHELF_PRODUCT_TEXT_MAX_BYTES
+    ? value
+    : null;
+}
+
+function strictShelfProductBarcode(value: unknown): string | null {
+  return typeof value === 'string' && SHELF_PRODUCT_BARCODE.test(value) ? value : null;
+}
+
+function shelfMirrorIncompatibilityCodes(product: ShelfProduct): ShelfMirrorIncompatibilityCode[] {
+  const codes: ShelfMirrorIncompatibilityCode[] = [];
+  if (!validCanonicalOperationId(product.id)) {
+    codes.push('SHELF_MIRROR_PRODUCT_ID_REPAIR_REQUIRED');
+  }
+  if (strictShelfProductText(product.name, SHELF_PRODUCT_NAME_MAX_LENGTH) !== product.name) {
+    codes.push('SHELF_MIRROR_NAME_REPAIR_REQUIRED');
+  }
+  if (
+    product.brand !== null &&
+    strictShelfProductText(product.brand, SHELF_PRODUCT_BRAND_MAX_LENGTH) !== product.brand
+  ) {
+    codes.push('SHELF_MIRROR_BRAND_REPAIR_REQUIRED');
+  }
+  if (product.barcode !== null && strictShelfProductBarcode(product.barcode) !== product.barcode) {
+    codes.push('SHELF_MIRROR_BARCODE_REPAIR_REQUIRED');
+  }
+  return codes;
+}
+
+function shelfMirrorIncompatibilities(
+  products: readonly ShelfProduct[],
+): ShelfMirrorIncompatibility[] {
+  return products.flatMap((product) => {
+    const codes = shelfMirrorIncompatibilityCodes(product);
+    return codes.length === 0 ? [] : [{ productId: product.id, codes }];
+  });
+}
+
+function validCanonicalOperationId(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value)
+  );
+}
+
+function validCanonicalTimestamp(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const timestamp = new Date(value);
+  return !Number.isNaN(timestamp.getTime()) && timestamp.toISOString() === value;
 }
 
 function stringOrNull(value: unknown): string | null {
@@ -243,9 +369,7 @@ function isoStringOrFallback(value: unknown, fallback: string): string {
 
 function isoStringOrNull(value: unknown): string | null {
   const text = nonEmptyString(value);
-  if (!text) return null;
-  const timestamp = Date.parse(text);
-  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+  return text && !Number.isNaN(Date.parse(text)) ? text : null;
 }
 
 function zeroToOneOrNull(value: unknown): number | null {
@@ -271,369 +395,18 @@ function catalogQualityOrNull(value: unknown): CatalogQualityGrade | 'manual' | 
     : null;
 }
 
-function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduct | null {
-  if (!isRecord(value)) return null;
-  const id = nonEmptyString(value.id);
-  const name = nonEmptyString(value.name);
-  if (!id || !name) return null;
-
-  const addedVia = enumValue(value.addedVia, ADDED_VIA, 'manual');
-  const catalogSource =
-    stringOrNull(value.catalogSource) ?? (addedVia === 'manual' ? 'user_local' : null);
-  const catalogMatchQuality =
-    catalogQualityOrNull(value.catalogMatchQuality) ?? (addedVia === 'manual' ? 'manual' : null);
-  const status = enumValue(value.status, PRODUCT_STATUSES, 'active');
-  const createdAt = isoStringOrFallback(value.createdAt, fallbackISO);
-  // Persisted local dates must not be reinterpreted against a UTC timestamp on
-  // every read. Mutation entry points normalize against the current local date
-  // before this strict, clock-independent codec pass.
-  const freshness = normalizeShelfFreshness(value, ADD_INPUT_FINGERPRINT_MAX_LOCAL_DATE);
-
-  return {
-    id,
-    name,
-    brand: stringOrNull(value.brand),
-    category: stringOrNull(value.category),
-    barcode: stringOrNull(value.barcode),
-    catalogProductId: stringOrNull(value.catalogProductId),
-    catalogSourceId: stringOrNull(value.catalogSourceId),
-    catalogSource,
-    catalogSourceName: stringOrNull(value.catalogSourceName),
-    catalogSourceRef: stringOrNull(value.catalogSourceRef),
-    catalogSourceUrl: stringOrNull(value.catalogSourceUrl),
-    catalogSourceSnapshotDate: localDateOrNull(value.catalogSourceSnapshotDate),
-    catalogMatchQuality,
-    dataQualityScore: zeroToHundredOrNull(value.dataQualityScore),
-    ingredientParseStatus: stringOrNull(value.ingredientParseStatus),
-    ingredientParseConfidence: zeroToOneOrNull(value.ingredientParseConfidence),
-    parserVersion: stringOrNull(value.parserVersion),
-    sourceDisclosureAckAt: isoStringOrNull(value.sourceDisclosureAckAt),
-    ingredients: stringArray(value.ingredients),
-    ...freshness,
-    status,
-    finishedAt: status === 'active' ? null : localDateOrNull(value.finishedAt),
-    addedVia,
-    repurchaseCount:
-      typeof value.repurchaseCount === 'number' &&
-      Number.isInteger(value.repurchaseCount) &&
-      value.repurchaseCount > 0
-        ? value.repurchaseCount
-        : 1,
-    thumbnailPath: stringOrNull(value.thumbnailPath),
-    createdAt,
-    updatedAt: isoStringOrFallback(value.updatedAt, createdAt),
-  };
-}
-
-function normalizeShelfProducts(value: unknown, fallbackISO: string): ShelfProduct[] | null {
-  if (!Array.isArray(value)) return null;
-  const items: ShelfProduct[] = [];
-  const ids = new Set<string>();
-  for (const row of value) {
-    const product = normalizeShelfProduct(row, fallbackISO);
-    if (!product || ids.has(product.id)) return null;
-    ids.add(product.id);
-    items.push(product);
-  }
-  return items;
-}
-
-const SHA256_HEX = /^[0-9a-f]{64}$/;
-
-function normalizeShelfAddOperations(
-  value: unknown,
-  products: readonly ShelfProduct[],
-  version: typeof SCHEMA_VERSION | typeof LEGACY_ADD_OPERATION_ENVELOPE_VERSION,
-): ShelfAddOperation[] | null {
-  if (!Array.isArray(value) || value.length > MAX_ADD_OPERATION_MAPPINGS) return null;
-  const productIds = new Set(products.map((product) => product.id));
-  const operationIds = new Set<string>();
-  const productReceipts = new Set<string>();
-  const operations: ShelfAddOperation[] = [];
-
-  for (const row of value) {
-    const expectedKeys =
-      version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION
-        ? ['operationId', 'ownerHash', 'inputHash', 'productId', 'createdAt']
-        : [
-            'operationId',
-            'ownerHash',
-            'inputHash',
-            'productId',
-            'createdAt',
-            'status',
-            'acknowledgedAt',
-          ];
-    if (!isRecord(row) || !hasExactKeys(row, expectedKeys)) {
-      return null;
-    }
-    const operationId = nonEmptyString(row.operationId);
-    const productId = nonEmptyString(row.productId);
-    const createdAt = isoStringOrNull(row.createdAt);
-    if (
-      !operationId ||
-      operationId.length > 128 ||
-      !SHA256_HEX.test(String(row.ownerHash)) ||
-      !SHA256_HEX.test(String(row.inputHash)) ||
-      !productId ||
-      !productIds.has(productId) ||
-      !createdAt ||
-      operationIds.has(operationId) ||
-      productReceipts.has(productId)
-    ) {
-      return null;
-    }
-    const ownerHash = String(row.ownerHash);
-    const inputHash = String(row.inputHash);
-    const status = version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION ? 'pending' : row.status;
-    const acknowledgedAt =
-      version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION
-        ? null
-        : row.acknowledgedAt === null
-          ? null
-          : isoStringOrNull(row.acknowledgedAt);
-    if (
-      (status !== 'pending' && status !== 'acknowledged') ||
-      (status === 'pending' && acknowledgedAt !== null) ||
-      (status === 'acknowledged' && acknowledgedAt === null)
-    ) {
-      return null;
-    }
-    operationIds.add(operationId);
-    productReceipts.add(productId);
-    operations.push({
-      operationId,
-      ownerHash,
-      inputHash,
-      productId,
-      createdAt,
-      status,
-      acknowledgedAt,
-    });
-  }
-  return operations;
-}
-
-function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedShelfState {
-  if (raw === null) return { products: [], addOperations: [], format: 'absent' };
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw new Error(SHELF_STATE_INVALID);
-  }
-
-  if (Array.isArray(parsed)) {
-    const legacy = normalizeShelfProducts(parsed, fallbackISO);
-    if (!legacy) throw new Error(SHELF_STATE_INVALID);
-    return { products: legacy, addOperations: [], format: 'legacy' };
-  }
-  if (!isRecord(parsed)) throw new Error(SHELF_STATE_INVALID);
+function mirrorPayloadForProduct(product: ShelfProduct): ShelfMirrorUpsertPayload {
   if (
-    parsed.version !== SCHEMA_VERSION &&
-    parsed.version !== LEGACY_ENVELOPE_VERSION &&
-    parsed.version !== LEGACY_ADD_OPERATION_ENVELOPE_VERSION
+    !validCanonicalOperationId(product.id) ||
+    strictShelfProductText(product.name, SHELF_PRODUCT_NAME_MAX_LENGTH) !== product.name ||
+    (product.brand !== null &&
+      strictShelfProductText(product.brand, SHELF_PRODUCT_BRAND_MAX_LENGTH) !== product.brand) ||
+    (product.barcode !== null && strictShelfProductBarcode(product.barcode) !== product.barcode)
   ) {
-    if (
-      typeof parsed.version === 'number' &&
-      Number.isSafeInteger(parsed.version) &&
-      parsed.version > SCHEMA_VERSION
-    ) {
-      throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
-    }
-    throw new Error(SHELF_STATE_INVALID);
-  }
-  const isProductOnlyLegacyEnvelope = parsed.version === LEGACY_ENVELOPE_VERSION;
-  if (
-    !hasExactKeys(
-      parsed,
-      isProductOnlyLegacyEnvelope
-        ? ['version', 'products']
-        : ['version', 'products', 'addOperations'],
-    )
-  ) {
-    throw new Error(SHELF_STATE_INVALID);
-  }
-  const products = normalizeShelfProducts(parsed.products, fallbackISO);
-  if (!products || canonicalJson(products) !== canonicalJson(parsed.products)) {
-    throw new Error(SHELF_STATE_INVALID);
-  }
-  if (isProductOnlyLegacyEnvelope) return { products, addOperations: [], format: 'legacy' };
-  const addOperationVersion =
-    parsed.version === LEGACY_ADD_OPERATION_ENVELOPE_VERSION
-      ? LEGACY_ADD_OPERATION_ENVELOPE_VERSION
-      : SCHEMA_VERSION;
-  const addOperations = normalizeShelfAddOperations(
-    parsed.addOperations,
-    products,
-    addOperationVersion,
-  );
-  if (!addOperations) {
     throw new Error(SHELF_STATE_INVALID);
   }
   return {
-    products,
-    addOperations,
-    format: parsed.version === SCHEMA_VERSION ? 'current' : 'legacy',
-  };
-}
-
-/** Strict snapshot used only while another encrypted mutation holds the Shelf
- * key in the same private-KV transaction. It never repairs or rewrites bytes. */
-export function decodeShelfProductsForOutboxDependency(raw: string | null): ShelfProduct[] {
-  return decodeShelfState(raw).products;
-}
-
-function encodeShelfState(products: ShelfProduct[], addOperations: ShelfAddOperation[]): string {
-  return JSON.stringify({
-    version: SCHEMA_VERSION,
-    products,
-    addOperations,
-  } satisfies ShelfEnvelope);
-}
-
-let e2eShelfReadFailureCount = 0;
-
-function consumeE2EShelfReadFailure(): boolean {
-  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
-  const fixture = process.env.EXPO_PUBLIC_E2E_SHELF_STORAGE_FAILURE?.trim().toLowerCase();
-  if (fixture === 'always') return true;
-  if (fixture !== 'once' || e2eShelfReadFailureCount > 0) return false;
-  e2eShelfReadFailureCount += 1;
-  return true;
-}
-
-/** Read and classify Shelf state without repairing, deleting, or migrating bytes. */
-export async function readShelfState(): Promise<ShelfStateRead> {
-  if (consumeE2EShelfReadFailure()) return { status: 'unavailable', products: null };
-
-  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
-  try {
-    stored = await readPrivateItem(KEY);
-  } catch {
-    return { status: 'unavailable', products: null };
-  }
-  if (stored.status === 'absent') return { status: 'absent', products: [] };
-  if (stored.status === 'unavailable') return { status: 'unavailable', products: null };
-  if (stored.status === 'corrupt') return { status: 'corrupt', products: null };
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', products: null };
-  }
-
-  try {
-    const decoded = decodeShelfState(stored.value);
-    return {
-      status: 'available',
-      products: decoded.products,
-      format: decoded.format === 'legacy' ? 'legacy' : 'current',
-    };
-  } catch (error) {
-    return error instanceof Error && error.message === SHELF_STATE_UNSUPPORTED_VERSION
-      ? { status: 'unsupported_version', products: null }
-      : { status: 'corrupt', products: null };
-  }
-}
-
-export async function loadShelf(): Promise<ShelfProduct[]> {
-  const result = await readShelfState();
-  if (result.status === 'available' || result.status === 'absent') return result.products;
-  if (result.status === 'unsupported_version') {
-    throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
-  }
-  if (result.status === 'corrupt') throw new Error(SHELF_STATE_INVALID);
-  throw new Error(SHELF_STATE_UNAVAILABLE);
-}
-
-function fingerprintText(value: string | null): string | null {
-  return value === null ? null : value.trim();
-}
-
-function canonicalAddInput(product: ShelfProduct): string {
-  return canonicalJson({
-    name: product.name.trim(),
-    brand: fingerprintText(product.brand),
-    category: fingerprintText(product.category),
-    barcode: fingerprintText(product.barcode),
-    catalogProductId: fingerprintText(product.catalogProductId),
-    catalogSourceId: fingerprintText(product.catalogSourceId),
-    catalogSource: fingerprintText(product.catalogSource),
-    catalogSourceName: fingerprintText(product.catalogSourceName),
-    catalogSourceRef: fingerprintText(product.catalogSourceRef),
-    catalogSourceUrl: fingerprintText(product.catalogSourceUrl),
-    catalogSourceSnapshotDate: product.catalogSourceSnapshotDate,
-    catalogMatchQuality: product.catalogMatchQuality,
-    dataQualityScore: product.dataQualityScore,
-    ingredientParseStatus: fingerprintText(product.ingredientParseStatus),
-    ingredientParseConfidence: product.ingredientParseConfidence,
-    parserVersion: fingerprintText(product.parserVersion),
-    sourceDisclosureAckAt: fingerprintText(product.sourceDisclosureAckAt),
-    ingredients: product.ingredients,
-    openedAt: product.openedAt,
-    isOpened: product.isOpened,
-    paoMonths: product.paoMonths,
-    paoSource: product.paoSource,
-    expiryDate: product.expiryDate,
-    expirySource: product.expirySource,
-    addedVia: product.addedVia,
-  });
-}
-
-async function digestAddIdentity(namespace: string, value: string): Promise<string> {
-  const digest = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    `${namespace}${value}`,
-  );
-  const normalized = digest.toLowerCase();
-  if (!SHA256_HEX.test(normalized)) throw new Error(SHELF_STATE_INVALID);
-  return normalized;
-}
-
-function normalizedAddOwnerId(owner: ShelfOperationOwner | undefined): string {
-  if (owner?.ownerId === undefined) return LOCAL_UNCLAIMED_ADD_OWNER;
-  const ownerId = owner.ownerId.trim();
-  if (!ownerId || ownerId.length > 512) throw new Error(SHELF_STATE_INVALID);
-  return ownerId;
-}
-
-function normalizedAddOperationId(owner: ShelfAddOwner): string {
-  const operationId = owner?.operationId;
-  if (
-    typeof operationId !== 'string' ||
-    operationId.trim().length === 0 ||
-    operationId.trim() !== operationId ||
-    operationId.length > 128
-  ) {
-    throw new Error(SHELF_STATE_INVALID);
-  }
-  return operationId;
-}
-
-function assertShelfAddOwnerCurrent(owner: ShelfOperationOwner | undefined): void {
-  owner?.assertCurrent?.();
-}
-
-async function shelfAddIdentity(
-  product: ShelfProduct,
-  owner: ShelfOperationOwner | undefined,
-): Promise<{ ownerHash: string; inputHash: string }> {
-  assertShelfAddOwnerCurrent(owner);
-  const ownerId = normalizedAddOwnerId(owner);
-  const [ownerHash, inputHash] = await Promise.all([
-    digestAddIdentity(ADD_OWNER_HASH_NAMESPACE, ownerId).then((digest) => {
-      assertShelfAddOwnerCurrent(owner);
-      return digest;
-    }),
-    digestAddIdentity(ADD_INPUT_HASH_NAMESPACE, canonicalAddInput(product)).then((digest) => {
-      assertShelfAddOwnerCurrent(owner);
-      return digest;
-    }),
-  ]);
-  assertShelfAddOwnerCurrent(owner);
-  return { ownerHash, inputHash };
-}
-
-export function shelfProductOutboxPayload(product: ShelfProduct): ShelfProductOutboxPayload {
-  return Object.freeze({
+    id: product.id,
     catalog_product_id: product.catalogProductId,
     catalog_source_id: product.catalogSourceId,
     catalog_match_quality: product.catalogMatchQuality,
@@ -651,444 +424,1248 @@ export function shelfProductOutboxPayload(product: ShelfProduct): ShelfProductOu
     source_disclosure_ack_at: product.sourceDisclosureAckAt,
     status: product.status,
     finished_at: product.finishedAt,
-  });
+  };
 }
 
-function shelfUpsertChange(product: ShelfProduct): ShelfOutboxChange {
-  return Object.freeze({
-    operationKind: 'upsert',
-    entityId: product.id,
-    payload: shelfProductOutboxPayload(product),
-  });
+const MIRROR_UPSERT_PAYLOAD_KEYS = [
+  'id',
+  'catalog_product_id',
+  'catalog_source_id',
+  'catalog_match_quality',
+  'catalog_source_snapshot_date',
+  'manual_name',
+  'manual_brand',
+  'barcode',
+  'opened_at',
+  'pao_months',
+  'expiry_date',
+  'is_opened',
+  'pao_source',
+  'expiry_source',
+  'added_via',
+  'source_disclosure_ack_at',
+  'status',
+  'finished_at',
+] as const;
+
+function decodeShelfMirrorPayload(value: unknown): ShelfMirrorUpsertPayload | null {
+  if (!isRecord(value) || !hasExactKeys(value, MIRROR_UPSERT_PAYLOAD_KEYS)) return null;
+  const id = typeof value.id === 'string' && validCanonicalOperationId(value.id) ? value.id : null;
+  const manualName = strictShelfProductText(value.manual_name, SHELF_PRODUCT_NAME_MAX_LENGTH);
+  const catalogProductId = stringOrNull(value.catalog_product_id);
+  const catalogSourceId = stringOrNull(value.catalog_source_id);
+  const catalogMatchQuality = catalogQualityOrNull(value.catalog_match_quality);
+  const catalogSourceSnapshotDate = localDateOrNull(value.catalog_source_snapshot_date);
+  const manualBrand =
+    value.manual_brand === null
+      ? null
+      : strictShelfProductText(value.manual_brand, SHELF_PRODUCT_BRAND_MAX_LENGTH);
+  const barcode = value.barcode === null ? null : strictShelfProductBarcode(value.barcode);
+  const openedAt = localDateOrNull(value.opened_at);
+  const expiryDate = localDateOrNull(value.expiry_date);
+  const sourceDisclosureAckAt = isoStringOrNull(value.source_disclosure_ack_at);
+  const finishedAt = localDateOrNull(value.finished_at);
+
+  if (
+    !id ||
+    !manualName ||
+    (value.catalog_product_id !== null && catalogProductId === null) ||
+    (value.catalog_source_id !== null && catalogSourceId === null) ||
+    (value.catalog_match_quality !== null && catalogMatchQuality === null) ||
+    (value.catalog_source_snapshot_date !== null && catalogSourceSnapshotDate === null) ||
+    (value.manual_brand !== null && manualBrand === null) ||
+    (value.barcode !== null && barcode === null) ||
+    (value.opened_at !== null && openedAt === null) ||
+    (value.expiry_date !== null && expiryDate === null) ||
+    (value.source_disclosure_ack_at !== null && sourceDisclosureAckAt === null) ||
+    (value.finished_at !== null && finishedAt === null) ||
+    typeof value.is_opened !== 'boolean' ||
+    typeof value.pao_source !== 'string' ||
+    !PAO_SOURCES.has(value.pao_source as PaoSource) ||
+    typeof value.expiry_source !== 'string' ||
+    !EXPIRY_SOURCES.has(value.expiry_source as ExpirySource) ||
+    typeof value.added_via !== 'string' ||
+    !ADDED_VIA.has(value.added_via as AddedVia) ||
+    typeof value.status !== 'string' ||
+    !PRODUCT_STATUSES.has(value.status as ProductStatus) ||
+    (value.pao_months !== null &&
+      (typeof value.pao_months !== 'number' ||
+        !Number.isInteger(value.pao_months) ||
+        value.pao_months < 1 ||
+        value.pao_months > 120))
+  ) {
+    return null;
+  }
+
+  return {
+    id,
+    catalog_product_id: catalogProductId,
+    catalog_source_id: catalogSourceId,
+    catalog_match_quality: catalogMatchQuality,
+    catalog_source_snapshot_date: catalogSourceSnapshotDate,
+    manual_name: manualName,
+    manual_brand: manualBrand,
+    barcode,
+    opened_at: openedAt,
+    pao_months: value.pao_months as number | null,
+    expiry_date: expiryDate,
+    is_opened: value.is_opened,
+    pao_source: value.pao_source as PaoSource,
+    expiry_source: value.expiry_source as ExpirySource,
+    added_via: value.added_via as AddedVia,
+    source_disclosure_ack_at: sourceDisclosureAckAt,
+    status: value.status as ProductStatus,
+    finished_at: finishedAt,
+  };
 }
 
-function shelfDeleteChange(entityId: string): ShelfOutboxChange {
-  return Object.freeze({ operationKind: 'delete', entityId, payload: null });
-}
-
-/**
- * Authenticated mutations commit their unchanged Shelf v3 bytes and encrypted
- * outbox rows through one crash-recoverable journal. Low-level callers without
- * an account generation retain the local-only behavior used by signed-out and
- * migration/test surfaces.
- */
-async function updateShelfStorage(
-  owner: ShelfOperationOwner | undefined,
-  updater: (current: string | null) => ShelfStorageUpdate,
-): Promise<void> {
-  assertShelfAddOwnerCurrent(owner);
-  const ownerId = owner?.ownerId?.trim();
-  const ownerGeneration = owner?.ownerGeneration;
-  if (ownerId === undefined || ownerGeneration === undefined) {
-    await updatePrivateItem(KEY, (current) => updater(current).nextShelf);
-    assertShelfAddOwnerCurrent(owner);
-    return;
+function decodeShelfMirrorOperation(value: unknown): ShelfMirrorOperation | null {
+  if (
+    !isRecord(value) ||
+    !validCanonicalOperationId(value.operationId) ||
+    !validCanonicalTimestamp(value.enqueuedAt)
+  ) {
+    return null;
+  }
+  if (value.kind === 'upsert') {
+    if (!hasExactKeys(value, ['operationId', 'enqueuedAt', 'kind', 'payload'])) return null;
+    const payload = decodeShelfMirrorPayload(value.payload);
+    return payload === null
+      ? null
+      : {
+          operationId: value.operationId,
+          enqueuedAt: value.enqueuedAt,
+          kind: 'upsert',
+          payload,
+        };
   }
   if (
-    !ownerId ||
-    ownerId.length > 512 ||
-    !Number.isSafeInteger(ownerGeneration) ||
-    ownerGeneration < 0
+    value.kind !== 'delete' ||
+    !hasExactKeys(value, ['operationId', 'enqueuedAt', 'kind', 'productId'])
   ) {
+    return null;
+  }
+  const productId =
+    typeof value.productId === 'string' && validCanonicalOperationId(value.productId)
+      ? value.productId
+      : null;
+  return productId === null
+    ? null
+    : {
+        operationId: value.operationId,
+        enqueuedAt: value.enqueuedAt,
+        kind: 'delete',
+        productId,
+      };
+}
+
+function decodeShelfMirrorOutbox(value: unknown): ShelfMirrorOperation[] | null {
+  if (!Array.isArray(value)) return null;
+  const operations: ShelfMirrorOperation[] = [];
+  const operationIds = new Set<string>();
+  for (const candidate of value) {
+    const operation = decodeShelfMirrorOperation(candidate);
+    if (operation === null || operationIds.has(operation.operationId)) return null;
+    operationIds.add(operation.operationId);
+    operations.push(operation);
+  }
+  return operations;
+}
+
+function decodeShelfMirrorTerminal(value: unknown): ShelfMirrorTerminal[] | null {
+  if (!Array.isArray(value)) return null;
+  const terminal: ShelfMirrorTerminal[] = [];
+  const operationIds = new Set<string>();
+  for (const candidate of value) {
+    if (!isRecord(candidate) || !hasExactKeys(candidate, ['operation', 'code'])) return null;
+    const operation = decodeShelfMirrorOperation(candidate.operation);
+    if (
+      operation === null ||
+      operationIds.has(operation.operationId) ||
+      typeof candidate.code !== 'string' ||
+      !SHELF_MIRROR_TERMINAL_CODES.has(candidate.code as ShelfMirrorTerminalCode)
+    ) {
+      return null;
+    }
+    operationIds.add(operation.operationId);
+    terminal.push({
+      operation,
+      code: candidate.code as ShelfMirrorTerminalCode,
+    });
+  }
+  return terminal;
+}
+
+function normalizeShelfProduct(
+  value: unknown,
+  fallbackISO: string,
+  freshnessNormalizer: ShelfFreshnessNormalizer = normalizeShelfFreshness,
+  freshnessToday: string | null = currentLocalDate(),
+  includeV2Fields = true,
+  allowLegacyMirrorFields = false,
+): ShelfProduct | null {
+  if (!isRecord(value)) return null;
+  const id = nonEmptyString(value.id);
+  const name = allowLegacyMirrorFields
+    ? nonEmptyString(value.name)
+    : strictShelfProductText(value.name, SHELF_PRODUCT_NAME_MAX_LENGTH);
+  if (!id || !name) return null;
+  const brand =
+    value.brand === null || value.brand === undefined
+      ? null
+      : allowLegacyMirrorFields
+        ? nonEmptyString(value.brand)
+        : strictShelfProductText(value.brand, SHELF_PRODUCT_BRAND_MAX_LENGTH);
+  const barcode =
+    value.barcode === null || value.barcode === undefined
+      ? null
+      : allowLegacyMirrorFields
+        ? nonEmptyString(value.barcode)
+        : strictShelfProductBarcode(value.barcode);
+  if (
+    (value.brand !== null && value.brand !== undefined && brand === null) ||
+    (value.barcode !== null && value.barcode !== undefined && barcode === null)
+  ) {
+    return null;
+  }
+
+  const addedVia = enumValue(value.addedVia, ADDED_VIA, 'manual');
+  const catalogSource =
+    stringOrNull(value.catalogSource) ?? (addedVia === 'manual' ? 'user_local' : null);
+  const catalogMatchQuality =
+    catalogQualityOrNull(value.catalogMatchQuality) ?? (addedVia === 'manual' ? 'manual' : null);
+  const status = enumValue(value.status, PRODUCT_STATUSES, 'active');
+  const createdAt = isoStringOrFallback(value.createdAt, fallbackISO);
+  const updatedAt = isoStringOrFallback(value.updatedAt, createdAt);
+  const freshness = freshnessNormalizer(value, freshnessToday ?? utcCalendarDayPlusOne(updatedAt));
+  const legacyUnverifiedExpiryDate =
+    freshness.expiryDate === null ? validLocalDate(value.legacyUnverifiedExpiryDate) : null;
+
+  const replacementRootId = nonEmptyString(value.replacementRootId) ?? id;
+  return {
+    id,
+    name,
+    brand,
+    category: stringOrNull(value.category),
+    barcode,
+    catalogProductId: stringOrNull(value.catalogProductId),
+    catalogSourceId: stringOrNull(value.catalogSourceId),
+    catalogSource,
+    catalogSourceName: stringOrNull(value.catalogSourceName),
+    catalogSourceRef: stringOrNull(value.catalogSourceRef),
+    catalogSourceUrl: stringOrNull(value.catalogSourceUrl),
+    catalogSourceSnapshotDate: localDateOrNull(value.catalogSourceSnapshotDate),
+    catalogMatchQuality,
+    dataQualityScore: zeroToHundredOrNull(value.dataQualityScore),
+    ingredientParseStatus: stringOrNull(value.ingredientParseStatus),
+    ingredientParseConfidence: zeroToOneOrNull(value.ingredientParseConfidence),
+    parserVersion: stringOrNull(value.parserVersion),
+    sourceDisclosureAckAt: isoStringOrNull(value.sourceDisclosureAckAt),
+    ingredients: stringArray(value.ingredients),
+    ...freshness,
+    legacyUnverifiedExpiryDate: includeV2Fields ? legacyUnverifiedExpiryDate : null,
+    status,
+    finishedAt: status === 'active' ? null : localDateOrNull(value.finishedAt),
+    addedVia,
+    repurchaseCount:
+      typeof value.repurchaseCount === 'number' &&
+      Number.isInteger(value.repurchaseCount) &&
+      value.repurchaseCount > 0
+        ? value.repurchaseCount
+        : 1,
+    ...(includeV2Fields
+      ? {
+          replacementRootId,
+          replacesProductId: stringOrNull(value.replacesProductId),
+          replacementLineageAmbiguous: value.replacementLineageAmbiguous === true,
+        }
+      : {}),
+    thumbnailPath: stringOrNull(value.thumbnailPath),
+    createdAt,
+    updatedAt,
+  };
+}
+
+function normalizedLineageText(value: string | null): string {
+  return value?.trim().replace(/\s+/g, ' ').toLowerCase() ?? '';
+}
+
+function historicalReplacementIdentities(product: ShelfProduct): string[] {
+  return [
+    product.catalogProductId ? `catalog:${product.catalogProductId.toLowerCase()}` : '',
+    product.barcode ? `barcode:${product.barcode}` : '',
+    [
+      'manual',
+      normalizedLineageText(product.brand),
+      normalizedLineageText(product.name),
+      normalizedLineageText(product.category),
+    ].join(':'),
+  ].filter((identity) => identity.length > 0);
+}
+
+/** v1 had no explicit predecessor IDs. Build conservative connected components
+ * from every retained identity and the exact timestamp pair written by the
+ * replacement transaction. The latter survives later catalog enrichment even
+ * when name/brand/category identity changes. Only a unique consecutive chain
+ * receives predecessor edges; ambiguous peers share a root so an archived retry
+ * cannot create another active unit. */
+function attachHistoricalReplacementLineage(products: ShelfProduct[]): ShelfProduct[] {
+  const byId = new Map(products.map((product) => [product.id, product]));
+  const adjacency = new Map(products.map((product) => [product.id, new Set<string>()]));
+  const connect = (left: ShelfProduct, right: ShelfProduct): void => {
+    if (left.id === right.id) return;
+    adjacency.get(left.id)!.add(right.id);
+    adjacency.get(right.id)!.add(left.id);
+  };
+
+  const identityGroups = new Map<string, ShelfProduct[]>();
+  for (const product of products) {
+    for (const identity of historicalReplacementIdentities(product)) {
+      identityGroups.set(identity, [...(identityGroups.get(identity) ?? []), product]);
+    }
+  }
+  for (const group of identityGroups.values()) {
+    const [first, ...rest] = group;
+    if (first) rest.forEach((product) => connect(first, product));
+  }
+
+  for (const successor of products) {
+    if (successor.repurchaseCount <= 1) continue;
+    for (const predecessor of products) {
+      if (
+        predecessor.repurchaseCount + 1 === successor.repurchaseCount &&
+        predecessor.updatedAt === successor.createdAt &&
+        predecessor.createdAt <= successor.createdAt
+      ) {
+        connect(predecessor, successor);
+      }
+    }
+  }
+
+  const lineageById = new Map<
+    string,
+    Pick<ShelfProduct, 'replacementRootId' | 'replacesProductId' | 'replacementLineageAmbiguous'>
+  >();
+  const visited = new Set<string>();
+  for (const start of products) {
+    if (visited.has(start.id)) continue;
+    const component: ShelfProduct[] = [];
+    const pending = [start.id];
+    while (pending.length > 0) {
+      const id = pending.pop()!;
+      if (visited.has(id)) continue;
+      visited.add(id);
+      component.push(byId.get(id)!);
+      for (const neighbor of adjacency.get(id) ?? []) pending.push(neighbor);
+    }
+
+    const ordered = component.sort(
+      (left, right) =>
+        left.repurchaseCount - right.repurchaseCount ||
+        left.createdAt.localeCompare(right.createdAt) ||
+        left.id.localeCompare(right.id),
+    );
+    const uniqueConsecutive = ordered.every(
+      (product, index) =>
+        index === 0 || product.repurchaseCount === ordered[index - 1]!.repurchaseCount + 1,
+    );
+    const chronological = ordered.every(
+      (product, index) => index === 0 || product.createdAt >= ordered[index - 1]!.createdAt,
+    );
+    const exactChain = ordered.every(
+      (product, index) =>
+        index === 0 ||
+        (ordered[index - 1]!.updatedAt === product.createdAt &&
+          ordered[index - 1]!.repurchaseCount + 1 === product.repurchaseCount),
+    );
+    const ambiguous = ordered.length > 1 && (!uniqueConsecutive || !chronological || !exactChain);
+    const rootId = ordered[0]!.id;
+    ordered.forEach((product, index) => {
+      lineageById.set(product.id, {
+        replacementRootId: rootId,
+        replacesProductId: !ambiguous && index > 0 ? ordered[index - 1]!.id : null,
+        replacementLineageAmbiguous: ambiguous,
+      });
+    });
+  }
+  return products.map((product) => ({ ...product, ...lineageById.get(product.id)! }));
+}
+
+function normalizeShelfProducts(
+  value: unknown,
+  fallbackISO: string,
+  freshnessNormalizer: ShelfFreshnessNormalizer = normalizeShelfFreshness,
+  freshnessToday: string | null = currentLocalDate(),
+  includeV2Fields = true,
+  allowLegacyMirrorFields = false,
+): ShelfProduct[] | null {
+  if (!Array.isArray(value)) return null;
+  const items: ShelfProduct[] = [];
+  const ids = new Set<string>();
+  for (const row of value) {
+    const product = normalizeShelfProduct(
+      row,
+      fallbackISO,
+      freshnessNormalizer,
+      freshnessToday,
+      includeV2Fields,
+      allowLegacyMirrorFields,
+    );
+    if (!product || ids.has(product.id)) return null;
+    ids.add(product.id);
+    items.push(product);
+  }
+  return items;
+}
+
+function quarantineHistoricalCatalogExpiry(value: unknown): unknown {
+  if (!isRecord(value)) return value;
+  const historicalDate = validLocalDate(value.expiryDate);
+  const catalogLinked = nonEmptyString(value.catalogProductId) !== null;
+  return {
+    ...value,
+    expiryDate: catalogLinked && historicalDate ? null : value.expiryDate,
+    legacyUnverifiedExpiryDate: catalogLinked ? historicalDate : null,
+  };
+}
+
+function canonicalV1Product(
+  product: ShelfProduct,
+): Omit<
+  ShelfProduct,
+  | 'legacyUnverifiedExpiryDate'
+  | 'replacementRootId'
+  | 'replacesProductId'
+  | 'replacementLineageAmbiguous'
+> {
+  const {
+    legacyUnverifiedExpiryDate: _legacyUnverifiedExpiryDate,
+    replacementRootId: _replacementRootId,
+    replacesProductId: _replacesProductId,
+    replacementLineageAmbiguous: _replacementLineageAmbiguous,
+    ...v1Product
+  } = product;
+  return v1Product;
+}
+
+function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedShelfState {
+  if (raw === null) {
+    return {
+      products: [],
+      mirrorOutbox: [],
+      terminal: [],
+      mirrorIncompatibilities: [],
+      upgradeFrom: 'none',
+    };
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
     throw new Error(SHELF_STATE_INVALID);
   }
 
-  const ownerHash = await hashOutboxOwner(ownerId);
-  assertShelfAddOwnerCurrent(owner);
-  await updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY], (current) => {
-    assertShelfAddOwnerCurrent(owner);
-    const shelfCurrent = current.get(KEY) ?? null;
-    const outboxCurrent = current.get(OUTBOX_STORAGE_KEY) ?? null;
-    const update = updater(shelfCurrent);
-    let outbox = decodeOutboxEnvelope(outboxCurrent);
-    for (const change of update.outboxChanges) {
-      if (change.operationKind === 'delete') {
-        outbox = discardConflictChoiceOutboxDependencies(outbox, {
-          ownerHash,
-          productIds: [change.entityId],
-        }).envelope;
-      }
-      outbox = enqueueShelfOutboxOperation(outbox, {
-        operationId: Crypto.randomUUID(),
-        ownerHash,
-        ownerGeneration,
-        entityId: change.entityId,
-        operationKind: change.operationKind as OutboxOperationKind,
-        payload: change.payload,
-        enqueuedAt: nowISO(),
-      }).envelope;
-    }
-    return new Map<string, string | null>([
-      [KEY, update.nextShelf],
-      [
-        OUTBOX_STORAGE_KEY,
-        update.outboxChanges.length > 0 ? encodeOutboxEnvelope(outbox) : outboxCurrent,
-      ],
-    ]);
-  });
-  assertShelfAddOwnerCurrent(owner);
-}
-
-/**
- * Atomically commits a product and an owner/operation mapping. A retry with the
- * same stable operation id and semantic input returns the original row. An
- * acknowledgement converts the pending mapping to a bounded tombstone rather
- * than deleting the only proof of the committed operation.
- */
-export async function addProduct(
-  input: NewShelfProduct,
-  owner: ShelfAddOwner,
-): Promise<ShelfProduct> {
-  const ts = nowISO();
-  const freshness = normalizeShelfFreshness(input);
-  const candidate: ShelfProduct = {
-    id: Crypto.randomUUID(),
-    name: input.name,
-    brand: input.brand ?? null,
-    category: input.category ?? null,
-    barcode: input.barcode ?? null,
-    catalogProductId: input.catalogProductId ?? null,
-    catalogSourceId: input.catalogSourceId ?? null,
-    catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
-    catalogSourceName: input.catalogSourceName ?? null,
-    catalogSourceRef: input.catalogSourceRef ?? null,
-    catalogSourceUrl: input.catalogSourceUrl ?? null,
-    catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
-    catalogMatchQuality:
-      input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
-    dataQualityScore: input.dataQualityScore ?? null,
-    ingredientParseStatus: input.ingredientParseStatus ?? null,
-    ingredientParseConfidence: input.ingredientParseConfidence ?? null,
-    parserVersion: input.parserVersion ?? null,
-    sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
-    ingredients: input.ingredients ?? [],
-    ...freshness,
-    status: 'active',
-    finishedAt: null,
-    addedVia: input.addedVia,
-    repurchaseCount: 1,
-    thumbnailPath: null,
-    createdAt: ts,
-    updatedAt: ts,
-  };
-  const product = normalizeShelfProduct(candidate, ts);
-  if (!product) throw new Error(SHELF_STATE_INVALID);
-  const operationId = normalizedAddOperationId(owner);
-  // Retry identity must not change as the clock crosses UTC/local midnight.
-  // A maximal valid date makes syntactically valid freshness input canonical
-  // without applying the first commit's time-dependent future-date policy.
-  const fingerprintProduct: ShelfProduct = {
-    ...product,
-    ...normalizeShelfFreshness(input, ADD_INPUT_FINGERPRINT_MAX_LOCAL_DATE),
-  };
-  const { ownerHash, inputHash } = await shelfAddIdentity(fingerprintProduct, owner);
-  const operation: ShelfAddOperation = {
-    operationId,
-    ownerHash,
-    inputHash,
-    productId: product.id,
-    createdAt: ts,
-    status: 'pending',
-    acknowledgedAt: null,
-  };
-  let result: ShelfProduct | null = null;
-  assertShelfAddOwnerCurrent(owner);
-  await updateShelfStorage(owner, (current) => {
-    assertShelfAddOwnerCurrent(owner);
-    const state = decodeShelfState(current, ts);
-    const ownerConflict = state.addOperations.find((existing) => existing.ownerHash !== ownerHash);
-    if (ownerConflict) throw new Error(SHELF_ADD_OPERATION_OWNER_MISMATCH);
-    const existingOperation = state.addOperations.find(
-      (existing) => existing.operationId === operationId,
+  if (Array.isArray(parsed)) {
+    const legacy = normalizeShelfProducts(
+      parsed.map(quarantineHistoricalCatalogExpiry),
+      fallbackISO,
+      normalizeShelfFreshness,
+      null,
+      true,
+      true,
     );
-    if (existingOperation) {
-      if (existingOperation.inputHash !== inputHash) {
-        throw new Error(SHELF_ADD_OPERATION_INPUT_MISMATCH);
-      }
-      result =
-        state.products.find((existing) => existing.id === existingOperation.productId) ?? null;
-      if (!result) throw new Error(SHELF_STATE_INVALID);
-      return { nextShelf: current, outboxChanges: [] };
-    }
-    let retainedOperations = state.addOperations;
-    if (retainedOperations.length >= MAX_ADD_OPERATION_MAPPINGS) {
-      const oldestAcknowledged = retainedOperations
-        .filter((existing) => existing.status === 'acknowledged')
-        .sort((left, right) => {
-          const timestampOrder = (left.acknowledgedAt ?? left.createdAt).localeCompare(
-            right.acknowledgedAt ?? right.createdAt,
-          );
-          return timestampOrder || left.operationId.localeCompare(right.operationId);
-        })[0];
-      if (!oldestAcknowledged) throw new Error(SHELF_ADD_OPERATION_LIMIT_REACHED);
-      retainedOperations = retainedOperations.filter(
-        (existing) => existing.operationId !== oldestAcknowledged.operationId,
-      );
-    }
-    const items = state.products;
-    if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
-    result = product;
+    if (!legacy) throw new Error(SHELF_STATE_INVALID);
     return {
-      nextShelf: encodeShelfState([product, ...items], [operation, ...retainedOperations]),
-      outboxChanges: [shelfUpsertChange(product)],
+      products: legacy,
+      mirrorOutbox: [],
+      terminal: [],
+      mirrorIncompatibilities: shelfMirrorIncompatibilities(legacy),
+      upgradeFrom: 'legacy',
     };
-  });
-  assertShelfAddOwnerCurrent(owner);
-  if (!result) throw new Error(SHELF_STATE_INVALID);
-  return result;
-}
-
-async function addOperationWasAcknowledged(
-  productId: string,
-  ownerHash: string,
-  owner: ShelfOperationOwner | undefined,
-): Promise<boolean> {
-  assertShelfAddOwnerCurrent(owner);
-  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
-  try {
-    stored = await readPrivateItem(KEY);
-  } catch {
-    assertShelfAddOwnerCurrent(owner);
-    return false;
   }
-  assertShelfAddOwnerCurrent(owner);
-  if (stored.status === 'absent') return false;
-  if (stored.status !== 'available') return false;
-  try {
-    const state = decodeShelfState(stored.value);
-    assertShelfAddOwnerCurrent(owner);
-    if (!state.products.some((product) => product.id === productId)) return false;
-    const operation = state.addOperations.find((entry) => entry.productId === productId);
-    if (!operation) return false;
-    if (operation.ownerHash !== ownerHash) {
-      throw new Error(SHELF_ADD_OPERATION_OWNER_MISMATCH);
+  if (!isRecord(parsed)) throw new Error(SHELF_STATE_INVALID);
+  if (
+    parsed.version !== LEGACY_SCHEMA_VERSION &&
+    parsed.version !== PREVIOUS_SCHEMA_VERSION &&
+    parsed.version !== SCHEMA_VERSION
+  ) {
+    if (
+      typeof parsed.version === 'number' &&
+      Number.isSafeInteger(parsed.version) &&
+      parsed.version > SCHEMA_VERSION
+    ) {
+      throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
     }
-    return operation.status === 'acknowledged';
-  } catch (error) {
-    if (error instanceof Error && error.message === SHELF_ADD_OPERATION_OWNER_MISMATCH) throw error;
-    return false;
+    throw new Error(SHELF_STATE_INVALID);
+  }
+  if (parsed.version === LEGACY_SCHEMA_VERSION) {
+    if (!hasExactKeys(parsed, ['version', 'products'])) throw new Error(SHELF_STATE_INVALID);
+    const historical = normalizeShelfProducts(
+      parsed.products,
+      fallbackISO,
+      normalizeShelfFreshnessV1,
+      null,
+      false,
+      true,
+    );
+    if (
+      !historical ||
+      raw !==
+        JSON.stringify({
+          version: LEGACY_SCHEMA_VERSION,
+          products: historical.map(canonicalV1Product),
+        })
+    ) {
+      throw new Error(SHELF_STATE_INVALID);
+    }
+    const current = normalizeShelfProducts(
+      Array.isArray(parsed.products)
+        ? parsed.products.map(quarantineHistoricalCatalogExpiry)
+        : parsed.products,
+      fallbackISO,
+      normalizeShelfFreshness,
+      null,
+      true,
+      true,
+    );
+    const upgraded = current ? attachHistoricalReplacementLineage(current) : null;
+    if (!upgraded) throw new Error(SHELF_STATE_INVALID);
+    return {
+      products: upgraded,
+      mirrorOutbox: [],
+      terminal: [],
+      mirrorIncompatibilities: shelfMirrorIncompatibilities(upgraded),
+      upgradeFrom: 'legacy',
+    };
+  }
+  if (parsed.version === PREVIOUS_SCHEMA_VERSION) {
+    if (!hasExactKeys(parsed, ['version', 'products'])) throw new Error(SHELF_STATE_INVALID);
+    const products = normalizeShelfProducts(
+      parsed.products,
+      fallbackISO,
+      normalizeShelfFreshness,
+      null,
+      true,
+      true,
+    );
+    if (!products || raw !== JSON.stringify({ version: PREVIOUS_SCHEMA_VERSION, products })) {
+      throw new Error(SHELF_STATE_INVALID);
+    }
+    return {
+      products,
+      mirrorOutbox: [],
+      terminal: [],
+      mirrorIncompatibilities: shelfMirrorIncompatibilities(products),
+      upgradeFrom: 'v2',
+    };
+  }
+  if (
+    !hasExactKeys(parsed, [
+      'version',
+      'products',
+      'mirrorOutbox',
+      'terminal',
+      'mirrorIncompatibilities',
+    ])
+  ) {
+    throw new Error(SHELF_STATE_INVALID);
+  }
+  // Canonical persisted bytes must remain valid after a timezone/date-line
+  // change. Bind future-date validation to each row's persisted write instant,
+  // not the device's current calendar date.
+  const products = normalizeShelfProducts(
+    parsed.products,
+    fallbackISO,
+    normalizeShelfFreshness,
+    null,
+    true,
+    true,
+  );
+  const mirrorOutbox = decodeShelfMirrorOutbox(parsed.mirrorOutbox);
+  const terminal = decodeShelfMirrorTerminal(parsed.terminal);
+  const mirrorIncompatibilities = shelfMirrorIncompatibilities(products ?? []);
+  if (
+    !products ||
+    !mirrorOutbox ||
+    !terminal ||
+    JSON.stringify(parsed.mirrorIncompatibilities) !== JSON.stringify(mirrorIncompatibilities) ||
+    terminal.some(({ operation }) =>
+      mirrorOutbox.some((pending) => pending.operationId === operation.operationId),
+    ) ||
+    raw !== encodeShelfState(products, mirrorOutbox, terminal)
+  ) {
+    throw new Error(SHELF_STATE_INVALID);
+  }
+  return {
+    products,
+    mirrorOutbox,
+    terminal,
+    mirrorIncompatibilities,
+    upgradeFrom: 'none',
+  };
+}
+
+function encodeShelfState(
+  products: ShelfProduct[],
+  mirrorOutbox: ShelfMirrorOperation[],
+  terminal: ShelfMirrorTerminal[],
+): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    products,
+    mirrorOutbox,
+    terminal,
+    mirrorIncompatibilities: shelfMirrorIncompatibilities(products),
+  } satisfies ShelfEnvelope);
+}
+
+function createMirrorOperationId(outbox: readonly ShelfMirrorOperation[]): string {
+  const used = new Set(outbox.map((operation) => operation.operationId));
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const operationId = randomUUID().toLowerCase();
+    if (validCanonicalOperationId(operationId) && !used.has(operationId)) return operationId;
+  }
+  throw new Error(SHELF_STATE_INVALID);
+}
+
+function appendMirrorUpsert(
+  outbox: ShelfMirrorOperation[],
+  product: ShelfProduct,
+  enqueuedAt: string,
+): boolean {
+  if (shelfMirrorIncompatibilityCodes(product).length > 0) return false;
+  outbox.push({
+    operationId: createMirrorOperationId(outbox),
+    enqueuedAt,
+    kind: 'upsert',
+    payload: mirrorPayloadForProduct(product),
+  });
+  return true;
+}
+
+function appendMirrorDelete(
+  outbox: ShelfMirrorOperation[],
+  productId: string,
+  enqueuedAt: string,
+): void {
+  outbox.push({
+    operationId: createMirrorOperationId(outbox),
+    enqueuedAt,
+    kind: 'delete',
+    productId,
+  });
+}
+
+function prepareShelfStateForWrite(
+  decoded: DecodedShelfState,
+  enqueuedAt: string,
+): {
+  products: ShelfProduct[];
+  mirrorOutbox: ShelfMirrorOperation[];
+  terminal: ShelfMirrorTerminal[];
+  mirrorIncompatibilities: ShelfMirrorIncompatibility[];
+  outboxChanged: boolean;
+} {
+  const mirrorOutbox = [...decoded.mirrorOutbox];
+  if (decoded.upgradeFrom === 'v2') {
+    // v2 contains canonical, fully validated products but no durable retry
+    // state. An owner-free idempotent upsert is safe; a historical delete can
+    // never be inferred from rows that remain, so no delete is fabricated.
+    for (const product of decoded.products) {
+      if (shelfMirrorIncompatibilityCodes(product).length === 0) {
+        appendMirrorUpsert(mirrorOutbox, product, enqueuedAt);
+      }
+    }
+  }
+  return {
+    products: decoded.products,
+    mirrorOutbox,
+    terminal: decoded.terminal,
+    mirrorIncompatibilities: decoded.mirrorIncompatibilities,
+    outboxChanged: mirrorOutbox.length !== decoded.mirrorOutbox.length,
+  };
+}
+
+function notifyShelfMirrorOutboxChanged(): void {
+  for (const listener of shelfMirrorOutboxListeners) {
+    try {
+      listener();
+    } catch {
+      // A UI/worker listener cannot retroactively fail an already-committed
+      // private transaction. Consumers re-read the durable FIFO on wake.
+    }
   }
 }
 
-/** Idempotently tombstones that the current UI received an add result. */
-export async function acknowledgeProductAdd(
-  productId: string,
-  owner?: ShelfOperationOwner,
-): Promise<void> {
-  const normalizedProductId = nonEmptyString(productId);
-  if (!normalizedProductId) throw new Error(SHELF_STATE_INVALID);
-  const ownerId = normalizedAddOwnerId(owner);
-  assertShelfAddOwnerCurrent(owner);
-  const ownerHash = await digestAddIdentity(ADD_OWNER_HASH_NAMESPACE, ownerId);
-  assertShelfAddOwnerCurrent(owner);
+export function loadShelf(): Promise<ShelfProduct[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      lease.assertCurrent();
+      const raw = await getPrivateItem(KEY);
+      lease.assertCurrent();
+      const decoded = decodeShelfState(raw);
+      lease.assertCurrent();
+      return decoded.products;
+    } catch {
+      // Ordinary reads never repair, delete, or replace private shelf bytes.
+      // Authorization invalidation is not an ordinary recovery condition.
+      lease.assertCurrent();
+      return [];
+    }
+  });
+}
 
-  try {
-    assertShelfAddOwnerCurrent(owner);
+/** Deterministic, non-sensitive repair evidence for locally readable products
+ * that cannot yet satisfy the server mirror contract. */
+export function getShelfMirrorIncompatibilities(): Promise<ShelfMirrorIncompatibility[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const decoded = decodeShelfState(raw);
+    lease.assertCurrent();
+    return decoded.mirrorIncompatibilities;
+  });
+}
+
+function normalizeProductForWrite(
+  value: ShelfProduct,
+  fallbackISO: string,
+  fallback: ShelfProduct,
+  freshnessToday: string = currentLocalDate(),
+): ShelfProduct {
+  return (
+    normalizeShelfProduct(value, fallbackISO, normalizeShelfFreshness, freshnessToday) ?? {
+      ...fallback,
+      updatedAt: fallbackISO,
+    }
+  );
+}
+
+export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    const today = currentLocalDate();
+    const productId = (input.operationId ?? randomUUID()).toLowerCase();
+    if (!validCanonicalOperationId(productId)) {
+      throw new Error(SHELF_STATE_INVALID);
+    }
+    const freshness = normalizeShelfFreshness(input, today);
+    const candidate: ShelfProduct = {
+      id: productId,
+      name: input.name,
+      brand: input.brand ?? null,
+      category: input.category ?? null,
+      barcode: input.barcode ?? null,
+      catalogProductId: input.catalogProductId ?? null,
+      catalogSourceId: input.catalogSourceId ?? null,
+      catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
+      catalogSourceName: input.catalogSourceName ?? null,
+      catalogSourceRef: input.catalogSourceRef ?? null,
+      catalogSourceUrl: input.catalogSourceUrl ?? null,
+      catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
+      catalogMatchQuality:
+        input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
+      dataQualityScore: input.dataQualityScore ?? null,
+      ingredientParseStatus: input.ingredientParseStatus ?? null,
+      ingredientParseConfidence: input.ingredientParseConfidence ?? null,
+      parserVersion: input.parserVersion ?? null,
+      sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
+      ingredients: input.ingredients ?? [],
+      ...freshness,
+      legacyUnverifiedExpiryDate: null,
+      status: 'active',
+      finishedAt: null,
+      addedVia: input.addedVia,
+      repurchaseCount: 1,
+      replacementRootId: productId,
+      replacesProductId: null,
+      replacementLineageAmbiguous: false,
+      thumbnailPath: null,
+      createdAt: ts,
+      updatedAt: ts,
+    };
+    const product = normalizeShelfProduct(candidate, ts);
+    if (!product) throw new Error(SHELF_STATE_INVALID);
+    let committed = product;
+    let outboxChanged = false;
+    lease.assertCurrent();
     await updatePrivateItem(KEY, (current) => {
-      assertShelfAddOwnerCurrent(owner);
-      const state = decodeShelfState(current);
-      const receipt = state.addOperations.find(
-        (operation) => operation.productId === normalizedProductId,
-      );
-      if (!receipt) return current;
-      if (receipt.ownerHash !== ownerHash) {
-        throw new Error(SHELF_ADD_OPERATION_OWNER_MISMATCH);
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const items = prepared.products;
+      const mirrorOutbox = prepared.mirrorOutbox;
+      outboxChanged = prepared.outboxChanged;
+      const existing = items.find((item) => item.id === product.id);
+      if (existing) {
+        committed = existing;
+        return decoded.upgradeFrom === 'none'
+          ? current
+          : encodeShelfState(items, mirrorOutbox, prepared.terminal);
       }
-      if (receipt.status === 'acknowledged') return current;
-      const acknowledgedAt = nowISO();
-      return encodeShelfState(
-        state.products,
-        state.addOperations.map((operation) =>
-          operation.operationId === receipt.operationId
-            ? { ...operation, status: 'acknowledged', acknowledgedAt }
-            : operation,
-        ),
-      );
+      appendMirrorUpsert(mirrorOutbox, product, ts);
+      outboxChanged = true;
+      lease.assertCurrent();
+      return encodeShelfState([product, ...items], mirrorOutbox, prepared.terminal);
     });
-    assertShelfAddOwnerCurrent(owner);
-  } catch (error) {
-    assertShelfAddOwnerCurrent(owner);
-    // Native storage may commit the acknowledgement and lose only its response.
-    // Exact typed readback treats only the acknowledged mapping as success.
-    if (await addOperationWasAcknowledged(normalizedProductId, ownerHash, owner)) return;
-    throw error;
-  }
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return committed;
+  });
 }
 
 export async function updateProduct(
   id: string,
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
-  owner?: ShelfOperationOwner,
 ): Promise<ShelfProduct | null> {
-  const ts = nowISO();
-  let updated: ShelfProduct | null = null;
-  await updateShelfStorage(owner, (current) => {
-    const state = decodeShelfState(current, ts);
-    const items = state.products;
-    let changed = false;
-    const next = items.map((product) => {
-      if (product.id !== id) return product;
-      const patched = {
-        ...product,
-        ...patch,
-        id: product.id,
-        createdAt: product.createdAt,
-        updatedAt: ts,
-      };
-      const freshness = FRESHNESS_PATCH_KEYS.some((key) => hasOwn(patch, key))
-        ? normalizeShelfFreshness(patched)
-        : {
-            openedAt: product.openedAt,
-            isOpened: product.isOpened,
-            paoMonths: product.paoMonths,
-            paoSource: product.paoSource,
-            expiryDate: product.expiryDate,
-            expirySource: product.expirySource,
-          };
-      const candidate = normalizeShelfProduct({ ...patched, ...freshness }, ts);
-      if (!candidate) {
-        updated = product;
-        return product;
-      }
-      const { updatedAt: candidateUpdatedAt, ...candidateContent } = candidate;
-      const { updatedAt: productUpdatedAt, ...productContent } = product;
-      void candidateUpdatedAt;
-      void productUpdatedAt;
-      if (canonicalJson(candidateContent) === canonicalJson(productContent)) {
-        updated = product;
-        return product;
-      }
-      changed = true;
-      updated = candidate;
-      return candidate;
+  if (
+    (Object.hasOwn(patch, 'name') &&
+      strictShelfProductText(patch.name, SHELF_PRODUCT_NAME_MAX_LENGTH) === null) ||
+    (Object.hasOwn(patch, 'brand') &&
+      patch.brand !== null &&
+      strictShelfProductText(patch.brand, SHELF_PRODUCT_BRAND_MAX_LENGTH) === null) ||
+    (Object.hasOwn(patch, 'barcode') &&
+      patch.barcode !== null &&
+      strictShelfProductBarcode(patch.barcode) === null)
+  ) {
+    throw new Error(SHELF_STATE_INVALID);
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let updated: ShelfProduct | null = null;
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const items = prepared.products;
+      const mirrorOutbox = prepared.mirrorOutbox;
+      outboxChanged = prepared.outboxChanged;
+      const next = items.map((product) => {
+        if (product.id !== id) return product;
+        updated = normalizeProductForWrite(
+          {
+            ...product,
+            ...patch,
+            id: product.id,
+            createdAt: product.createdAt,
+            replacementRootId: product.replacementRootId,
+            replacesProductId: product.replacesProductId,
+            replacementLineageAmbiguous: product.replacementLineageAmbiguous,
+            legacyUnverifiedExpiryDate:
+              Object.hasOwn(patch, 'expiryDate') || patch.legacyUnverifiedExpiryDate === null
+                ? null
+                : product.legacyUnverifiedExpiryDate,
+            updatedAt: ts,
+          },
+          ts,
+          product,
+          Object.hasOwn(patch, 'openedAt') || Object.hasOwn(patch, 'isOpened')
+            ? currentLocalDate()
+            : preserveExistingOpenedDateToday(product),
+        );
+        appendMirrorUpsert(mirrorOutbox, updated, ts);
+        outboxChanged = true;
+        return updated;
+      });
+      lease.assertCurrent();
+      if (updated) return encodeShelfState(next, mirrorOutbox, prepared.terminal);
+      return decoded.upgradeFrom === 'v2'
+        ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+        : current;
     });
-    return changed && updated
-      ? {
-          nextShelf: encodeShelfState(next, state.addOperations),
-          outboxChanges: [shelfUpsertChange(updated)],
-        }
-      : { nextShelf: current, outboxChanges: [] };
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return updated;
   });
-  return updated;
-}
-
-export async function removeProduct(
-  id: string,
-  owner?: ShelfOperationOwner,
-): Promise<ShelfProduct | null> {
-  let removed: ShelfProduct | null = null;
-  await updateShelfStorage(owner, (current) => {
-    const state = decodeShelfState(current);
-    const items = state.products;
-    removed = items.find((product) => product.id === id) ?? null;
-    return removed
-      ? {
-          nextShelf: encodeShelfState(
-            items.filter((product) => product.id !== id),
-            state.addOperations.filter((operation) => operation.productId !== id),
-          ),
-          outboxChanges: [shelfDeleteChange(id)],
-        }
-      : { nextShelf: current, outboxChanges: [] };
-  });
-  return removed;
-}
-
-async function replacementIdForSource(sourceId: string): Promise<string> {
-  const digest = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    `${REPLENISHMENT_ID_NAMESPACE}${sourceId}`,
-  );
-  if (!/^[0-9a-f]{64}$/i.test(digest)) throw new Error(SHELF_STATE_INVALID);
-
-  // Format the first 128 digest bits as a UUIDv5-shaped identifier. The digest
-  // is deterministic from the immutable physical-unit ID, so every retry finds
-  // the same successor without persisting mutable coordination metadata.
-  const chars = digest.slice(0, 32).toLowerCase().split('');
-  chars[12] = '5';
-  chars[16] = ((Number.parseInt(chars[16]!, 16) & 0x3) | 0x8).toString(16);
-  return `${chars.slice(0, 8).join('')}-${chars.slice(8, 12).join('')}-${chars
-    .slice(12, 16)
-    .join('')}-${chars.slice(16, 20).join('')}-${chars.slice(20).join('')}`;
 }
 
 /**
- * Replenish: archive the current unit and add a fresh one of the same product,
- * resetting the opened-date clock and carrying the repurchase count forward
- * (docs/04 §6 "re-add the same one").
+ * Attach a freshly revalidated catalog identity without racing a later manual
+ * edit. User ingredients and every freshness field are intentionally absent
+ * from this patch and therefore remain byte-for-byte owned by the Shelf row.
+ */
+export function applyCatalogRecoveryProductUpdate(
+  input: CatalogRecoveryProductUpdate,
+): Promise<CatalogRecoveryProductUpdateResult> {
+  if (
+    input.useCatalogIdentity &&
+    (strictShelfProductText(input.catalogName, SHELF_PRODUCT_NAME_MAX_LENGTH) === null ||
+      (input.catalogBrand !== null &&
+        strictShelfProductText(input.catalogBrand, SHELF_PRODUCT_BRAND_MAX_LENGTH) === null))
+  ) {
+    return Promise.reject(new Error(SHELF_STATE_INVALID));
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let result: CatalogRecoveryProductUpdateResult = { status: 'missing' };
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const items = prepared.products;
+      const mirrorOutbox = prepared.mirrorOutbox;
+      outboxChanged = prepared.outboxChanged;
+      const index = items.findIndex((product) => product.id === input.id);
+      if (index < 0) {
+        return decoded.upgradeFrom === 'v2'
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          : current;
+      }
+
+      const existing = items[index]!;
+      if (existing.updatedAt !== input.expectedUpdatedAt) {
+        result = { status: 'stale' };
+        return decoded.upgradeFrom === 'v2'
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          : current;
+      }
+
+      const updated = normalizeProductForWrite(
+        {
+          ...existing,
+          catalogProductId: input.catalogProductId,
+          catalogSourceId: input.catalogSourceId,
+          catalogSource: input.catalogSource,
+          catalogSourceName: input.catalogSourceName,
+          catalogSourceRef: input.catalogSourceRef,
+          catalogSourceUrl: input.catalogSourceUrl,
+          catalogSourceSnapshotDate: input.catalogSourceSnapshotDate,
+          catalogMatchQuality: input.catalogMatchQuality,
+          dataQualityScore: input.dataQualityScore,
+          sourceDisclosureAckAt: input.sourceDisclosureAckAt,
+          ...(input.useCatalogIdentity
+            ? {
+                name: input.catalogName,
+                brand: input.catalogBrand,
+                category: input.catalogCategory,
+              }
+            : {}),
+          id: existing.id,
+          createdAt: existing.createdAt,
+          updatedAt: ts,
+        },
+        ts,
+        existing,
+        preserveExistingOpenedDateToday(existing),
+      );
+      const next = [...items];
+      next[index] = updated;
+      result = { status: 'updated', product: updated };
+      appendMirrorUpsert(mirrorOutbox, updated, ts);
+      outboxChanged = true;
+      lease.assertCurrent();
+      return encodeShelfState(next, mirrorOutbox, prepared.terminal);
+    });
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return result;
+  });
+}
+
+export async function removeProduct(id: string): Promise<ShelfProduct | null> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let removed: ShelfProduct | null = null;
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const items = prepared.products;
+      const mirrorOutbox = prepared.mirrorOutbox;
+      outboxChanged = prepared.outboxChanged;
+      removed = items.find((product) => product.id === id) ?? null;
+      if (removed && validCanonicalOperationId(id)) {
+        appendMirrorDelete(mirrorOutbox, id, ts);
+        outboxChanged = true;
+      }
+      lease.assertCurrent();
+      if (removed) {
+        return encodeShelfState(
+          items.filter((product) => product.id !== id),
+          mirrorOutbox,
+          prepared.terminal,
+        );
+      }
+      return decoded.upgradeFrom === 'v2'
+        ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+        : current;
+    });
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return removed;
+  });
+}
+
+/**
+ * Replenish: archive the current unit and add another package of the same
+ * product. The caller explicitly records whether that package is opened;
+ * repurchase alone never starts its PAO clock (docs/04 §6).
  */
 export async function reAddProduct(
   id: string,
-  owner?: ShelfOperationOwner,
-): Promise<ReAddedShelfProduct | null> {
-  const now = new Date();
-  const ts = now.toISOString();
-  const localDate = readLocalDateBoundaryIdentity(now).localDate;
-  const replacementId = await replacementIdForSource(id);
-  if (!replacementId || replacementId === id) throw new Error(SHELF_STATE_INVALID);
-  let result: ReAddedShelfProduct | null = null;
-  await updateShelfStorage(owner, (current) => {
-    const state = decodeShelfState(current, ts);
-    const items = state.products;
-    const prev = items.find((product) => product.id === id);
-    if (!prev) return { nextShelf: current, outboxChanges: [] };
-
-    const existingReplacement = items.find((product) => product.id === replacementId);
-    if (existingReplacement) {
-      // The cryptographic source-derived ID is the immutable lineage marker.
-      // An active source alongside that successor is inconsistent/colliding;
-      // a consumed successor proves this older source was already replaced.
-      if (prev.status === 'active') throw new Error(SHELF_STATE_INVALID);
-      if (existingReplacement.status !== 'active') {
-        throw new Error(SHELF_REPLENISHMENT_ALREADY_REPLACED);
-      }
-      result = { fresh: existingReplacement, archived: prev };
-      return { nextShelf: current, outboxChanges: [] };
+  opening: ReplacementOpeningState,
+  operationId: string,
+): Promise<ShelfProduct | null> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    const today = currentLocalDate();
+    const openedAt = opening?.isOpened === true ? validLocalDate(opening.openedAt) : null;
+    if (
+      !opening ||
+      (opening.isOpened !== true && opening.isOpened !== false) ||
+      (opening.isOpened && (!openedAt || openedAt > today)) ||
+      (!opening.isOpened && opening.openedAt !== null)
+    ) {
+      throw new Error(SHELF_STATE_INVALID);
     }
-    const archived: ShelfProduct =
-      prev.status === 'active'
-        ? {
-            ...prev,
-            status: 'finished',
-            finishedAt: localDate,
-            updatedAt: ts,
-          }
-        : { ...prev, updatedAt: ts };
-    const freshness = normalizeShelfFreshness(
-      {
+    const replacementId = operationId.toLowerCase();
+    if (!validCanonicalOperationId(replacementId)) throw new Error(SHELF_STATE_INVALID);
+    let fresh: ShelfProduct | null = null;
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const items = prepared.products;
+      const mirrorOutbox = prepared.mirrorOutbox;
+      outboxChanged = prepared.outboxChanged;
+      const prev = items.find((product) => product.id === id);
+      if (!prev) {
+        lease.assertCurrent();
+        return decoded.upgradeFrom === 'v2'
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          : current;
+      }
+      const existingOperation = items.find((product) => product.id === replacementId);
+      const replacementRootId = prev.replacementRootId ?? prev.id;
+      if (existingOperation) {
+        if (
+          existingOperation.repurchaseCount > prev.repurchaseCount &&
+          existingOperation.replacementRootId === replacementRootId
+        ) {
+          fresh = existingOperation;
+          return decoded.upgradeFrom === 'v2'
+            ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+            : current;
+        }
+        throw new Error(SHELF_STATE_INVALID);
+      }
+      if (prev.status !== 'active') {
+        const descendants = items
+          .filter(
+            (product) =>
+              product.id !== prev.id &&
+              product.replacementRootId === replacementRootId &&
+              (prev.replacementLineageAmbiguous === true ||
+                product.repurchaseCount > prev.repurchaseCount),
+          )
+          .sort((left, right) => right.repurchaseCount - left.repurchaseCount);
+        const activeDescendant = descendants.find((product) => product.status === 'active');
+        if (activeDescendant) fresh = activeDescendant;
+        if (descendants.length > 0) {
+          return decoded.upgradeFrom === 'v2'
+            ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+            : current;
+        }
+      }
+      const archived: ShelfProduct =
+        prev.status === 'active'
+          ? {
+              ...prev,
+              status: 'finished',
+              finishedAt: today,
+              updatedAt: ts,
+            }
+          : { ...prev, updatedAt: ts };
+      const freshness = normalizeShelfFreshness(
+        {
+          ...prev,
+          openedAt,
+          isOpened: opening.isOpened,
+          expiryDate: null,
+        },
+        today,
+      );
+      fresh = {
         ...prev,
-        openedAt: localDate,
-        isOpened: true,
-        expiryDate: null,
-      },
-      localDate,
-    );
-    const fresh: ShelfProduct = {
-      ...prev,
-      id: replacementId,
-      ...freshness,
-      status: 'active',
-      finishedAt: null,
-      repurchaseCount: prev.repurchaseCount + 1,
-      createdAt: ts,
-      updatedAt: ts,
-    };
-    result = { fresh, archived };
-    return {
-      nextShelf: encodeShelfState(
+        id: replacementId,
+        ...freshness,
+        legacyUnverifiedExpiryDate: null,
+        status: 'active',
+        finishedAt: null,
+        repurchaseCount: prev.repurchaseCount + 1,
+        replacementRootId,
+        replacesProductId: prev.id,
+        replacementLineageAmbiguous: prev.replacementLineageAmbiguous === true,
+        createdAt: ts,
+        updatedAt: ts,
+      };
+      appendMirrorUpsert(mirrorOutbox, archived, ts);
+      appendMirrorUpsert(mirrorOutbox, fresh, ts);
+      outboxChanged = true;
+      lease.assertCurrent();
+      return encodeShelfState(
         [fresh, ...items.map((product) => (product.id === id ? archived : product))],
-        state.addOperations,
-      ),
-      outboxChanges: [shelfUpsertChange(archived), shelfUpsertChange(fresh)],
-    };
+        mirrorOutbox,
+        prepared.terminal,
+      );
+    });
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return fresh;
   });
-  return result;
 }
 
-/** Explicit reset for tests/seeding. Refuses to delete unreadable domain bytes. */
-export async function clearShelf(): Promise<void> {
-  await updatePrivateItem(KEY, (current) => {
-    decodeShelfState(current);
-    return current === null ? current : null;
+/**
+ * Return the durable owner-free FIFO. Reading this API also performs the one
+ * safe v2 migration: canonical rows become idempotent upserts, while no delete
+ * is inferred. Malformed or future bytes fail closed instead of looking like an
+ * empty/successfully drained queue.
+ */
+export function getPendingShelfMirrorOperations(): Promise<ShelfMirrorOperation[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let pending: ShelfMirrorOperation[] = [];
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      pending = prepared.mirrorOutbox;
+      outboxChanged = prepared.outboxChanged;
+      if (decoded.upgradeFrom !== 'v2') return current;
+      return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal);
+    });
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return pending;
   });
+}
+
+/**
+ * Acknowledge exactly the current FIFO head. An out-of-order or unknown
+ * operation never discards work and returns false.
+ */
+export function acknowledgeShelfMirrorOperation(operationId: string): Promise<boolean> {
+  if (!validCanonicalOperationId(operationId)) {
+    return Promise.reject(new Error(SHELF_STATE_INVALID));
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let acknowledged = false;
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const [head] = prepared.mirrorOutbox;
+      if (head?.operationId === operationId) {
+        prepared.mirrorOutbox.shift();
+        acknowledged = true;
+        outboxChanged = true;
+        return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal);
+      }
+      outboxChanged = prepared.outboxChanged;
+      return decoded.upgradeFrom === 'v2'
+        ? encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal)
+        : current;
+    });
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return acknowledged;
+  });
+}
+
+/**
+ * Atomically move only the current FIFO head to the governed terminal lane.
+ * The complete canonical operation is retained with the exact server code so
+ * support/export tooling can diagnose it without reconstructing lost intent.
+ */
+export function rejectShelfMirrorOperation(
+  operationId: string,
+  code: ShelfMirrorTerminalCode,
+): Promise<boolean> {
+  if (!validCanonicalOperationId(operationId) || !SHELF_MIRROR_TERMINAL_CODES.has(code)) {
+    return Promise.reject(new Error(SHELF_STATE_INVALID));
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let rejected = false;
+    let outboxChanged = false;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      const [head] = prepared.mirrorOutbox;
+      if (head?.operationId === operationId) {
+        prepared.mirrorOutbox.shift();
+        const terminal = [...prepared.terminal, { operation: head, code }];
+        rejected = true;
+        outboxChanged = true;
+        return encodeShelfState(prepared.products, prepared.mirrorOutbox, terminal);
+      }
+      outboxChanged = prepared.outboxChanged;
+      return decoded.upgradeFrom === 'v2'
+        ? encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal)
+        : current;
+    });
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    return rejected;
+  });
+}
+
+/**
+ * Durable evidence used only after the completion RPC reports that this exact
+ * product identity is still absent. Pending corrective Shelf work suppresses
+ * the inference so replay can establish the identity first.
+ */
+export function hasUnresolvedTerminalShelfMirrorOperationForProduct(
+  productId: string,
+): Promise<boolean> {
+  if (!validCanonicalOperationId(productId)) {
+    return Promise.reject(new Error(SHELF_STATE_INVALID));
+  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const decoded = decodeShelfState(raw);
+    const operationProductId = (operation: ShelfMirrorOperation): string =>
+      operation.kind === 'upsert' ? operation.payload.id : operation.productId;
+    const hasPendingCorrection = decoded.mirrorOutbox.some(
+      (operation) => operationProductId(operation) === productId,
+    );
+    const hasTerminalFact = decoded.terminal.some(
+      ({ operation }) => operationProductId(operation) === productId,
+    );
+    lease.assertCurrent();
+    return hasTerminalFact && !hasPendingCorrection;
+  });
+}
+
+/** Subscribe to committed FIFO changes. No product or owner bytes are emitted. */
+export function subscribeShelfMirrorOutboxChanges(listener: () => void): () => void {
+  shelfMirrorOutboxListeners.add(listener);
+  return () => {
+    shelfMirrorOutboxListeners.delete(listener);
+  };
+}
+
+/** Test/seed reset. */
+export async function clearShelf(): Promise<void> {
+  // Closed-consent cleanup: deletion is account-scoped and never reads plaintext.
+  await removePrivateItem(KEY);
+  notifyShelfMirrorOutboxChanged();
 }

@@ -1,0 +1,2843 @@
+{
+  "schemaVersion": 1,
+  "sourcePlan": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md",
+  "readinessLabels": [
+    "implemented",
+    "stubbed",
+    "simulated",
+    "inert",
+    "needs-device-verification",
+    "launch-blocked"
+  ],
+  "features": [
+    {
+      "id": "F-01",
+      "number": 1,
+      "key": "brand_identity",
+      "name": "Rebrand and identity migration",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-02",
+      "number": 2,
+      "key": "onboarding_consent",
+      "name": "Onboarding, age gate, and consent",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-03",
+      "number": 3,
+      "key": "shelf_intake",
+      "name": "Shelf intake through manual entry, search, barcode, and real OCR",
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "F-04",
+      "number": 4,
+      "key": "catalog",
+      "name": "Production product catalog import and quality",
+      "readiness": "stubbed"
+    },
+    {
+      "id": "F-05",
+      "number": 5,
+      "key": "conflict_engine",
+      "name": "Reviewed conflict engine",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-06",
+      "number": 6,
+      "key": "routine_builder",
+      "name": "Routine builder",
+      "readiness": "implemented"
+    },
+    {
+      "id": "F-07",
+      "number": 7,
+      "key": "today_adherence",
+      "name": "Today check-off and adherence",
+      "readiness": "implemented"
+    },
+    {
+      "id": "F-08",
+      "number": 8,
+      "key": "cycle_scheduler",
+      "name": "Skin cycling and ramp scheduler",
+      "readiness": "implemented"
+    },
+    {
+      "id": "F-09",
+      "number": 9,
+      "key": "photo_progress",
+      "name": "Private photo progress",
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "F-10",
+      "number": 10,
+      "key": "reminders",
+      "name": "Reminders",
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "F-11",
+      "number": 11,
+      "key": "subscriptions",
+      "name": "RevenueCat paywall and entitlements",
+      "readiness": "stubbed"
+    },
+    {
+      "id": "F-12",
+      "number": 12,
+      "key": "reverse_trial",
+      "name": "Reverse trial",
+      "readiness": "simulated"
+    },
+    {
+      "id": "F-13",
+      "number": 13,
+      "key": "recommendations",
+      "name": "Recommendations",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-14",
+      "number": 14,
+      "key": "ask_advisor",
+      "name": "Ask advisor, including the production cloud path",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-15",
+      "number": 15,
+      "key": "conflict_share",
+      "name": "Shareable conflict cards",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-16",
+      "number": 16,
+      "key": "commerce",
+      "name": "Commerce and replenishment",
+      "readiness": "inert"
+    },
+    {
+      "id": "F-17",
+      "number": 17,
+      "key": "community",
+      "name": "Community and Skin Notes",
+      "readiness": "stubbed"
+    },
+    {
+      "id": "F-18",
+      "number": 18,
+      "key": "trend_insights",
+      "name": "Trend insights",
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "F-19",
+      "number": 19,
+      "key": "widgets_live_activities",
+      "name": "Widgets and Live Activities",
+      "readiness": "inert"
+    },
+    {
+      "id": "F-20",
+      "number": 20,
+      "key": "admin_tooling",
+      "name": "Admin and operator review tooling",
+      "readiness": "launch-blocked"
+    }
+  ],
+  "gatedSurfaces": [
+    {
+      "id": "P7-CLOUD-ASK",
+      "surfaceKeys": ["cloud_ask"],
+      "name": "Cloud Ask",
+      "featureId": "F-14"
+    },
+    {
+      "id": "P7-COMMERCE",
+      "surfaceKeys": ["commerce"],
+      "name": "Commerce and order polling",
+      "featureId": "F-16"
+    },
+    {
+      "id": "P7-COMMUNITY",
+      "surfaceKeys": ["community_posting", "community_aggregates"],
+      "name": "Community posting and public aggregates",
+      "featureId": "F-17"
+    },
+    {
+      "id": "P7-TRENDS",
+      "surfaceKeys": ["trend_insights"],
+      "name": "Trend insights",
+      "featureId": "F-18"
+    },
+    {
+      "id": "P7-WIDGETS",
+      "surfaceKeys": ["widgets", "live_activities"],
+      "name": "Widgets and Live Activities",
+      "featureId": "F-19"
+    },
+    {
+      "id": "P7-SHARE-CARDS",
+      "surfaceKeys": ["share_cards"],
+      "name": "Share cards",
+      "featureId": "F-15"
+    },
+    {
+      "id": "P7-CONFLICT-SHARING",
+      "surfaceKeys": ["reviewed_conflict_sharing"],
+      "name": "Reviewed conflict sharing",
+      "featureId": "F-05"
+    },
+    {
+      "id": "P7-GOAL-RECOMMENDATIONS",
+      "surfaceKeys": ["goal_active_recommendations"],
+      "name": "Goal-active recommendations",
+      "featureId": "F-13"
+    },
+    {
+      "id": "P8-PUBLIC-LINKS",
+      "surfaceKeys": ["public_links"],
+      "name": "Public links",
+      "featureId": "F-15"
+    },
+    {
+      "id": "P8-REVIEW-PROMPT",
+      "surfaceKeys": ["review_prompts"],
+      "name": "Review prompts",
+      "featureId": "F-01"
+    },
+    {
+      "id": "P8-CREATOR-LINKS",
+      "surfaceKeys": ["creator_links"],
+      "name": "Creator links",
+      "featureId": "F-16"
+    },
+    {
+      "id": "P8-PAID-MEASUREMENT",
+      "surfaceKeys": ["paid_measurement"],
+      "name": "Paid measurement",
+      "featureId": "F-20"
+    }
+  ],
+  "categoryCounts": {
+    "data-store": 152,
+    "edge-function": 18,
+    "feature-flag": 17,
+    "generated-packet": 32,
+    "native-module": 44,
+    "route": 93,
+    "vendor-call": 16
+  },
+  "items": [
+    {
+      "id": "data-store:local:apps/mobile/src/features/ask/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/ask/store.ts",
+      "featureIds": ["F-14"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/commerce/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/commerce/store.ts",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/community/reactionStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/community/reactionStore.ts",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/community/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/community/store.ts",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/healthConsent/lifecycleStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/healthConsent/lifecycleStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/notifications/sentStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/notifications/sentStore.ts",
+      "featureIds": ["F-10"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/notifications/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/notifications/store.ts",
+      "featureIds": ["F-10"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/onboarding/ageGateStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/onboarding/ageGateStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/onboarding/healthConsentStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/onboarding/skinProfileStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/onboarding/skinProfileStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/photos/encryptedStorage.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/photos/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/photos/store.ts",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/recommendations/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/recommendations/store.ts",
+      "featureIds": ["F-13"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/routine/orderStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/routine/orderStore.ts",
+      "featureIds": ["F-06"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/routine/rampStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/routine/rampStore.ts",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/scheduler/cycleStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/scheduler/cycleStore.ts",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/shelf/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/shelf/store.ts",
+      "featureIds": ["F-03"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/streak/milestoneStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/streak/milestoneStore.ts",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/subscription/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/subscription/store.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/today/completionsStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/today/completionsStore.ts",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/trend/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/trend/store.ts",
+      "featureIds": ["F-18"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/applock/store.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/applock/store.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/offline/catalogLookupQueue.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/offline/catalogLookupQueue.ts",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/offline/completionQueue.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/offline/completionQueue.ts",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/offline/shelfMirrorQueue.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/offline/shelfMirrorQueue.ts",
+      "featureIds": ["F-03"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/storage/privateSecureStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/storage/privateSecureStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/supabase/largeSecureStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/supabase/largeSecureStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_barriers",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_click_tombstones",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000043_account_deletion_resumable.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_operator_recovery_audit",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_requests",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000043_account_deletion_resumable.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_steps",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_publication_leases",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000052_account_publication_fence.sql",
+      "featureIds": ["F-02", "F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:active_ramp",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000015_active_ramp.sql",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:affiliate_links",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000022_commerce.sql",
+      "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:apple_auth_capture_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:apple_auth_lifecycles",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:apple_auth_server_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ask_safety_audit",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000025_ask_layerwell.sql",
+      "featureIds": ["F-14"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ask_sessions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000025_ask_layerwell.sql",
+      "featureIds": ["F-14"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ask_turn_audit",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000025_ask_layerwell.sql",
+      "featureIds": ["F-14"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:brands",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_active_imports",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_corrections",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_batch_effects",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_batch_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_batches",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_chunk_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_conflicts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_entity_revisions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_promotion_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_review_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_staged_products",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_staged_records",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_import_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000045_catalog_import_pipeline.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_campaign_release_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_campaign_release_heads",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_campaigns",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_heads",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_product_mutations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_launch_curation_records",
+      "category": "data-store",
+      "source": "supabase/migrations/20260717000058_catalog_launch_curation.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_lookup_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_audit_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_capability_bindings",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_claims",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_grant_attestations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_grant_revocations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_grants",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_hold_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_operation_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_product_holds",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_rate_buckets",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_repair_authority_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_runtime_control",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_runtime_control_history",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_sessions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_operator_work_states",
+      "category": "data-store",
+      "source": "supabase/migrations/20260722000063_catalog_operator_authority.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_quality_reports",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:catalog_sources",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:commerce_admission_control",
+      "category": "data-store",
+      "source": "supabase/migrations/20260729000072_commerce_zero_admission.sql",
+      "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:commerce_click_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000022_commerce.sql",
+      "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_blocks",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_moderation_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_notes",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_questions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_reactions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_reports",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:community_topics",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000023_community.sql",
+      "featureIds": ["F-17"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:conflict_choice_mirror_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000051_conflict_choice_outbox_rpc.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:conflict_rules",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:consents",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000010_consents.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:creator_stack_items",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000022_commerce.sql",
+      "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:creator_stacks",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000022_commerce.sql",
+      "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:cycle_nights",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000017_cycles.sql",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:cycles",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000017_cycles.sql",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:edge_rate_limits",
+      "category": "data-store",
+      "source": "supabase/migrations/20260705000029_phase9_edge_rate_limits.sql",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:entitlements",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000009_entitlements.sql",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:growth_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260616000028_phase8_growth.sql",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_copy_registry",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_copy_review_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_copy_staging_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_withdrawal_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_withdrawal_steps",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_dependent_consent_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_dependent_consent_states",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_processing_states",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ingredient_pao_defaults",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ingredient_synonyms",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ingredient_tag_assignments",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ingredient_tag_definitions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ingredient_tags",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:ingredients",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:mobile_outbox_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000046_shelf_outbox_rpc.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:notification_log",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000019_reminders_streaks.sql",
+      "featureIds": ["F-10"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:notification_preferences",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000011_notification_preferences.sql",
+      "featureIds": ["F-10"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:obf_contribution_queue",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "inert"
+    },
+    {
+      "id": "data-store:postgres:order_attributions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000022_commerce.sql",
+      "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:photo_trend",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000024_photo_trend.sql",
+      "featureIds": ["F-09", "F-18"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:photos",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000008_photos.sql",
+      "featureIds": ["F-09"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_active_bands",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_barcodes",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_categories",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_ingredient_lists",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_ingredient_tokens",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_ingredients",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:product_pao_expiry",
+      "category": "data-store",
+      "source": "supabase/migrations/20260614000026_phase4_catalog.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:products",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000003_catalog.sql",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:profiles",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000002_profiles.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:recommendation_admission_control",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000071_recommendation_zero_admission.sql",
+      "featureIds": ["F-13"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:recommendation_preferences",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000021_recommendations.sql",
+      "featureIds": ["F-13"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:recommendations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000021_recommendations.sql",
+      "featureIds": ["F-13"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:revenuecat_identity_tombstones",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
+      "featureIds": ["F-02", "F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:reverse_trial_grants",
+      "category": "data-store",
+      "source": "supabase/migrations/20260615000027_phase6_payments.sql",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:routine_completion_sync_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:routine_completions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000007_routine_completions.sql",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:routine_conflicts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000012_routine_conflicts.sql",
+      "featureIds": ["F-06"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:routine_steps",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000006_routines.sql",
+      "featureIds": ["F-06"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:routines",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000006_routines.sql",
+      "featureIds": ["F-06"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:sequencing_rules",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000014_sequencing_rules.sql",
+      "featureIds": ["F-05"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:shelf_mirror_versions",
+      "category": "data-store",
+      "source": "supabase/migrations/20260718000046_shelf_outbox_rpc.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:shelf_product_identities",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:shelf_scans",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000016_smart_shelf.sql",
+      "featureIds": ["F-03"],
+      "readiness": "inert"
+    },
+    {
+      "id": "data-store:postgres:shelf_sync_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:skin_profiles",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000004_skin_profiles.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:streak_freezes",
+      "category": "data-store",
+      "source": "supabase/migrations/20260613000019_reminders_streaks.sql",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:subscriptions_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000009_entitlements.sql",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:user_products",
+      "category": "data-store",
+      "source": "supabase/migrations/20260612000005_user_products.sql",
+      "featureIds": ["F-03"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:waitlist_signups",
+      "category": "data-store",
+      "source": "supabase/migrations/20260616000028_phase8_growth.sql",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "edge-function:account-deletion",
+      "category": "edge-function",
+      "source": "supabase/functions/account-deletion/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:apple-account-events",
+      "category": "edge-function",
+      "source": "supabase/functions/apple-account-events/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:apple-auth-lifecycle",
+      "category": "edge-function",
+      "source": "supabase/functions/apple-auth-lifecycle/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:apple-auth-worker",
+      "category": "edge-function",
+      "source": "supabase/functions/apple-auth-worker/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:ask-layerwell",
+      "category": "edge-function",
+      "source": "supabase/functions/ask-layerwell/index.ts",
+      "featureIds": ["F-14"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:catalog-lookup",
+      "category": "edge-function",
+      "source": "supabase/functions/catalog-lookup/index.ts",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "edge-function:catalog-operator",
+      "category": "edge-function",
+      "source": "supabase/functions/catalog-operator/index.ts",
+      "featureIds": ["F-04", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:catalog-report",
+      "category": "edge-function",
+      "source": "supabase/functions/catalog-report/index.ts",
+      "featureIds": ["F-04"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "edge-function:catalog-search",
+      "category": "edge-function",
+      "source": "supabase/functions/catalog-search/index.ts",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "edge-function:consent-withdrawal",
+      "category": "edge-function",
+      "source": "supabase/functions/consent-withdrawal/index.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:data-export",
+      "category": "edge-function",
+      "source": "supabase/functions/data-export/index.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:growth-event",
+      "category": "edge-function",
+      "source": "supabase/functions/growth-event/index.ts",
+      "featureIds": ["F-15", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:health-consent-worker",
+      "category": "edge-function",
+      "source": "supabase/functions/health-consent-worker/index.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "edge-function:order-report-poll",
+      "category": "edge-function",
+      "source": "supabase/functions/order-report-poll/index.ts",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "edge-function:revenuecat-webhook",
+      "category": "edge-function",
+      "source": "supabase/functions/revenuecat-webhook/index.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "edge-function:subscription-grants",
+      "category": "edge-function",
+      "source": "supabase/functions/subscription-grants/index.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "edge-function:subscription-reconciliation",
+      "category": "edge-function",
+      "source": "supabase/functions/subscription-reconciliation/index.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "edge-function:waitlist",
+      "category": "edge-function",
+      "source": "supabase/functions/waitlist/index.ts",
+      "featureIds": ["F-01"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_E2E_APP_LOCK_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/applock/store.ts",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_IOS_WIN_BACK_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-11"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_NATIVE_CAMERA_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-03", "F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_NATIVE_OCR_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-14"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-13"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_TREND_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-18"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-19"],
+      "readiness": "inert"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED",
+      "category": "feature-flag",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-01"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "feature-flag:OBF_CONTRIBUTION_ENABLED",
+      "category": "feature-flag",
+      "source": "supabase/functions/catalog-report/index.ts",
+      "featureIds": ["F-04"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "generated-packet:docs/generated/device-support-policy-audit.json",
+      "category": "generated-packet",
+      "source": "docs/generated/device-support-policy-audit.json",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/device-support-policy-audit.md",
+      "category": "generated-packet",
+      "source": "docs/generated/device-support-policy-audit.md",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/generated-packet-status-audit.json",
+      "category": "generated-packet",
+      "source": "docs/generated/generated-packet-status-audit.json",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/generated-packet-status-audit.md",
+      "category": "generated-packet",
+      "source": "docs/generated/generated-packet-status-audit.md",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/performance-readiness-audit.json",
+      "category": "generated-packet",
+      "source": "docs/generated/performance-readiness-audit.json",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/performance-readiness-audit.md",
+      "category": "generated-packet",
+      "source": "docs/generated/performance-readiness-audit.md",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/readiness-status-audit.json",
+      "category": "generated-packet",
+      "source": "docs/generated/readiness-status-audit.json",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/readiness-status-audit.md",
+      "category": "generated-packet",
+      "source": "docs/generated/readiness-status-audit.md",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/source-packet-audit.json",
+      "category": "generated-packet",
+      "source": "docs/generated/source-packet-audit.json",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/source-packet-audit.md",
+      "category": "generated-packet",
+      "source": "docs/generated/source-packet-audit.md",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/tas-todo-audit.json",
+      "category": "generated-packet",
+      "source": "docs/generated/tas-todo-audit.json",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:docs/generated/tas-todo-audit.md",
+      "category": "generated-packet",
+      "source": "docs/generated/tas-todo-audit.md",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/device-support-policy-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/device-support-policy-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/generated-packet-status-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/generated-packet-status-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/performance-readiness-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/performance-readiness-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/readiness-status-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/readiness-status-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/source-packet-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/source-packet-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/tas-todo-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/tas-todo-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/e2e/cat04-catalog-recovery-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/cat04-catalog-recovery-audit.mjs",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/e2e/cat05-native-ocr-ui-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/cat05-native-ocr-ui-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/e2e/cat07-shelf-freshness-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/cat07-shelf-freshness-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/e2e/text-pressure-route-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/e2e/text-pressure-route-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase10/build-support-handoff-packet.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase10/build-support-handoff-packet.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase3/build-review-operator-queue.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase3/build-review-operator-queue.mjs",
+      "featureIds": ["F-01", "F-05", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase3/build-review-packet.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase3/build-review-packet.mjs",
+      "featureIds": ["F-01", "F-05", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase3/build-review-worklist.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase3/build-review-worklist.mjs",
+      "featureIds": ["F-01", "F-05", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase4/beta-coverage-report.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase4/beta-coverage-report.mjs",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase4/build-source-worklist.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase4/build-source-worklist.mjs",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase4/catalog-qa-report.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase4/catalog-qa-report.mjs",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase4/catalog-source-policy-audit.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase4/catalog-source-policy-audit.mjs",
+      "featureIds": ["F-04"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase6/build-payments-qa-packet.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase6/build-payments-qa-packet.mjs",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/phase8/build-growth-store-qa-packet.mjs",
+      "category": "generated-packet",
+      "source": "scripts/phase8/build-growth-store-qa-packet.mjs",
+      "featureIds": ["F-15", "F-16", "F-17", "F-18", "F-19", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "native-module:@infinitered/react-native-mlkit-face-detection",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:@react-native-async-storage/async-storage",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:@react-native-google-signin/google-signin",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:@sentry/react-native",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-apple-authentication",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-application",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-10", "F-19"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-build-properties",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-camera",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-03", "F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-constants",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-crypto",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-dev-client",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-device",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-10", "F-19"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-file-system",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-font",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-haptics",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-image",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-image-manipulator",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-linking",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-local-authentication",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-localization",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-network",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-notifications",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-10", "F-19"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-router",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-secure-store",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "native-module:expo-sharing",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-splash-screen",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-status-bar",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-store-review",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-01"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-system-ui",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-web-browser",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:expo-widgets",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:posthog-react-native",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-gesture-handler",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-get-random-values",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-purchases",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "native-module:react-native-reanimated",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-safe-area-context",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-screens",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-url-polyfill",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-view-shot",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-web",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "native-module:react-native-worklets",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/_layout.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:(tabs)/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/(tabs)/_layout.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:(tabs)/progress.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/(tabs)/progress.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:(tabs)/shelf.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/(tabs)/shelf.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:(tabs)/today.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/(tabs)/today.tsx",
+      "featureIds": ["F-07", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:(tabs)/you.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/(tabs)/you.tsx",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:ask/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/ask/_layout.tsx",
+      "featureIds": ["F-14"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:ask/consent.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/ask/consent.tsx",
+      "featureIds": ["F-14"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:ask/index.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/ask/index.tsx",
+      "featureIds": ["F-14"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:commerce/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/commerce/_layout.tsx",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "route:commerce/consent.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/commerce/consent.tsx",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "route:commerce/stack/[slug].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/commerce/stack/[slug].tsx",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "route:commerce/stacks.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/commerce/stacks.tsx",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "route:commerce/transparency.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/commerce/transparency.tsx",
+      "featureIds": ["F-16"],
+      "readiness": "inert"
+    },
+    {
+      "id": "route:community/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/community/_layout.tsx",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "route:community/ask.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/community/ask.tsx",
+      "featureIds": ["F-14", "F-17"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:community/index.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/community/index.tsx",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "route:community/note/[id].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/community/note/[id].tsx",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "route:community/people-like-you.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/community/people-like-you.tsx",
+      "featureIds": ["F-17"],
+      "readiness": "stubbed"
+    },
+    {
+      "id": "route:conflict/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/conflict/_layout.tsx",
+      "featureIds": ["F-05"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:conflict/[ruleId].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "featureIds": ["F-05"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:cycle/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/_layout.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/disruption.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/disruption.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/phased-intro.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/phased-intro.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/procedure.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/procedure.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/recovery.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/recovery.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/settings.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/settings.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/week.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/week.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:cycle/why-tonight.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/cycle/why-tonight.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:index.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/index.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/_layout.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/account.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/account.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/age.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/age.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/analyzing.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/analyzing.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/consent.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/consent.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/goals.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/goals.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/notifications.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/notifications.tsx",
+      "featureIds": ["F-02", "F-10"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/paywall.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/paywall.tsx",
+      "featureIds": ["F-02", "F-11", "F-12"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/products.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/products.tsx",
+      "featureIds": ["F-02", "F-03"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/quiz.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/quiz.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:onboarding/reveal.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/onboarding/reveal.tsx",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:paywall/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/paywall/_layout.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:paywall/downgrade.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/paywall/downgrade.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:paywall/reoffer.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/paywall/reoffer.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:paywall/success.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/paywall/success.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:paywall/upsell.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/paywall/upsell.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:paywall/winback.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/paywall/winback.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:photos/[id].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/photos/[id].tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:photos/capture.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/photos/capture.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:photos/review.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/photos/review.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:progress/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/progress/_layout.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:progress/[id].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/progress/[id].tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:progress/about.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/progress/about.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:progress/capture.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/progress/capture.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:progress/review.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/progress/review.tsx",
+      "featureIds": ["F-09"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:recommendations/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/recommendations/_layout.tsx",
+      "featureIds": ["F-13"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:recommendations/[id].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/recommendations/[id].tsx",
+      "featureIds": ["F-13"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:recommendations/index.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/recommendations/index.tsx",
+      "featureIds": ["F-13"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:recommendations/preferences.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/recommendations/preferences.tsx",
+      "featureIds": ["F-13"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:routine/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/_layout.tsx",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/adaptation.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/adaptation.tsx",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/plan.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/plan.tsx",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/ramp.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/ramp.tsx",
+      "featureIds": ["F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/reorder.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/reorder.tsx",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/streak.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/streak.tsx",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/tolerance.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/tolerance.tsx",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/welcome-back.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/welcome-back.tsx",
+      "featureIds": ["F-07"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "route:routine/widgets.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/routine/widgets.tsx",
+      "featureIds": ["F-19"],
+      "readiness": "inert"
+    },
+    {
+      "id": "route:s/[shareId].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/s/[shareId].tsx",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:settings/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/_layout.tsx",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:settings/beta-feedback.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/beta-feedback.tsx",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:settings/notifications.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/notifications.tsx",
+      "featureIds": ["F-10"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:settings/privacy.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/privacy.tsx",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:settings/skin-profile.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/skin-profile.tsx",
+      "featureIds": ["F-02", "F-05"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:settings/subscription.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/subscription.tsx",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "route:settings/timing.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/settings/timing.tsx",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:share/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/share/_layout.tsx",
+      "featureIds": ["F-15"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:share/conflict/[ruleId].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "featureIds": ["F-05"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:shelf/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/_layout.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/[id].tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/[id].tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/add.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/add.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/archive.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/archive.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/catalog-recovery.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/catalog-recovery.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/manual.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/manual.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/no-match.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/no-match.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/ocr.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/ocr.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/opened.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/opened.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/replenish.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/replenish.tsx",
+      "featureIds": ["F-03", "F-16"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/scan.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/scan.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/search.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/search.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:trend/_layout.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/trend/_layout.tsx",
+      "featureIds": ["F-18"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:trend/fairness.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/trend/fairness.tsx",
+      "featureIds": ["F-18"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "route:trend/optin.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/trend/optin.tsx",
+      "featureIds": ["F-18"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:api.revenuecat.com",
+      "category": "vendor-call",
+      "source": "supabase/functions/account-deletion/durableProviderDeletion.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "vendor-call:origin:appleid.apple.com",
+      "category": "vendor-call",
+      "source": "supabase/functions/account-deletion/appleDeletionNetwork.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:apps.apple.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/subscription/entitlementE2EFixture.web.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "vendor-call:origin:challenges.cloudflare.com",
+      "category": "vendor-call",
+      "source": "supabase/functions/growth-event/index.ts",
+      "featureIds": ["F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:developer.apple.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "vendor-call:origin:eu.i.posthog.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/lib/env.ts",
+      "featureIds": ["F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:eu.posthog.com",
+      "category": "vendor-call",
+      "source": "supabase/functions/account-deletion/providerDeletion.ts",
+      "featureIds": ["F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:play.google.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/lib/iap/revenuecat.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "vendor-call:origin:support.apple.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/settings/accountDeletionNotice.ts",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:origin:www.aad.org",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "vendor-call:origin:www.fda.gov",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "vendor-call:origin:www.ftc.gov",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/features/routine/sequencing.ts",
+      "featureIds": ["F-06", "F-08"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "vendor-call:origin:www.revenuecat.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/lib/iap/revenuecat.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "vendor-call:sdk:google-sign-in",
+      "category": "vendor-call",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:sdk:sentry",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/lib/observability/sentry.ts",
+      "featureIds": ["F-20"],
+      "readiness": "launch-blocked"
+    },
+    {
+      "id": "vendor-call:sdk:supabase",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/lib/supabase/client.ts",
+      "featureIds": ["F-02", "F-04", "F-20"],
+      "readiness": "launch-blocked"
+    }
+  ]
+}

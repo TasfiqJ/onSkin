@@ -1,21 +1,29 @@
 type RoutinePhase = 'AM' | 'PM';
 
-export type CycleNightCompletionCandidate = {
-  completedAfter: ReadonlySet<string>;
-  cycleActive: boolean;
-  phase: RoutinePhase;
-  stepKeys: readonly string[];
-  changed: boolean;
-};
-
 export function shouldTrackCycleNightCompleted({
-  completedAfter,
+  completedStepKeysAfter,
+  completedKey,
   cycleActive,
   phase,
   stepKeys,
-  changed,
-}: CycleNightCompletionCandidate): boolean {
-  if (!changed || phase !== 'PM' || !cycleActive || stepKeys.length === 0) return false;
+  completionInserted,
+}: {
+  completedStepKeysAfter: ReadonlySet<string>;
+  completedKey: string;
+  cycleActive: boolean;
+  phase: RoutinePhase;
+  stepKeys: readonly string[];
+  completionInserted: boolean;
+}): boolean {
+  if (
+    !completionInserted ||
+    phase !== 'PM' ||
+    !cycleActive ||
+    stepKeys.length === 0 ||
+    !stepKeys.includes(completedKey)
+  ) {
+    return false;
+  }
 
-  return stepKeys.every((key) => completedAfter.has(key));
+  return stepKeys.every((key) => completedStepKeysAfter.has(key));
 }

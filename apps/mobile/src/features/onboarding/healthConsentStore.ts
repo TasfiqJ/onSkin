@@ -1,26 +1,38 @@
-import type { ConsentType } from '@onskin/types';
+import type { ConsentType } from '@layerwell/types';
 import * as Crypto from 'expo-crypto';
 
-import {
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-} from '@/lib/auth/accountGeneration';
-import {
-  readPrivateItem,
-  removePrivateItem,
-  type PrivateKVReadFailureReason,
-  type PrivateKVReadResult,
-  updatePrivateItem,
-} from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
-import { HEALTH_DATA_CONSENT } from './consentCopy';
+import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from './consentCopy';
 
-const HEALTH_DATA_CONSENT_KEY = 'onskin.healthDataCollectionConsent.v1';
+const HEALTH_DATA_CONSENT_KEY = 'layerwell.healthDataCollectionConsent.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const HEALTH_CONSENT_INVALID = 'HEALTH_CONSENT_INVALID';
 export const HEALTH_CONSENT_UNSUPPORTED_VERSION = 'HEALTH_CONSENT_UNSUPPORTED_VERSION';
-export const HEALTH_CONSENT_UNAVAILABLE = 'HEALTH_CONSENT_UNAVAILABLE';
+export const HEALTH_CONSENT_MUTATION_SUPERSEDED = 'HEALTH_CONSENT_MUTATION_SUPERSEDED';
+
+const CURRENT_GRANT_HASH =
+  '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
+const CURRENT_DECLINE_HASH =
+  '6a34a4d3b8086a0ee86951261f612c502bd4376bc8378cf22533b49817cdedea';
+const CURRENT_WITHDRAWAL_HASH =
+  '5200ef21982670cf73539d8a7d3e0f9c2219b40ee8d63be0a83d3e10043ba37f';
+
+let consentMutationGeneration = 0;
+
+function canonicalConsentHash(consentText: string): string | null {
+  if (consentText === HEALTH_DATA_CONSENT.fullText) return CURRENT_GRANT_HASH;
+  if (consentText === HEALTH_DATA_CONSENT.declineText) return CURRENT_DECLINE_HASH;
+  if (consentText === HEALTH_DATA_WITHDRAWAL.fullText) return CURRENT_WITHDRAWAL_HASH;
+  return null;
+}
+
+function assertConsentMutationCurrent(generation: number): void {
+  if (generation !== consentMutationGeneration) {
+    throw new Error(HEALTH_CONSENT_MUTATION_SUPERSEDED);
+  }
+}
 
 export type LocalHealthDataConsent = {
   type: ConsentType;
@@ -29,22 +41,6 @@ export type LocalHealthDataConsent = {
   consentTextHash: string;
   recordedAt: string;
 };
-
-type PrivateKVCorruptReason = Extract<
-  PrivateKVReadResult,
-  { status: 'corrupt' }
->['reason'];
-
-export type HealthConsentReadResult =
-  | { status: 'absent'; consent: null }
-  | { status: 'available'; consent: LocalHealthDataConsent }
-  | { status: 'unavailable'; consent: null; reason: PrivateKVReadFailureReason }
-  | {
-      status: 'corrupt';
-      consent: null;
-      reason: PrivateKVCorruptReason | 'invalid_record';
-    }
-  | { status: 'unsupported_version'; consent: null };
 
 type HealthConsentEnvelope = {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -156,79 +152,74 @@ export async function setHealthDataCollectionConsentLocal(params: {
   version: string;
   consentText: string;
 }): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
-    const consentTextHash = await awaitAccountGenerationLease(lease, () =>
-      Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, params.consentText),
+  const mutationGeneration = ++consentMutationGeneration;
+  let consentTextHash = canonicalConsentHash(params.consentText);
+  if (consentTextHash === null) {
+    consentTextHash = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      params.consentText,
     );
-    lease.assertCurrent();
+    assertConsentMutationCurrent(mutationGeneration);
+  }
 
-    const consent: LocalHealthDataConsent = {
-      type: 'health_data_collection',
-      granted: params.granted,
-      version: params.version,
-      consentTextHash,
-      recordedAt: new Date().toISOString(),
-    };
-    await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
-      if (current !== null) decodeConsent(current);
-      return encodeConsent(consent);
-    });
-    lease.assertCurrent();
+  const consent: LocalHealthDataConsent = {
+    type: 'health_data_collection',
+    granted: params.granted,
+    version: params.version,
+    consentTextHash,
+    recordedAt: new Date().toISOString(),
+  };
+  assertConsentMutationCurrent(mutationGeneration);
+  await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
+    assertConsentMutationCurrent(mutationGeneration);
+    if (current !== null) decodeConsent(current);
+    return encodeConsent(consent);
   });
 }
 
-/** Read and classify the local proof without repairing, deleting, or migrating bytes. */
-export async function readHealthDataCollectionConsentLocal(): Promise<HealthConsentReadResult> {
-  const stored = await readPrivateItem(HEALTH_DATA_CONSENT_KEY);
-  if (stored.status === 'absent') return { status: 'absent', consent: null };
-  if (stored.status === 'unavailable') {
-    return { status: 'unavailable', consent: null, reason: stored.reason };
-  }
-  if (stored.status === 'corrupt') {
-    return { status: 'corrupt', consent: null, reason: stored.reason };
-  }
-  if (stored.status === 'unsupported_version') {
-    return { status: 'unsupported_version', consent: null };
-  }
-
-  try {
-    return { status: 'available', consent: decodeConsent(stored.value) };
-  } catch (error) {
-    if (error instanceof Error && error.message === HEALTH_CONSENT_UNSUPPORTED_VERSION) {
-      return { status: 'unsupported_version', consent: null };
-    }
-    return { status: 'corrupt', consent: null, reason: 'invalid_record' };
-  }
-}
-
-/** Compatibility API: only genuine absence maps to null; unreadable state remains explicit. */
 export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealthDataConsent | null> {
-  const result = await readHealthDataCollectionConsentLocal();
-  if (result.status === 'available') return result.consent;
-  if (result.status === 'absent') return null;
-  if (result.status === 'unsupported_version') {
-    throw new Error(HEALTH_CONSENT_UNSUPPORTED_VERSION);
+  try {
+    const raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
+    return raw === null ? null : decodeConsent(raw);
+  } catch {
+    return null;
   }
-  if (result.status === 'corrupt') throw new Error(HEALTH_CONSENT_INVALID);
-  throw new Error(HEALTH_CONSENT_UNAVAILABLE);
 }
 
 export async function hasCurrentHealthDataCollectionConsent(): Promise<boolean> {
-  const result = await readHealthDataCollectionConsentLocal();
-  if (result.status !== 'available') return false;
-  const consent = result.consent;
+  const consent = await getHealthDataCollectionConsentLocal();
   if (consent?.granted !== true || consent.version !== HEALTH_DATA_CONSENT.version) {
     return false;
   }
 
-  const currentConsentTextHash = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    HEALTH_DATA_CONSENT.fullText,
-  );
-  return consent.consentTextHash === currentConsentTextHash;
+  return consent.consentTextHash === CURRENT_GRANT_HASH;
+}
+
+/**
+ * Mirror an already-authoritative server ledger grant into the encrypted local
+ * cache consumed by onboarding persistence. This accepts only the exact current
+ * disclosure contract; it never upgrades or invents consent from local state.
+ */
+export async function synchronizeAuthoritativeHealthDataCollectionConsent(params: {
+  version: string | null;
+  consentTextHash: string | null;
+}): Promise<void> {
+  if (
+    params.version !== HEALTH_DATA_CONSENT.version ||
+    params.consentTextHash !== CURRENT_GRANT_HASH
+  ) {
+    throw new Error('AUTHORITATIVE_HEALTH_CONSENT_CONTRACT_MISMATCH');
+  }
+  await setHealthDataCollectionConsentLocal({
+    granted: true,
+    version: HEALTH_DATA_CONSENT.version,
+    consentText: HEALTH_DATA_CONSENT.fullText,
+  });
 }
 
 /** Test/seed reset. */
 export async function clearHealthDataCollectionConsentLocal(): Promise<void> {
+  const mutationGeneration = ++consentMutationGeneration;
   await removePrivateItem(HEALTH_DATA_CONSENT_KEY);
+  assertConsentMutationCurrent(mutationGeneration);
 }

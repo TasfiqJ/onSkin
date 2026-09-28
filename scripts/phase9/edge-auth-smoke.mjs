@@ -16,6 +16,31 @@ const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
 const supabaseKeyMapHelper = read('supabase/functions/_shared/supabaseKeyMap.ts');
 const supabasePublishableKeyHelper = read('supabase/functions/_shared/supabasePublishableKey.ts');
 const supabaseSecretKeyHelper = read('supabase/functions/_shared/supabaseSecretKey.ts');
+const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
+const accountDeletionManifest = edgeFunctionManifest.functions?.['account-deletion'] ?? {};
+const accountDeletionIndex = read('supabase/functions/account-deletion/index.ts');
+const accountDeletionHandler = read(
+  'supabase/functions/account-deletion/durableDeletionHttpHandler.ts',
+);
+const accountDeletionRuntime = read(
+  'supabase/functions/account-deletion/durableDeletionRuntime.ts',
+);
+const accountDeletionGateway = read(
+  'supabase/functions/account-deletion/durableDeletionDatabaseGateway.ts',
+);
+const accountDeletionRuntimeCore = read(
+  'supabase/functions/account-deletion/durableDeletionRuntimeCore.ts',
+);
+const healthConsentWorkerManifest = edgeFunctionManifest.functions?.['health-consent-worker'] ?? {};
+const healthConsentWorkerIndex = read('supabase/functions/health-consent-worker/index.ts');
+const healthConsentWorkerHandler = read('supabase/functions/health-consent-worker/httpHandler.ts');
+const accountDeletionProviderNetwork = read(
+  'supabase/functions/account-deletion/deletionProviderNetwork.ts',
+);
+const accountDeletionAppleNetwork = read(
+  'supabase/functions/account-deletion/appleDeletionNetwork.ts',
+);
+const subscriptionGrantErrors = read('supabase/functions/subscription-grants/grantErrors.ts');
 const clientSupabaseSecretReferences = listFiles('apps/mobile')
   .filter((path) => /\.(?:js|jsx|ts|tsx)$/.test(path))
   .filter((path) => /SUPABASE_(?:SECRET_KEYS|SECRET_KEY|SERVICE_ROLE_KEY)/.test(read(path)));
@@ -42,9 +67,9 @@ function publicFormBodyLimitChecks(source, scope) {
 }
 
 const userJwtFunctions = [
-  'account-deletion',
   'data-export',
   'subscription-grants',
+  'subscription-reconciliation',
   'catalog-search',
   'catalog-lookup',
   'catalog-report',
@@ -157,9 +182,142 @@ block(
   'Mobile source must never reference Supabase secret/service-role key variables.',
 );
 
+block(
+  errors,
+  accountDeletionManifest.access === 'mixed' &&
+    accountDeletionManifest.public === true &&
+    accountDeletionManifest.verifyJwt === false &&
+    /bearer JWT for begin/.test(accountDeletionManifest.auth ?? '') &&
+    /256-bit capability for status/.test(accountDeletionManifest.auth ?? '') &&
+    /worker secret for scheduled work/.test(accountDeletionManifest.auth ?? ''),
+  'account-deletion must declare its mixed JWT/capability/worker boundary instead of relying on gateway JWT verification.',
+);
+block(
+  errors,
+  /createDurableDeletionRuntime/.test(accountDeletionIndex) &&
+    /createDurableDeletionHttpHandler/.test(accountDeletionIndex) &&
+    /readSupabaseSecretKey/.test(accountDeletionIndex) &&
+    accountDeletionIndex.includes(
+      'const handler = createDurableDeletionHttpHandler(dependencies);',
+    ) &&
+    accountDeletionIndex.includes(
+      'Deno.serve((request) => stagingTrafficFreezeResponse() ?? handler(request));',
+    ),
+  'account-deletion entrypoint must compose the validated durable runtime and mixed-auth HTTP handler with server-only credentials behind the freeze-first wrapper.',
+);
+block(
+  errors,
+  /bearerToken\(request\)/.test(accountDeletionHandler) &&
+    /dependencies\.authenticate\(token\)/.test(accountDeletionHandler) &&
+    /["']UNAUTHORIZED["']/.test(accountDeletionHandler),
+  'account-deletion begin must use the strict shared Bearer parser and return stable 401 responses.',
+);
+const accountDeletionPreflightIndex = accountDeletionHandler.indexOf(
+  "if (parsed.action === 'preflight')",
+);
+const accountDeletionSubjectValidationIndex = accountDeletionHandler.indexOf(
+  '!AUTH_USER_ID_PATTERN.test(user.id)',
+  accountDeletionPreflightIndex,
+);
+const accountDeletionBarrierLookupIndex = accountDeletionHandler.indexOf(
+  'dependencies.barrierState(user.id, user.sessionId)',
+  accountDeletionPreflightIndex,
+);
+block(
+  errors,
+  /ACCOUNT_DELETION_SESSION_REJECTED/.test(accountDeletionHandler) &&
+    accountDeletionPreflightIndex !== -1 &&
+    accountDeletionSubjectValidationIndex > accountDeletionPreflightIndex &&
+    accountDeletionBarrierLookupIndex > accountDeletionSubjectValidationIndex &&
+    /return json\(\{ status, ownerSubject: user\.id \}, 200\)/.test(accountDeletionHandler),
+  'account-deletion preflight must validate and return the authenticated subject for clear/active and reserve its lane-specific 401 for authoritative bearer rejection.',
+);
+block(
+  errors,
+  /dependencies\.consumeIntakeRateLimit\(user\.id, user\.sessionId\)/.test(
+    accountDeletionHandler,
+  ) && /p_session_id: input\.sessionId/.test(accountDeletionGateway),
+  'account-deletion rate admission and irreversible begin must retain the verified live-session binding.',
+);
+block(
+  errors,
+  accountDeletionHandler.search(/parsed\.action === ["']status["']/) !== -1 &&
+    accountDeletionHandler.indexOf('const token = bearerToken(request)') !== -1 &&
+    accountDeletionHandler.search(/parsed\.action === ["']status["']/) <
+      accountDeletionHandler.indexOf('const token = bearerToken(request)') &&
+    /dependencies\.status\(parsed\.capability\)/.test(accountDeletionHandler) &&
+    /mapPublicDeletionStatus\(lookup\)/.test(accountDeletionHandler),
+  'account-deletion status must be capability-only and resolved before the authenticated begin lane.',
+);
+block(
+  errors,
+  /x-account-deletion-worker-secret/.test(accountDeletionHandler) &&
+    /constantTimeEqual\(supplied, dependencies\.workerSecret\)/.test(accountDeletionHandler) &&
+    /parsed\.action === ["']work["']/.test(accountDeletionHandler) &&
+    /dependencies\.runWorker\(\)/.test(accountDeletionHandler),
+  'account-deletion worker execution must require its dedicated constant-time secret boundary.',
+);
+block(
+  errors,
+  healthConsentWorkerManifest.access === 'scheduled' &&
+    healthConsentWorkerManifest.public === false &&
+    healthConsentWorkerManifest.verifyJwt === false &&
+    healthConsentWorkerManifest.auth === 'scheduler-secret',
+  'health-consent-worker must declare its private scheduler-secret boundary.',
+);
+block(
+  errors,
+  /x-health-consent-worker-secret/.test(healthConsentWorkerHandler) &&
+    /constantTimeEqual\(supplied, dependencies\.workerSecret\)/.test(healthConsentWorkerHandler) &&
+    /action !== 'work'/.test(healthConsentWorkerHandler) &&
+    /dependencies\.runWorker\(\)/.test(healthConsentWorkerHandler) &&
+    /readEdgeAppEnvironment/.test(healthConsentWorkerIndex),
+  'health-consent-worker must require its exact dedicated secret/action and fail closed on environment configuration.',
+);
+block(
+  errors,
+  accountDeletionHandler.search(/request\.method === ["']OPTIONS["']/) !== -1 &&
+    accountDeletionHandler.search(/request\.method !== ["']POST["']/) !== -1 &&
+    accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') !==
+      -1 &&
+    accountDeletionHandler.indexOf('readLimitedJson(') !== -1 &&
+    accountDeletionHandler.indexOf('const token = bearerToken(request)') !== -1 &&
+    accountDeletionHandler.search(/request\.method === ["']OPTIONS["']/) <
+      accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') &&
+    accountDeletionHandler.search(/request\.method !== ["']POST["']/) <
+      accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') &&
+    accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') <
+      accountDeletionHandler.indexOf('readLimitedJson(') &&
+    accountDeletionHandler.indexOf('readLimitedJson(') <
+      accountDeletionHandler.indexOf('const token = bearerToken(request)') &&
+    /\{ error: ["']PAYLOAD_TOO_LARGE["'] \},\s*413/.test(accountDeletionHandler),
+  'account-deletion must reject methods and oversized mixed-boundary bodies before parsing or Auth work.',
+);
+block(
+  errors,
+  /fetcher: fetchWithTimeout/.test(accountDeletionRuntime) &&
+    /createDeletionProviderJsonNetwork/.test(accountDeletionRuntime) &&
+    /createAppleDeletionNetwork/.test(accountDeletionRuntime) &&
+    /readLimitedResponseText/.test(accountDeletionProviderNetwork) &&
+    /readLimitedResponseText/.test(accountDeletionAppleNetwork) &&
+    !/await fetch\(/.test(
+      `${accountDeletionRuntime}\n${accountDeletionProviderNetwork}\n${accountDeletionAppleNetwork}`,
+    ),
+  'account-deletion provider clients must receive timed fetches and use bounded response readers without direct fetch calls.',
+);
+block(
+  errors,
+  /constantTimeEqual/.test(accountDeletionRuntimeCore) &&
+    /difference \|=/.test(accountDeletionRuntimeCore),
+  'account-deletion mixed-auth secret comparisons must remain content- and length-aware.',
+);
+
 for (const fn of userJwtFunctions) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   const handlerSource = source.slice(source.indexOf('Deno.serve'));
+  const referencesServerCredential =
+    /\b(?:service|secret)Key\b/i.test(source) ||
+    /SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)/.test(source);
   block(errors, /auth\.getUser/.test(source), `${fn} must validate caller JWT with auth.getUser.`);
   block(
     errors,
@@ -200,13 +358,18 @@ for (const fn of userJwtFunctions) {
   );
   block(
     errors,
-    /readSupabaseSecretKey/.test(source) &&
+    (!referencesServerCredential || /readSupabaseSecretKey/.test(source)) &&
       !/Deno\.env\.get\(['"]SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)['"]\)/.test(source),
-    `${fn} must resolve server credentials through the shared hosted-key helper.`,
+    `${fn} must resolve any server credentials through the shared hosted-key helper.`,
   );
 }
 
-for (const fn of ['growth-event', 'order-report-poll', 'revenuecat-webhook', 'waitlist']) {
+for (const fn of [
+  'growth-event',
+  'health-consent-worker',
+  'revenuecat-webhook',
+  'waitlist',
+]) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -216,7 +379,13 @@ for (const fn of ['growth-event', 'order-report-poll', 'revenuecat-webhook', 'wa
   );
 }
 
-for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-export']) {
+for (const fn of [
+  'catalog-lookup',
+  'catalog-report',
+  'catalog-search',
+  'consent-withdrawal',
+  'data-export',
+]) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -228,13 +397,7 @@ for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-ex
   );
 }
 
-for (const fn of [
-  'account-deletion',
-  'catalog-lookup',
-  'waitlist',
-  'growth-event',
-  'order-report-poll',
-]) {
+for (const fn of ['waitlist', 'growth-event', 'subscription-reconciliation']) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -265,12 +428,14 @@ block(
 );
 block(
   errors,
-  /active_subscription_exists/.test(subscriptionGrants),
+  /reverseTrialGrantErrorCode\(error\)/.test(subscriptionGrants) &&
+    /active_subscription_exists/.test(subscriptionGrantErrors),
   'subscription-grants must return a stable active-subscription conflict code.',
 );
 block(
   errors,
-  /reverse_trial_already_used/.test(subscriptionGrants),
+  /reverseTrialGrantErrorStatus\(code\)/.test(subscriptionGrants) &&
+    /reverse_trial_already_used/.test(subscriptionGrantErrors),
   'subscription-grants must return a stable already-used reverse-trial conflict code.',
 );
 block(
@@ -319,23 +484,57 @@ block(
 );
 block(
   errors,
-  /proposed_payload:\s*proposedPayload\.value/.test(catalogReport),
+  /p_proposed_payload:\s*proposedPayload\.value/.test(catalogReport),
   'catalog-report must write sanitized proposed payloads only.',
 );
 block(
   errors,
-  /client_context:\s*clientContext\.value/.test(catalogReport),
+  /p_client_context:\s*clientContext\.value/.test(catalogReport),
   'catalog-report must write sanitized client context only.',
 );
 block(
   errors,
-  !/proposed_payload:\s*body\.proposedPayload/.test(catalogReport),
+  /normalizeReportRequestId\(body\.reportRequestId\)/.test(catalogReport) &&
+    /p_report_request_id:\s*reportRequestId/.test(catalogReport),
+  'catalog-report must require and forward one random response-loss retry identity.',
+);
+block(
+  errors,
+  !/p_proposed_payload:\s*body\.proposedPayload/.test(catalogReport),
   'catalog-report must not persist raw proposedPayload.',
 );
 block(
   errors,
-  !/client_context:\s*body\.clientContext/.test(catalogReport),
+  !/p_client_context:\s*body\.clientContext/.test(catalogReport),
   'catalog-report must not persist raw clientContext.',
+);
+block(
+  errors,
+  /readSupabaseSecretKey/.test(catalogReport) &&
+    /admin\.rpc\(['"]submit_catalog_correction['"]/.test(catalogReport) &&
+    !/\.from\(['"]catalog_corrections['"]\)/.test(catalogReport),
+  'catalog-report must create serving-control corrections only through the service-only RPC.',
+);
+block(
+  errors,
+  /\[HEALTH_PROCESSING_EPOCH_HEADER\]:\s*healthProcessingEpoch/.test(catalogReport) &&
+    /p_expected_health_epoch:\s*healthProcessingEpoch/.test(catalogReport),
+  'catalog-report must bind the service RPC and its write trigger to the exact caller health epoch.',
+);
+block(
+  errors,
+  /CATALOG_REPORT_RATE_LIMITED/.test(catalogReport) &&
+    /rate_limited/.test(catalogReport) &&
+    /Retry-After/.test(catalogReport),
+  'catalog-report must map its account-serialized database limit to a stable 429 response.',
+);
+block(
+  errors,
+  /HEALTH_PROCESSING_BUSY/.test(catalogReport) &&
+    /report_busy/.test(catalogReport) &&
+    /423/.test(catalogReport) &&
+    /already_received/.test(catalogReport),
+  'catalog-report must distinguish owner-lock retry from a confirmed idempotent receipt.',
 );
 block(
   errors,
@@ -357,12 +556,19 @@ const catalogLookup = read('supabase/functions/catalog-lookup/index.ts');
 block(
   errors,
   !/req\.method === 'GET'/.test(catalogLookup),
-  'catalog-lookup must not support GET because lookups write caller telemetry and can call external catalog APIs.',
+  'catalog-lookup must not support GET because lookups write caller telemetry.',
 );
 block(
   errors,
   !/searchParams\.get\('barcode'\)/.test(catalogLookup),
   'catalog-lookup must not accept barcodes from query strings.',
+);
+block(
+  errors,
+  !/(?:fetchOpenBeautyFacts|fetchWithTimeout|world\.openbeautyfacts\.org|OBF_API_ENABLED|OBF_USER_AGENT|external_candidate)/.test(
+    catalogLookup,
+  ),
+  'catalog-lookup must remain local-catalog-only and expose no live Open Beauty Facts path.',
 );
 
 function orderedCatalogRateLimit(source, scope, firstBodyMarker, firstWorkMarker) {
@@ -389,7 +595,7 @@ for (const [label, source, scope, firstBodyMarker, firstWorkMarker] of [
     catalogLookup,
     'catalog-lookup',
     'requestBarcode(req)',
-    'fetchOpenBeautyFacts',
+    'admin.rpc(CATALOG_LOOKUP_RPC',
   ],
 ]) {
   block(
@@ -483,15 +689,74 @@ block(
 block(
   errors,
   /PHASE9_RUN_LIVE_EDGE_AUTH/.test(liveEdgeAuth) &&
-    /PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH/.test(liveEdgeAuth) &&
+    /env\.APP_ENV === 'staging'/.test(liveEdgeAuth) &&
+    /resolveHostedSupabaseProjectTarget/.test(liveEdgeAuth) &&
+    /supabaseTarget\.valid/.test(liveEdgeAuth) &&
     /docs\/phase-9\/generated\/live-edge-auth\.json/.test(liveEdgeAuth),
-  'Live Edge auth harness must be explicit-flagged, production-guarded, and write evidence artifacts.',
+  'Live Edge auth harness must be explicit-flagged, staging-only, bound to the reviewed canonical Supabase target, and write evidence artifacts.',
 );
 block(
   errors,
   /user Edge Functions reject missing JWT/.test(liveEdgeAuth) &&
     /user Edge Functions reject invalid JWT/.test(liveEdgeAuth),
   'Live Edge auth harness must cover missing and invalid JWT rejection.',
+);
+block(
+  errors,
+  /accountDeletionFunction = 'account-deletion'/.test(liveEdgeAuth) &&
+    /bearerProtectedFunctions = \[accountDeletionFunction, \.\.\.userJwtFunctions\]/.test(
+      liveEdgeAuth,
+    ) &&
+    /return \{ action: 'begin', idempotencyKey, statusCapability \}/.test(liveEdgeAuth) &&
+    /parseAccountDeletionBegin/.test(liveEdgeAuth) &&
+    /response\.status === 202/.test(liveEdgeAuth) &&
+    /status === 'accepted'/.test(liveEdgeAuth),
+  'Live Edge auth harness must model account-deletion begin as an exact authenticated asynchronous 202 contract.',
+);
+block(
+  errors,
+  /postAccountDeletionStatus/.test(liveEdgeAuth) &&
+    /account-deletion capability status is unauthenticated/.test(liveEdgeAuth) &&
+    /response\.status === 200/.test(liveEdgeAuth) &&
+    /response\.status === 202/.test(liveEdgeAuth) &&
+    /response\.status === 404/.test(liveEdgeAuth) &&
+    /response\.status === 410/.test(liveEdgeAuth) &&
+    /status === 'completed'/.test(liveEdgeAuth) &&
+    /status === 'invalid'/.test(liveEdgeAuth) &&
+    /status === 'expired'/.test(liveEdgeAuth),
+  'Live Edge auth harness must send capability-only status and validate exact 200/202/404/410 response semantics.',
+);
+block(
+  errors,
+  /x-account-deletion-worker-secret/.test(liveEdgeAuth) &&
+    /postAccountDeletionWorker/.test(liveEdgeAuth) &&
+    /body: \{ action: 'work' \}/.test(liveEdgeAuth) &&
+    /account-deletion worker rejects missing and wrong dedicated service credentials without work/.test(
+      liveEdgeAuth,
+    ) &&
+    !/env\.ACCOUNT_DELETION_WORKER_SECRET/.test(liveEdgeAuth) &&
+    /delegated-to-reviewed-cron-evidence/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove safe worker-secret negatives without reading or sending the real global worker credential.',
+);
+block(
+  errors,
+  /x-health-consent-worker-secret/.test(liveEdgeAuth) &&
+    /postHealthConsentWorker/.test(liveEdgeAuth) &&
+    /health-consent worker rejects missing and wrong dedicated service credentials without work/.test(
+      liveEdgeAuth,
+    ) &&
+    !/env\.HEALTH_CONSENT_WORKER_SECRET/.test(liveEdgeAuth) &&
+    /healthConsentAuthorizedWorker: 'delegated-to-reviewed-cron-evidence'/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove health-worker secret negatives without reading or sending the real global credential.',
+);
+block(
+  errors,
+  /PHASE9_EDGE_AUTH_REQUEST_TIMEOUT_SECONDS/.test(liveEdgeAuth) &&
+    /PHASE9_EDGE_AUTH_RESPONSE_MAX_BYTES/.test(liveEdgeAuth) &&
+    /AbortSignal\.timeout/.test(liveEdgeAuth) &&
+    /readBoundedResponseText/.test(liveEdgeAuth) &&
+    /response\.body\.getReader\(\)/.test(liveEdgeAuth),
+  'Live Edge auth harness requests and streamed responses must remain time- and size-bounded.',
 );
 block(
   errors,
@@ -525,6 +790,13 @@ block(
 );
 block(
   errors,
+  /subscription-reconciliation valid JWT rejects caller-selected authority without fetch/.test(
+    liveEdgeAuth,
+  ) && /caller-selected reconciliation wrote entitlement/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove callers cannot select reconciliation subjects or clocks.',
+);
+block(
+  errors,
   /catalog-report valid JWT rejects malformed JSON and unknown fields/.test(liveEdgeAuth) &&
     /catalog-report valid JWT rejects invalid nested payload shapes/.test(liveEdgeAuth) &&
     /catalog-report valid JWT stores sanitized report payload only/.test(liveEdgeAuth),
@@ -555,14 +827,16 @@ block(
 );
 block(
   errors,
-  /intEnv\(\s*'REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS'\s*,\s*300\s*,\s*1\s*,\s*3600\s*,?\s*\)/.test(
+  /intEnv\(\s*["']REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS["']\s*,\s*300\s*,\s*1\s*,\s*3600\s*,?\s*\)/.test(
     revenueCat,
   ),
   'RevenueCat webhook signature tolerance must be bounded and fail safe.',
 );
 block(
   errors,
-  /intEnv\('REVENUECAT_WEBHOOK_MAX_BYTES',\s*65536,\s*1024,\s*262144\)/.test(revenueCat),
+  /intEnv\(\s*["']REVENUECAT_WEBHOOK_MAX_BYTES["']\s*,\s*65536\s*,\s*1024\s*,\s*262144\s*,?\s*\)/.test(
+    revenueCat,
+  ),
   'RevenueCat webhook body limit must be bounded and fail safe.',
 );
 block(
@@ -592,19 +866,19 @@ block(
 );
 block(
   errors,
-  /return json\('bad signature', 401\)/.test(revenueCat),
+  /return json\(["']bad signature["'],\s*401\)/.test(revenueCat),
   'RevenueCat webhook must return a stable public signature failure.',
 );
 block(
   errors,
-  /req\.method !== 'POST'/.test(revenueCat),
+  /req\.method !== ["']POST["']/.test(revenueCat),
   'RevenueCat webhook must reject non-POST methods before verification work.',
 );
 block(
   errors,
-  revenueCatHandler.indexOf("req.method !== 'POST'") !== -1 &&
+  /req\.method !== ["']POST["']/.test(revenueCatHandler) &&
     revenueCatHandler.indexOf('readLimitedText') !== -1 &&
-    revenueCatHandler.indexOf("req.method !== 'POST'") <
+    revenueCatHandler.search(/req\.method !== ["']POST["']/) <
       revenueCatHandler.indexOf('readLimitedText'),
   'RevenueCat webhook method check must run before reading the raw body.',
 );
@@ -648,7 +922,7 @@ block(
 block(
   errors,
   /REVENUECAT_ATOMIC_PROCESSING_FAILED:/.test(revenueCatAtomicMigration) &&
-    /return json\('processing failed',\s*503\)/.test(revenueCat),
+    /return json\(["']processing failed["'],\s*503\)/.test(revenueCat),
   'RevenueCat webhook must persist a stable failure code and request provider retry.',
 );
 block(
@@ -885,61 +1159,67 @@ block(
 );
 
 const poll = read('supabase/functions/order-report-poll/index.ts');
+const pollCore = read('supabase/functions/order-report-poll/orderAttributionCore.ts');
+const pollCoreTest = read('supabase/functions/order-report-poll/orderAttributionCore.test.ts');
 block(
   errors,
-  /SHOPMY_BRAND_API_KEY/.test(poll),
-  'order-report-poll must require ShopMy brand API key before polling.',
-);
-block(errors, /no brand API key/.test(poll), 'order-report-poll must no-op without ShopMy key.');
-block(
-  errors,
-  /ORDER_REPORT_POLL_SECRET/.test(poll),
-  'order-report-poll must require a scheduler secret before activation.',
+  /COM-01A: commerce admission closed/.test(poll) &&
+    /ok:\s*true/.test(poll) &&
+    /skipped:\s*"COM-01A: commerce admission closed"/.test(poll),
+  'order-report-poll must return the exact COM-01A literal-zero response.',
 );
 block(
   errors,
-  /req\.method !== 'POST'/.test(poll) && /method_not_allowed/.test(poll),
+  /req\.method !== "POST"/.test(poll) &&
+    /method_not_allowed/.test(poll) &&
+    /Allow:\s*"POST"/.test(poll),
   'order-report-poll must reject non-POST methods.',
 );
 block(
   errors,
-  /scheduler_secret_not_configured/.test(poll),
-  'order-report-poll must fail closed when ShopMy key exists but scheduler secret is missing.',
+  /stagingTrafficFreezeResponse/.test(poll) &&
+    poll.indexOf('stagingTrafficFreezeResponse()') <
+      poll.indexOf('req.method !== "POST"') &&
+    poll.indexOf('req.method !== "POST"') <
+      poll.indexOf('COM-01A: commerce admission closed'),
+  'order-report-poll must preserve traffic freeze, method rejection, then COM-01A closure ordering.',
 );
 block(
   errors,
-  /authorizedSchedulerRequest/.test(poll),
-  'order-report-poll must validate scheduler authorization before polling.',
+  ![
+    /Deno\.env/,
+    /SHOPMY/i,
+    /ORDER_REPORT_POLL_SECRET/,
+    /createClient/,
+    /readSupabaseSecretKey/,
+    /\bfetch\s*\(/,
+    /pollOrderReportPages/,
+    /order_attributions/,
+    /\.upsert\s*\(/,
+    /orderAttributionCore/,
+    /Authorization/,
+  ].some((pattern) => pattern.test(poll)),
+  'order-report-poll must not read commerce credentials, call a provider, create a Supabase client, import the future adapter, or write attributions.',
 );
 block(
   errors,
-  /Authorization/.test(poll) && /x-scheduler-secret/.test(poll),
-  'order-report-poll must support explicit scheduler secret headers.',
+  /for \(let page = 0; page < maxPages; page \+= 1\)/.test(pollCore) &&
+    /limit:\s*pageSize/.test(pollCore) &&
+    /ORDER_REPORT_PAGE_LIMIT_EXCEEDED/.test(pollCore) &&
+    /order_report_page_limit_exceeded/.test(pollCore) &&
+    /order_report_upstream_failed/.test(pollCore) &&
+    /official ShopMy wire fixture/.test(pollCoreTest) &&
+    /max-page truncation/.test(pollCoreTest),
+  'The quarantined future order-report adapter must retain bounded pagination and stable failure tests.',
 );
 block(
   errors,
-  /constantTimeEqual/.test(poll),
-  'order-report-poll must compare scheduler secrets without direct string equality.',
-);
-block(
-  errors,
-  poll.indexOf("req.method !== 'POST'") !== -1 &&
-    poll.indexOf('!shopmyBrandKey') !== -1 &&
-    poll.indexOf("req.method !== 'POST'") < poll.indexOf('!shopmyBrandKey'),
-  'order-report-poll method check must run before inert/no-op handling.',
-);
-block(
-  errors,
-  poll.indexOf('authorizedSchedulerRequest(req)') !== -1 &&
-    poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL') !== -1 &&
-    poll.indexOf('authorizedSchedulerRequest(req)') <
-      poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL'),
-  'order-report-poll scheduler authorization must run before the ShopMy API call.',
-);
-warn(
-  warnings,
-  !/INERT STUB/i.test(poll),
-  'order-report-poll remains inert until ShopMy account model and API key are approved.',
+  /'Order ID'/.test(pollCore) &&
+    /'Order Amount USD'/.test(pollCore) &&
+    /'Commission Amount USD'/.test(pollCore) &&
+    /not expose a click-token/.test(pollCore) &&
+    /click_token === null/.test(pollCoreTest),
+  'The quarantined future order-report adapter must not invent click attribution.',
 );
 block(
   errors,
@@ -955,22 +1235,28 @@ block(
 );
 block(
   errors,
-  /order-report-poll rejects non-POST before service-role work/.test(liveOrderReportPoll) &&
-    /order-report-poll missing scheduler secret does not write attributions/.test(
+  /order-report-poll rejects non-POST before COM-01A inert response/.test(liveOrderReportPoll) &&
+    /order-report-poll POST returns exact COM-01A inert response without credentials/.test(
       liveOrderReportPoll,
     ) &&
-    /order-report-poll wrong scheduler secret does not write attributions/.test(
+    /order-report-poll ignores fake provider and scheduler credentials under COM-01A/.test(
       liveOrderReportPoll,
     ) &&
-    /order-report-poll evidence avoids authorized ShopMy polling/.test(liveOrderReportPoll),
-  'Live order-report-poll harness must prove method rejection and missing/wrong scheduler secret no-write behavior.',
+    /order-report-poll observations remain literal-zero commerce/.test(liveOrderReportPoll),
+  'Live order-report-poll harness must prove exact COM-01A closure and no-write behavior.',
 );
 block(
   errors,
-  /Authorized scheduler success path intentionally not run/.test(liveOrderReportPoll) &&
+  /COM-01A: commerce admission closed/.test(liveOrderReportPoll) &&
+    /Object\.keys\(response\.body\)\.sort\(\)\.join\(','\) === 'ok,skipped'/.test(
+      liveOrderReportPoll,
+    ) &&
+    /order_attributions count changed/.test(liveOrderReportPoll) &&
     !/ORDER_REPORT_POLL_SECRET/.test(liveOrderReportPoll) &&
-    /PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(liveOrderReportPoll),
-  'Live order-report-poll harness must not read/send the real scheduler secret and must support activated-env expectations.',
+    !/SHOPMY_BRAND_API_KEY/.test(liveOrderReportPoll) &&
+    !/SHOPMY_BRAND_DOMAIN/.test(liveOrderReportPoll) &&
+    !/PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(liveOrderReportPoll),
+  'Live order-report-poll harness must strictly verify the exact inert response without reading activation values.',
 );
 
 warn(

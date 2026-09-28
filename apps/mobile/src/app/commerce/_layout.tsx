@@ -1,36 +1,5 @@
-import { Stack } from 'expo-router';
+import { Slot } from 'expo-router';
 
-import { DeferredSurface } from '@/components/launch/DeferredSurface';
-import {
-  shouldReduceMotion,
-  useReduceMotionPreference,
-} from '@/lib/accessibility/useReduceMotionPreference';
-import { phase7Flags } from '@/lib/launch/phase7';
-import { APP_YOU_ROUTE } from '@/lib/navigation/safeBack';
-
-// Commerce surfaces (docs/10 §3/§4/§7). Presented over the tabs. The consent gate is
-// a dimmed bottom sheet; the transparency page + stacks are normal pushed screens.
 export default function CommerceLayout() {
-  const reduceMotion = useReduceMotionPreference();
-  const modalAnimation = shouldReduceMotion(reduceMotion) ? 'none' : 'fade';
-  if (!phase7Flags.commerce)
-    return (
-      <DeferredSurface
-        surface="commerce"
-        fallbackRoute={APP_YOU_ROUTE}
-        fallbackLabel="Back to You"
-      />
-    );
-
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="transparency" />
-      <Stack.Screen name="stacks" />
-      <Stack.Screen name="stack/[slug]" />
-      <Stack.Screen
-        name="consent"
-        options={{ presentation: 'transparentModal', animation: modalAnimation }}
-      />
-    </Stack>
-  );
+  return <Slot />;
 }

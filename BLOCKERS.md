@@ -1,9 +1,14 @@
 # Blockers - iOS All-Features Launch Gates
 
-> Active scope (2026-09-27): iOS lean V1 supersedes earlier all-features launch requirements. Required feature IDs: 1, 2, 3, 5, 6, 7, 8, 9, 10, 11. See `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md` and `docs/hugeToDo/launch-contract.json`. Manual Shelf/local ingredient parsing, reviewed guidance, routine/cycle, Today, private Progress, local reminders and standard subscriptions remain required. Catalog/search/barcode, custom grants/reverse trial/win-back, recommendations, Ask, public sharing, commerce, community, trends, widgets and growth experiments are post-launch and must stay closed. Existing Apple/email account functionality and all current privacy, payment, persistence, accessibility and owner-isolation safeguards are preserved. Historical sections below do not add deferred features back to the V1 launch gate.
+> Active scope (2026-09-27): the ten-feature iOS lean V1 contract in `docs/hugeToDo/launch-contract.json` governs launch. Deferred features do not block V1 merely by being deferred. All applicable privacy, clinical/legal, payment, native-device, beta and release-evidence gates remain required. Prior detailed findings below are retained; see `docs/MAIN_INTEGRATION_2026-09-27.md` for this integration.
 
 
-Date: 2026-07-12
+> Active scope (2026-09-27): the ten-feature iOS lean V1 contract in `docs/hugeToDo/launch-contract.json` governs launch. Deferred features do not block V1 merely by being deferred. All applicable privacy, clinical/legal, payment, native-device, beta and release-evidence gates remain required. Prior detailed findings below are retained; see `docs/MAIN_INTEGRATION_2026-09-27.md` for this integration.
+
+
+Date: 2026-08-05
+
+Status reviewed: 2026-08-05
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -62,6 +67,8 @@ Read this with:
 - `docs/phase-4/first-curated-product-batch.md`
 - `docs/phase-4/observability-dashboard.md`
 - `docs/phase-4/beta-coverage-report.md`
+- `docs/phase-4/catalog-curation-release-runbook.md`
+- `docs/phase-4/catalog-operator-authority-runbook.md`
 - `docs/phase-4/phase-4-exit-review.md`
 
 ## Status Key
@@ -76,8 +83,13 @@ Read this with:
 
 ## Current Launch Gates
 
-1. RoutineKind working identity is implemented locally, but legal/store/domain
-   clearance and production identity evidence are unresolved.
+1. Layerwell working identity is implemented locally and remains the first
+   candidate in the sequence for counsel review. The provisional sequence is
+   `Layerwell`, `Ritunera`, `Ritualoom`; `Rituvia` is suspended. The governed
+   2026-07-16 public knockout is complete for its declared preliminary scope.
+   Comprehensive WIPO/Madrid, final-country, company/trade-name, common-law,
+   linguistic, legal-decision, reservation, and production-identity evidence
+   remain open.
 2. Supabase project not live.
 3. RevenueCat not live.
 4. Apple Developer/App Store Connect and Google OAuth for iPhone are not verified.
@@ -94,16 +106,36 @@ Read this with:
    owners and dates are recorded, one current detached signoff records the
    credential/role, conditions, and retained approval reference per release
    disposition, current hashes match, and the strict copy audit passes.
-7. Real catalog seed not imported and source/license review not complete.
+7. Real catalog seed not imported; source/license review, separately consented
+   beta-shelf coverage evidence, qualified curation, signed holdout-quality
+   targets, immutable launch-catalog activation, hosted CAT-08 operator
+   authority, deployed internal console, and named operator coverage are not
+   complete.
 8. Native camera/barcode/photo capture, encrypted keychain/keystore behavior,
    and app-wide/photo-timeline biometric prompt ordering, deep-link coverage,
    background relock, encrypted Progress read-failure recovery, and screen-reader
    focus are implemented or specified but not physical-device verified; required
-   native iOS OCR is not implemented.
+   native iOS OCR now has a staging-only Apple Vision source candidate, but no
+   Xcode/Swift, signed-archive, physical-iPhone, privacy, accuracy,
+   accessibility, cleanup, or performance proof.
 9. Native notification/device verification incomplete.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
 11. Closed beta not run.
+12. Health-consent withdrawal now has a purpose-scoped, non-account-deleting
+    source candidate and local Expo-web/database evidence, but all 15 installed
+    copy tuples remain `draft_blocked`; hosted worker/Storage/processor/backup,
+    physical-iPhone, and professional privacy/legal approval evidence are absent.
+13. Sign in with Apple now has a locally verified source candidate for
+    nonce/state and one-use-code capture, encrypted versioned refresh-token
+    retention, daily validation, signed server events, native invalidation,
+    deletion-vault reuse, and exact-session access denial. Hosted deployment,
+    primary-App-ID event delivery, Vault/Cron continuity, recapture/key-rotation
+    drills, stale-JWT proof, physical-iPhone/TestFlight evidence, and
+    professional approval remain launch-blocking. `TRANSFERRED` remains
+    fail-closed pending a formal transfer decision.
+14. The exact release privacy report, live policy/support URLs, and
+    non-expiring App Review demo access/instructions do not exist.
 
 ## Source-Of-Truth Status
 
@@ -127,7 +159,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Broader launch-gate verification retained through 2026-07-12: `npm run typecheck`, `npm run lint`,
+Broader launch-gate verification retained through 2026-07-15: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -137,18 +169,29 @@ Broader launch-gate verification retained through 2026-07-12: `npm run typecheck
 `npm run docs:tas-todo-audit:check`,
 `npm run docs:readiness-status-audit:check`,
 `npm run docs:generated-packet-status-audit:check`, and
-`npm run e2e:human:manifest:check` pass non-strict code and documentation
-freshness gates. The generated-packet status audit now rejects dirty packet
-outputs and stale recorded source/file hashes. The Phase 7 core-loop packet has
-been refreshed for the current Today and Progress route hashes; the Phase 8
-growth/store packet has
-been refreshed for the current share-card and conflict-share route hashes; the
-Phase 5 native-device packet has been refreshed for the current progress
-capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
+`npm run e2e:human:manifest:check` passed their then-current non-strict code and
+documentation freshness gates. These results and generated packets are
+historical only: the retained human manifest records a different, non-ancestor
+Git SHA and no current governed-chain binding. The current source revision must
+republish and recheck every required unit through the governed `E -> ... -> F`
+chain. At the current CORE-06A source checkpoint on 2026-07-29, repository
+typecheck and strict lint pass, and the current full mobile run passes 337
+mobile test files / 4,204 tests. The prior catalog operator console baseline
+remains 7 files / 24 tests. These are
+local source facts only; they do not clear hosted, native, professional-review,
+App Review, market, or revenue gates.
+sequence before any packet can be treated as current release evidence. The
+generated-packet status audit rejects dirty packet outputs and stale recorded
+source/file hashes. At that historical checkpoint, the Phase 7 core-loop packet
+covered the then-current Today and Progress route hashes; the Phase 8
+growth/store packet covered the then-current share-card and conflict-share
+route hashes; and the Phase 5 native-device packet covered the then-current
+progress capture route hash. Strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
-confirmation instead of requiring a native alert. A clean `main` rerun on
-2026-07-13 passes root typecheck, lint, and 209 mobile test files / 2244 tests.
+confirmation instead of requiring a native alert. At the latest verified
+pre-CAT-07 integrated CAT-06 source checkpoint on 2026-07-18, mobile typecheck,
+changed-file ESLint, and 301 mobile test files / 3,529 tests passed.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -165,6 +208,14 @@ the `Account export local-photo scope disclosure` gate in
 `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`,
 and the `Combined account and current-device export` gate in
 `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
+The governed `CAT04 catalog search, scan, report, and recovery Expo-web pass`
+in `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/` adds
+45/45 scenario executions and 18/18 explicit-consent bootstraps across the
+375 x 667, 390 x 844, and 430 x 932 supported web viewports, with zero browser
+failures, 365 tracked files, and 144 screenshots. It uses deterministic Expo
+web fixtures and `nativeDeviceProof=false`; native camera/permission behavior,
+restart-to-ready persistence, hosted catalog/reporting, physical-iPhone
+accessibility, professional legal review, and App Store acceptance remain open.
 The `Account-generation-bound combined export` gate in
 `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`
 also proves delayed-export sign-out, cleanup-failure gating, and recovery at
@@ -188,6 +239,17 @@ unavailable-beta behavior only; native widget/live-activity targets, validated
 Trend processing and consent, and production Community moderation, appeals,
 persistence, support, and reviewed aggregate data remain launch blockers under
 the iOS all-features contract.
+The required `Trend navigator privacy and exact-route recovery` gate in
+`test-results/human-e2e/2026-07-13/trend-route-group-gate-current/` catches and
+fixes a layout-level `/trend/optin` to `/trend/fairness` canonicalization
+regression. The 375 x 667 rerun proves both exact direct URLs survive refresh,
+disabled child scenes and the fairness Monk-band hook stay unmounted, no
+consent input or switch appears, the complete refusal is visibly captured at
+375 x 667, and 55.99 px recovery controls deterministically replace to
+`/progress` even with stale Trend history. Unexpected browser warn/error count
+is zero. Native iPhone navigation,
+VoiceOver, Dynamic Type, and any future validated Trend engine remain external
+release gates.
 It also includes the `360 x 640 account-upgrade error and recovery pass` in
 `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
 The required `360 x 640 account-transition isolation and cleanup recovery pass`
@@ -252,9 +314,10 @@ device, beta, accessibility, or store-review evidence elevates it.
 The Settings Privacy Terms-row spacer and contextual Progress
 tall-phone compact compliance header have fresh route evidence, including
 compact visible Explore-first copy with the full reverse-trial copy retained in
-the accessibility label. Phase 9 dependency/SBOM evidence now records 1073
-packages and zero npm vulnerabilities; strict release completion still needs
-release-owner dependency signoff. The earlier 2026-07-08 Expo web
+the accessibility label. Phase 9 dependency/SBOM evidence now records 1,100
+packages and zero advisories in the local offline cache; strict release
+completion still needs a current registry-backed CI audit and release-owner
+dependency signoff for the exact RC. The earlier 2026-07-08 Expo web
 shortest-phone rerun at 320 x 480 passed 49 direct-entry routes with zero
 failed routes, visible clipped controls, sub-44 user-facing controls, blocked
 hit-tests, horizontal overflow, or disallowed browser logs. The Shelf manual
@@ -290,27 +353,46 @@ and retained evidence reference. The flag must remain pending, and the strict
 Phase 3 audit must remain blocking, until counsel, dermatologist,
 cosmetic-chemist, privacy/security, and IP/FTO signoffs are real.
 
-## B-BRAND - RoutineKind candidate clearance and launch identity
+## B-BRAND - Layerwell candidate clearance and launch identity
 
 Status: `launch-blocked`
 
-There is already a public skincare/cosmetic scanner branded `OnSkin` at
-`onskin.com`, with App Store and Google Play presence. This repo no longer uses
+There is already a public skincare/cosmetic scanner branded `Layerwell` at
+`layerwell.com`, with App Store and Google Play presence. This repo no longer uses
 the legacy identity for local/native launch defaults: the current working
-candidate is `RoutineKind`, with `routinekind://` and `com.routinekind.app`
+candidate is `Layerwell`, with `layerwell://` and `com.layerwell.app`
 development/staging defaults. `npm run brand:audit:strict` passes with zero
-public launch-risk and zero review-needed legacy-brand hits; remaining legacy
-hits are deliberate guard rails, internal namespaces, fixtures, or historical
-context.
+public launch-risk, zero review-needed, and 23 exact reviewed
+`legacy-compatibility` hits. The retained 23 are cryptographic/domain-separation
+contracts, historical migration contracts, one live compatibility harness, or
+exact PostgreSQL rehearsal fixtures. Their path, literal, expected count,
+subtype, and rationale are fail-closed in
+`scripts/brand-legacy-compatibility.json`; new or drifted references make the
+strict audit fail. Evidence:
+`docs/hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md`.
 
-This is not legal clearance, trademark clearance, domain registration, App
-Store name reservation, or final production identity evidence. Production
-native config still fails closed unless
+That technical audit result is not legal clearance, trademark clearance,
+domain registration, App Store name reservation, or final production identity
+evidence. Production native config still fails closed unless
 `BRAND_LEGAL_CLEARANCE=cleared` and explicit final identity env values are set.
+That flag is an operator-supplied build assertion, not evidence that counsel
+issued an opinion.
+
+The governed 2026-07-16 knockout refresh completed the declared Apple public
+store, CIPO, USPTO, IP Australia, RDAP, common-law, public-handle, UKIPO, and
+TMview preliminary scope. It retains `Layerwell` first, `Ritunera` backup 1,
+and lower-confidence `Ritualoom` backup 2. It records occupied YouTube
+`@layerwell`, a redirecting Facebook `ritunera` path, UK class-9 `Trunera`,
+and the dense `RITUAL` field. It suspends `Rituvia` after `Rituva`, `Retuvia`,
+`RITUVÃ‰`, `Ritjuva`, `RITULIA`, and registered `rituvia.com` evidence.
+Comprehensive WIPO/Madrid, final-country, company/trade-name, common-law,
+linguistic, and qualified-counsel review remain open. Authenticated reservations
+remain a later gate. No name is cleared, available, registrable,
+non-infringing, reserved, or Apple-approved.
 
 Risk:
 
-- trademark/customer-confusion exposure if the app reverts to `OnSkin` or uses
+- trademark/customer-confusion exposure if the app reverts to `Layerwell` or uses
   a confusingly similar identity
 - users downloading or contacting the wrong app if public surfaces are created
   before final reservation
@@ -324,10 +406,15 @@ Risk:
 Next action:
 
 - Give counsel `docs/brand-evidence.md`.
-- Ask counsel to clear or reject `RoutineKind` as the final app identity; do not
-  revert to `OnSkin` unless counsel explicitly clears it.
-- Run registrar, App Store Connect, social-handle, paid
-  search, and common-law checks for the final candidate.
+- Ask counsel to clear or reject the exact `Layerwell`, `Ritunera`, and
+  `Ritualoom` sequence and review the rejected `Rituvia` comparators; do not
+  revert to `Layerwell` unless counsel explicitly clears it.
+- Have qualified counsel independently reproduce and expand the preliminary
+  grids and complete WIPO/Madrid, final-country, company/trade-name,
+  common-law, linguistic, priority, and goods/services analysis.
+- After written counsel decision and founder selection, run authenticated
+  registrar, App Store Connect, package, scheme, and social-handle reservation
+  checks. Each receipt proves only its specific reservation at that time.
 - Use `docs/brand-decision-memo.md` to record the final identity decision.
 
 Exit criteria:
@@ -340,62 +427,301 @@ Exit criteria:
 - code/copy/share-card/policy/env references match the final identity and
   typecheck/lint/tests pass.
 
-Default until cleared: do not launch as `OnSkin`, and do not treat
-`RoutineKind` as final until counsel and store/domain reservation evidence are
-attached.
+Default until cleared: do not launch as `Layerwell`, and do not treat
+`Layerwell` as final, do not advance `Rituvia`, and do not freeze any
+replacement until counsel and store/domain reservation evidence are attached.
 
 ## B-SUPABASE - Live backend
 
-Status: `stubbed`
+Status: `source-hardened / live-blocked`
 
-The repo contains migrations, Supabase client code, generated types, Edge
-Functions, a staging deploy wrapper, and a live-project RLS smoke script. There
-is no live staging/production Supabase project verified for release.
+The repo contains a 91-migration source candidate through
+`20260921000075`; the checked-in raw CLI-generated database types still
+represent a historical 71-migration/`0072` reset, with a separate
+client-restriction overlay. There are 17 deploy-by-default Edge Functions, a staging
+deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
+historical `0072` source inventory classifies 82 RLS-enabled public tables: 36 directly
+queryable private tables, 32 read-sealed private/authority tables, and 14
+authenticated catalog/editorial tables. The 32 read-sealed tables comprise 24
+service-private authorities, four global clinical/editorial relations, and four
+catalog dictionary/legacy authorities. CAT-02/CAT-03 lifecycle relations,
+CAT-08's 15 operator-authority relations, the two `0069` minimized replay
+ledgers, and `0071`'s immutable recommendation-admission control are separately
+sealed in the `private` schema. Migrations `0064`-`0067` add profile provenance,
+the CAT-08/default-ACL repair, the legacy clinical fixture seal, and the
+checker-only catalog-release lint shape. Migrations `0068` and `0069` add the
+routine-adherence authority and owner-derived Shelf/completion replay bridge;
+`0070` records a draft-to-draft consent-copy transition without release
+authority; `0071` establishes recommendation zero admission; and `0072`
+establishes literal-zero commerce admission. This is a
+source-contract classification, not hosted evidence.
+The last recorded CAT-02 Docker baseline covered the then-
+current 35-assertion partial suite and remains historical. The current source
+plans contain 52 schema, 218 CAT-02, 99 CAT-03, 53 CAT-07, 58 catalog-serving,
+114 Apple-lifecycle, 48 quiz/profile-provenance, 89 CAT-08 operator, 78
+adherence, 82 Shelf/completion-sync, 25 draft-consent-staging, and 35
+recommendation-zero-admission assertions. The corrected `0065`-head replay completed the
+structural pgTAP phase, and the focused CAT-08 exact-role plan passes locally.
+The focused `0066` seal rehearsal/26-assertion plan passes, while the focused
+`0067` rehearsal/seven-assertion plan passes and direct
+`plpgsql_check_function` inspection returns no findings. On 2026-08-05,
+`npm run phase2:db-local-verify` exited 0 in 2,149.9 seconds at clean commit
+`57da25f63` against the complete 71-migration chain through
+`20260729000072`: all five forward cutovers
+(`0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072`), including commerce 21/21;
+two clean resets; exact 71-version history with `0072` latest; the focused
+five-file lane / 433 assertions; 16 structural pgTAP files / 1,222 assertions
+including CAT-03 99/99; error-level public-schema lint; an empty
+migration-shadow diff; temporary type generation of 6,771 lines with SHA-256
+`39619a6870c33fc402323c61ffce5601c0fb1460993026b8465f0ce56a0a9a91e`,
+the CAT-08 two-connection rehearsal 10/10, and awaited teardown plus removal of
+that run's own sandbox. Historical or hard-timeout roots were excluded and are
+not claimed absent. At that historical checkpoint, repository types were
+deliberately not replaced. This is disposable local PostgreSQL 15 source
+evidence only; it does not prove hosted staging/production or hosted
+generated-type parity,
+live role/provider/TLS/load/concurrency behavior, PostgreSQL major-version
+compatibility, device behavior, professional approval, App Store acceptance,
+legal compliance, revenue, or release readiness.
+The authoritative later clean verifier at commit `e5588ae69` exited 0 in
+2,200.4 seconds and completed the local DB-08 canonical replacement/drift gate:
+`packages/types/src/database.types.ts` is the exact raw CLI-generated 6,770-line
+artifact with SHA-256
+`2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+Client restrictions remain in a separate overlay and are not edits to the raw
+artifact. DB-08 itself remains open because DB-06 has not produced its reviewed
+hosted evidence packet or proven repository/local/linked parity. No staging
+parity is claimed.
+Exact local evidence now passes; reviewed hosted evidence remains absent.
+PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system,
+the separate RevenueCat/app-grant entitlement authorities, and the `0064`
+through `0067` forward-upgrade paths.
+They do not clear a PostgreSQL major-version upgrade for CAT-08. PostgreSQL
+16/17 changed `CREATEROLE` and role-membership administration semantics, while
+the full CAT-08 authority chain is intentionally pinned to the Supabase
+PostgreSQL 15 runtime and requires a membership-free operator gateway. No major
+upgrade may ship until the complete `0063`-through-current chain passes under a
+Supabase-equivalent nonsuperuser migration owner and proves that
+`catalog_operator_edge` has no membership or admin grants. The existing
+PostgreSQL 17 `0065` superuser rehearsal proves forward-migration behavior only;
+no PostgreSQL 15/17 claim is made here for the exact `0068`-`0072` chain.
+
+The DB-06 source procedure is now complete for a first empty staging project.
+It deploys only a Git-blob-verified immutable clean-main snapshot through the
+pinned native CLI, requires confirmed child-process settlement, binds every
+linked operation to the expected target, and rejects any public/migration/
+function/Auth/Storage/all-Cron state. It retains a full-target-bound cutover
+record, one traffic/provider-freeze artifact, five schema-v2 redacted boundary
+files, and exact before/pre-migration/after inventories. The runner sets
+`DB06_TRAFFIC_FREEZE=frozen`, guards all 17 Edge entrypoints, canaries the exact
+eight `verifyJwt: false` endpoints, and immediately rereads functions, public
+freeze responses, hosted Auth controls, migrations, schema, Storage, and all
+Cron jobs before migration push. A `pass` cannot omit these proofs, cutover
+hashes are revalidated at completion, and DB-06 never unfreezes staging. A
+post-mutation failure stays remote-state-unknown and never claims containment;
+unconfirmed Windows containment preserves its recovery state and stable
+fingerprint. No hosted run or live packet exists, so DB-06 remains
+`in_progress` and blocked by ACCT-03.
+
+Migrations `0048`-`0052` provide the durable deletion operation, provider-step,
+barrier, guarded-writer, identity-tombstone, exact-session publication-lease,
+drain, settling, and repeated-absence contracts. Mobile now places every
+Supabase request and RevenueCat identity/operation behind one purpose-scoped,
+exact-session remote-admission controller; controlled refresh validates and
+persists only the exact subject. Migration `0053` keeps RevenueCat authority in
+`entitlements`, the no-card grant in `reverse_trial_grants`, and exposes both
+through an owner-derived RPC. Bounded authenticated reconciliation uses only a
+fresh provider `request_date`. Focused deletion, reconciliation, grant, webhook,
+auth, RLS, policy, and data-rights source gates pass.
+
+Migration `0054` adds the non-destructive health-consent lifecycle, append-only
+copy review history, processing epochs, dependent-consent operations, a
+retry-bounded worker lane, and fail-closed mobile admission/cleanup gates. Its
+local database, Deno, mobile, and Expo-web evidence passes; all installed copy
+remains `draft_blocked`, and no hosted worker/Storage/Cron/Vault or legal
+approval is claimed.
+
+Migration `0055` adds the Sign in with Apple lifecycle authority: owner/subject/
+client-bound encrypted refresh-token vaulting, nonce/state and one-use-code
+capture, daily validation, signed terminal-event reconciliation, native
+invalidation, deletion-vault reuse, and exact-session denial across RLS, photo
+Storage, authenticated Edge Functions, writes, and direct authenticated helper
+RPCs. The focused Apple Edge suite passes 20/20 and the complete Apple auth work
+lane passes 47 tests. This is local disposable evidence, not hosted or device
+proof.
+
+Migrations `0056`, `0057`, and forward migration `0061` add the catalog serving
+and transactional import boundaries. Runtime lookup/search and authenticated catalog reads require
+positive source, batch, projection, correction, quality, review, and dependency
+eligibility. Direct API-role catalog mutation is denied. The owner-only CAT-02
+lane provides signed provenance and receipt-bound review, bounded replay-safe
+staging, Unicode-aware collision detection, immutable projection lineage,
+one-transaction insert-only promotion, and non-destructive rollback. This is a
+local source candidate; no real source approval, hosted batch, concurrency
+drill, or production catalog is claimed. `0061` adds `benzoyl_peroxide` to the
+database staging allowlist; the offline v2 envelope, not the RPC, remains
+responsible for dual-review signatures. It repairs the shared health-write
+guard across clean and already-applied-`0060` paths and exposes only bounded
+product-specific PAO evidence from `label`, `brand_label`, or `catalog` sources;
+category defaults and unknown sources remain excluded.
+
+Migration `0058` remains the foundational CAT-03 launch-curation source
+boundary: immutable
+campaign/record/event authority, exact CAT-01/CAT-02 and database-snapshot
+bindings, a hard 2,000-record/category/priority floor, owner-only campaign-
+scoped non-serving authorization, exact-set atomic campaign release, signed
+readback, immutable retirement, an append-only per-product served-state mutation
+ledger, RPC-only `service_role` access, and a positive active-campaign serving
+dependency. Forward migration `0062` adds three covered authority indexes,
+pushes the already-required staged digest into the exact authority join without
+changing its returned contract, and adds an `AFTER STATEMENT` guard that rejects
+campaign-count overflow after every insert statement and validates
+the already-sealed complete root set only when stored rows reach the expected
+count; partial governed inserts remain allowed, and exact per-row authority
+checks remain in force.
+Exactly one artifact may match the target CAT-02 lineage, only its reviewed
+primary barcode is served, staged outcome-reviewer signatures bind the later
+operator authorization, and live roots seal every client-readable field and
+child-row set. Outcome reviewers bind the current product mutation root and
+campaign root set. Exact restoration, hold closure, source reapproval, or batch
+restoration cannot resurrect an old record; only a newly reviewed successor
+campaign and readback can recover. The offline contracts bind a target policy and
+full reviewed-record decision witnessed before holdout access, a separately
+consented/privacy-minimized beta-shelf coverage corpus, curation/holdout
+separation, exact multi-batch/four-scope CAT-02 memberships, confidence-bound
+quality gates, and qualified review. Current CAT-03 review and database-readback
+artifacts must attest exact latest migration `20260722000062`. The exact
+71-migration local gate through `0072` passes, including the current CAT-03 plan
+at 99/99 within the 16-file / 1,222-assertion suite, lint, empty drift,
+temporary type generation, and the CAT-08 10/10 two-connection rehearsal. This
+remains disposable local evidence. The hosted staging/release/supersession race
+and serving drill, real beta corpus, witnessed target/decision, signed
+review/readback, and active catalog remain open. Beta demand prioritizes
+independently sourced rows; it never becomes a product fact.
+
+This is not a hosted deployment or provider proof. Full generated-type parity,
+hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
+cross-owner community-handle cleanup, Sign in with Apple deployment and
+provider-event proof, and staging/production provider evidence remain open.
 
 Next action:
 
-- create staging and production projects after the brand decision;
+- create an approved empty staging project after the brand/account/data-map
+  gates;
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- apply all migrations with `scripts/phase2/deploy-supabase-staging.ps1`;
-- execute `20260710000037_routine_conflict_choice_identity.sql` against staging
-  twice with reversed/duplicate fixtures, explicit-choice retention, owner-RLS,
-  and canonical-upsert evidence before production promotion;
-- regenerate `packages/types/src/database.types.ts`;
-- deploy `revenuecat-webhook`, `account-deletion`, `data-export`, and
-  `order-report-poll`;
+- prepare the current full-target-bound cutover record, traffic/provider-freeze
+  artifact, and five schema-v2 redacted boundary files outside the worktree;
+- close client/key distribution, Auth signup/anonymous signup/providers/hooks/
+  SAML/OAuth/SSO/third-party integrations, provider callbacks and retries,
+  Apple notifications, and scheduled ingress; capture observations within 30
+  minutes; require both `validUntil` and the covering freeze `holdUntil` to have
+  at least 12 hours remaining before the first mutation and seven hours
+  immediately before migration push, inside a maximum 24-hour freeze window;
+- run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
+  guarded 17-function manifest, canaries the eight public-gateway functions,
+  immediately rereads the full empty-target boundary, applies all 91
+  migrations through `0075`, redeploys the manifest, retains linked types
+  without changing repository types, and leaves
+  `DB06_TRAFFIC_FREEZE=frozen`; this updated source has not run against an
+  approved hosted target;
+- release the freeze only through a separately recorded downstream live gate;
+- after DB-06 live review, compare its retained linked types with the canonical
+  repository artifact and a fresh local generation, require exact
+  repository/local/linked parity, and only then close DB-08;
 - run Security Advisor and Performance Advisor;
-- run `npm run phase2:rls-smoke` with at least two users plus anonymous account
-  flows.
+- configure anonymous Auth and Turnstile, then run
+  `npm run phase9:live-supabase-adversarial:strict` in staging and production;
+- retain clean-revision, redacted artifacts covering both permanent users, the
+  signed-anonymous user, the no-session client, the regenerated exact `0062`
+  CAT-03 authority/readback plus the exact current-head (`0075`)
+  private/read-sealed-table inventory, exact
+  database/Storage outcomes, publication/deletion concurrency, provider
+  interruption/recreation, and zero cleanup residue;
+- obtain an approved old/tampered-client control and prove the source-complete
+  SIWA authorization-code/token/server-event lifecycle against hosted Apple
+  and Supabase services before production; and
+- use only the separately reviewed DB-12/DB-13 procedure for production.
 
 Exit criteria:
 
-- current user can only read/write their own data;
+- current user can only read/write their own data and signed-anonymous accounts
+  cannot upload or replace cloud photo bytes;
 - account deletion and data export work against live backend;
 - Edge Functions return correct status and logs;
-- generated DB types match live schema.
+- generated DB types match live schema;
+- staging and production adversarial artifacts contain no synthetic residue or
+  raw provider/database/user identifiers.
 
 ## B-APPLE - Apple Developer and App Store Connect
 
-Status: `stubbed`
+Status: `source-hardened / external-blocked`
 
 Apple account and App Store records should be created only under the
-counsel-cleared final identity. Do not use legacy `OnSkin` identifiers.
+counsel-cleared final identity. Do not use legacy `Layerwell` identifiers.
 
 Next action:
 
 - create App ID under cleared bundle ID;
 - configure Sign in with Apple;
-- create server-side token revocation credentials for account deletion;
+- configure the final server-side token exchange/revocation credentials and
+  versioned vault secrets, deploy the reviewed Apple lifecycle functions,
+  provision the one-minute Vault/Cron lane, and register the signed event
+  endpoint for the primary App ID;
+- verify exact automatic revocation plus the manual iPhone Settings fallback,
+  including durable notice recovery, on a signed physical-iPhone build;
 - create App Store Connect app;
 - prepare privacy nutrition labels and required support/policy URLs.
+- produce the exact release privacy report and a non-expiring ordinary App
+  Review demo account with complete feature/deletion/Restore instructions.
 
 Exit criteria:
 
 - TestFlight build installs and auth/deletion flows pass;
 - subscription metadata and policy links are accurate;
 - app identity matches brand memo.
+
+## B-SIWA-SERVER-LIFECYCLE - Sign in with Apple token and event proof
+
+Status: `source-hardened / launch-blocked`
+
+The source now implements the complete candidate lifecycle. Native sign-in uses
+a 32-byte CSPRNG nonce/state, sends only the SHA-256 nonce to Apple, captures the
+single-use authorization code, and defers session publication until the trusted
+server verifies and seals the result. Migration `0055` and the Apple Edge
+functions provide owner/subject/client-bound versioned encrypted refresh-token
+retention, daily validation, signed terminal-event ingestion and reconciliation,
+native invalidation, deletion-vault reuse, and exact-session denial across RLS,
+photo Storage, authenticated Edge Functions, writes, and direct authenticated
+helper RPCs. `TRANSFERRED` remains fail-closed as `credential_transferred`.
+
+The local gate passes two clean resets, exact 54-migration history through
+`0055`, the full structural suite plus 114/114 Apple pgTAP assertions, schema
+lint, empty shadow diff, temporary type generation, 20/20 focused Apple Edge
+tests, and the 47-test Apple auth work lane. These results close the source
+implementation gap only. Before launch, reviewed staging/production and the
+exact signed iOS build must prove primary-App-ID event delivery, one-minute
+Vault/Cron continuity, existing-account recapture and mandatory-version cutover,
+key rotation/rollback with zero-row or reauthentication evidence, stale JWT and
+multi-device drain denial, provider interruption/recreation, deletion, backup/
+restore, and physical-iPhone/TestFlight behavior. Product/counsel must approve
+either a formal no-transfer policy or a tested app/team-transfer migration
+before changing the fail-closed behavior.
+
+Exit criteria:
+
+- fresh-code exchange, encrypted refresh-token retention/rotation, account
+  deletion revocation, invalid/expired/replayed code handling, and exact
+  `200`/no-body revoke proof pass in staging and on a supported physical iPhone;
+- native credential-state notification and server-to-server `consent-revoked`,
+  `account-deleted`, `email-enabled`, and `email-disabled` events applicable to
+  the release are
+  signature/issuer/audience/time checked, deduplicated, and owner-bound;
+- missing automatic proof leaves truthful durable manual recovery and never
+  blocks deletion or claims revocation success; and
+- privacy/security counsel approves token retention, operator access,
+  rotation, incident, and deletion behavior.
 
 ## B-GOOGLE - Google Sign-In For iPhone
 
@@ -424,24 +750,27 @@ The client now upgrades active anonymous sessions in place: Apple/Google native
 tokens use Supabase `linkIdentity`, email uses `updateUser` plus an
 `email_change` OTP, and every successful path asserts the original user ID.
 Focused local tests prove routing, same-user invariants, and no unsafe fallback,
-plus hashed local ownership, query-cache eviction, write draining, cleanup
-failure recovery, and signed-out route isolation. Codex has no Tas-owned
-Supabase project, live provider identities, email inbox, second real account, or
-physical release build with which to prove the external configuration.
+plus hashed local ownership, encrypted raw-session restore, exact-subject
+controlled refresh, query-cache eviction, write and child-request draining,
+purpose/URL/body/response binding, deadline/quarantine handling, cleanup failure
+recovery, and signed-out route isolation. Every production Supabase request
+uses the central remote-admission fetch. No hosted Supabase project, live
+provider identity, email inbox, second real account, or physical release build
+proves the external configuration.
 
 Next action:
 
 - enable anonymous sign-in and manual identity linking in staging and production;
 - configure and review email-change OTP delivery/templates, expiry, and rate limits;
 - after final brand clearance, configure Apple and Google provider credentials;
-- on supported iOS and Android devices, capture the anonymous `auth.users.id`
+- on supported physical iPhones, capture the anonymous `auth.users.id`
   before and after Apple, Google, and email upgrades;
 - exercise an identity already owned by another account and confirm the app
   stays on the anonymous user without deleting local private data;
 - populate account A with distinctive Shelf/routine/completion/Progress data,
   then verify sign-out, a signed-out cold start with retained owner metadata,
   cold-start owner mismatch, token expiry, and account A to account B switching on
-  supported iOS and Android builds;
+  the supported iOS build;
 - after every destructive account boundary, open direct Shelf, Today, Progress,
   and You routes and verify no account A query or metadata is visible to account B.
 - start a combined export for account A, delay the `data-export` response, then
@@ -453,6 +782,10 @@ Next action:
 - force a partial cleanup after the owner hash is removed and a remote sign-out
   failure; verify the cleanup-required control survives, persisted local auth is
   removed, and account B remains gated until every native store succeeds on retry.
+- exercise background/foreground, refresh expiry, delayed response bodies,
+  aborted callers, transport ambiguity, and fire-and-forget child requests;
+  prove no remote request or RevenueCat result survives closure, owner switch,
+  deletion intake, or a mismatched session generation.
 
 Exit criteria:
 
@@ -471,26 +804,68 @@ Exit criteria:
 
 ## B-REVENUECAT - Live purchases and entitlements
 
-Status: `stubbed`
+Status: `source-hardened / live-blocked`
 
-Paywall and entitlement surfaces exist. The native RevenueCat SDK is installed
-and guarded purchase/restore runtime wiring exists, bound to the Supabase user
-ID, but real products, offerings, sandbox purchases, localized pricing, webhook
-reconciliation, and account deletion cleanup are not live.
+Paywall and entitlement surfaces exist. Store authority is isolated in
+`entitlements`; the no-card app grant is isolated in `reverse_trial_grants`.
+The owner-derived read RPC returns both lanes, `legacy_unknown` fails closed,
+and the authenticated reconciliation function accepts no caller owner/time.
+Every configure/log-in/offering/purchase/Restore/customer-info request requires
+exact publication authority. A durable write-ahead journal prevents a second
+charge after an unconfirmed native result. iOS copy names the App Store and
+deletion copy discloses up to 29 days for provider verification. The PAY-07
+candidate also removes local reverse-trial minting, makes default/native E2E
+fixtures fail closed, rejects RevenueCat `NOT_REQUESTED`, preserves provider
+promotions as RevenueCat-granted out-of-store/non-billing `promotional`
+entitlements (not Apple promotional offers), and refuses confirmation for
+cached, pending, failed, expired, stale-verification, or incomplete-authority
+evidence. Renewal/price copy requires an exact billing store,
+`willRenew=true`, and the entitlement's own price. None of this is live
+RevenueCat, StoreKit,
+counsel, physical-iPhone, or App Review evidence.
 
 Next action:
 
 - create RevenueCat project after final app identity;
 - configure monthly/annual products, offerings, and entitlements;
+- retain the exact production build's explicit RevenueCat informational
+  response-signature-verification configuration and sandbox/TestFlight purchase
+  and Restore results showing `VERIFIED` or `VERIFIED_ON_DEVICE`; keep
+  `NOT_REQUESTED` denied;
 - bind RevenueCat `appUserID` to Supabase user ID;
 - fetch localized prices from RevenueCat;
-- wire purchase, restore, intro eligibility, cancellation/manage links;
+- verify purchase, Restore, intro eligibility, cancellation/manage links and
+  the unconfirmed/payment-pending journal on a physical iPhone;
+- deploy migration `0053`, `subscription-reconciliation`, webhook, grants, and
+  the compatible mobile reader in the reviewed order; prove no installed old
+  direct-table reader remains or enforce a mandatory-version fence;
 - deploy and verify webhook reconciliation;
-- confirm subscriber-deletion API for account deletion.
+- configure and verify provider deletion/recreation, alias/transfer, late
+  webhook, fresh v1 reconciliation, and the v2 full-family absence contract
+  against disposable sandbox data;
+- obtain qualified counsel review of transaction-journal retention and the
+  29-day deletion disclosure, then submit the exact build for Apple's independent
+  App Review decision;
+- use the safest iOS release default: disable the custom server-issued full-Pro
+  grant and configure an Apple introductory offer. If retained as an exception,
+  record counsel analysis and any Apple correspondence, separately prove
+  server-verified App Attest/DeviceCheck, cross-account/device eligibility,
+  replay resistance, and rate limits, and remain launch-blocked until the exact
+  submitted build is accepted by Apple for App Store distribution with that
+  mechanism present. No prior review, correspondence, or source result
+  guarantees acceptance.
 
 Exit criteria:
 
-- no local stub can grant paid access in production;
+- no client/native/default fixture or unconfigured path can grant paid access;
+- the custom app-grant mechanism is absent from the release candidate, or an
+  exception has counsel/Apple-correspondence inputs plus reviewed abuse controls
+  and Apple has accepted the exact submitted build for App Store distribution
+  with that mechanism present; no earlier build or correspondence substitutes
+  for that exact-build outcome;
+- the signed production candidate proves its exact SDK/version/configuration
+  kept RevenueCat response-signature verification enabled and its
+  purchase/Restore paths return verified evidence;
 - purchase/restore/renewal/refund/expiry/grace/upgrade/downgrade matrix passes;
 - entitlement state is correct offline and reconciles online;
 - account deletion handles active subscribers correctly.
@@ -500,14 +875,18 @@ Exit criteria:
 Status: `stubbed`
 
 PostHog runtime wiring exists with JSON-safe event properties and session replay
-disabled, but the production project, consent/privacy review, dashboards, and
-deletion behavior are not live.
+disabled. The account-deletion source uses the EU project bulk-delete endpoint,
+accepts only a typed `202`, treats zero matches as already absent, and blocks
+local/Auth deletion when a nonzero deletion is merely queued. The production
+project, consent/privacy review, dashboards, durable queue-status polling, and
+live deletion behavior are still absent.
 
 Exit criteria:
 
 - PostHog project exists under cleared brand;
 - event taxonomy matches V1 loop;
-- person deletion works with account deletion;
+- person/event/recording deletion reaches a durable terminal state during
+  account deletion, including interruption and retry;
 - no health/photo content is sent without explicit consent.
 
 ## B-SENTRY - Crash reporting
@@ -544,8 +923,14 @@ to avoid copying or implying proprietary skin typing frameworks.
 
 Current implementation note:
 
-- `apps/mobile/src/features/onboarding/quiz.ts` is still explicitly
-  placeholder-gated.
+- `apps/mobile/src/features/onboarding/quizContract.ts` now freezes and hashes
+  one exact draft content/scoring contract, and `quiz.ts` rejects any cloned,
+  incomplete, extra-key, duplicate, invalid, or noncanonical answer set.
+- Migration `0075` is the current source authority for the versioned Layerwell
+  quiz tuple. The `0064` PostgreSQL 15/17 rehearsal covers its historical
+  RoutineKind boundary only; full `0075` replay and hosted parity remain open.
+- The current draft remains marked `launch-blocked`; deterministic source and
+  database provenance are not professional IP, clinical, or legal approval.
 - `docs/phase-3/quiz-fto-summary.md` is the review packet entry point.
 
 Exit criteria:
@@ -553,7 +938,8 @@ Exit criteria:
 - final quiz copy is counsel-reviewed;
 - age gate/minors policy is clear;
 - copy avoids diagnosis and unsupported claims;
-- reviewed copy version is recorded.
+- the content, scoring, and combined SHA-256 values reviewed by counsel are
+  recorded, and any later semantic change invalidates that review.
 
 ## B-PRIVACY-COPY - Policies and consent copy
 
@@ -582,6 +968,9 @@ Current implementation note:
   approved or that a claimed credential is authentic.
 - The copy and URLs are still placeholders until counsel supplies final text and
   the final brand/domain.
+- No exact release privacy report or non-expiring ordinary App Review demo
+  account/instructions have been reconciled to the observed binary and network
+  behavior.
 
 Exit criteria:
 
@@ -599,6 +988,14 @@ commerce data. Washington MHMDA, FTC health-app guidance, GDPR/UK/EU if
 applicable, Apple/Google data policies, and affiliate disclosure rules need
 review before launch.
 
+The current `Withdraw health-data consent` behavior is not accepted as the
+launch design. Withdrawal must stop future processing and revoke the applicable
+purpose without silently converting into account deletion, destroying
+unrelated account/store data, or retaining derived health state without a
+documented basis. The exact local/server/cache/analytics/recommendation effects,
+re-consent behavior, pending/offline work, export treatment, and legally
+required retention need one reviewed non-destructive contract and live proof.
+
 Exit criteria:
 
 - DPIA or equivalent review complete for health data and photos;
@@ -607,6 +1004,30 @@ Exit criteria:
 - data-sharing consent is separate from collection consent where required;
 - commerce disclosure language is counsel-approved;
 - Ask/cloud transmission consent is final if cloud Ask ever launches.
+
+## B-HEALTH-CONSENT-WITHDRAWAL - Non-destructive purpose withdrawal
+
+Status: `launch-blocked`
+
+Design and implement one source-of-truth state machine that distinguishes
+withdrawal of health-data processing from account deletion. It must freeze new
+health-dependent work before acknowledgement, cancel or reject stale in-flight
+work, remove or quarantine data and derived state only according to the approved
+purpose/retention matrix, preserve unrelated account and billing records, and
+offer a truthful re-consent path without resurrecting data that was required to
+be erased.
+
+Exit criteria:
+
+- counsel-approved consent/data-retention matrix names every local, Supabase,
+  analytics, notification, recommendation, Ask, photo, export, backup, and
+  processor effect;
+- online, offline, interrupted, A-to-B, retry, re-consent, export, and account
+  deletion interactions pass automated and human E2E tests;
+- staging proves processor withdrawal/deletion and no stale health-derived
+  result is published after withdrawal; and
+- the exact Settings copy, privacy policy, App Privacy answers, and App Review
+  instructions match observed behavior.
 
 ## B-LEGAL - Store, subscription, claims, and commerce legal review
 
@@ -629,6 +1050,51 @@ Exit criteria:
 - no unbuilt, simulated, or unreviewed feature is marketed as live;
 - UGC/community/legal floor is approved before any peer posting launches.
 
+## B-APP-REVIEW-PRIVACY - Exact privacy report, URLs, and reviewer access
+
+Status: `launch-blocked`
+
+Source manifests and draft policy packets do not establish what the frozen
+release binary actually sends or stores, and placeholder links or a
+short-lived/privileged account cannot support App Review.
+
+Current source checkpoint: the deterministic installed-npm audit reports
+`archive_required` with 72 native packages, 23/23 source-valid manifests, 23
+manifest-resource source candidates still requiring archive verification, 228
+podspecs, 16 XCFramework candidates, ten Apple SDK-list intersections, zero
+errors, and 24 warnings. The exact-hash repair removes the invalid empty
+`NSPrivacyAccessedAPITypes` array from the reviewed `react-native-view-shot`
+source and fails closed on drift. This closes the known installed-source defect
+only. Ruby podspec tokens are not evaluated CocoaPods output; first-party and
+generated native source have separate validators; and no production archive,
+merged report, SDK signature, runtime data-flow, label, legal, or App Review
+proof is implied.
+
+The repository now also has a strict archive-evidence-index path: the EAS
+configuration requires committed input, and retained evidence must record the
+exact source SHA, build UUID, and log; one direct RC-only evidence commit must
+contain normal HEAD-bound metadata; the archive,
+log, and ten review artifacts must be hash-bound inside that RC; and the
+manifest identity must match. No completed production RC index or underlying
+archive/report set exists yet. Index validation proves binding and named review
+metadata, not the truth of opaque reports, so this blocker remains
+`launch-blocked`.
+
+Exit criteria:
+
+- inspect the exact archived iOS build and reconcile its privacy manifest,
+  required-reason APIs, SDK signatures, observed network/storage behavior, data
+  inventory, retention, tracking/linkage, and App Privacy answers;
+- publish final HTTPS Terms, Privacy, Consumer Health Data Privacy, Support,
+  account-deletion, data-export, and privacy-choices URLs under the cleared
+  identity, with uptime and device handoff verified;
+- create a non-expiring ordinary production-like reviewer account and complete
+  instructions/sample data for all 20 features, purchase/Restore, deletion,
+  moderation, Ask, commerce, widgets, and links without exposing staff/admin or
+  real-user data; and
+- counsel approves the final report/answers and the exact review build passes
+  reviewer-account and policy-link human E2E before submission.
+
 ## B-DERM-REVIEW - Clinical and cosmetic chemistry review
 
 Status: `launch-blocked`
@@ -650,8 +1116,19 @@ Current implementation note:
 - `docs/phase-3/clinical-review-log.md` and
   `docs/phase-3/cosmetic-chemistry-review-log.md` are ready for reviewer
   signoff entries.
-- Production gates are tested so unreviewed rules, PAO defaults, stacks, and
-  Skin Notes stay hidden until reviewer metadata is recorded.
+- Production gates are tested so unreviewed conflict rules, medical-adjacent
+  cadence, sequencing roles/instructions, PAO defaults, stacks, and Skin Notes
+  stay hidden until reviewer metadata is recorded. An unreviewed sequencing
+  role stays on the Shelf but is withheld from the generated routine, Today,
+  and cycle projection. The current order editor only reorders already-generated
+  reviewed steps; there is no manual add-to-AM/PM path, and none may be claimed
+  until that flow is implemented and human-E2E verified. The bundled base
+  sequencing/order copy remains open and must not be described as clinically
+  reviewed.
+- Migration `0058` also removes the legacy broad database read policies and API-
+  role table privileges for unreviewed conflict/sequencing rules and creator-stack
+  content. A future server content lane must add a separately reviewed, evidence-
+  bound publication contract; `is_active` alone is not approval.
 
 Exit criteria:
 
@@ -700,14 +1177,26 @@ Current implementation note:
 
 - Phase 4 catalog schema, source metadata, import batches, barcode tables,
   ingredient-list parse tables, quality grades, correction reports,
-  contribution queue, and lookup observability tables exist locally.
+  a legacy-held contribution table, and lookup observability tables exist
+  locally.
 - Mobile shelf rows now carry catalog source/quality/parse metadata, product
   detail shows source and quality, catalog search is wired through an Edge
   Function, and users can report catalog issues.
-- `scripts/phase4/*` can run a fixture import and generated QA report. The
-  fixture is not a production catalog.
-- Open Beauty Facts contribution-back is intentionally not promised in the UI
-  until the source workflow is legally and operationally approved.
+- `scripts/phase4/*` can run fixture transforms and QA, construct a strict
+  dual-signed stage envelope, and complete database-authoritative receipts.
+  Migrations `0056`/`0057` plus forward migration `0061` supply fail-closed
+  serving plus transactional promotion/correction/rollback with immutable lineage. Fixtures and local
+  lifecycle tests are not a production catalog or hosted race proof.
+- CAT-03 target/corpus/review templates, offline curation-envelope and
+  confidence-bound quality-report contracts, foundational migration `0058`,
+  and forward migration `0062` provide a
+  local non-serving authorization, exact-set atomic campaign release, signed
+  readback, and immutable retirement source candidate with hard inventory
+  floors. They do not supply real consented beta data, market-representative
+  evidence, professional review, hosted proof, or an activated launch batch.
+- External contribution is excluded from the current launch architecture. The
+  legacy queue/flag are inert; a future source recipient requires a new reviewed
+  privacy/legal/architecture decision.
 
 Next action:
 
@@ -716,16 +1205,26 @@ Next action:
 - ingest barcode, brand, product name, category, INCI list, ingredient tags,
   PAO/expiry where available, and commerce links if commerce ships;
 - hand-curate top products for launch quality;
-- add match-rate observability.
+- predeclare quality targets before outcomes, seal a separately consented and
+  privacy-minimized curation/holdout corpus, externally witness the complete
+  record decision before holdout access, obtain qualified exact-row review,
+  build at least 2,000 eligible rows with category/priority floors, and add
+  confidence-bound match/quality observability plus signed database readback.
 
 Exit criteria:
 
 - beta users get meaningful barcode/OCR/manual match outcomes;
 - catalog miss/wrong-match reports are tracked;
 - recommendations can reference real products where appropriate;
-- OBF contribution-back obligations are handled or not promised.
+- beta demand affects review priority only and never supplies catalog facts;
+- tracked evidence contains bounded aggregates/commitments only, not raw
+  shelves, identifiers, searches, barcodes, labels, ingredients, notes, or
+  support text;
+- OBF attribution/share-alike/offer-of-data obligations are handled without
+  treating user-report publication as an assumed duty; reports remain
+  first-party and external contribution is not promised.
 
-## B-CATALOG-SOURCE-REVIEW - Catalog source, attribution, and API identity
+## B-CATALOG-SOURCE-REVIEW - Catalog source, attribution, and release identity
 
 Status: `launch-blocked`
 
@@ -735,7 +1234,11 @@ Exit criteria:
 - `npm run phase4:check-source-env:strict` passes;
 - CosIng source memo is reviewed;
 - Open Beauty Facts source memo is reviewed;
-- source attribution copy is approved under final brand.
+- source attribution copy is approved under final brand;
+- the externally root-signed reviewer registry and separately pinned current
+  epoch/raw-file hash validate;
+- fixed US release scope, distinct legal/engineering signed source approvals,
+  and signed exact EAS/archive/App Store build evidence all match the release.
 
 ## B-ODBL-REVIEW - Open Beauty Facts / ODbL posture
 
@@ -747,7 +1250,10 @@ Exit criteria:
 - any public derivative database/share-alike obligations have an owner;
 - product images remain disabled unless image-rights handling is approved;
 - bulk imports use exports, not API crawling;
-- attribution is visible in product detail and policy/source pages.
+- attribution is visible in product detail and policy/source pages;
+- the current filtering/normalization transform uses the conservative
+  derivative-database machine-readable-delivery path unless a new reviewed
+  transformer/policy revision implements a different counsel conclusion.
 
 ## B-CURATED-CATALOG - First reviewed launch batch
 
@@ -755,11 +1261,50 @@ Status: `launch-blocked`
 
 Exit criteria:
 
-- first curated batch is built from approved sources and beta shelves;
-- product rows have source/ref/snapshot/provenance;
-- recommendable rows are `verified` or `usable`, reviewed, and correction-free;
-- sunscreen/OTC-adjacent products have separate review and expiry handling;
-- import QA has zero blockers.
+- first curated batch is built from approved CAT-01 sources and CAT-02 rows,
+  prioritized by a separately consented, privacy-minimized defined beta-shelf
+  coverage corpus; no market-representative claim is made;
+- a signed target policy predates outcome access and fixes the cohort/window/
+  build, SKU definition, curation/holdout split, required strata, minimum
+  denominators, suppression, confidence methods, and pass/hold operators;
+- the complete reviewed-record decision and exact CAT-02 membership set are
+  externally witnessed before holdout access;
+- at least 2,000 independently sourced, reviewed, activation-eligible records,
+  every signed required-category floor, and at least 100 demand-prioritized
+  eligible records are in the exact campaign;
+- product rows bind exact CAT-01 approval/artifact/QA and CAT-02 batch/staged-
+  record/projection/revision/receipt lineage, including all four required field
+  scopes and contributing batches, plus source/ref/snapshot/per-field provenance;
+- beta demand is review priority only and never product identity, ingredient,
+  category, safety, regulatory, efficacy, expiry, or recommendation fact;
+- recommendable rows are `verified` or `usable`, qualified-reviewed,
+  dependency-complete, correction-free, and positively active under CAT-03;
+- U.S. sunscreen/OTC-adjacent products have separate market/label/
+  classification/expiry/claim review;
+- OBF and CosIng import QA have zero blockers/warnings;
+- migration `0056` is hosted-verified and serves only positive-eligible,
+  correction-free rows from production/legal-approved sources;
+- migration `0057` passes the hosted two-connection replay, conflict,
+  correction, source-withdrawal, promotion, dependency-serving, and rollback
+  drill for the exact reviewed batch;
+- the complete migration chain through `0075`, with `0058` as its foundational
+  CAT-03 authority, `0064`/`0065` as forward-only profile-provenance and
+  operator-transition/default-ACL repairs, `0066` as the legacy clinical-table
+  seal, `0067` as the checker-only catalog-release lint contract, `0068`/`0069`
+  as adherence/replay authorities, `0070` as draft-only consent staging, and
+  `0071` as recommendation zero admission, `0072` as commerce zero
+  admission, `0073` as the catalog promoter boundary, and `0074`/`0075` as
+  draft-consent/quiz-provenance successors, passes
+  clean local and hosted pgTAP,
+  two-connection replay/
+  staging/release/supersession/retirement races, successor isolation, direct-
+  table denial including `service_role`, dependency-serving suppression, and
+  rollback drills for the exact signed campaign;
+- an independent database verifier signs the exact released campaign readback;
+  offline-only approval cannot be final-clear; and
+- the untouched holdout passes every predeclared confidence-bound and minimum-
+  denominator gate with zero open P0/P1 and zero below-usable recommendation
+  exposure.
 
 ## B-CATALOG-COVERAGE - Beta catalog usefulness
 
@@ -767,21 +1312,50 @@ Status: `launch-blocked`
 
 Exit criteria:
 
-- closed beta captures barcode/search/OCR/manual add paths;
-- match rate, miss rate, wrong-match rate, parser unknown-token rate, and support
-  tickets are reviewed;
-- priority gaps are fed back into curation;
+- genuine beta participants separately consent to the exact optional curation
+  purpose, and withdrawal/deletion/retention evidence is retained;
+- the self-selected cohort is reported only as the exact defined beta-shelf
+  coverage corpus and holdout, not as market/population representative;
+- tracked evidence uses capped, small-cell/complementary-suppressed aggregates
+  and cryptographic commitments only; raw participant/shelf/search/barcode/
+  product/ingredient/photo/note/support data stays out of Git, general
+  analytics, OBF, CosIng, and AI providers;
+- the sealed holdout captures barcode/search/OCR/manual add paths;
+- the pre-holdout full-record commitment has independently observed append-only
+  or trusted-timestamp evidence; a self-declared timestamp does not qualify;
+- match, miss, wrong-match, parser-unknown, below-usable recommendation,
+  fallback completion, and support-severity results are reviewed with the
+  predeclared denominators and confidence bounds;
+- failed/gap findings feed a new target/corpus/curation revision with a new
+  untouched holdout; the opened holdout is never reused for a passing claim;
 - users can complete the shelf-to-routine loop even when catalog matching fails.
+- the final report is clear only after exact independently signed database
+  readback verifies the atomically released campaign.
 
-## B-SHELF-CONTRIB - Unmatched product contribution-back
+## B-SHELF-CONTRIB - First-party missing-product and wrong-match operation
 
 Status: `launch-blocked`
 
 Exit criteria:
 
-- unmatched product workflow is legally and operationally defined;
-- user-facing copy does not promise contribution unless the pipeline exists;
-- OBF obligations are satisfied if using OBF-derived data.
+- owner-scoped reports are minimized, privacy-authorized, deletion/withdrawal
+  covered, and operated to the recorded triage SLA;
+- operator-reviewed triage creates an independent reporter-free product hold
+  that immediately suppresses affected rows from serving and product-specific
+  recommendations; an unreviewed report alone does not become catalog
+  authority, and accepted/rejected/deleted report state cannot release a hold;
+- repair attestation requires exact current CAT-02 plus signed structurally
+  valid staged CAT-03 successor authority over the active-hold root; triage,
+  disposition, repair attestation, and release use four distinct people;
+  release advances the root without activation, and a fresh post-release CAT-03
+  campaign/activation/readback is required before serving; hosted MFA/session/
+  revocation, lease/CAS race, reporter-erasure, audit, deployed-console E2E, and
+  staffing evidence pass;
+- no lookup or report is sent to OBF, CosIng, or another source, and user-facing
+  copy does not promise external contribution;
+- OBF obligations are satisfied through the counsel-approved attribution,
+  share-alike, offer-of-data, and source-delivery posture rather than assumed
+  user-data transmission.
 
 ## B-PERFORMANCE - Performance baseline and scale evidence
 
@@ -803,7 +1377,11 @@ Risk:
 - slow post-capture analysis makes a private progress-photo habit feel stalled,
   while analyzer timeouts can hide device-specific incompatibility;
 - slow local photo loading or high memory use in photo timeline weakens the
-  progress moat and can cause native crashes under real photo volume.
+  progress moat and can cause native crashes under real photo volume;
+- the Layerwell WidgetKit provider/render read path synchronously acquires an
+  exclusive cross-process `flock` and opens SQLite read-write, so contention,
+  schema work, or busy waits can consume the extension execution budget and
+  leave the system presenting stale/generic content.
 
 Next action:
 
@@ -812,12 +1390,20 @@ Next action:
   paths;
 - measure barcode lookup latency separately from camera acquisition and
   no-match recovery;
+- measure native OCR recognition latency (`native_ocr_recognition_ms`) from
+  managed-photo handoff to a successful editable transcript; timeout/no-text/
+  failure branches remain functional failures rather than passing latency
+  samples;
 - measure routine generation time with 3, 5, and 10 product shelves;
 - measure Progress photo capture-analysis latency
   (`photo_capture_analysis_ms`) from shutter confirmation until both review
   quality labels reach terminal measured or unavailable states;
 - measure local photo loading and memory use in photo timeline with realistic
   encrypted local photo volume;
+- use Instruments and extension diagnostics on the oldest supported and current
+  physical iPhones to measure Layerwell provider/render lock wait, read-write
+  SQLite open/schema/read work, memory, timeout, and concurrent
+  AppIntent/publication/cleanup pressure;
 - set explicit beta pass/fail thresholds before recruiting testers;
 - generate `docs/phase-5/performance-evidence.template.json`, define thresholds
   before the first run, record every raw observation, collect the complete
@@ -829,7 +1415,7 @@ phase5:performance-evidence:strict`;
 
 Exit criteria:
 
-- a completed schema-v3 artifact passes
+- a completed schema-v4 artifact passes
   `npm run phase5:performance-evidence:strict`;
 - the artifact includes build IDs, device model/OS, at least five raw samples
   for every platform/metric pair, validator-calculated p50/p95/max, accepted
@@ -842,14 +1428,46 @@ Status: `needs-device-verification`
 Barcode and still-photo capture use native camera paths. Progress review now
 uses on-device post-capture ML Kit face framing/pose analysis plus a temporary
 local luminance/balance sample; synthetic readiness and quality scores have
-been removed. Native OCR remains disabled, real-time preview analysis is not
+been removed. Native OCR has a staging-only Apple Vision source candidate while
+development and production remain disabled; real-time preview analysis is not
 implemented, and none of these paths is device-certified yet.
+
+CAT-06 now has a shared source lifecycle for Shelf Scan, Shelf OCR, and
+Progress Capture. It re-verifies permission after iOS AppState transitions,
+invalidates the explicit request result when the permission prompt drives iOS
+`inactive`, keeps the camera closed until a fresh foreground query, admits
+previews only while focused/foreground/business-gated, requires camera-ready,
+uses fresh keyed generations after mount failure, and invalidates queued native
+callbacks through operation leases. Progress saves
+first-use photo consent before requesting OS access and keeps an exact raw-photo
+cleanup owner outside entitlement, app-lock, storage, and content gates until
+cleanup or atomic review handoff succeeds. Native config derives one exact
+purpose string into both iOS locations and rejects drift.
+
+These are source controls only. The retained CAT-04 and CAT-05 deterministic
+web packets predate the shared lifecycle and are stale until regenerated; web
+regeneration still cannot prove native behavior. No completed schema-v1 CAT-06
+artifact, signed-archive `Info.plist` inspection, or two-physical-iPhone run
+exists. `PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored.
 
 Exit criteria:
 
 - custom dev build exists;
-- camera permission, barcode, OCR, and progress photo capture work on supported
-  physical iPhones;
+- the exact committed staging or production source, EAS build, signed archive,
+  executable/signing identity, and final `NSCameraUsageDescription` are bound
+  and inspected;
+- `PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH` passes the schema-v1 contract across
+  Shelf Scan, Shelf OCR, and Progress Capture on the supported-floor iOS 17.x
+  and current flagship physical iPhones: nine scenario suites per route/device,
+  54 runs at the two-phone floor, unique hash-verified proofs, network/cache/
+  cleanup/accessibility reports, and named QA, privacy/security, and
+  accessibility signoffs;
+- camera permission, permanent denial/Settings recovery, foreground/focus and
+  interruption recovery, mount/ready failure, retry, offline behavior,
+  barcode, OCR, and Progress photo capture work on those exact devices;
+- Progress Back/Close/gate replacement drains an in-flight shutter and exact
+  raw-file cleanup; forced cleanup failure remains visibly retryable and cannot
+  duplicate encrypted storage;
 - post-capture one/no/multiple-face, pose/alignment, luminance, uneven-light,
   timeout, and unavailable states pass a calibrated physical-device matrix;
 - launch copy describes the current post-capture check, not real-time guidance
@@ -878,13 +1496,46 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-In-app previews exist. Required WidgetKit and ActivityKit targets do not.
+In-app previews and a signed-disabled native lifecycle source candidate now
+exist. The exact `expo-widgets` 57.0.8 patch uses a bounded SQLite App Group
+authority, rotating-nonce CAS, durable action outbox, owner/snapshot binding,
+lock-held final-outbox quiescence, two-entry stale timeline, typed
+`outbox_pending`/stale-Activity retries, finite Layerwell Activity lifecycle,
+and a closed cleanup tombstone; UserDefaults is presentation-only. A nonempty
+quiescence capture permits only one exact receipt/authority/owner/snapshot/
+revision-bound commit before native admission remains closed; an empty capture
+revokes the structured receipt under the same lock before returning. The stable
+mounted app host serializes activation/reconciliation with expiry, withdrawal,
+sign-out, deletion, and account switches, while privacy and account boundaries
+start native closure before JavaScript writer drains or replacement-owner
+publication. A close receipt proves admission denial, not completed ActivityKit
+dismissal.
+
+Publication and Live Activity start remain literal generated Info.plist
+`false`. The five-minute health-processing status lease reserves 30 seconds for
+reconciliation, making personalized widget display short-lived pending a
+reviewed longer purpose-limited local-display authorization. The synchronous
+exclusive-`flock`, read-write-SQLite WidgetKit render path requires Instruments
+and device contention proof. Windows source/model tests prove none of Swift
+compilation, signed extension/archive embedding, physical-iPhone cross-process
+runtime behavior, actual ActivityKit removal, App Review, or legal clearance.
+No macOS compile, signed archive, or physical-iPhone evidence exists.
 
 Exit criteria:
 
-- implement WidgetKit and ActivityKit targets, App Group data sharing,
-  timelines/lifecycle, privacy redaction, deep links, and failure behavior;
-- pass the supported physical-iPhone matrix.
+- compile and link the exact hash-pinned sources under the reviewed macOS/Xcode
+  toolchain and inspect a disabled signed `.app`/`.appex`, entitlements,
+  privacy manifests, lifecycle flags, deployment target, and SQLite linkage;
+- approve and implement a fit-for-purpose local-display authorization lifetime,
+  or accept a generic widget after the current short lease, with privacy/legal
+  review and truthful disclosure;
+- profile synchronous WidgetKit SQLite/`flock` rendering under contention with
+  Instruments on the oldest supported and current physical iPhones;
+- clear the final identity/deep links, separately audit the enabling change,
+  rebuild, and cross-bind source, archive, identity, and typed evidence; and
+- pass the supported physical-iPhone interaction/concurrency/replay,
+  process-death/reboot, expiry/privacy-cleanup, locked-state, deep-link,
+  actual ActivityKit-removal timing, accessibility, and Dynamic Type matrix.
 
 ## B-ROUTINE-PERSIST - Server routine/cycle persistence
 
@@ -941,20 +1592,60 @@ Exit criteria:
 
 ## B-COMMERCE-RAIL - ShopMy or alternative commerce rail
 
-Status: `inert`
+Status: `launch-blocked`
 
-Commerce is launch-required but must remain subordinate to the trust/core loop
-and must never influence rankings.
+COM-01A establishes **literal zero admission** while this blocker remains open.
+Commerce is launch-required but currently no mobile/direct route, catalog or
+stack read, consent grant, click record, external handoff, analytic event,
+partner poll, order read, or attribution write is admitted. Those paths are
+inert and side-effect-free. Only refusal, withdrawal, owner deletion, and
+account data-rights cleanup remain, and cleanup cannot activate commerce.
+
+Every pre-COM-01A positive development stack, consent-allow, paid-link,
+retailer-handoff, opaque-token, credential-driven poll, and 2026-07-06 through
+2026-07-08 commerce browser result is historical/stale. COM-01 through COM-07
+remain launch-blocked.
+
+The blocker is broader than provider correlation. Apple 5.1.2(vi) can prohibit
+marketing/advertising/use-based data-mining uses of data gathered from the
+listed facial/depth/Camera/Photo tools; Apple 2.5.18 restricts sensitive-data
+targeted/behavioral display advertising; and 3.1.3(e) addresses payment for
+physical goods without authorizing data reuse. Consent, ATT, pseudonymization,
+or an opaque token does not cure a prohibited upstream photo-derived marketing
+purpose. The exact surface also needs FTC affiliate/native-ad net-impression
+and health-claim review, HBNR analysis, Washington RCW 19.373 and Nevada NRS
+603A.400-.550 health-data analysis, and applicable CCPA/CPRA classification and
+rights. See
+`docs/hugeToDo/COM-01-COMMERCE-ADMISSION-SOURCE-CHECKPOINT-2026-07-29.md`.
 
 Exit criteria:
 
-- rail selected and working;
-- data-sharing consent finalized;
-- FTC "paid link" style disclosure reviewed;
-- attribution/order-report pipeline works;
-- ranking remains independent from commission;
-- live link validation, broken-link monitoring, order reconciliation, support,
-  opt-out, and physical-iPhone handoff evidence pass.
+- Apple/App Review and qualified counsel accept the exact classification of
+  retailer rows, creator stacks, attribution, measurement, and disclosures;
+- an enforced independent-input rule proves no photo, face signal, Trend result,
+  health profile, concern, condition, pregnancy state, inferred health data, or
+  health-derived category selects, targets, ranks, or measures commerce;
+- a rail/account and written provider contract support first-party links,
+  correlation, retention, deletion, opt-out, security, incident response, and
+  audit duties;
+- a source-cleared catalog and separately authorized, exact-version reviewed
+  stacks exist; fixtures and reviewer-name strings are not publication
+  authority;
+- FTC link-level material-connection/native-ad disclosures and every
+  health-adjacent claim are reviewed and substantiated;
+- exact privacy, ATT where applicable, consumer-health, HBNR, Washington,
+  Nevada, applicable California, processor, retention, withdrawal, deletion,
+  export, and breach controls are approved and match observed behavior;
+- credentials remain server-held; link allowlisting, safe handoff, bounded
+  idempotent polling, monitoring, reconciliation, support, and kill switches
+  pass while commission remains absent from recommendation paths; and
+- hosted RLS/isolation, network/privacy/security, accessibility, compact/text
+  pressure, failure/offline, signed-archive, supported physical-iPhone,
+  staging/production, App Review, and named-review evidence pass for the exact
+  release candidate.
+
+This source refusal does not guarantee legal compliance, Apple acceptance,
+commercial viability, product-market fit, seven-figure revenue, or any revenue.
 
 ## B-COMMUNITY-MOD - Human moderation and store floor
 
@@ -980,18 +1671,74 @@ Exit criteria:
 - reviewer metadata recorded;
 - stale or unreviewed content is gated out.
 
+## B-AI-FAIRNESS - Trend measurement fairness evidence
+
+Status: `launch-blocked`
+
+PHOTO-05A admits no Trend result. A real on-device engine cannot launch until
+PHOTO-06 supplies predeclared, independently reviewed evidence across the
+supported skin-tone, lighting, hair, glasses, environment, and iPhone matrix.
+Fairness is not implied by local processing, a Monk-tone input, a conservative
+constant, or the availability of Apple image-processing APIs.
+
+Exit criteria:
+
+- the exact measurement and abstention semantics are fixed before evaluation;
+- a separately consented cohort and sampling/power plan are approved;
+- Monk 7-10 representation, device/environment coverage, confidence intervals,
+  false-positive, false-negative, inconclusive, and abstention results are
+  retained;
+- parity bands, failure thresholds, drift ownership, and model/algorithm
+  revalidation rules are signed by named independent reviewers; and
+- the report is bound to the exact source, production archive, engine and
+  calibration versions, supported markets, and user-facing claims.
+
+## B-AI-LEGAL - Trend consent, privacy, and claims review
+
+Status: `launch-blocked`
+
+PHOTO-05A is a source refusal, not a conclusion that an eventual Trend feature
+complies with any law or Apple policy. The exact finished data flow, derived
+health inference, consent, withdrawal, deletion, backup, incident, App Privacy,
+and express/implied measurement claims require market-specific review.
+
+Exit criteria:
+
+- privacy/security and regulatory counsel review the exact source, archive,
+  data flow, policies, consent copy, App Privacy answers, and store/marketing
+  copy for every launch market;
+- Washington consumer-health-data and California sensitive-personal-
+  information duties, FTC health-claim substantiation and breach obligations,
+  FDA intended-use boundaries, and other applicable regimes are resolved;
+- collection, sharing, retention, backup, export, withdrawal, deletion, and
+  installed-base reconsent behavior are exact, tested, and disclosed;
+- no diagnosis, disease, treatment, score, age, percentage, accuracy,
+  objectivity, or superiority claim exceeds retained evidence; and
+- named decisions are bound to the exact production source and archive.
+
 ## B-AI-ONDEVICE - Real trend analysis engine
 
 Status: `launch-blocked`
 
 The safe current posture is no score, no age, no disease, no percentage
-improvement. Do not market trend analysis as AI skin scoring.
+improvement, and no Trend result at all. PHOTO-05A removes the former simulated
+delta/lighting path and keeps the engine, consent grant, result copy, and
+content analytics at literal zero admission. Apple Vision, Accelerate/vImage,
+an environment flag, a legacy consent, or a pure classifier is not a result
+issuer. Do not market trend analysis as AI skin scoring.
 
 Exit criteria:
 
-- real on-device CV exists;
-- MDC calibration and fairness validation pass;
-- FDA/FTC/EU/app-store counsel review is complete;
+- a real on-device engine and versioned result issuer exist in the exact signed
+  archive;
+- input selection, registration, measurement, calibration, provenance,
+  limitations, and every abstention/failure state are deterministic and
+  retained;
+- no photo, feature vector, derived observation, or content analytics leaves
+  the device, as proven by archive and observed-network evidence;
+- supported physical-iPhone performance, memory, thermal, battery, lifecycle,
+  cancellation, accessibility, and failure evidence passes;
+- `B-AI-FAIRNESS` and `B-AI-LEGAL` close independently; and
 - copy remains descriptive and no-score.
 
 ## B-AI-ASSISTANT - Cloud Ask vendor, safety, and legal gates
@@ -1013,18 +1760,49 @@ Exit criteria:
 
 ## B-GROWTH-LINK - Share-card domain and attribution
 
-Status: `needs-device-verification`
+Status: `launch-blocked`
 
-The Shelf Conflict Card is a strong organic loop, but final brand/domain and
-app/web fallback are blocked by `B-BRAND`.
+The Shelf Conflict Card is a possible future organic loop, not an admitted
+publication surface. CORE-07A now establishes a literal zero-share/public-link
+source checkpoint: the machine contract records no receipt issuer, no token
+service, no positive admission, no raw/private projection fields, and no share
+analytics. A legacy `reviewedBy` value, an owned-product match, broad QA flags,
+or a final domain cannot authorize a public health-adjacent claim. Denied paths
+return before capture, temporary file, link, network, native share, record-
+implying landing copy, or analytics. The renderer boundary accepts only a
+constructed sanitized projection rather than a private conflict object, and
+every identifier is neutrally unavailable. Brand/domain, app/web fallback,
+attribution, and device QA remain additional gates, not substitutes for
+publication or token authority.
 
 Exit criteria:
 
+- a separate share-publication receipt positively admits the exact
+  rule/copy/citation/version/market/projection bytes, current professional
+  review and content-rights scope, expiry, and revocation state;
+- the renderer accepts only an allowlisted sanitized projection and cannot
+  receive product names, Shelf identifiers, goals, profile data, safety state,
+  account identifiers, or other private conflict fields not approved for the
+  card;
+- the user sees and explicitly confirms the exact export payload and
+  destination behavior before the native share sheet opens;
+- public links remain disabled until a separate reviewed token, retention,
+  revocation, recipient, indexing, abuse, incident, privacy, and deletion
+  boundary exists; a static public landing URL must not imply a per-user record;
 - final domain and universal/app links work;
 - non-users reach a useful web fallback and store path;
 - UTM/channel attribution works;
-- card export works in a native build;
-- card copy remains claim-safe.
+- card export, cancel, failure, relaunch, accessibility, Dynamic Type, and
+  privacy inspection work in the exact native build;
+- card copy remains claim-safe, citation-complete, version-bound, and covered by
+  named clinical, regulatory, privacy, IP/content-rights, and launch review;
+- exact-source `REV-02` regulatory claims, `REV-03` privacy/security,
+  `REV-04` dermatology, `REV-05` cosmetic chemistry, `REV-06` IP/content
+  rights, and `REV-07` detached signoffs all pass without role substitution;
+  and
+- exact archive/network/analytics evidence proves that no private Shelf,
+  health, recommendation, conflict, share-ID, or destination payload is sent
+  before positive share admission and confirmation.
 
 ## B-CLOSED-BETA - Real demand proof
 
@@ -1035,7 +1813,8 @@ the complete iOS feature set.
 
 Exit criteria:
 
-- 50-100 real users complete beta;
+- 50-100 genuine users complete the declared beta; this self-selected cohort
+  is not described as market-representative;
 - onboarding completion, product add rate, first useful insight, routine
   generation, Today check-off, baseline photo, reminders, payments, cloud Ask,
   commerce, community/moderation, trends, widgets/Live Activities, links,
@@ -1051,11 +1830,23 @@ Status: `needs-device-verification`
 Phase 5 native code exists in repo, but no public or paid beta claim can rely on
 it until an installable iOS build passes the physical-device matrix.
 
+The generated packet now requires a validated CAT-06 camera-lifecycle artifact
+rather than a permission Boolean. At the two-phone floor, that artifact covers
+three camera routes by nine scenario suites on each phone (54 runs), the final
+signed-archive purpose string, source hashes, install receipts, network/privacy
+and cleanup reports, accessibility, and three named signoffs. The artifact has
+not been supplied. Current deterministic Expo-web camera evidence is
+non-native; the CAT-04/CAT-05 packets are also stale after the CAT-06 source
+changes until regenerated.
+
 Exit criteria:
 
 - EAS development and staging iOS builds have recorded build IDs;
 - supported physical iPhones install and run the app across the declared iOS
   floor/current-device matrix;
+- the exact build passes `phase5:camera-lifecycle-evidence:strict` and the same
+  evidence is accepted by `phase5:qa-packet:strict`; Boolean-only permission QA
+  is rejected;
 - barcode, label capture, progress photo, encrypted save/restart/delete,
   notifications, share sheet, RevenueCat native smoke, Sentry native smoke, and
   Supabase catalog calls pass;
@@ -1066,15 +1857,49 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-The current label path captures a real image and requires editable user text.
-It does not claim native OCR while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false`.
+An Apple Vision revision-3 on-device source candidate and strict evidence
+contract exist, but no Windows/source check proves Swift compilation, signed
+archive linkage, physical-device behavior, or launch accuracy. Production
+claims remain gated while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false` and the exact
+build has no validated native OCR artifact. Only the internal `staging` EAS
+profile enables the candidate for evidence collection; development and
+production remain disabled. See
+`docs/hugeToDo/CAT-05-NATIVE-OCR-SOURCE-CHECKPOINT-2026-07-18.md`.
+
+The retained `CAT05 native OCR review Expo-web pass` packet bound to source
+`fec382eddd0e79f73b4c38b5de30d996928a8fc9` passed 15/15 scenarios and 4/4
+explicit-consent bootstraps with zero browser failures. CAT-06 subsequently
+changed the Shelf OCR camera lifecycle and Progress shutter ownership, so this
+packet is historical/stale until regenerated against the accepted source. Its
+139 non-summary artifacts, including 55 PNGs, are retained at
+`test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`. It records
+`nativeDeviceProof=false`. The 375 x 667 manual-handoff PNG omits the
+Ingredients field/prefill, and the fixture has multilingual Unicode but no
+Arabic/Hebrew RTL sample, so those visuals and RTL remain unproven. The packet
+does not execute or prove Apple Vision, Swift, a camera, an iOS binary,
+physical-device behavior, native privacy cleanup, OCR accuracy/latency, native
+accessibility, archive linkage, App Review, legal clearance, or revenue. The
+macOS compile remains unverified/pending, so `B-NATIVE-OCR` remains
+launch-blocking.
 
 Exit criteria:
 
-- reviewed ML Kit or Apple Vision text-recognition module is selected;
-- the iOS native build includes the module without missing-native-module errors;
+- the reviewed Apple Vision module is compiled and present in the exact signed
+  candidate without missing-native-module errors;
 - clear, curved, tiny, multilingual, and glare-heavy INCI labels pass beta QA;
 - low-confidence words and user corrections remain visible;
+- `PHASE5_NATIVE_OCR_EVIDENCE_PATH` passes the schema-v2 exact-source/build/
+  profile/archive, two-device, 25-label/50-run, predeclared calculated
+  unordered plus ordered-sequence accuracy/latency, RTL reading order,
+  accessibility, managed-photo plus Expo Camera/Image/SDWebImage cache cleanup,
+  zero-network, provenance, and proof-attachment contract; the old Boolean flag
+  is ignored;
+- exact-build cleanup proves both Shelf-label and Progress shutters await the
+  shared startup drain, snapshot acquisition retries only while both remain
+  gated and before its first successful listing, and every later bounded retry
+  uses that immutable boot snapshot without relisting post-boot captures;
+- `native_ocr_recognition_ms` passes the separate schema-v4 physical-device
+  performance contract against the same source/build;
 - launch copy is updated only after device QA passes.
 
 ## B-FACE-POSE-SIGNALS - Reviewed guided-photo signal detector

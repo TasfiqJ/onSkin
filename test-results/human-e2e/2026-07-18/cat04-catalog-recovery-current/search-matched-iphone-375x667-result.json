@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "search-matched-iphone-375x667",
+  "completedAt": "2026-07-18T21:17:53.164Z",
+  "error": null,
+  "fixture": "matched",
+  "fixtureGroup": "matched",
+  "nativeDeviceProof": false,
+  "route": "/shelf/search",
+  "scenarioId": "search-matched",
+  "startedAt": "2026-07-18T21:17:49.537Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-375x667",
+    "width": 375,
+    "height": 667
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8460/shelf/opened"
+}

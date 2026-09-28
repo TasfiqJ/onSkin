@@ -3,7 +3,7 @@
 Severity: Medium
 Surface: Expo web
 Environment: Codex in-app browser, `npm --workspace apps/mobile run web -- --port 8182 --host localhost`, 320 x 480 viewport
-Feature: Ask RoutineKind deterministic advisor
+Feature: Ask Layerwell deterministic advisor
 Date: 2026-07-08
 Tester: Codex
 

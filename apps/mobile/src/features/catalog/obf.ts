@@ -1,3 +1,5 @@
+// Pure offline artifact mapper. This module has no provider transport, and its
+// candidate provenance is deliberately non-routable in the app source tree.
 import type { ProductCategory } from '@/features/shelf/categories';
 
 import { normalizeBarcode, normalizeProductName } from './normalization';
@@ -109,7 +111,7 @@ export function mapObfProduct(raw: ObfProductRaw): CatalogProductCandidate | nul
     category: categoryFromObfTags(tags),
     source: 'open_beauty_facts',
     sourceRef: barcode,
-    sourceUrl: `https://world.openbeautyfacts.org/product/${barcode}`,
+    sourceUrl: `https://offline-artifact.invalid/open-beauty-facts/product/${barcode}`,
     sourceSnapshotDate: snapshotDate,
     rawIngredientsText: raw.ingredients_text?.trim() || null,
     qualityGrade: isBeauty && raw.ingredients_text ? 'limited' : 'unverified',

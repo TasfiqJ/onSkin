@@ -9,7 +9,7 @@ This sanitized checkpoint covers notification preferences, the local sent ledger
 
 ## Implemented Contract
 
-- `onskin.notifPrefs.v1`, `onskin.notiflog.v1`, and `onskin.milestones.v1` now expose strict bounded typed reads, preserve malformed/future/unavailable bytes, use atomic same-key transforms, and reconcile exact commit-response loss.
+- `layerwell.notifPrefs.v1`, `layerwell.notiflog.v1`, and `layerwell.milestones.v1` now expose strict bounded typed reads, preserve malformed/future/unavailable bytes, use atomic same-key transforms, and reconcile exact commit-response loss.
 - Genuine preference absence is all-off and cannot imply notification consent.
 - Preference persistence, fixed-ID cancellation/rescheduling, and behavioral delivery share one owner-generation queue. A durable opt-out cannot be overtaken by later queued delivery.
 - Native schedule convergence is root-owned outside the tabs tree, retries transient failures at bounded delays, and verifies fixed IDs before reusing an in-memory signature.

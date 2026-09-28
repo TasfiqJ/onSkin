@@ -19,11 +19,13 @@ Format: `D-NNN — date — decision — rationale`.
 
 - **D-002 — 2026-06-12 — Turborepo monorepo** (`apps/mobile` + `packages/types`
   - `supabase/`), per docs/00 §9 ("Turborepo monorepo with shared TS packages").
-    Shared `@onskin/types` package holds the Supabase `Database` type + domain
+    Shared `@layerwell/types` package holds the Supabase `Database` type + domain
     enums so the mobile client and Edge Functions share one source of truth.
-    NOTE: Metro's monorepo module resolution cannot be runtime-verified in this
-    environment (no Mac/simulator/device). Standard Expo monorepo `metro.config.js`
-    is used; flagged for first-device verification (see BLOCKERS B-VERIFY-METRO).
+    Expo web now runtime-verifies `@layerwell/types` and hoisted dependencies in
+    the current installed worktree. The Metro config also watches a resolved
+    linked-dependency target when one exists. Native first-device/build
+    verification remains a Phase 5 gate because this Windows host cannot run
+    the iOS simulator.
 
 - **D-003 — 2026-06-12 — expo-router (file-based navigation).** Not specified in
   docs; expo-router is the current Expo default and what the template ships.
@@ -41,8 +43,8 @@ Format: `D-NNN — date — decision — rationale`.
   route. A monospaced face (system mono) is used for the spec's caption/label
   treatment ("01 · Welcome", "2 of 4", "NEXT").
 
-- **D-006 — 2026-06-12 — App identifiers:** bundle id `com.onskin.app`, URL
-  scheme `onskin://`. Placeholder defaults; must match the registered App
+- **D-006 — 2026-06-12 — App identifiers:** bundle id `com.layerwell.app`, URL
+  scheme `layerwell://`. Placeholder defaults; must match the registered App
   ID / Play package once accounts exist (see BLOCKERS B-APPLE / B-GOOGLE).
 
 - **D-007 — 2026-06-12 — Offline/data layer: TanStack Query + a persisted
@@ -110,6 +112,11 @@ Format: `D-NNN — date — decision — rationale`.
   The Slice-1 docs/00 §2 catalog _sketch_ (migration 0003) was rewritten to the
   docs/02 §3 schema — it was a never-applied placeholder, so editing forward is
   clean (no deployed DB; B-SUPABASE).
+  **Superseded 2026-07-18:** migration `0058` removes direct API-role reads from
+  clinical/editorial and catalog-authority tables, including `conflict_rules`
+  and `sequencing_rules`. Clients use only bounded, positively eligible serving
+  projections; bundled rule mirrors retain review metadata and fail closed in
+  production until their separate qualified-review gate passes.
 
 - **D-017 — 2026-06-13 — Conflict rules match on FUNCTIONAL TAGS, not INCI ids**
   (docs/02 §2.4/§4). It's the acid-ness / retinoid-ness that interacts. A
@@ -144,11 +151,15 @@ Format: `D-NNN — date — decision — rationale`.
 ## Routine builder (docs/03, Slice 12+)
 
 - **D-022 — 2026-06-13 — Application order is versioned DATA, not hard-coded**
-  (docs/03 §3): `sequencing_rules` (catalog-style, world-readable) holds
-  role→priority/phase/eligibility; the engine sorts by it. Pure ordering is
-  low-risk cosmetic; the ramp/frequency/cycling on top are medical-adjacent and
-  fall under B-DERM-REVIEW. Roles classified by functional TAGS first, then name
-  keywords (a "glycolic toner" is an exfoliant, not a toner).
+  (docs/03 §3): `sequencing_rules` holds versioned
+  role→priority/phase/eligibility authority. Migration `0058` supersedes the
+  original catalog-style, world-readable posture: direct API-role reads are
+  sealed, and the client engine sorts only individually reviewed bundled rules
+  admitted by the production gate. Without an admitted rule, automatic phase
+  placement and rule-derived instructions are withheld. Ramp/frequency/cycling
+  remain medical-adjacent and fall under B-DERM-REVIEW. Roles are classified by
+  functional TAGS first, then name keywords (a "glycolic toner" is an
+  exfoliant, not a toner).
 
 - **D-023 — 2026-06-13 — Retinoid ramp is per-user recomputable state**
   (`active_ramp`, docs/03 §4): "start low and slow" — sensitive start 2×/wk,
@@ -288,7 +299,7 @@ B-DERM-REVIEW` banner as `rules.ts` plus `PAO_DEFAULTS_REVIEWED = false` and a
 - **D-038 — 2026-06-13 — The Progress tab IS the photo timeline (docs/06); the calm
   streak relocated to `/routine/streak`.** docs/06 explicitly and repeatedly defines
   the Progress tab as the guided-photo feature ("It is the Progress tab"), and the
-  new "OnSkin Photo Progress" design confirms it (Compare/Timeline). The calm
+  new "Layerwell Photo Progress" design confirms it (Compare/Timeline). The calm
   adherence streak (docs/03 §6, briefly the Progress tab in Slice 14) was **moved**,
   not removed — it now lives in the routine stack (`app/routine/streak.tsx`) and is
   reachable from **Today's streak pill** (now tappable) and the **You** tab's "Streak
@@ -345,7 +356,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 
 - **D-044 — 2026-06-13 — Photo capture/review/detail use the design's near-black
   `#16130F` backdrop**, distinct from the `night` token (`#1B1813`), to match the
-  "OnSkin Photo Progress" `.dc.html` exactly (it uses a darker capture palette so the
+  "Layerwell Photo Progress" `.dc.html` exactly (it uses a darker capture palette so the
   face is the brightest thing on screen). Logged so the divergence from the night
   token is intentional, not drift.
 
@@ -548,7 +559,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   fixtures assert the URL and the persisted click payload carry no concern/goal/skin/
   pregnancy/photo/profile attribute. This is Doc 10's analogue of the docs/09 "FIT score
   has no commercial input" guard. Deep-link straight out (no in-app webview) — keeps
-  OnSkin out of the transaction and reduces data-handling liability.
+  Layerwell out of the transaction and reduces data-handling liability.
 
 - **D-061 — 2026-06-13 — MHMDA-strict consent gate (docs/10 §6).** The "where to buy"
   affordance is gated behind a **separate, distinct, opt-in, revocable** consent
@@ -640,11 +651,20 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 
 > docs/12 pre-specifies "D-046…D-050"; those numbers were long taken. Recorded here as
 > D-068…D-072. Validated by a cited deep-research pass: AI trend analysis is NOT a
-> seven-figure pillar; the population skin score is a trust destroyer; the highest-value
+> seven-figure pillar; the populatilayerwell score is a trust destroyer; the highest-value
 > move is to KEEP REFUSING AI scores and MARKET THE REFUSAL (the same trust engine behind
 > Yuka's $7.37M, zero AI face analysis). The verdict rests on four HIGH-confidence grounds
 > (trust-promise reversal, unfixable fairness physics, the regulatory claim-surface, the
 > absence of any independent validation) — the economics are explicitly non-load-bearing.
+>
+> **2026-07-29 PHOTO-05A source checkpoint:** the decision-number crosswalk
+> remains deliberate (`D-046`…`D-050` in docs/12 map to root
+> `D-068`…`D-072`). PHOTO-05A supersedes the former implementation note that
+> allowed a conservative stub to render `consistent`. No engine or result
+> issuer currently exists, so Trend processing, positive consent, result copy,
+> and content analytics remain at literal zero admission. The future
+> on-device-only, no-score, calibrated, fairness-gated, separately consented
+> decisions remain requirements, not current runtime capabilities.
 
 - **D-068 — 2026-06-13 — The population "skin score" / "skin age" is KILLED OUTRIGHT
   (docs/12 §4, the doc's "D-046").** AI trend analysis is not a pillar; it ranks below
@@ -663,13 +683,14 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   own series), honestly "your phone comparing your own photos", **never a general
   multimodal LLM** and **never marketed as "AI"**. The real CV engine + the MDC
   calibration + device-performance verification are **B-AI-ONDEVICE** (shares B-CAMERA's
-  custom-dev-build need); v1 ships the pure, tested **classification + tone-adjusted MDC
-  floor** with the registered-pair delta stubbed (a conservative value → the calm
-  "consistent" common output renders).
+  custom-dev-build need). Until that exact engine and a versioned result issuer exist,
+  the pure classifier, tone adjustment, caller values, environment flags, historical
+  consent/data, and Apple image-processing primitives are not measurement authority:
+  PHOTO-05A renders no Trend result and invokes no Trend input or analytics path.
 
 - **D-070 — 2026-06-13 — Within-person CHANGE, never a population score; a hard MDC noise
-  floor; "consistent" celebrated (docs/12 §6, the doc's "D-048").** The output is a
-  within-person change-STATE (`consistent` | `change_observed` | `inconclusive_lighting`
+  floor; "consistent" celebrated (docs/12 §6, the doc's "D-048").** Any future output is
+  a within-person change-STATE (`consistent` | `change_observed` | `inconclusive_lighting`
   | `insufficient_data`) — surfaced **only** above a Minimal-Detectable-Change floor, and
   **"consistent / no detectable change" is a celebrated first-class output (adherence
   win)**, never a flat line to feel bad about; "lighting varied too much" is shown
@@ -678,6 +699,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   skin-age/grade/%/rating, disease-detection → FDA SaMD, "dermatologist-grade"/superiority
   → FTC, "improved/worse" verdict, structure/function, "AI" marketing — with a
   negation-exemption for the disclosure strings that quote banned terms to refuse them).
+  None of these states may be produced before a real engine, calibrated threshold, and
+  issuer-authenticated result contract exist; missing measurement authority yields no
+  Trend output, not a reassuring default.
 
 - **D-071 — 2026-06-13 — Fairness is a LAUNCH GATE (docs/12 §7, the doc's "D-049",
   B-AI-FAIRNESS).** The Monk Skin Tone scale (read from `skin_profiles.monk_tone`), never
@@ -690,6 +714,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   ships until a ≥25–30% dark-skin, Monk 7–10-heavy cohort shows parity** — a launch gate
   the whole field has failed. The "Fairness check" surface states this calmly (the
   internal blocker is B-AI-FAIRNESS; not surfaced as a code in the UI).
+  PHOTO-05A does not evaluate a Monk band or tone multiplier at runtime because no
+  engine is admitted. A future fairness threshold remains conditional on the signed,
+  predeclared evaluation; a hardcoded factor is not fairness evidence.
 
 - **D-072 — 2026-06-13 — A separate, explicit, DEFAULT-OFF `photo_trend_insights` consent
   (docs/12 §8, the doc's "D-050").** The consents enum gains an 8th type
@@ -705,8 +732,11 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   FTC AI-washing counsel sign-off of the copy + the DPIA extension), **B-AI-ONDEVICE**
   (the on-device CV/Core ML engine + MDC calibration + device verification); the consent
   copy + DPIA also extend **B-PRIVACY / B-PRIVACY-COPY**.
+  While admission is closed, positive Trend consent is neither read, displayed, refreshed,
+  nor granted. Explicit withdrawal/deletion may still erase legacy private state as a
+  data-rights operation and can never activate the feature.
 
-- **D-073 — 2026-06-14 — "Ask OnSkin" is the grounded, TEMPLATE-BOUNDED front-end to the
+- **D-073 — 2026-06-14 — "Ask Layerwell" is the grounded, TEMPLATE-BOUNDED front-end to the
   on-device intelligence layer, never an open chatbot (docs/13, the doc's "D-051/D-057").**
   Slice 27 — the founder-delegated feature beyond the 12 build-order docs (chosen by
   objective reasoning). The TRUTH SOURCE is the deterministic engine (`detectConflicts`
@@ -732,9 +762,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   honestly (exempt from the AI-marketing scan, like the Slice-24 pattern); marketing leads
   with independent/grounded/knows-your-shelf/private, never "AI".
 
-- **D-075 — 2026-06-14 — A separate, explicit, DEFAULT-OFF `ask_onskin` consent + a
+- **D-075 — 2026-06-14 — A separate, explicit, DEFAULT-OFF `ask_layerwell` consent + a
   content-free / safety-audit-only data model (docs/13 §7/§10, "D-053/D-058").** The
-  consents enum gains a 9th type `ask_onskin` (migration 0025), distinct from every other
+  consents enum gains a 9th type `ask_layerwell` (migration 0025), distinct from every other
   consent — the user's question is a health disclosure transmitted to the cloud (MHMDA /
   GDPR Art. 9 attaches to the TRANSMISSION). Default-off, revocable, ledger-authoritative-
   then-local; **deletion-on-revocation clears the local turn counter** (`clearAskStore`).
@@ -749,7 +779,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 - **D-076 — 2026-06-14 — Pro-gating: the deterministic on-device advisor is FREE (the moat
   taste); only the cloud-grounded layer is Pro-gated + trial-capped (docs/13 §15, "D-054").**
   `GatedFeature` gains `ask` + `UPSELL_COPY.ask`. The pure `askGate` + the local-first
-  per-period grounded-turn counter (`onskin.ask.groundedTurns.v1`) enforce: free → grounded
+  per-period grounded-turn counter (`layerwell.ask.groundedTurns.v1`) enforce: free → grounded
   is Pro; trial/reverse-trial → a hard cap then the paywall; fully paid → uncapped. The
   authoritative cap is server-side at the Edge Function (deferred); the client counter is a
   best-effort cost guardrail. The first-session moat taste (the deterministic conflict
@@ -782,9 +812,9 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 - **D-079 — 2026-07-04 — Phase 1 source-of-truth cleanup added launch-readiness,
   brand, V1 scope, Phase 2, and seven-figure-readiness docs.** This does not
   legally clear a brand. `B-BRAND` remains a founder/counsel launch blocker, but
-  engineering should not create production infrastructure under the `OnSkin`
+  engineering should not create production infrastructure under the `Layerwell`
   identity unless counsel clears it in writing. The default planning path is a
-  rebrand before Phase 2; `RoutineKind` is a working clearance candidate only.
+  rebrand before Phase 2; `Layerwell` is a working clearance candidate only.
 
 - **D-080 — 2026-07-04 — Phase 2 infrastructure is scaffolded locally, but live
   accounts remain blocked by brand/account/secret ownership.** The repo now has
@@ -832,7 +862,7 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
 
 - **D-084 - 2026-07-04 - Phase 5 local photo storage uses authenticated local
   encryption and no exact-alarm escalation.** Captured progress-photo temp files
-  are encrypted into app-private `.onskinphoto` envelopes using
+  are encrypted into app-private `.layerwellphoto` envelopes using
   XChaCha20-Poly1305 with a SecureStore-held content key; renderers decrypt to
   memory for display/share, and deletion removes ciphertext. Routine reminders
   stay gentle/inexact and the app does not request Android exact-alarm

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 3,
+  "capturedAt": null,
+  "sourceGitSha": null,
+  "build": {
+    "platform": "ios",
+    "configuration": "Release",
+    "easIosBuildId": null
+  },
+  "device": {
+    "physical": true,
+    "model": null,
+    "osVersion": "iOS 17.0 or newer"
+  },
+  "identifiers": {
+    "final": true,
+    "appBundleIdentifier": null,
+    "extensionBundleIdentifier": null,
+    "appGroupIdentifier": null,
+    "teamIdentifier": null
+  },
+  "signedArtifacts": {
+    "appBundle": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/zip"
+    },
+    "appEntitlements": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    },
+    "appPrivacyManifest": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    },
+    "archive": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/zip"
+    },
+    "extensionBundle": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/zip"
+    },
+    "extensionEntitlements": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    },
+    "extensionPrivacyManifest": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    }
+  },
+  "scenarioArtifacts": {
+    "archiveInspection": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    },
+    "interactionPrivacy": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    },
+    "liveActivity": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    },
+    "widgetDevice": {
+      "path": null,
+      "sha256": null,
+      "mediaType": "application/json"
+    }
+  },
+  "signoff": {
+    "decision": null,
+    "signedOffBy": null,
+    "signedAt": null
+  }
+}

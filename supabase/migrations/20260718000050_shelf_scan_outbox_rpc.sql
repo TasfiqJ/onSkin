@@ -166,7 +166,7 @@ begin
         v_payload_hash := pg_catalog.encode(
           extensions.digest(
             pg_catalog.convert_to(
-              'onskin:shelf-scan-payload:v1' || E'\n' ||
+              'layerwell:shelf-scan-payload:v1' || E'\n' ||
               v_barcode || E'\n' ||
               v_result || E'\n' ||
               coalesce(v_matched_product_id::text, '-') || E'\n' ||

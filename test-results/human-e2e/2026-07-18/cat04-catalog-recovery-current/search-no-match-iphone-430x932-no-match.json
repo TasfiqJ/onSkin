@@ -1,0 +1,80 @@
+{
+  "alerts": [],
+  "bodyText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. No catalog match yet. Add it by hand for now. Report missing product Add by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Catalog search query",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 299.91,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Search",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 74.09,
+      "x": 331.91,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Report missing product",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 154.73,
+      "x": 40,
+      "y": 236
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add by hand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 844
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Catalog search query",
+      "value": "ceramide cleanser"
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8480/shelf/search?cat04Audit=search-no-match-iphone-430x932-1784409577907&e2eQuery=ceramide+cleanser",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

@@ -4,28 +4,36 @@ import { View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { WELCOME_BACK } from '@/features/notifications/copy';
 import { useProgress } from '@/features/routine/useProgress';
-import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { colors } from '@/theme/tokens';
 
 // Calm earn-back after a lapse (design screen 04, docs/07 §4.2). No shame screen:
 // if grace days absorbed the gap, the streak is shown safe; if it lapsed, a gentle
 // invite back. Either way the next action is simply tonight's step.
 export default function WelcomeBackScreen() {
-  const progressQuery = useProgress();
-  const { data } = progressQuery;
-  const frozen = data?.graceUsed ?? false;
+  const { data, isError, refetch } = useProgress();
 
-  if (progressQuery.isPending || progressQuery.isError) {
+  if (!data) {
     return (
       <Screen edges={['top', 'bottom']}>
-        <CompletionHistoryState
-          failed={progressQuery.isError}
-          retrying={progressQuery.isFetching}
-          onRetry={() => void progressQuery.refetch()}
-        />
+        <View className="flex-1 justify-center">
+          <Text variant="display" style={{ fontSize: 40, lineHeight: 44 }}>
+            {isError ? 'Progress is unavailable.' : 'Loading your progress…'}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-4" style={{ lineHeight: 26 }}>
+            {isError
+              ? "We couldn't safely read your saved check-offs, so we won't guess whether your streak is protected or lapsed."
+              : 'Your saved check-offs are being read securely.'}
+          </Text>
+        </View>
+        <View className="gap-3 pb-4 pt-2">
+          {isError ? <Button label="Try again" onPress={() => void refetch()} /> : null}
+          <Button label="Back to Today" onPress={() => router.replace('/(tabs)/today')} />
+        </View>
       </Screen>
     );
   }
+
+  const frozen = data.graceUsed;
 
   return (
     <Screen edges={['top', 'bottom']}>

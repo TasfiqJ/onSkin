@@ -1,239 +1,188 @@
 import { describe, expect, it } from 'vitest';
 
-import { shouldLoadContextualOffering, type StoredEntitlement } from './entitlement';
+import type { StoredEntitlement } from './entitlement';
 import {
-  ENTITLEMENT_OFFLINE_GRACE_MS,
-  ENTITLEMENT_RECONCILIATION_INTERVAL_MS,
-  ENTITLEMENT_VERIFICATION_CLOCK_SKEW_MS,
-  classifyEntitlementEvidence,
-  resolveEntitlementCacheRead,
+  advanceEntitlementClock,
+  compareStoreEvidenceCursors,
+  effectiveEntitlementProjection,
+  emptyEntitlementEnvelope,
+  mergeEntitlementEnvelope,
+  type EntitlementCacheEnvelopeV2,
+  type EntitlementEvidence,
 } from './entitlementEvidence';
 
-const NOW_MS = Date.parse('2026-07-05T12:00:00.000Z');
-const NOW = new Date(NOW_MS).toISOString();
+const OWNER = 'a'.repeat(64);
+const NOW = '2026-07-14T12:00:00.000Z';
 
-function entitlement(overrides: Partial<StoredEntitlement> = {}): StoredEntitlement {
+function storeEntitlement(overrides: Partial<StoredEntitlement> = {}): StoredEntitlement {
   return {
     tier: 'pro',
     isActive: true,
     periodType: 'normal',
     store: 'app_store',
-    productId: 'routinekind_pro_annual',
-    expiresAt: '2027-07-05T12:00:00.000Z',
+    productId: 'annual',
+    expiresAt: '2027-07-14T12:00:00.000Z',
     willRenew: true,
-    grantedAt: '2026-06-05T12:00:00.000Z',
+    grantedAt: '2026-07-01T00:00:00.000Z',
     source: 'revenuecat',
     environment: 'production',
     managementUrl: null,
-    verifiedAt: NOW,
+    verifiedAt: '2026-07-14T10:00:00.000Z',
     offeringId: null,
     packageId: null,
-    storeUserId: 'owner-a',
+    storeUserId: null,
     priceLabel: null,
     ...overrides,
   };
 }
 
-function verifiedAtAge(ageMs: number): string {
-  return new Date(NOW_MS - ageMs).toISOString();
+function appGrant(overrides: Partial<StoredEntitlement> = {}): StoredEntitlement {
+  return storeEntitlement({
+    periodType: 'reverse_trial',
+    store: 'app_granted',
+    productId: null,
+    expiresAt: '2026-07-21T12:00:00.000Z',
+    willRenew: false,
+    grantedAt: '2026-07-14T09:00:00.000Z',
+    source: 'app_granted',
+    offeringId: null,
+    packageId: null,
+    ...overrides,
+  });
 }
 
-describe('entitlement cache evidence policy', () => {
-  it.each([
-    [ENTITLEMENT_RECONCILIATION_INTERVAL_MS - 1, 'fresh'],
-    [ENTITLEMENT_RECONCILIATION_INTERVAL_MS, 'reconciliation_due'],
-    [ENTITLEMENT_OFFLINE_GRACE_MS - 1, 'reconciliation_due'],
-    [ENTITLEMENT_OFFLINE_GRACE_MS, 'stale'],
-  ] as const)('classifies exact store-evidence age %s as %s', (ageMs, expected) => {
+function snapshot(requestDate: string, entitlement: StoredEntitlement | null): EntitlementEvidence {
+  return {
+    kind: 'store_definitive',
+    cursor: { kind: 'revenuecat_snapshot', requestDate, fingerprint: `snapshot:${requestDate}` },
+    state: entitlement?.isActive ? 'active' : entitlement ? 'inactive' : 'empty',
+    entitlement,
+    provenance: 'revenuecat_verified',
+  };
+}
+
+function merge(
+  envelope: EntitlementCacheEnvelopeV2,
+  evidence: EntitlementEvidence,
+): EntitlementCacheEnvelopeV2 {
+  return mergeEntitlementEnvelope(envelope, evidence).envelope;
+}
+
+describe('pure entitlement evidence merge', () => {
+  it('orders webhook cursors by provider time, priority, then event id', () => {
+    const base = {
+      kind: 'revenuecat_webhook' as const,
+      eventAt: '2026-07-14T10:00:00.000Z',
+      priority: 20,
+      eventId: 'a',
+    };
     expect(
-      classifyEntitlementEvidence(entitlement({ verifiedAt: verifiedAtAge(ageMs) }), NOW, 'production'),
-    ).toBe(expected);
+      compareStoreEvidenceCursors({ ...base, eventAt: '2026-07-14T09:00:00.000Z' }, base),
+    ).toBe(-1);
+    expect(compareStoreEvidenceCursors({ ...base, priority: 21 }, base)).toBe(1);
+    expect(compareStoreEvidenceCursors({ ...base, eventId: 'b' }, base)).toBe(1);
   });
 
-  it('allows at most five minutes of provider clock skew and clamps its age to zero', () => {
-    expect(
-      classifyEntitlementEvidence(
-        entitlement({
-          verifiedAt: new Date(NOW_MS + ENTITLEMENT_VERIFICATION_CLOCK_SKEW_MS).toISOString(),
-        }),
-        NOW,
-        'production',
-      ),
-    ).toBe('fresh');
-    expect(
-      classifyEntitlementEvidence(
-        entitlement({
-          verifiedAt: new Date(
-            NOW_MS + ENTITLEMENT_VERIFICATION_CLOCK_SKEW_MS + 1,
-          ).toISOString(),
-        }),
-        NOW,
-        'production',
-      ),
-    ).toBe('invalid');
-  });
-
-  it('keeps a verified app-granted reverse trial authorized beyond 72 hours until exact expiry', () => {
-    const reverseTrial = entitlement({
-      periodType: 'reverse_trial',
-      store: 'app_granted',
-      willRenew: false,
-      source: 'server',
-      verifiedAt: verifiedAtAge(ENTITLEMENT_OFFLINE_GRACE_MS + 24 * 60 * 60 * 1_000),
-      expiresAt: new Date(NOW_MS + 1).toISOString(),
-    });
-
-    expect(classifyEntitlementEvidence(reverseTrial, NOW, 'production')).toBe(
-      'reconciliation_due',
+  it('lets a newer provisional positive bridge an older definitive empty, then yields to newer definitive evidence', () => {
+    let envelope = merge(
+      emptyEntitlementEnvelope(OWNER),
+      snapshot('2026-07-14T10:00:00.000Z', null),
     );
-    expect(
-      resolveEntitlementCacheRead(
-        { status: 'available', entitlement: reverseTrial },
-        NOW,
-        'production',
-      ),
-    ).toMatchObject({ isPro: true, evidenceStatus: 'reconciliation_due', expired: false });
-
-    const atExpiry = { ...reverseTrial, expiresAt: NOW };
-    expect(classifyEntitlementEvidence(atExpiry, NOW, 'production')).toBe('expired');
-    expect(
-      resolveEntitlementCacheRead(
-        { status: 'available', entitlement: atExpiry },
-        NOW,
-        'production',
-      ),
-    ).toMatchObject({ isPro: false, evidenceStatus: 'expired', expired: true });
-  });
-
-  it.each([
-    ['missing verification time', { verifiedAt: null }, 'production'],
-    ['client-cache source', { source: 'local_cache' }, 'production'],
-    ['missing source', { source: null }, 'production'],
-    ['development proof in staging', { environment: 'development' }, 'staging'],
-    [
-      'Test Store proof in production',
-      { store: 'test_store', environment: 'test_store' },
-      'production',
-    ],
-    [
-      'malformed app grant',
-      { source: 'server', store: 'app_granted', periodType: 'normal' },
-      'development',
-    ],
-  ] as const)('rejects %s', (_label, overrides, appEnvironment) => {
-    expect(
-      classifyEntitlementEvidence(
-        entitlement(overrides as Partial<StoredEntitlement>),
-        NOW,
-        appEnvironment,
-      ),
-    ).toBe('invalid');
-  });
-
-  it('classifies authoritative inactive evidence as expired', () => {
-    expect(
-      classifyEntitlementEvidence(entitlement({ isActive: false }), NOW, 'production'),
-    ).toBe('expired');
-  });
-
-  it.each(['stale', 'invalid', 'unavailable', 'corrupt', 'unsupported_version'] as const)(
-    'keeps %s evidence uncertain instead of presenting an ordinary paywall',
-    (status) => {
-      const state =
-        status === 'stale' || status === 'invalid'
-          ? resolveEntitlementCacheRead(
-              {
-                status: 'available',
-                entitlement:
-                  status === 'stale'
-                    ? entitlement({ verifiedAt: verifiedAtAge(ENTITLEMENT_OFFLINE_GRACE_MS) })
-                    : entitlement({ verifiedAt: null }),
-              },
-              NOW,
-              'production',
-            )
-          : resolveEntitlementCacheRead({ status, entitlement: null }, NOW, 'production');
-
-      expect(state).toMatchObject({ isPro: false, expired: false, evidenceStatus: status });
-      expect(shouldLoadContextualOffering(state)).toBe(false);
-    },
-  );
-
-  it('requires a RevenueCat empty watermark to satisfy the clock-skew policy', () => {
-    const valid = resolveEntitlementCacheRead(
-      {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: { verifiedAt: NOW },
+    envelope = merge(envelope, {
+      kind: 'store_provisional_active',
+      cursor: {
+        kind: 'revenuecat_snapshot',
+        requestDate: '2026-07-14T11:00:00.000Z',
+        fingerprint: 'on-device-positive',
       },
-      NOW,
-      'production',
-    );
-    const future = resolveEntitlementCacheRead(
-      {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: {
-          verifiedAt: new Date(
-            NOW_MS + ENTITLEMENT_VERIFICATION_CLOCK_SKEW_MS + 1,
-          ).toISOString(),
-        },
-      },
-      NOW,
-      'production',
+      entitlement: storeEntitlement({ verifiedAt: null }),
+      provenance: 'revenuecat_verified_on_device',
+    });
+    expect(effectiveEntitlementProjection(envelope, NOW).activeStoreEntitlement?.isActive).toBe(
+      true,
     );
 
-    expect(valid).toMatchObject({
-      isPro: false,
-      source: 'revenuecat',
-      verifiedAt: NOW,
-      evidenceStatus: 'absent',
-    });
-    expect(future).toMatchObject({
-      isPro: false,
-      source: 'revenuecat',
-      evidenceStatus: 'invalid',
-    });
-    expect(shouldLoadContextualOffering(future)).toBe(false);
+    envelope = merge(envelope, snapshot('2026-07-14T12:00:00.000Z', null));
+    expect(effectiveEntitlementProjection(envelope, NOW).activeStoreEntitlement).toBeNull();
+    expect(envelope.store.provisionalActive).toBeNull();
   });
 
-  it('ages a RevenueCat empty watermark into uncertainty at the 72-hour boundary', () => {
-    const before = resolveEntitlementCacheRead(
-      {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: {
-          verifiedAt: new Date(NOW_MS - ENTITLEMENT_OFFLINE_GRACE_MS + 1).toISOString(),
-          storeUserId: 'owner-a',
-        },
-      },
-      NOW,
-      'production',
+  it('fails closed on equal direct/webhook contradictions and requires strictly later evidence', () => {
+    let envelope = merge(
+      emptyEntitlementEnvelope(OWNER),
+      snapshot('2026-07-14T10:00:00.000Z', storeEntitlement()),
     );
-    const atBoundary = resolveEntitlementCacheRead(
-      {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: {
-          verifiedAt: new Date(NOW_MS - ENTITLEMENT_OFFLINE_GRACE_MS).toISOString(),
-          storeUserId: 'owner-a',
-        },
+    const conflict = mergeEntitlementEnvelope(envelope, {
+      kind: 'store_definitive',
+      cursor: {
+        kind: 'revenuecat_webhook',
+        eventAt: '2026-07-14T10:00:00.000Z',
+        priority: 100,
+        eventId: 'expiration',
       },
-      NOW,
-      'production',
-    );
+      state: 'inactive',
+      entitlement: storeEntitlement({ isActive: false, willRenew: false }),
+      provenance: 'server_webhook',
+    });
+    expect(conflict).toMatchObject({
+      disposition: 'conflict',
+      requiresUncachedRefresh: true,
+    });
+    envelope = conflict.envelope;
+    expect(effectiveEntitlementProjection(envelope, NOW).activeStoreEntitlement).toBeNull();
 
-    expect(before).toMatchObject({
-      isPro: false,
-      evidenceStatus: 'absent',
-      source: 'revenuecat',
+    const equalRetry = mergeEntitlementEnvelope(
+      envelope,
+      snapshot('2026-07-14T10:00:00.000Z', storeEntitlement()),
+    );
+    expect(equalRetry).toMatchObject({ changed: false, requiresUncachedRefresh: true });
+    const later = mergeEntitlementEnvelope(
+      envelope,
+      snapshot('2026-07-14T10:00:01.000Z', storeEntitlement()),
+    );
+    expect(later.requiresUncachedRefresh).toBe(false);
+    expect(
+      effectiveEntitlementProjection(later.envelope, NOW).activeStoreEntitlement,
+    ).not.toBeNull();
+  });
+
+  it('projects the union of independent store and app-grant lanes', () => {
+    let envelope = merge(
+      emptyEntitlementEnvelope(OWNER),
+      snapshot('2026-07-14T10:00:00.000Z', null),
+    );
+    const grant = appGrant();
+    envelope = merge(envelope, {
+      kind: 'app_grant',
+      grantAt: grant.grantedAt!,
+      entitlement: grant,
     });
-    expect(before.evidenceIdentity).not.toBeNull();
-    expect(atBoundary).toMatchObject({
-      isPro: false,
-      evidenceStatus: 'stale',
-      source: 'revenuecat',
+    const projection = effectiveEntitlementProjection(envelope, NOW);
+    expect(projection.activeStoreEntitlement).toBeNull();
+    expect(projection.activeAppGrantEntitlement).toMatchObject({ isActive: true });
+    expect(projection.entitlement?.periodType).toBe('reverse_trial');
+  });
+
+  it('never lets weak legacy evidence override a trusted watermark', () => {
+    const envelope = merge(
+      emptyEntitlementEnvelope(OWNER),
+      snapshot('2026-07-14T10:00:00.000Z', null),
+    );
+    const result = mergeEntitlementEnvelope(envelope, {
+      kind: 'legacy_positive',
+      provenance: 'server_missing_cursor',
+      entitlement: storeEntitlement({ source: 'server', verifiedAt: null }),
     });
-    expect(shouldLoadContextualOffering(atBoundary)).toBe(false);
+    expect(result).toMatchObject({ changed: false, disposition: 'ignored' });
+    expect(effectiveEntitlementProjection(result.envelope, NOW).activeStoreEntitlement).toBeNull();
+  });
+
+  it('keeps expiry clock advancement nondecreasing and separate from evidence revision ordering', () => {
+    const empty = emptyEntitlementEnvelope(OWNER);
+    const advanced = advanceEntitlementClock(empty, '2026-07-14T12:00:00.000Z');
+    const rolledBack = advanceEntitlementClock(advanced, '2026-07-13T12:00:00.000Z');
+    expect(advanced.clockAnchor).toBe('2026-07-14T12:00:00.000Z');
+    expect(rolledBack).toBe(advanced);
+    expect(advanced.store.definitive).toBeNull();
   });
 });

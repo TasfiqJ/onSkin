@@ -4,13 +4,7 @@ import { Platform, Pressable, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
-import { paywallPurchasePresentation, UPSELL_COPY } from '@/features/subscription/copy';
-import {
-  DirectPaywallLoading,
-  DirectPaywallRecovery,
-  DirectPaywallRedirecting,
-} from '@/features/subscription/DirectPaywallResolution';
-import { directPaywallDecision } from '@/features/subscription/directPaywallPolicy';
+import { PAYWALL_COPY, UPSELL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
 import {
   PAYWALL_FEEDBACK,
@@ -18,14 +12,11 @@ import {
   type PaywallFeedbackState,
 } from '@/features/subscription/PaywallFeedback';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
-import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { usePaidActionHold } from '@/features/subscription/usePaidActionHold';
+import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 // Contextual upsell (design 04, docs/08 §3.2). A dimmed bottom sheet framed around
 // the gated feature, same compliance elements, dismissible. Reached when a free /
@@ -33,17 +24,9 @@ import type { GatedFeature } from '@onskin/types';
 export default function UpsellSheet() {
   const { feature } = useLocalSearchParams<{ feature?: string }>();
   const { fontScale, height, width } = useWindowDimensions();
-  const ownerScope = useOwnerQueryScope();
-  const entitlement = useEntitlement();
-  const decision = directPaywallDecision('upsell', {
-    state: entitlement.data,
-    isLoading: entitlement.isLoading,
-    isError: entitlement.isError,
-  });
-  const { purchase } = useEntitlementActions();
-  const offering = useSubscriptionOffering({ enabled: decision.loadOffering });
+  const { startTrial } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const paidAction = usePaidActionHold(ownerScope.generation);
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
   const midTextPressurePaywall =
@@ -52,9 +35,11 @@ export default function UpsellSheet() {
   const shortPaywall = height < 600 || midTextPressurePaywall;
   const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
   const annual = offering.data?.annual ?? null;
-  const offeringResolved = offering.data !== undefined;
-  const purchasePresentation = paywallPurchasePresentation(annual);
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;
+  const primaryCtaLabel = hasEligibleIntroTrial
+    ? PAYWALL_COPY.offer.cta
+    : PAYWALL_COPY.offer.subscribeCta;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const splitShortPaywall = height < 410;
   const microShortPaywall = height < 380;
@@ -66,59 +51,24 @@ export default function UpsellSheet() {
     : copy.title;
 
   function onStartTrial() {
-    if (!decision.allowPurchase || !offeringResolved || paidAction.isHeld) return;
     setActionFeedback(null);
     if (!canPurchase) {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    purchase.mutate(
-      {
-        kind: 'upsell_purchase',
-        expectedEvidenceIdentity: entitlement.data?.evidenceIdentity ?? null,
+    startTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
+        else setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      {
-        onSuccess: (result) => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          const outcome = paidAction.resolve(result);
-          if (outcome.kind === 'success') {
-            router.replace({
-              pathname: '/paywall/success',
-              params: { receipt: outcome.receiptId },
-            });
-          } else if (outcome.kind === 'active_without_receipt') {
-            router.replace('/(tabs)/today');
-          } else if (outcome.kind === 'inactive' && !result.cancelled) {
-            setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
-          }
-        },
-        onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-      },
-    );
+      onError: (error) => setActionFeedback(PAYWALL_FEEDBACK.purchaseError(error)),
+    });
   }
 
   useEffect(() => {
-    if (!decision.trackPresentation) return;
     track('contextual_paywall_shown', { feature: key });
-  }, [decision.trackPresentation, key]);
-
-  useEffect(() => {
-    if (decision.phase !== 'redirect') return;
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    dismissPaywall(router);
-  }, [decision.phase, ownerScope]);
-
-  if (decision.phase === 'loading') return <DirectPaywallLoading />;
-  if (decision.phase === 'recovery') {
-    return (
-      <DirectPaywallRecovery
-        isRetrying={entitlement.isVerificationRetrying}
-        onClose={() => dismissPaywall(router)}
-        onRetry={() => void entitlement.retryVerification()}
-      />
-    );
-  }
-  if (decision.phase === 'redirect') return <DirectPaywallRedirecting />;
+  }, [key]);
 
   return (
     <Sheet
@@ -301,9 +251,7 @@ export default function UpsellSheet() {
       ) : null}
       <Pressable
         accessibilityRole="button"
-        disabled={
-          !decision.allowPurchase || !offeringResolved || paidAction.isHeld || purchase.isPending
-        }
+        disabled={startTrial.isPending}
         onPress={onStartTrial}
         className={
           microShortPaywall
@@ -316,9 +264,7 @@ export default function UpsellSheet() {
                   ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
                   : 'mt-4 h-[54px] items-center justify-center rounded-pill'
         }
-        style={{
-          backgroundColor: canPurchase && !paidAction.isHeld ? colors.clay : colors.mutedLight,
-        }}
+        style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
       >
         <Text
           adjustsFontSizeToFit
@@ -327,10 +273,10 @@ export default function UpsellSheet() {
           numberOfLines={1}
           style={{ color: colors.paper, fontSize: microShortPaywall ? 15.5 : 17 }}
         >
-          {purchasePresentation.cta}
+          {primaryCtaLabel}
         </Text>
       </Pressable>
-      <PaywallFeedback compact={compactPaywall} feedback={paidAction.feedback ?? actionFeedback} />
+      <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
       {shortPaywall ? null : <ComplianceRow />}
       {shortPaywall ? null : (
         <Pressable

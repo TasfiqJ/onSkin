@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  paywallPurchasePresentation,
-  PAYWALL_COPY,
-  UPSELL_COPY,
-  UPSELL_DISMISS,
-} from './copy';
+import { PAYWALL_COPY, UPSELL_COPY, UPSELL_DISMISS } from './copy';
 
 // Honest-by-design guard for the paywall + lifecycle copy (docs/08 §9, the
 // Slice-11/20/21 pattern). The subscription playbook is where dark patterns live;
@@ -65,59 +60,42 @@ describe('the required honest disclosures are present (Apple 3.1.2 / ARLs)', () 
     expect(d).toContain('auto-renew');
     expect(d).toContain('cancel');
   });
-  it('withholds every trial promise unless the store proves exact eligibility', () => {
-    const eligible = paywallPurchasePresentation({
-      trialDays: 14,
-      trialEligibility: 'eligible',
-    });
-    expect(eligible.hasEligibleTrial).toBe(true);
-    expect(eligible.cta.toLowerCase()).toContain('trial');
-
-    for (const trialEligibility of ['ineligible', 'unknown'] as const) {
-      const presentation = paywallPurchasePresentation({ trialDays: 14, trialEligibility });
-      const copy = [
-        presentation.cta,
-        presentation.reassurance,
-        presentation.autoRenewDisclosure,
-      ].join(' ');
-
-      expect(presentation.hasEligibleTrial).toBe(false);
-      expect(copy.toLowerCase()).not.toContain('trial');
-      expect(presentation.autoRenewDisclosure.toLowerCase()).toContain('auto-renew');
-      expect(presentation.autoRenewDisclosure.toLowerCase()).toContain('cancel');
-    }
-  });
-  it('the offer promises the 2-day pre-charge reminder and cancel-anytime', () => {
-    expect(PAYWALL_COPY.offer.trialReassurance.toLowerCase()).toContain('2 days before');
-    expect(PAYWALL_COPY.offer.trialReassurance.toLowerCase()).toContain('cancel anytime');
+  it('the offer makes reminder delivery conditional and names App Store management', () => {
+    const reassurance = PAYWALL_COPY.offer.trialReassurance.toLowerCase();
+    expect(reassurance).toContain('notifications enabled');
+    expect(reassurance).toContain('app store');
+    expect(reassurance).not.toMatch(/we(?:’|')ll remind|apple sends|one tap/iu);
   });
   it('the reverse trial is stated as no-card', () => {
     expect(PAYWALL_COPY.offer.exploreBody.toLowerCase()).toContain('no credit card');
   });
+  it('the onboarding free path promises no purchase or Pro unlock', () => {
+    expect(PAYWALL_COPY.offer.continueFreeBody.toLowerCase()).toContain('no purchase');
+    expect(PAYWALL_COPY.offer.continueFreeBody.toLowerCase()).toContain('stay locked');
+  });
   it('the trust block carries the privacy promise, no data sales', () => {
     expect(PAYWALL_COPY.offer.trustBlock.toLowerCase()).toContain('no data sales');
   });
-  it('separates a finite win-back price from the standard renewal terms', () => {
-    const body = PAYWALL_COPY.success.bodyForPaid(
-      'winback',
-      '$4.99',
-      'month',
-      '3 months',
-      true,
-      '$49.99',
-      'year',
+});
+
+describe('zero-admission marketing cannot sell unavailable clinical guidance', () => {
+  it('states the review prerequisite without claiming an active review', () => {
+    expect(PAYWALL_COPY.offer.trustBlock).toContain(
+      'Health-related guidance requires independent professional review before availability',
     );
-
-    expect(body).toContain('$4.99/month for 3 months');
-    expect(body).toContain('renews at $49.99/year');
-    expect(body).not.toContain('renews at $4.99');
+    expect(PAYWALL_COPY.offer.trustBlock).not.toMatch(/is under .*review/iu);
+    expect(ALL.join('\n')).not.toMatch(/reviewed by dermatologists/iu);
   });
-  it('uses honest date-only reminder copy when no exact renewal price is known', () => {
-    const reminder = PAYWALL_COPY.trialReminder.bodyFor('July 29', null);
 
-    expect(reminder).toContain('July 29');
-    expect(reminder).toContain('App Store');
-    expect(reminder).not.toMatch(/\$\d|undefined|null\/year/i);
+  it('does not advertise paid conflict, sequencing, ramp, or skin-cycling guidance', () => {
+    const copy = ALL.join('\n');
+    expect(copy).not.toMatch(/unlimited (?:ingredient-)?conflict checks/iu);
+    expect(copy).not.toMatch(/conflict checks, with evidence grades/iu);
+    expect(copy).not.toMatch(/full skin-cycling scheduler/iu);
+    expect(copy).not.toMatch(/complete builder, sequencing and ramp/iu);
+    expect(UPSELL_COPY.conflict_checks.body).toContain(
+      'required before product-interaction claims can be sold, unlocked, or shown',
+    );
   });
 });
 

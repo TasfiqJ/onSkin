@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "contractId": "catalog-cat02-curation-membership-proof-v1",
+  "signatureEnvelopeVersion": "catalog-cat02-curation-membership-proof-signature-v1",
+  "signingDomain": "layerwell.catalog-cat02-curation-membership-proof.v1",
+  "proofId": "pending-cat02-membership-proof",
+  "releaseId": "pending-catalog-curation-release",
+  "targetPolicySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "databaseEligibilityPolicySha256": "9b1fd33edaec8cf3c8582f3f9298ec9e70f5f4140b6426afb1e710eee4845e9d",
+  "artifactSets": [
+    {
+      "batchId": "11111111-1111-4111-8111-111111111111",
+      "artifactKind": "production",
+      "batchEvidenceSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+      "recordsArtifactSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "candidatesArtifactSha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+      "stageEnvelopeSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "databaseReceiptCompletionSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+      "promotionReceiptSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+      "qaReportSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "productionIntegrityEvidenceSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc"
+    },
+    {
+      "batchId": "22222222-2222-4222-8222-222222222222",
+      "artifactKind": "production",
+      "batchEvidenceSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "recordsArtifactSha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+      "candidatesArtifactSha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
+      "stageEnvelopeSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "databaseReceiptCompletionSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+      "promotionReceiptSha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+      "qaReportSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+      "productionIntegrityEvidenceSha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ],
+  "artifactSetSha256": "89a5cf5f6f005a5ffad8e211b9c5b9be5559770650b1c549ccc8a6cb204746f9",
+  "memberships": [
+    {
+      "productRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "fieldScope": "barcode_identity",
+      "dependencyEntitySha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "batchId": "11111111-1111-4111-8111-111111111111",
+      "artifactSetSha256": "e2ad864b6e2fbd9271c5e4ca96de2755731b9985705446636628c84d31700a24",
+      "cat02StageRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "cat02DatabaseNormalizedRecordSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+      "sourceApprovalSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "sourceQaSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "membershipEvidenceSha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456"
+    },
+    {
+      "productRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "fieldScope": "category",
+      "dependencyEntitySha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0",
+      "batchId": "11111111-1111-4111-8111-111111111111",
+      "artifactSetSha256": "e2ad864b6e2fbd9271c5e4ca96de2755731b9985705446636628c84d31700a24",
+      "cat02StageRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "cat02DatabaseNormalizedRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "sourceApprovalSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "sourceQaSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "membershipEvidenceSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab"
+    },
+    {
+      "productRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "fieldScope": "ingredients",
+      "dependencyEntitySha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+      "batchId": "22222222-2222-4222-8222-222222222222",
+      "artifactSetSha256": "3fb75ef9efd9ef1160068fc1b1876836d33b856d19a3c23c2ad04765cac351e8",
+      "cat02StageRecordSha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
+      "cat02DatabaseNormalizedRecordSha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+      "sourceApprovalSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+      "sourceQaSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+      "membershipEvidenceSha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0"
+    },
+    {
+      "productRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "fieldScope": "ingredients",
+      "dependencyEntitySha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "batchId": "22222222-2222-4222-8222-222222222222",
+      "artifactSetSha256": "3fb75ef9efd9ef1160068fc1b1876836d33b856d19a3c23c2ad04765cac351e8",
+      "cat02StageRecordSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "cat02DatabaseNormalizedRecordSha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+      "sourceApprovalSha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234",
+      "sourceQaSha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
+      "membershipEvidenceSha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456"
+    },
+    {
+      "productRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "fieldScope": "regulatory_classification",
+      "dependencyEntitySha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+      "batchId": "11111111-1111-4111-8111-111111111111",
+      "artifactSetSha256": "e2ad864b6e2fbd9271c5e4ca96de2755731b9985705446636628c84d31700a24",
+      "cat02StageRecordSha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
+      "cat02DatabaseNormalizedRecordSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "sourceApprovalSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+      "sourceQaSha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
+      "membershipEvidenceSha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345"
+    }
+  ],
+  "membershipSetSha256": "1b86d653aba94f767c9c9d7781a9b4a87eac882cd027c7aab117680f7ae80e1b",
+  "databaseObservation": {
+    "projectRefSha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01",
+    "schemaMigrationVersion": "20260713000054",
+    "schemaMigrationSha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012",
+    "verificationQuerySha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "observationMode": "live_database_exact_set_receipt",
+    "observedArtifactSetSha256": "89a5cf5f6f005a5ffad8e211b9c5b9be5559770650b1c549ccc8a6cb204746f9",
+    "observedMembershipSetSha256": "1b86d653aba94f767c9c9d7781a9b4a87eac882cd027c7aab117680f7ae80e1b",
+    "observedProductionIntegritySetSha256": "68aa758ec73ba2a5d868c4072c3a80c603f8eb2faf8de98a18947124dcb560cb",
+    "observedServedStateMutationRootSetSha256": "4324bbbddbfc58f0b62c50d1c80a95207321fe4e2fef3d603697605e1e85d3e5",
+    "capturedAt": "2026-09-02T12:00:00.000Z",
+    "promotedBatchCount": 2,
+    "membershipRowCount": 5,
+    "missingMembershipCount": 0,
+    "extraMembershipCount": 0,
+    "mismatchedMembershipCount": 0,
+    "allBatchesLivePromoted": true,
+    "allBatchesProductionIntegrityVerified": true
+  },
+  "verifiedAt": "2026-09-02T12:00:00.000Z",
+  "signers": [
+    {
+      "decisionRole": "cat02_database_membership_verifier",
+      "reviewerId": "unassigned-cat02-database-verifier",
+      "trustRegistryKeyId": "unassigned-cat02-database-verifier-key",
+      "trustRegistryRole": "engineering",
+      "independenceGroup": "unassigned-cat02-database-verifier-group",
+      "publicKeySha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
+      "qualificationEvidenceSha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567"
+    }
+  ],
+  "signatures": [
+    {
+      "decisionRole": "cat02_database_membership_verifier",
+      "reviewerId": "unassigned-cat02-database-verifier",
+      "trustRegistryKeyId": "unassigned-cat02-database-verifier-key",
+      "algorithm": "Ed25519",
+      "signedAt": "2026-09-02T12:00:00.000Z",
+      "valueBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+    }
+  ]
+}

@@ -53,7 +53,7 @@ function write(root, path, source) {
 }
 
 function run(files) {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-sentry-audit-'));
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-sentry-audit-'));
   try {
     write(root, 'apps/mobile/src/lib/observability/sentry.ts', wrapper);
     for (const [path, source] of Object.entries(files)) write(root, path, source);

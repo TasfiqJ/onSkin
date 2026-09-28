@@ -28,6 +28,19 @@ describe('auth session boundary', () => {
     expect(shouldClearLocalPrivateDataForSessionChange('user-b', 'user-b', 'mismatch')).toBe(true);
   });
 
+  it('always resumes an interrupted authorized cleanup before mounting any session', () => {
+    expect(shouldClearLocalPrivateDataForSessionChange(null, null, 'cleanup_required')).toBe(true);
+    expect(shouldClearLocalPrivateDataForSessionChange(null, 'user-a', 'cleanup_required')).toBe(
+      true,
+    );
+  });
+
+  it('preserves an owner-bound forced sign-out only while no new user is mounting', () => {
+    expect(shouldClearLocalPrivateDataForSessionChange('user-b', null, 'retained')).toBe(false);
+    expect(shouldClearLocalPrivateDataForSessionChange(null, null, 'retained')).toBe(false);
+    expect(shouldClearLocalPrivateDataForSessionChange(null, 'user-c', 'retained')).toBe(true);
+  });
+
   it('publishes the latest same-user session without accepting a different target', () => {
     const older = { accessToken: 'older', user: { id: 'user-a' } };
     const refreshed = { accessToken: 'refreshed', user: { id: 'user-a' } };

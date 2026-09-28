@@ -22,12 +22,12 @@ afterEach(() => {
 describe('brand identity', () => {
   it('defaults runtime public copy to the working rebrand candidate', () => {
     expect(buildBrandIdentity()).toEqual({
-      appName: 'RoutineKind',
-      proName: 'RoutineKind Pro',
-      askName: 'Ask RoutineKind',
-      appLockPrompt: 'Unlock RoutineKind',
-      catalogCuratedSource: 'RoutineKind curated',
-      catalogParserSource: 'RoutineKind parser',
+      appName: 'Layerwell',
+      proName: 'Layerwell Pro',
+      askName: 'Ask Layerwell',
+      appLockPrompt: 'Unlock Layerwell',
+      catalogCuratedSource: 'Layerwell curated',
+      catalogParserSource: 'Layerwell parser',
     });
   });
 
@@ -37,10 +37,10 @@ describe('brand identity', () => {
   });
 
   it('builds filesystem-safe cache prefixes from runtime brand names', () => {
-    expect(brandFileSlug()).toBe('routinekind');
+    expect(brandFileSlug()).toBe('layerwell');
     expect(brandFileSlug('  Layer   Wise!  ')).toBe('layer-wise');
     expect(brandCachePrefix('export', 'Layer Wise')).toBe('layer-wise-export-');
-    expect(brandCachePrefix('share', '   ')).toBe('routinekind-share-');
+    expect(brandCachePrefix('share', '   ')).toBe('layerwell-share-');
   });
 
   it('prefers the public Expo display name at module load', async () => {

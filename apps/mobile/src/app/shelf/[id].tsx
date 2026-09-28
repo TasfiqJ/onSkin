@@ -1,11 +1,36 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ReactNode } from 'react';
-import { memo, useState } from 'react';
-import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useRef, useState } from 'react';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
-import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
+import { BRAND } from '@/lib/brand';
+import { CatalogReportConfirmation } from '@/features/catalog/CatalogReportConfirmation';
+import {
+  isCatalogProductId,
+  reportCatalogIssue,
+  type CatalogCorrectionType,
+  type CatalogReportInput,
+} from '@/features/catalog/client';
+import {
+  catalogReportFeedback as feedbackForCatalogReport,
+  type CatalogReportFeedback,
+} from '@/features/catalog/reportPresentation';
+import {
+  cancelCatalogReportOperation,
+  createCatalogReportOperation,
+  finishCatalogReportOperation,
+  markCatalogReportOperationAttempted,
+  type CatalogReportOperation,
+} from '@/features/catalog/reportOperation';
 import { conflictDetailRoute, conflictKey } from '@/features/intelligence/conflictIdentity';
 import { choiceForConflict } from '@/features/intelligence/conflictChoices';
 import {
@@ -13,17 +38,20 @@ import {
   catalogQualityLabel,
   sourceDisplayName,
 } from '@/features/catalog/copy';
-import type { DetectedConflict } from '@/features/intelligence/engine';
-import { bannerSubhead, tagLabel } from '@/features/intelligence/presentation';
-import { expiryMonthLabel, surfacedExpiry } from '@/features/shelf/expiry';
-import { PAO_MONTH_OPTIONS, shiftLocalDateMonths } from '@/features/shelf/freshness';
-import { expirySourceLabel, paoSourceLabel } from '@/features/shelf/labels';
+import { tagLabel } from '@/features/intelligence/presentation';
+import { expiryMonthLabel, localDateMonthYearLabel } from '@/features/shelf/expiry';
+import {
+  PAO_MONTH_OPTIONS,
+  parsePaoMonthInput,
+  shiftLocalDateMonths,
+} from '@/features/shelf/freshness';
+import { paoSourceLabel } from '@/features/shelf/labels';
 import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { editedPaoSource } from '@/features/shelf/paoProvenance';
-import { useShelfRouteSources, type ShelfRouteSources } from '@/features/shelf/ShelfRouteSources';
-import { useShelfDetailViewModel } from '@/features/shelf/useShelfDetailViewModel';
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import { useShelf } from '@/features/shelf/useShelf';
+import { usePlan } from '@/features/routine/usePlan';
+import { useCycle } from '@/features/scheduler/useCycle';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -49,30 +77,8 @@ const RECENT_OPENS: { label: string; monthsAgo: number }[] = [
   { label: '6 mo ago', monthsAgo: 6 },
 ];
 
-// Printed best-before is a FUTURE date (docs/04 §3. Wins for sunscreen). The
-// primary source is the catalog/scan path (OBF, B-CATALOG-SEED); this inline edit
-// lets the user record it by hand on the freshness block (§5.6 "editable inline").
-const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
-  { label: 'in 3 mo', monthsAhead: 3 },
-  { label: 'in 6 mo', monthsAhead: 6 },
-  { label: 'in 1 yr', monthsAhead: 12 },
-  { label: 'in 2 yr', monthsAhead: 24 },
-];
-
 type RoutineUsage = { phase: string; cycleNightNumbers?: number[] };
-type ProductDetailSheet = 'manage' | 'report' | null;
-type CatalogReportFeedback = { title: string; message: string };
-
-const CATALOG_REPORT_SENT: CatalogReportFeedback = {
-  title: 'Report sent',
-  message: 'Thanks. Open catalog issues block product-specific recommendations until reviewed.',
-};
-
-const CATALOG_REPORT_NOT_SENT: CatalogReportFeedback = {
-  title: 'Report not sent',
-  message:
-    'The catalog backend is not configured on this build. You can still keep this product on your shelf.',
-};
+type ProductDetailSheet = 'manage' | 'report' | 'report-confirm' | null;
 
 function MoreOptionsGlyph() {
   return (
@@ -94,13 +100,7 @@ function shiftMonthsISO(months: number): string {
 }
 const monthsAgoISO = (m: number) => shiftMonthsISO(-m);
 
-function RoutineUsageCard({
-  scheduleUnavailable,
-  usage,
-}: {
-  scheduleUnavailable: boolean;
-  usage: RoutineUsage | null;
-}) {
+function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
   const placed = Boolean(usage);
   return (
     <Pressable
@@ -118,9 +118,7 @@ function RoutineUsageCard({
           Routine role
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-1">
-          {scheduleUnavailable ? (
-            'Active-night timing is unavailable right now. This product is still in your evening plan.'
-          ) : usage ? (
+          {usage ? (
             <>
               Used in your{' '}
               <Text variant="bodySm" className="font-sans-semibold">
@@ -137,121 +135,21 @@ function RoutineUsageCard({
           )}
         </Text>
         <Text variant="bodySm" tone="clay" className="mt-1 font-sans-semibold">
-          {scheduleUnavailable
-            ? 'Open your plan to retry safely.'
-            : usage
-              ? 'Review the AM/PM plan before you check it off.'
-              : 'Build an AM/PM draft from your shelf.'}
+          {usage
+            ? 'Review the AM/PM plan before you check it off.'
+            : 'Build an AM/PM draft from your shelf.'}
         </Text>
       </View>
     </Pressable>
   );
 }
 
-function RoutineGuidanceUnavailableCard({
-  retrying,
-  onRetry,
-}: {
-  retrying: boolean;
-  onRetry: () => Promise<unknown>;
-}) {
-  return (
-    <View
-      accessibilityLiveRegion="polite"
-      accessibilityRole="alert"
-      className="mt-2.5 rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5"
-    >
-      <Text variant="label" tone="clay" className="font-mono uppercase">
-        Routine role
-      </Text>
-      <Text variant="bodySm" className="mt-1 font-sans-semibold">
-        Routine guidance unavailable
-      </Text>
-      <Text variant="bodySm" tone="muted" className="mt-1">
-        We could not safely read the private schedule data for this product. Its Shelf details are
-        unchanged.
-      </Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ disabled: retrying }}
-        disabled={retrying}
-        onPress={() => void onRetry()}
-        className="mt-2 min-h-[48px] self-start items-center justify-center rounded-pill border border-hairline-strong bg-paper px-4 py-2"
-        style={{ opacity: retrying ? 0.68 : 1 }}
-      >
-        <Text variant="bodySm" className="font-sans-semibold" tone="clay">
-          {retrying ? 'Trying again...' : 'Retry routine guidance'}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function RoutineGuidanceLoadingCard() {
-  return (
-    <View
-      accessibilityLabel="Checking routine placement"
-      className="rounded-[18px] bg-greige-chip p-4"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}
-    >
-      <Text variant="label" tone="clay" className="font-mono uppercase">
-        Routine role
-      </Text>
-      <Text variant="bodySm" tone="muted" className="mt-1.5">
-        Checking your saved routine placement…
-      </Text>
-    </View>
-  );
-}
-
-const ProductRoutineGuidance = memo(function ProductRoutineGuidance({
-  productId,
-  routeSources,
-}: {
-  productId: string;
-  routeSources: ShelfRouteSources;
-}) {
-  const viewModel = useShelfDetailViewModel(routeSources);
-  const { plan } = viewModel;
-  const cycleQuery = viewModel.cycle;
-  const { data: cycleData } = cycleQuery;
-
-  let usage: RoutineUsage | null = null;
-  let cycleTimingRequired = false;
-  if (plan.data && !plan.data.isExample) {
-    const pm = plan.data.plan.pm.find((step) => step.productId === productId);
-    if (pm) {
-      cycleTimingRequired = pm.cadence === 'cycle';
-      const cycleNightNumbers = cycleData?.cycle?.nights
-        .filter((night) => night.productId === productId)
-        .map((night) => night.index + 1);
-      usage = {
-        phase: 'Evening routine',
-        cycleNightNumbers: cycleNightNumbers?.length ? cycleNightNumbers : undefined,
-      };
-    } else if (plan.data.plan.am.find((step) => step.productId === productId)) {
-      usage = { phase: 'Morning routine' };
-    }
-  }
-  const scheduleUnavailable = cycleTimingRequired && canUseRoutineCadence() && cycleQuery.isError;
-
-  if (viewModel.routineGuidanceError) {
-    return (
-      <RoutineGuidanceUnavailableCard
-        retrying={viewModel.routineGuidanceFetching}
-        onRetry={viewModel.retryRoutineGuidance}
-      />
-    );
-  }
-  if (viewModel.routineGuidanceLoading) return <RoutineGuidanceLoadingCard />;
-  return <RoutineUsageCard scheduleUnavailable={scheduleUnavailable} usage={usage} />;
-});
-
 function ProductDetailActionSheet({
   title,
   body,
   viewportHeight,
   bottomInset,
+  closeDisabled = false,
   children,
   onClose,
 }: {
@@ -259,6 +157,7 @@ function ProductDetailActionSheet({
   body: string;
   viewportHeight: number;
   bottomInset: number;
+  closeDisabled?: boolean;
   children: ReactNode;
   onClose: () => void;
 }) {
@@ -275,6 +174,8 @@ function ProductDetailActionSheet({
         <Pressable
           accessibilityLabel={`Dismiss ${title}`}
           accessibilityRole="button"
+          accessibilityState={{ disabled: closeDisabled }}
+          disabled={closeDisabled}
           className="flex-1"
           onPress={onClose}
         />
@@ -302,7 +203,12 @@ function ProductDetailActionSheet({
             <Pressable
               accessibilityLabel="Close product options"
               accessibilityRole="button"
-              className="min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3"
+              accessibilityState={{ disabled: closeDisabled }}
+              disabled={closeDisabled}
+              className={cn(
+                'min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3',
+                closeDisabled && 'opacity-40',
+              )}
               onPress={onClose}
             >
               <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clay }}>
@@ -310,7 +216,13 @@ function ProductDetailActionSheet({
               </Text>
             </Pressable>
           </View>
-          <View className="gap-2">{children}</View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerClassName="gap-2 pb-1"
+          >
+            {children}
+          </ScrollView>
         </View>
       </View>
     </View>
@@ -321,19 +233,29 @@ function SheetAction({
   label,
   description,
   tone = 'default',
+  busy = false,
+  disabled = false,
   onPress,
 }: {
   label: string;
   description: string;
   tone?: 'default' | 'destructive';
+  busy?: boolean;
+  disabled?: boolean;
   onPress: () => void;
 }) {
   const destructive = tone === 'destructive';
+  const unavailable = busy || disabled;
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ busy, disabled: unavailable }}
+      disabled={unavailable}
       onPress={onPress}
-      className="min-h-[58px] rounded-[16px] border border-hairline bg-paper-raised px-4 py-3"
+      className={cn(
+        'min-h-[58px] rounded-[16px] border border-hairline bg-paper-raised px-4 py-3',
+        unavailable && 'opacity-40',
+      )}
     >
       <Text
         variant="bodySm"
@@ -353,20 +275,28 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { height, width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const routeSources = useShelfRouteSources();
-  const { data } = routeSources.shelf;
+  const { data } = useShelf();
+  const plan = usePlan();
+  const { data: cycleData } = useCycle();
   const m = useShelfMutations();
+  const reportSubmissionInFlight = useRef(false);
+  const [catalogReportOperations, setCatalogReportOperations] = useState(
+    () => new Map<string, CatalogReportOperation>(),
+  );
   const [editOpen, setEditOpen] = useState(false);
   const [exactOpenedDate, setExactOpenedDate] = useState<string | null>(null);
   const [paoOpen, setPaoOpen] = useState(false);
+  const [customPaoText, setCustomPaoText] = useState('');
   const [bestOpen, setBestOpen] = useState(false);
   const [exactExpiryDate, setExactExpiryDate] = useState<string | null>(null);
   const [activeSheet, setActiveSheet] = useState<ProductDetailSheet>(null);
+  const [pendingCorrectionType, setPendingCorrectionType] = useState<CatalogCorrectionType | null>(
+    null,
+  );
+  const [reportingCatalogIssue, setReportingCatalogIssue] = useState(false);
   const [catalogReportFeedback, setCatalogReportFeedback] = useState<CatalogReportFeedback | null>(
     null,
   );
-  const [replacingArchived, setReplacingArchived] = useState(false);
-  const [replaceArchivedFailed, setReplaceArchivedFailed] = useState(false);
   const supportFloorTextPressureDetail = width <= 390 && height >= 640 && height < 700;
   const compactMissingDetail = height < 640 || supportFloorTextPressureDetail;
 
@@ -421,15 +351,15 @@ export default function ProductDetailScreen() {
   }
 
   const p = item.product;
+  const customPaoMonths = parsePaoMonthInput(customPaoText);
   const archived = p.status !== 'active';
-  const expiry = surfacedExpiry(p);
-  const best = expiryMonthLabel(expiry);
+  const printedDateLabel = expiryMonthLabel(p.expiryDate);
   const provenance = p.catalogSource
     ? `data / ${sourceDisplayName(p.catalogSource)}`
     : (PROVENANCE[p.addedVia] ?? 'added by hand');
   const openedLabel = p.isOpened
     ? p.openedAt
-      ? new Date(p.openedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+      ? localDateMonthYearLabel(p.openedAt, 'long')
       : 'date not set'
     : 'not opened yet';
 
@@ -437,8 +367,21 @@ export default function ProductDetailScreen() {
     (c) => c.productAId === id || c.productBId === id,
   );
 
-  const otherName = (c: DetectedConflict) =>
-    (c.productAId === id ? c.productBName : c.productAName) ?? 'another product';
+  // Where it's used. From the live plan (skipped for the example fallback).
+  let usage: RoutineUsage | null = null;
+  if (plan.data && !plan.data.isExample) {
+    const pm = plan.data.plan.pm.find((s) => s.productId === id);
+    if (pm) {
+      const cycleNightNumbers = cycleData?.cycle?.nights
+        .filter((night) => night.productId === id)
+        .map((night) => night.index + 1);
+      usage = {
+        phase: 'Evening routine',
+        cycleNightNumbers: cycleNightNumbers?.length ? cycleNightNumbers : undefined,
+      };
+    } else if (plan.data.plan.am.find((s) => s.productId === id))
+      usage = { phase: 'Morning routine' };
+  }
 
   const setOpened = async (monthsAgo: number) => {
     await m.setOpened(id, { openedAt: monthsAgoISO(monthsAgo), isOpened: true });
@@ -463,26 +406,39 @@ export default function ProductDetailScreen() {
     setPaoOpen(false);
   };
 
-  const confirmRemove = () => {
-    setActiveSheet('manage');
-  };
+  const catalogSourceLabel =
+    p.catalogSourceName ??
+    sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
+  const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
+  const sourceDate = p.catalogSourceSnapshotDate
+    ? localDateMonthYearLabel(p.catalogSourceSnapshotDate)
+    : null;
+  const catalogProductId = isCatalogProductId(p.catalogProductId) ? p.catalogProductId : null;
+  const canReportMissingProduct =
+    catalogProductId === null && Boolean(p.barcode || p.name.trim().length > 0);
+  const catalogReportOperationKey = (correctionType: CatalogCorrectionType) =>
+    `${item.id}:${correctionType}`;
 
-  const submitCatalogReport = async (correctionType: CatalogCorrectionType) => {
-    setActiveSheet(null);
-    const result = await reportCatalogIssue({
+  const catalogReportInput = (correctionType: CatalogCorrectionType): CatalogReportInput | null => {
+    if (correctionType === 'missing_product') {
+      if (!canReportMissingProduct) return null;
+    } else if (!catalogProductId) {
+      return null;
+    }
+
+    return {
       correctionType,
-      productId: p.catalogProductId,
+      productId: catalogProductId ?? undefined,
       barcode: p.barcode,
       description: `${correctionType} reported from product detail`,
       proposedPayload: {
         productName: p.name,
         brand: p.brand,
-        barcode: p.barcode,
         category: p.category,
-        sourceName: catalogSourceLabel,
-        sourceUrl: p.catalogSourceUrl,
+        sourceName: correctionType === 'missing_product' ? null : catalogSourceLabel,
+        sourceUrl: correctionType === 'missing_product' ? null : p.catalogSourceUrl,
         defaultPaoMonths:
-          p.paoMonths != null && (p.paoSource === 'catalog' || p.paoSource === 'category_default')
+          correctionType !== 'missing_product' && p.paoMonths != null && p.paoSource === 'catalog'
             ? p.paoMonths
             : null,
         qualityIssue: correctionType,
@@ -494,25 +450,96 @@ export default function ProductDetailScreen() {
         platform: Platform.OS,
         route: 'shelf_detail',
       },
+    };
+  };
+
+  const confirmRemove = () => {
+    setActiveSheet('manage');
+  };
+
+  const openCatalogReportConfirmation = (correctionType: CatalogCorrectionType) => {
+    const input = catalogReportInput(correctionType);
+    if (!input || reportSubmissionInFlight.current) return;
+    const operationKey = catalogReportOperationKey(correctionType);
+    if (!catalogReportOperations.has(operationKey)) {
+      setCatalogReportOperations((current) => {
+        if (current.has(operationKey)) return current;
+        const next = new Map(current);
+        next.set(operationKey, createCatalogReportOperation(input));
+        return next;
+      });
+    }
+    setPendingCorrectionType(correctionType);
+    setActiveSheet('report-confirm');
+  };
+
+  const submitCatalogReport = async () => {
+    const operationKey = pendingCorrectionType
+      ? catalogReportOperationKey(pendingCorrectionType)
+      : null;
+    const operation = operationKey ? catalogReportOperations.get(operationKey) : null;
+    if (!operation || !operationKey || reportSubmissionInFlight.current || reportingCatalogIssue) {
+      return;
+    }
+
+    const attempted = markCatalogReportOperationAttempted(operation);
+    setCatalogReportOperations((current) => {
+      const next = new Map(current);
+      next.set(operationKey, attempted);
+      return next;
     });
-    setCatalogReportFeedback(result.ok ? CATALOG_REPORT_SENT : CATALOG_REPORT_NOT_SENT);
+    reportSubmissionInFlight.current = true;
+    setReportingCatalogIssue(true);
+    try {
+      const outcome = await reportCatalogIssue(attempted.input);
+      const retained = finishCatalogReportOperation(attempted, outcome);
+      setCatalogReportOperations((current) => {
+        const next = new Map(current);
+        if (retained) next.set(operationKey, retained);
+        else next.delete(operationKey);
+        return next;
+      });
+      setCatalogReportFeedback(feedbackForCatalogReport(outcome));
+    } catch {
+      setCatalogReportOperations((current) => {
+        const next = new Map(current);
+        next.set(operationKey, attempted);
+        return next;
+      });
+      setCatalogReportFeedback(feedbackForCatalogReport({ result: 'offline_or_withdrawn' }));
+    } finally {
+      setReportingCatalogIssue(false);
+      reportSubmissionInFlight.current = false;
+      setPendingCorrectionType(null);
+      setActiveSheet(null);
+    }
   };
 
   const reportIssue = () => {
+    if (reportSubmissionInFlight.current) return;
     setCatalogReportFeedback(null);
+    setPendingCorrectionType(null);
     setActiveSheet('report');
   };
-
-  const catalogSourceLabel =
-    p.catalogSourceName ??
-    sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
-  const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
-  const sourceDate = p.catalogSourceSnapshotDate
-    ? new Date(p.catalogSourceSnapshotDate).toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-      })
+  const pendingReportInput = pendingCorrectionType
+    ? (catalogReportOperations.get(catalogReportOperationKey(pendingCorrectionType))?.input ?? null)
     : null;
+
+  const cancelPendingCatalogReport = () => {
+    if (pendingCorrectionType) {
+      const operationKey = catalogReportOperationKey(pendingCorrectionType);
+      const operation = catalogReportOperations.get(operationKey) ?? null;
+      const retained = cancelCatalogReportOperation(operation);
+      setCatalogReportOperations((current) => {
+        const next = new Map(current);
+        if (retained) next.set(operationKey, retained);
+        else next.delete(operationKey);
+        return next;
+      });
+    }
+    setPendingCorrectionType(null);
+    setActiveSheet(null);
+  };
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -556,9 +583,7 @@ export default function ProductDetailScreen() {
             <View className="mt-4 rounded-[16px] bg-greige px-4 py-3">
               <Text variant="bodySm" tone="muted">
                 {p.status === 'finished' ? 'Finished' : 'Discarded'}
-                {p.finishedAt
-                  ? ` · ${new Date(p.finishedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`
-                  : ''}
+                {p.finishedAt ? ` · ${localDateMonthYearLabel(p.finishedAt)}` : ''}
                 {p.repurchaseCount > 1 ? ` · bought ${p.repurchaseCount}×` : ''}
               </Text>
             </View>
@@ -607,6 +632,11 @@ export default function ProductDetailScreen() {
             </View>
             <Pressable
               accessibilityRole="button"
+              accessibilityState={{
+                busy: reportingCatalogIssue,
+                disabled: reportingCatalogIssue,
+              }}
+              disabled={reportingCatalogIssue}
               onPress={reportIssue}
               className="mt-3 min-h-[48px] self-start items-center justify-center px-1"
             >
@@ -615,12 +645,14 @@ export default function ProductDetailScreen() {
               </Text>
             </Pressable>
             {catalogReportFeedback ? (
-              <View className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3">
+              <View
+                accessibilityRole="alert"
+                className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3"
+              >
                 <Text variant="label" style={{ color: colors.clayDeep }}>
                   {catalogReportFeedback.title}
                 </Text>
                 <Text
-                  accessibilityRole="alert"
                   variant="bodySm"
                   className="mt-1"
                   style={{ color: colors.clayDeep, lineHeight: 19 }}
@@ -708,6 +740,14 @@ export default function ProductDetailScreen() {
               accessibilityLabel="Edit period after opening"
               onPress={() => {
                 haptics.select();
+                if (!paoOpen) {
+                  setCustomPaoText(
+                    p.paoMonths != null &&
+                      !PAO_MONTH_OPTIONS.some((months) => months === p.paoMonths)
+                      ? String(p.paoMonths)
+                      : '',
+                  );
+                }
                 setPaoOpen((open) => !open);
               }}
               className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"
@@ -751,10 +791,53 @@ export default function ProductDetailScreen() {
                     </Text>
                   </Pressable>
                 ))}
+                <View className="w-full gap-2 rounded-[14px] border border-hairline bg-paper-raised p-3">
+                  <Text variant="label" tone="muted">
+                    Another value printed on the label
+                  </Text>
+                  <View className="flex-row items-center gap-2">
+                    <TextInput
+                      accessibilityLabel="PAO months printed on label"
+                      accessibilityHint="Enter a whole number from 1 to 120"
+                      keyboardType="number-pad"
+                      inputMode="numeric"
+                      maxLength={3}
+                      value={customPaoText}
+                      onChangeText={setCustomPaoText}
+                      className="h-[48px] min-w-0 flex-1 rounded-[12px] border border-hairline bg-paper px-4 font-sans-medium text-[15px] text-ink"
+                    />
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Confirm label PAO value"
+                      accessibilityState={{ disabled: customPaoMonths == null }}
+                      disabled={customPaoMonths == null}
+                      onPress={() => {
+                        if (customPaoMonths == null) return;
+                        haptics.select();
+                        void setLabelPao(customPaoMonths);
+                      }}
+                      className={cn(
+                        'min-h-[48px] items-center justify-center rounded-pill px-4 py-2',
+                        customPaoMonths == null ? 'bg-greige' : 'bg-ink',
+                      )}
+                    >
+                      <Text
+                        className="font-sans-semibold text-[13px]"
+                        tone={customPaoMonths == null ? 'muted' : 'inverse'}
+                      >
+                        Use value
+                      </Text>
+                    </Pressable>
+                  </View>
+                  <Text variant="label" tone="muted">
+                    Enter whole months from 1 to 120 exactly as printed.
+                  </Text>
+                </View>
                 <Pressable
                   accessibilityRole="button"
                   onPress={async () => {
                     await m.edit(id, { paoMonths: null, paoSource: 'unknown' });
+                    setCustomPaoText('');
                     setPaoOpen(false);
                   }}
                   className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
@@ -768,36 +851,77 @@ export default function ProductDetailScreen() {
             <View className="py-3">
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Set printed best-before date"
+                accessibilityLabel="Set date printed on this package"
                 onPress={() => {
                   haptics.select();
-                  if (!bestOpen) setExactExpiryDate(p.expiryDate);
+                  if (!bestOpen) {
+                    setExactExpiryDate(p.expiryDate ?? p.legacyUnverifiedExpiryDate);
+                  }
                   setBestOpen((o) => !o);
                 }}
                 className="min-h-[56px] flex-row items-center justify-between"
               >
                 <Text variant="bodySm" tone="muted">
-                  {p.isOpened ? 'Best used by' : 'Shelf life'}
+                  Recorded package date
                 </Text>
                 <View className="flex-1 items-end pl-4">
                   <Text variant="bodySm" className="font-sans-bold text-clay-deep">
-                    {best ?? 'not known'}{' '}
+                    {printedDateLabel ?? 'not entered'}{' '}
                     <Text variant="bodySm" tone="clay">
-                      · {p.expirySource === 'printed' ? 'edit' : 'set'}
+                      · {p.expiryDate ? 'edit' : 'set'}
                     </Text>
                   </Text>
                   <Text variant="label" tone="muted" className="mt-0.5 text-right">
-                    {expirySourceLabel(p.expirySource)}
+                    {p.expiryDate ? 'recorded as printed' : 'Date unknown'}
                   </Text>
                 </View>
               </Pressable>
+              {p.legacyUnverifiedExpiryDate ? (
+                <View className="mt-2.5 gap-2 rounded-[14px] bg-greige px-4 py-3">
+                  <Text variant="bodySm" className="font-sans-semibold">
+                    Reconfirm a previous package date
+                  </Text>
+                  <Text variant="bodySm" tone="muted">
+                    {localDateMonthYearLabel(p.legacyUnverifiedExpiryDate, 'long')} came from older
+                    catalog data and is not tied to this exact package. It is not used for freshness
+                    reminders. Check this package before recording it.
+                  </Text>
+                  {!archived ? (
+                    <View className="flex-row flex-wrap gap-2">
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={() => {
+                          setExactExpiryDate(p.legacyUnverifiedExpiryDate);
+                          setBestOpen(true);
+                        }}
+                        className="min-h-[48px] items-center justify-center rounded-pill bg-ink px-3.5 py-2"
+                      >
+                        <Text className="font-sans-medium text-[13px]" tone="inverse">
+                          Check this package
+                        </Text>
+                      </Pressable>
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={async () => {
+                          await m.edit(id, { legacyUnverifiedExpiryDate: null });
+                        }}
+                        className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
+                      >
+                        <Text className="font-sans-medium text-[13px]" tone="muted">
+                          Remove old date
+                        </Text>
+                      </Pressable>
+                    </View>
+                  ) : null}
+                </View>
+              ) : null}
               {bestOpen ? (
                 <View className="mt-2.5 flex-row flex-wrap items-center gap-2">
                   <Text variant="label" tone="muted" className="w-full">
-                    Printed best-before on the pack?
+                    Date printed on this package?
                   </Text>
                   <LocalDateField
-                    label="Exact printed date"
+                    label="Exact package date"
                     value={exactExpiryDate}
                     onChangeDate={setExactExpiryDate}
                   />
@@ -819,24 +943,9 @@ export default function ProductDetailScreen() {
                       className="font-sans-medium text-[13px]"
                       tone={exactExpiryDate ? 'inverse' : 'muted'}
                     >
-                      Save printed date
+                      Save package date
                     </Text>
                   </Pressable>
-                  {BEST_BEFORE.map((b) => (
-                    <Pressable
-                      key={b.label}
-                      accessibilityRole="button"
-                      onPress={async () => {
-                        await m.edit(id, {
-                          expiryDate: shiftMonthsISO(b.monthsAhead),
-                        });
-                        setBestOpen(false);
-                      }}
-                      className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
-                    >
-                      <Text className="font-sans-medium text-[13px]">{b.label}</Text>
-                    </Pressable>
-                  ))}
                   {p.expiryDate ? (
                     <Pressable
                       accessibilityRole="button"
@@ -865,7 +974,7 @@ export default function ProductDetailScreen() {
               className="mt-2.5 min-h-[48px] items-center justify-center rounded-[14px] border border-hairline bg-paper-raised py-3"
             >
               <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-                Mark as opened. Start the freshness clock
+                Record opening date
               </Text>
             </Pressable>
           ) : null}
@@ -893,23 +1002,8 @@ export default function ProductDetailScreen() {
 
           {/* Conflicts & pairings */}
           {conflicts.map((c) => {
-            const reassure =
-              c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
             const savedChoice = data ? choiceForConflict(data.conflictChoices, c) : null;
             const resolved = savedChoice != null;
-            const lead = reassure
-              ? 'Pairs well with '
-              : savedChoice === 'use_together'
-                ? 'Your timing choice is saved with '
-                : savedChoice === 'accept_suggested_timing'
-                  ? 'Kept on separate timing with '
-                  : 'Timing note with ';
-            const detail =
-              savedChoice === 'use_together'
-                ? 'Guided check-offs stay on the reviewed one-active schedule.'
-                : savedChoice === 'accept_suggested_timing'
-                  ? 'Your guided schedule keeps this pairing apart.'
-                  : bannerSubhead(c);
             return (
               <Pressable
                 key={conflictKey(c)}
@@ -927,17 +1021,16 @@ export default function ProductDetailScreen() {
                   )}
                 />
                 <Text variant="bodySm" tone="muted" className="flex-1">
-                  {lead}
                   <Text variant="bodySm" className="font-sans-semibold">
-                    {otherName(c)}
+                    {c.rule.copy.bannerTitle}
                   </Text>
                   {'. '}
-                  {detail}{' '}
+                  {c.rule.copy.bannerSubhead}{' '}
                   <Text
                     variant="bodySm"
                     className={cn('font-sans-bold', resolved ? 'text-sage' : 'text-clay-deep')}
                   >
-                    {resolved ? 'Change →' : 'Review →'}
+                    {c.rule.copy.primaryActionLabel} →
                   </Text>
                 </Text>
               </Pressable>
@@ -945,41 +1038,16 @@ export default function ProductDetailScreen() {
           })}
 
           {/* Where it's used */}
-          {!archived ? <ProductRoutineGuidance productId={id} routeSources={routeSources} /> : null}
+          {!archived ? <RoutineUsageCard usage={usage} /> : null}
         </ScrollView>
       </View>
 
       {/* Lifecycle actions */}
       {archived ? (
-        <View>
-          {replaceArchivedFailed ? (
-            <View accessibilityRole="alert" className="mb-2 rounded-[14px] bg-clay-tint px-4 py-3">
-              <Text variant="bodySm" className="font-sans-semibold">
-                Replacement not confirmed
-              </Text>
-              <Text variant="bodySm" tone="muted" className="mt-1">
-                Your saved Shelf was not reset. Try again when private storage is available.
-              </Text>
-            </View>
-          ) : null}
-          <Button
-            disabled={replacingArchived}
-            label={replacingArchived ? 'Adding fresh unit...' : 'Replace. Add a fresh one'}
-            onPress={async () => {
-              if (replacingArchived) return;
-              setReplacingArchived(true);
-              setReplaceArchivedFailed(false);
-              try {
-                await m.replace(id);
-                router.replace('/shelf');
-              } catch {
-                setReplaceArchivedFailed(true);
-              } finally {
-                setReplacingArchived(false);
-              }
-            }}
-          />
-        </View>
+        <Button
+          label="Replace. Add a fresh one"
+          onPress={() => router.push(`/shelf/replenish?id=${id}`)}
+        />
       ) : (
         <View className="flex-row gap-2.5">
           <Pressable
@@ -1053,25 +1121,53 @@ export default function ProductDetailScreen() {
           bottomInset={insets.bottom}
           onClose={() => setActiveSheet(null)}
         >
-          <SheetAction
-            label="Missing catalog product"
-            description="This local shelf item should be added to the reviewed catalog."
-            onPress={() => submitCatalogReport('missing_product')}
-          />
-          <SheetAction
-            label="Wrong product match"
-            description="The product, brand, or barcode does not match this shelf item."
-            onPress={() => submitCatalogReport('wrong_match')}
-          />
-          <SheetAction
-            label="Ingredient issue"
-            description="The INCI list or active ingredient parsing looks wrong."
-            onPress={() => submitCatalogReport('ingredient_issue')}
-          />
-          <SheetAction
-            label="Expiry or PAO issue"
-            description="The printed date, PAO, or freshness source looks wrong."
-            onPress={() => submitCatalogReport('expiry_issue')}
+          {canReportMissingProduct ? (
+            <SheetAction
+              label="Missing catalog product"
+              description={`Send this local product name or barcode for ${BRAND.appName} catalog review.`}
+              onPress={() => openCatalogReportConfirmation('missing_product')}
+            />
+          ) : null}
+          {catalogProductId ? (
+            <>
+              <SheetAction
+                label="Wrong product match"
+                description="The product, brand, or barcode does not match this shelf item."
+                onPress={() => openCatalogReportConfirmation('wrong_match')}
+              />
+              <SheetAction
+                label="Ingredient issue"
+                description="The INCI list or active ingredient parsing looks wrong."
+                onPress={() => openCatalogReportConfirmation('ingredient_issue')}
+              />
+              <SheetAction
+                label="Expiry or PAO issue"
+                description="The printed date, PAO, or freshness source looks wrong."
+                onPress={() => openCatalogReportConfirmation('expiry_issue')}
+              />
+            </>
+          ) : null}
+        </ProductDetailActionSheet>
+      ) : null}
+      {activeSheet === 'report-confirm' && pendingReportInput ? (
+        <ProductDetailActionSheet
+          title="Confirm catalog report"
+          body="Review exactly what identifies this product before sending."
+          viewportHeight={height}
+          bottomInset={insets.bottom}
+          closeDisabled={reportingCatalogIssue}
+          onClose={() => {
+            if (reportingCatalogIssue) return;
+            cancelPendingCatalogReport();
+          }}
+        >
+          <CatalogReportConfirmation
+            input={pendingReportInput}
+            busy={reportingCatalogIssue}
+            onCancel={() => {
+              cancelPendingCatalogReport();
+            }}
+            onConfirm={() => void submitCatalogReport()}
           />
         </ProductDetailActionSheet>
       ) : null}

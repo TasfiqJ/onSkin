@@ -5,7 +5,7 @@ import {
   evidenceFlagEnabled,
   envSnapshot,
   exists,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
   hash,
   markdownList,
   normalizeLaunchDecision,
@@ -41,7 +41,7 @@ const packetOutputPaths = [
 ].map((path) => path.replace(/\\/g, '/'));
 
 function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
+  return gitStatusExcludingPaths(packetOutputPaths);
 }
 
 for (const file of sourceFiles)

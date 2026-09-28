@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T18:49:56.953Z",
-  "status": "pass",
+  "generatedAt": "2026-08-10T01:49:53.103Z",
+  "status": "blocked",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
@@ -20,7 +20,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 34,
+      "hashReferenceCount": 35,
       "staleHashReferenceCount": 0
     },
     {
@@ -52,7 +52,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 40,
+      "hashReferenceCount": 42,
       "staleHashReferenceCount": 0
     },
     {
@@ -68,7 +68,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 292,
+      "hashReferenceCount": 454,
       "staleHashReferenceCount": 0
     },
     {
@@ -84,7 +84,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 80,
+      "hashReferenceCount": 395,
       "staleHashReferenceCount": 0
     },
     {
@@ -100,7 +100,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 296,
+      "hashReferenceCount": 458,
       "staleHashReferenceCount": 0
     },
     {
@@ -116,7 +116,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 25,
+      "hashReferenceCount": 62,
       "staleHashReferenceCount": 0
     },
     {
@@ -132,11 +132,27 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 25,
+      "hashReferenceCount": 87,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
+      "kind": "md",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-4/generated/cosing-catalog-qa-report.json",
+      "kind": "json",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 87,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-4/generated/cosing-catalog-qa-report.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
@@ -164,7 +180,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 149,
+      "hashReferenceCount": 383,
       "staleHashReferenceCount": 0
     },
     {
@@ -180,7 +196,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 88,
+      "hashReferenceCount": 242,
       "staleHashReferenceCount": 0
     },
     {
@@ -196,7 +212,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 33,
+      "hashReferenceCount": 196,
       "staleHashReferenceCount": 0
     },
     {
@@ -212,7 +228,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 96,
+      "hashReferenceCount": 281,
       "staleHashReferenceCount": 0
     },
     {
@@ -228,7 +244,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 47,
+      "hashReferenceCount": 72,
       "staleHashReferenceCount": 0
     },
     {
@@ -256,6 +272,22 @@
       "staleHashReferenceCount": 0
     },
     {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "kind": "json",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 254,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "kind": "md",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
+    },
+    {
       "path": "docs/phase-9/generated/live-catalog-rate-limit.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
@@ -276,8 +308,8 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 0,
-      "staleHashReferenceCount": 0
+      "hashReferenceCount": 3,
+      "staleHashReferenceCount": 3
     },
     {
       "path": "docs/phase-9/generated/live-consent-withdrawal.md",
@@ -388,7 +420,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 102,
+      "hashReferenceCount": 480,
       "staleHashReferenceCount": 0
     },
     {
@@ -404,7 +436,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 0,
+      "hashReferenceCount": 3,
       "staleHashReferenceCount": 0
     }
   ],
@@ -414,14 +446,18 @@
     "docs:generated-packet-status-audit:check"
   ],
   "summary": {
-    "generatedFileCount": 49,
+    "generatedFileCount": 53,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
-    "hashReferenceCount": 1312,
-    "staleHashReferenceCount": 0,
-    "blockerCount": 0,
+    "hashReferenceCount": 3539,
+    "staleHashReferenceCount": 3,
+    "blockerCount": 3,
     "warningCount": 0
   },
-  "blockers": [],
+  "blockers": [
+    "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference schemaRevision -> supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql: sha256 does not match current file.",
+    "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference harnessRevision -> scripts/phase9/live-consent-withdrawal.mjs: sha256 does not match current file.",
+    "docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference evidenceContractRevision -> scripts/phase9/consent-withdrawal-evidence.mjs: sha256 does not match current file."
+  ],
   "warnings": []
 }

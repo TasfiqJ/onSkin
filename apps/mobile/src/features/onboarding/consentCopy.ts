@@ -5,6 +5,34 @@
  * docs; the ledger text remains clearly marked as pending legal review.
  */
 export const CONSENT_COPY_VERSION = 'draft-v1-2026-07-10';
+export const HEALTH_DATA_CONSENT_COPY_RELEASE_BLOCKED =
+  'HEALTH_DATA_CONSENT_COPY_RELEASE_BLOCKED';
+type HealthDataConsentCopyReviewStatus = 'approved' | 'draft_blocked';
+export type HealthDataConsentCopyAction = 'grant' | 'withdrawal';
+
+export const HEALTH_DATA_CONSENT_COPY_REVIEW_STATUS: Readonly<
+  Record<'collection' | 'withdrawal', HealthDataConsentCopyReviewStatus>
+> = Object.freeze({
+  collection: 'draft_blocked',
+  withdrawal: 'draft_blocked',
+} as const);
+
+/**
+ * Staging is the exact legal-review surface. Production fails closed for new
+ * grants only; an existing user must always be able to withdraw consent.
+ */
+export function assertHealthDataConsentCopyReleaseAllowed(
+  action: HealthDataConsentCopyAction,
+  appEnvironment: 'development' | 'staging' | 'production',
+): void {
+  if (
+    action === 'grant' &&
+    appEnvironment === 'production' &&
+    HEALTH_DATA_CONSENT_COPY_REVIEW_STATUS.collection !== 'approved'
+  ) {
+    throw new Error(HEALTH_DATA_CONSENT_COPY_RELEASE_BLOCKED);
+  }
+}
 
 export const HEALTH_DATA_CONSENT = {
   version: CONSENT_COPY_VERSION,
@@ -12,7 +40,7 @@ export const HEALTH_DATA_CONSENT = {
   why: 'To build your routine, check product conflicts, and adjust timing around your shelf.',
   never: 'Sold, shared for ads, or used to train AI.',
   footnote:
-    'You can withdraw this consent in Settings. Account deletion removes collected health data.',
+    'You can withdraw in Settings. Withdrawal deletes health-purpose data while keeping your account and subscription; starting again requires fresh consent.',
   declineCta: "I don't agree",
   declinedTitle: 'No consent recorded',
   declinedBody:
@@ -36,7 +64,8 @@ export const HEALTH_DATA_WITHDRAWAL = {
   version: CONSENT_COPY_VERSION,
   fullText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent ' +
-    'WITHDRAWN. Collected health data is to be deleted and the account closed.',
+    'WITHDRAWN. Collected health-purpose data is to be deleted. The account, billing, ' +
+    'subscription entitlement, App Lock setting, and store-transaction safety record are preserved.',
 } as const;
 
 export const ACCOUNT_CONSENT = {

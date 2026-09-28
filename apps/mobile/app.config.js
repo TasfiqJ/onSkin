@@ -4,6 +4,7 @@ const { assertReleaseReadyReviewEvidence } = require('./phase3-review-evidence')
 const launchContract = require('../../docs/hugeToDo/launch-contract.json');
 
 const APP_VARIANTS = new Set(['development', 'staging', 'production']);
+const IOS_WIDGET_EXTENSION_BUILD_ENV = 'IOS_WIDGET_EXTENSION_BUILD_ENABLED';
 
 function readVariantEnv(name, value, defaultValue) {
   const rawValue = value === undefined ? defaultValue : value;
@@ -14,14 +15,54 @@ function readVariantEnv(name, value, defaultValue) {
   );
 }
 
+function readOptionalBooleanEnv(name, value) {
+  if (value === undefined) return false;
+  const candidate = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  if (candidate === 'true') return true;
+  if (candidate === 'false') return false;
+  throw new Error(`${name} must be true or false; got ${value ?? '<unset>'}.`);
+}
+
 const variant = readVariantEnv('APP_VARIANT', process.env.APP_VARIANT, 'development');
 const appEnvironment =
   process.env.EXPO_PUBLIC_APP_ENV === undefined
     ? variant
     : readVariantEnv('EXPO_PUBLIC_APP_ENV', process.env.EXPO_PUBLIC_APP_ENV);
+if (appEnvironment !== variant) {
+  throw new Error(
+    `APP_VARIANT and EXPO_PUBLIC_APP_ENV must match exactly; got ${variant} and ${appEnvironment}.`,
+  );
+}
 const isProduction = variant === 'production';
+const customProGrantEnabled = readOptionalBooleanEnv(
+  'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED',
+  process.env.EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED,
+);
+if (customProGrantEnabled && variant !== 'development') {
+  throw new Error(
+    'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED may be true only for a development build; the iOS release candidate must use StoreKit purchase or introductory-offer authority.',
+  );
+}
+const iosWinBackEnabled = readOptionalBooleanEnv(
+  'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED',
+  process.env.EXPO_PUBLIC_IOS_WIN_BACK_ENABLED,
+);
+if (iosWinBackEnabled && launchContract.iosWinBackOfferAdmission?.winBackOfferAdmitted !== true) {
+  throw new Error(
+    'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED cannot be true while the versioned launch contract does not admit an iOS win-back offer. Reopen PAY-08 and update the reviewed admission before enabling a build.',
+  );
+}
+const iosWidgetExtensionBuildEnabled = readOptionalBooleanEnv(
+  IOS_WIDGET_EXTENSION_BUILD_ENV,
+  process.env[IOS_WIDGET_EXTENSION_BUILD_ENV],
+);
+if ((isProduction || appEnvironment === 'production') && iosWidgetExtensionBuildEnabled) {
+  throw new Error(
+    'Production iOS widget extension builds remain blocked until lifecycle, withdrawal cleanup, privacy, signed-binary, and physical-device evidence gates are implemented and bound to a separate production clearance.',
+  );
+}
 const androidReleaseRequired = launchContract.release.platforms.includes('android');
-const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
+const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|on\s*skin/i;
 const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
 const MAX_EXTERNAL_URL_LENGTH = 2048;
 const PLACEHOLDER_ENV_VALUE =
@@ -32,6 +73,13 @@ const RESERVED_PRODUCTION_HOSTNAME =
   /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 const EXPORT_CLASSIFICATIONS = new Set(['exempt', 'non_exempt']);
 const MAX_APPLE_EXPORT_COMPLIANCE_CODE_LENGTH = 1024;
+const IOS_BUILD_NUMBER_PATTERN = /^[1-9]\d{0,17}$/;
+const SUPPORT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CAMERA_PERMISSION_PRODUCT_NAME_TOKEN = '$(PRODUCT_NAME)';
+const CAMERA_PERMISSION_PRODUCT_NAME_CONTROL_CHAR_RE = /[\u0000-\u001F\u007F-\u009F]/;
+const CAMERA_PERMISSION_PRODUCT_NAME_BUILD_VARIABLE_RE = /\$(?:\(|\{)/u;
+const REVIEWED_CAMERA_PERMISSION_TEMPLATE =
+  'Allow $(PRODUCT_NAME) to use the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Barcode frames are processed on your device; label and progress photos remain local.';
 
 const variantSuffix =
   {
@@ -62,54 +110,74 @@ function pluginOptions(plugin) {
     : {};
 }
 
-function buildPlugins(plugins, permissionCopy) {
+function buildPlugins(plugins, permissionCopy, widgetDeepLink) {
   const googleIosUrlScheme = process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME;
   const sentryOrg = process.env.SENTRY_ORG;
   const sentryProject = process.env.SENTRY_PROJECT;
 
-  return plugins.map((plugin) => {
+  return plugins.flatMap((plugin) => {
     const name = pluginName(plugin);
+
+    // Keep incomplete native extension source out of ordinary and store
+    // binaries. Dedicated QA builds opt in explicitly; production config still
+    // has to pass every identity, review, and evidence gate below.
+    if (
+      (name === 'expo-widgets' || name === './plugins/withLayerwellWidgetPrivacyManifest') &&
+      !iosWidgetExtensionBuildEnabled
+    ) {
+      return [];
+    }
 
     if (name === 'expo-camera') {
       return [
-        name,
-        {
-          ...pluginOptions(plugin),
-          cameraPermission: permissionCopy.cameraPermission,
-        },
+        [
+          name,
+          {
+            ...pluginOptions(plugin),
+            cameraPermission: permissionCopy.cameraPermission,
+          },
+        ],
       ];
     }
 
     if (name === 'expo-local-authentication') {
       return [
-        name,
-        {
-          ...pluginOptions(plugin),
-          faceIDPermission: permissionCopy.faceIDPermission,
-        },
+        [
+          name,
+          {
+            ...pluginOptions(plugin),
+            faceIDPermission: permissionCopy.faceIDPermission,
+          },
+        ],
       ];
     }
 
     if (name === 'expo-font') {
-      return [name, createExpoFontPluginOptions()];
+      return [[name, createExpoFontPluginOptions()]];
     }
 
     if (name === '@react-native-google-signin/google-signin' && googleIosUrlScheme) {
-      return [name, { iosUrlScheme: googleIosUrlScheme }];
+      return [[name, { iosUrlScheme: googleIosUrlScheme }]];
     }
 
     if (name === '@sentry/react-native' && sentryOrg && sentryProject) {
       return [
-        name,
-        {
-          url: 'https://sentry.io/',
-          organization: sentryOrg,
-          project: sentryProject,
-        },
+        [
+          name,
+          {
+            url: 'https://sentry.io/',
+            organization: sentryOrg,
+            project: sentryProject,
+          },
+        ],
       ];
     }
 
-    return plugin;
+    if (name === './plugins/withLayerwellWidgetPrivacyManifest') {
+      return [[name, { ...pluginOptions(plugin), deepLink: widgetDeepLink }]];
+    }
+
+    return [plugin];
   });
 }
 
@@ -126,9 +194,10 @@ function normalizeDomain(value) {
   }
 
   if (
-    (url.protocol !== 'https:' && url.protocol !== 'http:') ||
+    url.protocol !== 'https:' ||
     url.username ||
     url.password ||
+    url.pathname !== '/' ||
     url.search ||
     url.hash ||
     url.port
@@ -140,7 +209,7 @@ function normalizeDomain(value) {
   return productionHostname(hostname) ? hostname : '';
 }
 
-function productionUrl(value) {
+function productionStoreUrl(value, allowedHostname) {
   const trimmed = String(value ?? '').trim();
   if (
     placeholderEnvValue(trimmed) ||
@@ -157,14 +226,91 @@ function productionUrl(value) {
     return '';
   }
 
-  if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) return '';
+  if (
+    url.protocol !== 'https:' ||
+    !url.hostname ||
+    url.username ||
+    url.password ||
+    url.hostname.toLowerCase() !== allowedHostname
+  ) {
+    return '';
+  }
   if (!productionHostname(url.hostname)) return '';
+  const validStoreDestination =
+    allowedHostname === 'apps.apple.com'
+      ? /^\/(?:[a-z]{2}\/)?app\/(?:[^/]+\/)?id\d+\/?$/i.test(url.pathname)
+      : url.pathname === '/store/apps/details' &&
+        /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$/.test(
+          url.searchParams.get('id') ?? '',
+        );
+  if (!validStoreDestination) return '';
   url.hash = '';
   return url.toString();
 }
 
 function hasValue(value) {
   return String(value ?? '').trim().length > 0;
+}
+
+function assertCameraPermissionCompatibilityInput(name, value, reviewedCopy) {
+  // These legacy keys remain readable only so a blank documented dotenv
+  // assignment does not break local builds. They are not customization points:
+  // accepting arbitrary copy here would let an EAS environment silently replace
+  // the reviewed purpose string after source review.
+  if (value === undefined || value === '') return;
+  if (typeof value !== 'string' || value !== reviewedCopy) {
+    throw new Error(
+      `${name} must be blank or exactly equal the reviewed camera permission copy derived from the resolved app display name. Remove this legacy override to use the deterministic source-reviewed value.`,
+    );
+  }
+}
+
+function assertCameraPermissionProductName(appName) {
+  if (
+    typeof appName !== 'string' ||
+    !appName ||
+    appName.trim() !== appName ||
+    CAMERA_PERMISSION_PRODUCT_NAME_CONTROL_CHAR_RE.test(appName) ||
+    appName.includes(CAMERA_PERMISSION_PRODUCT_NAME_TOKEN) ||
+    CAMERA_PERMISSION_PRODUCT_NAME_BUILD_VARIABLE_RE.test(appName)
+  ) {
+    throw new Error(
+      'The resolved app display name used in camera permission copy must be non-empty, contain no surrounding whitespace or control characters, and contain no Xcode/build-variable syntax such as $(...) or ${...}.',
+    );
+  }
+}
+
+function resolveCameraPermissionCopy(appName) {
+  const baseCameraPlugin = (base.expo.plugins ?? []).find(
+    (plugin) => pluginName(plugin) === 'expo-camera',
+  );
+  const baseUsageDescription = base.expo.ios?.infoPlist?.NSCameraUsageDescription;
+  const basePluginPermission = pluginOptions(baseCameraPlugin).cameraPermission;
+  if (
+    baseUsageDescription !== REVIEWED_CAMERA_PERMISSION_TEMPLATE ||
+    basePluginPermission !== REVIEWED_CAMERA_PERMISSION_TEMPLATE
+  ) {
+    throw new Error(
+      'Base iOS NSCameraUsageDescription and expo-camera cameraPermission must both equal the reviewed camera permission template.',
+    );
+  }
+
+  assertCameraPermissionProductName(appName);
+  const reviewedCopy = REVIEWED_CAMERA_PERMISSION_TEMPLATE.replace(
+    CAMERA_PERMISSION_PRODUCT_NAME_TOKEN,
+    () => appName,
+  );
+  assertCameraPermissionCompatibilityInput(
+    'APP_CAMERA_USAGE_DESCRIPTION',
+    process.env.APP_CAMERA_USAGE_DESCRIPTION,
+    reviewedCopy,
+  );
+  assertCameraPermissionCompatibilityInput(
+    'APP_CAMERA_PERMISSION',
+    process.env.APP_CAMERA_PERMISSION,
+    reviewedCopy,
+  );
+  return reviewedCopy;
 }
 
 function placeholderEnvValue(value) {
@@ -189,10 +335,16 @@ function assertProductionIdentity(expo, permissionCopy) {
 
   const identityValues = {
     APP_DISPLAY_NAME: expo.name,
+    EXPO_PUBLIC_APP_DISPLAY_NAME: process.env.EXPO_PUBLIC_APP_DISPLAY_NAME,
     APP_SLUG: expo.slug,
     APP_SCHEME: expo.scheme,
+    EXPO_PUBLIC_APP_SCHEME: process.env.EXPO_PUBLIC_APP_SCHEME,
     APP_IOS_BUNDLE_IDENTIFIER: expo.ios?.bundleIdentifier,
-    ...(androidReleaseRequired ? { APP_ANDROID_PACKAGE: expo.android?.package } : {}),
+    APP_ANDROID_PACKAGE: expo.android?.package,
+    EXPO_PUBLIC_FINAL_BRAND_DOMAIN: process.env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN,
+    EXPO_PUBLIC_APP_STORE_URL: process.env.EXPO_PUBLIC_APP_STORE_URL,
+    EXPO_PUBLIC_PLAY_STORE_URL: process.env.EXPO_PUBLIC_PLAY_STORE_URL,
+    EXPO_PUBLIC_SUPPORT_EMAIL: process.env.EXPO_PUBLIC_SUPPORT_EMAIL,
     APP_CAMERA_USAGE_DESCRIPTION: permissionCopy.cameraUsageDescription,
     APP_FACE_ID_USAGE_DESCRIPTION: permissionCopy.faceIDUsageDescription,
     APP_CAMERA_PERMISSION: permissionCopy.cameraPermission,
@@ -202,11 +354,15 @@ function assertProductionIdentity(expo, permissionCopy) {
     .filter(([, value]) => legacyIdentityPattern.test(String(value ?? '')))
     .map(([key]) => key);
 
+  if (legacyKeys.length > 0) {
+    throw new Error(
+      `Production app identity contains the rejected legacy brand in: ${legacyKeys.join(', ')}.`,
+    );
+  }
+
   if (process.env.BRAND_LEGAL_CLEARANCE !== 'cleared') {
     throw new Error(
-      `Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve.${
-        legacyKeys.length > 0 ? ` Current resolved legacy keys: ${legacyKeys.join(', ')}.` : ''
-      }`,
+      'Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve.',
     );
   }
 
@@ -243,7 +399,7 @@ function assertProductionReviewClearance() {
 
   const testWorklist =
     process.env.NODE_ENV === 'test'
-      ? globalThis.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__
+      ? globalThis.__LAYERWELL_PHASE3_REVIEW_TEST_WORKLIST__
       : undefined;
   assertReleaseReadyReviewEvidence({ worklist: testWorklist });
 }
@@ -288,27 +444,52 @@ function applyProductionExportCompliance(expo) {
   expo.ios.infoPlist.ITSEncryptionExportComplianceCode = complianceCode;
 }
 
+function applyProductionReleaseBinding(expo) {
+  if (!isProduction) return '';
+
+  const buildNumber = String(process.env.CATALOG_RELEASE_IOS_BUILD_NUMBER ?? '').trim();
+  if (!IOS_BUILD_NUMBER_PATTERN.test(buildNumber)) {
+    throw new Error(
+      'Production iOS config requires CATALOG_RELEASE_IOS_BUILD_NUMBER as the exact reviewed positive decimal build number.',
+    );
+  }
+
+  const supportEmail = String(process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? '').trim();
+  if (
+    !SUPPORT_EMAIL_PATTERN.test(supportEmail) ||
+    CONTROL_CHAR_RE.test(supportEmail) ||
+    placeholderEnvValue(supportEmail)
+  ) {
+    throw new Error(
+      'Production iOS config requires a final non-placeholder EXPO_PUBLIC_SUPPORT_EMAIL.',
+    );
+  }
+
+  expo.ios.buildNumber = buildNumber;
+  return supportEmail;
+}
+
 module.exports = () => {
   const expo = JSON.parse(JSON.stringify(base.expo));
   const baseScheme = expo.scheme;
   const baseIosBundle = expo.ios.bundleIdentifier;
   const baseAndroidPackage = expo.android.package;
   const finalDomain = normalizeDomain(process.env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN);
-  const appStoreUrl = productionUrl(process.env.EXPO_PUBLIC_APP_STORE_URL);
-  const playStoreUrl = productionUrl(process.env.EXPO_PUBLIC_PLAY_STORE_URL);
+  const appStoreUrl = productionStoreUrl(process.env.EXPO_PUBLIC_APP_STORE_URL, 'apps.apple.com');
+  const playStoreUrl = productionStoreUrl(
+    process.env.EXPO_PUBLIC_PLAY_STORE_URL,
+    'play.google.com',
+  );
 
   expo.name = displayName(expo.name);
   const appName = expo.name;
+  const cameraPermission = resolveCameraPermissionCopy(appName);
   const permissionCopy = {
-    cameraUsageDescription:
-      process.env.APP_CAMERA_USAGE_DESCRIPTION ??
-      `${appName} uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.`,
+    cameraUsageDescription: cameraPermission,
     faceIDUsageDescription:
       process.env.APP_FACE_ID_USAGE_DESCRIPTION ??
       `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,
-    cameraPermission:
-      process.env.APP_CAMERA_PERMISSION ??
-      `Allow ${appName} to scan barcodes, capture ingredient labels, and take guided progress photos.`,
+    cameraPermission,
     faceIDPermission:
       process.env.APP_FACE_ID_PERMISSION ??
       `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,
@@ -327,26 +508,37 @@ module.exports = () => {
     NSCameraUsageDescription: permissionCopy.cameraUsageDescription,
     NSFaceIDUsageDescription: permissionCopy.faceIDUsageDescription,
   };
+  expo.ios.entitlements = {
+    ...(expo.ios.entitlements ?? {}),
+    'com.apple.developer.declared-age-range': true,
+  };
+  if (!iosWidgetExtensionBuildEnabled) {
+    delete expo.ios.infoPlist.NSSupportsLiveActivities;
+    delete expo.ios.infoPlist.NSSupportsLiveActivitiesFrequentUpdates;
+  }
   assertProductionIdentity(expo, permissionCopy);
   assertProductionReviewClearance();
   applyProductionExportCompliance(expo);
+  const productionSupportEmail = applyProductionReleaseBinding(expo);
   if (finalDomain) {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),
     );
+  }
+  if (finalDomain && androidReleaseRequired) {
     expo.android.intentFilters = [
       ...(expo.android.intentFilters ?? []),
       {
         action: 'VIEW',
         autoVerify: true,
-        data: [{ scheme: 'https', host: finalDomain, pathPrefix: '/' }],
+        data: [{ scheme: 'https', host: finalDomain, pathPrefix: '/s/' }],
         category: ['BROWSABLE', 'DEFAULT'],
       },
     ];
   }
   if (appStoreUrl) expo.ios.appStoreUrl = appStoreUrl;
   if (playStoreUrl) expo.android.playStoreUrl = playStoreUrl;
-  expo.plugins = buildPlugins(expo.plugins, permissionCopy);
+  expo.plugins = buildPlugins(expo.plugins, permissionCopy, `${expo.scheme}://today`);
   expo.extra = {
     ...(expo.extra ?? {}),
     appVariant: variant,
@@ -354,6 +546,8 @@ module.exports = () => {
     publicLinkDomain: finalDomain,
     appStoreUrl,
     playStoreUrl,
+    supportEmail: productionSupportEmail,
+    iosWidgetExtensionBuildEnabled,
   };
 
   return { expo };

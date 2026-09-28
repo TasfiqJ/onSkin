@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 
-export const CATALOG_IMPORTER_VERSION = 'onskin-obf-stream-v1';
+export const CATALOG_IMPORTER_VERSION = 'layerwell-obf-stream-v1';
 export const MAX_CATALOG_BATCH_SIZE = 500;
 export const MAX_CATALOG_LINE_BYTES = 1_048_576;
 

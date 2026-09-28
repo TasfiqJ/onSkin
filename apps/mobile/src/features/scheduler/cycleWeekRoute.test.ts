@@ -151,10 +151,6 @@ describe('cycle week route scheduler notes', () => {
   it('persists cycle mutations before cache, analytics, navigation, or success copy', () => {
     const store = readFileSync(`${APP_DIR}/../features/scheduler/cycleStore.ts`, 'utf8');
     const useCycle = readFileSync(`${APP_DIR}/../features/scheduler/useCycle.ts`, 'utf8');
-    const mutationCoordinator = readFileSync(
-      `${APP_DIR}/../features/scheduler/cycleMutationCoordinator.ts`,
-      'utf8',
-    );
     const disruption = readAppRoute('cycle/disruption.tsx');
     const procedure = readAppRoute('cycle/procedure.tsx');
     const recovery = readAppRoute('cycle/recovery.tsx');
@@ -172,14 +168,12 @@ describe('cycle week route scheduler notes', () => {
     expect(store).toContain('currentAndFutureSkips');
     expect(store).not.toContain('/* best-effort */');
 
-    const commitIndex = useCycle.indexOf('await commit(() => updateCycleConfig({ variant }))');
+    const commitIndex = useCycle.indexOf('() => updateCycleConfig({ variant })');
     expect(commitIndex).toBeGreaterThan(-1);
     expect(useCycle.indexOf("track('cycle_variant_changed'", commitIndex)).toBeGreaterThan(
       commitIndex,
     );
-    const customCommitIndex = useCycle.indexOf(
-      'await commit(() => saveCustomCycleDefinition(definition))',
-    );
+    const customCommitIndex = useCycle.indexOf('() => saveCustomCycleDefinition(definition)');
     expect(customCommitIndex).toBeGreaterThan(-1);
     expect(useCycle.indexOf("track('routine_edited'", customCommitIndex)).toBeGreaterThan(
       customCommitIndex,
@@ -189,18 +183,27 @@ describe('cycle week route scheduler notes', () => {
       "config.variant === 'auto' || config.variant === 'custom' ? null : config.variant",
     );
     expect(useCycle).toContain("cadenceReady && config.variant === 'custom' && config.customCycle");
-    expect(useCycle).toContain('return commitCycleConfigForOwner({');
-    expect(useCycle).toContain('operation: () => runOwnerQueryOperation(ownerScope, operation)');
-    expect(mutationCoordinator).toContain('await cancel(ownerQueryPrefixes.cycleConfig(scope))');
-    expect(mutationCoordinator).toContain(
-      'publish(queryKeys.cycleConfig(scope, readBoundary()), next)',
+    expect(useCycle).toContain("await qc.cancelQueries({ queryKey: ['cycleConfig'] })");
+    const admissionIndex = useCycle.indexOf('assertRoutineCadenceMutationAdmission();');
+    const healthOperationIndex = useCycle.indexOf(
+      'return runCurrentHealthDataOperation(async (lease) =>',
+      admissionIndex,
     );
-    expect(useCycle).toContain('queryKey: queryKeys.cycleConfig(ownerScope, boundary)');
+    expect(admissionIndex).toBeGreaterThan(-1);
+    expect(healthOperationIndex).toBeGreaterThan(admissionIndex);
+    expect(
+      useCycle.indexOf("await qc.cancelQueries({ queryKey: ['cycleConfig'] })"),
+    ).toBeGreaterThan(healthOperationIndex);
     expect(useCycle).toContain(
-      'queryFn: () => runOwnerQueryOperation(ownerScope, loadCycleConfigWithLease)',
+      "qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)",
     );
-    expect(useCycle).not.toContain("AppState.addEventListener('change', handleAppState)");
-    expect(useCycle).not.toContain('millisecondsUntilNextLocalDay()');
+    expect(useCycle.indexOf('afterCommit?.();')).toBeGreaterThan(
+      useCycle.indexOf("qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)"),
+    );
+    expect(useCycle).toContain('lease.assertCurrent();');
+    expect(useCycle).toContain("queryKey: ['cycleConfig', today]");
+    expect(useCycle).toContain("AppState.addEventListener('change', handleAppState)");
+    expect(useCycle).toContain('millisecondsUntilNextLocalDay()');
 
     expect(disruption).toContain('data?.paused ? (');
     expect(disruption).toContain('Resume my routine');
@@ -215,10 +218,19 @@ describe('cycle week route scheduler notes', () => {
     expect(today).toContain('Your cycle resumes when you are ready');
 
     expect(plan).toContain('const cycleMutations = useCycleMutations();');
-    expect(plan).toContain('await cycleMutations.start();');
+    const planAdmissionIndex = plan.indexOf(
+      'if (canUseRoutineCadence() && canUseRoutineRecovery() && cycleData?.cycle)',
+    );
+    const planMutationIndex = plan.indexOf('await cycleMutations.start();');
+    const planHandoffIndex = plan.indexOf("router.replace('/today');");
+    expect(planAdmissionIndex).toBeGreaterThan(-1);
+    expect(planMutationIndex).toBeGreaterThan(planAdmissionIndex);
+    expect(planHandoffIndex).toBeGreaterThan(planMutationIndex);
     expect(plan).toContain('<CycleMutationError className="mb-2 mt-0" />');
 
-    const recoveryWriteIndex = tolerance.indexOf("await m.beginRecovery(7, 'irritation');");
+    const recoveryWriteIndex = tolerance.indexOf(
+      "await m.beginRecovery(irritationRecoveryDays, 'irritation');",
+    );
     const rampWriteIndex = tolerance.indexOf('await applyToleranceToRamps(selected);');
     expect(recoveryWriteIndex).toBeGreaterThan(-1);
     expect(rampWriteIndex).toBeGreaterThan(recoveryWriteIndex);
@@ -239,9 +251,7 @@ describe('cycle week route scheduler notes', () => {
     const source = readAppRoute('cycle/week.tsx');
     const noteRenderCount = source.match(/<SchedulerNote note=\{schedulerNote\} \/>/g) ?? [];
 
-    expect(source).toContain(
-      'const schedulerNote = cadenceReady ? (data?.notes[0] ?? null) : null;',
-    );
+    expect(source).toContain('const schedulerNote = data?.notes[0] ?? null;');
     expect(noteRenderCount).toHaveLength(2);
     expect(source.indexOf('No actives to cycle yet.')).toBeLessThan(
       source.lastIndexOf('<SchedulerNote note={schedulerNote} />'),
@@ -253,47 +263,163 @@ describe('cycle week route scheduler notes', () => {
     const settings = readAppRoute('cycle/settings.tsx');
     const whyTonight = readAppRoute('cycle/why-tonight.tsx');
     const reviewGate = readFileSync(`${APP_DIR}/../features/routine/reviewGate.ts`, 'utf8');
+    const sequencing = readFileSync(`${APP_DIR}/../features/routine/sequencing.ts`, 'utf8');
 
-    expect(reviewGate).toContain('EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE');
-    expect(reviewGate).toContain("'closed'");
-    expect(reviewGate).toContain('isDev &&');
+    expect(sequencing).toContain('EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE');
+    expect(sequencing).toContain("'closed'");
+    expect(sequencing).toContain('isDev &&');
+    expect(reviewGate).toContain('shippableRoutineCadencePolicy() !== null');
 
     expect(week).toContain("import { canUseRoutineCadence } from '@/features/routine/reviewGate';");
-    expect(week).toContain('const cadenceReady = canUseRoutineCadence();');
-    expect(week).toContain("!cadenceReady\n    ? 'review gate'");
-    expect(week).toContain('cadenceReady && data?.paused ? (');
-    expect(week).toContain(') : cadenceReady && data?.recovery.active ? (');
-    expect(week).toContain('!cadenceReady ? (');
+    expect(week).toContain('if (!canUseRoutineCadence()) return <ReviewGateWeekScreen />;');
+    expect(week).toContain('return <AdmittedWeekScreen />;');
+    expect(week).toContain('function AdmittedWeekScreen()');
+    expect(week).toContain('function ReviewGateWeekScreen()');
     expect(week).toContain('<ReviewGateEmptyState />');
-    expect(week).toContain('cadenceReady && data?.paused');
-    expect(week).toContain('cadenceReady && data?.recovery.active');
-    expect(week).toContain('Cycle guidance is under review.');
-    expect(week).toContain('We publish skin-cycling cadence only after dermatologist');
-    expect(week).toContain('{cadenceReady ? (');
+    expect(week).toContain('Your cycle · review gate');
+    const reviewGateStart = week.indexOf('function ReviewGateWeekScreen()');
+    const reviewGateEnd = week.indexOf('function ReviewGateEmptyState()', reviewGateStart);
+    const reviewGateSource = week.slice(reviewGateStart, reviewGateEnd);
+    expect(reviewGateSource).toContain('DAILY ROUTINE');
+    expect(reviewGateSource).toContain('Available from Today');
+    expect(reviewGateSource).toContain('unchanged');
+    expect(reviewGateSource).not.toContain('amSummary(');
+    expect(reviewGateSource).not.toContain('moisturizer');
+    expect(reviewGateSource).not.toContain('SPF');
+    expect(week).toContain(
+      'Cycle guidance is unavailable until its exact rules and copy complete required professional',
+    );
+    expect(week).toContain('We publish skin-cycling cadence only after all required');
+    expect(week).toContain('independent professional review is complete.');
+    expect(week).not.toContain('cadenceReady');
 
     expect(settings).toContain(
       "import { canUseRoutineCadence } from '@/features/routine/reviewGate';",
     );
-    expect(settings).toContain('const cadenceReady = canUseRoutineCadence();');
-    expect(settings).toContain('if (!cadenceReady) return <CadenceReviewGate />;');
+    expect(settings).toContain('if (!canUseRoutineCadence()) return <CadenceReviewGate />;');
+    expect(settings).toContain('return <AdmittedCycleSettingsScreen />;');
+    expect(settings).toContain('function AdmittedCycleSettingsScreen()');
     expect(settings).toContain('Cycle settings open after review.');
     expect(settings).toContain('settings stay hidden');
-    expect(settings).toContain('until clinical and cosmetic-chemistry review closes.');
+    expect(settings).toContain('until all required independent professional review is complete.');
 
-    expect(whyTonight).toContain(
-      "import { canUseRoutineCadence } from '@/features/routine/reviewGate';",
-    );
+    expect(whyTonight).toContain('canUseRoutineCadence,');
+    expect(whyTonight).toContain('canUseRoutineExplainabilityCopy,');
+    expect(whyTonight).toContain("from '@/features/routine/reviewGate';");
     expect(whyTonight).toContain("case 'authored_recovery':");
     expect(whyTonight).toContain("case 'missing':");
     expect(whyTonight).toContain("case 'safety':");
     expect(whyTonight).toContain("case 'staged':");
     expect(whyTonight).toContain("case 'cadence_cap':");
-    expect(whyTonight).toContain('const cadenceReady = canUseRoutineCadence();');
-    expect(whyTonight).toContain('const cycle = cadenceReady ? (data?.cycle ?? null) : null;');
-    expect(whyTonight).toContain('const tonight = cadenceReady ? (data?.tonight ?? null) : null;');
-    expect(whyTonight).not.toContain('const cycle = data?.cycle;');
-    expect(whyTonight).not.toContain('const tonight = data?.tonight;');
-    expect(whyTonight).toContain('Cycle guidance is under review.');
+    expect(whyTonight).toContain(
+      'if (!canUseRoutineCadence() || !canUseRoutineExplainabilityCopy())',
+    );
+    expect(whyTonight).toContain('return <AdmittedWhyTonightScreen />;');
+    expect(whyTonight).toContain('function AdmittedWhyTonightScreen()');
+    expect(whyTonight).toContain('const cycle = data?.cycle ?? null;');
+    expect(whyTonight).toContain('const tonight = data?.tonight ?? null;');
+    expect(whyTonight).not.toContain('cadenceReady');
+    expect(whyTonight).toMatch(
+      /Cycle guidance is unavailable until its exact rules and copy complete required\s+professional\s+review\./,
+    );
     expect(whyTonight).toContain('Your daily AM/PM routine is still available.');
+
+    for (const route of [
+      {
+        path: 'cycle/week.tsx',
+        source: week,
+        wrapper: 'WeekScreen',
+        content: 'AdmittedWeekScreen',
+        gate: 'ReviewGateWeekScreen',
+        admissionChecks: ['canUseRoutineCadence()'],
+      },
+      {
+        path: 'cycle/settings.tsx',
+        source: settings,
+        wrapper: 'CycleSettingsScreen',
+        content: 'AdmittedCycleSettingsScreen',
+        gate: 'CadenceReviewGate',
+        admissionChecks: ['canUseRoutineCadence()'],
+      },
+      {
+        path: 'cycle/why-tonight.tsx',
+        source: whyTonight,
+        wrapper: 'WhyTonightScreen',
+        content: 'AdmittedWhyTonightScreen',
+        gate: 'CadenceReviewGate',
+        admissionChecks: ['canUseRoutineCadence()', 'canUseRoutineExplainabilityCopy()'],
+      },
+    ]) {
+      const wrapperIndex = route.source.indexOf(`function ${route.wrapper}()`);
+      const contentIndex = route.source.indexOf(`function ${route.content}()`);
+      const wrapperSource = route.source.slice(wrapperIndex, contentIndex);
+      const cycleHookIndex = route.source.indexOf('useCycle()', contentIndex);
+
+      expect(wrapperIndex, route.path).toBeGreaterThan(-1);
+      expect(contentIndex, route.path).toBeGreaterThan(wrapperIndex);
+      for (const admissionCheck of route.admissionChecks) {
+        expect(wrapperSource, route.path).toContain(admissionCheck);
+      }
+      expect(wrapperSource, route.path).toContain(`return <${route.gate} />;`);
+      expect(wrapperSource, route.path).not.toContain('useCycle()');
+      expect(wrapperSource, route.path).not.toContain("track('why_tonight_viewed')");
+      expect(cycleHookIndex, route.path).toBeGreaterThan(contentIndex);
+    }
+
+    expect(whyTonight.indexOf("track('why_tonight_viewed')")).toBeGreaterThan(
+      whyTonight.indexOf('function AdmittedWhyTonightScreen()'),
+    );
+  });
+
+  it('fails closed before mounting cadence controls on direct-entry cycle routes', () => {
+    const routes = [
+      {
+        path: 'cycle/procedure.tsx',
+        content: 'ProcedureScreenContent',
+        unavailableCopy: 'Cycle recovery controls are unavailable.',
+        admissionChecks: ['canUseRoutineCadence()', 'canUseRoutineRecovery()'],
+      },
+      {
+        path: 'cycle/recovery.tsx',
+        content: 'RecoveryScreenContent',
+        unavailableCopy: 'Cycle recovery guidance is unavailable.',
+        admissionChecks: ['canUseRoutineCadence()', 'canUseRoutineRecovery()'],
+      },
+      {
+        path: 'cycle/disruption.tsx',
+        content: 'DisruptionScreenContent',
+        unavailableCopy: 'Cycle controls are unavailable.',
+        admissionChecks: ['canUseRoutineCadence()'],
+      },
+      {
+        path: 'cycle/phased-intro.tsx',
+        content: 'PhasedIntroScreenContent',
+        unavailableCopy: 'Cycle introduction guidance is unavailable.',
+        admissionChecks: ['canUseRoutineCadence()', 'canUseRoutineExplainabilityCopy()'],
+      },
+    ] as const;
+
+    for (const route of routes) {
+      const source = readAppRoute(route.path);
+      const contentIndex = source.indexOf(`function ${route.content}`);
+      const wrapperSource = source.slice(0, contentIndex);
+      const mutationHookIndex = source.indexOf('useCycleMutations()', contentIndex);
+
+      expect(contentIndex, route.path).toBeGreaterThan(-1);
+      for (const admissionCheck of route.admissionChecks) {
+        expect(wrapperSource, route.path).toContain(admissionCheck);
+      }
+      expect(wrapperSource, route.path).toContain('return <CadenceReviewGate />;');
+      expect(mutationHookIndex, route.path).toBeGreaterThan(contentIndex);
+      expect(source, route.path).toContain(route.unavailableCopy);
+      expect(source, route.path).toMatch(/complete required\s+professional review\./);
+    }
+
+    expect(readAppRoute('cycle/procedure.tsx')).toContain('<ProcedureScreenContent');
+    expect(readAppRoute('cycle/recovery.tsx')).toContain('<RecoveryScreenContent');
+    expect(readAppRoute('cycle/disruption.tsx')).toContain('return <DisruptionScreenContent />;');
+    expect(readAppRoute('cycle/phased-intro.tsx')).toContain(
+      'return <PhasedIntroScreenContent />;',
+    );
   });
 });

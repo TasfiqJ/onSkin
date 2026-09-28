@@ -62,7 +62,7 @@ Assert-ThrowsCode -Expected "SUPABASE_CLI_VERSION_INVALID" -Operation {
   Assert-SupabaseCliMinimumVersion -RawVersion "999999999999999999999.0.0"
 }
 
-$tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) "onskin-supabase-cli-gate-$PID-$([Guid]::NewGuid().ToString('N'))"
+$tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) "layerwell-supabase-cli-gate-$PID-$([Guid]::NewGuid().ToString('N'))"
 $fakeCliPaths = @()
 try {
   $null = New-Item -ItemType Directory -Path $tempRoot
@@ -141,7 +141,7 @@ try {
     $mixedCliPath,
     (@(
       "@echo off",
-      'echo %*>>"%ONSKIN_FAKE_SUPABASE_LOG%"',
+      'echo %*>>"%LAYERWELL_FAKE_SUPABASE_LOG%"',
       'if "%~1"=="--version" echo 2.109.0',
       "exit /b 0"
     ) -join "`r`n") + "`r`n",
@@ -149,13 +149,13 @@ try {
   )
   $fakeCliPaths += @($mixedCliPath, $mixedLogPath)
   $originalPath = $env:PATH
-  $originalLogPath = $env:ONSKIN_FAKE_SUPABASE_LOG
+  $originalLogPath = $env:LAYERWELL_FAKE_SUPABASE_LOG
   try {
     $env:PATH = $tempRoot
-    $env:ONSKIN_FAKE_SUPABASE_LOG = $mixedLogPath
-    $global:OnSkinSupabaseShadowCalls = 0
+    $env:LAYERWELL_FAKE_SUPABASE_LOG = $mixedLogPath
+    $global:LayerwellSupabaseShadowCalls = 0
     function global:supabase {
-      $global:OnSkinSupabaseShadowCalls += 1
+      $global:LayerwellSupabaseShadowCalls += 1
       return "999.0.0"
     }
 
@@ -167,19 +167,19 @@ try {
     $null = Assert-SupabaseCliMinimumVersion -CliPath $resolvedCliPath
     & $resolvedCliPath link --project-ref "aaaaaaaaaaaaaaaaaaaa"
     Assert-Equal -Actual $LASTEXITCODE -Expected 0 -Label "absolute-application-invocation"
-    Assert-Equal -Actual $global:OnSkinSupabaseShadowCalls -Expected 0 -Label "function-not-invoked"
+    Assert-Equal -Actual $global:LayerwellSupabaseShadowCalls -Expected 0 -Label "function-not-invoked"
     Assert-Equal `
       -Actual ((Get-Content -LiteralPath $mixedLogPath) -join "`n") `
       -Expected ("--version`nlink --project-ref aaaaaaaaaaaaaaaaaaaa") `
       -Label "absolute-application-call-log"
   } finally {
     Remove-Item function:\global:supabase -ErrorAction SilentlyContinue
-    Remove-Variable -Name OnSkinSupabaseShadowCalls -Scope Global -ErrorAction SilentlyContinue
+    Remove-Variable -Name LayerwellSupabaseShadowCalls -Scope Global -ErrorAction SilentlyContinue
     $env:PATH = $originalPath
     if ($null -eq $originalLogPath) {
-      Remove-Item Env:\ONSKIN_FAKE_SUPABASE_LOG -ErrorAction SilentlyContinue
+      Remove-Item Env:\LAYERWELL_FAKE_SUPABASE_LOG -ErrorAction SilentlyContinue
     } else {
-      $env:ONSKIN_FAKE_SUPABASE_LOG = $originalLogPath
+      $env:LAYERWELL_FAKE_SUPABASE_LOG = $originalLogPath
     }
   }
 } finally {

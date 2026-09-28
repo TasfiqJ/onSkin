@@ -1,6 +1,6 @@
 {
   "baseUrl": "http://localhost:8299",
-  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-16\\pseudo-localization-120-390x844-current",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\layerwell\\test-results\\human-e2e\\2026-07-16\\pseudo-localization-120-390x844-current",
   "generatedAt": "2026-07-17T05:06:44.982Z",
   "pseudoLocale": "expanded",
   "routeCount": 8,

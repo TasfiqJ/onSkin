@@ -1,4 +1,4 @@
-import type { CommunityNoteKind, EvidenceLabel } from '@onskin/types';
+import type { CommunityNoteKind, EvidenceLabel } from '@layerwell/types';
 
 import { colors } from '@/theme/tokens';
 

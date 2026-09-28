@@ -5,11 +5,11 @@ import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { applyToleranceToRamps } from '@/features/routine/rampStore';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { shippableRoutineCadencePolicy } from '@/features/routine/sequencing';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // 07 · Weekly tolerance check-in (design 07, docs/03 §4). The ONLY assessment ,
@@ -46,6 +46,16 @@ const OPTIONS = [
 type ToleranceAnswer = (typeof OPTIONS)[number]['id'];
 
 export default function ToleranceScreen() {
+  const cadenceReady = canUseRoutineCadence();
+  const recoveryReady = canUseRoutineRecovery();
+  const cadencePolicy = shippableRoutineCadencePolicy();
+  if (!cadenceReady || !recoveryReady || !cadencePolicy) {
+    return <ToleranceReviewGate />;
+  }
+  return <ToleranceCheckIn irritationRecoveryDays={cadencePolicy.recoveryWindows.irritationDays} />;
+}
+
+function ToleranceCheckIn({ irritationRecoveryDays }: { irritationRecoveryDays: number }) {
   const { height } = useWindowDimensions();
   const [selected, setSelected] = useState<ToleranceAnswer | null>(null);
   const [saving, setSaving] = useState(false);
@@ -53,7 +63,6 @@ export default function ToleranceScreen() {
   const [recoveryStarted, setRecoveryStarted] = useState(false);
   const m = useCycleMutations();
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
   const compactSheet = height < 640;
 
   // Each answer states what the app does (docs/03 §4 / docs/05 §7) and now PERSISTS to
@@ -61,7 +70,7 @@ export default function ToleranceScreen() {
   // holds the pace, irritated de-escalates the ramp AND starts a barrier-recovery
   // window. Previously comfortable/dry did nothing (review fix).
   const onSave = async () => {
-    if (!selected || saving) return;
+    if (!selected || saving || !canUseRoutineCadence() || !canUseRoutineRecovery()) return;
     setSaving(true);
     setSaveFailure(null);
     let recoveryIsActive = recoveryStarted;
@@ -70,14 +79,12 @@ export default function ToleranceScreen() {
       // fails, the ramp is untouched; if the later ramp write fails, retry is
       // idempotent and the already-active recovery still withholds actives.
       if (selected === 'irritated' && !recoveryIsActive) {
-        await m.beginRecovery(7, 'irritation');
+        await m.beginRecovery(irritationRecoveryDays, 'irritation');
         recoveryIsActive = true;
         setRecoveryStarted(true);
       }
       await applyToleranceToRamps(selected);
-      if (isOwnerQueryScopeCurrent(ownerScope)) {
-        await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) });
-      }
+      await qc.invalidateQueries({ queryKey: ['ramp'] });
       if (selected === 'irritated') {
         router.replace('/cycle/recovery');
         return;
@@ -190,6 +197,37 @@ export default function ToleranceScreen() {
         label={saving ? 'Saving...' : saveFailure ? 'Try again' : 'Save'}
         disabled={!selected || saving}
         onPress={() => void onSave()}
+      />
+    </Sheet>
+  );
+}
+
+function ToleranceReviewGate() {
+  const { height } = useWindowDimensions();
+  const compactSheet = height < 640;
+
+  return (
+    <Sheet
+      fallbackRoute={APP_HOME_ROUTE}
+      scroll
+      backdropAccessible={!compactSheet}
+      className={compactSheet ? 'pb-6' : undefined}
+    >
+      <Text variant="label" tone="clay" className="font-mono">
+        CHECK-IN UNAVAILABLE
+      </Text>
+      <Text variant="title" className="mt-2.5 text-[33px]">
+        Weekly check-ins open after review.
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-2 text-[14px]">
+        Your existing daily routine is still available and unchanged. Check-in guidance and any
+        cadence or recovery changes stay unavailable until their exact rules and copy complete all
+        required independent professional review.
+      </Text>
+      <Button
+        className={compactSheet ? 'mt-4 h-[48px] min-h-[48px] py-2.5' : 'mt-6'}
+        label="Back to routine"
+        onPress={() => backOrReplace(router)}
       />
     </Sheet>
   );

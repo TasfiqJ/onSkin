@@ -1,6 +1,14 @@
 # Phase 2 Readiness Checklist
 
-Date: 2026-07-04
+Date: 2026-07-15
+Updated: 2026-09-21 for the 91-migration source chain through `0075`
+
+The historical 2026-08-05 local evidence below covers only 71 migrations through
+`0072`. The current 91-migration chain through `0075` has not passed a clean
+full-chain DB-05 replay or generated-type parity. The DB-06 runner currently
+stops before project linking or mutation with
+`DB06_CURRENT_CHAIN_REPLAY_REQUIRED`; do not use these steps to deploy staging
+until that gate is resolved through reviewed source and current evidence.
 
 Phase 2 should not start until naming, account ownership, environments, and
 secret handling are clear enough that production infrastructure will not need to
@@ -13,22 +21,22 @@ external accounts.
 
 ## Required Before Infrastructure Setup
 
-| Item                  | Decision needed                                              | Current Phase 1 state                                                                    |
-| --------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Brand name            | Keep `OnSkin` only with counsel clearance; otherwise rebrand | Default path is rebrand; `RoutineKind` is the working candidate for clearance            |
-| Domain                | Final policy, support, app link, and fallback domain         | Target candidate `routinekind.app`; registrar and legal clearance required               |
-| iOS bundle ID         | Final App Store identifier                                   | Candidate `com.routinekind.app` if rebrand clears                                        |
-| Android package       | Final Play package identifier                                | Candidate `com.routinekind.app` if rebrand clears                                        |
-| URL scheme            | Final deep link scheme                                       | Candidate `routinekind` if rebrand clears                                                |
-| Environment split     | Naming for dev/staging/prod                                  | Use `development`, `staging`, `production`                                               |
-| Supabase projects     | Project names and region                                     | Create separate staging and production projects after brand decision                     |
-| RevenueCat project    | App and entitlement naming                                   | Create after final app identity; entitlement `pro` remains stable unless pricing changes |
-| Apple account owner   | Human owner and billing                                      | Founder to assign                                                                        |
-| Google account owner  | Human owner and billing                                      | Founder to assign                                                                        |
-| Secret storage        | Where `.env` and server secrets live                         | Use local `.env` for dev only; production secrets in provider dashboards/CI secret store |
-| Account owner email   | Durable admin email                                          | Founder to assign before account creation                                                |
-| Billing owner         | Card/account for paid services                               | Founder to assign                                                                        |
-| Branch/release policy | How release candidates are cut                               | Keep docs/code on main; create release branches only after RC checklist exists           |
+| Item                  | Decision needed                                                               | Current Phase 1 state                                                                    |
+| --------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Brand name            | Obtain written counsel decision for the founder-selected `Layerwell` identity | Selected for engineering; not legally cleared for public production                      |
+| Domain                | Final policy, support, app link, and fallback domain                          | No domain is claimed until authenticated reservation evidence exists                     |
+| iOS bundle ID         | Final App Store identifier                                                    | Candidate `com.layerwell.app` if rebrand clears                                          |
+| Android package       | Final Play package identifier                                                 | Candidate `com.layerwell.app` if rebrand clears                                          |
+| URL scheme            | Final deep link scheme                                                        | Candidate `layerwell` if rebrand clears                                                  |
+| Environment split     | Naming for dev/staging/prod                                                   | Use `development`, `staging`, `production`                                               |
+| Supabase projects     | Project names and region                                                      | Create separate staging and production projects after brand decision                     |
+| RevenueCat project    | App and entitlement naming                                                    | Create after final app identity; entitlement `pro` remains stable unless pricing changes |
+| Apple account owner   | Human owner and billing                                                       | Founder to assign                                                                        |
+| Google account owner  | Human owner and billing                                                       | Founder to assign                                                                        |
+| Secret storage        | Where `.env` and server secrets live                                          | Use local `.env` for dev only; production secrets in provider dashboards/CI secret store |
+| Account owner email   | Durable admin email                                                           | Founder to assign before account creation                                                |
+| Billing owner         | Card/account for paid services                                                | Founder to assign                                                                        |
+| Branch/release policy | How release candidates are cut                                                | Keep docs/code on main; create release branches only after RC checklist exists           |
 
 ## Environment Naming
 
@@ -38,28 +46,105 @@ Use exactly:
 - `staging`
 - `production`
 
-Do not create production service accounts under the `OnSkin` name unless counsel
+Do not create production service accounts under the `Layerwell` name unless counsel
 clears the brand.
 
 ## Supabase Start Order
 
-1. Create staging project.
-2. Fill `SUPABASE_PROJECT_REF`, `EXPO_PUBLIC_SUPABASE_URL`, and
-   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for staging.
-3. Run `npm run phase2:check-env:strict`.
-4. Apply all migrations in `supabase/migrations`.
-5. Generate fresh database types into `packages/types/src/database.types.ts`.
-6. Deploy Edge Functions: `revenuecat-webhook`, `account-deletion`,
-   `data-export`, and `order-report-poll`.
-7. Configure Edge Function secrets.
-8. Run Security Advisor and Performance Advisor.
-9. Run `npm run phase2:rls-smoke`.
-10. Repeat for production only after staging passes.
+1. After account/brand/data-map approval, create a new isolated empty staging
+   project. DB-06 refuses any public/migration/function state plus any Auth,
+   Storage, or Cron state.
+2. Fill `SUPABASE_PROJECT_REF`, `PHASE9_EXPECTED_SUPABASE_PROJECT_REF`,
+   `EXPO_PUBLIC_SUPABASE_URL`, and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for
+   staging; the two project refs must match exactly.
+3. Run `npm run phase2:check-env:strict` and configure every required hosted
+   manifest secret/environment **name** without retaining any value in source or
+   evidence.
+4. Produce the main operator-attestation record, one exact
+   `traffic-provider-freeze.json`, and five schema-v2 redacted zero-cohort
+   boundary files for migrations `0048`/`0052`/`0053`/`0054`/`0055`. Bind them
+   to the clean `origin/main` SHA, full target fingerprint, rollback point,
+   exact current 91-migration plan hash where required, and explicit future
+   retention-review checkpoint. At the initial pre-mutation gate, all
+   observations must be no more than 30 minutes old. The freeze must cover the
+   main record's `validUntil` and span no more than 24 hours. Both `validUntil`
+   and `holdUntil` must have at least 12 hours remaining at this initial gate
+   and at least seven hours at the immediate pre-push gate; completion retains
+   current validity and at least one hour of hold. Use only local non-secret
+   ticket/artifact IDs with an
+   approved prefix for `changeLockRef` and `evidenceRefs`; URLs, email-like
+   values, and provider/account/project identifiers are rejected. Attestation
+   role labels do not substitute for independent legal, privacy, or security
+   review.
+5. Before execution, prove closed ingress: no staging-targeted mobile, web, or
+   OTA client; no externally distributed staging key; no provider callbacks or
+   pending retries; no Apple/App Store server notifications; no schedules; and
+   hosted Auth signup, anonymous signup, all 26 reviewed external providers,
+   all seven reviewed hooks, SAML, OAuth server, custom OAuth, SSO, and
+   third-party integrations disabled, with Auth admin-creation automation off.
+6. Run `npm run phase2:db-local-verify` against the complete current
+   91-migration chain through `0075`; require all five committed cutover
+   rehearsals from `0067` through `0072` to pass, including nonzero legacy
+   adherence caches, client-authored freezes, partial steps, routine markers,
+   replay/export fixtures, draft consent, recommendation purge/ACL, and
+   commerce attribution/ACL convergence before either repeatable current-head
+   reset is accepted. Only after the clean replay, current generated-type
+   parity, and reviewed removal of the DB-06 source guard, run
+   `scripts/phase2/deploy-supabase-staging.ps1`. The procedure
+   creates and repeatedly verifies an immutable Git snapshot, sets
+   `DB06_TRAFFIC_FREEZE=frozen`, predeploys all 17 guarded default functions,
+   and canaries the exact eight `verifyJwt: false` endpoints for HTTP `503`,
+   exact `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`.
+7. Require the immediate pre-push gate to revalidate cutover bytes and reread
+   the exact function inventory, public freeze canaries, Auth freeze, empty
+   migration inventory, schema, Storage, and all Cron jobs before applying the
+   current 91 migrations through `0075`. The historical local acceptance lane rehearsed
+   `0067 -> 0068 -> 0069 -> 0070 -> 0071 -> 0072` before its two clean head
+   resets. The exact 2026-08-05 clean-`57da25f63` local gate passed that lane,
+   exact 71-version history, focused 5 files/433 assertions, structural 16
+   files/1,222 assertions, lint, empty drift, temporary types, CAT-08 10/10,
+   and removal of its own sandbox; current-chain and hosted proof remain
+   required. The future DB-06 gate must reparse unchanged cutover artifact
+   bytes/hashes and prove current `validUntil`/`holdUntil`, including the
+   seven-hour immediate pre-push and one-hour final hold budgets; it must not
+   pretend the initial operator observations were recaptured. The procedure
+   redeploys the complete manifest and retains exact
+   before/pre-migration/after evidence plus seven cutover artifacts. A `pass`
+   packet cannot omit these proofs.
+8. Require hosted pgTAP, error-level lint, empty linked drift, exact function
+   versions/JWT posture/hosted hashes, exact migration IDs/source checksums, and
+   repository/local/linked generated-type parity. The historical 71-migration
+   local DB-08 canonical replacement/drift gate passed at clean commit `e5588ae69`: the verifier
+   exited 0 in 2,200.4 seconds and accepted the exact raw CLI-generated
+   `packages/types/src/database.types.ts` artifact at 6,770 lines with SHA-256
+   `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+   Client restrictions live in a separate overlay rather than edits to the raw
+   generated file. This is not current-chain type parity. Regenerate the
+   repository artifact from the clean 91-migration replay without hand-editing
+   it; DB-06 must then retain the hosted linked artifact and prove the three-way
+   parity above in its reviewed hosted evidence packet. No current-chain,
+   staging, or DB-08 completion is claimed.
+9. Confirm the final DB-06 public-table and RLS counts against the exact
+   reviewed current-chain schema inventory. The previous 82/82 count is
+   historical `0072` evidence, not a verified `0073` expectation. Also confirm
+   one `photos` bucket, zero Auth users/identities/sessions, zero
+   Storage objects, and zero Cron jobs. Confirm the final cutover revalidation
+   matches the original retained hashes.
+10. Keep `DB06_TRAFFIC_FREEZE=frozen` after success or failure. Reopening
+    staging requires a separately recorded downstream live-gate release; DB-06
+    never performs that release.
+11. Run Security Advisor, Performance Advisor, backup/restore, and the full live
+    RLS/auth/privacy/provider matrices. A local pass is not hosted acceptance.
+12. Repeat for production only through the separately reviewed
+    [DB-12 production database release procedure](phase-2-production-database-release-procedure.md)
+    and DB-13 hosted deployment after staging signoff, recovery proof, and
+    target-bound approval. The linked document is currently a source-only
+    draft; never mutate schema in the dashboard.
 
 ## Payment Start Order
 
 1. Finalize brand/app identity.
-2. Create App Store Connect and Play Console records.
+2. Create the App Store Connect record for the current iOS-only launch scope.
 3. Create RevenueCat project.
 4. Define products and offerings.
 5. Bind RevenueCat app user IDs to Supabase user IDs.
@@ -78,4 +163,5 @@ Phase 2 can begin when:
 - account owner email and billing owner are assigned
 - staging/production environment names are fixed
 - secret storage policy is documented
-- first Phase 2 task is clear: create Supabase staging project
+- first Phase 2 task is clear: create an approved empty Supabase staging project
+  and execute the reviewed DB-06 evidence procedure

@@ -1,8 +1,8 @@
 # Device Support Policy Audit
 
-Generated: 2026-09-28T03:23:44.542Z
-Status: pass
-Strict mode: yes
+Generated: 2026-09-28T03:48:20.066Z
+Status: blocked
+Strict mode: no
 
 This generated audit keeps the contract-required device cutoff explicit: iOS 17.0+,
 375 pt width or wider as the supported iPhone layout floor, and 320-wide browser sizes as
@@ -14,8 +14,8 @@ Android release evidence: not_applicable.
 
 - Config contracts: 2
 - Docs checked: 8
-- Human-E2E manifest gates: 43
-- Blockers: 0
+- Human-E2E manifest gates: 48
+- Blockers: 9
 - Warnings: 0
 
 ## Native Config
@@ -40,12 +40,20 @@ Android release evidence: not_applicable.
 
 ## Human-E2E Manifest
 
-- Launch gate: iphone-375-667-200-text-pressure / pass
+- Launch gate: iphone-375-667-200-text-pressure / fail
 - 320 x 480 misclassified gates: 0
 
 ## Blockers
 
-- None.
+- iPhone 375 x 667 launch-floor gate must pass.
+- iphone-375-667-200-text-pressure must pass.
+- iphone-375-200-text-pressure must pass.
+- modern-390-200-text-pressure must pass.
+- boundary-414-896-200-text-pressure must pass.
+- modern-430-200-text-pressure must pass.
+- skipped-routes-375-667-200-text-pressure must pass.
+- skipped-routes-390-844-200-text-pressure must pass.
+- skipped-routes-430-932-200-text-pressure must pass.
 
 ## Warnings
 

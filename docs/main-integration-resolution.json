@@ -1,0 +1,454 @@
+[
+  {
+    "file": ".github/workflows/quality.yml",
+    "decision": "Preserve main SDK 57, Layerwell workspace names, dependency locks and expanded verification workflow. Add only the SDK-compatible direct expo-symbols dependency for the floating dock."
+  },
+  {
+    "file": "04_repo_docs/docs/ARCHITECTURE.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "04_repo_docs/docs/DECISIONS.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "04_repo_docs/docs/FEATURE_INDEX.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "BLOCKERS.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "LAUNCH_READINESS.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "PROGRESS.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "apps/mobile/app.config.js",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "apps/mobile/package.json",
+    "decision": "Preserve main SDK 57, Layerwell workspace names, dependency locks and expanded verification workflow. Add only the SDK-compatible direct expo-symbols dependency for the floating dock."
+  },
+  {
+    "file": "apps/mobile/src/app/(tabs)/_layout.tsx",
+    "decision": "Preserve main screen data, owner, privacy and payment behavior. Port shared floating dock, composed scroll callbacks, manual-first Shelf and compact settings spacing; use current account-generation and routine-clock APIs."
+  },
+  {
+    "file": "apps/mobile/src/app/(tabs)/progress.tsx",
+    "decision": "Preserve main screen data, owner, privacy and payment behavior. Port shared floating dock, composed scroll callbacks, manual-first Shelf and compact settings spacing; use current account-generation and routine-clock APIs."
+  },
+  {
+    "file": "apps/mobile/src/app/(tabs)/shelf.tsx",
+    "decision": "Preserve main screen data, owner, privacy and payment behavior. Port shared floating dock, composed scroll callbacks, manual-first Shelf and compact settings spacing; use current account-generation and routine-clock APIs."
+  },
+  {
+    "file": "apps/mobile/src/app/(tabs)/today.tsx",
+    "decision": "Preserve main screen data, owner, privacy and payment behavior. Port shared floating dock, composed scroll callbacks, manual-first Shelf and compact settings spacing; use current account-generation and routine-clock APIs."
+  },
+  {
+    "file": "apps/mobile/src/app/(tabs)/you.tsx",
+    "decision": "Preserve main screen data, owner, privacy and payment behavior. Port shared floating dock, composed scroll callbacks, manual-first Shelf and compact settings spacing; use current account-generation and routine-clock APIs."
+  },
+  {
+    "file": "apps/mobile/src/app/ask/_layout.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/index.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/onboarding/account.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/onboarding/analyzing.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/onboarding/goals.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/onboarding/notifications.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/onboarding/paywall.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/onboarding/quiz.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/settings/subscription.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/shelf/_layout.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/trend/_layout.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/trend/fairness.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/app/trend/optin.tsx",
+    "decision": "Preserve current route behavior and safety gates; layer lean V1 route admission and compact onboarding presentation on top. Apple/email remain; ordinary Google button is deferred. No child effects mount on closed routes."
+  },
+  {
+    "file": "apps/mobile/src/components/launch/DeferredSurface.tsx",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/components/ui/Button.tsx",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/ask/routeContract.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/commerce/consentWorkflowIntegration.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "apps/mobile/src/features/navigation/tabBar.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/notifications/BehaviouralTriggers.tsx",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/notifications/behaviouralSnapshot.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "apps/mobile/src/features/onboarding/onboardingRoutes.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/photos/progressRoutes.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/shelf/labels.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/shelf/metadata.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/shelf/scanLog.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/shelf/shelfAvailability.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "apps/mobile/src/features/shelf/store.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/shelf/useShelf.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/subscription/useEntitlement.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/today/todayRoute.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/trend/consent.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/trend/consent.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/trend/trendRoutes.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/trend/useTrend.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/features/trend/useTrend.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/lib/appConfig.test.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "apps/mobile/src/lib/auth/accountScopeInventory.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "apps/mobile/src/lib/launch/phase7.test.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/lib/launch/phase7.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/lib/launch/phase8.ts",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "apps/mobile/src/lib/network/requestPolicyInventory.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "apps/mobile/src/lib/query/queryKeys.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "apps/mobile/src/lib/query/queryPolicies.test.ts",
+    "decision": "Honor main removal of superseded legacy test; validate replacement architecture coverage"
+  },
+  {
+    "file": "docs/FEATURE_INDEX.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/e2e/generated/human-e2e-manifest.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/e2e/generated/human-e2e-manifest.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/device-support-policy-audit.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/device-support-policy-audit.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/performance-readiness-audit.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/performance-readiness-audit.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/readiness-status-audit.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/readiness-status-audit.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/source-packet-audit.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/generated/source-packet-audit.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/README.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/hugeToDo/execution-status.json",
+    "decision": "Keep active 25-item lean V1 task plan and ten required features. Regenerate inventory from current main discovery rules; preserve all main tracker snapshots in history/main-before-lean-integration-2026-09-27. Deferred recommendation/share professional-review prerequisites remain enforced."
+  },
+  {
+    "file": "docs/hugeToDo/feature-inventory.json",
+    "decision": "Keep active 25-item lean V1 task plan and ten required features. Regenerate inventory from current main discovery rules; preserve all main tracker snapshots in history/main-before-lean-integration-2026-09-27. Deferred recommendation/share professional-review prerequisites remain enforced."
+  },
+  {
+    "file": "docs/hugeToDo/launch-contract.json",
+    "decision": "Keep active 25-item lean V1 task plan and ten required features. Regenerate inventory from current main discovery rules; preserve all main tracker snapshots in history/main-before-lean-integration-2026-09-27. Deferred recommendation/share professional-review prerequisites remain enforced."
+  },
+  {
+    "file": "docs/hugeToDo/task-graph.json",
+    "decision": "Keep active 25-item lean V1 task plan and ten required features. Regenerate inventory from current main discovery rules; preserve all main tracker snapshots in history/main-before-lean-integration-2026-09-27. Deferred recommendation/share professional-review prerequisites remain enforced."
+  },
+  {
+    "file": "docs/phase-11/incident-rollback-drill.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-3/app-review-notes.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-4/generated/beta-coverage-report.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-4/generated/beta-coverage-report.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-4/generated/catalog-qa-report.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-4/generated/catalog-qa-report.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-4/generated/source-worklist.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-4/generated/source-worklist.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-9/generated/store-build-inspection.json",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/phase-9/rollout-rollback-plan.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "docs/rebrand-and-core-loop-migration-checklist.md",
+    "decision": "Preserve main detailed facts, checkpoints and evidence limits; apply authoritative lean V1 scope where active. Generated audits are refreshed and blocked release evidence is not relabeled as passed."
+  },
+  {
+    "file": "package-lock.json",
+    "decision": "Preserve main SDK 57, Layerwell workspace names, dependency locks and expanded verification workflow. Add only the SDK-compatible direct expo-symbols dependency for the floating dock."
+  },
+  {
+    "file": "package.json",
+    "decision": "Preserve main SDK 57, Layerwell workspace names, dependency locks and expanded verification workflow. Add only the SDK-compatible direct expo-symbols dependency for the floating dock."
+  },
+  {
+    "file": "scripts/docs/readiness-status-audit.mjs",
+    "decision": "Preserve main current runtime contracts; update only intentional lean V1, control-size, layout and navigation expectations. Obsolete owner-query/persistence implementations are superseded by current generation/health-admission APIs."
+  },
+  {
+    "file": "scripts/e2e/onboarding-first-session.mjs",
+    "decision": "Use current onboarding age/health-consent and denial flows. Extend navigation driver with actual setup, tab clicks, hover/wheel/reduced-motion checks and manual-entry redirects. Existing SDK pointerEvents deprecation is recorded and narrowly allowlisted."
+  },
+  {
+    "file": "scripts/e2e/tabbar-geometry.mjs",
+    "decision": "Use current onboarding age/health-consent and denial flows. Extend navigation driver with actual setup, tab clicks, hover/wheel/reduced-motion checks and manual-entry redirects. Existing SDK pointerEvents deprecation is recorded and narrowly allowlisted."
+  },
+  {
+    "file": "scripts/launch/contract-smoke.mjs",
+    "decision": "Combine lean feature/task scope with main source discovery and closed-admission contracts; preserve exact future professional-review prerequisites and reject weakened safety gates."
+  },
+  {
+    "file": "scripts/launch/contract.mjs",
+    "decision": "Combine lean feature/task scope with main source discovery and closed-admission contracts; preserve exact future professional-review prerequisites and reject weakened safety gates."
+  },
+  {
+    "file": "scripts/launch/execution-baseline.mjs",
+    "decision": "Combine lean feature/task scope with main source discovery and closed-admission contracts; preserve exact future professional-review prerequisites and reject weakened safety gates."
+  },
+  {
+    "file": "scripts/phase2/deploy-supabase-staging-smoke.mjs",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "scripts/phase2/deploy-supabase-staging.ps1",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "scripts/phase9/edge-auth-smoke.mjs",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "scripts/phase9/edge-function-manifest-smoke.mjs",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/account-deletion/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/catalog-lookup/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/consent-withdrawal/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/data-export/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/manifest.json",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/order-report-poll/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/revenuecat-webhook/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  },
+  {
+    "file": "supabase/functions/subscription-grants/index.ts",
+    "decision": "Preserve main production/auth/privacy/traffic-freeze implementation and associated tests. Older monolithic handoff code is superseded; no authority or safety checks removed."
+  }
+]

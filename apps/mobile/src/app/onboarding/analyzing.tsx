@@ -5,10 +5,6 @@ import { Animated, Easing, Platform, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
-import {
-  shouldReduceMotion,
-  useReduceMotionPreference,
-} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -17,23 +13,19 @@ function devProfileSaveFailureMode(): 'once' | null {
   return process.env.EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE === 'once' ? 'once' : null;
 }
 
-// 07a · Personalization theater. "Analyzing your skin profile…" (docs/01 §2/§8).
-// Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
-// hero (BLOCKED: B-VERIFY-RIVE-LOTTIE). Persists the skin profile, then reveals.
 export default function AnalyzingScreen() {
-  const { goals, persistSkinProfile, quizAnswers } = useOnboarding();
+  const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();
   const quizCompletion = getQuizCompletionState(quizAnswers);
+  const hasProfileResult = profileResult !== null || quizCompletion.complete;
   const [pulse] = useState(() => new Animated.Value(0));
   const [saveError, setSaveError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const simulatedProfileSaveFailureUsed = useRef(false);
   const profileSaveFailureMode = devProfileSaveFailureMode();
   const useNativeAnimationDriver = Platform.OS !== 'web';
-  const reduceMotion = useReduceMotionPreference();
-  const renderStaticPulse = shouldReduceMotion(reduceMotion);
 
   useEffect(() => {
-    if (!quizCompletion.complete) {
+    if (!hasProfileResult) {
       router.replace('/onboarding/quiz');
       return;
     }
@@ -43,41 +35,6 @@ export default function AnalyzingScreen() {
     }
 
     track('personalization_shown');
-    let cancelled = false;
-
-    // Persist the local completion record before reveal. Without that durable
-    // signal, a cold start can force the user back through onboarding.
-    const profileSave =
-      profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
-        ? (() => {
-            simulatedProfileSaveFailureUsed.current = true;
-            return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
-          })()
-        : persistSkinProfile();
-
-    void profileSave
-      .then(() => {
-        if (cancelled) return;
-        router.replace('/onboarding/reveal');
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setSaveError(true);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [goals.length, persistSkinProfile, profileSaveFailureMode, quizCompletion.complete, retryKey]);
-
-  useEffect(() => {
-    if (renderStaticPulse || saveError) {
-      pulse.stopAnimation();
-      pulse.setValue(0);
-      return;
-    }
-
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, {
@@ -95,15 +52,48 @@ export default function AnalyzingScreen() {
       ]),
     );
     loop.start();
-    return () => loop.stop();
-  }, [pulse, renderStaticPulse, saveError, useNativeAnimationDriver]);
 
-  const scale = renderStaticPulse
-    ? 1
-    : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1.04] });
-  const opacity = renderStaticPulse
-    ? 0.65
-    : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });
+    let revealTimer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+    const profileSave = profileResult
+      ? Promise.resolve(profileResult)
+      : profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
+        ? (() => {
+            simulatedProfileSaveFailureUsed.current = true;
+            return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
+          })()
+        : persistSkinProfile();
+
+    void profileSave
+      .then(() => {
+        if (cancelled) return;
+        revealTimer = setTimeout(() => router.replace('/onboarding/reveal'), 2600);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          loop.stop();
+          setSaveError(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      loop.stop();
+      if (revealTimer) clearTimeout(revealTimer);
+    };
+  }, [
+    goals.length,
+    hasProfileResult,
+    persistSkinProfile,
+    profileResult,
+    profileSaveFailureMode,
+    pulse,
+    retryKey,
+    useNativeAnimationDriver,
+  ]);
+
+  const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.94, 1.08] });
+  const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.42, 0.82] });
 
   if (saveError) {
     return (
@@ -136,22 +126,34 @@ export default function AnalyzingScreen() {
 
   return (
     <Screen>
-      <View className="flex-1 items-center justify-center">
-        <Animated.View
-          style={{
-            width: 88,
-            height: 88,
-            borderRadius: 28,
-            backgroundColor: colors.clayBright,
-            transform: [{ scale }],
-            opacity,
-          }}
-        />
-        <Text variant="title" className="mt-12 text-center">
-          Building your plan…
+      <View className="flex-1 items-center justify-center px-4">
+        <View className="h-[148px] w-[148px] items-center justify-center rounded-full bg-clay-tint">
+          <Animated.View
+            style={{
+              width: 104,
+              height: 104,
+              borderRadius: 52,
+              borderWidth: 1,
+              borderColor: 'rgba(165,105,75,0.28)',
+              backgroundColor: colors.paperRaised,
+              transform: [{ scale }],
+              opacity,
+            }}
+          />
+          <View
+            className="absolute h-7 w-7 rounded-[9px]"
+            style={{ backgroundColor: colors.clay }}
+          />
+        </View>
+        <Text variant="eyebrow" tone="clay" className="mt-10 text-center">
+          BUILDING YOUR PLAN
         </Text>
-        <Text variant="body" tone="muted" className="mt-2 text-center">
-          Reading your answers and shaping a routine around your skin.
+        <Text variant="title" className="mt-2 text-center">
+          Turning your answers into something useful.
+        </Text>
+        <Text variant="body" tone="muted" className="mt-3 max-w-[310px] text-center">
+          We&apos;re organizing your skin profile and the products you added into a simpler first
+          routine.
         </Text>
       </View>
     </Screen>

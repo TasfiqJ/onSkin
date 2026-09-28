@@ -3,7 +3,7 @@
 Severity: Medium
 Surface: Expo web phone-width proxy for iOS and Android
 Environment: Expo web, 320x568 viewport, local development server on port 19114
-Feature: Ask RoutineKind deterministic advisor
+Feature: Ask Layerwell deterministic advisor
 Date: 2026-07-07
 Tester: Codex
 

@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import {
   block,
   evidenceFlagEnabled,
+  generatedEvidenceOutputPaths,
   gitStatusExcludingGeneratedEvidence,
   printResult,
   read,
@@ -23,6 +24,7 @@ const evidenceGates = [
     keys: [
       'PHASE6_RC_OFFERING_REVIEWED',
       'PHASE6_IOS_SANDBOX_RESTORE_PASS',
+      'PHASE6_REVENUECAT_TRUSTED_ENTITLEMENTS_PASS',
       'PHASE6_ANDROID_LICENSE_TEST_PASS',
       'PHASE6_WEBHOOK_HMAC_TEST_PASS',
       'PHASE6_FINANCE_SIGNOFF',
@@ -163,6 +165,7 @@ const evidenceGates = [
   },
 ];
 
+// Prettier may wrap a long flag call and add a trailing argument comma.
 const accessFor = (key) => String.raw`(?:process\.env|env)\.${key}`;
 
 for (const { file, keys } of evidenceGates) {
@@ -183,7 +186,7 @@ for (const { file, keys } of evidenceGates) {
     );
     block(
       errors,
-      /evidenceFlagEnabled\(env\[key\]\)/.test(source),
+      /evidenceFlagEnabled\(\s*env\[key\]\s*,?\s*\)/.test(source),
       `${file} must normalize dynamic evidence keys with evidenceFlagEnabled(env[key]).`,
     );
     block(
@@ -206,7 +209,7 @@ for (const { file, keys } of evidenceGates) {
     const access = accessFor(key);
     block(
       errors,
-      new RegExp(String.raw`evidenceFlagEnabled\(${access}\)`).test(source),
+      new RegExp(String.raw`evidenceFlagEnabled\(\s*${access}\s*,?\s*\)`).test(source),
       `${file} must normalize ${key} with evidenceFlagEnabled.`,
     );
     block(
@@ -235,6 +238,17 @@ for (const [value, expected] of [
     errors,
     evidenceFlagEnabled(value) === expected,
     `evidenceFlagEnabled(${JSON.stringify(value)}) must be ${expected}.`,
+  );
+}
+
+for (const path of [
+  'docs/phase-4/generated/cosing-catalog-qa-report.json',
+  'docs/phase-4/generated/cosing-catalog-qa-report.md',
+]) {
+  block(
+    errors,
+    generatedEvidenceOutputPaths.includes(path),
+    `generatedEvidenceOutputPaths must include ${path}.`,
   );
 }
 

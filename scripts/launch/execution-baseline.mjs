@@ -28,7 +28,7 @@ export const readinessLabels = [
 
 export const features = [
   ['F-01', 1, 'brand_identity', 'Rebrand and identity migration', 'launch-blocked'],
-  ['F-02', 2, 'onboarding_consent', 'Onboarding, age gate, and consent', 'implemented'],
+  ['F-02', 2, 'onboarding_consent', 'Onboarding, age gate, and consent', 'launch-blocked'],
   [
     'F-03',
     3,
@@ -52,7 +52,7 @@ export const features = [
   ['F-17', 17, 'community', 'Community and Skin Notes', 'stubbed'],
   ['F-18', 18, 'trend_insights', 'Trend insights', 'launch-blocked'],
   ['F-19', 19, 'widgets_live_activities', 'Widgets and Live Activities', 'inert'],
-  ['F-20', 20, 'admin_tooling', 'Admin and operator review tooling', 'implemented'],
+  ['F-20', 20, 'admin_tooling', 'Admin and operator review tooling', 'launch-blocked'],
 ].map(([id, number, key, name, readiness]) => ({
   id,
   number,
@@ -220,6 +220,8 @@ function routeFeatures(path) {
 }
 
 function flagFeatures(name) {
+  if (name === 'EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED') return ['F-11', 'F-12'];
+  if (name === 'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED') return ['F-11'];
   if (name.includes('NATIVE_CAMERA')) return ['F-03', 'F-09'];
   if (name.includes('NATIVE_OCR') || name.includes('OBF_API')) return ['F-03', 'F-04'];
   if (name.includes('OBF_CONTRIBUTION')) return ['F-04'];
@@ -256,7 +258,25 @@ function nativeFeatures(name) {
 
 function dataFeatures(name) {
   const value = name.toLowerCase();
-  if (value.includes('localdateboundary')) return ['F-07', 'F-08'];
+  if (value === 'apps/mobile/src/lib/storage/privatesecurestore.ts') return ['F-02'];
+  const exactTableFeatures = {
+    account_deletion_operations: ['F-02', 'F-20'],
+    account_deletion_barriers: ['F-02', 'F-20'],
+    account_deletion_steps: ['F-02', 'F-20'],
+    account_deletion_receipts: ['F-02', 'F-20'],
+    account_deletion_operator_recovery_audit: ['F-02', 'F-20'],
+    revenuecat_identity_tombstones: ['F-02', 'F-11', 'F-12'],
+    account_publication_leases: ['F-02', 'F-11', 'F-12'],
+    apple_auth_lifecycles: ['F-02', 'F-20'],
+    apple_auth_capture_operations: ['F-02', 'F-20'],
+    apple_auth_server_events: ['F-02', 'F-20'],
+    health_processing_states: ['F-02'],
+    health_consent_withdrawal_operations: ['F-02'],
+    health_consent_withdrawal_steps: ['F-02'],
+  };
+  if (exactTableFeatures[value]) return exactTableFeatures[value];
+  if (value.startsWith('account_deletion_')) return ['F-02', 'F-20'];
+  if (value === 'mobile_outbox_receipts') return ['F-03'];
   if (value.includes('/trend/')) return ['F-18'];
   if (/photo/.test(value)) return ['F-09', ...(value.includes('trend') ? ['F-18'] : [])];
   if (/community|moderation|reaction|topic|question/.test(value)) return ['F-17'];
@@ -266,39 +286,46 @@ function dataFeatures(name) {
   if (/entitlement|subscription|reverse_trial/.test(value)) return ['F-11', 'F-12'];
   if (/notification/.test(value)) return ['F-10'];
   if (/streak|completion|\/today\//.test(value)) return ['F-07'];
+  if (/healthconsent|health[_-]consent|healthprocessing|health_processing/.test(value)) {
+    return ['F-02'];
+  }
   if (/cycle|ramp/.test(value)) return ['F-08'];
   if (/routine/.test(value)) return ['F-06'];
+  if (value.includes('/offline/cataloglookupqueue')) return ['F-03', 'F-04'];
   if (/conflict|sequencing|ingredient_tag/.test(value)) return ['F-05'];
-  if (/user_product|shelf|opened|pao|mobile_outbox/.test(value)) return ['F-03'];
+  if (/user_product|shelf|opened|pao/.test(value)) return ['F-03'];
   if (/product|catalog|brand|ingredient|obf/.test(value)) return ['F-04'];
-  if (
-    /consent|profile|agegate|skinprofile|applock|largesecure|privatesecure|account_deletion/.test(
-      value,
-    )
-  )
-    return ['F-02'];
-  if (/growth|waitlist|edge_rate|analytics|posthog/.test(value)) return ['F-20'];
+  if (/consent|profile|agegate|skinprofile|applock|largesecure/.test(value)) return ['F-02'];
+  if (/growth|waitlist|edge_rate/.test(value)) return ['F-20'];
   return [];
 }
 
 function edgeFeatures(name) {
   const map = {
     'account-deletion': ['F-02', 'F-20'],
+    'apple-account-events': ['F-02', 'F-20'],
+    'apple-auth-lifecycle': ['F-02', 'F-20'],
+    'apple-auth-worker': ['F-02', 'F-20'],
+    'ask-layerwell': ['F-14'],
     'catalog-lookup': ['F-03', 'F-04'],
+    'catalog-operator': ['F-04', 'F-20'],
     'catalog-report': ['F-04'],
     'catalog-search': ['F-03', 'F-04'],
     'consent-withdrawal': ['F-02'],
+    'health-consent-worker': ['F-02'],
     'data-export': ['F-02'],
     'growth-event': ['F-15', 'F-20'],
     'order-report-poll': ['F-16'],
     'revenuecat-webhook': ['F-11', 'F-12'],
     'subscription-grants': ['F-11', 'F-12'],
+    'subscription-reconciliation': ['F-11', 'F-12'],
     waitlist: ['F-01'],
   };
   return map[name] ?? [];
 }
 
 function packetFeatures(path) {
+  if (path.includes('/e2e/cat04-catalog-recovery-audit.mjs')) return ['F-03', 'F-04'];
   if (path.includes('/phase3/')) return ['F-01', 'F-05', 'F-20'];
   if (path.includes('/phase4/')) return ['F-04'];
   if (path.includes('/phase5/')) return ['F-03', 'F-09', 'F-10', 'F-19'];
@@ -340,7 +367,7 @@ function discoverTables() {
   const tables = new Map();
   for (const path of walk('supabase/migrations').filter((entry) => entry.endsWith('.sql'))) {
     for (const match of readRepo(path).matchAll(
-      /create\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?([a-z_]+)/gi,
+      /create\s+table\s+(?:if\s+not\s+exists\s+)?(?:(?:public|private)\.)?([a-z_]+)/gi,
     )) {
       if (!tables.has(match[1])) tables.set(match[1], path);
     }
@@ -364,25 +391,42 @@ function discoverGeneratedArtifacts() {
 function discoverVendorOrigins() {
   const hostMap = {
     'api.revenuecat.com': ['revenuecat', ['F-11', 'F-12']],
+    'www.revenuecat.com': ['revenuecat-documentation', ['F-11', 'F-12']],
     'api.shopmy.us': ['shopmy', ['F-16']],
     'appleid.apple.com': ['apple-identity', ['F-02']],
     'apps.apple.com': ['apple-app-store', ['F-11', 'F-12']],
+    'developer.apple.com': ['apple-review-guideline-source-provenance', ['F-06', 'F-08']],
+    'www.fda.gov': ['fda-general-wellness-policy-source-provenance', ['F-06', 'F-08']],
+    'www.ftc.gov': ['ftc-health-products-policy-source-provenance', ['F-06', 'F-08']],
+    'support.apple.com': ['apple-identity-support', ['F-02']],
     'challenges.cloudflare.com': ['cloudflare-turnstile', ['F-20']],
     'eu.i.posthog.com': ['posthog', ['F-20']],
     'eu.posthog.com': ['posthog', ['F-20']],
     'play.google.com': ['google-play-subscriptions-source-only', ['F-11', 'F-12']],
     'us.i.posthog.com': ['posthog', ['F-20']],
     'us.posthog.com': ['posthog', ['F-20']],
-    'world.openbeautyfacts.org': ['open-beauty-facts', ['F-04']],
+    'www.aad.org': ['american-academy-dermatology-source-provenance', ['F-06', 'F-08']],
   };
   const origins = new Map();
   const files = [...walk('apps/mobile/src'), ...walk('supabase/functions')].filter(
     (path) => /\.(?:ts|tsx)$/.test(path) && !/\.(?:test|spec)\./.test(path),
   );
   for (const path of files) {
-    for (const match of readRepo(path).matchAll(/https:\/\/([a-z0-9.-]+)/gi)) {
-      const host = match[1].toLowerCase();
-      if (host.endsWith('.invalid') || host === 'example.com' || host.startsWith('your-project'))
+    const source = readRepo(path);
+    const sourceHosts = new Set([
+      ...[...source.matchAll(/https:\/\/([a-z0-9.-]+)/gi)].map((match) => match[1].toLowerCase()),
+      ...[...source.matchAll(/\.hostname\s*(?:===|!==)\s*['"]([a-z0-9.-]+)['"]/gi)].map((match) =>
+        match[1].toLowerCase(),
+      ),
+    ]);
+    for (const host of sourceHosts) {
+      if (
+        host.endsWith('.invalid') ||
+        host === 'example.com' ||
+        host === 'localhost' ||
+        host === '127.0.0.1' ||
+        host.startsWith('your-project')
+      )
         continue;
       const mapping = hostMap[host];
       if (!mapping) throw new Error(`Unmapped external origin https://${host} in ${path}.`);
@@ -419,14 +463,27 @@ export function buildFeatureInventory() {
     item('native-module', name, 'apps/mobile/package.json', nativeFeatures(name)),
   );
 
-  const localStores = walk('apps/mobile/src').filter((path) =>
-    /(?:store|storage|repository|database)\.(?:ts|tsx)$/i.test(path),
+  const nonPersistentStores = new Set([
+    'apps/mobile/src/lib/auth/sessionBoundaryQueue.ts',
+    'apps/mobile/src/lib/query/localDateBoundaryStore.ts',
+    'apps/mobile/src/lib/serialTaskQueue.ts',
+  ]);
+  const localStores = walk('apps/mobile/src').filter(
+    (path) =>
+      /(?:store|storage|repository|database|queue)\.(?:ts|tsx)$/i.test(path) &&
+      !nonPersistentStores.has(path),
   );
   const storeItems = localStores.map((path) =>
     item('data-store', `local:${path}`, path, dataFeatures(path)),
   );
   const tableItems = discoverTables().map(([name, path]) =>
-    item('data-store', `postgres:${name}`, path, dataFeatures(name), 'implemented'),
+    item(
+      'data-store',
+      `postgres:${name}`,
+      path,
+      dataFeatures(name),
+      ['obf_contribution_queue', 'shelf_scans'].includes(name) ? 'inert' : 'implemented',
+    ),
   );
 
   const edgeItems = readdirSync(resolve(root, 'supabase/functions'), { withFileTypes: true })

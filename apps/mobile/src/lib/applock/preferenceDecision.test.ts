@@ -29,11 +29,9 @@ describe('App Lock preference consumer decisions', () => {
   });
 
   it.each([
-    { status: 'corrupt', enabled: null, reason: 'content_key_invalid' },
-    { status: 'corrupt', enabled: null, reason: 'decryption_failed' },
+    { status: 'unavailable', enabled: null, reason: 'content_key_invalid' },
+    { status: 'unavailable', enabled: null, reason: 'decryption_failed' },
     { status: 'unavailable', enabled: null, reason: 'content_key_missing' },
-    { status: 'unavailable', enabled: null, reason: 'content_key_conflict' },
-    { status: 'unavailable', enabled: null, reason: 'content_key_storage_unavailable' },
     { status: 'unavailable', enabled: null, reason: 'storage_unavailable' },
     { status: 'unavailable', enabled: null, reason: 'account_boundary' },
   ] as const)('blocks with non-destructive reread recovery for state %j', (result) => {

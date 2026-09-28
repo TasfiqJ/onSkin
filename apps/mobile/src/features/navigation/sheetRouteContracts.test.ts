@@ -93,6 +93,7 @@ describe('Permission recovery contracts', () => {
 
   it('surfaces camera capture and mount failures', () => {
     const copy = readSource('features/native/camera/failureCopy.ts');
+    const cameraLifecycle = readSource('features/native/camera/useCameraAccessLifecycle.ts');
     const progressCapture = readAppRoute('progress/capture.tsx');
     const shelfOcr = readAppRoute('shelf/ocr.tsx');
     const shelfScan = readAppRoute('shelf/scan.tsx');
@@ -100,8 +101,16 @@ describe('Permission recovery contracts', () => {
     expect(copy).toContain('progressCaptureTitle');
     expect(copy).toContain('shelfSettingsTitle');
     expect(copy).toContain('labelCaptureTitle');
+    expect(copy).toContain('CAMERA_PERMISSION_FAILURE_COPY');
+    expect(copy).toContain('refresh_failed: {');
+    expect(copy).toContain("retryLabel: 'Check camera again'");
+    expect(copy).toContain('request_failed: {');
+    expect(copy).toContain("retryLabel: 'Try camera access again'");
+    expect(cameraLifecycle).toContain('setCameraUnavailable(true)');
+    expect(cameraLifecycle).toContain('retryCameraMount: retryCamera');
     expect(progressCapture).toContain('CameraUnavailableGate');
-    expect(progressCapture).toContain('setCameraUnavailable(true)');
+    expect(progressCapture).toContain('onMountError={cameraAccess.onCameraMountError}');
+    expect(progressCapture).toContain('onRetry={cameraAccess.retryCameraMount}');
     expect(progressCapture).toContain('PhotoCaptureFailureGate');
     expect(progressCapture).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE');
     expect(progressCapture).toContain('setPhotoCaptureFailed(true)');
@@ -113,15 +122,20 @@ describe('Permission recovery contracts', () => {
     expect(progressCapture).toContain('{canAttemptCapture ? (');
     expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureBody');
+    expect(progressCapture).toContain('permissionFailureCopy={permissionFailureCopy}');
+    expect(progressCapture).toContain('permissionFailureCopy?.retryLabel ?? askLabel');
     expect(progressCapture).toContain('disabled={!captureReady || capturing}');
     expect(progressCapture).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
-    expect(shelfOcr).toContain('setCameraUnavailable(true)');
+    expect(shelfOcr).toContain('cameraAccess.markCameraUnavailable(cameraGeneration)');
+    expect(shelfOcr).toContain("'Try camera again'");
     expect(shelfOcr).toContain('setLabelCaptureFailed(true)');
     expect(shelfOcr).toContain('accessibilityRole="alert"');
     expect(shelfOcr).toContain('Try label photo again');
     expect(shelfOcr).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
     expect(shelfOcr).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelUnavailableTitle');
     expect(shelfOcr).toContain('CAMERA_FAILURE_COPY.labelUnavailableTitle');
+    expect(shelfOcr).toContain('CAMERA_PERMISSION_FAILURE_COPY[cameraAccess.permissionFailure]');
+    expect(shelfScan).toContain('CAMERA_PERMISSION_FAILURE_COPY[permissionFailure]');
     for (const routeSource of [shelfOcr, shelfScan]) {
       expect(routeSource).toContain('EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION');
       expect(routeSource).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');

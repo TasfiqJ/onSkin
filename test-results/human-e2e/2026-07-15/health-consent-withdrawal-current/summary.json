@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "verdict": "pass",
+  "failedRouteCount": 0,
+  "viewports": ["390 x 844", "360 x 640"],
+  "verified": [
+    "fresh reset reaches age and current consent before goals",
+    "decline records no consent and direct goals entry recovers to consent",
+    "fresh grant stays on /onboarding/goals through 6.5 seconds and reload",
+    "withdrawal cancel preserves active state and confirm reaches the paused shell",
+    "withdrawn paused state survives reload with local cleanup complete",
+    "fresh-consent refusal remains paused without health-data collection",
+    "fresh reconsent stays on /onboarding/goals through 6.5 seconds and reload",
+    "compact 360 x 640 consent controls remain visible and reachable"
+  ],
+  "artifacts": [
+    "report.md",
+    "results.json",
+    "13-goals-stable-postfix-390x844.png",
+    "15-privacy-active-postfix-390x844.png",
+    "16-withdrawal-confirm-postfix-390x844.png",
+    "17-withdrawn-paused-postfix-390x844.png",
+    "18-withdrawn-reload-postfix-390x844.png",
+    "19-fresh-consent-postfix-390x844.png",
+    "20-reconsent-goals-stable-postfix-390x844.png",
+    "21-consent-360x640-postfix.png",
+    "22-reconsent-goals-reload-postfix-390x844.png",
+    "23-fresh-grant-goals-final-390x844.png",
+    "24-fresh-grant-goals-reload-final-390x844.png"
+  ],
+  "limitations": [
+    "Expo web compatibility evidence does not replace physical-iPhone, TestFlight, VoiceOver, Dynamic Type, or native lifecycle verification.",
+    "Placeholder Supabase configuration did not exercise hosted worker, Cron/Vault, Storage deletion, or the version-2 zero-residue artifact.",
+    "All 15 installed consent-copy tuples remain draft_blocked; no counsel, legal-compliance, Apple-review, or revenue outcome is claimed."
+  ]
+}

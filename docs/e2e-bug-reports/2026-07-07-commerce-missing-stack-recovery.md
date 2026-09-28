@@ -2,7 +2,7 @@
 
 Severity: Medium
 Surface: Expo web
-Environment: Compact direct-entry route at 320 x 568 with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`
+Environment: Compact direct-entry route at 320 x 568 with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app`
 Feature: Commerce stack detail
 Date: 2026-07-07
 Tester: Codex
@@ -52,7 +52,7 @@ Render a polished stack-unavailable state with an explicit stack-library return 
 ## Verification Flow After Fix
 
 1. Run the commerce route contract test.
-2. Start Expo web with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`.
+2. Start Expo web with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app`.
 3. Open `/commerce/stack/missing-stack-e2e` at 320 x 568.
 4. Confirm `Stack unavailable` copy, no horizontal overflow, no clipped controls, and no visible sub-44 px controls.
 5. Tap `Back to stacks` and confirm `/commerce/stacks`.

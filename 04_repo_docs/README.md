@@ -1,4 +1,4 @@
-# RoutineKind
+# Layerwell
 
 Private skincare shelf, routine, and progress system for people who already own multiple skincare products and need a trustworthy way to use them in the right order, on the right nights.
 
@@ -10,7 +10,9 @@ Target business outcome: reach and retain 10,000+ active subscribers, which is t
 
 ## Current Product Position
 
-[Decision] Do not launch as `OnSkin`. The existing public OnSkin app occupies the same name, category, and scanner language.
+[Decision] Layerwell is the founder-selected identity. Public launch remains
+blocked until qualified trademark counsel clears the exact use and the final
+identity assets are authenticated.
 
 [Decision] Keep the full product vision, but expose and market only surfaces that are reviewed, production-real, and device-verified.
 

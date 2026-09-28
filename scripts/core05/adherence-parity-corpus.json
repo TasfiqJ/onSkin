@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "canonicalFrozenDateOrder": "newest_to_oldest",
+  "cases": [
+    {
+      "id": "separated_misses",
+      "completedDates": ["2026-06-06", "2026-06-08", "2026-06-10"],
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 3,
+        "best": 3,
+        "frozenDates": ["2026-06-09", "2026-06-07"],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "today_neutral_trailing_gap",
+      "completedDates": ["2026-06-07"],
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 1,
+        "best": 1,
+        "frozenDates": ["2026-06-09", "2026-06-08"],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "future_only",
+      "completedDates": ["2026-06-11"],
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 0,
+        "best": 0,
+        "frozenDates": [],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "empty_new",
+      "completedDates": [],
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 0,
+        "best": 0,
+        "frozenDates": [],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "lapsed",
+      "completedDates": ["2026-06-01"],
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 0,
+        "best": 1,
+        "frozenDates": [],
+        "lapsed": true
+      }
+    },
+    {
+      "id": "dst_date_boundary",
+      "completedDates": ["2026-03-07", "2026-03-08", "2026-03-09"],
+      "referenceDay": "2026-03-09",
+      "expected": {
+        "current": 3,
+        "best": 3,
+        "frozenDates": [],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "duplicates_and_future",
+      "completedDates": ["2026-06-09", "2026-06-09", "2026-06-10", "2026-06-11"],
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 2,
+        "best": 2,
+        "frozenDates": [],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "best_preservation_projection",
+      "completedDates": [
+        "2026-05-01",
+        "2026-05-02",
+        "2026-05-04",
+        "2026-05-05",
+        "2026-05-06",
+        "2026-06-10",
+        "2026-06-11"
+      ],
+      "referenceDay": "2026-06-13",
+      "expected": {
+        "current": 2,
+        "best": 5,
+        "frozenDates": ["2026-06-12"],
+        "lapsed": false
+      }
+    },
+    {
+      "id": "bounded_current_scan",
+      "completedDateRange": {
+        "start": "2024-06-09",
+        "end": "2026-06-10"
+      },
+      "referenceDay": "2026-06-10",
+      "expected": {
+        "current": 731,
+        "best": 732,
+        "frozenDates": [],
+        "lapsed": false
+      }
+    }
+  ]
+}

@@ -40,7 +40,7 @@ Note encryption, camera capture, metadata-store commit, source cleanup, deletion
 
 ### Display-photo decryption
 
-`decryptPhotoToDataUri` times only owned encrypted `.onskinphoto` inputs. It includes the account-bound read, encrypted file read, envelope validation, content-key read, authenticated decryption, UTF-8 conversion, and data-URI construction.
+`decryptPhotoToDataUri` times only owned encrypted `.layerwellphoto` inputs. It includes the account-bound read, encrypted file read, envelope validation, content-key read, authenticated decryption, UTF-8 conversion, and data-URI construction.
 
 Plaintext pass-throughs, note encryption/decryption, and `createPhotoShareFile` are excluded. Share preparation also strips metadata, reserves plaintext staging, writes a Base64 file, and advances a staging journal; mixing it into `photo_decrypt` would make the display-decode distribution uninterpretable. A future share-performance gate needs its own separately reviewed fixed label.
 

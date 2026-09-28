@@ -1,6 +1,7 @@
-import type { NotificationKind } from '@onskin/types';
+import type { NotificationKind } from '@layerwell/types';
 
 import { BRAND } from '@/lib/brand';
+import { DEFAULT_ROUTINE_REMINDER_TIMES } from './defaults';
 
 /**
  * Centralised, calm + claim-safe copy for the engagement layer (docs/07 §3.3/§4,
@@ -69,16 +70,25 @@ export function notificationContentForLockScreen(kind: NotificationKind): {
   return { title: LOCK_SCREEN_NOTIFICATION_TITLE, body: c.discreet };
 }
 
+function formatReminderTime(hm: string): string {
+  const [rawHour, rawMinute] = hm.split(':').map(Number);
+  const hour = Number.isFinite(rawHour) ? (rawHour ?? 0) : 0;
+  const minute = Number.isFinite(rawMinute) ? (rawMinute ?? 0) : 0;
+  const suffix = hour < 12 ? 'AM' : 'PM';
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${displayHour}:${String(minute).padStart(2, '0')} ${suffix}`;
+}
+
 /** Soft-ask permission priming (design screen 01, docs/07 §3.2). */
 export const SOFT_ASK = {
-  title: 'A gentle morning and evening nudge?',
-  body: 'Turning this on uses the morning and evening times in Settings. On a new setup, those start at 7:30 AM and 9:30 PM. Both stay generic on your lock screen.',
+  title: 'A gentle nudge at your routine times?',
+  body: 'Start with these two times for routine reminders. No pressure, and you can change either time anytime.',
   bullets: [
-    'New setups start at 7:30 AM and 9:30 PM',
+    `Morning at ${formatReminderTime(DEFAULT_ROUTINE_REMINDER_TIMES.amTime)}`,
+    `Evening at ${formatReminderTime(DEFAULT_ROUTINE_REMINDER_TIMES.pmTime)}`,
     'Discreet on your lock screen',
-    'Change or turn off each reminder anytime',
   ],
-  yes: 'Yes, remind me',
+  yes: 'Use these times',
   no: 'Not now',
 } as const;
 
@@ -98,30 +108,16 @@ export const WELCOME_BACK = {
 
 /** Calm milestone copy (docs/07 §4.5). Gentle markers, never confetti-cannon. */
 export const MILESTONE_COPY: Record<string, string> = {
-  d7: 'One week of showing up. That’s how habits start.',
-  one_cycle: 'A full cycle in. Your progress photos may start to show it.',
-  d30: 'Thirty days of consistency. Quietly, this is the work paying off.',
+  d7: 'Seven completed routine nights. A steady start, at your pace.',
+  one_cycle: 'A cycle’s worth of routine nights checked off. Keep going at your pace.',
+  d30: 'Thirty completed routine nights. A steady rhythm, at your pace.',
 };
 
 /** Settings-surface labels (design screens 02/03). */
 export const SETTINGS_COPY = {
-  capNote: 'we cap gentle nudges so they never stack up',
+  capNote:
+    'On this device, routine pacing and replenishment suggestions are limited to 3 scheduling attempts in 7 days; tips and announcements to 1. Progress-photo reminders are weekly.',
   discreetLabel: 'Lock screen privacy',
   discreetHint: 'Always generic; product, photo, and condition details stay inside the app',
-  quietLabel: 'Nothing fires',
-  permissionRecovery: {
-    askTitle: 'Notifications need your permission',
-    askBody:
-      'Your reminder choices are saved. Allow notifications to deliver them on this device.',
-    deniedTitle: 'Reminders paused by device settings',
-    deniedBody:
-      'Your reminder choices are still saved. Open this device’s settings to allow notifications.',
-    unavailableTitle: 'Notification access unavailable',
-    unavailableBody:
-      'Your reminder choices are still saved. This device could not confirm notification access.',
-    promptFailure:
-      'Notification access did not change. Try again, or allow notifications from your system Settings app.',
-    settingsFailure:
-      'Device settings could not be opened. Try again from your system Settings app.',
-  },
+  quietLabel: 'Routine quiet hours',
 } as const;

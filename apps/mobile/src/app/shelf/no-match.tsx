@@ -1,9 +1,22 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, type StyleProp, View, type ViewStyle, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
+import { CatalogReportConfirmation } from '@/features/catalog/CatalogReportConfirmation';
 import { reportCatalogIssue } from '@/features/catalog/client';
+import { barcodeRecoveryReportInput } from '@/features/catalog/recoveryReport';
+import {
+  cancelCatalogReportOperation,
+  createCatalogReportOperation,
+  finishCatalogReportOperation,
+  markCatalogReportOperationAttempted,
+  type CatalogReportOperation,
+} from '@/features/catalog/reportOperation';
+import {
+  catalogReportFeedback,
+  type CatalogReportFeedback,
+} from '@/features/catalog/reportPresentation';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { cn } from '@/lib/cn';
@@ -15,17 +28,23 @@ import { colors } from '@/theme/tokens';
 // the source workflow is approved.
 export default function NoMatchScreen() {
   const { reset } = useIntake();
-  const params = useLocalSearchParams<{ barcode?: string }>();
+  const params = useLocalSearchParams<{ barcode?: string; wrongProductId?: string }>();
   const { height, width } = useWindowDimensions();
+  const reportSubmissionInFlight = useRef(false);
+  const [confirmingReport, setConfirmingReport] = useState(false);
+  const [reportOperation, setReportOperation] = useState<CatalogReportOperation | null>(null);
   const [reportingMissingProduct, setReportingMissingProduct] = useState(false);
-  const [missingProductFeedback, setMissingProductFeedback] = useState<{
-    title: string;
-    message: string;
-  } | null>(null);
+  const [missingProductFeedback, setMissingProductFeedback] =
+    useState<CatalogReportFeedback | null>(null);
   const barcode =
     typeof params.barcode === 'string' && params.barcode.trim().length > 0
       ? params.barcode.trim()
       : null;
+  const wrongProductId =
+    typeof params.wrongProductId === 'string' && params.wrongProductId.trim().length > 0
+      ? params.wrongProductId.trim()
+      : null;
+  const reportDraft = barcodeRecoveryReportInput({ barcode, wrongProductId });
   const shortPhone = height < 700 || width <= 430;
   const ultraShortPhone = height < 560 || width <= 320;
   const supportFloorPhone = width <= 320 && height < 520;
@@ -47,49 +66,51 @@ export default function NoMatchScreen() {
         : undefined;
 
   const goOcr = () => {
+    if (reportingMissingProduct) return;
     haptics.select();
     trackProductAddStarted('miss_label');
-    reset({ addedVia: 'ocr' });
-    router.replace('/shelf/ocr');
+    const intakeId = reset({ addedVia: 'ocr', barcode });
+    router.replace({ pathname: '/shelf/ocr', params: { intakeId } });
   };
   const goSearch = () => {
+    if (reportingMissingProduct) return;
     haptics.select();
     trackProductAddStarted('miss_search');
-    reset({ addedVia: 'search' });
-    router.replace('/shelf/search');
+    const intakeId = reset({ addedVia: 'search', barcode });
+    router.replace({ pathname: '/shelf/search', params: { intakeId } });
   };
   const goManual = () => {
+    if (reportingMissingProduct) return;
     haptics.select();
     trackProductAddStarted('miss_manual');
-    reset({ addedVia: 'manual', barcode });
-    router.replace('/shelf/manual');
+    const intakeId = reset({ addedVia: 'manual', barcode });
+    router.replace({ pathname: '/shelf/manual', params: { intakeId } });
+  };
+  const openReportConfirmation = () => {
+    if (!reportDraft || reportSubmissionInFlight.current) return;
+    setReportOperation((current) => current ?? createCatalogReportOperation(reportDraft));
+    setMissingProductFeedback(null);
+    setConfirmingReport(true);
   };
   const reportMissingProduct = async () => {
-    if (reportingMissingProduct) return;
+    if (!reportOperation || reportSubmissionInFlight.current || reportingMissingProduct) return;
+    const attempted = markCatalogReportOperationAttempted(reportOperation);
+    setReportOperation(attempted);
+    reportSubmissionInFlight.current = true;
     setReportingMissingProduct(true);
     setMissingProductFeedback(null);
-    const result = await reportCatalogIssue({
-      correctionType: 'missing_product',
-      barcode,
-      description: 'missing_product reported from barcode no-match',
-      proposedPayload: barcode ? { barcode } : undefined,
-      clientContext: {
-        addedVia: 'barcode',
-        route: 'shelf_no_match',
-      },
-    });
-    setMissingProductFeedback(
-      result.ok
-        ? {
-            title: 'Report sent',
-            message: 'Thanks. Missing-product reports help prioritize catalog review.',
-          }
-        : {
-            title: 'Report not sent',
-            message: 'Catalog reporting is not configured on this build. Add it another way.',
-          },
-    );
-    setReportingMissingProduct(false);
+    try {
+      const outcome = await reportCatalogIssue(attempted.input);
+      setReportOperation(finishCatalogReportOperation(attempted, outcome));
+      setMissingProductFeedback(catalogReportFeedback(outcome));
+    } catch {
+      setReportOperation(attempted);
+      setMissingProductFeedback(catalogReportFeedback({ result: 'offline_or_withdrawn' }));
+    } finally {
+      setConfirmingReport(false);
+      setReportingMissingProduct(false);
+      reportSubmissionInFlight.current = false;
+    }
   };
 
   return (
@@ -135,6 +156,7 @@ export default function NoMatchScreen() {
         )}
         <RouteIconButton
           accessibilityLabel="Close"
+          disabled={reportingMissingProduct}
           glyph="x"
           tone="night"
           onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
@@ -154,7 +176,11 @@ export default function NoMatchScreen() {
         }
         accessibilityRole="header"
       >
-        {compactPressurePhone ? 'Not found yet.' : 'We don&apos;t have this one yet.'}
+        {wrongProductId
+          ? 'Not the right product.'
+          : compactPressurePhone
+            ? 'Not found yet.'
+            : 'We don&apos;t have this one yet.'}
       </Text>
       {!shortPhone ? (
         <Text
@@ -162,8 +188,9 @@ export default function NoMatchScreen() {
           tone="inverseMuted"
           className={shortPhone ? 'mt-1 text-[12px] leading-[17px]' : 'mt-2'}
         >
-          That barcode isn&apos;t in our database yet. No problem. Add it another way, then report
-          any wrong details from the product page.
+          {wrongProductId
+            ? 'Choose another way to add it, and optionally report the wrong catalog match.'
+            : "That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page."}
         </Text>
       ) : null}
 
@@ -185,18 +212,20 @@ export default function NoMatchScreen() {
           compact={shortPhone}
           ultraCompact={shortPhone}
           hideSubtitle={ultraShortPhone}
+          disabled={reportingMissingProduct}
           onPress={goSearch}
         />
         {showScanRecovery ? (
           <View style={compactSecondaryRecoveryStyle}>
             <NoMatchAction
               icon="I"
-              title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
-              subtitle="We'll read the INCI text"
-              accessibilityLabel="Scan the ingredient list. We'll read the INCI text"
+              title={compactPressurePhone ? 'Add ingredients' : 'Add the ingredient list'}
+              subtitle="Take a label photo or type it"
+              accessibilityLabel="Add the ingredient list. Take a label photo or type it"
               compact={shortPhone}
               ultraCompact={shortPhone}
               hideSubtitle={compactPressurePhone}
+              disabled={reportingMissingProduct}
               style={compactScanRecoveryStyle}
               onPress={goOcr}
             />
@@ -210,19 +239,36 @@ export default function NoMatchScreen() {
             compact={shortPhone}
             ultraCompact={shortPhone}
             hideSubtitle={ultraShortPhone}
+            disabled={reportingMissingProduct}
             onPress={goManual}
           />
         </View>
       </View>
 
       <View className={shortPhone ? 'mt-3' : 'mt-4'}>
-        <Button
-          label={reportingMissingProduct ? 'Sending report...' : 'Report missing product'}
-          variant="inverse"
-          disabled={reportingMissingProduct}
-          className={shortPhone ? 'min-h-[48px] py-3' : undefined}
-          onPress={reportMissingProduct}
-        />
+        {reportDraft ? (
+          <Button
+            label={wrongProductId ? 'Report wrong match' : 'Report missing product'}
+            variant="inverse"
+            disabled={reportingMissingProduct}
+            className={shortPhone ? 'min-h-[48px] py-3' : undefined}
+            onPress={openReportConfirmation}
+          />
+        ) : null}
+        {confirmingReport && reportOperation ? (
+          <View className="mt-2.5">
+            <CatalogReportConfirmation
+              input={reportOperation.input}
+              busy={reportingMissingProduct}
+              tone="night"
+              onCancel={() => {
+                setReportOperation((current) => cancelCatalogReportOperation(current));
+                setConfirmingReport(false);
+              }}
+              onConfirm={() => void reportMissingProduct()}
+            />
+          </View>
+        ) : null}
         {missingProductFeedback ? (
           <View
             accessibilityRole="alert"
@@ -266,6 +312,7 @@ function NoMatchAction({
   compact,
   ultraCompact,
   hideSubtitle = false,
+  disabled = false,
   style,
   onPress,
 }: {
@@ -276,6 +323,7 @@ function NoMatchAction({
   compact: boolean;
   ultraCompact: boolean;
   hideSubtitle?: boolean;
+  disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   onPress: () => void;
 }) {
@@ -283,6 +331,8 @@ function NoMatchAction({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
       className={cn(
         ultraCompact
@@ -292,7 +342,7 @@ function NoMatchAction({
             : 'gap-3.5 rounded-[18px] p-3',
         'flex-row items-center',
       )}
-      style={[{ backgroundColor: 'rgba(244,239,231,0.08)' }, style]}
+      style={[{ backgroundColor: 'rgba(244,239,231,0.08)', opacity: disabled ? 0.45 : 1 }, style]}
     >
       <View
         className={cn(

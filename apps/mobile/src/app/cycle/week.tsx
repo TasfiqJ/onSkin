@@ -21,17 +21,17 @@ import { colors } from '@/theme/tokens';
 // showing the stable AM block + the rotating PM cycle. Only tonight is tinted,
 // with the "next acid night" line from the projection. No counts, no pressure.
 function WeekScreen() {
+  if (!canUseRoutineCadence()) return <ReviewGateWeekScreen />;
+  return <AdmittedWeekScreen />;
+}
+
+function AdmittedWeekScreen() {
   const { data } = useCycle();
 
-  const cadenceReady = canUseRoutineCadence();
-  const cycle = cadenceReady ? (data?.cycle ?? null) : null;
-  const variantLabel = !cadenceReady
-    ? 'review gate'
-    : cycle
-      ? `${cycle.variant}, ${cycle.lengthNights} nights`
-      : 'simple daily';
-  const resolution = cadenceReady && data ? resolutionNote(data) : null;
-  const schedulerNote = cadenceReady ? (data?.notes[0] ?? null) : null;
+  const cycle = data?.cycle ?? null;
+  const variantLabel = cycle ? `${cycle.variant}, ${cycle.lengthNights} nights` : 'simple daily';
+  const resolution = data ? resolutionNote(data) : null;
+  const schedulerNote = data?.notes[0] ?? null;
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
@@ -43,23 +43,19 @@ function WeekScreen() {
             tone="night"
             onPress={() => backOrReplace(router)}
           />
-          {cadenceReady ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Cycle settings"
-              onPress={() => {
-                haptics.select();
-                router.push('/cycle/settings');
-              }}
-              className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
-            >
-              <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
-                Settings
-              </Text>
-            </Pressable>
-          ) : (
-            <View className="min-h-[48px] min-w-[48px]" />
-          )}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cycle settings"
+            onPress={() => {
+              haptics.select();
+              router.push('/cycle/settings');
+            }}
+            className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
+          >
+            <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
+              Settings
+            </Text>
+          </Pressable>
         </View>
 
         <Text variant="label" tone="inverseMuted" className="mt-1 uppercase">
@@ -74,12 +70,12 @@ function WeekScreen() {
           This week, by night.
         </Text>
 
-        {cadenceReady && data?.paused ? (
+        {data?.paused ? (
           <Banner
             text="Your cycle is paused. Resume whenever you're ready."
             onPress={() => router.push('/cycle/disruption')}
           />
-        ) : cadenceReady && data?.recovery.active ? (
+        ) : data?.recovery.active ? (
           <Banner
             text={`Recovery mode · day ${data.recovery.day} of ${data.recovery.days}. Barrier support only.`}
             onPress={() => router.push('/cycle/recovery')}
@@ -102,9 +98,7 @@ function WeekScreen() {
           </Text>
         </View>
 
-        {!cadenceReady ? (
-          <ReviewGateEmptyState />
-        ) : cycle ? (
+        {cycle ? (
           <>
             <Text variant="label" tone="inverseMuted" className="mb-2.5 mt-5">
               EVENINGS
@@ -247,18 +241,65 @@ function WeekScreen() {
   );
 }
 
+function ReviewGateWeekScreen() {
+  return (
+    <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-7 pb-10">
+        <View className="mt-2 flex-row items-center justify-between">
+          <RouteIconButton
+            accessibilityLabel="Back"
+            tone="night"
+            onPress={() => backOrReplace(router)}
+          />
+          <View className="min-h-[48px] min-w-[48px]" />
+        </View>
+
+        <Text variant="label" tone="inverseMuted" className="mt-1 uppercase">
+          Your cycle · review gate
+        </Text>
+        <Text
+          variant="title"
+          tone="inverse"
+          className="mt-1 text-[34px] leading-[38px]"
+          accessibilityRole="header"
+        >
+          This week, by night.
+        </Text>
+
+        <View
+          className="mt-4 flex-row items-center gap-3 rounded-2xl px-4 py-3.5"
+          style={{ backgroundColor: colors.nightSurface }}
+        >
+          <Text variant="label" tone="inverseMuted" className="w-12">
+            DAILY ROUTINE
+          </Text>
+          <Text className="flex-1 text-[13px]" style={{ color: 'rgba(244,239,231,0.75)' }}>
+            Available from Today
+          </Text>
+          <Text variant="label" tone="inverseMuted">
+            unchanged
+          </Text>
+        </View>
+
+        <ReviewGateEmptyState />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 function ReviewGateEmptyState() {
   return (
     <View className="mt-6 rounded-2xl px-5 py-6" style={{ backgroundColor: colors.nightSurface }}>
       <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
-        Cycle guidance is under review.
+        Cycle guidance is unavailable until its exact rules and copy complete required professional
+        review.
       </Text>
       <Text
         className="mt-2 text-[13px]"
         style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}
       >
-        Your AM/PM routine still works. We publish skin-cycling cadence only after dermatologist and
-        cosmetic-chemist review.
+        Your AM/PM routine still works. We publish skin-cycling cadence only after all required
+        independent professional review is complete.
       </Text>
     </View>
   );

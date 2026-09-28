@@ -1,286 +1,54 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { COMMERCE_ADMISSION_CLOSED } from './admission';
 import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-  waitForAccountGenerationOperationsToSettle,
-} from '@/lib/auth/accountGeneration';
-import { createOwnerQueryScope } from '@/lib/query/queryKeys';
-
-import {
-  COMMERCE_CONSENT_WITHDRAWAL_PENDING,
-  clearCommerceConsentLocal,
   clearCommerceState,
-  readCommerceConsentLocal,
+  getCommerceConsentLocal,
   recordClick,
-  runCommerceClickOperation,
   setCommerceConsentLocal,
 } from './store';
 
 const mocks = vi.hoisted(() => ({
-  abortSignal: vi.fn(),
-  from: vi.fn(),
-  getUser: vi.fn(),
-  insert: vi.fn(),
-  storage: new Map<string, string>(),
-  updatePrivateItem: vi.fn(),
-}));
-
-vi.mock('expo-crypto', () => ({
-  randomUUID: vi.fn(() => '00000000-0000-4000-8000-000000000000'),
-}));
-
-vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: { getUser: mocks.getUser },
-    from: mocks.from,
-  },
+  removePrivateItem: vi.fn(),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
-  readPrivateItem: vi.fn(async (key: string) => {
-    const value = mocks.storage.get(key);
-    return value === undefined ? { status: 'absent' } : { status: 'available', value };
-  }),
-  setPrivateItem: vi.fn(async (key: string, value: string) => {
-    mocks.storage.set(key, value);
-  }),
-  updatePrivateItem: mocks.updatePrivateItem,
-  removePrivateItem: vi.fn(async (key: string) => {
-    mocks.storage.delete(key);
-  }),
+  removePrivateItem: mocks.removePrivateItem,
 }));
 
-const CONSENT_KEY = 'onskin.commerceConsent.v1';
-const CLICK = {
-  clickToken: 'opaque-click-token',
-  productType: 'cleanser',
-  source: 'none' as const,
-  consented: true,
-};
-let boundaryActive = false;
-
-afterEach(() => {
-  if (boundaryActive) {
-    endAccountGenerationBoundary();
-    boundaryActive = false;
-  }
-});
-
-describe('commerce consent store', () => {
+describe('COM-01A commerce persistence boundary', () => {
   beforeEach(() => {
-    mocks.storage.clear();
-    mocks.from.mockReset();
-    mocks.getUser.mockReset();
-    mocks.insert.mockReset();
-    mocks.abortSignal.mockReset();
-    mocks.updatePrivateItem.mockReset();
-    mocks.from.mockReturnValue({ insert: mocks.insert });
-    mocks.getUser.mockResolvedValue({
-      data: { user: { id: 'owner-a' } },
-      error: null,
-    });
-    mocks.abortSignal.mockResolvedValue({ error: null });
-    mocks.insert.mockReturnValue({ abortSignal: mocks.abortSignal });
-    mocks.updatePrivateItem.mockImplementation(
-      async (key: string, updater: (current: string | null) => string | null) => {
-        const next = updater(mocks.storage.get(key) ?? null);
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
-      },
-    );
+    mocks.removePrivateItem.mockReset();
+    mocks.removePrivateItem.mockResolvedValue(undefined);
   });
 
-  it('reads legacy commerce consent grants without repair and writes versioned flags', async () => {
-    mocks.storage.set(CONSENT_KEY, ' true ');
-
-    await expect(readCommerceConsentLocal()).resolves.toEqual({
-      status: 'available',
-      value: true,
-      format: 'legacy',
-    });
-    expect(mocks.storage.get(CONSENT_KEY)).toBe(' true ');
-
-    await setCommerceConsentLocal(false);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
+  it('always reads local commerce authority as false without storage access', async () => {
+    await expect(getCommerceConsentLocal()).resolves.toBe(false);
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
   });
 
-  it('classifies and preserves malformed commerce consent values', async () => {
-    mocks.storage.set(CONSENT_KEY, 'allowed');
-
-    await expect(readCommerceConsentLocal()).resolves.toEqual({
-      status: 'corrupt',
-      reason: 'invalid_value',
-    });
-
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('allowed');
+  it('throws before storage when a positive local grant is attempted', async () => {
+    await expect(setCommerceConsentLocal(true)).rejects.toThrow(COMMERCE_ADMISSION_CLOSED);
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
   });
 
-  it('clears the local commerce consent gate', async () => {
-    mocks.storage.set(CONSENT_KEY, '1');
-
-    await clearCommerceState();
-
-    expect(mocks.storage.has(CONSENT_KEY)).toBe(false);
+  it('preserves explicit negative and deletion cleanup', async () => {
+    await expect(setCommerceConsentLocal(false)).resolves.toBeUndefined();
+    await expect(clearCommerceState()).resolves.toBeUndefined();
+    expect(mocks.removePrivateItem).toHaveBeenNthCalledWith(1, 'layerwell.commerceConsent.v1');
+    expect(mocks.removePrivateItem).toHaveBeenNthCalledWith(2, 'layerwell.commerceConsent.v1');
   });
 
-  it('does not let a grant erase a pending withdrawal marker', async () => {
-    await setCommerceConsentLocal(false);
-
-    await expect(setCommerceConsentLocal(true)).rejects.toThrow(
-      'COMMERCE_CONSENT_WITHDRAWAL_PENDING',
-    );
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
-
-    await clearCommerceConsentLocal();
-    await expect(setCommerceConsentLocal(true)).resolves.toBeUndefined();
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:1');
-  });
-
-  it('atomically rejects a grant queued behind a deferred withdrawal commit', async () => {
-    let releaseWithdrawal!: () => void;
-    let markWithdrawalUpdaterStarted!: () => void;
-    const withdrawalUpdaterStarted = new Promise<void>((resolve) => {
-      markWithdrawalUpdaterStarted = resolve;
-    });
-    const withdrawalCommitGate = new Promise<void>((resolve) => {
-      releaseWithdrawal = resolve;
-    });
-    let mutationTail = Promise.resolve();
-    let pauseFirstCommit = true;
-    mocks.updatePrivateItem.mockImplementation(
-      (key: string, updater: (current: string | null) => string | null) => {
-        const operation = mutationTail.then(async () => {
-          const next = updater(mocks.storage.get(key) ?? null);
-          if (pauseFirstCommit) {
-            pauseFirstCommit = false;
-            markWithdrawalUpdaterStarted();
-            await withdrawalCommitGate;
-          }
-          if (next === null) mocks.storage.delete(key);
-          else mocks.storage.set(key, next);
-        });
-        mutationTail = operation.catch(() => undefined);
-        return operation;
+  it('rejects click persistence before inspecting an adversarial payload', async () => {
+    const payload = new Proxy(
+      {},
+      {
+        get() {
+          throw new Error('payload was inspected');
+        },
       },
     );
 
-    const withdrawal = setCommerceConsentLocal(false);
-    await withdrawalUpdaterStarted;
-    const grant = setCommerceConsentLocal(true);
-    const rejectedGrant = expect(grant).rejects.toThrow(COMMERCE_CONSENT_WITHDRAWAL_PENDING);
-    releaseWithdrawal();
-
-    await expect(withdrawal).resolves.toBeUndefined();
-    await rejectedGrant;
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
-  });
-
-  it('attributes a click to the owner captured by its mounted query scope', async () => {
-    const ownerScope = createOwnerQueryScope();
-
-    await recordClick(ownerScope, CLICK);
-
-    expect(mocks.insert).toHaveBeenCalledWith({
-      user_id: 'owner-a',
-      click_token: CLICK.clickToken,
-      product_type: CLICK.productType,
-      source: CLICK.source,
-      consented: true,
-    });
-    expect(mocks.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
-  });
-
-  it('retries the same click token after a transient failure and accepts dedup receipt', async () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0);
-    mocks.abortSignal
-      .mockResolvedValueOnce({
-        error: { code: 'TEMPORARY_NETWORK_FAILURE', message: 'temporary server failure' },
-        status: 503,
-      })
-      .mockResolvedValueOnce({ error: { code: '23505' }, status: 409 });
-
-    await expect(recordClick(createOwnerQueryScope(), CLICK)).resolves.toBeUndefined();
-
-    expect(mocks.insert).toHaveBeenCalledTimes(2);
-    expect(mocks.insert.mock.calls[0]?.[0]).toEqual(mocks.insert.mock.calls[1]?.[0]);
-    vi.restoreAllMocks();
-  });
-
-  it('backs the click-token retry contract with an exact owner-scoped unique index', () => {
-    const migration = readFileSync(
-      fileURLToPath(
-        new URL(
-          '../../../../../supabase/migrations/20260718000044_commerce_click_event_idempotency.sql',
-          import.meta.url,
-        ),
-      ),
-      'utf8',
-    );
-
-    expect(migration).toContain('partition by user_id, click_token');
-    expect(migration).toContain('and ranked.duplicate_rank > 1');
-    expect(migration).toContain('create unique index commerce_click_events_user_token_uidx');
-    expect(migration).toContain('on public.commerce_click_events (user_id, click_token)');
-  });
-
-  it('does not attribute a delayed owner-A click after an A-to-B boundary starts', async () => {
-    let releaseOwner!: (value: { data: { user: { id: string } }; error: null }) => void;
-    let markOwnerLookupStarted!: () => void;
-    const ownerLookupStarted = new Promise<void>((resolve) => {
-      markOwnerLookupStarted = resolve;
-    });
-    mocks.getUser.mockImplementationOnce(() => {
-      markOwnerLookupStarted();
-      return new Promise((resolve) => {
-        releaseOwner = resolve;
-      });
-    });
-    const ownerScope = createOwnerQueryScope();
-
-    const recording = recordClick(ownerScope, CLICK);
-    await ownerLookupStarted;
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-    releaseOwner({ data: { user: { id: 'owner-a' } }, error: null });
-
-    await expect(recording).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.insert).not.toHaveBeenCalled();
-  });
-
-  it('keeps an external handoff in the owner lease until account isolation drains it', async () => {
-    let markHandoffStarted!: () => void;
-    let releaseHandoff!: () => void;
-    const handoffStarted = new Promise<void>((resolve) => {
-      markHandoffStarted = resolve;
-    });
-    const handoffGate = new Promise<void>((resolve) => {
-      releaseHandoff = resolve;
-    });
-    const ownerScope = createOwnerQueryScope();
-
-    const handoff = runCommerceClickOperation(ownerScope, CLICK, async () => {
-      markHandoffStarted();
-      await handoffGate;
-      return true;
-    });
-    await handoffStarted;
-
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-    let drained = false;
-    const draining = waitForAccountGenerationOperationsToSettle().then(() => {
-      drained = true;
-    });
-    await Promise.resolve();
-    expect(drained).toBe(false);
-
-    releaseHandoff();
-    await expect(handoff).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    await draining;
-    expect(drained).toBe(true);
+    await expect(recordClick(payload as never)).rejects.toThrow(COMMERCE_ADMISSION_CLOSED);
   });
 });

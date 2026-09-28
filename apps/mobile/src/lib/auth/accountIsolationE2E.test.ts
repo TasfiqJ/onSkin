@@ -1,13 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
-import {
-  ACCOUNT_ISOLATION_E2E_FUTURE_OWNER_MARKER,
-  ACCOUNT_ISOLATION_E2E_SENTINEL_KEY,
-  ACCOUNT_ISOLATION_E2E_SENTINEL_VALUE,
-  getAccountIsolationE2EFixture,
-  readAccountIsolationE2EStorageProof,
-  seedAccountIsolationE2EFixture,
-} from './accountIsolationE2E';
+import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
 
 afterEach(() => {
   delete process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION;
@@ -38,41 +31,5 @@ describe('account isolation E2E fixture', () => {
     expect(getAccountIsolationE2EFixture(true)).toBeNull();
     process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'unknown';
     expect(getAccountIsolationE2EFixture(true)).toBeNull();
-  });
-
-  it('seeds a future owner marker and preservation sentinel only in its explicit mode', async () => {
-    process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'owner_marker_future';
-    const fixture = getAccountIsolationE2EFixture(true)!;
-    const persist = vi.fn(async () => {});
-
-    expect(fixture).toMatchObject({
-      clearDelayMs: 0,
-      failFirstClear: false,
-      mode: 'owner_marker_future',
-    });
-    await seedAccountIsolationE2EFixture(fixture, persist);
-
-    expect(persist).toHaveBeenCalledWith([
-      ['routinekind.localDataOwnerHash.v1', ACCOUNT_ISOLATION_E2E_FUTURE_OWNER_MARKER],
-      [ACCOUNT_ISOLATION_E2E_SENTINEL_KEY, ACCOUNT_ISOLATION_E2E_SENTINEL_VALUE],
-    ]);
-
-    await expect(
-      readAccountIsolationE2EStorageProof(fixture, async (keys) =>
-        keys.map((key) => {
-          if (key === 'routinekind.localDataOwnerHash.v1') {
-            return [key, ACCOUNT_ISOLATION_E2E_FUTURE_OWNER_MARKER] as const;
-          }
-          if (key === ACCOUNT_ISOLATION_E2E_SENTINEL_KEY) {
-            return [key, ACCOUNT_ISOLATION_E2E_SENTINEL_VALUE] as const;
-          }
-          return [key, null] as const;
-        }),
-      ),
-    ).resolves.toEqual({
-      cleanupMarkerAbsent: true,
-      ownerMarkerPreserved: true,
-      privateRecordPreserved: true,
-    });
   });
 });

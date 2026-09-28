@@ -8,14 +8,6 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
-function sourceBetween(source: string, start: string, end: string): string {
-  const startIndex = source.indexOf(start);
-  const endIndex = source.indexOf(end, startIndex + start.length);
-  expect(startIndex, `missing source boundary: ${start}`).toBeGreaterThanOrEqual(0);
-  expect(endIndex, `missing source boundary: ${end}`).toBeGreaterThan(startIndex);
-  return source.slice(startIndex, endIndex);
-}
-
 function expectTouchableRouteIcon(route: string): void {
   const source = readAppRoute(route);
 
@@ -49,15 +41,15 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_SCROLL_NUDGE = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 80;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN = 180;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 16;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
     expect(you).toContain("const privacyDirectEntry = params.section === 'privacy';");
@@ -105,12 +97,10 @@ describe('Settings route contracts', () => {
     );
     expect(you).toContain('const nextPrivacyCardY = event.nativeEvent.layout.y;');
     expect(you).toContain('privacyCardY.current = nextPrivacyCardY;');
-    expect(you).toContain('onLayout={onPrivacyCardLayout}');
-    expect(you).toContain('<Card className="mt-4" onLayout={onLayout}>');
-    expect(you).toContain('if (!privacyDirectEntry) return;');
+    expect(you).toContain('if (privacyDirectEntry) {');
     expect(you).toContain('const scrollToCurrentPrivacyCard = () => {');
     expect(you).toContain(
-      'nextPrivacyCardY - PRIVACY_DIRECT_ENTRY_TOP_OFFSET + privacyDirectEntryScrollNudge',
+      'nextPrivacyCardY -\n                      PRIVACY_DIRECT_ENTRY_TOP_OFFSET +',
     );
     expect(you).toContain('requestAnimationFrame(scrollToCurrentPrivacyCard);');
     expect(you).toContain('setTimeout(scrollToCurrentPrivacyCard, 80);');
@@ -135,17 +125,10 @@ describe('Settings route contracts', () => {
     expect(you).toContain('{privacyDirectEntry ? null : (');
     expect(you).toContain('<Card className="mt-4">');
 
-    const shell = sourceBetween(
-      you,
-      'const YouMutationSections = memo(',
-      'export default function',
-    );
-    expect(shell.indexOf('<YouPrivacySection')).toBeGreaterThan(
-      shell.indexOf('<YouSecuritySection'),
-    );
-    expect(shell.indexOf('<YouPrivacySection')).toBeGreaterThan(
-      shell.indexOf('<YouStaticUtilitySections'),
-    );
+    const privacyAnchorIndex = you.indexOf('const nextPrivacyCardY = event.nativeEvent.layout.y;');
+    expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('SECURITY'));
+    expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('REMINDERS'));
+    expect(you.indexOf('PRIVACY &amp; CONSENT')).toBeGreaterThan(privacyAnchorIndex);
   });
 
   it('keeps direct-entry exits safe for account and reminder settings', () => {
@@ -189,9 +172,8 @@ describe('Settings route contracts', () => {
     expect(you).toContain("label: 'Pregnancy & breastfeeding'");
     expect(you).toContain("href: '/settings/skin-profile'");
     expect(route).toContain('savePregnancyStatus(selected)');
-    expect(route).toContain('qc.setQueryData(queryKeys.skinProfile(ownerScope), next)');
-    expect(route).toContain('ownerQueryPrefixes.shelf(ownerScope)');
-    expect(route).toContain('ownerQueryPrefixes.ramp(ownerScope)');
+    expect(route).toContain("qc.setQueryData(['skinProfileBits'], next)");
+    expect(route).toContain("qc.invalidateQueries({ queryKey: ['shelf'] })");
     expect(route).toContain('Choice not saved');
     expect(route).toContain('Your previous setting is unchanged.');
     expect(route).toContain('Skin profile unavailable');
@@ -225,12 +207,9 @@ describe('Settings route contracts', () => {
     expect(route).toContain("['source', 'beta_feedback']");
     expect(route).toContain("['category', category]");
     expect(route).toContain("['severity', severity]");
-    expect(route).toContain("track('support_contact_opened', {");
-    expect(route).toContain("track('support_contact_failed', {");
-    expect(route).not.toContain('analyticsPayload');
+    expect(route).toContain("track('support_contact_opened', analyticsPayload)");
+    expect(route).toContain("track('support_contact_failed', analyticsPayload)");
     expect(route).toContain("source: 'beta_feedback'");
-    expect(route).toContain("result: 'opened'");
-    expect(route).toContain("result: 'unavailable'");
     expect(route).toContain('category,');
     expect(route).toContain('severity,');
     expect(route).toContain(
@@ -319,6 +298,15 @@ describe('Settings route contracts', () => {
     expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
     expect(notifications).toContain('useWindowDimensions');
     expect(notifications).toContain('const { height, width } = useWindowDimensions();');
+    expect(notifications).toContain('const authorizationPending = authorization.isPending;');
+    expect(notifications).toContain('Checking notification access…');
+    expect(notifications).toContain(
+      'const opened = await openAppSettings({ alertOnFailure: false })',
+    );
+    expect(notifications).toContain('setSettingsOpenFailed(!opened);');
+    expect(notifications).toContain('Open Settings manually to allow notifications.');
+    expect(notifications).toContain('disabled={authorizationPending}');
+    expect(notifications).toContain('Routine pacing suggestions');
     expect(notifications).toContain('const compactNotifications = height < 600;');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
     expect(notifications).toContain('const splitShortNotifications = height < 600;');
@@ -384,47 +372,6 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('accessibilityLabel={title}');
   });
 
-  it('keeps typed notification preferences behind route-owned recovery and mutation feedback', () => {
-    const notifications = readAppRoute('settings/notifications.tsx');
-    const timing = readAppRoute('settings/timing.tsx');
-
-    for (const source of [notifications, timing]) {
-      expect(source).toContain('useNotificationPreferenceRouteState');
-      expect(source).toContain('<NotificationPreferenceAvailability');
-      expect(source).toContain('<NotificationPreferenceMutationFeedback');
-      expect(source).toContain("preference.preferenceState.status === 'ready'");
-      expect(source).toContain('preference.mutationPending');
-      expect(source).toContain('preference.retryLastPatch');
-      expect(source).toContain('preference.retryRead');
-      expect(source).not.toContain('if (!p) return null');
-      expect(source).not.toContain('error.message');
-    }
-
-    expect(notifications).toContain('disabled={preference.mutationPending}');
-    expect(notifications).toContain('accessibilityState={{ disabled }}');
-    expect(timing).toContain('disabled={preference.mutationPending}');
-    expect(timing).toContain('field={p ? picking : null}');
-  });
-
-  it('does not fabricate a quiet-hours window when nullable preference endpoints are unset', () => {
-    const timing = readAppRoute('settings/timing.tsx');
-
-    expect(timing).toContain("const pickerFallback = picking === 'qend' ? '07:00' : '22:00';");
-    expect(timing).toContain("p.quietStart ? fmtTime(p.quietStart) : 'Off'");
-    expect(timing).toContain("p.quietEnd ? fmtTime(p.quietEnd) : 'Off'");
-    expect(timing).toContain(
-      'const quietHoursEnabled = p?.quietStart != null && p.quietEnd != null;',
-    );
-    expect(timing).toContain("'Quiet hours are off until both a start and end time are set.'");
-    expect(timing).toContain("{quietHoursEnabled ? SETTINGS_COPY.quietLabel : 'Quiet hours off'}");
-    expect(timing).toContain(
-      "{quietHoursEnabled ? 'Turn off quiet hours' : 'Turn on quiet hours'}",
-    );
-    expect(timing).toContain('? { quietStart: null, quietEnd: null }');
-    expect(timing).not.toContain("fmtTime(p.quietStart ?? '22:00')");
-    expect(timing).not.toContain("fmtTime(p.quietEnd ?? '07:00')");
-  });
-
   it('keeps the reminder time picker dismissible without inert sheet buttons', () => {
     const source = readAppRoute('settings/timing.tsx');
 
@@ -458,14 +405,17 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain('onValueChange');
   });
 
-  it('keeps the You tab commerce toggle on the owner-fenced local-first helper', () => {
+  it('omits commerce consent controls from You while commerce admission is closed', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain('persistSettingsPrivacyConsentChoice(ownerScope, {');
-    expect(source).toContain('onLocalDataSharingSaved: (localGranted) => {');
-    expect(source).toContain('commerceConsentWithdrawalPending.data === true');
-    expect(source).not.toContain('recordConsent({');
-    expect(source).not.toContain('setCommerceConsentLocal(');
+    expect(source).not.toContain('grantCommerceConsent');
+    expect(source).not.toContain('declineCommerceConsent');
+    expect(source).not.toContain('isCommerceConsented');
+    expect(source).not.toContain('data_sharing');
+    expect(source).not.toContain('/commerce/');
+    expect(source).not.toContain('phase7Flags.commerce');
+    expect(source).toContain("onChange={(v) => void setConsent('marketing', v, 'privacy')}");
+    expect(source).toContain('expectedUserId: initiatingUserId');
   });
 
   it('keeps You tab navigation rows touchable beyond the chevron glyph', () => {
@@ -476,17 +426,16 @@ describe('Settings route contracts', () => {
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
     expect(source).toContain('accessibilityLabel={hint ? `${label}. ${hint}` : label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
-    expect(source).toContain('const YouPoliciesSection = memo(');
-    expect(source).toContain('const [policyFeedback, setPolicyFeedback] = useState<PolicyFeedback');
-    expect(source).toContain('const pendingPolicyRef = useRef<PolicyLinkKey | null>(null);');
+    expect(source).toContain("import { useEffect, useRef, useState } from 'react';");
+    expect(source).toContain('const [policyFeedback, setPolicyFeedback] = useState<{');
+    expect(source).toContain('key: PolicyLinkKey;');
+    expect(source).toContain('message: string;');
     expect(source).toContain(
       "const POLICY_LINK_UNAVAILABLE_MESSAGE =\n  'Link unavailable. We could not open this policy link. Please try again.';",
     );
-    expect(source).toContain('const openPolicyRow = useCallback(');
-    expect(source).toContain('if (pendingPolicyRef.current !== null) return;');
-    expect(source).toContain('recordYouPolicyStart();');
+    expect(source).toContain('async function openPolicyRow(row: (typeof POLICY_ROWS)[number])');
     expect(source).toContain('setPolicyFeedback(null);');
-    expect(source).toContain('opened = await openPolicyUrl(row.url);');
+    expect(source).toContain('const opened = await openPolicyUrl(row.url);');
     expect(source).toContain("if (row.key === 'support')");
     expect(source).toContain(
       "track('support_contact_opened', { source: 'settings', result: 'opened' });",
@@ -498,9 +447,10 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       'setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });',
     );
-    expect(source).toContain('key={row.key}');
-    expect(source).toContain('disabled={pendingPolicy !== null}');
-    expect(source).toContain('onPress={() => void openPolicyRow(row)}');
+    expect(source).toContain('<View\n              key={row.key}');
+    expect(source).toContain(
+      'compact={compactPhone}\n                onPress={() => void openPolicyRow(row)}',
+    );
     expect(source).toContain('policyFeedback?.key === row.key');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain(
@@ -509,82 +459,23 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain(
       'onPress={() => void openPolicyRow(row)}\n                accessibilityRole="button"',
     );
-
-    const policyOwner = sourceBetween(
-      source,
-      'const YouPoliciesSection = memo(',
-      'const YouDataSection = memo(',
-    );
-    expect(policyOwner.indexOf('if (pendingPolicyRef.current !== null) return;')).toBeLessThan(
-      policyOwner.indexOf('pendingPolicyRef.current = row.key;'),
-    );
-    expect(policyOwner.indexOf('pendingPolicyRef.current = row.key;')).toBeLessThan(
-      policyOwner.indexOf('recordYouPolicyStart();'),
-    );
-    expect(policyOwner.indexOf('recordYouPolicyStart();')).toBeLessThan(
-      policyOwner.indexOf('opened = await openPolicyUrl(row.url);'),
-    );
-    expect(policyOwner.indexOf('await waitForDuplicateActivationFrame();')).toBeLessThan(
-      policyOwner.indexOf('pendingPolicyRef.current = null;'),
-    );
-  });
-
-  it('keeps You mutations below memoized route, account, subscription, and static owners', () => {
-    const source = readAppRoute('(tabs)/you.tsx');
-    const screen = sourceBetween(source, 'export default function YouScreen()', '\n}');
-    const shell = sourceBetween(
-      source,
-      'const YouMutationSections = memo(',
-      'export default function YouScreen()',
-    );
-    const staticOverview = sourceBetween(
-      source,
-      'const YouStaticOverview = memo(',
-      'function ConsentFeedbackText',
-    );
-
-    for (const [owner, counter] of [
-      ['YouAccountCard', 'recordYouAccountRender'],
-      ['YouSubscriptionCard', 'recordYouSubscriptionRender'],
-      ['YouStaticOverview', 'recordYouStaticOverviewRender'],
-      ['YouCommerceSection', 'recordYouCommerceRender'],
-      ['YouSecuritySection', 'recordYouSecurityRender'],
-      ['YouPrivacySection', 'recordYouPrivacyRender'],
-      ['YouPoliciesSection', 'recordYouPoliciesRender'],
-      ['YouDataSection', 'recordYouDataRender'],
-    ] as const) {
-      expect(source).toContain(`const ${owner} = memo(`);
-      expect(source).toContain(`${counter}();`);
-    }
-
-    expect(screen).toContain('recordYouScreenRender();');
-    expect(screen).toContain('return <YouMutationSections />;');
-    expect(screen).not.toMatch(/use(?:State|Query|Auth|Entitlement|AppLock)/);
-    expect(shell).toContain(
-      "<YouConsentCoordinator pendingFeedbackPlacement={privacyDirectEntry ? 'privacy' : 'commerce'}>",
-    );
-    expect(shell).toContain('<YouDataRightsCoordinator');
-    expect(shell).not.toMatch(/use(?:Query|Auth|Entitlement|AppLock)/);
-    expect(staticOverview).not.toMatch(/use(?:State|Query|Auth|Entitlement|AppLock)/);
-    expect(source).not.toContain('useMutation(');
-
-    const consentOwner = sourceBetween(
-      source,
-      'const YouConsentCoordinator = memo(',
-      'const YouDataRightsCoordinator = memo(',
-    );
-    expect(consentOwner.indexOf('await waitForDuplicateActivationFrame();')).toBeLessThan(
-      consentOwner.indexOf('savingPrivacyRef.current = false;'),
-    );
   });
 
   it('keeps You tab For You rows polished and accessible', () => {
     const source = readAppRoute('(tabs)/you.tsx');
-    expect(source).toContain("label: 'Pregnancy & breastfeeding'");
-    expect(source).toContain('PROFILE');
-    expect(source).not.toContain("label: 'Recommendations'");
+
+    expect(source).toContain(
+      'const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [',
+    );
     expect(source).not.toContain("label: 'Skin Notes'");
-    expect(source).not.toContain('label: BRAND.askName');
+    expect(source).not.toContain("href: '/recommendations'");
+    expect(source).toContain('label: BRAND.askName');
+    expect(source).toContain("hint: 'Ask about your organized shelf and routine.'");
+    expect(source).toContain(
+      '<Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />',
+    );
+    expect(source).not.toContain('Skin Notes. Myth vs evidence');
+    expect(source).not.toContain('Ask about your organized shelf and routine.`, href');
   });
 
   it('keeps You tab first-viewport rows clear of the floating tab bar on short phones', () => {
@@ -628,20 +519,47 @@ describe('Settings route contracts', () => {
     expect(source).toContain('? routineRows.slice(1)');
     expect(source).toContain('? routineRows.slice(2)');
     expect(source).toContain('? routineRows.slice(3)');
-    expect(source).not.toContain('secondaryRoutineTopMargin');
-    expect(source).not.toContain('COMPACT_FOR_YOU_TOP_MARGIN');
-    expect(source).toContain('<Card className="mt-4 p-3">');
+    expect(source).toContain('const secondaryRoutineTopMargin = tallTextPressureYou');
+    expect(source).toContain('const SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN = 16;');
+    expect(source).toContain('const TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN = 16;');
+    expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
+    expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
+    expect(source).toContain('const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 16;');
+    expect(source).toContain('const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 16;');
+    expect(source).toContain('<Card\n            className="p-3"');
+    expect(source).toContain('marginTop: secondaryRoutineTopMargin');
+    expect(source).toContain('? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN');
+    expect(source).toContain('? SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN');
+    expect(source).toContain('? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN');
+    expect(source).toContain(': COMPACT_SECONDARY_ROUTINE_TOP_MARGIN');
     expect(source).toContain('MORE ROUTINE');
+    expect(source).toContain('const COMPACT_FOR_YOU_TOP_MARGIN = 16');
+    expect(source).toContain("className={compactPhone ? undefined : 'mt-4'}");
+    expect(source).toContain(
+      'style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}',
+    );
+    expect(source.indexOf('COMPACT_FOR_YOU_TOP_MARGIN')).toBeLessThan(
+      source.indexOf('function Row'),
+    );
+    expect(source.indexOf("className={compactPhone ? undefined : 'mt-4'}")).toBeGreaterThan(
+      source.indexOf('MORE ROUTINE'),
+    );
     expect(source).toContain('compact={compactPhone}');
     expect(source).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source).toContain('style={compact ? { fontSize: 12, lineHeight: 16 } : undefined}');
-    expect(source).toMatch(
-      /supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*'Off by default\. Opt in anytime\.'/,
+    expect(source).toContain(
+      "supportFloorPrivacyEntry || ultraShortPrivacyEntry\n                ? undefined\n                : 'Off by default. Opt in anytime.'",
     );
     expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
     expect(source).toMatch(
-      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Records withdrawal and deletes collected health data\.'/,
+      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Pauses health use; starts active-data deletion; keeps billing\.'/,
+    );
+    expect(source).toContain(
+      'starts deleting health-purpose data from this device and the live service',
+    );
+    expect(source).toContain(
+      'Protected backups, if any, follow the disclosed retention period and are not used for personalization.',
     );
   });
 
@@ -715,40 +633,6 @@ describe('Settings route contracts', () => {
     );
   });
 
-  it('does not present unresolved or uncertain entitlement evidence as Free', () => {
-    const subscription = readAppRoute('settings/subscription.tsx');
-    const you = readAppRoute('(tabs)/you.tsx');
-    const statusBranch = subscription.indexOf('{entitlementChecking || entitlementUncertain ? (');
-    const freeBranch = subscription.indexOf('{freePlanTitle}');
-    const restoreRows = subscription.indexOf('label={restoreLabel}', freeBranch);
-
-    expect(subscription).toContain('isEntitlementEvidenceUncertain');
-    expect(subscription).toContain('const entitlementChecking = isLoading || (!data && !isError);');
-    expect(subscription).toContain(
-      'const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);',
-    );
-    expect(subscription).toContain('Plan status unavailable');
-    expect(subscription).toContain('Checking your plan');
-    expect(subscription).toContain('accessibilityLabel="Retry plan verification"');
-    expect(subscription).toContain('onPress={() => void retryVerification()}');
-    expect(subscription).toContain('disabled={isVerificationRetrying}');
-    expect(subscription).not.toContain('useSubscriptionOffering');
-    expect(statusBranch).toBeGreaterThan(-1);
-    expect(freeBranch).toBeGreaterThan(statusBranch);
-    expect(restoreRows).toBeGreaterThan(freeBranch);
-    expect(subscription).toContain(
-      '{!entitlementChecking && !entitlementUncertain && data?.expired ? (',
-    );
-
-    expect(you).toContain('isLoading: entitlementLoading');
-    expect(you).toContain('isError: entitlementError');
-    expect(you).toContain('entitlementLoading || (!ent && !entitlementError)');
-    expect(you).toContain("? 'Checking plan'");
-    expect(you).toContain('const entitlementUncertain = !ent');
-    expect(you).toContain(': isEntitlementEvidenceUncertain(ent);');
-    expect(you).toContain("? 'Plan status unavailable'");
-  });
-
   it('tracks store-backed cancel intent separately from generic subscription management', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
@@ -775,7 +659,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('PAYWALL_COPY.reverseTrial.keepCta');
     expect(source).toContain('PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)');
     expect(source).toContain('PAYWALL_COPY.manage.appGrantedNote(endDateLabel)');
-    expect(source).toContain('PAYWALL_COPY.manage.cancelNote(endDateLabel)');
+    expect(source).toContain('SUBSCRIPTION_STOREFRONT_COPY.cancellationNote(endDateLabel)');
     expect(source).toContain('const statusPillLabel = data?.inReverseTrial');
     expect(source).toContain("? 'No card'");
     expect(source).toContain("? 'Store trial'");

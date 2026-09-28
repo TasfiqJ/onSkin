@@ -220,7 +220,7 @@ function eventBody(id, type, userId, overrides = {}) {
       app_user_id: userId,
       original_app_user_id: userId,
       aliases: [userId],
-      product_id: 'onskin_phase9_security_annual',
+      product_id: 'layerwell_phase9_security_annual',
       store: 'TEST_STORE',
       environment: 'SANDBOX',
       entitlement_ids: ['pro'],
@@ -533,7 +533,7 @@ async function main() {
         'subscription event payload did not retain sanitized event type.',
       );
       assert(
-        event.payload?.event?.product_id === 'onskin_phase9_security_annual',
+        event.payload?.event?.product_id === 'layerwell_phase9_security_annual',
         'subscription event payload did not retain sanitized product id.',
       );
       assert(
@@ -564,7 +564,7 @@ async function main() {
         'entitlement raw_status did not retain sanitized event type.',
       );
       assert(
-        row.raw_status?.product_id === 'onskin_phase9_security_annual',
+        row.raw_status?.product_id === 'layerwell_phase9_security_annual',
         'entitlement raw_status did not retain product id.',
       );
       assert(
@@ -822,7 +822,6 @@ async function main() {
       },
     );
   } finally {
-    await admin.from('entitlements').delete().eq('user_id', user.id);
     await admin.from('subscriptions_events').delete().in('rc_event_id', Object.values(eventIds));
     await cleanupLiveTestAccounts({
       admin,

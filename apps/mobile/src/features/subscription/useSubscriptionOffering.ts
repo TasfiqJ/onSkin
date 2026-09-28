@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { useAuth } from '@/lib/auth/AuthProvider';
-import { configureRevenueCat, getSubscriptionOffering } from '@/lib/iap/revenuecat';
-import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
-import { stableErrorQueryPolicy } from '@/lib/query/queryPolicies';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { getSubscriptionOffering, snapshotRevenueCatGenerationForUser } from '@/lib/iap/revenuecat';
+
+const KEY = ['subscription-offering'] as const;
 
 type SubscriptionOfferingOptions = {
   enabled?: boolean;
@@ -12,20 +11,13 @@ type SubscriptionOfferingOptions = {
 
 export function useSubscriptionOffering({ enabled = true }: SubscriptionOfferingOptions = {}) {
   const { user } = useAuth();
-  const ownerScope = useOwnerQueryScope();
+  const publicationGeneration = user?.id ? snapshotRevenueCatGenerationForUser(user.id) : null;
 
   return useQuery({
-    ...stableErrorQueryPolicy,
-    queryKey: queryKeys.subscriptionOffering(ownerScope),
+    queryKey: [...KEY, user?.id ?? 'anonymous', publicationGeneration ?? 'closed'],
     enabled,
+    retry: 1,
     staleTime: 5 * 60 * 1000,
-    queryFn: () =>
-      runOwnerQueryOperation(ownerScope, async (lease) => {
-        if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');
-        const owner = { appUserId: user.id, lease } as const;
-        await configureRevenueCat(owner);
-        lease.assertCurrent();
-        return getSubscriptionOffering(owner);
-      }),
+    queryFn: () => getSubscriptionOffering(user?.id),
   });
 }

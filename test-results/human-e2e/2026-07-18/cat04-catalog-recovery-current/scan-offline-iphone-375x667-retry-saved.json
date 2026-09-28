@@ -1,0 +1,77 @@
+{
+  "alerts": [
+    "Retry saved on this device. We will check the RoutineKind catalog when the app is online."
+  ],
+  "bodyText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Couldn't reach the product catalog for barcode 012345678905 . Search by name, scan the label, or add it by hand; the shelf still works offline. Retry saved on this device. We will check the RoutineKind catalog when the app is online. = Scan label S Search catalog + Add it by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "torch",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 57,
+      "x": 294,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Scan ingredient label. Capture label, then type from it",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 495
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Search catalog. Use reviewed matches",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 549
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add it by hand. Always works offline",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 335,
+      "x": 20,
+      "y": 603
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8500/shelf/scan?cat04Audit=scan-offline-iphone-375x667-1784409627394",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

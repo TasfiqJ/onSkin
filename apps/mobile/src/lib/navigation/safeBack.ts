@@ -38,3 +38,10 @@ export function backOrReplace(
 
   router.replace(fallbackRoute);
 }
+
+export function replaceWithFallback(
+  router: Pick<BackOrReplaceRouter, 'replace'>,
+  fallbackRoute: AppFallbackRoute = APP_HOME_ROUTE,
+) {
+  router.replace(fallbackRoute);
+}

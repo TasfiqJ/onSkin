@@ -20,9 +20,9 @@ This checkpoint closes another owner-boundary group across startup authority, an
 | --- | --- |
 | Twenty-one-file startup/consent/Ask/photo lifecycle Vitest matrix | Pass, 21 files / 199 tests |
 | `npm test` | Pass, 260 files / 3,278 tests |
-| `npm --workspace @onskin/mobile run typecheck` | Pass |
+| `npm --workspace @layerwell/mobile run typecheck` | Pass |
 | `npm run typecheck` | Pass, 2 workspaces |
-| `npm --workspace @onskin/mobile run lint` | Pass, zero warnings |
+| `npm --workspace @layerwell/mobile run lint` | Pass, zero warnings |
 | `npm run lint` | Pass, 2 workspaces, zero warnings |
 | Scoped and staged `git diff --check` | Pass |
 

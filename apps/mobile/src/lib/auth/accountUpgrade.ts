@@ -1,14 +1,16 @@
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 
-export type AccountProvider = 'apple' | 'google';
+import {
+  requireSupabaseRemoteSessionBinding,
+  runWithSupabaseAppleAuthBootstrapPermit,
+  runWithSupabaseFreshAuthPermit,
+  runWithSupabaseIdentityUpgradePermit,
+} from '@/lib/supabase/remoteRequestGate';
 
-export type AuthSessionFingerprint =
-  | { status: 'signed_out' }
-  | {
-      status: 'signed_in';
-      userId: string;
-      identity: 'anonymous' | 'permanent';
-    };
+import type { AppleSignInCredential } from './apple';
+import { captureAppleAuthLifecycle } from './appleAuthLifecycleClient';
+
+export type AccountProviderCredential = { provider: 'google'; token: string };
 
 export type PendingEmailAccountCode =
   | {
@@ -34,46 +36,31 @@ export type EmailAccountCodeRequest =
 
 export type AccountUpgradeAuthClient = Pick<
   SupabaseClient['auth'],
-  'getSession' | 'linkIdentity' | 'signInWithIdToken' | 'signInWithOtp' | 'updateUser' | 'verifyOtp'
+  'linkIdentity' | 'resend' | 'signInWithIdToken' | 'signInWithOtp' | 'updateUser' | 'verifyOtp'
 >;
-
-export type AuthStorageMutationRunner = <T>(operation: () => Promise<T>) => Promise<T>;
 
 const IDENTITY_CHANGED_ERROR = 'Account upgrade could not preserve the current authenticated user.';
 const UPGRADE_INCOMPLETE_ERROR = 'Account upgrade did not create a permanent identity.';
 const STALE_EMAIL_CODE_ERROR = 'This email code is no longer valid for the current session.';
-export const PROVIDER_AUTH_SESSION_CHANGED = 'PROVIDER_AUTH_SESSION_CHANGED';
-
-export class ProviderAuthSessionChangedError extends Error {
-  readonly code = PROVIDER_AUTH_SESSION_CHANGED;
-
-  constructor() {
-    super(PROVIDER_AUTH_SESSION_CHANGED);
-    this.name = 'ProviderAuthSessionChangedError';
-  }
-}
-
-export function authSessionFingerprint(session: Session | null): AuthSessionFingerprint {
-  if (!session) return Object.freeze({ status: 'signed_out' });
-  return Object.freeze({
-    status: 'signed_in',
-    userId: session.user.id,
-    identity: session.user.is_anonymous === true ? 'anonymous' : 'permanent',
-  });
-}
-
-export function authSessionFingerprintMatches(
-  expected: AuthSessionFingerprint,
-  actual: AuthSessionFingerprint,
-): boolean {
-  if (expected.status !== actual.status) return false;
-  if (expected.status === 'signed_out' || actual.status === 'signed_out') return true;
-  return expected.userId === actual.userId && expected.identity === actual.identity;
-}
+const ACTIVE_SESSION_SIGN_IN_ERROR =
+  'Sign-in cannot replace an existing authenticated account. Sign out first.';
+const INVALID_APPLE_CREDENTIAL_ERROR = 'Sign in with Apple returned an invalid credential.';
 
 function normalizeRequired(value: string, label: string): string {
   const normalized = value.trim();
   if (!normalized) throw new Error(`${label} is required.`);
+  return normalized;
+}
+
+function normalizeAppleValue(value: string, maximum: number): string {
+  const normalized = value.trim();
+  if (
+    normalized.length === 0 ||
+    normalized.length > maximum ||
+    /[\u0000-\u001f\u007f]/u.test(normalized)
+  ) {
+    throw new Error(INVALID_APPLE_CREDENTIAL_ERROR);
+  }
   return normalized;
 }
 
@@ -99,12 +86,6 @@ function assertSameUser(
   }
 }
 
-async function getCurrentSession(auth: AccountUpgradeAuthClient) {
-  const { data, error } = await auth.getSession();
-  if (error) throw error;
-  return data.session;
-}
-
 /**
  * Native provider tokens link to an active anonymous session. We deliberately
  * do not fall back to sign-in after a linking failure because that could switch
@@ -112,48 +93,97 @@ async function getCurrentSession(auth: AccountUpgradeAuthClient) {
  */
 export async function authenticateWithProviderToken(
   auth: AccountUpgradeAuthClient,
-  credentials: { provider: AccountProvider; token: string },
-  expectedSession: AuthSessionFingerprint,
-  assertRequestCurrent: () => void,
-  runAuthStorageMutation: AuthStorageMutationRunner,
+  currentSession: Session | null,
+  credentials: AccountProviderCredential,
 ): Promise<void> {
   const token = normalizeRequired(credentials.token, 'Provider token');
-  assertRequestCurrent();
-  const currentSession = await getCurrentSession(auth);
-  assertRequestCurrent();
-  if (!authSessionFingerprintMatches(expectedSession, authSessionFingerprint(currentSession))) {
-    throw new ProviderAuthSessionChangedError();
-  }
-  const anonymousUserId =
-    expectedSession.status === 'signed_in' && expectedSession.identity === 'anonymous'
-      ? expectedSession.userId
-      : null;
+  const linkProviderIdentity = () => auth.linkIdentity({ provider: 'google', token });
+  const signInWithProvider = () => auth.signInWithIdToken({ provider: 'google', token });
+  const anonymousUserId = currentSession?.user.is_anonymous ? currentSession.user.id : null;
 
   if (anonymousUserId) {
-    await runAuthStorageMutation(async () => {
-      // The manual auth-storage lock has drained earlier refresh/session work.
-      // Keep the final assertion and SDK call in one turn while that exact lock
-      // excludes newer capture/save work for the full native mutation.
-      assertRequestCurrent();
-      const link = auth.linkIdentity({
-        provider: credentials.provider,
-        token,
-      });
-      const { data, error } = await link;
-      if (error) throw error;
-      assertSameUser(anonymousUserId, data, true);
-    });
+    if (currentSession === null) throw new Error(IDENTITY_CHANGED_ERROR);
+    const binding = requireSupabaseRemoteSessionBinding(
+      currentSession.access_token,
+      anonymousUserId,
+    );
+    const { data, error } = await runWithSupabaseIdentityUpgradePermit(binding, () =>
+      linkProviderIdentity(),
+    );
+    if (error) throw error;
+    assertSameUser(anonymousUserId, data, true);
     return;
   }
+  if (currentSession !== null) throw new Error(ACTIVE_SESSION_SIGN_IN_ERROR);
 
-  await runAuthStorageMutation(async () => {
-    assertRequestCurrent();
-    const signIn = auth.signInWithIdToken({
-      provider: credentials.provider,
-      token,
-    });
-    const { error } = await signIn;
-    if (error) throw error;
+  const { error } = await runWithSupabaseFreshAuthPermit(() => signInWithProvider());
+  if (error) throw error;
+}
+
+/**
+ * Apple is deliberately separate from generic provider auth: its one-use
+ * authorization code must reach the sealed server vault before the deferred
+ * Supabase session is eligible for publication.
+ */
+export async function authenticateWithAppleCredential(
+  auth: AccountUpgradeAuthClient,
+  currentSession: Session | null,
+  credential: AppleSignInCredential,
+): Promise<void> {
+  const capture = Object.freeze({
+    appleUser: normalizeAppleValue(credential.appleUser, 512),
+    authorizationCode: normalizeAppleValue(credential.authorizationCode, 4_096),
+    identityToken: normalizeAppleValue(credential.idToken, 16_384),
+    nonce: normalizeAppleValue(credential.nonce, 43),
+  });
+  if (!/^[A-Za-z0-9_-]{43}$/u.test(capture.nonce)) {
+    throw new Error(INVALID_APPLE_CREDENTIAL_ERROR);
+  }
+
+  const anonymousUserId = currentSession?.user.is_anonymous ? currentSession.user.id : null;
+  if (currentSession !== null && anonymousUserId === null) {
+    throw new Error(ACTIVE_SESSION_SIGN_IN_ERROR);
+  }
+  const previousBinding = anonymousUserId
+    ? requireSupabaseRemoteSessionBinding(currentSession!.access_token, anonymousUserId)
+    : undefined;
+
+  await runWithSupabaseAppleAuthBootstrapPermit(capture, previousBinding, async () => {
+    const authentication = anonymousUserId
+      ? await auth.linkIdentity({
+          nonce: capture.nonce,
+          provider: 'apple',
+          token: capture.identityToken,
+        })
+      : await auth.signInWithIdToken({
+          nonce: capture.nonce,
+          provider: 'apple',
+          token: capture.identityToken,
+        });
+    if (authentication.error) throw authentication.error;
+
+    if (anonymousUserId) {
+      assertSameUser(anonymousUserId, authentication.data, true);
+    } else {
+      const authenticatedUser = authentication.data.user ?? authentication.data.session?.user;
+      if (
+        !authentication.data.session ||
+        !authenticatedUser ||
+        authentication.data.session.user.id !== authenticatedUser.id ||
+        authenticatedUser.is_anonymous !== false
+      ) {
+        throw new Error(UPGRADE_INCOMPLETE_ERROR);
+      }
+    }
+
+    const captureSession = authentication.data.session ?? currentSession;
+    if (
+      captureSession === null ||
+      (anonymousUserId !== null && captureSession.user.id !== anonymousUserId)
+    ) {
+      throw new Error(IDENTITY_CHANGED_ERROR);
+    }
+    await captureAppleAuthLifecycle(captureSession.access_token, capture);
   });
 }
 
@@ -163,14 +193,21 @@ export async function authenticateWithProviderToken(
  */
 export async function requestEmailAccountCode(
   auth: AccountUpgradeAuthClient,
+  currentSession: Session | null,
   emailInput: string,
 ): Promise<EmailAccountCodeRequest> {
   const email = normalizeRequired(emailInput, 'Email');
-  const currentSession = await getCurrentSession(auth);
   const anonymousUserId = currentSession?.user.is_anonymous ? currentSession.user.id : null;
 
   if (anonymousUserId) {
-    const { data, error } = await auth.updateUser({ email });
+    if (currentSession === null) throw new Error(IDENTITY_CHANGED_ERROR);
+    const binding = requireSupabaseRemoteSessionBinding(
+      currentSession.access_token,
+      anonymousUserId,
+    );
+    const { data, error } = await runWithSupabaseIdentityUpgradePermit(binding, () =>
+      auth.updateUser({ email }),
+    );
     if (error) throw error;
     assertSameUser(anonymousUserId, { session: currentSession, user: data.user }, false);
     if (data.user?.is_anonymous === false) {
@@ -187,17 +224,52 @@ export async function requestEmailAccountCode(
       otpType: 'email_change',
     };
   }
+  if (currentSession !== null) throw new Error(ACTIVE_SESSION_SIGN_IN_ERROR);
 
-  const { error } = await auth.signInWithOtp({
-    email,
-    options: { shouldCreateUser: true },
-  });
+  const { error } = await runWithSupabaseFreshAuthPermit(() =>
+    auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: true },
+    }),
+  );
   if (error) throw error;
   return { email, expectedUserId: null, kind: 'sign_in', otpType: 'email' };
 }
 
+/** Resend only for the exact pending owner and address; never sign in a new user on an upgrade. */
+export async function resendEmailAccountCode(
+  auth: AccountUpgradeAuthClient,
+  currentSession: Session | null,
+  pending: PendingEmailAccountCode,
+): Promise<void> {
+  if (pending.kind === 'anonymous_upgrade') {
+    if (
+      currentSession?.user.id !== pending.expectedUserId ||
+      currentSession.user.is_anonymous !== true
+    ) {
+      throw new Error(STALE_EMAIL_CODE_ERROR);
+    }
+    const binding = requireSupabaseRemoteSessionBinding(
+      currentSession.access_token,
+      pending.expectedUserId,
+    );
+    const { error } = await runWithSupabaseIdentityUpgradePermit(binding, () =>
+      auth.resend({ type: 'email_change', email: pending.email }),
+    );
+    if (error) throw error;
+    return;
+  }
+
+  if (currentSession !== null) throw new Error(STALE_EMAIL_CODE_ERROR);
+  const { error } = await runWithSupabaseFreshAuthPermit(() =>
+    auth.signInWithOtp({ email: pending.email, options: { shouldCreateUser: true } }),
+  );
+  if (error) throw error;
+}
+
 export async function verifyEmailAccountCode(
   auth: AccountUpgradeAuthClient,
+  currentSession: Session | null,
   pending: PendingEmailAccountCode,
   emailInput: string,
   tokenInput: string,
@@ -207,16 +279,31 @@ export async function verifyEmailAccountCode(
   if (email !== pending.email) throw new Error(STALE_EMAIL_CODE_ERROR);
 
   if (pending.kind === 'anonymous_upgrade') {
-    const currentSession = await getCurrentSession(auth);
     if (
       currentSession?.user.id !== pending.expectedUserId ||
       currentSession.user.is_anonymous !== true
     ) {
       throw new Error(STALE_EMAIL_CODE_ERROR);
     }
+  } else if (currentSession !== null) {
+    throw new Error(STALE_EMAIL_CODE_ERROR);
   }
 
-  const { data, error } = await auth.verifyOtp({ email, token, type: pending.otpType });
+  let verification: Awaited<ReturnType<AccountUpgradeAuthClient['verifyOtp']>>;
+  if (pending.kind === 'anonymous_upgrade') {
+    const binding = requireSupabaseRemoteSessionBinding(
+      currentSession!.access_token,
+      pending.expectedUserId,
+    );
+    verification = await runWithSupabaseIdentityUpgradePermit(binding, () =>
+      auth.verifyOtp({ email, token, type: pending.otpType }),
+    );
+  } else {
+    verification = await runWithSupabaseFreshAuthPermit(() =>
+      auth.verifyOtp({ email, token, type: pending.otpType }),
+    );
+  }
+  const { data, error } = verification;
   if (error) throw error;
   if (pending.kind === 'anonymous_upgrade') {
     assertSameUser(pending.expectedUserId, data, true);

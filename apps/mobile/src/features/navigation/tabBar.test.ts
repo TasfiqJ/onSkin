@@ -15,10 +15,10 @@ describe('V1 tab navigation', () => {
     expect(source).not.toContain('Prog.');
   });
   it('preserves owner-bound lifecycle cancellation and local reminders', () => {
-    expect(source).toContain('expectedStoreUserId: storeUserId');
-    expect(source).toContain('!isOwnerQueryScopeCurrent(ownerScope)');
+    expect(source).toContain('runAccountGenerationOperation(async (lease) =>');
+    expect(source).toContain('lease.assertCurrent();');
     expect(source).toContain('mounted = false');
-    expect(source).toContain('lifecyclePromptId: prompt.promptId');
+    expect(source).toContain('if (!mounted || !route) return;');
     expect(source).toContain('<BehaviouralTriggers />');
   });
 });

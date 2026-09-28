@@ -175,7 +175,7 @@ describe('photo store envelope', () => {
 
   it('round-trips a strict V2 envelope with a content-free journal', () => {
     const raw = encodePhotoStore({
-      items: [{ id: OPERATION_ID, localUri: 'file://private/photo.onskinphoto' }],
+      items: [{ id: OPERATION_ID, localUri: 'file://private/photo.layerwellphoto' }],
       mutation: { kind: 'add', operationId: OPERATION_ID, phase: 'prepared' },
       retainedItems: [],
     });

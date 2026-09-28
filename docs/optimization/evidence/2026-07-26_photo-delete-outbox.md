@@ -10,7 +10,7 @@ Signed-out deletion and authenticated legacy non-UUID IDs remain strictly local-
 
 - `usePhotoActions` passes the published AuthProvider owner ID and the current owner generation into the store. The store never rediscovers the current user after accepting the photo ID.
 - The prepared photo envelope removes the target from `items`, retains the exact record for file recovery, and shares its operation UUID with a delete/null/tombstone outbox row.
-- `[onskin.photos.v1, onskin.outbox.v1]` commits through one crash-recoverable private-KV transaction. Malformed/future outbox state, capacity failure, a stale owner generation, or a transaction conflict fails before file quarantine.
+- `[layerwell.photos.v1, layerwell.outbox.v1]` commits through one crash-recoverable private-KV transaction. Malformed/future outbox state, capacity failure, a stale owner generation, or a transaction conflict fails before file quarantine.
 - Startup photo recovery finishes the existing prepared/metadata-committed file journal. It does not synthesize or duplicate an outbox row; the atomic prepare already made the intent durable.
 - The shared worker gives `photo_delete` highest privacy lease priority, sends it only through `apply_photo_delete_outbox_batch`, and retains ready/leased/dead commands. Applied, duplicate, or stale settlement removes the terminal row and its otherwise-unneeded revision fence.
 - Current-owner content-free status and manual retry APIs cover terminal photo deletion rows and feed the non-blocking Progress recovery leaf.

@@ -498,7 +498,7 @@ async function main() {
   );
 
   const browserPath = findBrowserPath();
-  const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-shelf-stress-'));
+  const userDataDir = mkdtempSync(path.join(tmpdir(), 'layerwell-shelf-stress-'));
   let server = null;
   let browser = null;
   let client = null;
@@ -655,7 +655,7 @@ async function main() {
 
     const diagnostics = await evaluate(
       client,
-      `({ ...(globalThis.__ONSKIN_SHELF_RENDER_DIAGNOSTICS__ ?? {}) })`,
+      `({ ...(globalThis.__LAYERWELL_SHELF_RENDER_DIAGNOSTICS__ ?? {}) })`,
     );
     const logs = browserLogs(client.events);
     const unexpectedLogs = logs.filter(

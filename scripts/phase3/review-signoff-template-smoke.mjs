@@ -204,7 +204,7 @@ const cases = [
   {
     name: 'writes only non-overwriting direct JSON children of the signoff directory',
     run() {
-      const rootDir = mkdtempSync(join(tmpdir(), 'routinekind-signoff-template-'));
+      const rootDir = mkdtempSync(join(tmpdir(), 'layerwell-signoff-template-'));
       try {
         const item = itemFixture();
         const template = createSignoffTemplate(item, 'approved');

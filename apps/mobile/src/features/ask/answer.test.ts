@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  detectConflicts,
+  evaluateConflicts,
+  previewDetectConflicts,
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
-import { bannerSubhead } from '@/features/intelligence/presentation';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
-import { answerPrompt, answerQuestion, pickFitRec, type AskContext } from './answer';
+import {
+  answerPrompt,
+  answerQuestion,
+  pickFitRec,
+  resolveRequestedShelfPair,
+  type AskContext,
+} from './answer';
 import { ASK_COPY } from './copy';
 
 // The pure, template-bounded answer engine (docs/13 §4, D-057). Substantive claims are
@@ -19,9 +25,9 @@ const PRODUCTS: EngineProduct[] = [
   { id: 'b', name: 'Glycolic 7% Toner', tags: ['aha'] },
 ];
 const PROFILE: EngineProfile = { sensitivity: 'sensitive', pregnancy: false };
-const CONFLICTS = detectConflicts(PRODUCTS, PROFILE, STARTER_RULES);
+const CONFLICTS = previewDetectConflicts(PRODUCTS, PROFILE, STARTER_RULES);
 // A pregnant user with a retinoid. The engine emits a HIGH-severity safety contraindication.
-const PREGNANT_CONFLICTS = detectConflicts(
+const PREGNANT_CONFLICTS = previewDetectConflicts(
   [{ id: 'r', name: 'Retinol', tags: ['retinoid'] }],
   { sensitivity: 'neutral', pregnancy: true },
   STARTER_RULES,
@@ -29,7 +35,10 @@ const PREGNANT_CONFLICTS = detectConflicts(
 
 const CTX: AskContext = {
   conflicts: CONFLICTS,
+  shelfProducts: PRODUCTS.map(({ id, name }) => ({ id, name })),
   hasShelfProducts: true,
+  shelfProductCount: PRODUCTS.length,
+  conflictCoverageStatus: 'unsupported_unreviewed',
   pmSteps: [
     { name: 'Glycolic 7% Toner', role: 'exfoliant' },
     { name: 'Ceramide moisturizer', role: 'moisturiser' },
@@ -48,41 +57,152 @@ const CTX: AskContext = {
 };
 
 describe('the conflict answer is deterministic and template-bounded from the engine', () => {
-  it('surfaces the top shelf conflict with severity, citation, and the recommendation note', () => {
+  it('does not surface raw candidate conflict copy', () => {
     const a = answerPrompt('conflict', CTX);
-    expect(a.kind).toBe('deterministic');
-    expect(a.badge).toBe(ASK_COPY.badges.deterministic);
-    expect(a.severity).not.toBeNull();
-    expect(a.citation).not.toBeNull();
-    expect(a.recommendationNote).toBe(true);
-    // The substantive sentence ends in the ENGINE's resolution subhead. Not free text.
-    const top = CONFLICTS.find((c) => c.computedSeverity !== 'none');
-    expect(top).toBeTruthy();
-    expect(a.claim).toContain(bannerSubhead(top!));
-    // The product-name DATA (with "7%") lives in `note`, never in the scanned `claim`.
-    expect(a.claim).not.toContain('7%');
+    expect(a.kind).toBe('refuse');
+    expect(a.claim).toBe(ASK_COPY.conflictCoverageUnavailable);
+    expect(a.severity).toBeNull();
+    expect(a.citation).toBeNull();
+  });
+  it('fails closed across suggested, typed, and fit reassurance paths with the empty admitted corpus', () => {
+    const evaluation = evaluateConflicts(PRODUCTS, {
+      sensitivity: PROFILE.sensitivity,
+      reproductiveStatus: 'none',
+    });
+    const emptyCorpusContext: AskContext = {
+      ...CTX,
+      conflicts: evaluation.conflicts,
+      conflictCoverageStatus: evaluation.status,
+      topRec: null,
+      // Even a stale/inconsistent consumer bit cannot override unavailable coverage.
+      youreSet: true,
+    };
+
+    expect(evaluation).toMatchObject({
+      status: 'unsupported_unreviewed',
+      conflicts: [],
+    });
+    expect(answerPrompt('conflict', emptyCorpusContext)).toMatchObject({
+      kind: 'refuse',
+      claim: ASK_COPY.conflictCoverageUnavailable,
+    });
+    expect(
+      answerQuestion('Can I use Retinol 0.3% with Glycolic 7% Toner?', emptyCorpusContext),
+    ).toMatchObject({
+      kind: 'refuse',
+      claim: ASK_COPY.conflictCoverageUnavailable,
+    });
+    expect(answerPrompt('fit', emptyCorpusContext)).toMatchObject({
+      kind: 'refuse',
+      claim: ASK_COPY.refuse.outOfScope,
+    });
   });
   it('says "you’re set" when nothing clashes', () => {
-    const a = answerPrompt('conflict', { ...CTX, conflicts: [] });
+    const a = answerPrompt('conflict', {
+      ...CTX,
+      conflicts: [],
+      conflictCoverageStatus: 'compatible',
+    });
     expect(a.claim).toBe(ASK_COPY.noConflicts);
   });
-  it('does not reassure when the shelf is empty', () => {
+  it('refuses generically when a typed conflict question cannot resolve an exact shelf pair', () => {
     const a = answerQuestion('Can I use retinol with glycolic toner?', {
       ...CTX,
       conflicts: [],
+      shelfProducts: [],
       hasShelfProducts: false,
     });
 
-    expect(a.kind).toBe('deterministic');
-    expect(a.claim).toBe(ASK_COPY.emptyShelfConflict);
+    expect(a.kind).toBe('refuse');
+    expect(a.claim).toBe(ASK_COPY.refuse.outOfScope);
     expect(a.claim).not.toBe(ASK_COPY.noConflicts);
   });
-  it('a safety contraindication (e.g. pregnancy) escalates. NEVER "you’re set"', () => {
+  it('answers a typed conflict question only for two complete shelf product names', () => {
+    const exact = answerQuestion('Can I use Retinol 0.3% with Glycolic 7% Toner?', {
+      ...CTX,
+      conflicts: [],
+      conflictCoverageStatus: 'compatible',
+    });
+    const partial = answerQuestion('Can I use retinol with glycolic toner?', {
+      ...CTX,
+      conflicts: [],
+      conflictCoverageStatus: 'compatible',
+    });
+
+    expect(exact.kind).toBe('deterministic');
+    expect(exact.claim).toBe(ASK_COPY.noConflicts);
+    expect(partial.kind).toBe('refuse');
+    expect(partial.claim).toBe(ASK_COPY.refuse.outOfScope);
+  });
+  it('keeps an exact resolved pair fail-closed while its interaction coverage is unavailable', () => {
+    const a = answerQuestion('Can I use Retinol 0.3% with Glycolic 7% Toner?', CTX);
+
+    expect(a.kind).toBe('refuse');
+    expect(a.claim).toBe(ASK_COPY.conflictCoverageUnavailable);
+    expect(a.claim).not.toBe(ASK_COPY.noConflicts);
+  });
+  it('keeps the suggested conflict prompt shelf-wide', () => {
+    const suggested = answerPrompt('conflict', {
+      ...CTX,
+      conflicts: [],
+      shelfProducts: [],
+      conflictCoverageStatus: 'compatible',
+    });
+
+    expect(suggested.kind).toBe('deterministic');
+    expect(suggested.claim).toBe(ASK_COPY.noConflicts);
+  });
+  it('refuses ambiguous duplicate shelf names instead of guessing an id', () => {
+    expect(
+      resolveRequestedShelfPair('Can I use Retinol with Glycolic Toner?', [
+        { id: 'retinol-1', name: 'Retinol' },
+        { id: 'retinol-2', name: 'Retinol' },
+        { id: 'glycolic', name: 'Glycolic Toner' },
+      ]),
+    ).toBeNull();
+  });
+  it('resolves exactly the two fully named products on a larger shelf', () => {
+    expect(
+      resolveRequestedShelfPair('Can I layer Retinol 0.3% with Glycolic 7% Toner?', [
+        ...CTX.shelfProducts,
+        { id: 'c', name: 'Ceramide moisturizer' },
+      ]),
+    ).toEqual(['a', 'b']);
+  });
+  it('does not show a review warning or compatibility claim when no pair applies', () => {
+    const a = answerPrompt('conflict', {
+      ...CTX,
+      conflicts: [],
+      hasShelfProducts: true,
+      shelfProductCount: 1,
+      conflictCoverageStatus: 'not_applicable',
+    });
+
+    expect(a.kind).toBe('deterministic');
+    expect(a.claim).toBe(ASK_COPY.noConflictPair);
+    expect(a.claim).not.toBe(ASK_COPY.noConflicts);
+    expect(a.claim).not.toBe(ASK_COPY.conflictCoverageUnavailable);
+  });
+  it('refuses an impossible no-pair state for two unassessable products', () => {
+    const a = answerPrompt('conflict', {
+      ...CTX,
+      conflicts: [],
+      hasShelfProducts: true,
+      shelfProductCount: 2,
+      conflictCoverageStatus: 'not_applicable',
+    });
+
+    expect(a.kind).toBe('refuse');
+    expect(a.claim).toBe(ASK_COPY.conflictCoverageUnavailable);
+    expect(a.claim).not.toBe(ASK_COPY.noConflictPair);
+    expect(a.claim).not.toBe(ASK_COPY.noConflicts);
+  });
+  it('does not turn a raw candidate pregnancy row into safety guidance', () => {
     expect(PREGNANT_CONFLICTS.some((c) => c.rule.interactionType === 'safety')).toBe(true);
     const a = answerPrompt('conflict', { ...CTX, conflicts: PREGNANT_CONFLICTS });
-    expect(a.kind).toBe('escalate');
+    expect(a.kind).toBe('refuse');
     expect(a.claim).not.toBe(ASK_COPY.noConflicts);
-    expect(a.badge).toBe(ASK_COPY.escalate.safetyEyebrow);
+    expect(a.claim).not.toMatch(/pregnan|doctor|clinician/iu);
   });
 });
 
@@ -105,7 +225,7 @@ describe('pickFitRec keeps raw product-name DATA (a "7%") out of the scanned cla
     expect(picked?.what).toBe('A vitamin C serum');
     expect(picked?.what).not.toContain('%');
   });
-  it('returns null when only shelf-anchored recs exist (→ "your routine looks complete")', () => {
+  it('returns null when only shelf-anchored recs exist without implying completeness', () => {
     expect(
       pickFitRec([
         {
@@ -137,10 +257,34 @@ describe('the product-fit answer is deterministic, from the fit engine', () => {
     expect(a.claim).toContain('a more even-looking tone');
     expect(a.claimSafeNote).toBe(true);
     expect(a.footnote).toBe(ASK_COPY.fit.deeperNote);
+    expect(a.citation).toBeNull();
   });
-  it('falls back to "complete" when there is nothing to add', () => {
-    const a = answerPrompt('fit', { ...CTX, topRec: null });
+  it('falls back to "complete" only when the engine positively reports it', () => {
+    const a = answerPrompt('fit', {
+      ...CTX,
+      topRec: null,
+      youreSet: true,
+      conflictCoverageStatus: 'compatible',
+    });
     expect(a.claim).toBe(ASK_COPY.fit.youreSet);
+  });
+  it.each([
+    ['the fit engine has not reported completion', false, 'compatible'],
+    ['conflict coverage is still unreviewed', true, 'unsupported_unreviewed'],
+    ['no product pair was evaluated', true, 'not_applicable'],
+    ['the shelf contains reviewed interactions', true, 'reviewed_interactions'],
+    ['conflict coverage is missing', true, undefined],
+  ] as const)('refuses generically when %s', (_reason, youreSet, conflictCoverageStatus) => {
+    const a = answerPrompt('fit', {
+      ...CTX,
+      topRec: null,
+      youreSet,
+      conflictCoverageStatus,
+    });
+
+    expect(a.kind).toBe('refuse');
+    expect(a.claim).toBe(ASK_COPY.refuse.outOfScope);
+    expect(a.claim).not.toBe(ASK_COPY.fit.youreSet);
   });
 });
 

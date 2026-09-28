@@ -10,7 +10,7 @@ describe('external URL handoff guard', () => {
   });
 
   it('rejects custom schemes, plaintext HTTP, credentials, malformed strings, and controls', () => {
-    expect(safeExternalHttpsUrl('onskin://auth/callback?token=x')).toBeNull();
+    expect(safeExternalHttpsUrl('layerwell://auth/callback?token=x')).toBeNull();
     expect(safeExternalHttpsUrl('javascript:alert(1)')).toBeNull();
     expect(safeExternalHttpsUrl('http://example.com/path')).toBeNull();
     expect(safeExternalHttpsUrl('https://user:pass@example.com/path')).toBeNull();
@@ -22,6 +22,6 @@ describe('external URL handoff guard', () => {
     expect(
       appendExternalQueryParam('https://example.com/p?x=1&oref=old#frag', 'oref', 'tok 123'),
     ).toBe('https://example.com/p?x=1&oref=tok+123');
-    expect(appendExternalQueryParam('onskin://retailer', 'oref', 'tok123')).toBeNull();
+    expect(appendExternalQueryParam('layerwell://retailer', 'oref', 'tok123')).toBeNull();
   });
 });

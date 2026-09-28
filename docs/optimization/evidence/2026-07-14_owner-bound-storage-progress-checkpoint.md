@@ -21,8 +21,8 @@ This sanitized checkpoint hardens destructive local-storage control records, bin
 | Command or action | Result |
 | --- | --- |
 | Final focused owner/storage/progress Vitest selection | Pass, 11 files / 182 tests |
-| `npm --workspace @onskin/mobile run typecheck` | Pass |
-| `npm --workspace @onskin/mobile run lint` | Pass, zero warnings |
+| `npm --workspace @layerwell/mobile run typecheck` | Pass |
+| `npm --workspace @layerwell/mobile run lint` | Pass, zero warnings |
 | `npm test` | Pass, 249 files / 3,163 tests |
 | `npm run typecheck` | Pass, 2 workspaces |
 | `npm run lint` | Pass, 2 workspaces, zero warnings |
@@ -32,7 +32,7 @@ Independent scoped storage and adversarial owner-boundary reviews found no P0/P1
 
 ## Human-Simulated Evidence Boundary
 
-The retained Expo-web run used `EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=owner_marker_future`. It began from the ordinary signed-out app, seeded an unsupported owner marker plus the registered representative sentinel `onskin.ageVerified`, reported both as preserved before retry, and demonstrated that the compact fail-closed gate remained operable and locked after a user retry. It did not independently reread the raw marker/sentinel after retry. The 375 x 667 target produced a browser-reported 376 x 668 layout viewport, no document overflow, an approximately 320 x 56 retry target, and zero operator-observed browser-console errors; no separate console export was retained.
+The retained Expo-web run used `EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=owner_marker_future`. It began from the ordinary signed-out app, seeded an unsupported owner marker plus the registered representative sentinel `layerwell.ageVerified`, reported both as preserved before retry, and demonstrated that the compact fail-closed gate remained operable and locked after a user retry. It did not independently reread the raw marker/sentinel after retry. The 375 x 667 target produced a browser-reported 376 x 668 layout viewport, no document overflow, an approximately 320 x 56 retry target, and zero operator-observed browser-console errors; no separate console export was retained.
 
 Evidence retained under `test-results/human-e2e/2026-07-14/owner-marker-recovery-current/`:
 

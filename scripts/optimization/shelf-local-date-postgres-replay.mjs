@@ -6,9 +6,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const database = 'onskin_shelf_local_date';
-const password = 'onskin-local-date-only';
-const container = `onskin-shelf-date-${process.pid}`;
+const database = 'layerwell_shelf_local_date';
+const password = 'layerwell-local-date-only';
+const container = `layerwell-shelf-date-${process.pid}`;
 const ownerId = '00000000-0000-4000-8000-000000000001';
 
 function assert(condition, message) {

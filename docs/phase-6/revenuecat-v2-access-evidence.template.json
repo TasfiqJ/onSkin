@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "status": "template",
+  "provider": "revenuecat",
+  "environment": "production",
+  "projectId": "REPLACE_WITH_EXACT_PRODUCTION_PROJECT_ID",
+  "legacyV1SecretKeyFingerprintSha256": "REPLACE_WITH_SHA256_OF_EXACT_PRODUCTION_LEGACY_V1_SECRET_KEY",
+  "v2SecretKeyFingerprintSha256": "REPLACE_WITH_SHA256_OF_EXACT_PRODUCTION_V2_SECRET_KEY",
+  "permissions": [
+    "customer_information:customers:read_write",
+    "project_configuration:projects:read"
+  ],
+  "observations": {
+    "bearerProjectListHttpStatus": null,
+    "customerReadBeforeDeleteHttpStatus": null,
+    "customerDeleteHttpStatus": null,
+    "customerReadAfterDeleteHttpStatus": null,
+    "fullFamilyAbsenceReconciled": false,
+    "legacyCustomerInfoReadHttpStatus": null
+  },
+  "redacted": true,
+  "reviewedAt": null,
+  "reviewedBy": "REPLACE_WITH_NAMED_REVIEWER"
+}

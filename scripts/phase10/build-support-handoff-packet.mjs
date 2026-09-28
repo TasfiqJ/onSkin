@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
-import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
+import { command, gitStatusExcludingPaths } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 const check = process.argv.includes('--check');
@@ -273,7 +273,7 @@ let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
   gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = gitStatusExcludingGeneratedEvidence(outputPaths);
+  gitStatus = gitStatusExcludingPaths(outputPaths);
 } catch {
   warnings.push('Git SHA/status could not be captured.');
 }

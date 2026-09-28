@@ -5,15 +5,16 @@
  * boots and the wiring is visible, rather than crashing.
  */
 
+import { resolveIosWinBackEnabled } from '@/features/subscription/winBackCommercialState';
+
 const PLACEHOLDER = '__BLOCKED_PLACEHOLDER__';
 const SUPABASE_URL_PLACEHOLDER = 'https://blocked-supabase-url.invalid';
 const SUPABASE_EXAMPLE_URL = 'https://YOUR-PROJECT-ref.supabase.co';
 const SUPABASE_EXAMPLE_KEY = 'sb_publishable_xxxxxxxxxxxxxxxxxxxx';
 const APP_ENVIRONMENTS = new Set(['development', 'staging', 'production']);
 const REVENUECAT_DEFAULT_PRODUCT_IDS = {
-  annual: 'routinekind_pro_annual_dev',
-  monthly: 'routinekind_pro_monthly_dev',
-  reverseTrialLocal: 'routinekind_pro_reverse_trial_local',
+  annual: 'layerwell_pro_annual_dev',
+  monthly: 'layerwell_pro_monthly_dev',
 } as const;
 
 export type AppEnvironment = 'development' | 'staging' | 'production';
@@ -33,8 +34,22 @@ function readEnv(name: string, value: string | undefined, blockerId: string): st
 
 function readAppEnvironment(value: string | undefined): AppEnvironment {
   const candidate = value?.trim().toLowerCase();
-  if (candidate && APP_ENVIRONMENTS.has(candidate)) return candidate as AppEnvironment;
+  if (candidate && APP_ENVIRONMENTS.has(candidate)) {
+    // A non-development JavaScript bundle must never regain local-only
+    // behavior because a public build variable was mislabeled development.
+    if (candidate === 'development' && !isDevRuntime()) return 'production';
+    return candidate as AppEnvironment;
+  }
   return isDevRuntime() ? 'development' : 'production';
+}
+
+const APP_ENVIRONMENT = readAppEnvironment(process.env.EXPO_PUBLIC_APP_ENV);
+
+function readCustomProGrantEnabled(value: string | undefined): boolean {
+  // The no-card full-Pro grant is not part of the iOS release candidate. It is
+  // available only as an explicitly requested development fixture while the
+  // separate Apple-policy/anti-abuse exception remains unresolved.
+  return APP_ENVIRONMENT === 'development' && isDevRuntime() && readBooleanEnv(value);
 }
 
 function readBooleanEnv(
@@ -81,7 +96,10 @@ function readSupabaseUrlEnv(name: string, value: string | undefined, blockerId: 
 }
 
 export const env = {
-  appEnvironment: readAppEnvironment(process.env.EXPO_PUBLIC_APP_ENV),
+  appEnvironment: APP_ENVIRONMENT,
+  customProGrantEnabled: readCustomProGrantEnabled(
+    process.env.EXPO_PUBLIC_CUSTOM_PRO_GRANT_ENABLED,
+  ),
   privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? '',
   termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? '',
   supportUrl: process.env.EXPO_PUBLIC_SUPPORT_URL ?? '',
@@ -99,7 +117,6 @@ export const env = {
     invalidValue: false,
   }),
   nativeOcrEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
-  phase7CommerceEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED),
   phase7CommunityPostingEnabled: readBooleanEnv(
     process.env.EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED,
   ),
@@ -141,18 +158,18 @@ export const env = {
   revenueCatIosKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY ?? '',
   revenueCatAndroidKey: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY ?? '',
   revenueCatEntitlementId: process.env.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID ?? 'pro',
+  iosWinBackEnabled: resolveIosWinBackEnabled(
+    readBooleanEnv(process.env.EXPO_PUBLIC_IOS_WIN_BACK_ENABLED),
+  ),
   revenueCatAnnualProductId:
     process.env.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID?.trim() ||
     REVENUECAT_DEFAULT_PRODUCT_IDS.annual,
   revenueCatMonthlyProductId:
     process.env.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID?.trim() ||
     REVENUECAT_DEFAULT_PRODUCT_IDS.monthly,
-  revenueCatReverseTrialProductId:
-    process.env.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID?.trim() ||
-    REVENUECAT_DEFAULT_PRODUCT_IDS.reverseTrialLocal,
   // BLOCKED: B-POSTHOG
   posthogKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
-  posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
+  posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com',
   // BLOCKED: B-SENTRY
   sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
 } as const;

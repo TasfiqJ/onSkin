@@ -1,50 +1,36 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-13T05:09:11.264Z
+Generated: 2026-08-10T01:48:49.442Z
 Status: blocked
-Git SHA: 8535dae51ec2191dbd7e0b8a13a1141ccd060f00
-Git status: DIRTY
+Git SHA: 0e4f07089c4e9ecd7a7e6642d2798e38ce744d85
+Git status: clean
 
-Dirty paths:
 
-```
-M BLOCKERS.md
- M LAUNCH_READINESS.md
- M PROGRESS.md
- M apps/mobile/src/lib/auth/accountGeneration.ts
- M apps/mobile/src/lib/query/queryClient.ts
- M docs/hugeToDo/README.md
- M docs/hugeToDo/execution-status.json
- M docs/optimization/IMPLEMENTATION_STATUS.md
- M docs/phase-3/app-review-notes.md
- M scripts/docs/readiness-status-audit.mjs
- M scripts/phase9/edge-function-manifest-smoke.mjs
-?? apps/mobile/src/lib/query/queryDateBoundary.ts
-?? apps/mobile/src/lib/query/queryDateBoundaryCore.ts
-?? apps/mobile/src/lib/query/queryKeys.ts
-?? deno.lock
-?? docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md
-?? docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md
-?? docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md
-?? docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md
-```
+## Governed Evidence Chain
+
+- Status: blocked
+- Source S: BLOCKED
+- Evidence E: BLOCKED
+- Current R/F HEAD: 0e4f07089c4e9ecd7a7e6642d2798e38ce744d85
+- Selected RC: BLOCKED
+- Ledger SHA-256: BLOCKED
+- Ledger entries: 0
+- Downstream generated commits: 0
 
 ## Verdict
 
 Local beta coverage clear: no
 
-This report is launch-clear only when it is generated from real closed-beta
-exports, the worktree is clean, every evidence URL/signoff is real, and all
-Phase 4 coverage thresholds below are satisfied.
+This aggregate beta report cannot authorize CAT-03; CAT-03 separately requires the signed catalog-curation contract and privacy-minimized holdout report.
 
 ## Evidence
 
-- Real beta data: BLOCKED
-- Catalog/beta dashboard: BLOCKED
-- Analytics dashboard: BLOCKED
-- Support dashboard: BLOCKED
-- Source export hash: BLOCKED
-- Signed off by: BLOCKED
+- Real beta data claimed: BLOCKED
+- Catalog/beta dashboard evidence present: BLOCKED
+- Analytics dashboard evidence present: BLOCKED
+- Support dashboard evidence present: BLOCKED
+- Exact source export digest present: BLOCKED
+- Named signoff present: BLOCKED
 
 ## Metrics
 
@@ -65,10 +51,12 @@ Phase 4 coverage thresholds below are satisfied.
 ## Blockers
 
 - Missing beta coverage input artifact. Set PHASE4_BETA_COVERAGE_INPUT or copy docs/phase-4/beta-coverage-input.template.json to docs/phase-4/beta-coverage-input.json and replace it with real beta exports.
+- Governed evidence chain: governed beta evidence requires one lowercase source commit S
+- Governed evidence chain: governed beta evidence requires one immutable selected RC
 
 ## Warnings
 
-- Beta coverage report generated with a dirty Git worktree; do not use it as final beta evidence.
+- None.
 
 ## Input Artifact
 
@@ -80,30 +68,65 @@ Phase 4 coverage thresholds below are satisfied.
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 20214 | 379620a811c9a415ffbf8f98ededcff42b7017efc391bc7fa741e8f4ade63d68 |
-| docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
-| scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
-| .env.example | present | 16277 | 2e389243c757aee40769b8a15718d601160687cfdbd84517aecb34c8834255ba |
-| scripts/phase4/build-source-worklist.mjs | present | 19918 | ac896b3cbeeaeb36781c5fc7d6e20c87223e30961f52900e9bbb2e2c6fa7d086 |
-| scripts/phase4/beta-coverage-report.mjs | present | 22245 | 708cc87185f72ee9356f73f75ec79c2543744647dae761aa347f55a81c86e4b7 |
-| scripts/phase4/beta-coverage-report-smoke.mjs | present | 8339 | 74be5ca44d86da117f80a514ad283212d05a08549cdafb3e2ed6824e6a118105 |
-| scripts/phase4/catalog-qa-report.mjs | present | 6961 | 86168235bfe785f680fdbdca89d6640fe2674627a1afdaf27669b0b24d750596 |
-| scripts/phase4/catalog-qa-report-smoke.mjs | present | 5504 | 43e8b217e0a8276e0299f2477ddb3b4ab9536521d745514be2a48e68e7bf97a1 |
-| supabase/functions/catalog-report/index.ts | present | 4653 | bff289eeca7657c0fa0e65ec686c07903dfa08a36c7a7691150cd28417d4aa36 |
-| supabase/functions/catalog-report/privacy.ts | present | 3504 | 9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e |
-| supabase/functions/catalog-report/privacy.test.ts | present | 4009 | db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac |
-| supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
-| scripts/phase9/lib.mjs | present | 14689 | 6248cbe57cb3a77b3ba8fc36c3a78d4ab18ca363b275c4dbf7735dc3e3f91675 |
-| docs/FOR_TAS_TO_DO.md | present | 11191 | a02a5647d2491966a701743128fbacab0dc57bf72f0067b305be98ffd469d56c |
-| docs/phase-4/beta-coverage-input.template.json | present | 1947 | cf8d5146432335820a361c1ea6d6c7cea1059df602c9d15804fefc01a4bc6cd2 |
-| docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
-| docs/phase-4/generated/source-worklist.json | present | 47647 | 008595ff9d02084ec0b69a58743ef0cc248350abf6f4529d1d31b085cd02d1b9 |
-| docs/phase-4/generated/source-worklist.md | present | 29024 | a864f3eb73e7fedf555d70a7724b88503e3a5af423f3a135aa38895167450ee7 |
-| docs/phase-4/observability-dashboard.md | present | 2488 | f2c94ee4b693a2b943134f0c7cbec737fb6017042c8aae3b27fb60330477b981 |
-| docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 8400 | 8dba71a6233817b81cea5f30bfc5655c68b653d3782d22bd6bcdf2d56e6e4a68 |
-| docs/phase-4/generated/catalog-qa-report.md | present | 4981 | 07527419c59b15e29229051b82711572ad17b1016f29fb7efbde1268cf2129ad |
-| docs/phase-10/beta-event-schema.md | present | 6525 | f3acfb6c84582d279e4000318c1e5c0e297623a80c1ce0bb8be17458313b4269 |
+| .gitignore | present | 1644 | 066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a |
+| package.json | present | 44354 | af6cec1697c363daf266bcd4032a184aa9a994a51cc6a8c0991da4c67b0d8c8e |
+| docs/hugeToDo/launch-contract.json | present | 7174 | ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb |
+| scripts/launch/contract.mjs | present | 15776 | 7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b |
+| .env.example | present | 29662 | d9825f22149f8d15e491d4f1d97fbc8311ce739564a36e1f0ed0ecc64464e091 |
+| scripts/phase4/build-source-worklist.mjs | present | 46184 | 28a02f5eadc7ea2fa54cc9995455a26e2a6a83db2821097ebe69549e7b11b640 |
+| scripts/phase4/beta-coverage-report.mjs | present | 41079 | 7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1 |
+| scripts/phase4/beta-coverage-report-smoke.mjs | present | 11135 | 5a0b2c40953c5a3ce641320d3df1b555872da27732d4c6b6da7bd2aba8234d7f |
+| scripts/phase4/beta-coverage-packet-contract.mjs | present | 996 | 38ed4065cb51607fac1f82f8e371dd3ef487256602f5535312da0dbed9cc37a0 |
+| scripts/phase4/beta-coverage-packet-contract.test.mjs | present | 867 | a4631af37fdc9bec17c89b0bc736fd3c7da871902aa4592b8cbb88e43196bfa1 |
+| scripts/phase4/beta-coverage-committed-check.mjs | present | 10745 | 401a677c2d90ca7af566debf7bb7925ecbb9f6094732dd90ed0bc24d76704c00 |
+| scripts/phase4/beta-coverage-committed-check.test.mjs | present | 9365 | f86658f38009adcfa1cd65a092684441a4f57f76c90814e44d2e3eed1767b7c6 |
+| scripts/phase4/source-policy.mjs | present | 89435 | 75242c44fe3ff9e46472647fbcfb9d59070a1306fb4638ae106117a30c9cc634 |
+| scripts/phase4/source-policy.test.mjs | present | 39730 | dedc9ebdb80bb022e9f0ad4769c369a4641fbfc03993a4d892ff7f3406659118 |
+| scripts/phase4/catalog-curation-contract.mjs | present | 229778 | d5b6565b893b8815eb29ffc5b50665684c86541b0f7580d2a0f80c2db8b56221 |
+| scripts/phase4/catalog-curation-contract.test.mjs | present | 114869 | 6f0bb1578661a3951bf4b4b370c003debe0f3d2505439077c91119e7d1d28c3c |
+| scripts/phase4/build-catalog-curation-envelope.mjs | present | 4096 | d31aa8d2bea0d2640ac4b343bf91261446aafc3155a9e7ce74e4f9406c760bd5 |
+| scripts/phase4/catalog-coverage-quality-report.mjs | present | 5480 | f5fc81ea9f2d31fcec3185fed837634506c89197f7f51777f0c174fa1ab17216 |
+| scripts/phase4/catalog-coverage-quality-report.test.mjs | present | 6586 | 616881a177d87b435f75ec39dfbe01eb2bc8dd4d91ff25b50da6c6a776dbb204 |
+| scripts/phase4/catalog-qa-report.mjs | present | 27119 | c01d9bc01c8db0951d8113cf74e53bea1e67e4d9145406e85098cfbdd032bf09 |
+| scripts/phase4/catalog-qa-report-smoke.mjs | present | 17375 | 70b44647b94c8e2dfded0b7afefbc0b91be3c4de1f8123950e66e412e88c7f2d |
+| supabase/functions/catalog-report/index.ts | present | 10890 | 00c15af1cac9a9cda6514d5c441b4c0b2420959a24727d697f7dce9ab8c4acbd |
+| supabase/functions/catalog-report/privacy.ts | present | 6403 | e81dfbdafe784f79503fc4ad03487040f6e2725fe63f5000df77d944c3e28eec |
+| supabase/functions/catalog-report/privacy.test.ts | present | 10228 | 31411acef464f8e0dda16605ee3f0af769163f67ea920ae5c1f6156ee4508f1d |
+| supabase/functions/deno.lock | present | 2465 | b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7 |
+| scripts/phase9/lib.mjs | present | 22873 | 2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c |
+| scripts/phase9/release-qa-integrity.mjs | present | 56470 | ff2f7724d4cc0bdd4058f76acb8c31ea3b4d2e80a1e1dba531066a1750b727db |
+| scripts/phase9/release-qa-integrity.test.mjs | present | 35031 | dc21754b7660bf356633471ad8479a26626d7dad046b7876c2c39902c2831dec |
+| scripts/launch/governed-evidence-chain.mjs | present | 64289 | e0ca8221da0ed5561fb68ae32c1eec28fc0291dd94518ddaeabb5e191c58ca1a |
+| scripts/launch/governed-evidence-chain.test.mjs | present | 35870 | 93dc7808c2e81f47fa1e5fb317c60050932955a236d135467ae2bcdfb1e7fddd |
+| docs/FOR_TAS_TO_DO.md | present | 11239 | 11b6df522e34a3b1a3ad8e130cf07345a8e91059efee6f4399d27360026c2825 |
+| docs/phase-3/consent-matrix.md | present | 18185 | 40c6e5537e138b7c8206baef6fca6be6cafb819813d13771793d8a5ca2fd716b |
+| docs/phase-3/data-inventory.md | present | 60091 | b5e153f31311d3fa7af2dd16f553f05624b09e27da5d2ed10e44a5018a14aa5c |
+| docs/store-privacy-inventory.md | present | 41453 | daa7d558c44e3cb246623258a475d78577a6df43d27ec2c17d7022e37e8aea37 |
+| docs/phase-4/beta-coverage-input.template.json | present | 2315 | 4def562c508626e3ad3c2e289d8cd454fe223ba560c85862e6dc78d53613a172 |
+| docs/phase-4/beta-shelf-corpus.template.json | present | 24378 | eab0f3ab1ac78f53307b69976163c9edd07350a7fdc5dd52c05cb7c3b40106d5 |
+| docs/phase-4/beta-coverage-report.md | present | 8829 | ec85aa2775e5c9075bf3d72137cca06e955720aa80c3b807137ab6a7671f6c05 |
+| docs/phase-4/catalog-coverage-quality-targets.template.json | present | 9406 | bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a |
+| docs/phase-4/catalog-curation-review.template.json | present | 22645 | 90f7348843f623d30b142d27a59a3d93c33978f9d163c06eea0b78ca2bc8283a |
+| docs/phase-4/catalog-cat02-membership-proof.template.json | present | 9252 | e4bf0f76e0ca82047ffe90700a768ddd12d79d0199da1522369f51a48a67e9d7 |
+| docs/phase-4/catalog-curation-database-readback.template.json | present | 8237 | d2a01a45d7af0d2cf428a144d589a916b1d2089ab1fa809502a0bcb694ac317e |
+| docs/phase-4/catalog-curation-release-runbook.md | present | 45248 | ddd36a968b4ef6f994fd4a9e5847a9ad4c2626a7f5d7057f4a1a92d1610d831e |
+| docs/phase-4/generated/source-worklist.json | present | 129167 | d2f7007d930f1c088e823ea4c3941127c21697d1bdff33f51db6be4907dae918 |
+| docs/phase-4/generated/source-worklist.md | present | 76995 | f12a71a9e882e297a3376aaf5884489abe353032fdfe83388ef5e2c583e6386d |
+| docs/phase-4/observability-dashboard.md | present | 5335 | ffc77c9c33712b2a7b81bf92103e9bc4e71237a60ed40cd96b3aaad7298f0949 |
+| docs/phase-4/phase-4-exit-review.md | present | 13732 | f816d01e8ec61062144ed5fe8e85805e58147e775efb86d87a3107971bec92ed |
+| supabase/migrations/20260717000058_catalog_launch_curation.sql | present | 295282 | f2d53caad23347103e29b0f5660eefdbdd22bfdc05cc2cb47445ece4192919a6 |
+| supabase/migrations/20260718000059_catalog_scan_minimization.sql | present | 33319 | 46c3128d68dccb17b50e28363c478ec7de032a180faf3a5298b0620bfe6e81ec |
+| supabase/migrations/20260718000060_cat07_truthful_freshness.sql | present | 24465 | 8bc2c35bfff443a3c3bf7ab76e52ed17e7d6b961a8b35bdde17701de5c7f574a |
+| supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql | present | 28316 | 4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9 |
+| supabase/migrations/20260722000062_catalog_curation_statement_guard.sql | present | 53193 | f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1 |
+| scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql | present | 28021 | b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919 |
+| scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql | present | 22993 | 64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9 |
+| supabase/tests/database/catalog_launch_curation.test.sql | present | 202040 | 2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376 |
+| supabase/tests/database/catalog_serving_gate.test.sql | present | 36707 | 1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9 |
+| supabase/tests/database/cat07_truthful_freshness.test.sql | present | 36165 | 24fe6b485009f9733568b3e101c5278380d620e9a75894898a114a9f1670d6f3 |
+| docs/phase-4/generated/catalog-qa-report.json | present | 24992 | 6e797d9d57ff9271e7a6214651764a01effea7f19ca2e3a66322373e6510124c |
+| docs/phase-4/generated/catalog-qa-report.md | present | 12339 | d9a1649a72704e307cf56cde5aa6d00d52174d58c53971c5abe51d3091f54810 |
+| docs/phase-10/beta-event-schema.md | present | 15983 | b8d378bed2de90910be0932c60f6d526adfe55c4c1fc2ec21641ab04aba84e85 |
 | docs/phase-10/catalog-beta-report.md | present | 1680 | 28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28 |
 | docs/phase-10/support-beta-report.md | present | 2149 | f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac |
 | docs/phase-10/retention-activation-report.md | present | 2343 | e7c5ebd8d49c5bc527e4ea926743a2ede4eb33522e6fda28ec1deae00953f8ab |

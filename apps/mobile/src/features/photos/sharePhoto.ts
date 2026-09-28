@@ -2,11 +2,15 @@ import * as Sharing from 'expo-sharing';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 
-import { createPhotoShareFile, deletePhotoShareFile } from './encryptedStorage';
+import {
+  createPhotoShareFile as createIdentityBoundPhotoShareFile,
+  deletePhotoShareFile,
+} from './encryptedStorage';
 
 type ShareablePhoto = {
   id: string;
   localUri?: string | null;
+  captureSessionId?: string | null;
 };
 
 function shouldForcePhotoShareFailure(): boolean {
@@ -31,6 +35,13 @@ export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promis
       if (!sharingAvailable) return false;
 
       let shareUri: string | null = null;
+      const createPhotoShareFile = (uri: string) =>
+        createIdentityBoundPhotoShareFile(uri, {
+          photoId: photo!.id,
+          captureSessionId: photo!.captureSessionId ?? null,
+          rendition: 'original',
+          allowLegacyEnvelope: true,
+        });
       try {
         shareUri = await createPhotoShareFile(localUri);
         lease.assertCurrent();

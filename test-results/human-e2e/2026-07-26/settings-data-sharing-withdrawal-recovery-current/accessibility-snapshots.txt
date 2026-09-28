@@ -31,7 +31,7 @@ AFTER FINAL RELOAD AND REGRANT
 - button "Try saving data sharing choice again": absent
 
 ACCOUNT-ISOLATION FIRST CLEAR FAILURE
-- alert: Unavailable Your private data could not be secured. App content remains locked while OnSkin verifies or finishes clearing local private data. Try again to continue safely.
+- alert: Unavailable Your private data could not be secured. App content remains locked while Layerwell verifies or finishes clearing local private data. Try again to continue safely.
 - button "Try again"
 - You surface: absent
 - account-A "Choice not saved": absent

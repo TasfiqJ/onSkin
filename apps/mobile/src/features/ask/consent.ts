@@ -1,89 +1,28 @@
 import { track } from '@/lib/analytics/track';
 import {
-  awaitAccountGenerationLease,
-  runAccountGenerationOperation,
-  type AccountGenerationLease,
-} from '@/lib/auth/accountGeneration';
-import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
-import { runSerializedConsentWorkflow } from '@/lib/consent/workflow';
-import { withdrawConsent } from '@/lib/consent/withdrawal';
-import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
+  grantHealthDependentConsent,
+  isHealthDependentConsentActive,
+  withdrawHealthDependentConsent,
+} from '@/lib/consent/dependentConsentLifecycle';
 
-import { ASK_COPY } from './copy';
-import { clearAskStore, readAskConsentLocal, setAskConsentLocal } from './store';
+import { clearAskStore } from './store';
 
-// The ask_onskin consent (docs/13 §7, D-053). A NEW, separate, explicit, revocable,
-// DEFAULT-OFF consent for the CLOUD-grounded language layer. The user's question is a
-// health disclosure transmitted to the cloud (MHMDA / GDPR Art. 9 attaches to the
-// TRANSMISSION, not just storage), so this is never reused from any other consent and
-// never default-on. NOTE: the deterministic, on-device advisor needs NO consent. This
-// gates only the cloud path. Ledger-authoritative-then-local (the Slice-24 precedence)
-// so a withdrawal re-locks even before the backend exists. Final copy: B-PRIVACY-COPY.
-
-export async function isAskConsentedWithLease(lease: AccountGenerationLease): Promise<boolean> {
-  lease.assertCurrent();
-  try {
-    const consents = await getLatestConsentsWithLease(lease);
-    lease.assertCurrent();
-    if ('ask_onskin' in consents) return consents['ask_onskin'] === true;
-  } catch {
-    lease.assertCurrent();
-    /* offline / no DB. Fall back to the local-first flag */
-  }
-  const local = await awaitAccountGenerationLease(lease, readAskConsentLocal);
-  lease.assertCurrent();
-  return requirePrivateBoolean(local);
-}
-
+/** Cloud Ask is default-off and requires an exact authoritative receipt. */
 export function isAskConsented(): Promise<boolean> {
-  return runAccountGenerationOperation(isAskConsentedWithLease);
+  return isHealthDependentConsentActive('ask_layerwell', {
+    deleteLocalOnAuthoritativeClose: clearAskStore,
+  });
 }
 
 export async function grantAskConsent(): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
-    await runSerializedConsentWorkflow(lease, async () => {
-      await awaitAccountGenerationLease(lease, () => setAskConsentLocal(true));
-      lease.assertCurrent();
-      try {
-        await awaitAccountGenerationLease(lease, () =>
-          recordConsent({
-            type: 'ask_onskin',
-            granted: true,
-            version: ASK_COPY.consentVersion,
-            consentText: `[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
-          }),
-        );
-        lease.assertCurrent();
-        track('ask_consent_granted');
-      } catch (error) {
-        lease.assertCurrent();
-        await awaitAccountGenerationLease(lease, () =>
-          setAskConsentLocal(false).catch(() => undefined),
-        );
-        lease.assertCurrent();
-        throw error;
-      }
-    });
-  });
+  await grantHealthDependentConsent('ask_layerwell');
+  track('ask_consent_granted');
 }
 
 export async function revokeAskConsent(): Promise<void> {
-  // Deletion-on-revocation (docs/13 §7/§10): clear the local consent flag AND the grounded-
-  // turn counter; the short server-side safety-audit window is purged by an Edge Function on
-  // withdrawal. No conversation content is stored locally (no transcript).
-  await runAccountGenerationOperation(async (lease) => {
-    await runSerializedConsentWorkflow(lease, async () => {
-      await awaitAccountGenerationLease(lease, clearAskStore);
-      lease.assertCurrent();
-      await awaitAccountGenerationLease(lease, () =>
-        withdrawConsent({
-          type: 'ask_onskin',
-          version: ASK_COPY.consentVersion,
-          consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
-        }),
-      );
-      lease.assertCurrent();
-      track('ask_consent_revoked');
-    });
+  await withdrawHealthDependentConsent({
+    type: 'ask_layerwell',
+    deleteLocal: clearAskStore,
   });
+  track('ask_consent_revoked');
 }

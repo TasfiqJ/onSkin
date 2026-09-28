@@ -1,16 +1,10 @@
-import {
-  ACCOUNT_GENERATION_CHANGED,
-  getAccountGeneration,
-  runAccountGenerationOperation,
-} from '@/lib/auth/accountGeneration';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import { env, isSupabaseConfigured, type AppEnvironment } from '@/lib/env';
+import type { QueryClient } from '@tanstack/react-query';
+import type { CustomerInfo } from 'react-native-purchases';
+
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { localDataOwnerBinding, readLocalDataOwnerProofBinding } from '@/lib/auth/sessionOwner';
+import { env, isSupabaseConfigured } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
-import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
-import {
-  runRequestWithLease,
-  supabaseRequestFailure,
-} from '@/lib/network/requestPolicy';
 import { supabase } from '@/lib/supabase/client';
 import {
   PRIVATE_KV_DECRYPTION_FAILED,
@@ -21,134 +15,46 @@ import {
   updatePrivateItem,
 } from '@/lib/storage/privateKV';
 
-import { deriveState, type StoredEntitlement } from './entitlement';
-import { classifyEntitlementEvidence } from './entitlementEvidence';
-import { selectLatestAuthoritativeEntitlementEvidence } from './entitlementOrdering';
+import {
+  ENTITLEMENT_OWNER_BINDING_PATTERN,
+  deriveState,
+  entitlementQueryKey,
+  type EntitlementOwnerContext,
+  type StoredEntitlement,
+} from './entitlement';
+import {
+  ENTITLEMENT_CACHE_SCHEMA_VERSION,
+  advanceEntitlementClock,
+  effectiveEntitlementProjection,
+  emptyEntitlementEnvelope,
+  entitlementEvidenceFingerprint,
+  mergeEntitlementEnvelope,
+  storeCursorProviderAt,
+  type AppGrantConflict,
+  type AppGrantProof,
+  type EntitlementCacheEnvelopeV2,
+  type EntitlementEvidence,
+  type LegacyPositiveProof,
+  type StoreConflict,
+  type StoreDefinitiveProof,
+  type StoreEvidenceCursor,
+  type StoreProvisionalProof,
+} from './entitlementEvidence';
 
 /**
- * Local-first entitlement cache. This is only a cache of RevenueCat CustomerInfo
- * or service-role Supabase grants; production flows never create paid/trial access
- * locally. Offline Pro access remains usable only after a verified grant has been
- * cached on this device.
+ * Owner-bound local entitlement evidence. Store and app-granted authority live
+ * in separate lanes so a lagging webhook, a verified-empty RevenueCat snapshot,
+ * or a transport failure cannot erase an unrelated reverse trial.
  */
-const KEY = 'onskin.entitlement.v2';
-const LEGACY_KEY = 'onskin.entitlement.v1';
-const REVENUECAT_EMPTY_KEY = LEGACY_KEY;
-const LOCAL_REVERSE_TRIAL_DAYS = 7;
-const PROOF_ENVELOPE_VERSION = 1 as const;
-const WATERMARK_SCHEMA_VERSION = 2 as const;
-const VERIFICATION_CLOCK_SKEW_MS = 5 * 60 * 1_000;
+const KEY = 'layerwell.entitlement.v2';
+const LEGACY_KEY = 'layerwell.entitlement.v1';
 
 export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
 export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION = 'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
-export const ENTITLEMENT_ACTIVE_PROVIDER_BARRIER =
-  'ENTITLEMENT_ACTIVE_PROVIDER_BARRIER';
-
-type RevenueCatEmptyWatermark = Readonly<{
-  verifiedAt: string;
-  managementUrl: string | null;
-  storeUserId: string | null;
-}>;
-
-type EntitlementCacheState = Readonly<{
-  entitlement: StoredEntitlement | null;
-  revenueCatEmpty: RevenueCatEmptyWatermark | null;
-  trustedRevenueCatProof: TrustedRevenueCatProofMarker | null;
-  /** Mutation-only ordering barrier recovered from a durable proof whose
-   * sidecar phase did not commit. Public reads never authorize from it. */
-  provisionalProviderBarrier?: ProvisionalProviderBarrier | null;
-}>;
-
-type ProvisionalProviderBarrier = Readonly<{
-  kind: 'active_proof' | 'revocation';
-  verifiedAt: string;
-  managementUrl: string | null;
-  storeUserId: string | null;
-  /** Allows the exact trusted CustomerInfo retry to complete phase three. */
-  exactRevenueCatProofIdentity: string | null;
-}>;
-
-type RevenueCatEmptyEnvelope = {
-  version: typeof WATERMARK_SCHEMA_VERSION;
-  revenueCatEmpty: RevenueCatEmptyWatermark | null;
-  trustedRevenueCatProof: TrustedRevenueCatProofMarker | null;
-};
-
-type TrustedRevenueCatProofMarker = Readonly<{
-  storeUserId: string;
-  proofIdentity: string;
-}>;
-
-type RevenueCatSidecar = Readonly<{
-  revenueCatEmpty: RevenueCatEmptyWatermark | null;
-  trustedRevenueCatProof: TrustedRevenueCatProofMarker | null;
-}>;
-
-const ENTITLEMENT_CACHE_V1_ENVELOPE_KEYS = ['version', 'entitlement'] as const;
-const REVENUECAT_EMPTY_ENVELOPE_KEYS = [
-  'version',
-  'revenueCatEmpty',
-  'trustedRevenueCatProof',
-] as const;
-const REVENUECAT_EMPTY_WATERMARK_KEYS = [
-  'verifiedAt',
-  'managementUrl',
-  'storeUserId',
-] as const;
-const TRUSTED_REVENUECAT_PROOF_KEYS = ['storeUserId', 'proofIdentity'] as const;
-const ENTITLEMENT_CACHE_RECORD_KEYS = [
-  'tier',
-  'isActive',
-  'periodType',
-  'store',
-  'productId',
-  'expiresAt',
-  'willRenew',
-  'grantedAt',
-  'source',
-  'environment',
-  'managementUrl',
-  'verifiedAt',
-  'offeringId',
-  'packageId',
-  'storeUserId',
-  'priceLabel',
-] as const satisfies readonly (keyof StoredEntitlement)[];
-
-export type RevenueCatVerifiedEmptyEvidence = Readonly<{
-  verifiedAt: string;
-  managementUrl?: string | null;
-  storeUserId?: string | null;
-}>;
-
-export type EntitlementCacheRead =
-  | {
-      status: 'available';
-      entitlement: StoredEntitlement;
-      revenueCatEmpty?: RevenueCatVerifiedEmptyEvidence;
-    }
-  | {
-      status: 'absent' | 'unavailable' | 'corrupt' | 'unsupported_version';
-      entitlement: null;
-      revenueCatEmpty?: RevenueCatVerifiedEmptyEvidence;
-    };
-
-export type EntitlementAcceptance = Readonly<{
-  entitlement: StoredEntitlement | null;
-  revenueCatEmpty: RevenueCatVerifiedEmptyEvidence | null;
-  persisted: boolean;
-}>;
-
-export type ServerEntitlementFetchResult =
-  | Readonly<{ status: 'evidence'; acceptance: EntitlementAcceptance }>
-  | Readonly<{ status: 'no_evidence' }>
-  | Readonly<{ status: 'failure' }>;
-
-export type ReverseTrialStartAcceptance = EntitlementAcceptance &
-  Readonly<{
-    /** True only when this action's exact owner-bound grant won the commit race. */
-    started: boolean;
-  }>;
+export const ENTITLEMENT_CACHE_LEGACY_UNBOUND = 'ENTITLEMENT_CACHE_LEGACY_UNBOUND';
+export const ENTITLEMENT_CACHE_FOREIGN_OWNER = 'ENTITLEMENT_CACHE_FOREIGN_OWNER';
+export const ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED = 'ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED';
+export const ENTITLEMENT_EVIDENCE_CURSOR_REQUIRED = 'ENTITLEMENT_EVIDENCE_CURSOR_REQUIRED';
 
 type EntitlementRow = {
   entitlement: string | null;
@@ -167,16 +73,251 @@ type EntitlementRow = {
   verified_at?: string | null;
   store_user_id?: string | null;
   updated_at?: string | null;
+  rc_event_at?: string | null;
+  rc_event_priority?: number | null;
+  rc_event_id?: string | null;
 };
+
+type ProjectionCursor =
+  | Readonly<{ kind: 'rc_webhook'; at: string; priority: number; event_id: string }>
+  | Readonly<{ kind: 'rc_snapshot'; at: string; fingerprint: string }>
+  | null;
+
+type ProjectionRow = Readonly<{
+  tier: string | null;
+  is_active: boolean;
+  product_id: string | null;
+  expires_at: string | null;
+  store: string | null;
+  period_type: string | null;
+  will_renew: boolean | null;
+  granted_at: string | null;
+  source: string | null;
+  environment: string | null;
+  management_url: string | null;
+  verified_at: string | null;
+  offering_id: string | null;
+  package_id: string | null;
+  cursor: ProjectionCursor;
+}>;
+
+type EntitlementProjectionResponse = Readonly<{
+  schema_version: 1;
+  store_projection: Readonly<{
+    state: 'active' | 'inactive' | 'legacy_unknown' | 'absent';
+    row: ProjectionRow | null;
+  }>;
+  app_grant_projection: Readonly<{
+    state: 'active' | 'inactive' | 'absent';
+    row: ProjectionRow | null;
+  }>;
+}>;
+
+export type EntitlementSnapshot = Readonly<{
+  ownerBinding: string;
+  revision: number;
+  entitlement: StoredEntitlement | null;
+  activeStoreEntitlement: StoredEntitlement | null;
+  activeAppGrantEntitlement: StoredEntitlement | null;
+  priorEntitlement: StoredEntitlement | null;
+  effectiveNowISO: string;
+  hasConflict: boolean;
+  requiresUncachedRefresh: boolean;
+}>;
+
+export type EntitlementSnapshotRead =
+  | Readonly<{ status: 'available'; snapshot: EntitlementSnapshot }>
+  | Readonly<{
+      status:
+        | 'absent'
+        | 'unavailable'
+        | 'corrupt'
+        | 'unsupported_version'
+        | 'legacy_unbound'
+        | 'foreign_owner';
+      snapshot: null;
+    }>;
+
+export type EntitlementCacheRead =
+  | Readonly<{
+      status: 'available';
+      entitlement: StoredEntitlement | null;
+      snapshot: EntitlementSnapshot;
+    }>
+  | Readonly<{
+      status: Exclude<EntitlementSnapshotRead['status'], 'available'>;
+      entitlement: null;
+      snapshot: null;
+    }>;
+
+export type EvidenceConversion =
+  | Readonly<{ status: 'evidence'; evidence: EntitlementEvidence }>
+  | Readonly<{
+      status: 'ignored' | 'rejected';
+      reason:
+        | 'verification_failed'
+        | 'verification_mismatch'
+        | 'verification_unknown'
+        | 'invalid_request_date'
+        | 'verified_on_device_empty'
+        | 'verification_not_requested'
+        | 'inactive_weak_evidence'
+        | 'invalid_entitlement'
+        | 'missing_store_cursor'
+        | 'missing_app_grant_cursor';
+    }>;
+
+type EvidenceConversionReason = Extract<
+  EvidenceConversion,
+  { status: 'ignored' | 'rejected' }
+>['reason'];
+
+export type MergeEntitlementEvidenceResult = Readonly<{
+  status: 'committed' | 'unchanged' | 'conflict' | 'blocked';
+  disposition: 'applied' | 'conflict' | 'duplicate' | 'stale' | 'ignored' | 'blocked';
+  snapshot: EntitlementSnapshot | null;
+  requiresUncachedRefresh: boolean;
+  reason?: string;
+}>;
+
+export type PublishCustomerInfoEvidenceResult =
+  | MergeEntitlementEvidenceResult
+  | Readonly<{
+      status: 'ignored' | 'rejected';
+      disposition: 'ignored';
+      snapshot: EntitlementSnapshot | null;
+      requiresUncachedRefresh: boolean;
+      reason: EvidenceConversionReason;
+    }>;
+
+export type ServerEvidenceResult =
+  | Readonly<{ status: 'evidence'; evidence: readonly EntitlementEvidence[] }>
+  | Readonly<{ status: 'absent' | 'unconfigured' }>
+  | Readonly<{ status: 'transport_error' | 'blocked'; reason: string }>
+  | Readonly<{
+      status: 'ignored' | 'rejected';
+      reason: string;
+    }>;
+
+type EntitlementVerificationValue = `${CustomerInfo['entitlements']['verification']}`;
+
+export function isDurablyAdmissibleStoreResult(
+  verification: EntitlementVerificationValue,
+  result: PublishCustomerInfoEvidenceResult,
+): boolean {
+  return (
+    (verification === 'VERIFIED' || verification === 'VERIFIED_ON_DEVICE') &&
+    (result.status === 'committed' || result.status === 'unchanged') &&
+    (result.disposition === 'applied' || result.disposition === 'duplicate') &&
+    result.snapshot?.hasConflict === false &&
+    result.snapshot.activeStoreEntitlement?.isActive === true
+  );
+}
+
+const ENTITLEMENT_CACHE_RECORD_KEYS = [
+  'tier',
+  'isActive',
+  'periodType',
+  'store',
+  'productId',
+  'expiresAt',
+  'willRenew',
+  'grantedAt',
+  'source',
+  'environment',
+  'managementUrl',
+  'verifiedAt',
+  'offeringId',
+  'packageId',
+  'storeUserId',
+  'priceLabel',
+] as const satisfies readonly (keyof StoredEntitlement)[];
+const ENVELOPE_KEYS = [
+  'version',
+  'ownerBinding',
+  'revision',
+  'clockAnchor',
+  'store',
+  'appGrant',
+  'legacy',
+] as const;
+const STORE_LANE_KEYS = ['definitive', 'provisionalActive', 'conflict'] as const;
+const APP_GRANT_LANE_KEYS = ['definitive', 'conflict'] as const;
+const STORE_DEFINITIVE_KEYS = [
+  'cursor',
+  'state',
+  'entitlement',
+  'priorEntitlement',
+  'provenance',
+  'fingerprint',
+] as const;
+const STORE_PROVISIONAL_KEYS = ['cursor', 'entitlement', 'provenance', 'fingerprint'] as const;
+const STORE_CONFLICT_KEYS = [
+  'providerAt',
+  'leftFingerprint',
+  'rightFingerprint',
+  'leftProvenance',
+  'rightProvenance',
+] as const;
+const APP_GRANT_PROOF_KEYS = ['grantAt', 'entitlement', 'fingerprint'] as const;
+const APP_GRANT_CONFLICT_KEYS = ['grantAt', 'leftFingerprint', 'rightFingerprint'] as const;
+const LEGACY_PROOF_KEYS = ['provenance', 'entitlement', 'fingerprint'] as const;
+const PROJECTION_RESPONSE_KEYS = [
+  'schema_version',
+  'store_projection',
+  'app_grant_projection',
+] as const;
+const PROJECTION_KEYS = ['state', 'row'] as const;
+const PROJECTION_ROW_KEYS = [
+  'tier',
+  'is_active',
+  'product_id',
+  'expires_at',
+  'store',
+  'period_type',
+  'will_renew',
+  'granted_at',
+  'source',
+  'environment',
+  'management_url',
+  'verified_at',
+  'offering_id',
+  'package_id',
+  'cursor',
+] as const satisfies readonly (keyof ProjectionRow)[];
 
 function nowISO(): string {
   return new Date().toISOString();
 }
 
-function daysFromNowISO(days: number): string {
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + days);
-  return expiresAt.toISOString();
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
+  const actual = Object.keys(value);
+  return actual.length === keys.length && keys.every((key) => hasOwn(value, key));
+}
+
+function stringOrNull(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  return text.length > 0 ? text : null;
+}
+
+function isoOrNull(value: unknown): string | null {
+  const text = stringOrNull(value);
+  if (!text) return null;
+  const time = Date.parse(text);
+  return Number.isFinite(time) ? new Date(time).toISOString() : null;
+}
+
+function booleanOrNull(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null;
 }
 
 function asTier(value: string | null): StoredEntitlement['tier'] {
@@ -202,6 +343,7 @@ function asStore(value: string | null): StoredEntitlement['store'] {
     value === 'play_store' ||
     value === 'web' ||
     value === 'app_granted' ||
+    value === 'promotional' ||
     value === 'test_store'
   ) {
     return value;
@@ -210,13 +352,7 @@ function asStore(value: string | null): StoredEntitlement['store'] {
 }
 
 function asSource(value: string | null | undefined): StoredEntitlement['source'] {
-  if (
-    value === 'revenuecat' ||
-    value === 'app_granted' ||
-    value === 'server' ||
-    value === 'local_cache'
-  )
-    return value;
+  if (value === 'revenuecat' || value === 'app_granted' || value === 'server') return value;
   return null;
 }
 
@@ -233,94 +369,8 @@ function asEnvironment(value: string | null | undefined): StoredEntitlement['env
   return null;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function hasOwn(value: Record<string, unknown>, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(value, key);
-}
-
-function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
-  const actual = Object.keys(value);
-  return actual.length === keys.length && keys.every((key) => hasOwn(value, key));
-}
-
-function stringOrNull(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  const text = value.trim();
-  return text.length > 0 ? text : null;
-}
-
-function booleanOrNull(value: unknown): boolean | null {
-  return typeof value === 'boolean' ? value : null;
-}
-
-function isoOrNull(value: unknown): string | null {
-  const text = stringOrNull(value);
-  if (!text) return null;
-  const time = Date.parse(text);
-  return Number.isFinite(time) ? new Date(time).toISOString() : null;
-}
-
-function isCanonicalNullableText(value: unknown): value is string | null {
-  return value === null || (typeof value === 'string' && stringOrNull(value) === value);
-}
-
-function isCanonicalNullableISO(value: unknown): value is string | null {
-  return value === null || (typeof value === 'string' && isoOrNull(value) === value);
-}
-
-function isCanonicalNullableBoolean(value: unknown): value is boolean | null {
-  return value === null || typeof value === 'boolean';
-}
-
-function isStrictCurrentEntitlement(value: unknown): value is Record<string, unknown> {
-  if (!isRecord(value) || !hasExactKeys(value, ENTITLEMENT_CACHE_RECORD_KEYS)) return false;
-
-  const tier = typeof value.tier === 'string' ? asTier(value.tier) : null;
-  const periodType =
-    value.periodType === null ||
-    (typeof value.periodType === 'string' && asPeriod(value.periodType) === value.periodType);
-  const store =
-    value.store === null ||
-    (typeof value.store === 'string' && asStore(value.store) === value.store);
-  const source =
-    value.source === null ||
-    (typeof value.source === 'string' && asSource(value.source) === value.source);
-  const environment =
-    value.environment === null ||
-    (typeof value.environment === 'string' &&
-      asEnvironment(value.environment) === value.environment);
-  const managementUrl =
-    value.managementUrl === null ||
-    (typeof value.managementUrl === 'string' &&
-      safeExternalHttpsUrl(value.managementUrl) === value.managementUrl);
-
-  return (
-    tier !== null &&
-    tier === value.tier &&
-    typeof value.isActive === 'boolean' &&
-    periodType &&
-    store &&
-    isCanonicalNullableText(value.productId) &&
-    isCanonicalNullableISO(value.expiresAt) &&
-    isCanonicalNullableBoolean(value.willRenew) &&
-    isCanonicalNullableISO(value.grantedAt) &&
-    source &&
-    environment &&
-    managementUrl &&
-    isCanonicalNullableISO(value.verifiedAt) &&
-    isCanonicalNullableText(value.offeringId) &&
-    isCanonicalNullableText(value.packageId) &&
-    isCanonicalNullableText(value.storeUserId) &&
-    isCanonicalNullableText(value.priceLabel)
-  );
-}
-
 function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
   if (!isRecord(value)) return null;
-
   const tier = asTier(stringOrNull(value.tier));
   if (!tier) return null;
 
@@ -328,11 +378,10 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
   const store = asStore(stringOrNull(value.store));
   const source = asSource(stringOrNull(value.source));
   const environment = asEnvironment(stringOrNull(value.environment));
-  const verifiedAt = isoOrNull(value.verifiedAt);
-  const grantedAt = isoOrNull(value.grantedAt);
   const expiresAt = isoOrNull(value.expiresAt);
+  const grantedAt = isoOrNull(value.grantedAt);
+  const verifiedAt = isoOrNull(value.verifiedAt);
   const rawActive = booleanOrNull(value.isActive) ?? false;
-  const activeHasVerifiedSource = Boolean(source && verifiedAt);
   const timeBoxed =
     periodType === 'reverse_trial' ||
     periodType === 'trial' ||
@@ -340,1360 +389,491 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
     periodType === 'prepaid' ||
     source === 'app_granted' ||
     store === 'app_granted';
-  const activeHasRequiredExpiry = !timeBoxed || Boolean(expiresAt);
   const devGrantedInNonDev =
     source === 'app_granted' &&
     environment === 'development' &&
     env.appEnvironment !== 'development';
   const testStoreInProduction =
     env.appEnvironment === 'production' && (store === 'test_store' || environment === 'test_store');
-  const reverseTrialHasAppGrantShape =
-    periodType !== 'reverse_trial' ||
-    (store === 'app_granted' && (source === 'app_granted' || source === 'server'));
-
-  if (!reverseTrialHasAppGrantShape) return null;
+  const appGranted = store === 'app_granted' || source === 'app_granted';
 
   return {
     tier,
     isActive:
       rawActive &&
-      activeHasVerifiedSource &&
-      activeHasRequiredExpiry &&
+      source !== null &&
+      (!timeBoxed || expiresAt !== null) &&
       !devGrantedInNonDev &&
       !testStoreInProduction,
     periodType,
     store,
-    productId: stringOrNull(value.productId),
+    productId: appGranted ? null : stringOrNull(value.productId),
     expiresAt,
     willRenew: booleanOrNull(value.willRenew),
     grantedAt,
-    source,
+    source: appGranted ? 'app_granted' : source,
     environment,
     managementUrl: safeExternalHttpsUrl(stringOrNull(value.managementUrl)),
     verifiedAt,
-    offeringId: stringOrNull(value.offeringId),
-    packageId: stringOrNull(value.packageId),
+    offeringId: appGranted ? null : stringOrNull(value.offeringId),
+    packageId: appGranted ? null : stringOrNull(value.packageId),
     storeUserId: stringOrNull(value.storeUserId),
     priceLabel: stringOrNull(value.priceLabel),
   };
 }
 
-function normalizeRevenueCatEmptyWatermark(
-  value: unknown,
-): RevenueCatEmptyWatermark | null {
-  if (!isRecord(value)) return null;
-  const verifiedAt = isoOrNull(value.verifiedAt);
-  const managementUrl = safeExternalHttpsUrl(stringOrNull(value.managementUrl));
-  const storeUserId = stringOrNull(value.storeUserId);
-  if (
-    !verifiedAt ||
-    (value.managementUrl !== null && !managementUrl) ||
-    (value.storeUserId !== null && !storeUserId)
-  ) {
-    return null;
-  }
-  return { verifiedAt, managementUrl, storeUserId };
+function storedEntitlementEquals(left: unknown, right: StoredEntitlement): boolean {
+  if (!isRecord(left) || !hasExactKeys(left, ENTITLEMENT_CACHE_RECORD_KEYS)) return false;
+  return ENTITLEMENT_CACHE_RECORD_KEYS.every((key) => left[key] === right[key]);
 }
 
-function isStrictRevenueCatEmptyWatermark(value: unknown): boolean {
-  if (!isRecord(value) || !hasExactKeys(value, REVENUECAT_EMPTY_WATERMARK_KEYS)) return false;
-  const normalized = normalizeRevenueCatEmptyWatermark(value);
+function strictStoredEntitlement(value: unknown): StoredEntitlement | null {
+  const normalized = normalizeStoredEntitlement(value);
+  return normalized && storedEntitlementEquals(value, normalized) ? normalized : null;
+}
+
+function canonicalISO(value: unknown): value is string {
+  return typeof value === 'string' && isoOrNull(value) === value;
+}
+
+function printableAscii(value: unknown, maxLength = 255): value is string {
   return (
-    normalized !== null &&
-    REVENUECAT_EMPTY_WATERMARK_KEYS.every((key) => value[key] === normalized[key])
+    typeof value === 'string' &&
+    value.length > 0 &&
+    value.length <= maxLength &&
+    /^[\x21-\x7e]+$/.test(value)
   );
 }
 
-function entitlementCacheError(code: string): Error {
-  return new Error(code);
-}
-
-function decodeEntitlementProof(raw: string): StoredEntitlement {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-
-  if (!isRecord(parsed)) throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-
-  if (hasOwn(parsed, 'version')) {
-    if (parsed.version !== PROOF_ENVELOPE_VERSION) {
-      if (
-        typeof parsed.version === 'number' &&
-        Number.isSafeInteger(parsed.version) &&
-        parsed.version > PROOF_ENVELOPE_VERSION
-      ) {
-        throw entitlementCacheError(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
-      }
-      throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-    }
+function decodeStoreCursor(value: unknown): StoreEvidenceCursor | null {
+  if (!isRecord(value) || typeof value.kind !== 'string') return null;
+  if (value.kind === 'revenuecat_snapshot') {
     if (
-      !hasExactKeys(parsed, ENTITLEMENT_CACHE_V1_ENVELOPE_KEYS) ||
-      !isStrictCurrentEntitlement(parsed.entitlement)
+      !hasExactKeys(value, ['kind', 'requestDate', 'fingerprint']) ||
+      !canonicalISO(value.requestDate) ||
+      typeof value.fingerprint !== 'string' ||
+      value.fingerprint.length === 0 ||
+      value.fingerprint.length > 2_048
     ) {
-      throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+      return null;
     }
-    parsed = parsed.entitlement;
+    return {
+      kind: 'revenuecat_snapshot',
+      requestDate: value.requestDate,
+      fingerprint: value.fingerprint,
+    };
   }
-
-  if (
-    isRecord(parsed) &&
-    parsed.expiresAt !== null &&
-    parsed.expiresAt !== undefined &&
-    isoOrNull(parsed.expiresAt) === null
-  ) {
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-  if (isRecord(parsed)) {
-    const invalidOptionalEnum = <T extends string>(
-      key: string,
-      normalize: (value: string | null) => T | null,
-    ) =>
-      hasOwn(parsed, key) &&
-      parsed[key] !== null &&
-      (typeof parsed[key] !== 'string' || normalize(parsed[key] as string) !== parsed[key]);
+  if (value.kind === 'revenuecat_webhook') {
     if (
-      invalidOptionalEnum('periodType', asPeriod) ||
-      invalidOptionalEnum('store', asStore) ||
-      invalidOptionalEnum('source', (value) => asSource(value) ?? null) ||
-      invalidOptionalEnum('environment', (value) => asEnvironment(value) ?? null) ||
-      (hasOwn(parsed, 'storeUserId') &&
-        parsed.storeUserId !== null &&
-        (typeof parsed.storeUserId !== 'string' ||
-          stringOrNull(parsed.storeUserId) !== parsed.storeUserId))
+      !hasExactKeys(value, ['kind', 'eventAt', 'priority', 'eventId']) ||
+      !canonicalISO(value.eventAt) ||
+      !Number.isSafeInteger(value.priority) ||
+      (value.priority as number) < 0 ||
+      (value.priority as number) > 32_767 ||
+      !printableAscii(value.eventId)
     ) {
-      throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+      return null;
     }
-    const appGranted =
-      parsed.source === 'app_granted' || parsed.store === 'app_granted';
-    if (
-      appGranted &&
-      (typeof parsed.environment !== 'string' ||
-        asEnvironment(parsed.environment) !== parsed.environment)
-    ) {
-      throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-    }
+    return {
+      kind: 'revenuecat_webhook',
+      eventAt: value.eventAt,
+      priority: value.priority as number,
+      eventId: value.eventId,
+    };
   }
-
-  const entitlement = normalizeStoredEntitlement(parsed);
-  if (!entitlement) throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  return entitlement;
-}
-
-/**
- * Keep v2 bytes readable by both older raw-record readers and the immediately
- * preceding version-1 envelope reader. New writes deliberately use the raw,
- * fully-normalized record instead of introducing another physical cache key.
- */
-function encodeEntitlementProof(entitlement: StoredEntitlement): string {
-  return JSON.stringify(entitlement);
-}
-
-function normalizeTrustedRevenueCatProofMarker(
-  value: unknown,
-): TrustedRevenueCatProofMarker | null {
-  if (!isRecord(value) || !hasExactKeys(value, TRUSTED_REVENUECAT_PROOF_KEYS)) return null;
-  const storeUserId = stringOrNull(value.storeUserId);
-  const proofIdentity = stringOrNull(value.proofIdentity);
-  if (!storeUserId || !proofIdentity) return null;
-  if (value.storeUserId !== storeUserId || value.proofIdentity !== proofIdentity) return null;
-  return { storeUserId, proofIdentity };
-}
-
-function decodeRevenueCatEmpty(raw: string): RevenueCatSidecar {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-  if (!isRecord(parsed)) throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  if (parsed.version !== WATERMARK_SCHEMA_VERSION) {
-    if (
-      typeof parsed.version === 'number' &&
-      Number.isSafeInteger(parsed.version) &&
-      parsed.version > WATERMARK_SCHEMA_VERSION
-    ) {
-      throw entitlementCacheError(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
-    }
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-  if (
-    !hasExactKeys(parsed, REVENUECAT_EMPTY_ENVELOPE_KEYS) ||
-    (parsed.revenueCatEmpty !== null &&
-      !isStrictRevenueCatEmptyWatermark(parsed.revenueCatEmpty)) ||
-    (parsed.trustedRevenueCatProof !== null &&
-      normalizeTrustedRevenueCatProofMarker(parsed.trustedRevenueCatProof) === null)
-  ) {
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-  const revenueCatEmpty =
-    parsed.revenueCatEmpty === null
-      ? null
-      : normalizeRevenueCatEmptyWatermark(parsed.revenueCatEmpty);
-  const trustedRevenueCatProof =
-    parsed.trustedRevenueCatProof === null
-      ? null
-      : normalizeTrustedRevenueCatProofMarker(parsed.trustedRevenueCatProof);
-  if (
-    (parsed.revenueCatEmpty !== null && !revenueCatEmpty) ||
-    (parsed.trustedRevenueCatProof !== null && !trustedRevenueCatProof) ||
-    (!revenueCatEmpty && !trustedRevenueCatProof)
-  ) {
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-  return { revenueCatEmpty, trustedRevenueCatProof };
-}
-
-function encodeRevenueCatEmpty(sidecar: RevenueCatSidecar): string {
-  return JSON.stringify({
-    version: WATERMARK_SCHEMA_VERSION,
-    revenueCatEmpty: sidecar.revenueCatEmpty,
-    trustedRevenueCatProof: sidecar.trustedRevenueCatProof,
-  } satisfies RevenueCatEmptyEnvelope);
-}
-
-function decodeRevenueCatEmptyOrLegacyProof(raw: string): RevenueCatSidecar | null {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  }
-  if (isRecord(parsed) && parsed.version === WATERMARK_SCHEMA_VERSION) {
-    return decodeRevenueCatEmpty(raw);
-  }
-  decodeEntitlementProof(raw);
   return null;
 }
 
-function errorMessage(error: unknown): string | null {
-  return error instanceof Error ? error.message : null;
+function decodeStoreDefinitive(value: unknown): StoreDefinitiveProof | null {
+  if (!isRecord(value) || !hasExactKeys(value, STORE_DEFINITIVE_KEYS)) return null;
+  const cursor = decodeStoreCursor(value.cursor);
+  const state = value.state;
+  const entitlement =
+    value.entitlement === null ? null : strictStoredEntitlement(value.entitlement);
+  const priorEntitlement =
+    value.priorEntitlement === null ? null : strictStoredEntitlement(value.priorEntitlement);
+  const provenance = value.provenance;
+  if (
+    !cursor ||
+    (state !== 'active' && state !== 'inactive' && state !== 'empty') ||
+    (value.entitlement !== null && entitlement === null) ||
+    (value.priorEntitlement !== null && priorEntitlement === null) ||
+    (provenance !== 'revenuecat_verified' &&
+      provenance !== 'server_snapshot' &&
+      provenance !== 'server_webhook') ||
+    typeof value.fingerprint !== 'string'
+  ) {
+    return null;
+  }
+  if (
+    (state === 'empty' && entitlement !== null) ||
+    (state === 'active' && !entitlement?.isActive) ||
+    (state === 'inactive' && (entitlement === null || entitlement.isActive)) ||
+    value.fingerprint !== entitlementEvidenceFingerprint(state, entitlement)
+  ) {
+    return null;
+  }
+  return {
+    cursor,
+    state,
+    entitlement,
+    priorEntitlement,
+    provenance,
+    fingerprint: value.fingerprint,
+  };
 }
 
-type PrivateDomainRead<T> =
-  | { status: 'available'; value: T }
-  | { status: 'absent' | 'unavailable' | 'corrupt' | 'unsupported_version'; value: null };
+function decodeStoreProvisional(value: unknown): StoreProvisionalProof | null {
+  if (!isRecord(value) || !hasExactKeys(value, STORE_PROVISIONAL_KEYS)) return null;
+  const cursor = decodeStoreCursor(value.cursor);
+  const entitlement = strictStoredEntitlement(value.entitlement);
+  if (
+    cursor?.kind !== 'revenuecat_snapshot' ||
+    !entitlement?.isActive ||
+    value.provenance !== 'revenuecat_verified_on_device' ||
+    typeof value.fingerprint !== 'string' ||
+    value.fingerprint !== entitlementEvidenceFingerprint('active', entitlement)
+  ) {
+    return null;
+  }
+  return {
+    cursor,
+    entitlement,
+    provenance: 'revenuecat_verified_on_device',
+    fingerprint: value.fingerprint,
+  };
+}
 
-function classifyPrivateReadError<T>(error: unknown): PrivateDomainRead<T> {
+function isStoreProvenance(value: unknown): value is StoreConflict['leftProvenance'] {
+  return (
+    value === 'revenuecat_verified' ||
+    value === 'revenuecat_verified_on_device' ||
+    value === 'server_snapshot' ||
+    value === 'server_webhook'
+  );
+}
+
+function decodeStoreConflict(value: unknown): StoreConflict | null {
+  if (!isRecord(value) || !hasExactKeys(value, STORE_CONFLICT_KEYS)) return null;
+  if (
+    !canonicalISO(value.providerAt) ||
+    typeof value.leftFingerprint !== 'string' ||
+    typeof value.rightFingerprint !== 'string' ||
+    !isStoreProvenance(value.leftProvenance) ||
+    !isStoreProvenance(value.rightProvenance)
+  ) {
+    return null;
+  }
+  return {
+    providerAt: value.providerAt,
+    leftFingerprint: value.leftFingerprint,
+    rightFingerprint: value.rightFingerprint,
+    leftProvenance: value.leftProvenance,
+    rightProvenance: value.rightProvenance,
+  };
+}
+
+function decodeAppGrantProof(value: unknown): AppGrantProof | null {
+  if (!isRecord(value) || !hasExactKeys(value, APP_GRANT_PROOF_KEYS)) return null;
+  const entitlement = strictStoredEntitlement(value.entitlement);
+  if (
+    !canonicalISO(value.grantAt) ||
+    !entitlement ||
+    entitlement.source !== 'app_granted' ||
+    entitlement.store !== 'app_granted' ||
+    entitlement.grantedAt !== value.grantAt ||
+    typeof value.fingerprint !== 'string' ||
+    value.fingerprint !== entitlementEvidenceFingerprint('app_grant', entitlement)
+  ) {
+    return null;
+  }
+  return { grantAt: value.grantAt, entitlement, fingerprint: value.fingerprint };
+}
+
+function decodeAppGrantConflict(value: unknown): AppGrantConflict | null {
+  if (!isRecord(value) || !hasExactKeys(value, APP_GRANT_CONFLICT_KEYS)) return null;
+  if (
+    !canonicalISO(value.grantAt) ||
+    typeof value.leftFingerprint !== 'string' ||
+    typeof value.rightFingerprint !== 'string'
+  ) {
+    return null;
+  }
+  return {
+    grantAt: value.grantAt,
+    leftFingerprint: value.leftFingerprint,
+    rightFingerprint: value.rightFingerprint,
+  };
+}
+
+function decodeLegacyProof(value: unknown): LegacyPositiveProof | null {
+  if (!isRecord(value) || !hasExactKeys(value, LEGACY_PROOF_KEYS)) return null;
+  const entitlement = strictStoredEntitlement(value.entitlement);
+  if (
+    value.provenance !== 'server_missing_cursor' ||
+    !entitlement?.isActive ||
+    typeof value.fingerprint !== 'string' ||
+    value.fingerprint !== entitlementEvidenceFingerprint('legacy', entitlement)
+  ) {
+    return null;
+  }
+  return {
+    provenance: value.provenance,
+    entitlement,
+    fingerprint: value.fingerprint,
+  };
+}
+
+/**
+ * Releases before the Trusted Entitlements boundary could persist an
+ * owner-bound V2 legacy proof from RevenueCat verification=NOT_REQUESTED.
+ * That proof must never grant access, but treating the otherwise-valid
+ * envelope as generic corruption prevents a fresh authoritative response
+ * from repairing an upgraded installation. Recognize only that exact retired
+ * shape so merge can atomically discard it after the current owner has
+ * received definitive evidence.
+ */
+function decodeDeprecatedNotRequestedEnvelope(raw: string): EntitlementCacheEnvelopeV2 | null {
+  let value: unknown;
+  try {
+    value = JSON.parse(raw) as unknown;
+  } catch {
+    return null;
+  }
+  if (
+    !isRecord(value) ||
+    value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION ||
+    !hasExactKeys(value, ENVELOPE_KEYS) ||
+    !isRecord(value.legacy) ||
+    !hasExactKeys(value.legacy, LEGACY_PROOF_KEYS) ||
+    value.legacy.provenance !== 'revenuecat_not_requested'
+  ) {
+    return null;
+  }
+  const entitlement = strictStoredEntitlement(value.legacy.entitlement);
+  if (
+    !entitlement?.isActive ||
+    typeof value.legacy.fingerprint !== 'string' ||
+    value.legacy.fingerprint !== entitlementEvidenceFingerprint('legacy', entitlement)
+  ) {
+    return null;
+  }
+  try {
+    return decodeEntitlementEnvelope(JSON.stringify({ ...value, legacy: null }));
+  } catch {
+    return null;
+  }
+}
+
+function hasDefinitiveReplacementEvidence(
+  evidence: readonly (EntitlementEvidence | null)[],
+): boolean {
+  return evidence.some((item) => item?.kind === 'store_definitive' || item?.kind === 'app_grant');
+}
+
+function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
+  let value: unknown;
+  try {
+    value = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error(ENTITLEMENT_CACHE_INVALID);
+  }
+  if (!isRecord(value)) throw new Error(ENTITLEMENT_CACHE_INVALID);
+  if (value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION) {
+    if (
+      typeof value.version === 'number' &&
+      Number.isSafeInteger(value.version) &&
+      value.version > ENTITLEMENT_CACHE_SCHEMA_VERSION
+    ) {
+      throw new Error(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
+    }
+    throw new Error(ENTITLEMENT_CACHE_LEGACY_UNBOUND);
+  }
+  if (
+    !hasExactKeys(value, ENVELOPE_KEYS) ||
+    typeof value.ownerBinding !== 'string' ||
+    !ENTITLEMENT_OWNER_BINDING_PATTERN.test(value.ownerBinding) ||
+    !Number.isSafeInteger(value.revision) ||
+    (value.revision as number) < 0 ||
+    (value.clockAnchor !== null && !canonicalISO(value.clockAnchor)) ||
+    !isRecord(value.store) ||
+    !hasExactKeys(value.store, STORE_LANE_KEYS) ||
+    !isRecord(value.appGrant) ||
+    !hasExactKeys(value.appGrant, APP_GRANT_LANE_KEYS)
+  ) {
+    throw new Error(ENTITLEMENT_CACHE_INVALID);
+  }
+
+  const definitive =
+    value.store.definitive === null ? null : decodeStoreDefinitive(value.store.definitive);
+  const provisionalActive =
+    value.store.provisionalActive === null
+      ? null
+      : decodeStoreProvisional(value.store.provisionalActive);
+  const storeConflict =
+    value.store.conflict === null ? null : decodeStoreConflict(value.store.conflict);
+  const appGrantDefinitive =
+    value.appGrant.definitive === null ? null : decodeAppGrantProof(value.appGrant.definitive);
+  const appGrantConflict =
+    value.appGrant.conflict === null ? null : decodeAppGrantConflict(value.appGrant.conflict);
+  const legacy = value.legacy === null ? null : decodeLegacyProof(value.legacy);
+  if (
+    (value.store.definitive !== null && !definitive) ||
+    (value.store.provisionalActive !== null && !provisionalActive) ||
+    (value.store.conflict !== null && !storeConflict) ||
+    (value.appGrant.definitive !== null && !appGrantDefinitive) ||
+    (value.appGrant.conflict !== null && !appGrantConflict) ||
+    (value.legacy !== null && !legacy)
+  ) {
+    throw new Error(ENTITLEMENT_CACHE_INVALID);
+  }
+
+  return {
+    version: ENTITLEMENT_CACHE_SCHEMA_VERSION,
+    ownerBinding: value.ownerBinding,
+    revision: value.revision as number,
+    clockAnchor: value.clockAnchor,
+    store: { definitive, provisionalActive, conflict: storeConflict },
+    appGrant: { definitive: appGrantDefinitive, conflict: appGrantConflict },
+    legacy,
+  };
+}
+
+function encodeEntitlementEnvelope(envelope: EntitlementCacheEnvelopeV2): string {
+  return JSON.stringify(envelope);
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : 'UNKNOWN_ERROR';
+}
+
+function readFailureStatus(
+  error: unknown,
+): Exclude<EntitlementSnapshotRead['status'], 'available'> {
   const message = errorMessage(error);
   if (
     message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION ||
     message === PRIVATE_KV_ENVELOPE_UNSUPPORTED
   ) {
-    return { status: 'unsupported_version', value: null };
+    return 'unsupported_version';
   }
+  if (message === ENTITLEMENT_CACHE_LEGACY_UNBOUND) return 'legacy_unbound';
+  if (message === ENTITLEMENT_CACHE_FOREIGN_OWNER) return 'foreign_owner';
   if (
     message === ENTITLEMENT_CACHE_INVALID ||
     message === PRIVATE_KV_ENVELOPE_INVALID ||
     message === PRIVATE_KV_DECRYPTION_FAILED
   ) {
-    return { status: 'corrupt', value: null };
+    return 'corrupt';
   }
-  return { status: 'unavailable', value: null };
+  return 'unavailable';
 }
 
-async function readPrivateDomainKey<T>(
-  key: string,
-  decode: (raw: string) => T,
-): Promise<PrivateDomainRead<T>> {
-  let raw: string | null;
-  try {
-    raw = await getPrivateItem(key);
-  } catch (error) {
-    return classifyPrivateReadError(error);
-  }
-  if (raw === null) return { status: 'absent', value: null };
-  try {
-    return { status: 'available', value: decode(raw) };
-  } catch (error) {
-    return classifyPrivateReadError(error);
+function assertContextShape(context: EntitlementOwnerContext): void {
+  if (!ENTITLEMENT_OWNER_BINDING_PATTERN.test(context.ownerBinding)) {
+    throw new Error('ENTITLEMENT_OWNER_BINDING_INVALID');
   }
 }
 
-function readEntitlementKey(key: string): Promise<PrivateDomainRead<StoredEntitlement>> {
-  return readPrivateDomainKey(key, decodeEntitlementProof);
+async function assertCurrentOwnerContext(context: EntitlementOwnerContext): Promise<void> {
+  assertContextShape(context);
+  const currentBinding = await readLocalDataOwnerProofBinding();
+  if (currentBinding !== context.ownerBinding) throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
 }
 
-async function readRevenueCatEmptyKey(): Promise<PrivateDomainRead<RevenueCatSidecar>> {
-  let raw: string | null;
-  try {
-    raw = await getPrivateItem(REVENUECAT_EMPTY_KEY);
-  } catch (error) {
-    return classifyPrivateReadError(error);
-  }
-  if (raw === null) return { status: 'absent', value: null };
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    return classifyPrivateReadError(entitlementCacheError(ENTITLEMENT_CACHE_INVALID));
-  }
-  if (isRecord(parsed) && parsed.version === WATERMARK_SCHEMA_VERSION) {
-    try {
-      return { status: 'available', value: decodeRevenueCatEmpty(raw) };
-    } catch (error) {
-      return classifyPrivateReadError(error);
-    }
-  }
-
-  // Raw v0 and strict-envelope v1 are legacy entitlement proofs, not a
-  // watermark. Validate them here so malformed/future bytes still fail closed.
-  try {
-    decodeEntitlementProof(raw);
-    return { status: 'absent', value: null };
-  } catch (error) {
-    return classifyPrivateReadError(error);
-  }
+export async function entitlementOwnerContextForUser(
+  userId: string,
+): Promise<EntitlementOwnerContext> {
+  if (!userId.trim()) throw new Error('ENTITLEMENT_OWNER_USER_ID_REQUIRED');
+  const context = { ownerBinding: await localDataOwnerBinding(userId) } as const;
+  await assertCurrentOwnerContext(context);
+  return context;
 }
 
-export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
-  const tier = asTier(row.entitlement);
-  const periodType = asPeriod(row.period_type);
-  const store = asStore(row.store);
-  const source = asSource(row.source);
-  const environment = asEnvironment(row.environment);
-  if (
-    (row.entitlement !== null && tier === null) ||
-    (row.period_type !== null && periodType === null) ||
-    (row.store !== null && store === null) ||
-    (row.source !== null && row.source !== undefined && source === null) ||
-    (row.environment !== null && row.environment !== undefined && environment === null)
-  ) {
-    throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
+export async function currentEntitlementOwnerContext(): Promise<EntitlementOwnerContext> {
+  const ownerBinding = await readLocalDataOwnerProofBinding();
+  if (!ownerBinding || !ENTITLEMENT_OWNER_BINDING_PATTERN.test(ownerBinding)) {
+    throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
   }
+  return { ownerBinding };
+}
+
+function maxISO(left: string | null, right: string): string {
+  return left === null || left < right ? right : left;
+}
+
+function snapshotFromEnvelope(
+  envelope: EntitlementCacheEnvelopeV2,
+  observedAtISO: string,
+): EntitlementSnapshot {
+  const effectiveNowISO = maxISO(envelope.clockAnchor, observedAtISO);
+  const projection = effectiveEntitlementProjection(envelope, effectiveNowISO);
   return {
-    tier,
-    isActive: row.is_active,
-    periodType,
-    store,
-    productId: row.product_id,
-    expiresAt: row.expires_at,
-    willRenew: row.will_renew,
-    grantedAt: row.original_purchase_at,
-    source: source ?? (row.store === 'app_granted' ? 'app_granted' : 'server'),
-    environment,
-    managementUrl: safeExternalHttpsUrl(row.management_url),
-    // Both fields are server-authored. Never turn the device clock into proof.
-    verifiedAt: row.verified_at ?? row.updated_at ?? null,
-    offeringId: row.offering_id ?? null,
-    packageId: row.package_id ?? null,
-    storeUserId: row.store_user_id ?? null,
-  };
-}
-
-function isStoreBackedEntitlement(e: StoredEntitlement | null): boolean {
-  if (!e) return false;
-  return (
-    e.source === 'revenuecat' ||
-    e.store === 'app_store' ||
-    e.store === 'play_store' ||
-    e.store === 'test_store' ||
-    e.store === 'web'
-  );
-}
-
-function revenueCatProofIdentity(e: StoredEntitlement): string {
-  return JSON.stringify([
-    e.source ?? null,
-    e.verifiedAt ?? null,
-    e.tier,
-    e.isActive,
-    e.periodType,
-    e.store,
-    e.productId,
-    e.expiresAt,
-    e.willRenew,
-    e.grantedAt,
-    e.environment ?? null,
-    e.storeUserId ?? null,
-  ]);
-}
-
-function provisionalBarrierFromRevenueCatProof(
-  proof: StoredEntitlement,
-  reviewedAt: string,
-): ProvisionalProviderBarrier | null {
-  if (proof.source !== 'revenuecat' || !proof.verifiedAt) return null;
-  return {
-    kind: isLiveEntitlementAt(proof, reviewedAt) ? 'active_proof' : 'revocation',
-    verifiedAt: proof.verifiedAt,
-    managementUrl: proof.managementUrl ?? null,
-    storeUserId: proof.storeUserId ?? null,
-    exactRevenueCatProofIdentity: revenueCatProofIdentity(proof),
-  };
-}
-
-function revenueCatProofIdentityKindAt(
-  proofIdentity: string,
-  storeUserId: string | null,
-  reviewedAt: string,
-): Readonly<{
-  kind: ProvisionalProviderBarrier['kind'];
-  verifiedAt: string;
-}> | null {
-  let identity: unknown;
-  try {
-    identity = JSON.parse(proofIdentity) as unknown;
-  } catch {
-    return null;
-  }
-  if (
-    !Array.isArray(identity) ||
-    identity.length !== 12 ||
-    JSON.stringify(identity) !== proofIdentity ||
-    identity[0] !== 'revenuecat' ||
-    typeof identity[1] !== 'string' ||
-    isoOrNull(identity[1]) !== identity[1] ||
-    typeof identity[3] !== 'boolean' ||
-    (identity[7] !== null &&
-      (typeof identity[7] !== 'string' || isoOrNull(identity[7]) !== identity[7])) ||
-    identity[11] !== storeUserId
-  ) {
-    return null;
-  }
-  const expiryTime = identity[7] === null ? Number.POSITIVE_INFINITY : Date.parse(identity[7]);
-  const live =
-    identity[3] &&
-    Number.isFinite(Date.parse(reviewedAt)) &&
-    expiryTime > Date.parse(reviewedAt);
-  return {
-    kind: live ? 'active_proof' : 'revocation',
-    verifiedAt: identity[1],
-  };
-}
-
-function provisionalBarrierAt(
-  barrier: ProvisionalProviderBarrier | null | undefined,
-  reviewedAt: string,
-): ProvisionalProviderBarrier | null {
-  if (!barrier) return null;
-  const kind = barrier.exactRevenueCatProofIdentity
-    ? revenueCatProofIdentityKindAt(
-        barrier.exactRevenueCatProofIdentity,
-        barrier.storeUserId,
-        reviewedAt,
-      )
-    : null;
-  return kind && kind.kind !== barrier.kind ? { ...barrier, kind: kind.kind } : barrier;
-}
-
-function provisionalBarrierFromTrustedMarker(
-  marker: TrustedRevenueCatProofMarker | null,
-  reviewedAt: string,
-): ProvisionalProviderBarrier | null {
-  if (!marker) return null;
-  const kind = revenueCatProofIdentityKindAt(
-    marker.proofIdentity,
-    marker.storeUserId,
-    reviewedAt,
-  );
-  if (!kind) return null;
-  return {
-    kind: kind.kind,
-    verifiedAt: kind.verifiedAt,
-    managementUrl: null,
-    storeUserId: marker.storeUserId,
-    exactRevenueCatProofIdentity: marker.proofIdentity,
-  };
-}
-
-function selectNewestProvisionalBarrier(
-  current: ProvisionalProviderBarrier | null,
-  incoming: ProvisionalProviderBarrier | null,
-): ProvisionalProviderBarrier | null {
-  if (!current) return incoming;
-  if (!incoming) return current;
-  return Date.parse(incoming.verifiedAt) >= Date.parse(current.verifiedAt)
-    ? incoming
-    : current;
-}
-
-function rollbackBarrierForPhysicalProof(
-  proof: StoredEntitlement,
-  marker: TrustedRevenueCatProofMarker | null,
-  reviewedAt: string,
-): ProvisionalProviderBarrier | null {
-  if (markerMatchesRevenueCatProof(marker, proof)) return null;
-  const physical = provisionalBarrierFromRevenueCatProof(proof, reviewedAt);
-  const trusted = provisionalBarrierFromTrustedMarker(marker, reviewedAt);
-  const markerCanOrderProof = Boolean(
-    trusted && (!proof.storeUserId || trusted.storeUserId === proof.storeUserId),
-  );
-  return selectNewestProvisionalBarrier(
-    physical,
-    markerCanOrderProof ? trusted : null,
-  );
-}
-
-function trustedRevenueCatProofMarkerFor(
-  entitlement: StoredEntitlement,
-): TrustedRevenueCatProofMarker | null {
-  return entitlement.source === 'revenuecat' && entitlement.storeUserId
-    ? {
-        storeUserId: entitlement.storeUserId,
-        proofIdentity: revenueCatProofIdentity(entitlement),
-      }
-    : null;
-}
-
-function markerMatchesRevenueCatProof(
-  marker: TrustedRevenueCatProofMarker | null,
-  entitlement: StoredEntitlement,
-): boolean {
-  return Boolean(
-    marker &&
-      entitlement.source === 'revenuecat' &&
-      marker.storeUserId === entitlement.storeUserId &&
-      marker.proofIdentity === revenueCatProofIdentity(entitlement),
-  );
-}
-
-function isAppGrantedEntitlement(e: StoredEntitlement | null): boolean {
-  return Boolean(e && (e.source === 'app_granted' || e.store === 'app_granted'));
-}
-
-function isLiveEntitlementAt(e: StoredEntitlement | null, reviewedAt: string): boolean {
-  if (!e?.isActive || !e.tier) return false;
-  const reviewedTime = Date.parse(reviewedAt);
-  const expiresTime = e.expiresAt ? Date.parse(e.expiresAt) : Number.POSITIVE_INFINITY;
-  return (
-    Number.isFinite(reviewedTime) &&
-    (e.expiresAt === null || (Number.isFinite(expiresTime) && expiresTime > reviewedTime))
-  );
-}
-
-function isLiveAppGrantAt(e: StoredEntitlement | null, reviewedAt: string): boolean {
-  return isAppGrantedEntitlement(e) && isLiveEntitlementAt(e, reviewedAt);
-}
-
-function isLiveStoreProofAt(
-  e: StoredEntitlement | null,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): boolean {
-  if (!e || !isStoreBackedEntitlement(e) || !isLiveEntitlementAt(e, reviewedAt)) return false;
-  const evidence = classifyEntitlementEvidence(e, reviewedAt, appEnvironment);
-  return evidence === 'fresh' || evidence === 'reconciliation_due';
-}
-
-function isRevenueCatEmptyTombstone(e: StoredEntitlement | null): boolean {
-  return Boolean(
-    e &&
-      e.tier === 'pro' &&
-      e.isActive === false &&
-      e.periodType === null &&
-      e.store === null &&
-      e.productId === null &&
-      e.expiresAt === null &&
-      e.willRenew === false &&
-      e.grantedAt === null &&
-      e.source === 'local_cache' &&
-      e.environment === null &&
-      e.managementUrl === null &&
-      e.verifiedAt !== null &&
-      e.offeringId === null &&
-      e.packageId === null &&
-      e.storeUserId === null &&
-      e.priceLabel === null,
-  );
-}
-
-function revenueCatEmptyTombstone(verifiedAt: string): StoredEntitlement {
-  return {
-    tier: 'pro',
-    isActive: false,
-    periodType: null,
-    store: null,
-    productId: null,
-    expiresAt: null,
-    willRenew: false,
-    grantedAt: null,
-    source: 'local_cache',
-    environment: null,
-    managementUrl: null,
-    verifiedAt,
-    offeringId: null,
-    packageId: null,
-    storeUserId: null,
-    priceLabel: null,
-  };
-}
-
-function isTimeBoxedEntitlement(entitlement: StoredEntitlement): boolean {
-  return (
-    entitlement.periodType === 'reverse_trial' ||
-    entitlement.periodType === 'trial' ||
-    entitlement.periodType === 'intro' ||
-    entitlement.periodType === 'prepaid' ||
-    entitlement.source === 'app_granted' ||
-    entitlement.store === 'app_granted'
-  );
-}
-
-function normalizeVerifiedEntitlement(
-  e: StoredEntitlement,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): StoredEntitlement {
-  const raw = e as StoredEntitlement & Record<string, unknown>;
-  if (
-    (raw.periodType !== null && asPeriod(String(raw.periodType)) !== raw.periodType) ||
-    (raw.store !== null && asStore(String(raw.store)) !== raw.store) ||
-    (raw.source !== null &&
-      raw.source !== undefined &&
-      asSource(String(raw.source)) !== raw.source) ||
-    (raw.environment !== null &&
-      raw.environment !== undefined &&
-      asEnvironment(String(raw.environment)) !== raw.environment)
-  ) {
-    throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
-  }
-  // Callers must supply provider/server evidence; this cache writer never mints it.
-  const verified = normalizeStoredEntitlement(e);
-  const reviewedTime = Date.parse(reviewedAt);
-  const verifiedTime = verified?.verifiedAt ? Date.parse(verified.verifiedAt) : Number.NaN;
-  const expiresWasMalformed = e.expiresAt !== null && isoOrNull(e.expiresAt) === null;
-  const appGranted =
-    verified?.source === 'app_granted' || verified?.store === 'app_granted';
-  const wrongEnvironment = Boolean(
-    verified &&
-      ((appEnvironment !== 'development' && verified.environment === 'development') ||
-        (appEnvironment === 'production' &&
-          (verified.store === 'test_store' || verified.environment === 'test_store'))),
-  );
-
-  if (
-    !verified ||
-    !verified.verifiedAt ||
-    !Number.isFinite(reviewedTime) ||
-    !Number.isFinite(verifiedTime) ||
-    verifiedTime - reviewedTime > VERIFICATION_CLOCK_SKEW_MS ||
-    (verified.source !== 'revenuecat' &&
-      verified.source !== 'server' &&
-      verified.source !== 'app_granted') ||
-    wrongEnvironment ||
-    expiresWasMalformed ||
-    (isTimeBoxedEntitlement(verified) && !verified.expiresAt) ||
-    (appGranted &&
-      (verified.store !== 'app_granted' ||
-        verified.periodType !== 'reverse_trial' ||
-        verified.willRenew !== false ||
-        verified.environment === null ||
-        !verified.expiresAt))
-  ) {
-    throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
-  }
-  return verified;
-}
-
-function normalizeRevenueCatVerifiedEmptyEvidence(
-  evidence: RevenueCatVerifiedEmptyEvidence,
-  reviewedAt: string,
-): RevenueCatEmptyWatermark {
-  const normalized = normalizeRevenueCatEmptyWatermark({
-    verifiedAt: evidence.verifiedAt,
-    managementUrl: evidence.managementUrl ?? null,
-    storeUserId: evidence.storeUserId ?? null,
-  });
-  const reviewedTime = Date.parse(reviewedAt);
-  const verifiedTime = normalized ? Date.parse(normalized.verifiedAt) : Number.NaN;
-  if (
-    !normalized ||
-    !normalized.storeUserId ||
-    !Number.isFinite(reviewedTime) ||
-    !Number.isFinite(verifiedTime) ||
-    verifiedTime - reviewedTime > VERIFICATION_CLOCK_SKEW_MS
-  ) {
-    throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
-  }
-  return normalized;
-}
-
-function currentEntitlementIsOrderable(
-  entitlement: StoredEntitlement,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): boolean {
-  try {
-    normalizeVerifiedEntitlement(entitlement, reviewedAt, appEnvironment);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function currentWatermarkIsOrderable(
-  watermark: RevenueCatEmptyWatermark,
-  reviewedAt: string,
-): boolean {
-  try {
-    normalizeRevenueCatVerifiedEmptyEvidence(watermark, reviewedAt);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function selectEffectiveEntitlement(
-  current: StoredEntitlement | null,
-  incoming: StoredEntitlement,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): StoredEntitlement {
-  if (!current || !currentEntitlementIsOrderable(current, reviewedAt, appEnvironment)) {
-    return incoming;
-  }
-
-  // The app-granted reverse trial is an independent access grant. Provider
-  // inactivity/empty evidence must not revoke it, even when provider evidence
-  // has a newer timestamp. A live store proof, however, is the stronger active
-  // authority and takes over in either direction.
-  if (isAppGrantedEntitlement(current) && !isAppGrantedEntitlement(incoming)) {
-    if (isLiveStoreProofAt(incoming, reviewedAt, appEnvironment)) return incoming;
-    if (isLiveAppGrantAt(current, reviewedAt)) return current;
-  }
-  if (isAppGrantedEntitlement(incoming) && !isAppGrantedEntitlement(current)) {
-    if (isLiveStoreProofAt(current, reviewedAt, appEnvironment)) return current;
-    if (isLiveAppGrantAt(incoming, reviewedAt)) return incoming;
-  }
-  const selected = selectLatestAuthoritativeEntitlementEvidence(current, incoming);
-  const other = selected === current ? incoming : current;
-  const sameCoreProviderProof =
-    current.verifiedAt === incoming.verifiedAt &&
-    current.source === incoming.source &&
-    current.storeUserId === incoming.storeUserId &&
-    current.tier === incoming.tier &&
-    current.isActive === incoming.isActive &&
-    current.periodType === incoming.periodType &&
-    current.store === incoming.store &&
-    current.productId === incoming.productId &&
-    current.expiresAt === incoming.expiresAt &&
-    current.willRenew === incoming.willRenew &&
-    current.grantedAt === incoming.grantedAt;
-  if (!sameCoreProviderProof) return selected;
-  return {
-    ...selected,
-    offeringId: selected.offeringId ?? other.offeringId ?? null,
-    packageId: selected.packageId ?? other.packageId ?? null,
-    priceLabel: selected.priceLabel ?? other.priceLabel ?? null,
-    managementUrl: selected.managementUrl ?? other.managementUrl ?? null,
-  };
-}
-
-function watermarkBlocksStoreEvidence(
-  watermark: RevenueCatEmptyWatermark | null,
-  incoming: StoredEntitlement,
-  reviewedAt: string,
-): boolean {
-  if (
-    !watermark ||
-    !isStoreBackedEntitlement(incoming) ||
-    !isLiveEntitlementAt(incoming, reviewedAt) ||
-    !currentWatermarkIsOrderable(watermark, reviewedAt) ||
-    !incoming.verifiedAt
-  ) {
-    return false;
-  }
-  // RevenueCat app-user IDs are owner binding, not ordering metadata. A
-  // rollback build may leave this newer key behind during an account switch;
-  // never let account A's watermark revoke account B's v2 proof.
-  if (watermark.storeUserId !== incoming.storeUserId) return false;
-  if (incoming.storeUserId !== null && watermark.storeUserId === null) return false;
-  return Date.parse(watermark.verifiedAt) >= Date.parse(incoming.verifiedAt);
-}
-
-function watermarkMatchesProofOwner(
-  watermark: RevenueCatEmptyWatermark,
-  proof: StoredEntitlement,
-): boolean {
-  return watermark.storeUserId === proof.storeUserId;
-}
-
-function canonicalizeCacheState(
-  state: EntitlementCacheState,
-  reviewedAt: string,
-): EntitlementCacheState {
-  const provisionalProviderBarrier = provisionalBarrierAt(
-    state.provisionalProviderBarrier,
-    reviewedAt,
-  );
-  if (provisionalProviderBarrier !== (state.provisionalProviderBarrier ?? null)) {
-    state = { ...state, provisionalProviderBarrier };
-  }
-  if (
-    state.entitlement &&
-    watermarkBlocksStoreEvidence(state.revenueCatEmpty, state.entitlement, reviewedAt)
-  ) {
-    return { ...state, entitlement: null, trustedRevenueCatProof: null };
-  }
-  if (
-    state.trustedRevenueCatProof &&
-    (!state.entitlement ||
-      !markerMatchesRevenueCatProof(state.trustedRevenueCatProof, state.entitlement))
-  ) {
-    return { ...state, trustedRevenueCatProof: null };
-  }
-  return state;
-}
-
-function applyVerifiedEntitlement(
-  state: EntitlementCacheState,
-  incoming: StoredEntitlement,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): EntitlementCacheState {
-  if (
-    incoming.storeUserId &&
-    state.entitlement &&
-    state.entitlement.storeUserId !== incoming.storeUserId
-  ) {
-    state = {
-      entitlement: null,
-      revenueCatEmpty:
-        state.revenueCatEmpty?.storeUserId === incoming.storeUserId
-          ? state.revenueCatEmpty
-          : null,
-      trustedRevenueCatProof: null,
-      provisionalProviderBarrier:
-        !state.provisionalProviderBarrier?.storeUserId ||
-        state.provisionalProviderBarrier.storeUserId === incoming.storeUserId
-          ? state.provisionalProviderBarrier
-          : null,
-    };
-  }
-  let existingWatermark =
-    state.revenueCatEmpty &&
-    incoming.storeUserId &&
-    state.revenueCatEmpty.storeUserId !== incoming.storeUserId
-      ? null
-      : state.revenueCatEmpty;
-  const provisional = state.provisionalProviderBarrier;
-  const provisionalApplies = Boolean(
-    provisional &&
-      (!provisional.storeUserId || provisional.storeUserId === incoming.storeUserId),
-  );
-  const exactProvisionalRetry = Boolean(
-    provisionalApplies &&
-      provisional?.exactRevenueCatProofIdentity &&
-      incoming.source === 'revenuecat' &&
-      incoming.storeUserId === (provisional.storeUserId ?? incoming.storeUserId) &&
-      revenueCatProofIdentity(incoming) === provisional.exactRevenueCatProofIdentity,
-  );
-  if (
-    provisionalApplies &&
-    provisional?.kind === 'revocation' &&
-    !exactProvisionalRetry &&
-    incoming.storeUserId
-  ) {
-    existingWatermark = selectRevenueCatEmptyWatermark(
-      existingWatermark,
-      {
-        verifiedAt: provisional!.verifiedAt,
-        managementUrl: provisional!.managementUrl,
-        storeUserId: provisional!.storeUserId ?? incoming.storeUserId,
-      },
-      reviewedAt,
-    );
-  }
-  const incomingRevocation =
-    isStoreBackedEntitlement(incoming) && !isLiveEntitlementAt(incoming, reviewedAt)
-      ? normalizeRevenueCatEmptyWatermark({
-          verifiedAt: incoming.verifiedAt,
-          managementUrl: incoming.managementUrl ?? null,
-          storeUserId: incoming.storeUserId ?? null,
-        })
-      : null;
-  const revenueCatEmpty = incomingRevocation
-    ? selectRevenueCatEmptyWatermark(
-        existingWatermark,
-        incomingRevocation,
-        reviewedAt,
-      )
-    : existingWatermark;
-  const provisionalBlocksIncoming = Boolean(
-    provisionalApplies &&
-      !exactProvisionalRetry &&
-      isStoreBackedEntitlement(incoming) &&
-      incoming.verifiedAt &&
-      Date.parse(incoming.verifiedAt) <= Date.parse(provisional!.verifiedAt),
-  );
-  if (provisionalBlocksIncoming) {
-    const current = state.entitlement;
-    const currentIsIndependentAppGrant = isLiveAppGrantAt(current, reviewedAt);
-    const currentIsNewerStoreProof = Boolean(
-      current &&
-        isStoreBackedEntitlement(current) &&
-        current.verifiedAt &&
-        Date.parse(current.verifiedAt) > Date.parse(provisional!.verifiedAt),
-    );
-    const preserveCurrent = currentIsIndependentAppGrant || currentIsNewerStoreProof;
-    const consumeBarrier =
-      provisional!.kind === 'revocation' || currentIsNewerStoreProof;
-    return {
-      entitlement: preserveCurrent ? current : null,
-      revenueCatEmpty:
-        provisional!.kind === 'revocation' ? revenueCatEmpty : state.revenueCatEmpty,
-      trustedRevenueCatProof:
-        preserveCurrent &&
-        current &&
-        markerMatchesRevenueCatProof(state.trustedRevenueCatProof, current)
-          ? state.trustedRevenueCatProof
-          : null,
-      provisionalProviderBarrier: consumeBarrier ? null : provisional,
-    };
-  }
-  if (watermarkBlocksStoreEvidence(revenueCatEmpty, incoming, reviewedAt)) {
-    return {
-      entitlement: state.entitlement,
-      revenueCatEmpty,
-      trustedRevenueCatProof: state.trustedRevenueCatProof,
-      provisionalProviderBarrier: null,
-    };
-  }
-  const entitlement = selectEffectiveEntitlement(
-    state.entitlement,
-    incoming,
-    reviewedAt,
-    appEnvironment,
-  );
-  return {
-    revenueCatEmpty,
-    entitlement,
-    trustedRevenueCatProof: markerMatchesRevenueCatProof(
-      state.trustedRevenueCatProof,
-      entitlement,
-    )
-      ? state.trustedRevenueCatProof
-      : null,
-    provisionalProviderBarrier:
-      provisionalApplies &&
-      provisional?.kind === 'active_proof' &&
-      !exactProvisionalRetry &&
-      isAppGrantedEntitlement(incoming)
-        ? provisional
-        : null,
-  };
-}
-
-function selectRevenueCatEmptyWatermark(
-  current: RevenueCatEmptyWatermark | null,
-  incoming: RevenueCatEmptyWatermark,
-  reviewedAt: string,
-): RevenueCatEmptyWatermark {
-  if (!current || !currentWatermarkIsOrderable(current, reviewedAt)) return incoming;
-  if (
-    current.storeUserId &&
-    incoming.storeUserId &&
-    current.storeUserId !== incoming.storeUserId
-  ) {
-    return incoming;
-  }
-  if (incoming.storeUserId && current.storeUserId !== incoming.storeUserId) return incoming;
-  if (!incoming.storeUserId && current.storeUserId) return current;
-  return Date.parse(current.verifiedAt) >= Date.parse(incoming.verifiedAt) ? current : incoming;
-}
-
-function applyRevenueCatVerifiedEmpty(
-  state: EntitlementCacheState,
-  incoming: RevenueCatEmptyWatermark,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): EntitlementCacheState {
-  if (
-    state.entitlement &&
-    state.entitlement.storeUserId !== incoming.storeUserId
-  ) {
-    state = {
-      entitlement: null,
-      revenueCatEmpty:
-        state.revenueCatEmpty?.storeUserId === incoming.storeUserId
-          ? state.revenueCatEmpty
-          : null,
-      trustedRevenueCatProof: null,
-      provisionalProviderBarrier:
-        !state.provisionalProviderBarrier?.storeUserId ||
-        state.provisionalProviderBarrier.storeUserId === incoming.storeUserId
-          ? state.provisionalProviderBarrier
-          : null,
-    };
-  }
-  const provisional = state.provisionalProviderBarrier;
-  const activeBarrierBlocksIncoming = Boolean(
-    provisional &&
-      provisional.kind === 'active_proof' &&
-      (!provisional.storeUserId || provisional.storeUserId === incoming.storeUserId) &&
-      Date.parse(incoming.verifiedAt) < Date.parse(provisional.verifiedAt),
-  );
-  if (activeBarrierBlocksIncoming) {
-    return state;
-  }
-  const provisionalWatermark =
-    provisional &&
-    provisional.kind === 'revocation' &&
-    (!provisional.storeUserId || provisional.storeUserId === incoming.storeUserId)
-      ? {
-          verifiedAt: provisional.verifiedAt,
-          managementUrl: provisional.managementUrl,
-          storeUserId: provisional.storeUserId ?? incoming.storeUserId,
-        }
-      : null;
-  const revenueCatEmpty = selectRevenueCatEmptyWatermark(
-    provisionalWatermark
-      ? selectRevenueCatEmptyWatermark(
-          state.revenueCatEmpty,
-          provisionalWatermark,
-          reviewedAt,
-        )
-      : state.revenueCatEmpty,
-    incoming,
-    reviewedAt,
-  );
-  const current = state.entitlement;
-  if (!current || !isStoreBackedEntitlement(current) || isLiveAppGrantAt(current, reviewedAt)) {
-    return {
-      entitlement: current,
-      revenueCatEmpty,
-      trustedRevenueCatProof:
-        current && markerMatchesRevenueCatProof(state.trustedRevenueCatProof, current)
-          ? state.trustedRevenueCatProof
-          : null,
-      provisionalProviderBarrier: null,
-    };
-  }
-  const preserveCurrent =
-    currentEntitlementIsOrderable(current, reviewedAt, appEnvironment) &&
-    Boolean(current.verifiedAt) &&
-    Date.parse(current.verifiedAt as string) > Date.parse(revenueCatEmpty.verifiedAt);
-  return {
-    entitlement: preserveCurrent ? current : null,
-    revenueCatEmpty,
-    trustedRevenueCatProof:
-      preserveCurrent && markerMatchesRevenueCatProof(state.trustedRevenueCatProof, current)
-        ? state.trustedRevenueCatProof
-        : null,
-    provisionalProviderBarrier: null,
-  };
-}
-
-const EMPTY_CACHE_STATE: EntitlementCacheState = Object.freeze({
-  entitlement: null,
-  revenueCatEmpty: null,
-  trustedRevenueCatProof: null,
-});
-
-function acceptanceFor(
-  state: EntitlementCacheState,
-  persisted: boolean,
-): EntitlementAcceptance {
-  return {
-    entitlement: isRevenueCatEmptyTombstone(state.entitlement) ? null : state.entitlement,
-    revenueCatEmpty: state.revenueCatEmpty,
-    persisted,
-  };
-}
-
-type EntitlementPersistenceAttempt = Readonly<{
-  acceptance: EntitlementAcceptance;
-  error: unknown | null;
-}>;
-
-type PersistenceSnapshot = Readonly<{
-  state: EntitlementCacheState;
-  error: unknown | null;
-  mayWriteAppGrant: boolean;
-}>;
-
-function privateReadError(key: string, status: PrivateDomainRead<unknown>['status']): Error {
-  if (status === 'corrupt') return entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
-  if (status === 'unsupported_version') {
-    return entitlementCacheError(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
-  }
-  return new Error(`ENTITLEMENT_CACHE_${key}_${status.toUpperCase()}`);
-}
-
-function readStatusResult(
-  status: Exclude<PrivateDomainRead<unknown>['status'], 'available' | 'absent'>,
-): EntitlementCacheRead {
-  return { status, entitlement: null };
-}
-
-function mismatchedTombstoneRead(
-  watermark: PrivateDomainRead<RevenueCatEmptyWatermark>,
-): EntitlementCacheRead {
-  if (watermark.status !== 'available' && watermark.status !== 'absent') {
-    return readStatusResult(watermark.status);
-  }
-  return { status: 'unavailable', entitlement: null };
-}
-
-function resolvePhysicalProof(
-  proof: StoredEntitlement,
-  watermark: PrivateDomainRead<RevenueCatEmptyWatermark>,
-  trustedMarker: TrustedRevenueCatProofMarker | null,
-  reviewedAt: string,
-): EntitlementCacheRead {
-  const markerBarrier = rollbackBarrierForPhysicalProof(
-    proof,
-    trustedMarker,
-    reviewedAt,
-  );
-  const proofTime = proof.verifiedAt ? Date.parse(proof.verifiedAt) : Number.NEGATIVE_INFINITY;
-  const trustedMarkerDominates = Boolean(
-    markerBarrier &&
-      trustedMarker &&
-      markerBarrier.exactRevenueCatProofIdentity === trustedMarker.proofIdentity &&
-      Date.parse(markerBarrier.verifiedAt) >= proofTime,
-  );
-  if (trustedMarkerDominates && !isLiveAppGrantAt(proof, reviewedAt)) {
-    return { status: 'unavailable', entitlement: null };
-  }
-
-  if (isRevenueCatEmptyTombstone(proof)) {
-    if (
-      watermark.status === 'available' &&
-      proof.verifiedAt &&
-      Date.parse(watermark.value.verifiedAt) >= Date.parse(proof.verifiedAt)
-    ) {
-      return {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: watermark.value,
-      };
-    }
-    return mismatchedTombstoneRead(watermark);
-  }
-
-  if (isAppGrantedEntitlement(proof)) {
-    return {
-      status: 'available',
-      entitlement: proof,
-      ...(watermark.status === 'available' && watermarkMatchesProofOwner(watermark.value, proof)
-        ? { revenueCatEmpty: watermark.value }
-        : {}),
-    };
-  }
-
-  if (isStoreBackedEntitlement(proof)) {
-    if (watermark.status !== 'available' && watermark.status !== 'absent') {
-      return readStatusResult(watermark.status);
-    }
-    if (
-      watermark.status === 'available' &&
-      watermarkBlocksStoreEvidence(watermark.value, proof, reviewedAt)
-    ) {
-      return {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: watermark.value,
-      };
-    }
-  }
-
-  // A pre-marker build may have written source=revenuecat bytes without ever
-  // passing RevenueCat's trusted verification classifier. A trusted, newer
-  // same-owner empty watermark may still revoke those bytes; otherwise they
-  // are uncertainty and never an offline grant.
-  if (proof.source === 'revenuecat' && !markerMatchesRevenueCatProof(trustedMarker, proof)) {
-    return { status: 'unavailable', entitlement: null };
-  }
-
-  return {
-    status: 'available',
-    entitlement: proof,
-    ...(watermark.status === 'available' && watermarkMatchesProofOwner(watermark.value, proof)
-      ? { revenueCatEmpty: watermark.value }
-      : {}),
+    ownerBinding: envelope.ownerBinding,
+    revision: envelope.revision,
+    entitlement: projection.entitlement,
+    activeStoreEntitlement: projection.activeStoreEntitlement,
+    activeAppGrantEntitlement: projection.activeAppGrantEntitlement,
+    priorEntitlement: projection.priorEntitlement,
+    effectiveNowISO,
+    hasConflict: projection.hasConflict,
+    requiresUncachedRefresh: projection.hasConflict,
   };
 }
 
 /**
- * Read the watermark before the proof. A v2 tombstone masks v1 even if the
- * second phase of the empty write crashed; that state is uncertainty, never a
- * reason to revive stale v1 access.
+ * Read and advance the separate nondecreasing expiry clock atomically. The
+ * local time affects expiry only; it is never used as an evidence cursor.
  */
-async function readPhysicalEntitlementCache(
-  expectedStoreUserId?: string,
-): Promise<EntitlementCacheRead> {
-  const sidecarRead = await readRevenueCatEmptyKey();
-  let sidecar =
-    sidecarRead.status === 'available'
-      ? sidecarRead.value
-      : null;
-  if (
-    sidecar &&
-    expectedStoreUserId &&
-    ((sidecar.revenueCatEmpty &&
-      sidecar.revenueCatEmpty.storeUserId !== expectedStoreUserId) ||
-      (sidecar.trustedRevenueCatProof &&
-        sidecar.trustedRevenueCatProof.storeUserId !== expectedStoreUserId))
-  ) {
-    sidecar = {
-      revenueCatEmpty:
-        sidecar.revenueCatEmpty?.storeUserId === expectedStoreUserId
-          ? sidecar.revenueCatEmpty
-          : null,
-      trustedRevenueCatProof:
-        sidecar.trustedRevenueCatProof?.storeUserId === expectedStoreUserId
-          ? sidecar.trustedRevenueCatProof
-          : null,
-    };
-  }
-  const watermark: PrivateDomainRead<RevenueCatEmptyWatermark> =
-    sidecar?.revenueCatEmpty
-      ? { status: 'available', value: sidecar.revenueCatEmpty }
-      : sidecarRead.status === 'available' || sidecarRead.status === 'absent'
-        ? { status: 'absent', value: null }
-        : { status: sidecarRead.status, value: null };
-  const trustedMarker = sidecar?.trustedRevenueCatProof ?? null;
-  const proof = await readEntitlementKey(KEY);
-  if (proof.status === 'available') {
-    if (
-      expectedStoreUserId &&
-      !isRevenueCatEmptyTombstone(proof.value) &&
-      proof.value.storeUserId !== expectedStoreUserId
-    ) {
-      return { status: 'unavailable', entitlement: null };
-    }
-    return resolvePhysicalProof(proof.value, watermark, trustedMarker, nowISO());
-  }
-  if (proof.status !== 'absent') return readStatusResult(proof.status);
-
-  if (watermark.status === 'available') {
-    const markerBarrier = provisionalBarrierFromTrustedMarker(trustedMarker, nowISO());
-    if (
-      markerBarrier?.kind === 'active_proof' &&
-      Date.parse(markerBarrier.verifiedAt) > Date.parse(watermark.value.verifiedAt)
-    ) {
-      return { status: 'unavailable', entitlement: null };
-    }
-    return {
-      status: 'absent',
-      entitlement: null,
-      revenueCatEmpty: watermark.value,
-    };
-  }
-  if (watermark.status !== 'absent') return readStatusResult(watermark.status);
-
-  // A marker-only schema-v2 sidecar can remain when a rollback build removed
-  // v2. It is not a legacy entitlement proof and cannot authorize by itself.
-  if (sidecarRead.status === 'available') {
-    return { status: 'unavailable', entitlement: null };
-  }
-
-  const legacy = await readEntitlementKey(LEGACY_KEY);
-  if (legacy.status === 'available') {
-    if (legacy.value.source === 'revenuecat') {
-      return { status: 'unavailable', entitlement: null };
-    }
-    if (
-      expectedStoreUserId &&
-      legacy.value.storeUserId !== expectedStoreUserId
-    ) {
-      return { status: 'unavailable', entitlement: null };
-    }
-    return { status: 'available', entitlement: legacy.value };
-  }
-  return legacy.status === 'absent'
-    ? { status: 'absent', entitlement: null }
-    : readStatusResult(legacy.status);
-}
-
-function cacheReadFromState(
-  state: EntitlementCacheState,
-  reviewedAt: string,
-): EntitlementCacheRead {
-  const barrier = provisionalBarrierAt(state.provisionalProviderBarrier, reviewedAt);
-  if (state.entitlement && !isRevenueCatEmptyTombstone(state.entitlement)) {
-    const barrierApplies = Boolean(
-      barrier &&
-        (!barrier.storeUserId || barrier.storeUserId === state.entitlement.storeUserId),
-    );
-    const barrierDominates = Boolean(
-      barrierApplies &&
-        (!state.entitlement.verifiedAt ||
-          Date.parse(barrier!.verifiedAt) >= Date.parse(state.entitlement.verifiedAt)),
-    );
-    if (
-      barrierApplies &&
-      !isLiveAppGrantAt(state.entitlement, reviewedAt) &&
-      (isAppGrantedEntitlement(state.entitlement) || barrierDominates)
-    ) {
-      return { status: 'unavailable', entitlement: null };
-    }
-    return {
-      status: 'available',
-      entitlement: state.entitlement,
-      ...(state.revenueCatEmpty
-        ? { revenueCatEmpty: state.revenueCatEmpty }
-        : {}),
-    };
-  }
-  if (
-    barrier?.kind === 'active_proof' &&
-    (!state.revenueCatEmpty ||
-      Date.parse(barrier.verifiedAt) >
-        Date.parse(state.revenueCatEmpty.verifiedAt))
-  ) {
-    return { status: 'unavailable', entitlement: null };
-  }
-  return state.revenueCatEmpty
-    ? {
-        status: 'absent',
-        entitlement: null,
-        revenueCatEmpty: state.revenueCatEmpty,
+export async function readEntitlementSnapshot(
+  context: EntitlementOwnerContext,
+  observedAtISO = nowISO(),
+): Promise<EntitlementSnapshotRead> {
+  const canonicalObservedAt = isoOrNull(observedAtISO);
+  if (!canonicalObservedAt) return { status: 'unavailable', snapshot: null };
+  try {
+    await assertCurrentOwnerContext(context);
+    let absent = false;
+    let snapshot: EntitlementSnapshot | null = null;
+    await updatePrivateItem(KEY, (raw) => {
+      if (raw === null) {
+        absent = true;
+        return null;
       }
-    : barrier
-      ? { status: 'unavailable', entitlement: null }
-      : { status: 'absent', entitlement: null };
+      const current = decodeEntitlementEnvelope(raw);
+      if (current.ownerBinding !== context.ownerBinding) {
+        throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
+      }
+      const advanced = advanceEntitlementClock(current, canonicalObservedAt);
+      snapshot = snapshotFromEnvelope(advanced, canonicalObservedAt);
+      return advanced === current ? raw : encodeEntitlementEnvelope(advanced);
+    });
+    if (snapshot) return { status: 'available', snapshot };
+    if (!absent) return { status: 'unavailable', snapshot: null };
+
+    // Unbound bytes are never adopted or granted to whichever account happens
+    // to sign in next. They remain intact until verified owner-bound evidence
+    // replaces them or explicit account cleanup removes them.
+    const legacy = await getPrivateItem(LEGACY_KEY);
+    return legacy === null
+      ? { status: 'absent', snapshot: null }
+      : { status: 'legacy_unbound', snapshot: null };
+  } catch (error) {
+    return { status: readFailureStatus(error), snapshot: null };
+  }
 }
 
-export async function readEntitlementCache(options: {
-  expectedStoreUserId?: string;
-} = {}): Promise<EntitlementCacheRead> {
-  const physical = await readPhysicalEntitlementCache(options.expectedStoreUserId);
-  const generation = getAccountGeneration();
-  const shadow = volatileStateFor(generation);
-  if (shadow === EMPTY_CACHE_STATE) return physical;
-
-  const physicalState: EntitlementCacheState =
-    physical.status === 'available'
-      ? {
-          entitlement: physical.entitlement,
-          revenueCatEmpty: physical.revenueCatEmpty
-            ? normalizeRevenueCatEmptyWatermark({
-                verifiedAt: physical.revenueCatEmpty.verifiedAt,
-                managementUrl: physical.revenueCatEmpty.managementUrl ?? null,
-                storeUserId: physical.revenueCatEmpty.storeUserId ?? null,
-              })
-            : null,
-          trustedRevenueCatProof: null,
-        }
-      : physical.status === 'absent' && physical.revenueCatEmpty
-        ? {
-            entitlement: null,
-            revenueCatEmpty:
-              normalizeRevenueCatEmptyWatermark({
-                verifiedAt: physical.revenueCatEmpty.verifiedAt,
-                managementUrl: physical.revenueCatEmpty.managementUrl ?? null,
-                storeUserId: physical.revenueCatEmpty.storeUserId ?? null,
-              }) ?? null,
-            trustedRevenueCatProof: null,
-          }
-        : EMPTY_CACHE_STATE;
-  const reviewedAt = nowISO();
-  return cacheReadFromState(
-    mergeCacheStates(
-      physicalState,
-      shadow,
-      reviewedAt,
-      env.appEnvironment,
-    ),
-    reviewedAt,
-  );
+export async function readEntitlementCache(): Promise<EntitlementCacheRead> {
+  let context: EntitlementOwnerContext;
+  try {
+    context = await currentEntitlementOwnerContext();
+  } catch (error) {
+    return { status: readFailureStatus(error), entitlement: null, snapshot: null };
+  }
+  const read = await readEntitlementSnapshot(context);
+  return read.status === 'available'
+    ? { status: 'available', entitlement: read.snapshot.entitlement, snapshot: read.snapshot }
+    : { status: read.status, entitlement: null, snapshot: null };
 }
 
 export async function loadEntitlement(): Promise<StoredEntitlement | null> {
@@ -1701,765 +881,897 @@ export async function loadEntitlement(): Promise<StoredEntitlement | null> {
   return result.status === 'available' ? result.entitlement : null;
 }
 
-async function persistenceSnapshot(reviewedAt: string): Promise<PersistenceSnapshot> {
-  const sidecar = await readRevenueCatEmptyKey();
-  const watermark: PrivateDomainRead<RevenueCatEmptyWatermark> =
-    sidecar.status === 'available' && sidecar.value.revenueCatEmpty
-      ? { status: 'available', value: sidecar.value.revenueCatEmpty }
-      : sidecar.status === 'available' || sidecar.status === 'absent'
-        ? { status: 'absent', value: null }
-        : { status: sidecar.status, value: null };
-  const trustedMarker =
-    sidecar.status === 'available' ? sidecar.value.trustedRevenueCatProof : null;
-  const proof = await readEntitlementKey(KEY);
-
-  if (proof.status === 'available') {
-    const rollbackBarrier = rollbackBarrierForPhysicalProof(
-      proof.value,
-      trustedMarker,
-      reviewedAt,
-    );
-    const resolved = resolvePhysicalProof(
-      proof.value,
-      watermark,
-      trustedMarker,
-      reviewedAt,
-    );
-    if (resolved.status === 'unavailable' && rollbackBarrier) {
-      return {
-        state: {
-          entitlement: null,
-          revenueCatEmpty:
-            watermark.status === 'available' ? watermark.value : null,
-          trustedRevenueCatProof: null,
-          provisionalProviderBarrier: rollbackBarrier,
-        },
-        error: null,
-        mayWriteAppGrant: true,
-      };
-    }
-    if (resolved.status === 'available') {
-      const implicitRevocation =
-        isStoreBackedEntitlement(resolved.entitlement) &&
-        !isLiveEntitlementAt(resolved.entitlement, reviewedAt)
-          ? normalizeRevenueCatEmptyWatermark({
-              verifiedAt: resolved.entitlement.verifiedAt,
-              managementUrl: resolved.entitlement.managementUrl ?? null,
-              storeUserId: resolved.entitlement.storeUserId ?? null,
-            })
-          : null;
-      return {
-        state: {
-          entitlement: resolved.entitlement,
-          revenueCatEmpty:
-            watermark.status === 'available'
-              ? watermark.value
-              : implicitRevocation,
-          trustedRevenueCatProof: markerMatchesRevenueCatProof(
-            trustedMarker,
-            resolved.entitlement,
-          )
-            ? trustedMarker
-            : null,
-          provisionalProviderBarrier: rollbackBarrier,
-        },
-        error:
-          watermark.status === 'available' || watermark.status === 'absent'
-            ? null
-            : privateReadError(REVENUECAT_EMPTY_KEY, watermark.status),
-        mayWriteAppGrant: true,
-      };
-    }
-    if (resolved.status === 'absent') {
-      const revenueCatEmpty = resolved.revenueCatEmpty
-        ? normalizeRevenueCatEmptyWatermark({
-            verifiedAt: resolved.revenueCatEmpty.verifiedAt,
-            managementUrl: resolved.revenueCatEmpty.managementUrl ?? null,
-            storeUserId: resolved.revenueCatEmpty.storeUserId ?? null,
-          })
-        : null;
-      return {
-        state: {
-          entitlement: null,
-          revenueCatEmpty,
-          trustedRevenueCatProof: null,
-          provisionalProviderBarrier: rollbackBarrier,
-        },
-        error: null,
-        mayWriteAppGrant: true,
-      };
-    }
+function normalizedEvidence(evidence: EntitlementEvidence): EntitlementEvidence | null {
+  if (!isRecord(evidence)) return null;
+  if (evidence.kind === 'store_definitive') {
+    const cursor = decodeStoreCursor(evidence.cursor);
+    const entitlement =
+      evidence.entitlement === null ? null : normalizeStoredEntitlement(evidence.entitlement);
     if (
-      resolved.status === 'unavailable' &&
-      isRevenueCatEmptyTombstone(proof.value) &&
-      (watermark.status === 'available' || watermark.status === 'absent') &&
-      (sidecar.status === 'available' || sidecar.status === 'absent')
+      !cursor ||
+      (evidence.state !== 'active' &&
+        evidence.state !== 'inactive' &&
+        evidence.state !== 'empty') ||
+      (evidence.provenance !== 'revenuecat_verified' &&
+        evidence.provenance !== 'server_snapshot' &&
+        evidence.provenance !== 'server_webhook') ||
+      (evidence.provenance === 'server_webhook') !== (cursor.kind === 'revenuecat_webhook') ||
+      (evidence.entitlement !== null && !entitlement) ||
+      (evidence.state === 'empty' && entitlement !== null) ||
+      (evidence.state === 'active' && !entitlement?.isActive) ||
+      (evidence.state === 'inactive' && (entitlement === null || entitlement.isActive))
+    ) {
+      return null;
+    }
+    return { ...evidence, cursor, entitlement };
+  }
+  if (
+    evidence.kind !== 'store_provisional_active' &&
+    evidence.kind !== 'legacy_positive' &&
+    evidence.kind !== 'app_grant'
+  ) {
+    return null;
+  }
+  const entitlement = normalizeStoredEntitlement(evidence.entitlement);
+  if (!entitlement) return null;
+  if (evidence.kind === 'store_provisional_active') {
+    const cursor = decodeStoreCursor(evidence.cursor);
+    if (
+      !entitlement.isActive ||
+      evidence.provenance !== 'revenuecat_verified_on_device' ||
+      cursor?.kind !== 'revenuecat_snapshot'
+    ) {
+      return null;
+    }
+    return { ...evidence, cursor, entitlement };
+  }
+  if (
+    evidence.kind === 'legacy_positive' &&
+    (!entitlement.isActive || evidence.provenance !== 'server_missing_cursor')
+  ) {
+    return null;
+  }
+  if (
+    evidence.kind === 'app_grant' &&
+    (entitlement.source !== 'app_granted' ||
+      entitlement.store !== 'app_granted' ||
+      entitlement.grantedAt !== evidence.grantAt)
+  ) {
+    return null;
+  }
+  return { ...evidence, entitlement };
+}
+
+export async function mergeEntitlementEvidenceBatch(
+  context: EntitlementOwnerContext,
+  candidates: readonly EntitlementEvidence[],
+  observedAtISO = nowISO(),
+): Promise<MergeEntitlementEvidenceResult> {
+  const evidence = candidates.map(normalizedEvidence);
+  const canonicalObservedAt = isoOrNull(observedAtISO);
+  if (evidence.length === 0 || evidence.some((item) => item === null) || !canonicalObservedAt) {
+    return {
+      status: 'blocked',
+      disposition: 'blocked',
+      snapshot: null,
+      requiresUncachedRefresh: false,
+      reason: 'invalid_evidence',
+    };
+  }
+  try {
+    await assertCurrentOwnerContext(context);
+    const mutation: {
+      changed?: boolean;
+      disposition?: MergeEntitlementEvidenceResult['disposition'];
+      snapshot?: EntitlementSnapshot;
+      storageChanged?: boolean;
+      requiresUncachedRefresh?: boolean;
+    } = {};
+    await updatePrivateItem(KEY, (raw) => {
+      let current: EntitlementCacheEnvelopeV2;
+      let sanitizedRetiredCache = false;
+      if (raw === null) {
+        current = emptyEntitlementEnvelope(context.ownerBinding);
+      } else {
+        try {
+          current = decodeEntitlementEnvelope(raw);
+        } catch (error) {
+          // Only definitive/provisional/app-grant evidence may replace old
+          // owner-unbound formats. Weak evidence must not adopt their access.
+          if (
+            errorMessage(error) === ENTITLEMENT_CACHE_LEGACY_UNBOUND &&
+            evidence.some((item) => item?.kind !== 'legacy_positive')
+          ) {
+            current = emptyEntitlementEnvelope(context.ownerBinding);
+          } else if (
+            errorMessage(error) === ENTITLEMENT_CACHE_INVALID &&
+            hasDefinitiveReplacementEvidence(evidence)
+          ) {
+            const deprecated = decodeDeprecatedNotRequestedEnvelope(raw);
+            if (!deprecated || deprecated.ownerBinding !== context.ownerBinding) throw error;
+            current = deprecated;
+            sanitizedRetiredCache = true;
+          } else {
+            throw error;
+          }
+        }
+      }
+      if (current.ownerBinding !== context.ownerBinding) {
+        throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
+      }
+      let merged = current;
+      const dispositions: MergeEntitlementEvidenceResult['disposition'][] = [];
+      let evidenceChanged = false;
+      for (const item of evidence) {
+        const result = mergeEntitlementEnvelope(merged, item!);
+        merged = result.envelope;
+        dispositions.push(result.disposition);
+        evidenceChanged ||= result.changed;
+      }
+      merged = advanceEntitlementClock(merged, canonicalObservedAt);
+      const projection = effectiveEntitlementProjection(merged, canonicalObservedAt);
+      mutation.changed = evidenceChanged;
+      mutation.disposition =
+        projection.hasConflict && dispositions.includes('conflict')
+          ? 'conflict'
+          : dispositions.includes('applied')
+            ? 'applied'
+            : dispositions.every((item) => item === 'duplicate')
+              ? 'duplicate'
+              : dispositions.includes('stale')
+                ? 'stale'
+                : 'ignored';
+      mutation.requiresUncachedRefresh = projection.hasConflict;
+      mutation.storageChanged = sanitizedRetiredCache || merged !== current;
+      mutation.snapshot = snapshotFromEnvelope(merged, canonicalObservedAt);
+      if (!mutation.storageChanged) return raw;
+      return encodeEntitlementEnvelope(merged);
+    });
+    const snapshot = mutation.snapshot;
+    if (
+      mutation.changed === undefined ||
+      !mutation.disposition ||
+      mutation.requiresUncachedRefresh === undefined ||
+      !snapshot
     ) {
       return {
-        // A tombstone written before its final sidecar is intentionally
-        // non-authorizing to public reads. An explicit trusted mutation may
-        // nevertheless repair it. Retain any older owner-bound watermark so
-        // the incoming proof still has to pass normal ordering.
-        state: {
-          entitlement: null,
-          revenueCatEmpty: watermark.status === 'available' ? watermark.value : null,
-          trustedRevenueCatProof: null,
-          provisionalProviderBarrier: selectNewestProvisionalBarrier(
-            {
-              kind: 'revocation',
-              verifiedAt: proof.value.verifiedAt!,
-              managementUrl: proof.value.managementUrl ?? null,
-              storeUserId:
-                watermark.status === 'available'
-                  ? watermark.value.storeUserId
-                  : null,
-              exactRevenueCatProofIdentity: null,
-            },
-            rollbackBarrier,
-          ),
+        status: 'blocked',
+        disposition: 'blocked',
+        snapshot: null,
+        requiresUncachedRefresh: false,
+        reason: 'merge_not_executed',
+      };
+    }
+    return {
+      status:
+        mutation.disposition === 'conflict'
+          ? 'conflict'
+          : mutation.changed
+            ? 'committed'
+            : 'unchanged',
+      disposition: mutation.disposition,
+      snapshot,
+      requiresUncachedRefresh: mutation.requiresUncachedRefresh,
+    };
+  } catch (error) {
+    return {
+      status: 'blocked',
+      disposition: 'blocked',
+      snapshot: null,
+      requiresUncachedRefresh: false,
+      reason: errorMessage(error),
+    };
+  }
+}
+
+export function mergeEntitlementEvidence(
+  context: EntitlementOwnerContext,
+  candidate: EntitlementEvidence,
+  observedAtISO = nowISO(),
+): Promise<MergeEntitlementEvidenceResult> {
+  return mergeEntitlementEvidenceBatch(context, [candidate], observedAtISO);
+}
+
+export function customerInfoToEvidence(
+  customerInfo: Pick<CustomerInfo, 'requestDate' | 'entitlements'>,
+  entitlement: StoredEntitlement | null,
+): EvidenceConversion {
+  const requestDate = isoOrNull(customerInfo.requestDate);
+  if (!requestDate) return { status: 'rejected', reason: 'invalid_request_date' };
+  const normalized = entitlement ? normalizeStoredEntitlement(entitlement) : null;
+  if (entitlement && !normalized) return { status: 'rejected', reason: 'invalid_entitlement' };
+  const verification = customerInfo.entitlements.verification;
+  const selected = customerInfo.entitlements.active[env.revenueCatEntitlementId] ?? null;
+  const selectedActive = selected?.isActive === true;
+  if (
+    verification === 'FAILED' ||
+    Object.values(customerInfo.entitlements.active).some((info) => info.verification === 'FAILED')
+  ) {
+    return { status: 'rejected', reason: 'verification_failed' };
+  }
+  if (verification === 'NOT_REQUESTED') {
+    return { status: 'rejected', reason: 'verification_not_requested' };
+  }
+  if (
+    selectedActive !== (normalized?.isActive === true) ||
+    (selectedActive && selected?.verification !== verification)
+  ) {
+    return { status: 'rejected', reason: 'verification_mismatch' };
+  }
+  const attributed = normalized
+    ? { ...normalized, source: 'revenuecat' as const, verifiedAt: requestDate }
+    : null;
+
+  if (verification === 'VERIFIED') {
+    const state = attributed?.isActive ? 'active' : attributed ? 'inactive' : 'empty';
+    return {
+      status: 'evidence',
+      evidence: {
+        kind: 'store_definitive',
+        cursor: {
+          kind: 'revenuecat_snapshot',
+          requestDate,
+          fingerprint: entitlementEvidenceFingerprint(state, attributed),
         },
-        error: null,
-        mayWriteAppGrant: true,
-      };
-    }
-    return {
-      state: EMPTY_CACHE_STATE,
-      error: privateReadError(
-        isRevenueCatEmptyTombstone(proof.value) ? REVENUECAT_EMPTY_KEY : KEY,
-        resolved.status,
-      ),
-      mayWriteAppGrant: true,
-    };
-  }
-
-  if (proof.status !== 'absent') {
-    return {
-      state: EMPTY_CACHE_STATE,
-      error: privateReadError(KEY, proof.status),
-      mayWriteAppGrant: false,
-    };
-  }
-
-  if (watermark.status === 'available') {
-    return {
-      state: {
-        entitlement: null,
-        revenueCatEmpty: watermark.value,
-        trustedRevenueCatProof: null,
-        provisionalProviderBarrier: provisionalBarrierFromTrustedMarker(
-          trustedMarker,
-          reviewedAt,
-        ),
+        state,
+        entitlement: attributed,
+        provenance: 'revenuecat_verified',
       },
-      error: null,
-      mayWriteAppGrant: true,
     };
   }
-  if (watermark.status !== 'absent') {
+  if (verification === 'VERIFIED_ON_DEVICE') {
+    if (!attributed?.isActive) return { status: 'ignored', reason: 'verified_on_device_empty' };
+    // This lane is intentionally positive-only and never advances the
+    // definitive empty/inactive watermark.
     return {
-      state: EMPTY_CACHE_STATE,
-      error: privateReadError(REVENUECAT_EMPTY_KEY, watermark.status),
-      mayWriteAppGrant: true,
-    };
-  }
-
-  if (sidecar.status === 'available') {
-    const provisionalProviderBarrier = provisionalBarrierFromTrustedMarker(
-      trustedMarker,
-      reviewedAt,
-    );
-    return {
-      state: provisionalProviderBarrier
-        ? { ...EMPTY_CACHE_STATE, provisionalProviderBarrier }
-        : EMPTY_CACHE_STATE,
-      error:
-        trustedMarker && !provisionalProviderBarrier
-          ? entitlementCacheError(ENTITLEMENT_ACTIVE_PROVIDER_BARRIER)
-          : null,
-      mayWriteAppGrant: true,
-    };
-  }
-
-  const legacy = await readEntitlementKey(LEGACY_KEY);
-  if (legacy.status === 'available') {
-    if (legacy.value.source === 'revenuecat') {
-      const provisionalProviderBarrier = provisionalBarrierFromRevenueCatProof(
-        legacy.value,
-        reviewedAt,
-      );
-      return {
-        state: provisionalProviderBarrier
-          ? { ...EMPTY_CACHE_STATE, provisionalProviderBarrier }
-          : EMPTY_CACHE_STATE,
-        error: provisionalProviderBarrier
-          ? null
-          : entitlementCacheError(ENTITLEMENT_ACTIVE_PROVIDER_BARRIER),
-        mayWriteAppGrant: true,
-      };
-    }
-    return {
-      state: {
-        entitlement: legacy.value,
-        revenueCatEmpty: null,
-        trustedRevenueCatProof: null,
+      status: 'evidence',
+      evidence: {
+        kind: 'store_provisional_active',
+        cursor: {
+          kind: 'revenuecat_snapshot',
+          requestDate,
+          fingerprint: entitlementEvidenceFingerprint('active', attributed),
+        },
+        entitlement: { ...attributed, verifiedAt: null },
+        provenance: 'revenuecat_verified_on_device',
       },
-      error: null,
-      mayWriteAppGrant: true,
     };
   }
+  return { status: 'rejected', reason: 'verification_unknown' };
+}
+
+export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
+  const appGranted = row.store === 'app_granted' || row.source === 'app_granted';
   return {
-    state: EMPTY_CACHE_STATE,
-    error:
-      legacy.status === 'absent' ? null : privateReadError(LEGACY_KEY, legacy.status),
-    mayWriteAppGrant: legacy.status === 'absent',
+    tier: asTier(row.entitlement),
+    isActive: row.is_active,
+    periodType: asPeriod(row.period_type),
+    store: asStore(row.store),
+    productId: appGranted ? null : row.product_id,
+    expiresAt: isoOrNull(row.expires_at),
+    willRenew: row.will_renew,
+    grantedAt: isoOrNull(row.original_purchase_at),
+    source: appGranted ? 'app_granted' : (asSource(row.source) ?? 'server'),
+    environment: asEnvironment(row.environment),
+    managementUrl: safeExternalHttpsUrl(row.management_url),
+    // Processing times are display provenance only. They are never an ordering
+    // cursor and there is deliberately no updated_at/Date.now fallback.
+    verifiedAt: isoOrNull(row.verified_at),
+    offeringId: appGranted ? null : (row.offering_id ?? null),
+    packageId: appGranted ? null : (row.package_id ?? null),
+    storeUserId: row.store_user_id ?? null,
+    priceLabel: null,
   };
 }
 
-function mergeCacheStates(
-  left: EntitlementCacheState,
-  right: EntitlementCacheState,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-): EntitlementCacheState {
-  const revenueCatEmpty = right.revenueCatEmpty
-    ? selectRevenueCatEmptyWatermark(left.revenueCatEmpty, right.revenueCatEmpty, reviewedAt)
-    : left.revenueCatEmpty;
-  const entitlement = right.entitlement
-    ? selectEffectiveEntitlement(left.entitlement, right.entitlement, reviewedAt, appEnvironment)
-    : left.entitlement;
-  const trustedRevenueCatProof =
-    entitlement && markerMatchesRevenueCatProof(right.trustedRevenueCatProof, entitlement)
-      ? right.trustedRevenueCatProof
-      : entitlement && markerMatchesRevenueCatProof(left.trustedRevenueCatProof, entitlement)
-        ? left.trustedRevenueCatProof
-        : null;
-  const rightMatchesLeftBarrier = Boolean(
-    right.entitlement &&
-      left.provisionalProviderBarrier?.exactRevenueCatProofIdentity &&
-      right.entitlement.source === 'revenuecat' &&
-      right.entitlement.storeUserId === left.provisionalProviderBarrier.storeUserId &&
-      revenueCatProofIdentity(right.entitlement) ===
-        left.provisionalProviderBarrier.exactRevenueCatProofIdentity,
-  );
-  const provisionalProviderBarrier =
-    right.provisionalProviderBarrier ??
-    (rightMatchesLeftBarrier ? null : left.provisionalProviderBarrier) ??
-    null;
-  return canonicalizeCacheState(
-    {
+export function rowToEvidence(row: EntitlementRow): EvidenceConversion {
+  const entitlement = normalizeStoredEntitlement(rowToStoredEntitlement(row));
+  if (!entitlement) return { status: 'rejected', reason: 'invalid_entitlement' };
+  if (entitlement.store === 'app_granted' || entitlement.source === 'app_granted') {
+    if (!entitlement.grantedAt) {
+      return { status: 'rejected', reason: 'missing_app_grant_cursor' };
+    }
+    return {
+      status: 'evidence',
+      evidence: { kind: 'app_grant', grantAt: entitlement.grantedAt, entitlement },
+    };
+  }
+
+  const eventAt = isoOrNull(row.rc_event_at);
+  const priority = row.rc_event_priority;
+  const eventId = row.rc_event_id;
+  if (
+    !eventAt ||
+    !Number.isSafeInteger(priority) ||
+    (priority as number) < 0 ||
+    (priority as number) > 32_767 ||
+    !printableAscii(eventId)
+  ) {
+    if (!entitlement.isActive) return { status: 'ignored', reason: 'missing_store_cursor' };
+    return {
+      status: 'evidence',
+      evidence: {
+        kind: 'legacy_positive',
+        provenance: 'server_missing_cursor',
+        entitlement,
+      },
+    };
+  }
+  return {
+    status: 'evidence',
+    evidence: {
+      kind: 'store_definitive',
+      cursor: {
+        kind: 'revenuecat_webhook',
+        eventAt,
+        priority: priority as number,
+        eventId,
+      },
+      state: entitlement.isActive ? 'active' : 'inactive',
       entitlement,
-      revenueCatEmpty,
-      trustedRevenueCatProof,
-      provisionalProviderBarrier,
+      provenance: 'server_webhook',
     },
-    reviewedAt,
+  };
+}
+
+type StrictDecode<T> = Readonly<{ ok: true; value: T }> | Readonly<{ ok: false }>;
+
+const WIRE_ISO_INSTANT_PATTERN =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function nullableBoundedString(value: unknown, maxLength = 2_048): value is string | null {
+  return (
+    value === null ||
+    (typeof value === 'string' &&
+      value.length > 0 &&
+      value.length <= maxLength &&
+      value.trim() === value)
   );
 }
 
-let entitlementMutationTail: Promise<void> = Promise.resolve();
-let volatileAccepted:
-  | Readonly<{ generation: number; state: EntitlementCacheState }>
-  | null = null;
-
-function volatileStateFor(generation: number): EntitlementCacheState {
-  return volatileAccepted?.generation === generation
-    ? volatileAccepted.state
-    : EMPTY_CACHE_STATE;
+function decodeNullableISO(value: unknown): StrictDecode<string | null> {
+  if (value === null) return { ok: true, value: null };
+  const normalized =
+    typeof value === 'string' && WIRE_ISO_INSTANT_PATTERN.test(value) ? isoOrNull(value) : null;
+  return normalized ? { ok: true, value: normalized } : { ok: false };
 }
 
-function setVolatileState(generation: number, state: EntitlementCacheState): void {
-  volatileAccepted = { generation, state };
-}
-
-function runSerializedEntitlementMutation<T>(
-  generation: number,
-  operation: () => Promise<T>,
-): Promise<T> {
-  const completion = entitlementMutationTail.catch(() => undefined).then(async () => {
-    if (getAccountGeneration() !== generation) throw new Error(ACCOUNT_GENERATION_CHANGED);
-    return operation();
-  });
-  entitlementMutationTail = completion.then(
-    () => undefined,
-    () => undefined,
-  );
-  return completion;
-}
-
-async function clearSupersededTrustedMarkerBeforeProof(
-  state: EntitlementCacheState,
-): Promise<void> {
-  await updatePrivateItem(REVENUECAT_EMPTY_KEY, (raw) => {
-    if (raw === null) return null;
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(raw) as unknown;
-    } catch {
-      return raw;
-    }
-    if (!isRecord(parsed) || parsed.version !== WATERMARK_SCHEMA_VERSION) return raw;
-    let sidecar: RevenueCatSidecar;
-    try {
-      sidecar = decodeRevenueCatEmpty(raw);
-    } catch {
-      return raw;
-    }
-    if (!sidecar.trustedRevenueCatProof) return raw;
+function decodeProjectionCursor(value: unknown): StrictDecode<ProjectionCursor> {
+  if (value === null) return { ok: true, value: null };
+  if (!isRecord(value) || typeof value.kind !== 'string') return { ok: false };
+  if (value.kind === 'rc_webhook') {
+    const at =
+      typeof value.at === 'string' && WIRE_ISO_INSTANT_PATTERN.test(value.at)
+        ? isoOrNull(value.at)
+        : null;
     if (
-      state.trustedRevenueCatProof?.storeUserId ===
-        sidecar.trustedRevenueCatProof.storeUserId &&
-      state.trustedRevenueCatProof.proofIdentity ===
-        sidecar.trustedRevenueCatProof.proofIdentity
+      !hasExactKeys(value, ['kind', 'at', 'priority', 'event_id']) ||
+      !at ||
+      !Number.isSafeInteger(value.priority) ||
+      (value.priority as number) < 0 ||
+      (value.priority as number) > 32_767 ||
+      !printableAscii(value.event_id)
     ) {
-      return raw;
+      return { ok: false };
     }
-    return sidecar.revenueCatEmpty
-      ? encodeRevenueCatEmpty({
-          revenueCatEmpty: sidecar.revenueCatEmpty,
-          trustedRevenueCatProof: null,
-        })
-      : null;
+    return {
+      ok: true,
+      value: {
+        kind: 'rc_webhook',
+        at,
+        priority: value.priority as number,
+        event_id: value.event_id,
+      },
+    };
+  }
+  if (value.kind === 'rc_snapshot') {
+    const at =
+      typeof value.at === 'string' && WIRE_ISO_INSTANT_PATTERN.test(value.at)
+        ? isoOrNull(value.at)
+        : null;
+    if (
+      !hasExactKeys(value, ['kind', 'at', 'fingerprint']) ||
+      !at ||
+      typeof value.fingerprint !== 'string' ||
+      value.fingerprint.length === 0 ||
+      value.fingerprint.length > 2_048
+    ) {
+      return { ok: false };
+    }
+    return {
+      ok: true,
+      value: { kind: 'rc_snapshot', at, fingerprint: value.fingerprint },
+    };
+  }
+  return { ok: false };
+}
+
+function decodeProjectionRow(value: unknown): StrictDecode<ProjectionRow> {
+  if (!isRecord(value) || !hasExactKeys(value, PROJECTION_ROW_KEYS)) return { ok: false };
+  const cursor = decodeProjectionCursor(value.cursor);
+  const expiresAt = decodeNullableISO(value.expires_at);
+  const grantedAt = decodeNullableISO(value.granted_at);
+  const verifiedAt = decodeNullableISO(value.verified_at);
+  const store =
+    value.store === null ? null : typeof value.store === 'string' ? value.store : undefined;
+  const periodType =
+    value.period_type === null
+      ? null
+      : typeof value.period_type === 'string'
+        ? value.period_type
+        : undefined;
+  const source =
+    value.source === null ? null : typeof value.source === 'string' ? value.source : undefined;
+  const environment =
+    value.environment === null
+      ? null
+      : typeof value.environment === 'string'
+        ? value.environment
+        : undefined;
+  if (
+    !cursor.ok ||
+    !(value.tier === null || value.tier === 'pro' || value.tier === 'pro_plus') ||
+    typeof value.is_active !== 'boolean' ||
+    !nullableBoundedString(value.product_id) ||
+    !expiresAt.ok ||
+    store === undefined ||
+    (store !== null && asStore(store) === null) ||
+    periodType === undefined ||
+    (periodType !== null && asPeriod(periodType) === null) ||
+    !(value.will_renew === null || typeof value.will_renew === 'boolean') ||
+    !grantedAt.ok ||
+    source === undefined ||
+    (source !== null && asSource(source) === null) ||
+    environment === undefined ||
+    (environment !== null && asEnvironment(environment) === null) ||
+    !nullableBoundedString(value.management_url) ||
+    (value.management_url !== null &&
+      safeExternalHttpsUrl(value.management_url) !== value.management_url) ||
+    !verifiedAt.ok ||
+    !nullableBoundedString(value.offering_id) ||
+    !nullableBoundedString(value.package_id)
+  ) {
+    return { ok: false };
+  }
+  return {
+    ok: true,
+    value: {
+      tier: value.tier,
+      is_active: value.is_active,
+      product_id: value.product_id,
+      expires_at: expiresAt.value,
+      store,
+      period_type: periodType,
+      will_renew: value.will_renew,
+      granted_at: grantedAt.value,
+      source,
+      environment,
+      management_url: value.management_url,
+      verified_at: verifiedAt.value,
+      offering_id: value.offering_id,
+      package_id: value.package_id,
+      cursor: cursor.value,
+    },
+  };
+}
+
+function decodeProjectionResponse(value: unknown): StrictDecode<EntitlementProjectionResponse> {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, PROJECTION_RESPONSE_KEYS) ||
+    value.schema_version !== 1 ||
+    !isRecord(value.store_projection) ||
+    !hasExactKeys(value.store_projection, PROJECTION_KEYS) ||
+    !isRecord(value.app_grant_projection) ||
+    !hasExactKeys(value.app_grant_projection, PROJECTION_KEYS)
+  ) {
+    return { ok: false };
+  }
+
+  const storeState = value.store_projection.state;
+  const appGrantState = value.app_grant_projection.state;
+  const storeRow =
+    value.store_projection.row === null
+      ? ({ ok: true, value: null } as const)
+      : decodeProjectionRow(value.store_projection.row);
+  const appGrantRow =
+    value.app_grant_projection.row === null
+      ? ({ ok: true, value: null } as const)
+      : decodeProjectionRow(value.app_grant_projection.row);
+  if (
+    !storeRow.ok ||
+    !appGrantRow.ok ||
+    (storeState !== 'active' &&
+      storeState !== 'inactive' &&
+      storeState !== 'legacy_unknown' &&
+      storeState !== 'absent') ||
+    (appGrantState !== 'active' && appGrantState !== 'inactive' && appGrantState !== 'absent')
+  ) {
+    return { ok: false };
+  }
+
+  const coherentStore =
+    (storeState === 'absent' && storeRow.value === null) ||
+    (storeState === 'legacy_unknown' &&
+      storeRow.value !== null &&
+      storeRow.value.tier !== null &&
+      !storeRow.value.is_active &&
+      storeRow.value.cursor === null &&
+      storeRow.value.source === 'revenuecat') ||
+    ((storeState === 'active' || storeState === 'inactive') &&
+      storeRow.value !== null &&
+      storeRow.value.cursor !== null &&
+      storeRow.value.source === 'revenuecat' &&
+      storeRow.value.is_active === (storeState === 'active'));
+  const coherentAppGrant =
+    (appGrantState === 'absent' && appGrantRow.value === null) ||
+    ((appGrantState === 'active' || appGrantState === 'inactive') &&
+      appGrantRow.value !== null &&
+      appGrantRow.value.cursor === null &&
+      appGrantRow.value.tier !== null &&
+      appGrantRow.value.source === 'app_granted' &&
+      appGrantRow.value.store === 'app_granted' &&
+      appGrantRow.value.period_type === 'reverse_trial' &&
+      appGrantRow.value.product_id === null &&
+      appGrantRow.value.offering_id === null &&
+      appGrantRow.value.package_id === null &&
+      appGrantRow.value.management_url === null &&
+      appGrantRow.value.will_renew === false &&
+      appGrantRow.value.granted_at !== null &&
+      appGrantRow.value.expires_at !== null &&
+      appGrantRow.value.is_active === (appGrantState === 'active'));
+  if (!coherentStore || !coherentAppGrant) return { ok: false };
+
+  return {
+    ok: true,
+    value: {
+      schema_version: 1,
+      store_projection: { state: storeState, row: storeRow.value },
+      app_grant_projection: { state: appGrantState, row: appGrantRow.value },
+    },
+  };
+}
+
+function projectionRowToEntitlement(row: ProjectionRow): StoredEntitlement | null {
+  return normalizeStoredEntitlement({
+    tier: row.tier,
+    isActive: row.is_active,
+    periodType: row.period_type,
+    store: row.store,
+    productId: row.product_id,
+    expiresAt: row.expires_at,
+    willRenew: row.will_renew,
+    grantedAt: row.granted_at,
+    source: row.source,
+    environment: row.environment,
+    managementUrl: row.management_url,
+    verifiedAt: row.verified_at,
+    offeringId: row.offering_id,
+    packageId: row.package_id,
+    storeUserId: null,
+    priceLabel: null,
   });
 }
 
-async function writeCanonicalState(state: EntitlementCacheState): Promise<void> {
-  const physicalProof =
-    state.entitlement ??
-    (state.revenueCatEmpty
-      ? revenueCatEmptyTombstone(state.revenueCatEmpty.verifiedAt)
-      : null);
-  if (physicalProof) {
-    // A trusted marker for proof P must not coexist with a newly durable
-    // non-RC proof S. Clear the known marker first; a crash then leaves P
-    // unchanged or unmarked, never S plus replayable trust for P.
-    await clearSupersededTrustedMarkerBeforeProof(state);
-    const encoded = encodeEntitlementProof(physicalProof);
-    await updatePrivateItem(KEY, (raw) => {
-      if (raw !== null) decodeEntitlementProof(raw);
-      return raw === encoded ? raw : encoded;
-    });
-  }
-  if (state.revenueCatEmpty || state.trustedRevenueCatProof) {
-    const incomingWatermark = state.revenueCatEmpty;
-    const incomingMarker = state.trustedRevenueCatProof;
-    await updatePrivateItem(REVENUECAT_EMPTY_KEY, (raw) => {
-      const currentSidecar = raw === null ? null : decodeRevenueCatEmptyOrLegacyProof(raw);
-      const currentWatermark = currentSidecar?.revenueCatEmpty ?? null;
-      const selectedWatermark =
-        incomingWatermark &&
-        currentWatermark &&
-        currentWatermark.storeUserId === incomingWatermark.storeUserId &&
-        Date.parse(currentWatermark.verifiedAt) >= Date.parse(incomingWatermark.verifiedAt)
-          ? currentWatermark
-          : incomingWatermark;
-      const encoded = encodeRevenueCatEmpty({
-        revenueCatEmpty: selectedWatermark,
-        trustedRevenueCatProof: incomingMarker,
-      });
-      return raw === encoded ? raw : encoded;
-    });
-  } else {
-    // v2 is already durable at this point. Remove only our schema-v2 sidecar
-    // so a marker for an old proof cannot be replayed after a server/app-grant
-    // winner replaces it. A raw/envelope legacy proof is rollback data and is
-    // deliberately preserved.
-    await updatePrivateItem(REVENUECAT_EMPTY_KEY, (raw) => {
-      if (raw === null) return null;
-      try {
-        return decodeRevenueCatEmptyOrLegacyProof(raw) === null ? raw : null;
-      } catch (error) {
-        // App grants are independent of the provider sidecar. Once their v2
-        // proof is durable, an unreadable/future v1 record must be preserved
-        // byte-for-byte but cannot make that independent proof memory-only.
-        if (isAppGrantedEntitlement(state.entitlement)) return raw;
-        throw error;
+function projectionCursorToStoreCursor(
+  cursor: Exclude<ProjectionCursor, null>,
+): StoreEvidenceCursor {
+  return cursor.kind === 'rc_webhook'
+    ? {
+        kind: 'revenuecat_webhook',
+        eventAt: cursor.at,
+        priority: cursor.priority,
+        eventId: cursor.event_id,
       }
+    : {
+        kind: 'revenuecat_snapshot',
+        requestDate: cursor.at,
+        fingerprint: cursor.fingerprint,
+      };
+}
+
+function projectionEvidence(
+  response: EntitlementProjectionResponse,
+): StrictDecode<readonly EntitlementEvidence[]> {
+  const evidence: EntitlementEvidence[] = [];
+  const store = response.store_projection;
+  if (store.state === 'active' || store.state === 'inactive') {
+    const row = store.row;
+    if (!row || !row.cursor) return { ok: false };
+    const entitlement = row.tier === null ? null : projectionRowToEntitlement(row);
+    const state = row.tier === null ? 'empty' : store.state;
+    if (
+      (row.tier !== null && !entitlement) ||
+      (state === 'active' && !entitlement?.isActive) ||
+      (state === 'inactive' && (entitlement === null || entitlement.isActive)) ||
+      (state === 'empty' && row.is_active)
+    ) {
+      return { ok: false };
+    }
+    evidence.push({
+      kind: 'store_definitive',
+      cursor: projectionCursorToStoreCursor(row.cursor),
+      state,
+      entitlement,
+      provenance: row.cursor.kind === 'rc_webhook' ? 'server_webhook' : 'server_snapshot',
     });
   }
-}
 
-async function persistAcceptedState(
-  generation: number,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-  apply: (state: EntitlementCacheState) => EntitlementCacheState,
-): Promise<EntitlementPersistenceAttempt> {
-  return runSerializedEntitlementMutation(generation, async () => {
-    const snapshot = await persistenceSnapshot(reviewedAt);
-    const durableAndVolatile = mergeCacheStates(
-      snapshot.state,
-      volatileStateFor(generation),
-      reviewedAt,
-      appEnvironment,
-    );
-    const accepted = canonicalizeCacheState(apply(durableAndVolatile), reviewedAt);
-
-    // This shadow is the ordering authority even when either physical write
-    // fails. A later delayed mutation must encode this winner, not its own T1.
-    setVolatileState(generation, accepted);
-
-    const appGrantOnly = isAppGrantedEntitlement(accepted.entitlement);
-    if (snapshot.error && !(snapshot.mayWriteAppGrant && appGrantOnly)) {
-      return { acceptance: acceptanceFor(accepted, false), error: snapshot.error };
+  const appGrant = response.app_grant_projection;
+  if (appGrant.state === 'active' || appGrant.state === 'inactive') {
+    const row = appGrant.row;
+    if (!row?.granted_at) return { ok: false };
+    const entitlement = projectionRowToEntitlement(row);
+    if (!entitlement || entitlement.isActive !== (appGrant.state === 'active')) {
+      return { ok: false };
     }
-    if (accepted.provisionalProviderBarrier) {
-      // An active unmarked proof is a mutation-order barrier, not a revocation.
-      // Rejecting older evidence must leave its durable bytes untouched so an
-      // exact trusted retry can still finish the marker phase.
-      return {
-        acceptance: acceptanceFor(accepted, false),
-        error: accepted.entitlement
-          ? null
-          : entitlementCacheError(ENTITLEMENT_ACTIVE_PROVIDER_BARRIER),
-      };
-    }
-    try {
-      await writeCanonicalState(accepted);
-      return { acceptance: acceptanceFor(accepted, true), error: null };
-    } catch (error) {
-      return { acceptance: acceptanceFor(accepted, false), error };
-    }
-  });
-}
-
-async function persistVerifiedEntitlement(
-  verified: StoredEntitlement,
-  reviewedAt: string,
-  appEnvironment: AppEnvironment,
-  trustedRevenueCat: boolean,
-): Promise<EntitlementPersistenceAttempt> {
-  const generation = getAccountGeneration();
-  return persistAcceptedState(generation, reviewedAt, appEnvironment, (state) => {
-    const accepted = applyVerifiedEntitlement(state, verified, reviewedAt, appEnvironment);
-    if (!trustedRevenueCat) return accepted;
-    const marker = trustedRevenueCatProofMarkerFor(verified);
-    return marker &&
-      accepted.entitlement &&
-      markerMatchesRevenueCatProof(marker, accepted.entitlement)
-      ? { ...accepted, trustedRevenueCatProof: marker }
-      : accepted;
-  });
-}
-
-export async function acceptVerifiedEntitlement(
-  e: StoredEntitlement,
-  options: {
-    reviewedAt?: string;
-    appEnvironment?: AppEnvironment;
-    storeUserId?: string;
-  } = {},
-): Promise<EntitlementAcceptance> {
-  const reviewedAt = options.reviewedAt ?? nowISO();
-  const appEnvironment = options.appEnvironment ?? env.appEnvironment;
-  const verified = normalizeVerifiedEntitlement(
-    options.storeUserId ? { ...e, storeUserId: options.storeUserId } : e,
-    reviewedAt,
-    appEnvironment,
-  );
-  const attempt = await persistVerifiedEntitlement(
-    verified,
-    reviewedAt,
-    appEnvironment,
-    false,
-  );
-  if ((attempt.error as Error | null)?.message === ENTITLEMENT_ACTIVE_PROVIDER_BARRIER) {
-    throw attempt.error;
+    evidence.push({ kind: 'app_grant', grantAt: row.granted_at, entitlement });
   }
-  return attempt.acceptance;
+  return { ok: true, value: evidence };
+}
+
+export async function publishCustomerInfoEvidence(
+  input: Readonly<{
+    context: EntitlementOwnerContext;
+    customerInfo: Pick<CustomerInfo, 'requestDate' | 'entitlements'>;
+    entitlement: StoredEntitlement | null;
+    queryClient: Pick<QueryClient, 'cancelQueries' | 'setQueryData'>;
+    observedAtISO?: string;
+  }>,
+): Promise<PublishCustomerInfoEvidenceResult> {
+  const queryKey = entitlementQueryKey(input.context.ownerBinding);
+  try {
+    await input.queryClient.cancelQueries({ queryKey, exact: true });
+  } catch (error) {
+    return {
+      status: 'blocked',
+      disposition: 'blocked',
+      snapshot: null,
+      requiresUncachedRefresh: false,
+      reason: errorMessage(error),
+    };
+  }
+
+  const conversion = customerInfoToEvidence(input.customerInfo, input.entitlement);
+  if (conversion.status !== 'evidence') {
+    const current = await readEntitlementSnapshot(input.context, input.observedAtISO ?? nowISO());
+    if (current.status === 'available') {
+      input.queryClient.setQueryData(
+        queryKey,
+        deriveState(current.snapshot.entitlement, current.snapshot.effectiveNowISO),
+      );
+    }
+    return {
+      status: conversion.status,
+      disposition: 'ignored',
+      snapshot: current.status === 'available' ? current.snapshot : null,
+      requiresUncachedRefresh:
+        current.status === 'available' ? current.snapshot.requiresUncachedRefresh : false,
+      reason: conversion.reason,
+    };
+  }
+
+  const merged = await mergeEntitlementEvidence(
+    input.context,
+    conversion.evidence,
+    input.observedAtISO ?? nowISO(),
+  );
+  if (merged.snapshot) {
+    input.queryClient.setQueryData(
+      queryKey,
+      deriveState(merged.snapshot.entitlement, merged.snapshot.effectiveNowISO),
+    );
+  }
+  return merged;
+}
+
+export async function fetchServerEvidence(
+  context: EntitlementOwnerContext,
+  signal: AbortSignal,
+): Promise<ServerEvidenceResult> {
+  if (!isSupabaseConfigured) return { status: 'unconfigured' };
+  try {
+    await assertCurrentOwnerContext(context);
+    const readProjection = async (): Promise<
+      | Readonly<{ status: 'available'; response: EntitlementProjectionResponse }>
+      | Readonly<{ status: 'transport_error' | 'rejected'; reason: string }>
+    > => {
+      await assertCurrentOwnerContext(context);
+      const { data, error } = await supabase
+        .rpc('read_entitlement_projections')
+        .abortSignal(signal);
+      await assertCurrentOwnerContext(context);
+      if (error) return { status: 'transport_error', reason: 'server_projection_query_failed' };
+      const decoded = decodeProjectionResponse(data);
+      return decoded.ok
+        ? { status: 'available', response: decoded.value }
+        : { status: 'rejected', reason: 'server_projection_invalid' };
+    };
+
+    const resultForProjection = (response: EntitlementProjectionResponse): ServerEvidenceResult => {
+      const converted = projectionEvidence(response);
+      if (!converted.ok) return { status: 'rejected', reason: 'server_projection_invalid' };
+      if (converted.value.length > 0) return { status: 'evidence', evidence: converted.value };
+      return response.store_projection.state === 'legacy_unknown'
+        ? { status: 'ignored', reason: 'legacy_store_projection_unresolved' }
+        : { status: 'absent' };
+    };
+
+    const first = await readProjection();
+    if (first.status !== 'available') return first;
+    const firstResult = resultForProjection(first.response);
+    if (firstResult.status === 'rejected') return firstResult;
+    if (first.response.store_projection.state !== 'legacy_unknown') return firstResult;
+
+    // The owner-scoped reconciliation function receives no subject or row
+    // identifier from the client. It derives the authenticated owner on the
+    // server and only two terminal outcomes authorize one fresh RPC read.
+    await assertCurrentOwnerContext(context);
+    const { data: reconciliation, error: reconciliationError } = await supabase.functions.invoke(
+      'subscription-reconciliation',
+      { body: {}, signal },
+    );
+    await assertCurrentOwnerContext(context);
+    const reconciliationAccepted =
+      !reconciliationError &&
+      isRecord(reconciliation) &&
+      hasExactKeys(reconciliation, ['outcome']) &&
+      (reconciliation.outcome === 'reconciled' || reconciliation.outcome === 'already_current');
+    if (!reconciliationAccepted) {
+      return firstResult.status === 'evidence'
+        ? firstResult
+        : { status: 'transport_error', reason: 'subscription_reconciliation_failed' };
+    }
+
+    const second = await readProjection();
+    if (second.status !== 'available') {
+      return firstResult.status === 'evidence' ? firstResult : second;
+    }
+    return resultForProjection(second.response);
+  } catch (error) {
+    return {
+      status:
+        errorMessage(error) === ENTITLEMENT_CACHE_FOREIGN_OWNER ? 'blocked' : 'transport_error',
+      reason: errorMessage(error),
+    };
+  }
+}
+
+/** Compatibility fetch: absence and transport failure return the local union. */
+export async function fetchServerEntitlement(): Promise<StoredEntitlement | null> {
+  if (!isSupabaseConfigured) return loadEntitlement();
+  try {
+    return await runAccountGenerationOperation(async (lease) => {
+      const context = await currentEntitlementOwnerContext();
+      lease.assertCurrent();
+      const fetched = await fetchServerEvidence(context, lease.signal);
+      lease.assertCurrent();
+      if (fetched.status === 'evidence') {
+        const merged = await mergeEntitlementEvidenceBatch(context, fetched.evidence);
+        lease.assertCurrent();
+        return merged.snapshot?.entitlement ?? null;
+      }
+      const local = await readEntitlementSnapshot(context);
+      lease.assertCurrent();
+      return local.status === 'available' ? local.snapshot.entitlement : null;
+    });
+  } catch {
+    return null;
+  }
 }
 
 /**
- * Persist an SDK proof only after `classifyRevenueCatEntitlement` returned its
- * trusted branch. Keeping this separate prevents server/generic call sites from
- * accidentally minting the offline-trust marker.
+ * Compatibility wrapper retained only for app-granted evidence. Store evidence
+ * without its verification result and ordering cursor is rejected.
  */
-export async function acceptTrustedRevenueCatEntitlement(
-  e: StoredEntitlement,
-  options: { reviewedAt?: string; appEnvironment?: AppEnvironment } = {},
-): Promise<EntitlementAcceptance> {
-  const reviewedAt = options.reviewedAt ?? nowISO();
-  const appEnvironment = options.appEnvironment ?? env.appEnvironment;
-  const verified = normalizeVerifiedEntitlement(e, reviewedAt, appEnvironment);
-  if (verified.source !== 'revenuecat' || !verified.storeUserId) {
-    throw new Error('TRUSTED_REVENUECAT_PROOF_REQUIRED');
+export async function saveVerifiedEntitlement(
+  entitlement: StoredEntitlement,
+): Promise<StoredEntitlement> {
+  const normalized = normalizeStoredEntitlement(entitlement);
+  if (!normalized) throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
+  if (
+    normalized.store !== 'app_granted' ||
+    normalized.source !== 'app_granted' ||
+    !normalized.grantedAt
+  ) {
+    throw new Error(ENTITLEMENT_EVIDENCE_CURSOR_REQUIRED);
   }
-  const attempt = await persistVerifiedEntitlement(
-    verified,
-    reviewedAt,
-    appEnvironment,
-    true,
-  );
-  if ((attempt.error as Error | null)?.message === ENTITLEMENT_ACTIVE_PROVIDER_BARRIER) {
-    throw attempt.error;
+  const context = await currentEntitlementOwnerContext();
+  const result = await mergeEntitlementEvidence(context, {
+    kind: 'app_grant',
+    grantAt: normalized.grantedAt,
+    entitlement: normalized,
+  });
+  if (!result.snapshot || result.status === 'blocked' || result.status === 'conflict') {
+    throw new Error(result.reason ?? ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
   }
-  return attempt.acceptance;
+  return normalized;
 }
 
-export async function saveVerifiedEntitlement(e: StoredEntitlement): Promise<StoredEntitlement> {
-  const reviewedAt = nowISO();
-  const verified = normalizeVerifiedEntitlement(e, reviewedAt, env.appEnvironment);
-  const persisted = await persistVerifiedEntitlement(
-    verified,
-    reviewedAt,
-    env.appEnvironment,
-    false,
-  );
-  if (persisted.error) throw persisted.error;
-  if (!persisted.acceptance.entitlement) throw new Error('ENTITLEMENT_EVIDENCE_SUPERSEDED');
-  return persisted.acceptance.entitlement;
-}
-
-export async function acceptRevenueCatVerifiedEmpty(
-  evidence: RevenueCatVerifiedEmptyEvidence,
-  options: { reviewedAt?: string; appEnvironment?: AppEnvironment } = {},
-): Promise<EntitlementAcceptance> {
-  const reviewedAt = options.reviewedAt ?? nowISO();
-  const appEnvironment = options.appEnvironment ?? env.appEnvironment;
-  const verifiedEmpty = normalizeRevenueCatVerifiedEmptyEvidence(evidence, reviewedAt);
-  const generation = getAccountGeneration();
-  const attempt = await persistAcceptedState(
-    generation,
-    reviewedAt,
-    appEnvironment,
-    (state) =>
-      applyRevenueCatVerifiedEmpty(state, verifiedEmpty, reviewedAt, appEnvironment),
-  );
-  if ((attempt.error as Error | null)?.message === ENTITLEMENT_ACTIVE_PROVIDER_BARRIER) {
-    throw attempt.error;
-  }
-  return attempt.acceptance;
-}
-
-/** Persist an ordered RevenueCat-empty watermark while preserving independent app grants. */
+/** Compatibility helper that still requires the complete aggregate verification
+ * result. A timestamp alone is never accepted as proof of a definitive empty. */
 export async function clearStoreEntitlementIfRevenueCatVerifiedEmpty(
-  evidence: RevenueCatVerifiedEmptyEvidence,
-): Promise<StoredEntitlement | null> {
-  return (await acceptRevenueCatVerifiedEmpty(evidence)).entitlement;
+  customerInfo?: Pick<CustomerInfo, 'requestDate' | 'entitlements'>,
+): Promise<'committed' | 'blocked'> {
+  if (!customerInfo) return 'blocked';
+  const conversion = customerInfoToEvidence(customerInfo, null);
+  if (
+    conversion.status !== 'evidence' ||
+    conversion.evidence.kind !== 'store_definitive' ||
+    conversion.evidence.state !== 'empty'
+  ) {
+    return 'blocked';
+  }
+  try {
+    const context = await currentEntitlementOwnerContext();
+    const result = await mergeEntitlementEvidence(context, conversion.evidence);
+    return result.status === 'blocked' ? 'blocked' : 'committed';
+  } catch {
+    return 'blocked';
+  }
 }
 
-/** Graceful local dismissal for expired/app-granted records only. Never cancels a store subscription. */
-export async function downgradeToFree(
-  expectedEvidenceIdentity: string,
-  expectedStoreUserId: string,
-): Promise<boolean> {
-  const generation = getAccountGeneration();
-  return runSerializedEntitlementMutation(generation, async () => {
-    const reviewedAt = nowISO();
-    const snapshot = await persistenceSnapshot(reviewedAt);
-    if (snapshot.error) return false;
-    const current = mergeCacheStates(
-      snapshot.state,
-      volatileStateFor(generation),
-      reviewedAt,
-      env.appEnvironment,
-    );
-    if (!current.entitlement) return false;
-    if (
-      current.entitlement.storeUserId !== expectedStoreUserId ||
-      deriveState(current.entitlement, reviewedAt).evidenceIdentity !==
-      expectedEvidenceIdentity
-    ) {
-      return false;
-    }
-    const expired = Boolean(
-      current.entitlement.expiresAt &&
-        Date.parse(current.entitlement.expiresAt) <= Date.parse(reviewedAt),
-    );
-    if (
-      current.entitlement.periodType !== 'reverse_trial' ||
-      current.entitlement.store !== 'app_granted' ||
-      (current.entitlement.source !== 'app_granted' &&
-        current.entitlement.source !== 'server') ||
-      !expired
-    ) {
-      return false;
-    }
-    const entitlement = { ...current.entitlement, isActive: false, willRenew: false };
-    const accepted = { ...current, entitlement };
-    setVolatileState(generation, accepted);
-    try {
-      await writeCanonicalState(accepted);
-    } catch {
-      // A dismissal is advisory and must remain fail-soft when protected
-      // storage becomes unavailable between the read and atomic transform.
-    }
-    return true;
+/** Expiry is derived from the nondecreasing clock; no authority lane is erased. */
+export async function downgradeToFree(): Promise<void> {
+  try {
+    const context = await currentEntitlementOwnerContext();
+    await readEntitlementSnapshot(context);
+  } catch {
+    // This UI convenience must never overwrite unreadable or foreign bytes.
+  }
+}
+
+async function commitAppGrant(
+  context: EntitlementOwnerContext,
+  entitlement: StoredEntitlement,
+): Promise<StoredEntitlement> {
+  const normalized = normalizeStoredEntitlement(entitlement);
+  if (!normalized?.grantedAt) throw new Error('INVALID_APP_GRANT_EVIDENCE');
+  const result = await mergeEntitlementEvidence(context, {
+    kind: 'app_grant',
+    grantAt: normalized.grantedAt,
+    entitlement: normalized,
   });
+  if (!result.snapshot || result.status === 'blocked' || result.status === 'conflict') {
+    throw new Error(result.reason ?? ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
+  }
+  return normalized;
 }
 
-/** Read the server entitlement mirror and refresh the local cache when available. */
-export async function fetchServerEntitlement(
-  assertCurrentOwner: () => void = () => {},
-): Promise<ServerEntitlementFetchResult> {
-  if (!isSupabaseConfigured) return { status: 'no_evidence' };
+export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
   return runAccountGenerationOperation(async (lease) => {
-    assertCurrentOwner();
-    let owner: Awaited<ReturnType<typeof captureAuthenticatedAccountOwner>>;
-    try {
-      owner = await captureAuthenticatedAccountOwner(lease);
-    } catch {
-      lease.assertCurrent();
-      assertCurrentOwner();
-      return { status: 'failure' };
+    if (!env.customProGrantEnabled) {
+      throw new Error('CUSTOM_PRO_GRANT_DISABLED');
     }
-    if (!owner) return { status: 'failure' };
-    let entitlement: StoredEntitlement;
-    try {
-      const data = await runRequestWithLease(
-        lease,
-        {
-          endpoint: 'entitlement_server',
-          deadlineMs: 10_000,
-          idempotent: true,
-          maxAttempts: 2,
-          maxResponseBytes: 256 * 1024,
-        },
-        async ({ signal }) => {
-          const response = await supabase
-            .from('entitlements')
-            .select('*')
-            .eq('user_id', owner.userId)
-            .limit(1)
-            .abortSignal(signal)
-            .maybeSingle();
-          if (response.error) {
-            throw supabaseRequestFailure(response.error, response.status);
-          }
-          return response.data;
-        },
-      );
-      lease.assertCurrent();
-      assertCurrentOwner();
-      if (!data) return { status: 'no_evidence' };
-      const mapped = rowToStoredEntitlement(data as EntitlementRow);
-      entitlement = isStoreBackedEntitlement(mapped)
-        ? { ...mapped, source: 'server', storeUserId: owner.userId }
-        : { ...mapped, storeUserId: owner.userId };
-    } catch {
-      lease.assertCurrent();
-      assertCurrentOwner();
-      return { status: 'failure' };
-    }
-    let accepted: EntitlementAcceptance;
-    try {
-      accepted = await acceptVerifiedEntitlement(entitlement);
-    } catch {
-      lease.assertCurrent();
-      assertCurrentOwner();
-      return { status: 'failure' };
-    }
-    lease.assertCurrent();
-    assertCurrentOwner();
-    // Valid current-account server evidence remains usable in memory even when
-    // protected bytes cannot be decoded or updated. The failed write never
-    // mutates those bytes, and invalid server rows were rejected above.
-    return { status: 'evidence', acceptance: accepted };
-  });
-}
-
-export async function startReverseTrialOnServer(
-  assertCurrentOwner: () => void = () => {},
-  storeUserId?: string,
-  assertCanDispatch: () => void = () => {},
-): Promise<ReverseTrialStartAcceptance> {
-  return runAccountGenerationOperation(async (lease) => {
-    assertCurrentOwner();
-    lease.assertCurrent();
     if (!isSupabaseConfigured) {
-      if (env.appEnvironment !== 'development') {
-        throw new Error('Reverse trial is unavailable until Supabase is configured.');
-      }
-
-      assertCanDispatch();
-      const reviewedAt = nowISO();
-      const actionEntitlement = normalizeVerifiedEntitlement({
-        tier: 'pro',
-        isActive: true,
-        periodType: 'reverse_trial',
-        store: 'app_granted',
-        productId: env.revenueCatReverseTrialProductId,
-        expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
-        willRenew: false,
-        grantedAt: reviewedAt,
-        source: 'app_granted',
-        environment: 'development',
-        managementUrl: null,
-        verifiedAt: reviewedAt,
-        offeringId: 'local_reverse_trial',
-        packageId: 'reverse_trial_7d',
-        storeUserId: storeUserId ?? null,
-        priceLabel: null,
-      }, reviewedAt, env.appEnvironment);
-      const accepted = (
-        await persistVerifiedEntitlement(
-          actionEntitlement,
-          reviewedAt,
-          env.appEnvironment,
-          false,
-        )
-      ).acceptance;
-      lease.assertCurrent();
-      assertCurrentOwner();
-      if (!accepted.entitlement) throw new Error('ENTITLEMENT_EVIDENCE_SUPERSEDED');
-      return {
-        ...accepted,
-        started:
-          accepted.entitlement.storeUserId === actionEntitlement.storeUserId &&
-          deriveState(accepted.entitlement, reviewedAt).evidenceIdentity ===
-            deriveState(actionEntitlement, reviewedAt).evidenceIdentity,
-      };
+      throw new Error('Reverse trial is unavailable until Supabase is configured.');
     }
 
-    assertCanDispatch();
-    const data = await invokeEdgeFunction<{ entitlement?: EntitlementRow }>(
-      'subscription-grants',
-      {
-        signal: lease.signal,
-        body: { action: 'start_reverse_trial' },
-      },
-    );
+    const context = await currentEntitlementOwnerContext();
     lease.assertCurrent();
-    assertCurrentOwner();
-
-    const row = data?.entitlement;
+    const { data, error } = await supabase.functions.invoke('subscription-grants', {
+      body: { action: 'start_reverse_trial' },
+      signal: lease.signal,
+    });
+    lease.assertCurrent();
+    if (error) throw error;
+    const row = (data as { entitlement?: EntitlementRow })?.entitlement;
     if (!row) throw new Error('Reverse trial grant did not return an entitlement.');
-
-    const reviewedAt = nowISO();
-    const entitlement = normalizeVerifiedEntitlement(
-      storeUserId
-        ? { ...rowToStoredEntitlement(row), storeUserId }
-        : rowToStoredEntitlement(row),
-      reviewedAt,
-      env.appEnvironment,
-    );
-    assertCurrentOwner();
+    const conversion = rowToEvidence(row);
+    if (conversion.status !== 'evidence' || conversion.evidence.kind !== 'app_grant') {
+      throw new Error('Reverse trial grant returned invalid app-grant evidence.');
+    }
+    const entitlement = await commitAppGrant(context, conversion.evidence.entitlement);
     lease.assertCurrent();
-    const accepted = (
-      await persistVerifiedEntitlement(
-        entitlement,
-        reviewedAt,
-        env.appEnvironment,
-        false,
-      )
-    ).acceptance;
-    lease.assertCurrent();
-    assertCurrentOwner();
-    if (!accepted.entitlement) throw new Error('ENTITLEMENT_EVIDENCE_SUPERSEDED');
-    return {
-      ...accepted,
-      started:
-        accepted.entitlement.storeUserId === entitlement.storeUserId &&
-        deriveState(accepted.entitlement, reviewedAt).evidenceIdentity ===
-          deriveState(entitlement, reviewedAt).evidenceIdentity,
-    };
+    return entitlement;
   });
 }
 
-/** Test/seed reset. */
+/** Explicit account-cleanup/test reset. */
 export async function clearEntitlement(): Promise<void> {
-  const generation = getAccountGeneration();
-  await runSerializedEntitlementMutation(generation, async () => {
-    await multiRemovePrivateItems([KEY, LEGACY_KEY]);
-    if (volatileAccepted?.generation === generation) volatileAccepted = null;
-  });
+  await multiRemovePrivateItems([KEY, LEGACY_KEY]);
 }
+
+export const entitlementCacheStorageKeys = { current: KEY, legacy: LEGACY_KEY } as const;
+export const entitlementCacheSchemaVersion = ENTITLEMENT_CACHE_SCHEMA_VERSION;
+export const entitlementCursorProviderAt = storeCursorProviderAt;

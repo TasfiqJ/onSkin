@@ -22,58 +22,39 @@ describe('account session isolation integration', () => {
     );
     expect(gate).toContain('if (!initializing && !sessionBoundaryError) return children;');
     expect(gate).toContain("loading: 'Securing account data...'");
-    expect(gate).toContain('<StateNotice');
-    expect(gate).toContain('kind="unavailable"');
-    expect(gate).toContain('<StateLoading');
-    expect(gate).toContain('setE2EStorageProof(null);');
-    expect(gate).toContain('await retrySessionBoundary();');
-    expect(gate).toContain('onPress={() => void retryBoundary()}');
-    expect(gate).toContain('accessibilityLabel="Retry securing account data"');
+    expect(gate).toContain("eyebrow: 'Account access paused'");
+    expect(gate).toContain(
+      "body: 'Your account data is still locked. Try again to continue safely.'",
+    );
+    expect(gate).not.toContain('private data could not be cleared');
+    expect(gate).toContain('accessibilityRole="alert"');
+    expect(gate).toContain('void retrySessionBoundary()');
+    expect(gate).toContain('min-h-[56px]');
   });
 
   it('drains private writes, clears query memory, and keeps failed cleanup gated', () => {
     const provider = readSource('lib/auth/AuthProvider.tsx');
     const isolation = readSource('lib/auth/localAccountIsolation.ts');
-    const boundaryQueue = readSource('lib/auth/sessionBoundaryQueue.ts');
     const accountGeneration = readSource('lib/auth/accountGeneration.ts');
     const privateKV = readSource('lib/storage/privateKV.ts');
-    const photoAccountBoundary = readSource('features/photos/photoAccountBoundary.ts');
-    const encryptedStorage = readSource('features/photos/encryptedStorage.ts');
     const actions = readSource('features/settings/actions.ts');
+    const deletionBarrier = readSource('features/settings/accountDeletionBarrier.ts');
+    const entitlementStore = readSource('features/subscription/store.ts');
+    const useEntitlement = readSource('features/subscription/useEntitlement.ts');
     const supabaseClient = readSource('lib/supabase/client.ts');
 
     expect(provider).toContain('await prepareLocalDataForSession(');
-    const fixtureSeedIndex = provider.indexOf('await seedAccountIsolationE2EFixture(');
-    const prepareIsolationIndex = provider.indexOf('await prepareLocalDataForSession(');
-    expect(fixtureSeedIndex).toBeGreaterThanOrEqual(0);
-    expect(prepareIsolationIndex).toBeGreaterThanOrEqual(0);
-    expect(fixtureSeedIndex).toBeLessThan(prepareIsolationIndex);
     expect(provider).toContain('beginPrivateKVAccountBoundary();');
     expect(provider).toContain('beginAccountGenerationBoundary();');
     expect(provider).toContain('await waitForAccountGenerationOperationsToSettle();');
     expect(provider).toContain('await waitForPrivateKVWritesToSettle();');
-    expect(provider).toContain('enqueueSessionBoundaryOperation(sessionBoundaryQueueRef.current');
-    expect(boundaryQueue).toContain('if (previous) await previous;');
-    expect(boundaryQueue).toContain('existing.effectEpoch === options.effectEpoch');
-    expect(provider).toContain(
-      'await applySessionBoundary(nextSession, initialRestore, forceQueue);',
-    );
+    expect(provider).toContain('if (previousTransition) await previousTransition;');
     expect(provider).toContain('retrySessionRestoreRef.current = restoreSession;');
-    expect(provider).toContain('if (sessionError) throw sessionError;');
-    expect(provider).toContain('invalidateLocalSupabaseSession()');
-    expect(provider).not.toContain('clearPersistedSupabaseSession()');
+    expect(provider).toContain('await readPersistedSupabaseSessionCandidate();');
+    expect(provider).toContain('await clearPersistedSessionAfterRemoteDrain();');
+    expect(provider).toContain('await awaitRemoteRequestAuthorityClosed();');
     expect(provider).toContain('latestSessionForCompletedBoundary(');
-    expect(provider).toContain(
-      'void applySessionBoundary(accountIsolationE2EFixture.session, true);',
-    );
     expect(provider).toContain('setSessionBoundaryError(true);');
-    expect(provider).toContain(
-      'devLocalResetCoordinator.runIfRequired(resolvedTargetUserId, isCurrent)',
-    );
-    expect(provider).toContain('devLocalResetCoordinator.isPublicationBlocked()');
-    expect(provider).toContain(
-      'devLocalResetCoordinator.consumeRedirectAfterSuccessfulPublication()',
-    );
     expect(provider).toContain("router.replace('/');");
     expect(provider).toContain('activeUserIdRef.current === userId');
     expect(isolation.match(/queryCache\.clear\(\)/g)).toHaveLength(2);
@@ -86,29 +67,49 @@ describe('account session isolation integration', () => {
     expect(accountGeneration).toContain('generation !== accountGeneration');
     expect(privateKV).toContain('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
     expect(privateKV).toContain('generation !== accountBoundaryGeneration');
-    expect(privateKV).toContain('function runAccountScopedPrivateRead');
-    expect(privateKV).toContain('async function runAccountScopedPrivateMutation');
-    expect(privateKV).toContain('const inFlightMutationOperations');
-    expect(privateKV).toContain('for (const read of [...activeReadOperations]) read.invalidate();');
-    expect(privateKV).toContain('while (inFlightMutationOperations.size > 0)');
-    expect(privateKV).not.toContain('const inFlightOperations');
-    expect(photoAccountBoundary).toContain('function runAccountScopedPhotoRead');
-    expect(photoAccountBoundary).toContain('async function runAccountScopedPhotoMutation');
-    expect(photoAccountBoundary).toContain('const inFlightPhotoMutations');
-    expect(photoAccountBoundary).toContain(
-      'for (const invalidate of [...activePhotoReadInvalidators]) invalidate();',
+    expect(privateKV).toContain('return runAccountScopedPrivateOperation');
+    const capture = actions.indexOf('runAccountGenerationOperation(async (lease) =>');
+    const journalRead = actions.indexOf('assertStoreTransactionDeletionJournalReadable(');
+    const intakeHold = actions.indexOf(
+      'startDeletionIntakeHandoff(owner.user.id, owner.remoteBinding)',
     );
-    expect(photoAccountBoundary).toContain('while (inFlightPhotoMutations.size > 0)');
-    expect(photoAccountBoundary).not.toContain('const inFlightPhotoOperations');
-    expect(encryptedStorage).toContain("} from './photoAccountBoundary';");
-    expect(actions).toContain('await completeLocalSignOut();');
+    const exactQuiescence = actions.indexOf('await quiescing.publicationQuiescence;');
+    const durablePrepare = actions.indexOf(
+      'preparePendingAccountDeletion(quiescing.owner.ownerBinding)',
+    );
+    const releaseHold = actions.indexOf('releasePreparedIntakeHold();');
+    const transport = actions.indexOf('const result = await invokeAccountDeletionWithDeadline(');
+    expect(capture).toBeGreaterThan(-1);
+    expect(journalRead).toBeGreaterThan(capture);
+    expect(intakeHold).toBeGreaterThan(journalRead);
+    expect(exactQuiescence).toBeGreaterThan(intakeHold);
+    expect(durablePrepare).toBeGreaterThan(exactQuiescence);
+    expect(releaseHold).toBeGreaterThan(durablePrepare);
+    expect(transport).toBeGreaterThan(releaseHold);
+    expect(deletionBarrier).toContain(
+      'return durableAccountActivityBlocked || deletionIntakeHoldCount > 0;',
+    );
+    expect(provider).toContain('subscribeToAccountDeletionIntakeHold((active) =>');
+    expect(provider).toContain('if (accountDeletionIntakeBoundaryActiveRef.current)');
+    expect(provider).toContain("if (event === 'TOKEN_REFRESHED') {");
+    expect(provider).toContain(
+      'void Promise.resolve().then(() => handleRejectedSessionRef.current());',
+    );
+    expect(actions).toContain('Authorization: `Bearer ${owner.accessToken}`');
+    expect(actions).toContain('requestAccountDeletionRecovery();');
+    expect(actions).not.toContain('await _completeLocalSignOut()');
     expect(actions).not.toContain('clearAccountIsolatedState');
-    expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');
-    expect(supabaseClient).toContain('export async function invalidateLocalSupabaseSession');
-    expect(supabaseClient).toContain("supabase.auth.signOut({ scope: 'local' })");
-    expect(supabaseClient.indexOf("supabase.auth.signOut({ scope: 'local' })")).toBeLessThan(
-      supabaseClient.lastIndexOf('await clearPersistedSupabaseSession();'),
+    expect(
+      entitlementStore.match(/runAccountGenerationOperation\(async \(lease\) =>/g),
+    ).toHaveLength(2);
+    expect(entitlementStore).toContain('fetchServerEvidence(context, lease.signal)');
+    expect(entitlementStore).toContain('.abortSignal(signal)');
+    expect(entitlementStore).toContain('signal: lease.signal');
+    expect(useEntitlement).toContain(
+      'queryFn: () =>\n      runAccountGenerationOperation(async (lease) =>',
     );
+    expect(useEntitlement.match(/lease\.assertCurrent\(\);/g)?.length).toBeGreaterThanOrEqual(3);
+    expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');
     expect(supabaseClient).toContain('storageKey: authStorageKey');
   });
 });

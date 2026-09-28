@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repo uses human-simulated end-to-end testing to verify that OnSkin works
+This repo uses human-simulated end-to-end testing to verify that Layerwell works
 through the same surface a real person uses: physical iPhone/iOS Simulator,
 Expo web where compatible, or another explicit target surface. Android may be
 used for source-health/resilience work, but it is not release evidence under
@@ -34,12 +34,11 @@ Do not mark UI-facing work as complete until Codex has:
 - Current durable local evidence gate: `npm run e2e:human:manifest`.
   This no-new-dependency Node verifier reads committed
   `test-results/human-e2e/YYYY-MM-DD/` Expo web-compatible evidence folders,
-  checks the launch-blocking 360 x 640 support-floor route sweep, requires
-  supported-phone 360 x 740 / 375 x 667 / 375 x 812 / 390 x 844 / 412 x 640 /
-  412 x 915 / 414 x 896 / 430 x 640 / 430 x 932 evidence, requires
+  requires the 375 x 667 compact iPhone-class and 390 x 844 / 430 x 932 modern
+  iPhone-class launch gates defined by `docs/DEVICE_SUPPORT_POLICY.md`, checks
   skipped/direct-entry onboarding, paywall, recovery, conflict, share, shelf,
-  and progress route sweeps when present, records smaller 320-wide stress
-  evidence when present, and writes
+  and progress route sweeps when present, and records 360-wide and 320-wide
+  resilience evidence without treating it as launch-blocking. It writes
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. It is not a UI runner and
   does not replace the human-simulated browser/simulator/device pass; it
   prevents known-good local evidence from becoming ambiguous or hidden.
@@ -271,7 +270,7 @@ A UI-facing task is done only when:
 
 ## Open Questions
 
-- Which native E2E harness should OnSkin standardize on: Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another tool?
+- Which native E2E harness should Layerwell standardize on: Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another tool?
 - Which flows are safe to test against local fixtures without live Supabase, RevenueCat, Sentry, PostHog, Apple, or Google services?
 - What test accounts, seed data, and local reset scripts should be used for onboarding, subscription, photo, recommendation, and account-deletion flows?
 - Which Expo web routes should graduate from human-simulated evidence plus `e2e:human:manifest` into a committed Playwright suite after dependency approval?

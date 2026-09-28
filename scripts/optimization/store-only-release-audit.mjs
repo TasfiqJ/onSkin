@@ -26,38 +26,64 @@ export function readStoreOnlyReleaseInputs() {
   return {
     app: readJson('apps/mobile/app.base.json').expo,
     eas: readJson('apps/mobile/eas.json'),
+    rootPackage: readJson('package.json'),
     mobilePackage: readJson('apps/mobile/package.json'),
-    maintenanceContract: readJson(
-      'docs/optimization/maintenance-dashboard-contract.json',
-    ),
+    maintenanceContract: readJson('docs/optimization/maintenance-dashboard-contract.json'),
     policyText: readText('docs/UPDATE_DELIVERY_POLICY.md'),
     architectureText: readText('docs/ARCHITECTURE.md'),
+    dynamicAppConfigSource: readText('apps/mobile/app.config.js'),
   };
 }
 
-export function auditStoreOnlyRelease(inputs) {
-  const { app, eas, mobilePackage, maintenanceContract, policyText, architectureText } =
-    inputs;
+export function auditStoreOnlyResolvedApp(app, variant) {
   const updates = app?.updates;
-  requireCondition(updates?.enabled === false, 'updates.enabled must be false.');
+  requireCondition(
+    updates?.enabled === false,
+    `Resolved ${variant} config updates.enabled must be false.`,
+  );
   requireCondition(
     updates?.checkAutomatically === 'NEVER',
-    'updates.checkAutomatically must be NEVER.',
+    `Resolved ${variant} config updates.checkAutomatically must be NEVER.`,
   );
-  requireCondition(!hasOwn(updates, 'url'), 'Store-only config must omit updates.url.');
+  requireCondition(!hasOwn(updates, 'url'), `Resolved ${variant} config must omit updates.url.`);
+}
+
+export function auditStoreOnlyRelease(inputs) {
+  const {
+    app,
+    eas,
+    rootPackage,
+    mobilePackage,
+    maintenanceContract,
+    policyText,
+    architectureText,
+    dynamicAppConfigSource,
+  } = inputs;
+  auditStoreOnlyResolvedApp(app, 'base');
   requireCondition(
     app?.runtimeVersion?.policy === 'fingerprint',
     'runtimeVersion.policy must remain fingerprint for artifact compatibility.',
   );
 
   const directDependencies = {
+    ...(rootPackage?.dependencies ?? {}),
+    ...(rootPackage?.devDependencies ?? {}),
+    ...(rootPackage?.optionalDependencies ?? {}),
     ...(mobilePackage?.dependencies ?? {}),
     ...(mobilePackage?.devDependencies ?? {}),
     ...(mobilePackage?.optionalDependencies ?? {}),
   };
   requireCondition(
     !hasOwn(directDependencies, 'expo-updates'),
-    'Store-only mobile package must not directly depend on expo-updates.',
+    'Store-only workspace must not directly depend on expo-updates.',
+  );
+  requireCondition(
+    !/(?:\bexpo\s*\.\s*)?\bupdates\s*(?:=|:)/.test(dynamicAppConfigSource),
+    'Dynamic app config must not mutate the reviewed base updates policy.',
+  );
+  requireCondition(
+    !hasOwn(eas, 'update'),
+    'Store-only EAS config must omit a top-level update policy.',
   );
 
   const profiles = eas?.build ?? {};
@@ -89,7 +115,7 @@ export function auditStoreOnlyRelease(inputs) {
     'Accepted update-delivery policy must declare store-bundled releases.',
   );
   requireCondition(
-    /A-007[^\n]*Store-Bundled Client Update Delivery/i.test(architectureText),
+    /A-014[^\n]*Ship Client Changes Only In Store-Bundled Binaries/i.test(architectureText),
     'Architecture must record the accepted store-bundled delivery decision.',
   );
 

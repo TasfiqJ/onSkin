@@ -1,7 +1,7 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-11T18:49:56.953Z
-Status: pass
+Generated: 2026-08-10T01:49:53.103Z
+Status: blocked
 Strict mode: yes
 
 This generated audit scans committed phase packet outputs for dirty-worktree
@@ -11,51 +11,55 @@ being treated as trustworthy launch evidence.
 
 ## Summary
 
-- Generated files scanned: 49
+- Generated files scanned: 53
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1312
-- Stale hash references: 0
-- Blockers: 0
+- Hash references checked: 3539
+- Stale hash references: 3
+- Blockers: 3
 - Warnings: 0
 
 ## Files
 
 | File                                                      | Kind | Dirty text matches | Non-empty gitStatus fields | Hash refs | Stale hash refs |
 | --------------------------------------------------------- | ---- | ------------------ | -------------------------- | --------- | --------------- |
-| docs/phase-10/generated/closed-beta-packet.json           | json | 0                  | 0                          | 34        | 0               |
+| docs/phase-10/generated/closed-beta-packet.json           | json | 0                  | 0                          | 35        | 0               |
 | docs/phase-10/generated/closed-beta-packet.md             | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-10/generated/support-handoff-packet.json       | json | 0                  | 0                          | 5         | 0               |
 | docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 40        | 0               |
+| docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 42        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 292       | 0               |
+| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 454       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 80        | 0               |
+| docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 395       | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 296       | 0               |
+| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 458       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 25        | 0               |
+| docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 62        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 25        | 0               |
+| docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 87        | 0               |
 | docs/phase-4/generated/catalog-qa-report.md               | md   | 0                  | 0                          | 0         | 0               |
+| docs/phase-4/generated/cosing-catalog-qa-report.json      | json | 0                  | 0                          | 87        | 0               |
+| docs/phase-4/generated/cosing-catalog-qa-report.md        | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/cosing-fixture-import.json         | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 149       | 0               |
+| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 383       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 88        | 0               |
+| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 242       | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 33        | 0               |
+| docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 196       | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 96        | 0               |
+| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 281       | 0               |
 | docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 47        | 0               |
+| docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 72        | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.json          | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.md            | md   | 0                  | 0                          | 0         | 0               |
+| docs/phase-9/generated/ios-privacy-source-audit.json      | json | 0                  | 0                          | 254       | 0               |
+| docs/phase-9/generated/ios-privacy-source-audit.md        | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-catalog-rate-limit.json       | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-catalog-rate-limit.md         | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/live-consent-withdrawal.json       | json | 0                  | 0                          | 0         | 0               |
+| docs/phase-9/generated/live-consent-withdrawal.json       | json | 0                  | 0                          | 3         | 3               |
 | docs/phase-9/generated/live-consent-withdrawal.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-data-rights.json              | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-data-rights.md                | md   | 0                  | 0                          | 0         | 0               |
@@ -69,13 +73,15 @@ being treated as trustworthy launch evidence.
 | docs/phase-9/generated/live-revenuecat-webhook.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.json     | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.md       | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 102       | 0               |
+| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 480       | 0               |
 | docs/phase-9/generated/release-engineering-qa-packet.md   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 0         | 0               |
+| docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 3         | 0               |
 
 ## Blockers
 
-- None.
+- docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference schemaRevision -> supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql: sha256 does not match current file.
+- docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference harnessRevision -> scripts/phase9/live-consent-withdrawal.mjs: sha256 does not match current file.
+- docs/phase-9/generated/live-consent-withdrawal.json has stale hash reference evidenceContractRevision -> scripts/phase9/consent-withdrawal-evidence.mjs: sha256 does not match current file.
 
 ## Warnings
 

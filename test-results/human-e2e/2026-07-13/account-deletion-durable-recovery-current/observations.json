@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "surface": "Expo web development fixtures in Codex in-app Chromium on Windows",
+  "capture": {
+    "format": "jpeg",
+    "width": 1279,
+    "height": 720
+  },
+  "browserErrorCount": 0,
+  "expectedWarningClasses": [
+    "placeholder_supabase_configuration",
+    "expo_notifications_web_unsupported"
+  ],
+  "liveCredentialsUsed": false,
+  "externalLinksOpened": false,
+  "destructiveRequestsPermittedByFixture": false,
+  "states": [
+    {
+      "id": "pending",
+      "fixture": "pending_then_completed_manual",
+      "actions": ["launch"],
+      "alertCount": 1,
+      "dialogCount": 0,
+      "buttons": ["Check status now"],
+      "screenshot": "01-pending-1279x720.jpg"
+    },
+    {
+      "id": "apple_manual",
+      "fixture": "pending_then_completed_manual",
+      "actions": ["launch", "click:Check status now"],
+      "alertCount": 1,
+      "dialogCount": 0,
+      "buttons": ["Open Apple instructions", "Continue"],
+      "screenshot": "02-apple-manual-1279x720.jpg"
+    },
+    {
+      "id": "signed_out",
+      "fixture": "pending_then_completed_manual",
+      "actions": ["launch", "click:Check status now", "click:Continue"],
+      "alertCount": 0,
+      "dialogCount": 0,
+      "buttons": ["Begin", "I already have an account"],
+      "screenshot": "03-signed-out-landing-1279x720.jpg"
+    },
+    {
+      "id": "invalid_retryable",
+      "fixture": "invalid",
+      "actions": ["launch", "click:Check status now", "click:Retry deletion request"],
+      "alertCount": 1,
+      "dialogCount": 0,
+      "buttons": ["Check status now", "Retry deletion request", "Open support"],
+      "screenshot": "04-invalid-receipt-1279x720.jpg"
+    },
+    {
+      "id": "expired",
+      "fixture": "expired",
+      "actions": ["launch", "click:Check status now"],
+      "alertCount": 1,
+      "dialogCount": 0,
+      "buttons": ["Check status now", "Open support"],
+      "screenshot": "05-expired-receipt-1279x720.jpg"
+    },
+    {
+      "id": "ownerless_support_only",
+      "fixture": "invalid_support_only",
+      "actions": ["launch", "click:Check status now"],
+      "alertCount": 1,
+      "dialogCount": 0,
+      "buttons": ["Check status now", "Open support"],
+      "screenshot": "06-ownerless-support-only-1279x720.jpg"
+    }
+  ],
+  "limitations": [
+    "The saved capture surface is desktop-sized and is not compact-phone evidence.",
+    "Fixture source prevents account-deletion requests; this run did not use a live network account.",
+    "Native iPhone, hosted Supabase, providers, external links, accessibility, and legal/App Review gates remain open."
+  ]
+}

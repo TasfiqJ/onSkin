@@ -1,0 +1,100 @@
+{
+  "alerts": [],
+  "bodyText": "x Add by hand Product name Brand Category Choose ▾ Barcode (optional) On the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Product name",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 78
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Brand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 124.56,
+      "x": 24,
+      "y": 156
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Category",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 194.44,
+      "x": 156.56,
+      "y": 156
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Barcode, optional",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 234
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 603
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Product name",
+      "value": "ceramide cleanser"
+    },
+    {
+      "label": "Brand",
+      "value": ""
+    },
+    {
+      "label": "Barcode, optional",
+      "value": ""
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8480/shelf/manual?intakeId=c63fde1e-804f-414e-b89e-c9206ff4b2ae",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

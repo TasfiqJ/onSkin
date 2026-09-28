@@ -8,6 +8,6 @@ module.exports = defineConfig([
   expoConfig,
   prettier,
   {
-    ignores: ['dist/*', '.expo/*', 'node_modules/*', 'expo-env.d.ts'],
+    ignores: ['dist/*', '.expo/*', 'node_modules/*', 'test-results/**', 'expo-env.d.ts'],
   },
 ]);

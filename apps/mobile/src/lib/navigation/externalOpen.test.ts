@@ -155,7 +155,6 @@ describe('external URL opener', () => {
       'app/(tabs)/you.tsx',
       'app/settings/subscription.tsx',
       'features/subscription/ComplianceRow.tsx',
-      'features/commerce/WhereToBuy.tsx',
     ]) {
       const source = readSource(path);
 
@@ -169,5 +168,9 @@ describe('external URL opener', () => {
         'openBrowserAsync',
       );
     }
+
+    const whereToBuy = readSource('features/commerce/WhereToBuy.tsx');
+    expect(whereToBuy).toContain('return null;');
+    expect(whereToBuy).not.toContain('openExternalHttpsUrl');
   });
 });

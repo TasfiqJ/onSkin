@@ -1,0 +1,94 @@
+{
+  "alerts": [
+    "Report not sentCatalog reporting is unavailable in this build, so nothing was sent."
+  ],
+  "bodyText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Wrong Catalog Serum Mismatch Lab / Open Beauty Facts / Limited barcode 012345678905 Use this match Not this product Report not sent Catalog reporting is unavailable in this build, so nothing was sent. Add by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Catalog search query",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 299.91,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 50,
+      "hitOk": true,
+      "label": "Search",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 74.09,
+      "x": 331.91,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Use Wrong Catalog Serum match",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 170,
+      "x": 41,
+      "y": 283
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not this product",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 170,
+      "x": 219,
+      "y": 283
+    },
+    {
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add by hand",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 844
+    }
+  ],
+  "inputs": [
+    {
+      "label": "Catalog search query",
+      "value": "ceramide cleanser"
+    }
+  ],
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8520/shelf/search?cat04Audit=search-wrong-match-recovery-iphone-430x932-1784700132092&e2eQuery=ceramide+cleanser",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

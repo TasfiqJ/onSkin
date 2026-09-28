@@ -1,12 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
-import { isNoteHelpful, setNoteHelpful } from '@/features/community/reactionStore';
+import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionStore';
 import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';
 import {
   motionAllowed,
@@ -14,9 +14,6 @@ import {
 } from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
-import { deterministicLocalQueryPolicy } from '@/lib/query/queryPolicies';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -25,11 +22,10 @@ import { colors } from '@/theme/tokens';
 // mandatory "not medical advice" footer. The only reaction is a structured "This
 // helped" (the docs/09 flywheel signal). No like count, no author to follow.
 export default function NoteDetail() {
-  const reduceMotion = useReduceMotionPreference();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const reduceMotion = useReduceMotionPreference();
   const { height, width } = useWindowDimensions();
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
   const note = id ? noteById(id) : undefined;
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -39,34 +35,19 @@ export default function NoteDetail() {
   const supportFloorMissingNote = splitShortMissingNote || narrowCompactMissingNote;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
-    ...deterministicLocalQueryPolicy,
-    queryKey: queryKeys.noteHelped(ownerScope, id),
+    queryKey: ['noteHelped', id],
     queryFn: () => isNoteHelpful(id ?? ''),
     enabled: !!id,
   });
   const helped = helpedQ.data ?? false;
-  const helpedMutation = useMutation({
-    mutationFn: async ({ noteId, next }: { noteId: string; next: boolean }) => ({
-      noteId,
-      next: await setNoteHelpful(noteId, next),
-    }),
-    onSuccess: ({ next, noteId }) => {
-      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-      qc.setQueryData(queryKeys.noteHelped(ownerScope, noteId), next);
-      if (next) track('reaction_added', { reaction: 'helped' });
-    },
-  });
   const pill = note ? evidencePill(note.evidenceLabel) : null;
 
-  const toggleHelped = () => {
-    if (!note || helpedQ.isPending || helpedQ.isError || helpedMutation.isPending) return;
+  const toggleHelped = async () => {
+    if (!note) return;
     haptics.select();
-    helpedMutation.mutate({ noteId: note.id, next: !helped });
-  };
-
-  const retryHelped = () => {
-    helpedMutation.reset();
-    void helpedQ.refetch();
+    const next = await toggleNoteHelpful(note.id);
+    qc.setQueryData(['noteHelped', id], next);
+    if (next) track('reaction_added', { reaction: 'helped' });
   };
 
   useEffect(() => {
@@ -266,83 +247,24 @@ export default function NoteDetail() {
             </Text>
           ) : null}
 
-          {helpedQ.isError ? (
-            <Text
-              accessibilityRole="alert"
-              variant="bodySm"
-              tone="muted"
-              className="mt-3 text-center"
-              style={{ lineHeight: 18 }}
-            >
-              Reaction unavailable. Your saved choice was not reset.
-            </Text>
-          ) : helpedMutation.isError ? (
-            <Text
-              accessibilityRole="alert"
-              variant="bodySm"
-              tone="muted"
-              className="mt-3 text-center"
-              style={{ lineHeight: 18 }}
-            >
-              Reaction status could not be confirmed. Your saved choice was not reset; try again.
-            </Text>
-          ) : null}
-
           {/* the only reaction. A structured "This helped" (the docs/09 flywheel) */}
-          <View
-            className={
-              shareFeedback || helpedQ.isError || helpedMutation.isError
-                ? 'mt-3 flex-row gap-3'
-                : 'mt-4 flex-row gap-3'
-            }
-          >
-            {helpedQ.isPending ? (
-              <View
-                accessibilityLabel="Loading This helped state"
-                className="h-12 flex-1 flex-row items-center justify-center gap-2 rounded-pill"
-                style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}
-              >
-                <ActivityIndicator color={colors.sage} size="small" />
-                <Text className="font-sans-semibold text-[14.5px]" tone="muted">
-                  Loading
-                </Text>
-              </View>
-            ) : helpedQ.isError ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Retry This helped"
-                onPress={retryHelped}
-                className="h-12 flex-1 items-center justify-center rounded-pill"
-                style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}
-              >
-                <Text className="font-sans-semibold text-[14.5px]" tone="muted">
-                  Try again
-                </Text>
-              </Pressable>
-            ) : (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{
-                  busy: helpedMutation.isPending,
-                  disabled: helpedMutation.isPending,
-                  selected: helped,
-                }}
-                disabled={helpedMutation.isPending}
-                onPress={toggleHelped}
-                className="h-12 flex-1 flex-row items-center justify-center gap-2 rounded-pill"
-                style={{
-                  borderWidth: 1.5,
-                  borderColor: helped ? colors.sage : 'rgba(79,122,74,0.4)',
-                  backgroundColor: helped ? colors.sageTint : 'transparent',
-                  opacity: helpedMutation.isPending ? 0.65 : 1,
-                }}
-              >
-                <Text style={{ color: colors.sage, fontSize: 14 }}>♥</Text>
-                <Text className="font-sans-semibold text-[14.5px]" style={{ color: colors.sage }}>
-                  {helpedMutation.isPending ? 'Saving' : COMMUNITY_COPY.card.helped}
-                </Text>
-              </Pressable>
-            )}
+          <View className={shareFeedback ? 'mt-3 flex-row gap-3' : 'mt-4 flex-row gap-3'}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ selected: helped }}
+              onPress={() => void toggleHelped()}
+              className="h-12 flex-1 flex-row items-center justify-center gap-2 rounded-pill"
+              style={{
+                borderWidth: 1.5,
+                borderColor: helped ? colors.sage : 'rgba(79,122,74,0.4)',
+                backgroundColor: helped ? colors.sageTint : 'transparent',
+              }}
+            >
+              <Text style={{ color: colors.sage, fontSize: 14 }}>♥</Text>
+              <Text className="font-sans-semibold text-[14.5px]" style={{ color: colors.sage }}>
+                {COMMUNITY_COPY.card.helped}
+              </Text>
+            </Pressable>
             <Pressable
               accessibilityRole="button"
               onPress={() => void onShare()}

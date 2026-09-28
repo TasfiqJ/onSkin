@@ -2,7 +2,7 @@
 
 Date researched: 2026-07-13
 
-Applies to: exact RoutineKind iOS binary and US-only Wave 1 availability
+Applies to: exact Layerwell iOS binary and US-only Wave 1 availability
 
 Status: **blocked pending qualified export review and App Store Connect evidence**
 

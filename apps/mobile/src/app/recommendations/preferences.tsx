@@ -1,4 +1,4 @@
-import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@onskin/types';
+import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@layerwell/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -12,41 +12,27 @@ import {
   REC_COPY,
   VALUES_LABEL,
 } from '@/features/recommendations/copy';
-import type { RecPreferences } from '@/features/recommendations/preferences';
-import { failClosedRecommendationQueriesAfterMutationFailure } from '@/features/recommendations/mutationFailure';
-import { recommendationInputsQueryOptions } from '@/features/recommendations/recommendationInputsQuery';
-import { RecommendationPreferenceSyncStatus } from '@/features/recommendations/RecommendationPreferenceSyncStatus';
-import { savePreferences, type RecommendationInputs } from '@/features/recommendations/store';
 import {
-  ShelfDataUnavailableNotice,
-  type DataAvailabilityCopy,
-} from '@/features/shelf/ShelfDataAvailabilityGate';
+  DEFAULT_PREFERENCES,
+  RECOMMENDATION_FORMATS,
+  type RecommendationFormat,
+  type RecPreferences,
+} from '@/features/recommendations/preferences';
+import { loadPreferences, savePreferences } from '@/features/recommendations/store';
 import { track } from '@/lib/analytics/track';
-import { useAuth } from '@/lib/auth/AuthProvider';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Preferences (docs/09 §8, §11). The values / format / budget filters. Honest
-// personalisation: they shape *what fits you*, never *what sells*. The engine is
-// type-first and WEIGHTS these in the fit score; the hard product-level exclusion
-// (a fragrance-averse user never seeing a fragranced product) lands with the
-// curated catalog (B-CATALOG-SEED), so the copy says "prioritise", not "never".
+// personalisation, never commerce. Current type guidance can use an explicit
+// fragrance-free preference where relevant type/Shelf facts exist. Budget,
+// format, and the remaining values are saved for a later reviewed product-level
+// matching contract and are not described as current ranking inputs.
 
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
-const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
+const FORMATS = RECOMMENDATION_FORMATS;
 const MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS = 3_000;
-const RECOMMENDATION_PREFERENCES_AVAILABILITY_COPY: DataAvailabilityCopy = {
-  eyebrow: 'Private choices',
-  title: 'Recommendation choices unavailable',
-  body: "We couldn't safely read your saved recommendation choices. OnSkin did not reset or remove them. Preferences, dismissed suggestions, and personalized guidance are paused until they can be read again.",
-  retry: 'Try again',
-  retrying: 'Trying again...',
-  retryFailed:
-    'Your saved recommendation choices are still unavailable. Nothing was reset or removed.',
-};
 
 function devRecommendationPreferenceFailureMode(): 'once' | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -129,87 +115,19 @@ function Toggle({
 export default function PreferencesScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
-  const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
-  const [manualRetrying, setManualRetrying] = useState(false);
   const simulatedPreferenceFailureUsed = useRef(false);
-  const commitInFlight = useRef(false);
   const {
-    data: recommendationInputs,
-    isError: inputIsError,
-    isFetching,
+    data: prefs,
+    isError,
     isLoading,
-    refetch,
-  } = useQuery(recommendationInputsQueryOptions(ownerScope));
-  const isError = inputIsError || manualRetrying;
-
-  if (isError) {
-    return (
-      <Screen edges={['top']}>
-        <View className="flex-row items-center gap-3 pb-2 pt-1">
-          <RouteIconButton
-            accessibilityLabel="Back"
-            onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
-          />
-          <Text variant="body" className="font-sans-semibold" tone="muted">
-            Preferences
-          </Text>
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 48 }}
-        >
-          <ShelfDataUnavailableNotice
-            copy={RECOMMENDATION_PREFERENCES_AVAILABILITY_COPY}
-            onRetry={async () => {
-              if (manualRetrying) return { isError: true };
-              setManualRetrying(true);
-              try {
-                const result = await refetch();
-                return { isError: result.isError };
-              } finally {
-                setManualRetrying(false);
-              }
-            }}
-            retrying={manualRetrying || isFetching}
-            retryAccessibilityLabel="Retry loading recommendation choices"
-            onExit={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
-            exitLabel="Back to For you"
-          />
-        </ScrollView>
-      </Screen>
-    );
-  }
-
-  if (isLoading || !recommendationInputs) {
-    return (
-      <Screen edges={['top']}>
-        <View className="flex-row items-center gap-3 pb-2 pt-1">
-          <RouteIconButton
-            accessibilityLabel="Back"
-            onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
-          />
-          <Text variant="body" className="font-sans-semibold" tone="muted">
-            Preferences
-          </Text>
-        </View>
-        <View
-          accessibilityLabel="Loading recommendation preferences"
-          accessibilityLiveRegion="polite"
-          className="flex-1 items-center justify-center px-7 pb-12"
-        >
-          <Text variant="bodySm" tone="muted" className="text-center">
-            Loading recommendation preferences…
-          </Text>
-        </View>
-      </Screen>
-    );
-  }
-
-  const p = recommendationInputs.prefs;
-  const controlsDisabled = saving;
+  } = useQuery({
+    queryKey: ['recPreferences'],
+    queryFn: loadPreferences,
+  });
+  const p = prefs ?? DEFAULT_PREFERENCES;
+  const controlsDisabled = isLoading || isError || saving;
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
@@ -289,12 +207,11 @@ export default function PreferencesScreen() {
       simulatedPreferenceFailureUsed.current = true;
       throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE');
     }
-    await savePreferences(ownerScope, next, user?.id);
+    await savePreferences(next);
   };
 
   const commit = async (next: RecPreferences) => {
-    if (controlsDisabled || commitInFlight.current) return;
-    commitInFlight.current = true;
+    if (controlsDisabled) return;
     haptics.select();
     setSaveFailed(false);
     setSaving(true);
@@ -302,26 +219,18 @@ export default function PreferencesScreen() {
       await applyRecommendationPreferences(next, {
         save: savePreferenceWithFixture,
         onSaved: async () => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          qc.setQueryData<RecommendationInputs>(queryKeys.recommendations(ownerScope), (current) =>
-            current ? { ...current, prefs: next } : current,
-          );
+          qc.setQueryData(['recPreferences'], next);
           setSaveFailed(false);
           track('preference_set');
           // The For-you hub reads prefs+dismissals together. Refresh it too.
-          await qc.invalidateQueries({
-            queryKey: ownerQueryPrefixes.recommendations(ownerScope),
-          });
+          await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
         },
-        onFailure: async () => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+        onFailure: () => {
           setSaveFailed(true);
-          await failClosedRecommendationQueriesAfterMutationFailure(qc, ownerScope);
         },
       });
     } finally {
-      commitInFlight.current = false;
-      if (isOwnerQueryScopeCurrent(ownerScope)) setSaving(false);
+      setSaving(false);
     }
   };
 
@@ -331,7 +240,7 @@ export default function PreferencesScreen() {
       values: p.values.includes(v) ? p.values.filter((x) => x !== v) : [...p.values, v],
     });
   const setBudget = (b: BudgetBand) => commit({ ...p, budget: p.budget === b ? null : b });
-  const toggleFormat = (f: string) =>
+  const toggleFormat = (f: RecommendationFormat) =>
     commit({
       ...p,
       formats: p.formats.includes(f) ? p.formats.filter((x) => x !== f) : [...p.formats, f],
@@ -375,7 +284,11 @@ export default function PreferencesScreen() {
           <Text variant="bodySm" tone="muted" className="mt-1.5">
             {REC_COPY.preferences.subtitle}
           </Text>
-        ) : null}
+        ) : (
+          <Text variant="label" tone="muted" className="mt-1">
+            {REC_COPY.preferences.compactScope}
+          </Text>
+        )}
         {saveFailed ? (
           <View
             accessibilityRole="alert"
@@ -390,7 +303,20 @@ export default function PreferencesScreen() {
             </Text>
           </View>
         ) : null}
-        <RecommendationPreferenceSyncStatus className="mb-12 mt-4" />
+        {isError ? (
+          <View
+            accessibilityRole="alert"
+            className="mt-4 rounded-xl bg-clay-tint px-3.5 py-3"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text className="font-sans-bold text-[13px]" style={{ color: colors.clay }}>
+              {REC_COPY.preferences.loadFailedTitle}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {REC_COPY.preferences.loadFailedBody}
+            </Text>
+          </View>
+        ) : null}
 
         <Text variant="label" tone="muted" className={valuesLabelClassName}>
           {REC_COPY.preferences.valuesLabel.toUpperCase()}

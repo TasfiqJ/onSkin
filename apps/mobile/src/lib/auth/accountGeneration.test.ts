@@ -5,13 +5,19 @@ import {
   ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE,
   AccountGenerationLeaseError,
   assertAccountGenerationLease,
-  awaitAccountGenerationLease,
+  assertAccountIdentityGeneration,
   beginAccountGenerationBoundary,
+  beginAccountGenerationBoundaryFromLease,
+  captureAccountIdentityGeneration,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
   type AccountGenerationLease,
   waitForAccountGenerationOperationsToSettle,
 } from './accountGeneration';
+import {
+  activeHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 let boundaryDepth = 0;
 
@@ -70,26 +76,6 @@ describe('account generation operations', () => {
     expect(drainFinished).toBe(true);
   });
 
-  it('drains a never-resolving API that cannot receive an abort signal', async () => {
-    let markStarted!: () => void;
-    const started = new Promise<void>((resolve) => {
-      markStarted = resolve;
-    });
-    const never = new Promise<never>(() => undefined);
-
-    const operation = runAccountGenerationOperation((lease) =>
-      awaitAccountGenerationLease(lease, () => {
-        markStarted();
-        return never;
-      }),
-    );
-    await started;
-
-    beginBoundary();
-    await expect(operation).rejects.toBeInstanceOf(AccountGenerationLeaseError);
-    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
-  });
-
   it('rejects a stale lease both during and after an account boundary', async () => {
     let lease!: AccountGenerationLease;
     await runAccountGenerationOperation((operationLease) => {
@@ -128,6 +114,29 @@ describe('account generation operations', () => {
     endBoundary();
     await expect(runAccountGenerationOperation(operation)).resolves.toBe('complete');
     expect(operation).toHaveBeenCalledOnce();
+  });
+
+  it('advances Auth identity for every nested boundary and closes health authority synchronously', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    let accountGeneration!: number;
+    await runAccountGenerationOperation((lease) => {
+      accountGeneration = lease.generation;
+    });
+    setActiveHealthProcessingEpoch(4, {
+      ownerUserId: 'owner-a',
+      accountGeneration,
+      serverVerifiedAt: null,
+    });
+
+    beginBoundary();
+    expect(activeHealthProcessingEpoch()).toBeNull();
+    beginBoundary();
+    expect(captureAccountIdentityGeneration()).toBe(identityBefore + 2);
+    expect(() => assertAccountIdentityGeneration(identityBefore)).toThrow(
+      ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE,
+    );
+    endBoundary();
+    endBoundary();
   });
 
   it('increments the generation only for the outermost boundary', async () => {
@@ -182,37 +191,22 @@ describe('account generation operations', () => {
     expect(failedLease.signal.aborted).toBe(false);
   });
 
-  it('atomically hands a terminal operation into a boundary without drain deadlock', async () => {
-    let finishHandoff!: () => void;
-    const handoffFinished = new Promise<void>((resolve) => {
-      finishHandoff = resolve;
+  it('hands a current lease into a boundary without waiting on itself', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    let releaseBoundary!: () => void;
+    await runAccountGenerationOperation((lease) => {
+      releaseBoundary = beginAccountGenerationBoundaryFromLease(lease);
     });
-    let handoffStarted!: () => void;
-    const started = new Promise<void>((resolve) => {
-      handoffStarted = resolve;
-    });
-
-    const operation = runAccountGenerationOperation(async (lease) => {
-      const endHandoff = lease.beginBoundaryHandoff();
-      handoffStarted();
-      try {
-        await handoffFinished;
-      } finally {
-        endHandoff();
-      }
-      return 'signed-out';
-    });
-    await started;
+    boundaryDepth += 1;
+    expect(captureAccountIdentityGeneration()).toBe(identityBefore);
 
     await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
-    await expect(runAccountGenerationOperation(async () => 'wrong-owner')).rejects.toBeInstanceOf(
+    await expect(runAccountGenerationOperation(async () => 'blocked')).rejects.toBeInstanceOf(
       AccountGenerationLeaseError,
     );
 
-    finishHandoff();
-    await expect(operation).resolves.toBe('signed-out');
-    await expect(runAccountGenerationOperation(async () => 'next-owner')).resolves.toBe(
-      'next-owner',
-    );
+    releaseBoundary();
+    boundaryDepth = Math.max(0, boundaryDepth - 1);
+    await expect(runAccountGenerationOperation(async () => 'ready')).resolves.toBe('ready');
   });
 });

@@ -1,4 +1,4 @@
-import type { GatedFeature } from '@onskin/types';
+import type { GatedFeature } from '@layerwell/types';
 
 const REMINDERS_ROUTINE_ROUTES = new Set(['streak', 'welcome-back']);
 

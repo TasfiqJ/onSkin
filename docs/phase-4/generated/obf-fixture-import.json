@@ -1,10 +1,72 @@
 {
-  "generatedAt": "2026-07-08T19:38:06.934Z",
-  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\scripts\\phase4\\fixtures\\obf-sample.jsonl",
-  "inputSha256": "c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5",
+  "generatedAt": "2026-07-22T17:40:36.320Z",
+  "schemaVersion": 2,
+  "status": "fixture",
+  "inputPath": "scripts/phase4/fixtures/obf-sample.jsonl",
+  "inputSha256": "af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd",
   "source": "open_beauty_facts",
-  "importMode": "export_or_fixture",
-  "warning": "Fixture import only. Production bulk import must use approved export artifacts and legal/source review.",
+  "sourceComponentId": "obf_odbl_component",
+  "sourcePolicy": {
+    "policyId": "catalog-source-policy-v1",
+    "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
+  },
+  "sourceApproval": null,
+  "transformerCandidate": null,
+  "sourceSnapshot": {
+    "date": null,
+    "url": null,
+    "artifactSha256": "af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd",
+    "bytes": 746
+  },
+  "importMode": "fixture",
+  "parserVersion": "phase4-obf-transform-v2",
+  "transformedPayloadContract": {
+    "contractId": "catalog-transformed-payload-v1",
+    "schemaVersion": 1,
+    "digestAlgorithm": "SHA-256",
+    "canonicalization": "canonical-json-sorted-object-keys",
+    "recordStage": "before-source-snapshot-date-enrichment",
+    "excludedRecordFields": [
+      "sourceSnapshotDate"
+    ],
+    "sourceSnapshotDateBinding": {
+      "signedApprovalPath": "artifact.snapshotDate",
+      "manifestPath": "sourceSnapshot.date",
+      "recordField": "sourceSnapshotDate"
+    }
+  },
+  "transformedPayloadSha256": "8335fc5da792881583587ec6536ae04dd894268173be7a4406f7b0a7cde43726",
+  "projectedFields": [
+    "code",
+    "product_name",
+    "brands",
+    "categories_tags",
+    "ingredients_text",
+    "last_modified_t"
+  ],
+  "sourceIsolationMode": "separate_source_component_pending_legal_classification",
+  "licenses": {
+    "database": {
+      "name": "Open Database License 1.0",
+      "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+    },
+    "contents": {
+      "name": "Database Contents License 1.0",
+      "url": "https://opendatacommons.org/licenses/dbcl/1-0/"
+    },
+    "images": {
+      "name": "CC BY-SA; additional depicted packaging, copyright, trademark, and personality rights may apply",
+      "url": "https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/",
+      "allowed": false
+    }
+  },
+  "controls": {
+    "runtimeRequests": false,
+    "imagesIncluded": false,
+    "contributionBack": false,
+    "productionApprovalRequired": true
+  },
+  "warning": "Fixture import only. This artifact is never production catalog data.",
   "totals": {
     "inputRecords": 3,
     "acceptedProducts": 2,
@@ -13,35 +75,41 @@
   },
   "products": [
     {
-      "barcode": "1234567890123",
+      "barcode": "1234567890128",
       "name": "Fixture Gentle Cleanser",
       "brand": "Fixture Lab",
       "category": "cleanser",
       "ingredientsText": "Aqua / Water / Eau, Glycerin, Niacinamide, Phenoxyethanol",
       "source": "open_beauty_facts",
-      "sourceRef": "1234567890123",
-      "sourceUrl": "https://world.openbeautyfacts.org/product/1234567890123",
-      "sourceSnapshotDate": "2026-01-01",
+      "sourceComponentId": "obf_odbl_component",
+      "sourceRef": "1234567890128",
+      "sourceUrl": "https://world.openbeautyfacts.org/product/1234567890128",
+      "sourceRecordModifiedDate": "2026-01-01",
+      "sourceArtifactSha256": "af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd",
       "qualityGrade": "limited",
-      "reviewStatus": "unreviewed"
+      "reviewStatus": "unreviewed",
+      "sourceSnapshotDate": null
     },
     {
-      "barcode": "2234567890123",
+      "barcode": "2234567890127",
       "name": "Fixture Daily Mineral SPF",
       "brand": "Fixture Lab",
       "category": "spf",
       "ingredientsText": "Active ingredients: Zinc Oxide 10%; Inactive ingredients: Water, Glycerin, Dimethicone",
       "source": "open_beauty_facts",
-      "sourceRef": "2234567890123",
-      "sourceUrl": "https://world.openbeautyfacts.org/product/2234567890123",
-      "sourceSnapshotDate": "2026-01-01",
+      "sourceComponentId": "obf_odbl_component",
+      "sourceRef": "2234567890127",
+      "sourceUrl": "https://world.openbeautyfacts.org/product/2234567890127",
+      "sourceRecordModifiedDate": "2026-01-01",
+      "sourceArtifactSha256": "af2a63f02ff50659565b050d298189c0298a846593c480bf822bed89b9001ebd",
       "qualityGrade": "limited",
-      "reviewStatus": "unreviewed"
+      "reviewStatus": "unreviewed",
+      "sourceSnapshotDate": null
     }
   ],
   "rejected": [
     {
-      "code": "3234567890123",
+      "code": "3234567890126",
       "product_name": "Fixture Mouthwash",
       "reason": "not_skin_care_category"
     }

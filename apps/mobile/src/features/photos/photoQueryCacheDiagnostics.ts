@@ -1,5 +1,5 @@
 export const PHOTO_QUERY_CACHE_DIAGNOSTICS_GLOBAL =
-  '__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__' as const;
+  '__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__' as const;
 
 export type PhotoQueryCacheDiagnosticsSnapshot = Readonly<{
   queryExecutions: number;
@@ -10,7 +10,7 @@ type MutablePhotoQueryCacheDiagnostics = {
 };
 
 type PhotoQueryDiagnosticsGlobal = typeof globalThis & {
-  __ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__?: MutablePhotoQueryCacheDiagnostics;
+  __LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__?: MutablePhotoQueryCacheDiagnostics;
 };
 
 const EMPTY_DIAGNOSTICS: PhotoQueryCacheDiagnosticsSnapshot = Object.freeze({
@@ -20,8 +20,8 @@ const EMPTY_DIAGNOSTICS: PhotoQueryCacheDiagnosticsSnapshot = Object.freeze({
 function mutableDiagnostics(): MutablePhotoQueryCacheDiagnostics | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
   const root = globalThis as PhotoQueryDiagnosticsGlobal;
-  root.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
-  return root.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__;
+  root.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
+  return root.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__;
 }
 
 export function recordPhotoQueryExecution(): void {

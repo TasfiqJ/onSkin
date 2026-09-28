@@ -1,18 +1,20 @@
-// Exact barcode lookup. Bulk import must use export files; this function only
-// supports one scan-time lookup at a time.
+// Exact barcode lookup against the reviewed local catalog only. Bulk import
+// may use reviewed offline artifacts; lookup payloads never go to a catalog provider.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
-import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
+import { normalizeCatalogBarcode } from '../_shared/catalogBarcode.ts';
+import {
+  HEALTH_PROCESSING_EPOCH_HEADER,
+  healthProcessingCallerHeaders,
+  preflightActiveHealthProcessing,
+  readHealthProcessingEpochHeader,
+} from '../_shared/healthProcessingEpoch.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
-import {
-  ACTIVE_CATALOG_PRODUCT_FILTER,
-  CATALOG_LOOKUP_PRODUCT_SELECT,
-  REVIEWED_CATALOG_FRESHNESS_FILTER,
-  externalCatalogProvenance,
-  shouldFetchExternalCatalogCandidate,
-} from './catalogContract.ts';
+import { CATALOG_LOOKUP_RPC } from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
@@ -24,20 +26,19 @@ let rateLimitHmacKey: CryptoKey | null = null;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, x-health-processing-epoch',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-type EdgeSupabaseClient = any;
-type OpenBeautyFactsBody = {
-  status?: number;
-  product?: {
-    product_name?: unknown;
-    brands?: unknown;
-    ingredients_text?: unknown;
-    last_modified_t?: unknown;
-  };
+type EdgeRateLimitClient = {
+  rpc(
+    functionName: 'consume_edge_rate_limit',
+    args: Record<string, string | number>,
+  ): PromiseLike<{ data: unknown; error: unknown }>;
 };
+type HealthProcessingPreflightClient = Parameters<typeof preflightActiveHealthProcessing>[0];
+type AccountAccessPreflightClient = Parameters<typeof preflightAccountAccess>[0];
 
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -46,25 +47,38 @@ function json(body: unknown, status = 200, headers: HeadersInit = {}): Response 
   });
 }
 
+async function requireActiveHealthProcessing(
+  caller: HealthProcessingPreflightClient,
+  userId: string,
+  epoch: string,
+): Promise<Response | null> {
+  const result = await preflightActiveHealthProcessing(caller, userId, epoch);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
+async function requireSameAccountAccess(
+  caller: AccountAccessPreflightClient,
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
 function intEnv(name: string, fallback: number, min: number, max: number): number {
   const value = Number(Deno.env.get(name));
   if (!Number.isInteger(value) || value < min || value > max) return fallback;
   return value;
 }
 
-function normalizeBarcode(value: unknown): string | null {
-  const digits = String(value ?? '').replace(/\D/g, '');
-  return digits.length >= 8 && digits.length <= 14 ? digits : null;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function externalText(value: unknown, maxLength: number): string | null {
-  if (typeof value !== 'string') return null;
-  const trimmed = value.replace(/\s+/g, ' ').trim();
-  return trimmed ? trimmed.slice(0, maxLength) : null;
+function hasExactDatabaseError(error: unknown, message: string): boolean {
+  if (!isRecord(error)) return false;
+  const values = [error.message, error.details, error.hint];
+  return values.some((value) => typeof value === 'string' && value.trim() === message);
 }
 
 async function hmacSha256Hex(value: string): Promise<string> {
@@ -83,7 +97,7 @@ async function hmacSha256Hex(value: string): Promise<string> {
 }
 
 async function enforceRateLimit(
-  admin: EdgeSupabaseClient,
+  admin: EdgeRateLimitClient,
   scope: string,
   userId: string,
 ): Promise<Response | null> {
@@ -93,6 +107,7 @@ async function enforceRateLimit(
     p_key_hash: keyHash,
     p_limit: catalogRateLimitMax,
     p_window_seconds: catalogRateLimitWindowSeconds,
+    p_owner_user_id: userId,
   });
 
   if (error) {
@@ -108,126 +123,217 @@ async function enforceRateLimit(
 }
 
 async function requestBarcode(req: Request): Promise<string | null | Response> {
-  const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'bad_json' });
+  const parsed = await readLimitedJson(req, maxBodyBytes, json, {
+    error: 'bad_json',
+  });
   if (parsed instanceof Response) return parsed;
   const body = isRecord(parsed) ? parsed : {};
-  return normalizeBarcode(body.barcode);
-}
-
-async function fetchOpenBeautyFacts(barcode: string) {
-  if (Deno.env.get('OBF_API_ENABLED') !== 'true') return null;
-  const userAgent = Deno.env.get('OBF_USER_AGENT') ?? '';
-  if (!/^[^/\s]+\/[^\s]+\s+\([^)@]+@[^)@]+\.[^)]+\)$/.test(userAgent)) return null;
-
-  const fields = 'code,product_name,brands,ingredients_text,categories_tags,last_modified_t';
-  const res = await fetchWithTimeout(
-    `https://world.openbeautyfacts.org/api/v2/product/${barcode}.json?fields=${fields}`,
-    {
-      headers: { 'User-Agent': userAgent },
-    },
-  ).catch(() => null);
-  if (!res?.ok) return null;
-  const body = await readLimitedResponseJson<OpenBeautyFactsBody>(res);
-  if (!body) return null;
-  if (body.status !== 1 || !body.product) return null;
-  const product = body.product;
-  const snapshotDate =
-    typeof product.last_modified_t === 'number'
-      ? new Date(product.last_modified_t * 1000).toISOString().slice(0, 10)
-      : null;
-  return {
-    id: null,
-    barcode,
-    name: externalText(product.product_name, 180) ?? 'Unknown product',
-    brand: externalText(product.brands, 180),
-    category: null,
-    ...externalCatalogProvenance(barcode, snapshotDate),
-    quality_grade: 'unverified',
-    review_status: 'unreviewed',
-    ingredient_parse_status: product.ingredients_text ? 'not_parsed' : 'failed',
-    ingredient_parse_confidence: 0,
-    rawIngredientsText: externalText(product.ingredients_text, 4000),
-    external: true,
-  };
+  return normalizeCatalogBarcode(body.barcode);
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
-  if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
+  if (contentLengthTooLarge(req, maxBodyBytes)) {
+    return json({ error: 'payload_too_large' }, 413);
+  }
 
   const authHeader = bearerAuthorizationHeader(req);
   if (!authHeader) return json({ error: 'unauthorized' }, 401);
+  const healthProcessingEpoch = readHealthProcessingEpochHeader(req.headers);
   const caller = createClient(supabaseUrl, publishableKey, {
-    global: { headers: { Authorization: authHeader } },
+    global: {
+      headers: healthProcessingEpoch
+        ? healthProcessingCallerHeaders(authHeader, healthProcessingEpoch)
+        : { Authorization: authHeader },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { data: userData } = await caller.auth.getUser();
   const userId = userData.user?.id;
   if (!userId) return json({ error: 'unauthorized' }, 401);
+  if (!healthProcessingEpoch) {
+    return json({ error: 'HEALTH_PROCESSING_EPOCH_REQUIRED' }, 409);
+  }
+
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
+  const initialHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (initialHealthError) return initialHealthError;
 
   const admin = createClient(supabaseUrl, serviceKey, {
+    global: {
+      headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const rateLimitError = await enforceRateLimit(admin, 'catalog-lookup', userId);
   if (rateLimitError) return rateLimitError;
 
+  const bodyHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (bodyHealthError) return bodyHealthError;
+  const bodyAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (bodyAccountError) return bodyAccountError;
+
   const barcode = await requestBarcode(req);
   if (barcode instanceof Response) return barcode;
   if (!barcode) return json({ error: 'invalid_barcode' }, 400);
 
-  const { data: barcodeRow, error: barcodeError } = await admin
-    .from('product_barcodes')
-    .select('barcode, product_id, confidence')
-    .eq('barcode', barcode)
-    .maybeSingle();
-  if (barcodeError) return json({ error: 'lookup_failed' }, 500);
+  const catalogHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (catalogHealthError) return catalogHealthError;
+  const catalogAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (catalogAccountError) return catalogAccountError;
 
-  if (barcodeRow?.product_id) {
-    const { data: product, error: productError } = await admin
-      .from('products')
-      .select(CATALOG_LOOKUP_PRODUCT_SELECT)
-      .eq('id', barcodeRow.product_id)
-      .eq(ACTIVE_CATALOG_PRODUCT_FILTER.column, ACTIVE_CATALOG_PRODUCT_FILTER.value)
-      .eq(REVIEWED_CATALOG_FRESHNESS_FILTER.column, REVIEWED_CATALOG_FRESHNESS_FILTER.value)
-      .maybeSingle();
-    if (productError) return json({ error: 'lookup_failed' }, 500);
-    if (product) {
-      await caller.from('catalog_lookup_events').insert({
-        user_id: userId,
-        lookup_type: 'barcode',
-        barcode,
-        result: 'matched',
-        matched_product_id: product.id,
-        source_key: product.source,
-        quality_grade: product.quality_grade,
-      });
-      return json({ result: 'matched', product: { ...product, barcode } });
-    }
-  }
+  const { data: eligibleProducts, error: lookupError } = await admin.rpc(CATALOG_LOOKUP_RPC, {
+    p_barcode: barcode,
+  });
+  if (lookupError) return json({ error: 'lookup_failed' }, 500);
 
-  if (!shouldFetchExternalCatalogCandidate(Boolean(barcodeRow?.product_id))) {
-    await caller.from('catalog_lookup_events').insert({
-      user_id: userId,
-      lookup_type: 'barcode',
-      barcode,
-      result: 'no_match',
-      source_key: null,
-      quality_grade: null,
+  const product = eligibleProducts?.[0] ?? null;
+  if (product) {
+    const persistHealthError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (persistHealthError) return persistHealthError;
+    const persistAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (persistAccountError) return persistAccountError;
+
+    // The sealed service-only RPC atomically rechecks account state, this exact
+    // epoch, and the combined lookup-event ceiling without accepting identity.
+    const { error: eventError } = await admin.rpc('record_catalog_lookup_event', {
+      p_user_id: userId,
+      p_expected_health_epoch: healthProcessingEpoch,
+      p_lookup_type: 'barcode',
+      p_result: 'matched',
+      p_rate_limit: catalogRateLimitMax * 2,
+      p_window_seconds: catalogRateLimitWindowSeconds,
     });
-    return json({ result: 'no_match', manualFallback: true });
+
+    if (eventError) {
+      const withdrawalError = await requireActiveHealthProcessing(
+        caller,
+        userId,
+        healthProcessingEpoch,
+      );
+      if (withdrawalError) return withdrawalError;
+      const eventAccountError = await requireSameAccountAccess(
+        caller,
+        userId,
+        initialAccountAccess.snapshot,
+      );
+      if (eventAccountError) return eventAccountError;
+      if (hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')) {
+        return json({ error: 'rate_limited' }, 429, {
+          'Retry-After': String(catalogRateLimitWindowSeconds),
+        });
+      }
+      return json({ error: 'lookup_failed' }, 500);
+    }
+
+    const responseHealthError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (responseHealthError) return responseHealthError;
+    const responseAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
+
+    return json({ result: 'matched', product: { ...product, barcode } });
   }
 
-  const external = await fetchOpenBeautyFacts(barcode);
-  await caller.from('catalog_lookup_events').insert({
-    user_id: userId,
-    lookup_type: 'barcode',
-    barcode,
-    result: external ? 'ambiguous' : 'no_match',
-    source_key: external ? 'open_beauty_facts' : null,
-    quality_grade: external ? 'unverified' : null,
+  const fallbackHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (fallbackHealthError) return fallbackHealthError;
+  const fallbackAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (fallbackAccountError) return fallbackAccountError;
+
+  const { error: eventError } = await admin.rpc('record_catalog_lookup_event', {
+    p_user_id: userId,
+    p_expected_health_epoch: healthProcessingEpoch,
+    p_lookup_type: 'barcode',
+    p_result: 'no_match',
+    p_rate_limit: catalogRateLimitMax * 2,
+    p_window_seconds: catalogRateLimitWindowSeconds,
   });
 
-  if (external) return json({ result: 'external_candidate', product: external });
+  if (eventError) {
+    const withdrawalError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (withdrawalError) return withdrawalError;
+    const eventAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (eventAccountError) return eventAccountError;
+    if (hasExactDatabaseError(eventError, 'CATALOG_LOOKUP_EVENT_RATE_LIMITED')) {
+      return json({ error: 'rate_limited' }, 429, {
+        'Retry-After': String(catalogRateLimitWindowSeconds),
+      });
+    }
+    return json({ error: 'lookup_failed' }, 500);
+  }
+
+  const responseHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (responseHealthError) return responseHealthError;
+  const responseAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (responseAccountError) return responseAccountError;
+
   return json({ result: 'no_match', manualFallback: true });
 });

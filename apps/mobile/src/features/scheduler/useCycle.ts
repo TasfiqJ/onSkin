@@ -1,27 +1,21 @@
-import type { DisruptionReason } from '@onskin/types';
+import type { DisruptionReason } from '@layerwell/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, type AppStateStatus } from 'react-native';
 
-import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { usePlanFromSources } from '@/features/routine/usePlan';
-import { useRampFromPlan, type RampQueryResult } from '@/features/routine/useRamp';
-import { useShelfFromBoundary } from '@/features/shelf/useShelf';
+import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
+import { routinePhasedIntroductionDelayDays } from '@/features/routine/sequencing';
+import { useRamp } from '@/features/routine/useRamp';
+import { useShelf } from '@/features/shelf/useShelf';
+import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
-import {
-  useLocalDateBoundary,
-  type LocalDateBoundaryIdentity,
-} from '@/lib/query/localDateBoundaryStore';
-import {
-  queryKeys,
-  runOwnerQueryOperation,
-  shouldRefetchCurrentLocalDayQuery,
-} from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
-import { commitCycleConfigForOwner } from './cycleMutationCoordinator';
 import {
+  assertRoutineCadenceMutationAdmission,
+  assertRoutineRecoveryAvailable,
   endRecovery,
-  loadCycleConfigWithLease,
+  loadCycleConfig,
   overrideStagingProducts,
   pauseCycle,
   recoveryProgress,
@@ -73,6 +67,34 @@ export type CycleData = {
   conflictChoices: ScheduledConflictChoice[];
 };
 
+function closedCadenceCycleData(storedConfig: CycleConfig): CycleData {
+  return {
+    cycle: null,
+    recommendedCycle: null,
+    config: {
+      ...storedConfig,
+      variant: 'auto',
+      pausedFrom: null,
+      pauseReason: null,
+      recovery: null,
+      skips: [],
+      stagingOverrides: [],
+      customCycle: null,
+    },
+    tonight: null,
+    weekAhead: [],
+    nextAcidNight: null,
+    recovery: { active: false, day: 0, days: 0, reason: null },
+    paused: false,
+    skippedTonight: false,
+    stagedActiveIds: [],
+    cycleActives: [],
+    knownProductIds: [],
+    notes: [],
+    conflictChoices: [],
+  };
+}
+
 export function hasUseTogetherChoiceBetween(
   choices: readonly ScheduledConflictChoice[],
   productAId: string | null | undefined,
@@ -88,59 +110,74 @@ export function hasUseTogetherChoiceBetween(
   );
 }
 
+function millisecondsUntilNextLocalDay(now = new Date()): number {
+  const next = new Date(now);
+  next.setHours(24, 0, 1, 0);
+  return Math.max(1_000, next.getTime() - now.getTime());
+}
+
+function useCycleLocalDate(): string {
+  const [today, setToday] = useState(() => localDateString());
+  const todayRef = useRef(today);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const refresh = () => {
+      const next = localDateString();
+      if (next !== todayRef.current) {
+        todayRef.current = next;
+        setToday(next);
+      }
+    };
+    const schedule = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        refresh();
+        schedule();
+      }, millisecondsUntilNextLocalDay());
+    };
+    const handleAppState = (state: AppStateStatus) => {
+      if (state !== 'active') return;
+      refresh();
+      schedule();
+    };
+
+    schedule();
+    const subscription = AppState.addEventListener('change', handleAppState);
+    return () => {
+      if (timer) clearTimeout(timer);
+      subscription.remove();
+    };
+  }, []);
+
+  return today;
+}
+
 function daysSince(iso: string): number {
   return Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
 }
 
-export type CycleQueryResult = {
+export type CycleHookResult = {
   data: CycleData | undefined;
   isLoading: boolean;
   isError: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
-  retry: () => Promise<{ isError: boolean }>;
+  sourceReady: boolean;
+  isExample: boolean;
 };
 
-export type CycleShelfSource = Pick<
-  ReturnType<typeof useShelfFromBoundary>,
-  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
->;
-export type CycleProfileSource = Pick<
-  ReturnType<typeof useProfileBits>,
-  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
->;
-export type CycleRampSource = Pick<
-  RampQueryResult,
-  'items' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
->;
-
-/**
- * Build the active schedule from route-owned Shelf/profile/ramp snapshots. This
- * hook owns only the independently keyed cycle-config observer.
- */
-export function useCycleFromSources(
-  shelf: CycleShelfSource,
-  profile: CycleProfileSource,
-  ramp: CycleRampSource,
-  boundary: LocalDateBoundaryIdentity,
-): CycleQueryResult {
-  const ownerScope = useOwnerQueryScope();
-  const { localDate: today } = boundary;
-  const cfg = useQuery({
-    queryKey: queryKeys.cycleConfig(ownerScope, boundary),
-    queryFn: () => runOwnerQueryOperation(ownerScope, loadCycleConfigWithLease),
-    networkMode: 'always',
-    retry: false,
-    retryOnMount: false,
-    refetchOnReconnect: (query) =>
-      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
-    refetchOnWindowFocus: (query) =>
-      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
-  });
+export function useCycle(): CycleHookResult {
+  const shelf = useShelf();
+  const today = useCycleLocalDate();
+  const cfg = useQuery({ queryKey: ['cycleConfig', today], queryFn: loadCycleConfig });
+  const profile = useProfileBits();
   // Live ramp state (the same source tolerance.tsx writes), so the user's actual
   // ramped frequency reaches the scheduler instead of every active defaulting to
   // the class cap (docs/05 §4: freq = min(ramp.freq_per_week, frequency_cap)).
+  const ramp = useRamp();
   const cadenceReady = canUseRoutineCadence();
+  const recoveryReady = canUseRoutineRecovery();
+  const phasedIntroductionDelayDays = routinePhasedIntroductionDelayDays();
   // Per-product ramp frequency keyed by engineProduct.id (== user_product id ==
   // rampStore key), built from the merged plan-initial + persisted-override ramp.
   const freqByProductId = useMemo<Record<string, number>>(() => {
@@ -150,21 +187,15 @@ export function useCycleFromSources(
   }, [ramp.items]);
 
   const data = useMemo<CycleData | undefined>(() => {
-    // Ramp cadence is a safety input. Never orchestrate with an empty frequency
-    // map while its persisted state is pending or unreadable: that would fall
-    // back to the higher reviewed class cap and silently increase active nights.
-    if (
-      !shelf.isSuccess ||
-      !cfg.isSuccess ||
-      !profile.isSuccess ||
-      !ramp.isSuccess ||
-      !shelf.data ||
-      !cfg.data ||
-      !profile.data
-    ) {
-      return undefined;
-    }
+    if (!shelf.data || !cfg.data || !profile.data) return undefined;
     const config = cfg.data;
+    // Keep the encrypted stored record byte-identical for later reviewed
+    // recovery, but never publish cached cadence or disruption guidance after
+    // admission closes. In particular, Today must not inherit stale
+    // pause/recovery/skip state from React Query.
+    if (!cadenceReady || phasedIntroductionDelayDays === null) {
+      return closedCadenceCycleData(config);
+    }
 
     const actives: SchedulerActive[] = shelf.data.items.map((i) => ({
       id: i.engineProduct.id,
@@ -176,7 +207,7 @@ export function useCycleFromSources(
       // Recently added → phased introduction, unless the user opted to start it
       // now ("add it now anyway", docs/05 §6.2).
       isNew:
-        daysSince(i.product.createdAt) <= 3 &&
+        daysSince(i.product.createdAt) <= phasedIntroductionDelayDays &&
         !config.stagingOverrides.includes(i.engineProduct.id),
     }));
     const {
@@ -215,16 +246,22 @@ export function useCycleFromSources(
       : null;
     const week = cycle ? weekAhead(cycle, anchor, today) : [];
     const nextAcidNight = cycle ? nextSlotDate(cycle, anchor, today, 'exfoliate') : null;
-    const rec = recoveryProgress(config.recovery, today);
+    const rec = recoveryReady
+      ? recoveryProgress(config.recovery, today)
+      : { active: false, day: 0, days: 0 };
+    const publishedConfig = recoveryReady ? config : { ...config, recovery: null };
 
     return {
       cycle,
       recommendedCycle,
-      config,
+      config: publishedConfig,
       tonight,
       weekAhead: week,
       nextAcidNight,
-      recovery: { ...rec, reason: config.recovery?.reason ?? null },
+      recovery: {
+        ...rec,
+        reason: recoveryReady ? (config.recovery?.reason ?? null) : null,
+      },
       paused: config.pausedFrom != null,
       skippedTonight: config.skips.includes(today),
       stagedActiveIds,
@@ -234,112 +271,105 @@ export function useCycleFromSources(
       conflictChoices,
     };
   }, [
-    shelf.isSuccess,
-    cfg.isSuccess,
-    profile.isSuccess,
-    ramp.isSuccess,
     shelf.data,
     cfg.data,
     profile.data,
     freqByProductId,
     today,
     cadenceReady,
+    recoveryReady,
+    phasedIntroductionDelayDays,
   ]);
 
-  async function retry(): Promise<{ isError: boolean }> {
-    if (!cfg.isError) return { isError: false };
-    const result = await cfg.refetch();
-    return { isError: result.isError };
-  }
-
+  const isLoading = shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading;
+  const isError = shelf.isError || cfg.isError || profile.isError || ramp.isError;
   return {
     data,
-    isLoading: shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading,
-    isError: shelf.isError || cfg.isError || profile.isError || ramp.isError,
-    isFetching: shelf.isFetching || cfg.isFetching || profile.isFetching || ramp.isFetching,
-    isSuccess:
-      shelf.isSuccess && cfg.isSuccess && profile.isSuccess && ramp.isSuccess && data !== undefined,
-    retry,
-  };
-}
-
-/** Standalone cycle consumer. Route view models should prefer shared sources. */
-export function useCycle(): CycleQueryResult {
-  const boundary = useLocalDateBoundary();
-  const shelf = useShelfFromBoundary(boundary);
-  const profile = useProfileBits();
-  const plan = usePlanFromSources(shelf, profile);
-  // Keep the plan-derived initial cadence and the persisted ramp override on the
-  // same route-owned source graph as Shelf and profile.
-  const ramp = useRampFromPlan(plan, boundary);
-  const cycle = useCycleFromSources(shelf, profile, ramp, boundary);
-
-  return {
-    ...cycle,
-    retry: async () => {
-      const results = await Promise.all([
-        shelf.isError ? shelf.refetch() : Promise.resolve(),
-        profile.isError ? profile.refetch() : Promise.resolve(),
-        plan.isError ? plan.retry() : Promise.resolve(),
-        ramp.isError ? ramp.retry() : Promise.resolve(),
-        cycle.isError ? cycle.retry() : Promise.resolve(),
-      ]);
-      return {
-        isError: results.some(
-          (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
-        ),
-      };
-    },
+    isLoading,
+    isError,
+    sourceReady: Boolean(
+      !isLoading &&
+      !isError &&
+      shelf.data !== undefined &&
+      cfg.data !== undefined &&
+      profile.data !== undefined &&
+      profile.data.source !== 'unavailable' &&
+      ramp.sourceReady &&
+      data !== undefined,
+    ),
+    isExample: ramp.isExample,
   };
 }
 
 export function useCycleMutations() {
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
-  const commit = async (operation: () => Promise<CycleConfig>): Promise<CycleConfig> => {
-    return commitCycleConfigForOwner({
-      cancel: (queryKey) => qc.cancelQueries({ queryKey }),
-      operation: () => runOwnerQueryOperation(ownerScope, operation),
-      publish: (queryKey, next) => qc.setQueryData<CycleConfig>(queryKey, next),
-      scope: ownerScope,
+  const commit = (
+    operation: () => Promise<CycleConfig>,
+    afterCommit?: () => void,
+  ): Promise<void> => {
+    // Refuse at the UI mutation boundary before query cancellation, cache
+    // publication, analytics, or any storage call. cycleStore repeats the check
+    // so direct/non-React callers are fail-closed too.
+    assertRoutineCadenceMutationAdmission();
+    return runCurrentHealthDataOperation(async (lease) => {
+      lease.assertCurrent();
+      await qc.cancelQueries({ queryKey: ['cycleConfig'] });
+      lease.assertCurrent();
+      const next = await operation();
+      lease.assertCurrent();
+      qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
+      lease.assertCurrent();
+      afterCommit?.();
+      lease.assertCurrent();
     });
   };
   return {
-    async setVariant(variant: CycleConfig['variant']) {
-      await commit(() => updateCycleConfig({ variant }));
-      track('cycle_variant_changed', { variant });
+    setVariant(variant: CycleConfig['variant']) {
+      return commit(
+        () => updateCycleConfig({ variant }),
+        () => track('cycle_variant_changed', { variant }),
+      );
     },
-    async saveCustom(definition: CustomCycleDefinition, variantChanged: boolean) {
-      await commit(() => saveCustomCycleDefinition(definition));
-      if (variantChanged) track('cycle_variant_changed', { variant: 'custom' });
-      track('routine_edited', { action: 'cycle_customized', source: 'cycle_settings' });
+    saveCustom(definition: CustomCycleDefinition, variantChanged: boolean) {
+      return commit(
+        () => saveCustomCycleDefinition(definition),
+        () => {
+          if (variantChanged) track('cycle_variant_changed', { variant: 'custom' });
+          track('routine_edited', { action: 'cycle_customized', source: 'cycle_settings' });
+        },
+      );
     },
-    async start() {
-      await commit(startCycleToday);
-      track('cycle_started');
+    start() {
+      return commit(startCycleToday, () => track('cycle_started'));
     },
-    async pause(reason: DisruptionReason) {
-      await commit(() => pauseCycle(reason));
-      track('cycle_paused');
+    pause(reason: DisruptionReason) {
+      return commit(
+        () => pauseCycle(reason),
+        () => track('cycle_paused'),
+      );
     },
-    async resume() {
-      await commit(resumeCycle);
-      track('cycle_resumed');
+    resume() {
+      return commit(resumeCycle, () => track('cycle_resumed'));
     },
-    async skip() {
-      await commit(skipTonight);
-      track('night_skipped');
+    skip() {
+      return commit(skipTonight, () => track('night_skipped'));
     },
-    async overrideStaging(productIds: readonly string[]) {
-      await commit(() => overrideStagingProducts(productIds));
-      track('phased_intro_overridden');
+    overrideStaging(productIds: readonly string[]) {
+      return commit(
+        () => overrideStagingProducts(productIds),
+        () => track('phased_intro_overridden'),
+      );
     },
-    async beginRecovery(days: number, reason: RecoveryReason) {
-      await commit(() => startRecovery(days, reason));
-      track('cycle_recovery_started');
+    beginRecovery(days: number, reason: RecoveryReason) {
+      assertRoutineRecoveryAvailable();
+      return commit(
+        () => startRecovery(days, reason),
+        () => track('cycle_recovery_started'),
+      );
     },
-    async finishRecovery() {
-      await commit(endRecovery);
+    finishRecovery() {
+      assertRoutineRecoveryAvailable();
+      return commit(endRecovery);
     },
   };
 }

@@ -13,238 +13,93 @@ function readFeatureFile(path: string): string {
   return readFileSync(`${FEATURE_DIR}/${path}`, 'utf8');
 }
 
-function expectTouchableRouteIcon(route: string): void {
-  const source = readAppRoute(route);
+const COMMERCE_ROUTES = [
+  'commerce/stacks.tsx',
+  'commerce/transparency.tsx',
+  'commerce/consent.tsx',
+  'commerce/stack/[slug].tsx',
+];
 
-  expect(source, `${route} should use the shared 44pt route icon button`).toContain(
-    'RouteIconButton',
-  );
-  expect(source, `${route} should not shrink route icons below phone touch targets`).not.toContain(
-    'h-7 w-7',
-  );
-  expect(source, `${route} should not keep a 36px dismiss route icon`).not.toContain('h-9 w-9');
-}
+describe('COM-01A direct-entry and dormant-renderer contracts', () => {
+  it('keeps the route layout transparent so direct URLs remain exact', () => {
+    const source = readAppRoute('commerce/_layout.tsx');
 
-describe('Commerce route contracts', () => {
-  it('keeps top-level commerce trust surfaces safe for direct entry', () => {
-    for (const route of [
-      'commerce/stacks.tsx',
-      'commerce/transparency.tsx',
-      'commerce/consent.tsx',
-    ]) {
+    expect(source).toContain("import { Slot } from 'expo-router';");
+    expect(source).toContain('return <Slot />;');
+    expect(source).not.toContain('CommerceDeferredSurface');
+    expect(source).not.toMatch(/track\(|useEffect|useQuery|router\./);
+  });
+
+  it('renders every commerce route through one analytics-free deferred surface', () => {
+    for (const route of COMMERCE_ROUTES) {
       const source = readAppRoute(route);
 
-      expect(source, `${route} should not depend on direct-entry history`).not.toContain(
-        'router.back()',
+      expect(source, route).toContain(
+        "import { CommerceDeferredSurface } from '@/features/commerce/CommerceDeferredSurface';",
       );
-      expect(source, `${route} should recover direct entries to You`).toContain('APP_YOU_ROUTE');
-      expect(source, `${route} should guard native back with a fallback`).toContain(
-        'backOrReplace(router, APP_YOU_ROUTE)',
-      );
+      expect(source, route).toContain('return <CommerceDeferredSurface />;');
+      for (const forbidden of [
+        'track(',
+        'useEffect',
+        'useQuery',
+        'router.',
+        '<Stack',
+        'grantCommerceConsent',
+        'refuseCommerceConsent',
+        'recordClick',
+      ]) {
+        expect(source, `${route} must not contain ${forbidden}`).not.toContain(forbidden);
+      }
     }
   });
 
-  it('keeps stack detail exits safe for direct entry', () => {
-    const source = readAppRoute('commerce/stack/[slug].tsx');
+  it('keeps the shared recovery surface explicit and disables view analytics', () => {
+    const source = readFeatureFile('CommerceDeferredSurface.tsx');
 
-    expect(source).not.toContain('router.back()');
-    expect(source).toContain('APP_COMMERCE_STACKS_ROUTE');
-    expect(source).toContain('backOrReplace(router, APP_COMMERCE_STACKS_ROUTE)');
-  });
-
-  it('recovers unavailable stack details without a dead empty state', () => {
-    const source = readAppRoute('commerce/stack/[slug].tsx');
-
-    expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const compactMissingStack = height < 640');
-    expect(source).toContain('<ScrollView');
-    expect(source).toContain('Stack unavailable');
-    expect(source).toContain('This routine is not available right now.');
-    expect(source).toContain('review disclosures or product availability');
-    expect(source).toContain('Current');
-    expect(source).toContain('stacks are still available');
-    expect(source).toContain('label="Back to stacks"');
-    expect(source).toContain('router.replace(APP_COMMERCE_STACKS_ROUTE)');
-    expect(source).toContain('label="How paid links work"');
-    expect(source).toContain("router.replace('/commerce/transparency')");
-    expect(source).not.toContain('This routine isn’t available right now.');
-    expect(source).not.toContain('<View className="flex-1 items-center justify-center px-6">');
-  });
-
-  it('returns deferred commerce direct entries to You', () => {
-    const source = readAppRoute('commerce/_layout.tsx');
-
+    expect(source).toContain('<DeferredSurface');
     expect(source).toContain('surface="commerce"');
     expect(source).toContain('fallbackRoute={APP_YOU_ROUTE}');
     expect(source).toContain('fallbackLabel="Back to You"');
+    expect(source).toContain('fallbackBehavior="replace"');
+    expect(source).toContain('trackView={false}');
   });
 
-  it('keeps commerce route escape controls touchable on phones', () => {
-    for (const route of [
-      'commerce/stacks.tsx',
-      'commerce/transparency.tsx',
-      'commerce/consent.tsx',
-      'commerce/stack/[slug].tsx',
+  it('keeps WhereToBuy a null renderer with no runtime import or hook side effect', () => {
+    const source = readFeatureFile('WhereToBuy.tsx');
+
+    expect(source).toContain('_props: { provenance: unknown }');
+    expect(source).toContain('return null;');
+    expect(source).not.toMatch(/^import /m);
+    for (const forbidden of [
+      'useCommerce',
+      'useQuery',
+      'useEffect',
+      'phase7Flags',
+      'router',
+      'track',
+      'recordClick',
+      'openExternal',
     ]) {
-      expectTouchableRouteIcon(route);
+      expect(source).not.toContain(forbidden);
     }
   });
 
-  it('keeps the commerce consent sheet reachable on short phones', () => {
-    const source = readAppRoute('commerce/consent.tsx');
+  it('removes commerce reads, routes, and toggles from You', () => {
+    const source = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('useSafeAreaInsets');
-    expect(source).toContain('sheetMaxHeight');
-    expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
-    expect(source).toContain('const insets = useSafeAreaInsets();');
-    expect(source).toContain(
-      'const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;',
-    );
-    expect(source).toContain('insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined');
-    expect(source).toContain('maxHeight: sheetMaxHeight');
-    expect(source).toContain('aria-modal');
-    expect(source).toContain('role="dialog"');
-    expect(source).toContain('accessibilityLabel={COMMERCE_COPY.consent.title}');
-    expect(source).toContain('accessibilityViewIsModal');
-    expect(source).toContain('aria-hidden');
-    expect(source).toContain('accessibilityElementsHidden');
-    expect(source).toContain('tabIndex={-1}');
-    expect(source).toContain('paddingBottom: footerPaddingBottom');
-    expect(source).toContain('<ScrollView');
-    expect(source).toContain('style={{ flexShrink: 1 }}');
-    expect(source).toContain('className="h-[48px] items-center justify-center"');
-    expect(source).not.toContain('viewportHeight > 0 ? Math.max(0, viewportHeight - 44) : 524');
-    expect(source).not.toContain('height - 48');
-    expect(source).not.toContain('className="h-[44px] items-center justify-center"');
-    expect(source).not.toContain('h-[42px]');
-  });
-
-  it('serializes allow and decline through one synchronous consent-action guard', () => {
-    const source = readAppRoute('commerce/consent.tsx');
-
-    const handlerStart = source.indexOf(
-      "const runConsentAction = async (action: 'allow' | 'decline') => {",
-    );
-    const handlerEnd = source.indexOf("const allow = () => runConsentAction('allow');");
-    const handler = source.slice(handlerStart, handlerEnd);
-
-    expect(handlerStart).toBeGreaterThanOrEqual(0);
-    expect(handlerEnd).toBeGreaterThan(handlerStart);
-    expect(handler).toContain('if (consentActionInFlightRef.current) return;');
-    expect(handler).toContain('consentActionInFlightRef.current = true;');
-    expect(handler).toContain('consentActionInFlightRef.current = false;');
-    expect(handler.indexOf('consentActionInFlightRef.current = true;')).toBeLessThan(
-      handler.indexOf("if (action === 'allow')"),
-    );
-    expect(source.match(/disabled=\{consentActionPending\}/g)).toHaveLength(3);
-    expect(source).toContain(
-      "disabled={consentActionPending || consentActionFailure === 'decline'}",
-    );
-    expect(source).toContain(
-      "disabled: consentActionPending || consentActionFailure === 'decline'",
-    );
-    expect(source).toContain('accessibilityState={{ disabled: consentActionPending }}');
-  });
-
-  it('keeps failed withdrawal pending, retryable, and fenced from stale route effects', () => {
-    const source = readAppRoute('commerce/consent.tsx');
-
-    expect(source).toContain('commerceConsentWithdrawalPendingQueryOptions');
-    expect(source).toContain('ownerQueryPrefixes.commerceConsentWithdrawalPending(ownerScope)');
-    expect(source).toContain('const withdrawalPending = await qc.fetchQuery(');
-    expect(source).toContain("setConsentActionFailure('decline');");
-    expect(source.indexOf('await grantCommerceConsent();')).toBeLessThan(
-      source.indexOf('const withdrawalPending = await qc.fetchQuery('),
-    );
-    expect(source).toContain('error.message === COMMERCE_CONSENT_WITHDRAWAL_PENDING');
-    expect(source).toContain('Partner data sharing remains off, but cleanup was not confirmed.');
-    expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain("'Try partner data-sharing withdrawal again'");
-    expect(source).toContain("consentActionFailure === 'decline' ? 'Try again'");
-    expect(source).not.toContain('catch(() => undefined)');
-
-    expect(source).toContain('const consentActionRequestIdRef = useRef(0);');
-    expect(source).toContain('const mountedRef = useRef(true);');
-    expect(source).toContain('consentActionRequestIdRef.current === requestId');
-    expect(source).toContain('mountedRef.current &&');
-    expect(source).toContain('if (!canPublish()) return;');
-    expect(source).toContain('if (mountedRef.current) setConsentActionPending(false);');
-  });
-
-  it('keeps where-to-buy secondary actions visible and touchable on phones', () => {
-    const source = readFeatureFile('WhereToBuy.tsx');
-
-    expect(source).not.toContain('hitSlop={6}');
-    expect(source).toContain(
-      'style={{ minHeight: 88, borderWidth: 1, borderColor: colors.hairline }}',
-    );
-    expect(source).toContain('accessibilityLabel={COMMERCE_COPY.whereToBuy.lockedCta}');
-    expect(source).toContain(
-      'className="mt-3 min-h-[48px] self-start justify-center rounded-pill px-4"',
-    );
-    expect(source).toContain('accessibilityLabel="How where-to-buy links work"');
-    expect(source).toContain('accessibilityLabel="Add this product to your shelf instead"');
-    expect(source.match(/minHeight: 48/g)?.length ?? 0).toBeGreaterThanOrEqual(3);
-  });
-
-  it('keeps stack detail paid-link disclosure actions touchable on phones', () => {
-    const source = readAppRoute('commerce/stack/[slug].tsx');
-
-    expect(source).not.toContain('hitSlop={6}');
-    expect(source).toContain(
-      'style={{ minHeight: 96, borderWidth: 1, borderColor: colors.hairline }}',
-    );
-    expect(source).toContain("'How stack paid links work'");
-    expect(source).toContain("'How stack link consent works'");
-    expect(source).toContain(
-      'className="mt-3 min-h-[48px] self-start justify-center rounded-pill px-3"',
-    );
-    expect(source).toContain('style={{ minHeight: 48, backgroundColor: colors.clayTint }}');
-  });
-
-  it('keeps stack paid links visually locked until commerce consent', () => {
-    const source = readAppRoute('commerce/stack/[slug].tsx');
-
-    expect(source).toContain('const itemAccessibilityLabel = consented');
-    expect(source).toContain('where-to-buy locked until consent');
-    expect(source).toContain('COMMERCE_COPY.stack.lockedChip');
-    expect(source).toContain('COMMERCE_COPY.stack.lockedDisclosure');
-    expect(source).toContain('LockGlyph size={12}');
-    expect(source).toContain('consented ? COMMERCE_COPY.stack.disclosure');
-    expect(source).toContain("consented ? 'How stack paid links work'");
-  });
-
-  it('keeps paid-link recovery inline instead of native blocking alerts', () => {
-    const whereToBuy = readFeatureFile('WhereToBuy.tsx');
-    const stackDetail = readAppRoute('commerce/stack/[slug].tsx');
-    const notice = readFeatureFile('CommerceLinkNotice.tsx');
-    const stateNotice = readFeatureFile('../../components/ui/StateNotice.tsx');
-
-    expect(whereToBuy).not.toContain('Alert');
-    expect(stackDetail).not.toContain('Alert');
-    expect(whereToBuy).toContain('CommerceLinkNotice');
-    expect(stackDetail).toContain('CommerceLinkNotice');
-    expect(whereToBuy).toContain('setLinkFeedback');
-    expect(stackDetail).toContain('setLinkFeedback');
-    expect(notice).toContain('<StateNotice');
-    expect(notice).toContain("kind={feedback.kind ?? 'error'}");
-    expect(stateNotice).toContain("alert ? 'alert' : undefined");
-    expect(stateNotice).toContain('backgroundColor: tokens.background');
-  });
-
-  it('keeps retailer handoff and feedback inside the initiating owner scope', () => {
-    const whereToBuy = readFeatureFile('WhereToBuy.tsx');
-    const stackDetail = readAppRoute('commerce/stack/[slug].tsx');
-    const consent = readAppRoute('commerce/consent.tsx');
-
-    expect(whereToBuy).toContain('await runCommerceClickOperation(');
-    expect(whereToBuy).toContain('const opened = await openExternalHttpsUrl(outboundUrl, {');
-    expect(whereToBuy).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(whereToBuy).toContain('if (feedback) setLinkFeedback(feedback);');
-    expect(stackDetail).toContain('await runCommerceClickOperation(');
-    expect(stackDetail).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(consent).toContain('onPress={() => void allow()}');
-    expect(consent).toContain('onPress={() => void decline()}');
+    for (const forbidden of [
+      'CommerceConsent',
+      'commerceConsent',
+      'phase7Flags.commerce',
+      'data_sharing',
+      '/commerce/',
+      'Shoppable routines',
+      'where-to-buy',
+      'Share data with partners',
+    ]) {
+      expect(source).not.toContain(forbidden);
+    }
+    expect(source).toContain('withdrawHealthDataConsent');
+    expect(source).toContain('deleteAccount');
   });
 });

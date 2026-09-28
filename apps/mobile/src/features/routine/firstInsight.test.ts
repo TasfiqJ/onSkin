@@ -12,9 +12,12 @@ const basePlan: GeneratedPlan = {
   ramp: [],
   safetyExclusions: [],
   cadenceWithheld: [],
+  sequencingWithheld: [],
   unplacedProducts: [],
   gaps: [],
   conflicts: [],
+  conflictCoverageStatus: 'compatible',
+  unsupportedConflictPairs: [],
 };
 
 function plan(overrides: Partial<GeneratedPlan>): GeneratedPlan {
@@ -127,6 +130,29 @@ describe('routine first insight copy', () => {
     });
   });
 
+  it('explains routine withholding without promising a nonexistent manual-placement flow', () => {
+    expect(
+      routineFirstInsightCopy(
+        plan({
+          sequencingWithheld: [
+            {
+              productId: 'cleanser',
+              name: 'Cream cleanser',
+              role: 'cleanser',
+              placement: 'withheld',
+              reason: 'review_required',
+            },
+          ],
+        }),
+        false,
+      ),
+    ).toEqual({
+      eyebrow: 'Application order',
+      title: 'Automatic order not set',
+      body: 'Cream cleanser does not have reviewed application-order guidance yet, so it stays on your shelf but out of your routine and Today for now. No use instructions are added.',
+    });
+  });
+
   it('keeps missing categories visible instead of filling the plan with fake products', () => {
     expect(
       routineFirstInsightCopy(
@@ -164,9 +190,18 @@ describe('routine first insight copy', () => {
         plan({
           gaps: ['A gentle cleanser would give your routine a clean base.'],
           unplacedProducts: [{ productId: 'unknown', name: 'Mystery drops' }],
+          sequencingWithheld: [
+            {
+              productId: 'cleanser',
+              name: 'Cream cleanser',
+              role: 'cleanser',
+              placement: 'withheld',
+              reason: 'review_required',
+            },
+          ],
           conflicts: [conflict(ruleFor('irritation')), conflict(ruleFor('synergy'))],
         }),
       ),
-    ).toBe(5);
+    ).toBe(6);
   });
 });

@@ -1,4 +1,5 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { booleanEnv, readEdgeAppEnvironment } from '../_shared/env.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
@@ -219,6 +220,8 @@ async function body(req: Request): Promise<Record<string, unknown> | Response> {
 }
 
 Deno.serve(async (req) => {
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   if (req.method !== 'POST')
     return new Response('method not allowed', { status: 405, headers: cors });

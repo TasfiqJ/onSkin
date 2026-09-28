@@ -1,4 +1,4 @@
-import type { PregnancyStatus } from '@onskin/types';
+import type { PregnancyStatus } from '@layerwell/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -7,12 +7,6 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 import { Button, OptionCard, RouteIconButton, Screen, Text } from '@/components/ui';
 import { savePregnancyStatus, useProfileBits } from '@/features/scheduler/profile';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import {
-  isOwnerQueryScopeCurrent,
-  ownerQueryPrefixes,
-  queryKeys,
-} from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 const OPTIONS: { id: PregnancyStatus; label: string }[] = [
@@ -36,7 +30,6 @@ export default function SkinProfileSettingsScreen() {
   const params = useLocalSearchParams<{ returnTo?: string | string[] }>();
   const returnTo = returnDestination(params.returnTo);
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
   const [choice, setChoice] = useState<PregnancyStatus | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -50,11 +43,10 @@ export default function SkinProfileSettingsScreen() {
     setSaveFailed(false);
     try {
       const next = await savePregnancyStatus(selected);
-      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-      qc.setQueryData(queryKeys.skinProfile(ownerScope), next);
+      qc.setQueryData(['skinProfileBits'], next);
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) }),
-        qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
+        qc.invalidateQueries({ queryKey: ['shelf'] }),
+        qc.invalidateQueries({ queryKey: ['ramp'] }),
       ]);
       if (returnTo === 'plan') router.replace('/routine/plan');
       else if (returnTo === 'shelf') router.replace('/(tabs)/shelf');

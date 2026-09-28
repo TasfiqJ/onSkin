@@ -3,6 +3,10 @@ import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
+import {
+  canUseRoutineCadence,
+  canUseRoutineExplainabilityCopy,
+} from '@/features/routine/reviewGate';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
@@ -82,6 +86,13 @@ function Step({
 }
 
 export default function PhasedIntroScreen() {
+  if (!canUseRoutineCadence() || !canUseRoutineExplainabilityCopy()) {
+    return <CadenceReviewGate />;
+  }
+  return <PhasedIntroScreenContent />;
+}
+
+function PhasedIntroScreenContent() {
   const { height } = useWindowDimensions();
   const { data } = useCycle();
   const { overrideStaging } = useCycleMutations();
@@ -201,6 +212,20 @@ export default function PhasedIntroScreen() {
               : 'Add it now anyway'}
         </Text>
       </Pressable>
+    </Sheet>
+  );
+}
+
+function CadenceReviewGate() {
+  return (
+    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
+      <Text variant="title" className="text-[30px] leading-[34px]" accessibilityRole="header">
+        Cycle introduction guidance is unavailable.
+      </Text>
+      <Text variant="body" tone="muted" className="mt-2">
+        This guidance stays unavailable until its exact rules and copy complete required
+        professional review.
+      </Text>
     </Sheet>
   );
 }

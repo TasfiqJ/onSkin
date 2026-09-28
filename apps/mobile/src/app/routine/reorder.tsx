@@ -6,21 +6,16 @@ import { Platform, Pressable, ScrollView, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import type { PlanStep } from '@/features/routine/generate';
 import {
+  ROUTINE_ORDER_QUERY_KEY,
   routineOrderOverrideForPhase,
-  saveRoutineOrderOverridePatch,
+  saveRoutineOrderOverrides,
   type RoutineOrderPhase,
   type RoutineOrderOverrides,
 } from '@/features/routine/orderStore';
 import { usePlan } from '@/features/routine/usePlan';
-import {
-  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
-  ShelfDataUnavailableNotice,
-} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -68,8 +63,7 @@ export default function ReorderScreen() {
   const params = useLocalSearchParams<{ phase?: string | string[] }>();
   const requestedPhase = Array.isArray(params.phase) ? params.phase[0] : params.phase;
   const initialPhase: RoutineOrderPhase = requestedPhase === 'pm' ? 'pm' : 'am';
-  const planQuery = usePlan();
-  const { data, isLoading } = planQuery;
+  const { data, isLoading } = usePlan();
   const canonical = useMemo<PhaseSteps>(
     () => ({
       am: data?.canonicalPlan.am ?? [],
@@ -87,24 +81,6 @@ export default function ReorderScreen() {
   const editorKey = `${phaseOrderKey(canonical.am)}|${phaseOrderKey(canonical.pm)}|${phaseOrderKey(
     initial.am,
   )}|${phaseOrderKey(initial.pm)}|${initialPhase}`;
-
-  if (planQuery.isError) {
-    return (
-      <Screen edges={['top', 'bottom']}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
-        >
-          <ShelfDataUnavailableNotice
-            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
-            onRetry={planQuery.retry}
-            retrying={planQuery.isFetching}
-            onExit={() => backOrReplace(router)}
-          />
-        </ScrollView>
-      </Screen>
-    );
-  }
 
   return (
     <ReorderEditor
@@ -141,7 +117,6 @@ function ReorderEditor({
   previousOverrides: RoutineOrderOverrides;
 }) {
   const queryClient = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
   const simulatedSaveFailureUsed = useRef(false);
   const saveInFlight = useRef(false);
   const [orders, setOrders] = useState<PhaseSteps>(initial);
@@ -206,31 +181,25 @@ function ReorderEditor({
         throw new Error('E2E_ROUTINE_ORDER_SAVE_FAILURE');
       }
 
-      const saved = await saveRoutineOrderOverridePatch({
-        ...(amChanged
-          ? {
-              am: routineOrderOverrideForPhase(
-                canonical.am,
-                orders.am,
-                previousOverrides.am,
-                activeProductIds,
-              ),
-            }
-          : {}),
-        ...(pmChanged
-          ? {
-              pm: routineOrderOverrideForPhase(
-                canonical.pm,
-                orders.pm,
-                previousOverrides.pm,
-                activeProductIds,
-              ),
-            }
-          : {}),
+      const saved = await saveRoutineOrderOverrides({
+        previous: previousOverrides,
+        next: {
+          schemaVersion: 1,
+          am: routineOrderOverrideForPhase(
+            canonical.am,
+            orders.am,
+            previousOverrides.am,
+            activeProductIds,
+          ),
+          pm: routineOrderOverrideForPhase(
+            canonical.pm,
+            orders.pm,
+            previousOverrides.pm,
+            activeProductIds,
+          ),
+        },
       });
-      if (isOwnerQueryScopeCurrent(ownerScope)) {
-        queryClient.setQueryData(queryKeys.routineOrder(ownerScope), saved);
-      }
+      queryClient.setQueryData(ROUTINE_ORDER_QUERY_KEY, saved);
 
       if (hasChanges) {
         const changedPhase = amChanged && pmChanged ? 'both' : amChanged ? 'am' : 'pm';
@@ -360,7 +329,7 @@ function ReorderEditor({
               Order not saved
             </Text>
             <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
-              Your previous routine is still in place. Try Save again.
+              We could not confirm the save. Reload to check your saved routine, then try again.
             </Text>
           </View>
         ) : null}

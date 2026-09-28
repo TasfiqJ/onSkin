@@ -4,10 +4,10 @@
 
 **Status:** Provisional recommendation; founder approval required before PAY-02 or any App Store Connect, RevenueCat, product, offer, price, storefront, or account change
 
-**Scope:** iOS auto-renewable subscriptions for the OnSkin launch contract
+**Scope:** iOS auto-renewable subscriptions for the Layerwell launch contract
 
 **Decision owner:** Founder
-**Prepared from:** the active OnSkin launch packet plus current Apple, RevenueCat, FTC, California, and Canada Revenue Agency primary sources listed below
+**Prepared from:** the active Layerwell launch packet plus current Apple, RevenueCat, FTC, California, and Canada Revenue Agency primary sources listed below
 
 ## Executive decision
 
@@ -64,13 +64,13 @@ Apple also imposes notice and, in some cases, subscriber-consent requirements fo
 
 Apple supports free, pay-up-front, and pay-as-you-go introductory offers. A customer can redeem one introductory offer per subscription group, and only one current or future introductory offer can exist per storefront. Apple supports free-trial durations including three days, one week, two weeks, one, two, three, or six months, and one year.
 
-Apple win-back offers can target eligible lapsed subscribers. Eligibility includes a minimum paid duration, a lapsed duration of one to 24 months, and an optional wait of two to 24 months. A product can have no more than 350 total win-back offers and five active offers per storefront. Apple's in-app win-back sheet requires iOS 18 or later, while win-back visibility on the system Manage Subscriptions surface reaches older operating systems. Because OnSkin's current minimum is iOS 17, a future win-back implementation must verify the iOS 17 experience rather than assuming the iOS 18 sheet exists everywhere.
+Apple win-back offers can target eligible lapsed subscribers. Eligibility includes a minimum paid duration, a lapsed duration of one to 24 months, and an optional wait of two to 24 months. A product can have no more than 350 total win-back offers and five active offers per storefront. Apple's in-app win-back sheet requires iOS 18 or later, while win-back visibility on the system Manage Subscriptions surface reaches older operating systems. Because Layerwell's current minimum is iOS 17, a future win-back implementation must verify the iOS 17 experience rather than assuming the iOS 18 sheet exists everywhere.
 
 Offer codes can serve new, current, or expired subscribers, but they are operational tools, not permission to use artificial urgency or opaque discounts. Apple currently allows up to 10 active offers per subscription product and up to one million codes per app per quarter.
 
 ### 2026 subscription benchmarks
 
-RevenueCat's 2026 report covers more than 115,000 apps, more than US$16 billion in revenue, more than one billion transactions, and primarily 2025 performance. Its sample contains apps integrated with RevenueCat and applies activity/revenue/install filters. It is directional benchmark evidence, not an OnSkin forecast or a substitute for a randomized experiment.
+RevenueCat's 2026 report covers more than 115,000 apps, more than US$16 billion in revenue, more than one billion transactions, and primarily 2025 performance. Its sample contains apps integrated with RevenueCat and applies activity/revenue/install filters. It is directional benchmark evidence, not an Layerwell forecast or a substitute for a randomized experiment.
 
 Relevant Health & Fitness observations include:
 
@@ -110,7 +110,7 @@ Monthly churn is structurally high. A US$9.99 price is not US$119.88 of expected
 
 ### No weekly plan
 
-Do not create a weekly product at launch. Weekly plans can make comparison harder, elevate perceived annual savings, and generate more renewal moments. OnSkin has no evidence that a weekly cadence improves trusted, durable customer value. It would add App Review, support, analytics, price-display, and experiment complexity without solving a current launch requirement.
+Do not create a weekly product at launch. Weekly plans can make comparison harder, elevate perceived annual savings, and generate more renewal moments. Layerwell has no evidence that a weekly cadence improves trusted, durable customer value. It would add App Review, support, analytics, price-display, and experiment complexity without solving a current launch requirement.
 
 ### Reverse trial: seven days, no payment method, no renewal
 
@@ -124,7 +124,7 @@ Do not label this preview an “Apple free trial,” “subscription trial,” o
 
 Recommend a seven-day Apple free trial for the annual product if, and only if, implementation can clearly distinguish it from the reverse preview and prevent misleading eligibility assumptions. The StoreKit purchase sheet and paywall must state the trial length, renewal date/cadence, and full localized annual amount that will be billed unless the customer cancels.
 
-The repo's earlier proposal is 14 days. The benchmark evidence does not prove seven days will outperform 14 days for OnSkin: longer trials converted better overall in RevenueCat's current duration comparison, while 5–9 days is the common Health & Fitness pattern and produces faster learning. The founder must choose one launch hypothesis. This memo recommends seven days for launch and reserving 14 days for a later properly powered trial-duration experiment.
+The repo's earlier proposal is 14 days. The benchmark evidence does not prove seven days will outperform 14 days for Layerwell: longer trials converted better overall in RevenueCat's current duration comparison, while 5–9 days is the common Health & Fitness pattern and produces faster learning. The founder must choose one launch hypothesis. This memo recommends seven days for launch and reserving 14 days for a later properly powered trial-duration experiment.
 
 Do not offer an introductory trial on monthly at launch. Do not knowingly promise a second trial to someone ineligible under Apple's one-intro-per-subscription-group rule. If a user can receive both the reverse preview and Apple trial, disclose both honestly; if that message becomes confusing, remove one mechanism rather than obscure the sequence.
 
@@ -138,7 +138,7 @@ Launch without a win-back offer. After enough real lapsed-subscriber data exists
 
 Provisional Wave 1 is the United States only. This is not authorization to enable the US storefront; all other launch gates still apply, including legal/privacy review, correct product availability, localized StoreKit display prices, support coverage, subscription metadata, screenshots, and tested purchase/restore/manage flows.
 
-Canada is provisional Wave 2 only after a Canada/Quebec launch gate. Apple's public availability documentation lets a developer select countries or regions and identifies Canada as one App Store territory; it does not document province-level availability controls. The safe operational inference is that selecting Canada also reaches Quebec and that a province-excluded Canadian rollout is not available. Before Canada is selected, OnSkin therefore needs a complete French-capable app and commercial/store experience, French customer support on equivalent terms, French subscription/adhesion-contract terms and connected documents, and Quebec and national legal, privacy, consumer-protection, tax, claims/catalog, price, accessibility, and QA approval. Qualified Quebec counsel must determine the exact scope; translation alone is not legal approval.
+Canada is provisional Wave 2 only after a Canada/Quebec launch gate. Apple's public availability documentation lets a developer select countries or regions and identifies Canada as one App Store territory; it does not document province-level availability controls. The safe operational inference is that selecting Canada also reaches Quebec and that a province-excluded Canadian rollout is not available. Before Canada is selected, Layerwell therefore needs a complete French-capable app and commercial/store experience, French customer support on equivalent terms, French subscription/adhesion-contract terms and connected documents, and Quebec and national legal, privacy, consumer-protection, tax, claims/catalog, price, accessibility, and QA approval. Qualified Quebec counsel must determine the exact scope; translation alone is not legal approval.
 
 Use Apple's comparable pricing as a starting point for a future Canada launch, then review the actual Canadian price and estimated proceeds. The founder must approve the exact Canadian tier. Do not hard-code a currency conversion in the app and do not infer a Canadian dollar point from today's exchange rate.
 
@@ -194,7 +194,7 @@ This formula intentionally treats RevenueCat as a percentage of gross at scale. 
 | Scale transition |                       5% |            22.5% |    4.5% |         1% |                                   US$4 | Simplified 50/50 blend between 15% and 30% Apple rates plus higher refund/service pressure          |
 | Downside         |                      15% |              30% |      8% |         1% |                                   US$8 | High embedded tax, standard Apple commission, elevated refunds, materially higher service use       |
 
-These are stress-test inputs, not a tax conclusion, accounting policy, or prediction. The 22.5% transition blend is an intentionally simple planning proxy; the real mix depends on Small Business Program timing, subscriber tenure, associated accounts, renewal history, and product mix. Variable service cost is a placeholder until OnSkin measures storage, media, compute/AI, database, observability, messaging, moderation/support, and vendor cost per paid cohort.
+These are stress-test inputs, not a tax conclusion, accounting policy, or prediction. The 22.5% transition blend is an intentionally simple planning proxy; the real mix depends on Small Business Program timing, subscriber tenure, associated accounts, renewal history, and product mix. Variable service cost is a placeholder until Layerwell measures storage, media, compute/AI, database, observability, messaging, moderation/support, and vendor cost per paid cohort.
 
 ### Results at US$1 million collected gross billings
 
@@ -270,7 +270,7 @@ For a new US$9.99 monthly payer, model expected first-year paid months using the
 | Planning |           55% |                   80% |                             3.51 |                                 US$35.10 |
 | Upside   |           60% |                   86% |                             4.47 |                                 US$44.66 |
 
-The first-renewal inputs use RevenueCat's current monthly price-tier range. The later-renewal inputs are transparent sensitivities, not report values or an OnSkin forecast. They exclude involuntary churn recovery, pauses, refunds, price changes, tax, commission, discounts, and reactivation.
+The first-renewal inputs use RevenueCat's current monthly price-tier range. The later-renewal inputs are transparent sensitivities, not report values or an Layerwell forecast. They exclude involuntary churn recovery, pauses, refunds, price changes, tax, commission, discounts, and reactivation.
 
 If every monthly subscriber were active throughout a month, a US$1 million annualized gross run rate at US$9.99 would require about 8,342 average active monthly subscribers. Real unique-customer acquisition must be higher because cohorts churn, fail payment, pause, refund, and reactivate.
 
@@ -298,7 +298,7 @@ If US$1 million in gross billings consisted entirely of 20,004 first-year US$49.
 | 4.5% freemium 75th percentile         |                                             444,533 |
 | 6.2% Health & Fitness 75th percentile |                                             322,645 |
 
-These figures are benchmark translations, not a funnel forecast. They ignore monthly mix, renewals, price/country mix, attribution, organic/paid channel quality, trial eligibility, refunds, cohort maturation, and the fact that OnSkin may not behave like the report's Health & Fitness sample.
+These figures are benchmark translations, not a funnel forecast. They ignore monthly mix, renewals, price/country mix, attribution, organic/paid channel quality, trial eligibility, refunds, cohort maturation, and the fact that Layerwell may not behave like the report's Health & Fitness sample.
 
 ### Tax and cash timing
 
@@ -306,7 +306,7 @@ Apple requires the Paid Apps Agreement, banking, and tax forms before payment. I
 
 Apple's selected app and in-app-purchase tax categories affect proceeds. The default App Store software category must not be accepted blindly; the correct category and any product-level override require review. Apple instructs developers to consult a tax adviser.
 
-For Canada, CRA generally requires GST/HST registration once a person ceases to be a small supplier, commonly measured against a C$30,000 threshold for worldwide taxable supplies, with timing rules depending on how the threshold is crossed. This does not by itself determine OnSkin's obligation because the legal entity, place of supply, Apple contractual/tax role, registration status, and supplies inside/outside the App Store matter. A Canadian CPA must review the actual entity and Apple agreements before launch and again before relevant thresholds or market expansion.
+For Canada, CRA generally requires GST/HST registration once a person ceases to be a small supplier, commonly measured against a C$30,000 threshold for worldwide taxable supplies, with timing rules depending on how the threshold is crossed. This does not by itself determine Layerwell's obligation because the legal entity, place of supply, Apple contractual/tax role, registration status, and supplies inside/outside the App Store matter. A Canadian CPA must review the actual entity and Apple agreements before launch and again before relevant thresholds or market expansion.
 
 ## Experiment plan and guardrails
 
@@ -393,23 +393,23 @@ Apple approval cannot be guaranteed. App Review applies the current guidelines t
 
 Apple controls App Store refund decisions and can issue full, partial, or prorated refunds. The app must consume authoritative transaction/refund state and remove paid entitlement when appropriate without deleting free-tier data. The business must reconcile refunds in Apple's financial reports and provide a clear route to Apple's refund-request process.
 
-Do not say “no refunds.” Do not promise that OnSkin can approve an Apple refund. Do not state that cancellation refunds the current period. Safe explanatory copy is materially equivalent to:
+Do not say “no refunds.” Do not promise that Layerwell can approve an Apple refund. Do not state that cancellation refunds the current period. Safe explanatory copy is materially equivalent to:
 
 > Manage or turn off renewal in your App Store subscription settings. Access normally continues through the current paid period. Refund eligibility and decisions are handled by Apple under its policies.
 
-That copy still requires legal and product review against the actual implementation. “Cancel anytime” must be qualified so it does not imply an instant prorated refund. Do not promise a custom pre-renewal reminder unless OnSkin has implemented, consented, monitored, and reliably delivered it; platform notices are not a substitute for an OnSkin claim.
+That copy still requires legal and product review against the actual implementation. “Cancel anytime” must be qualified so it does not imply an instant prorated refund. Do not promise a custom pre-renewal reminder unless Layerwell has implemented, consented, monitored, and reliably delivered it; platform notices are not a substitute for an Layerwell claim.
 
 ### United States baseline
 
 The federal Restore Online Shoppers' Confidence Act applies to online negative-option offers. FTC guidance summarizes three core requirements: clearly disclose all material terms before obtaining billing information, obtain express informed consent before charging, and provide a simple way to stop recurring charges.
 
-California's amended Automatic Renewal Law has been effective since July 1, 2025. The California Attorney General states that it requires express affirmative consent and clear, straightforward cancellation; includes annual reminders; requires online cancellation at will for online enrollment; and imposes specified notices for annual renewals, longer free/discounted periods, and fee changes. Apple's subscription-management and notice machinery may satisfy some operational pieces, but OnSkin must not assume that platform delegation eliminates the developer/supplier's obligations. US counsel must map the actual App Store contract, paywall, communications, trial length, customer location, and division of responsibilities before California or a nationwide launch.
+California's amended Automatic Renewal Law has been effective since July 1, 2025. The California Attorney General states that it requires express affirmative consent and clear, straightforward cancellation; includes annual reminders; requires online cancellation at will for online enrollment; and imposes specified notices for annual renewals, longer free/discounted periods, and fee changes. Apple's subscription-management and notice machinery may satisfy some operational pieces, but Layerwell must not assume that platform delegation eliminates the developer/supplier's obligations. US counsel must map the actual App Store contract, paywall, communications, trial length, customer location, and division of responsibilities before California or a nationwide launch.
 
 Other federal and state laws may apply. This memo is not a 50-state survey and cannot certify nationwide compliance.
 
 ### Canada baseline
 
-The Competition Bureau states that materially false or misleading marketing is prohibited and that an advertised price generally must be attainable without later mandatory non-government charges. It also warns against fake savings, hidden total cost, false scarcity cues, and burying key renewal/payment information. Use the StoreKit total localized price, ensure any savings claim uses a real comparison, and never add an OnSkin mandatory fee after the displayed price.
+The Competition Bureau states that materially false or misleading marketing is prohibited and that an advertised price generally must be attainable without later mandatory non-government charges. It also warns against fake savings, hidden total cost, false scarcity cues, and burying key renewal/payment information. Use the StoreKit total localized price, ensure any savings claim uses a real comparison, and never add an Layerwell mandatory fee after the displayed price.
 
 Apple documents availability by App Store country or region and lists Canada as a single territory. It does not document an App Store control for excluding Quebec while distributing elsewhere in Canada. Accordingly, this memo treats any Canadian release as a Quebec release unless Apple provides a different verified control in the actual account.
 
@@ -417,7 +417,7 @@ The Office québécois de la langue française states that customers of business
 
 The founder must not interpret that summary as a minimum translation checklist. Before Canadian availability, Quebec counsel must review the French app UI and paywall, App Store metadata and screenshots, Terms and subscription agreement, Privacy Policy and consent text, cancellation/refund/support documents, customer support channels and service levels, claims/catalog content, notifications/emails, accessibility, and any legally available language-choice mechanism. National and other provincial requirements still apply.
 
-Ontario's currently in-force Consumer Protection Act, 2002 includes disclosure, delivery, express accept/decline, error-correction, and cancellation rules for covered internet agreements. Ontario's Consumer Protection Act, 2023 is listed by e-Laws as not yet in force as of this memo's date, so it must be monitored rather than treated as operative law. Whether Apple, OnSkin, or both are the relevant supplier for any duty requires Ontario counsel to analyze the real agreements and flow.
+Ontario's currently in-force Consumer Protection Act, 2002 includes disclosure, delivery, express accept/decline, error-correction, and cancellation rules for covered internet agreements. Ontario's Consumer Protection Act, 2023 is listed by e-Laws as not yet in force as of this memo's date, so it must be monitored rather than treated as operative law. Whether Apple, Layerwell, or both are the relevant supplier for any duty requires Ontario counsel to analyze the real agreements and flow.
 
 CRA's registration and GST/HST rules also require entity-specific review. Apple tax forms, App Store tax treatment, and the developer's own sales-tax/income-tax duties are separate questions. A Canadian CPA and counsel must approve the launch posture.
 
@@ -432,7 +432,7 @@ Do not ship:
 - “free,” “risk free,” or “no cost” without the immediate complete billing consequence;
 - a tiny renewal price, obscured billed total, hard-to-read contrast, or savings claim based on a price that was not genuinely offered;
 - forced health answers, skin photos, notifications, contacts, tracking consent, review, or sharing as the price of dismissing or evaluating a paywall;
-- personalized price or discount based on skin photos, inferred condition, health-related data, age, skin tone, consent status, or another sensitive/protected trait;
+- personalized price or discount based layerwell photos, inferred condition, health-related data, age, skin tone, consent status, or another sensitive/protected trait;
 - a fake testimonial, unsubstantiated medical/performance claim, guaranteed result, guaranteed savings, or guaranteed income/business outcome.
 
 Accessibility is part of informed choice: disclosures and controls must work with VoiceOver, Dynamic Type, contrast requirements, reduced motion where relevant, switch/keyboard inputs where supported, and all launch-floor device sizes.
@@ -448,7 +448,7 @@ These unknowns can materially change the recommendation and must remain visible:
 5. **Canada GST/HST and provincial obligations:** entity, supplies, registration, place-of-supply, and Apple's role require CPA/counsel analysis.
 6. **Canada/Quebec readiness and exact later-country prices:** French-language and Quebec/national legal scope is not approved, no Canadian or later-country tiers are approved, and comparable pricing plus actual estimated proceeds must be reviewed in App Store Connect.
 7. **Reverse preview plus Apple trial:** real eligibility, copy comprehension, analytics, and state transitions have not been proven end to end.
-8. **Product value and willingness to pay:** US$49.99 has no OnSkin causal experiment yet.
+8. **Product value and willingness to pay:** US$49.99 has no Layerwell causal experiment yet.
 9. **Refund, conversion, retention, and reactivation:** only external benchmarks exist; selection bias and category mismatch are material.
 10. **Variable service cost:** US$1–US$8 is a placeholder range; AI/compute, media, storage, support, and moderation usage are not measured.
 11. **Fixed operating plan and acquisition cost:** no approved budget exists, so after-fixed-cost operating net and after-tax profit are not forecast.

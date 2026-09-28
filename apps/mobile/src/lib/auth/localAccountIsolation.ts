@@ -4,7 +4,8 @@ import {
   beginEncryptedPhotoAccountBoundary,
   endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle,
-} from '@/features/photos/photoAccountBoundary';
+} from '@/features/photos/encryptedStorage';
+import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { queryClient } from '@/lib/query/queryClient';
 import {
   beginPrivateKVAccountBoundary,
@@ -44,10 +45,7 @@ export type LocalAccountIsolationDependencies = {
 const defaultDependencies: LocalAccountIsolationDependencies = {
   claimOwnership: claimLocalDataOwnership,
   clearCleanupRequired: clearLocalDataCleanupRequired,
-  clearPersistedPrivateData: async () => {
-    const { clearLocalPrivateData } = await import('@/features/settings/localPrivateData');
-    await clearLocalPrivateData();
-  },
+  clearPersistedPrivateData: clearLocalPrivateData,
   clearPlaintextStaging: async () => {
     const { scavengePlaintextStaging } = await import('@/lib/storage/plaintextStaging');
     return scavengePlaintextStaging();
@@ -86,9 +84,6 @@ export async function clearAccountIsolatedState(
   beginPrivateKVAccountBoundary();
   beginEncryptedPhotoAccountBoundary();
   try {
-    // Plaintext scavenging deletes the dedicated staging/ingress directories.
-    // Drain every owner-scoped producer first so it cannot race a late camera or
-    // image-manipulator write into those directories.
     await attempt(() => waitForAccountGenerationOperationsToSettle());
     await attempt(() => waitForPrivateKVWritesToSettle());
     await attempt(() => waitForEncryptedPhotoWritesToSettle());
@@ -121,13 +116,12 @@ export async function prepareLocalDataForSession(
   nextUserId: string | null,
   dependencies: LocalAccountIsolationDependencies = defaultDependencies,
   beforeClear?: () => void | Promise<void>,
+  options: { clearUnclaimed?: boolean } = {},
 ): Promise<{ cleared: boolean; resetRoute: boolean }> {
   const ownership = await dependencies.readOwnership(nextUserId);
-  const mustClear = shouldClearLocalPrivateDataForSessionChange(
-    previousUserId,
-    nextUserId,
-    ownership,
-  );
+  const mustClear =
+    (options.clearUnclaimed === true && ownership === 'unclaimed') ||
+    shouldClearLocalPrivateDataForSessionChange(previousUserId, nextUserId, ownership);
 
   if (mustClear) {
     await beforeClear?.();

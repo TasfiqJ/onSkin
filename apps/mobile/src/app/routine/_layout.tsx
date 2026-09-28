@@ -1,10 +1,5 @@
 import { Stack, usePathname } from 'expo-router';
 
-import {
-  RoutineRouteSourcesProvider,
-  useRoutineRouteSources,
-} from '@/features/routine/RoutineRouteSources';
-import { ShelfDataAvailabilityBoundary } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { ProGate } from '@/features/subscription/ProGate';
 import { routineGateFeatureForPath } from '@/features/subscription/gatedRoutes';
 
@@ -15,32 +10,9 @@ import { routineGateFeatureForPath } from '@/features/subscription/gatedRoutes';
 export default function RoutineLayout() {
   const pathname = usePathname();
   const gateFeature = routineGateFeatureForPath(pathname);
-  const stack = <Stack screenLayout={RoutineScreenLayout} screenOptions={{ headerShown: false }} />;
+  const stack = <Stack screenOptions={{ headerShown: false }} />;
 
   if (!gateFeature) return stack;
 
   return <ProGate feature={gateFeature}>{stack}</ProGate>;
-}
-
-const ROUTES_REQUIRING_SHELF_DATA = new Set(['plan', 'reorder', 'adaptation', 'ramp', 'tolerance']);
-
-function RoutineScreenLayout({
-  children,
-  route,
-}: {
-  children: React.ReactNode;
-  route: { name: string };
-}) {
-  if (!ROUTES_REQUIRING_SHELF_DATA.has(route.name)) return <>{children}</>;
-
-  return (
-    <RoutineRouteSourcesProvider>
-      <RoutineShelfDataBoundary>{children}</RoutineShelfDataBoundary>
-    </RoutineRouteSourcesProvider>
-  );
-}
-
-function RoutineShelfDataBoundary({ children }: { children: React.ReactNode }) {
-  const { shelf } = useRoutineRouteSources();
-  return <ShelfDataAvailabilityBoundary query={shelf}>{children}</ShelfDataAvailabilityBoundary>;
 }

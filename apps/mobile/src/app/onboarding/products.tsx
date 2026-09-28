@@ -11,20 +11,18 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
-import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { ONBOARDING_PRODUCT_CATEGORIES } from '@/features/onboarding/productCategories';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { useShelfMutations } from '@/features/shelf/mutations';
-import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
+import { SHELF_PRODUCT_NAME_MAX_LENGTH } from '@/features/shelf/limits';
 import { useShelf } from '@/features/shelf/useShelf';
 import {
   motionAllowed,
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
-import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -127,17 +125,11 @@ function CategoryPickerSheet({
 export default function ProductsScreen() {
   const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
 
-  return (
-    <ShelfDataAvailabilityGate
-      onExit={() => router.replace('/onboarding/goals')}
-      exitLabel="Back to goals"
-    >
-      <ProductsScreenContent key={addedProductId ?? 'initial-add'} />
-    </ShelfDataAvailabilityGate>
-  );
+  return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;
 }
 
 function ProductsScreenContent() {
+  const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
   const reduceMotion = useReduceMotionPreference();
   const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
@@ -149,8 +141,6 @@ function ProductsScreenContent() {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<ProductCategory | null>(null);
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
-  const [removingId, setRemovingId] = useState<string | null>(null);
-  const [removeFailed, setRemoveFailed] = useState(false);
   const added = data?.items ?? [];
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
@@ -195,6 +185,14 @@ function ProductsScreenContent() {
     trackProductAddStarted('onboarding');
   }, []);
 
+  useEffect(() => {
+    if (!addedProductId || added.length === 0) return;
+    const frame = requestAnimationFrame(() => {
+      scrollRef.current?.scrollToEnd({ animated: false });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [added.length, addedProductId]);
+
   function focusNextProduct() {
     scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) });
     requestAnimationFrame(() => inputRef.current?.focus());
@@ -208,18 +206,17 @@ function ProductsScreenContent() {
   function add() {
     const trimmed = name.trim();
     if (!trimmed) return;
-    const pao = category ? reviewedCategoryPao(category) : null;
-    resetIntake({
+    const intakeId = resetIntake({
       name: trimmed,
       category,
       addedVia: 'onboarding',
       catalogSource: 'user_local',
       catalogMatchQuality: 'manual',
-      paoMonths: pao,
-      paoSource: pao != null ? 'category_default' : 'unknown',
+      paoMonths: null,
+      paoSource: 'unknown',
     });
     setCategoryPickerOpen(false);
-    router.push({ pathname: '/shelf/opened', params: { origin: 'onboarding' } });
+    router.push({ pathname: '/shelf/opened', params: { intakeId, origin: 'onboarding' } });
   }
 
   function go() {
@@ -229,19 +226,6 @@ function ProductsScreenContent() {
     }
     track('screen_viewed', { screen_name: 'products_intake', count: added.length });
     router.push('/onboarding/analyzing');
-  }
-
-  async function removeProduct(id: string): Promise<void> {
-    if (removingId) return;
-    setRemovingId(id);
-    setRemoveFailed(false);
-    try {
-      await m.remove(id);
-    } catch {
-      setRemoveFailed(true);
-    } finally {
-      setRemovingId(null);
-    }
   }
 
   function footerAction() {
@@ -322,9 +306,10 @@ function ProductsScreenContent() {
             <TextInput
               ref={inputRef}
               accessibilityLabel="Product name"
+              maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}
               value={name}
               onChangeText={setName}
-              placeholder={pseudoLocalizeString('e.g. Retinol serum')}
+              placeholder="e.g. Retinol serum"
               placeholderTextColor={colors.mutedLight}
               className="rounded-card border border-hairline bg-paper px-4 py-3.5 font-sans text-base text-ink"
               returnKeyType="done"
@@ -364,17 +349,6 @@ function ProductsScreenContent() {
                 {added.length} ON YOUR SHELF
               </Text>
               <View className="gap-2">
-                {removeFailed ? (
-                  <View accessibilityRole="alert" className="rounded-card bg-clay-tint px-4 py-3">
-                    <Text variant="bodySm" className="font-sans-semibold">
-                      Product not removed
-                    </Text>
-                    <Text variant="bodySm" tone="muted" className="mt-1">
-                      Your saved Shelf remains unchanged. Try again when private storage is
-                      available.
-                    </Text>
-                  </View>
-                ) : null}
                 {added.map((it) => (
                   <View
                     key={it.id}
@@ -387,13 +361,9 @@ function ProductsScreenContent() {
                     <Pressable
                       accessibilityRole="button"
                       accessibilityLabel={`Remove ${it.name}`}
-                      accessibilityState={{ disabled: removingId != null }}
-                      disabled={removingId != null}
-                      onPress={() => void removeProduct(it.id)}
+                      onPress={() => void m.remove(it.id)}
                       className="h-12 w-12 items-center justify-center rounded-full"
-                      style={({ pressed }) => ({
-                        opacity: removingId === it.id ? 0.5 : pressed ? 0.72 : 1,
-                      })}
+                      style={({ pressed }) => (pressed ? { opacity: 0.72 } : undefined)}
                     >
                       <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
                         ×

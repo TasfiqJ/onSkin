@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   assessFraming,
   assessLighting,
+  CAPTURE_ANALYSIS_TOLERANCE,
   captureAnalysisStatus,
   checkingFraming,
   checkingLighting,
@@ -18,6 +19,31 @@ describe('face detector result validation', () => {
     expect(validatedFaceObservations(undefined)).toBeNull();
     expect(validatedFaceObservations({ success: false, faces: [] })).toBeNull();
     expect(validatedFaceObservations({ success: true, faces: [] })).toEqual([]);
+  });
+
+  it('copies only finite framing and Euler fields from the native result', () => {
+    const result = validatedFaceObservations({
+      success: true,
+      faces: [
+        {
+          frame: { origin: { x: 1, y: 2 }, size: { x: 3, y: 4 } },
+          headEulerAngleX: 5,
+          headEulerAngleY: Number.NaN,
+          headEulerAngleZ: -2,
+          trackingID: 42,
+          landmarks: [{ type: 'eye' }],
+          imagePath: 'file:///private/photo.jpg',
+        },
+      ],
+    });
+
+    expect(result).toEqual([
+      {
+        frame: { origin: { x: 1, y: 2 }, size: { x: 3, y: 4 } },
+        headEulerAngleX: 5,
+        headEulerAngleZ: -2,
+      },
+    ]);
   });
 });
 
@@ -79,6 +105,23 @@ describe('captured-photo framing analysis', () => {
 
     expect(result.state).toBe('adjust');
     expect(result.score).toBeLessThan(0.72);
+  });
+
+  it('never matches when any pose angle is missing or nonfinite', () => {
+    for (const candidate of [
+      face({ headEulerAngleX: undefined }),
+      face({ headEulerAngleY: null }),
+      face({ headEulerAngleZ: Number.POSITIVE_INFINITY }),
+      face({
+        headEulerAngleX: undefined,
+        headEulerAngleY: undefined,
+        headEulerAngleZ: undefined,
+      }),
+    ]) {
+      const result = assessFraming([candidate], { width: 1000, height: 1000 });
+      expect(result.state).toBe('adjust');
+      expect(result.score).toBeLessThan(CAPTURE_ANALYSIS_TOLERANCE.matchedScore);
+    }
   });
 
   it('distinguishes no face, multiple faces, and invalid geometry', () => {

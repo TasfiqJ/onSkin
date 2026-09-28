@@ -47,7 +47,7 @@ and offline visually and semantically interchangeable.
 ## Deterministic Evidence
 
 ```text
-npm.cmd --workspace @onskin/mobile test -- \
+npm.cmd --workspace @layerwell/mobile test -- \
   src/theme/stateTokens.test.ts \
   src/components/ui/stateNoticeInventory.test.ts \
   src/features/shelf/shelfRoutes.test.ts \
@@ -62,7 +62,7 @@ npm.cmd --workspace @onskin/mobile test -- \
   src/features/notifications/NotificationPreferenceState.test.ts
 12 files / 274 tests PASS
 
-npm.cmd --workspace @onskin/mobile test -- \
+npm.cmd --workspace @layerwell/mobile test -- \
   src/lib/applock/authenticate.test.ts \
   src/features/photos/PhotoStorageGate.test.ts \
   src/features/commerce/commerceRoutes.test.ts \

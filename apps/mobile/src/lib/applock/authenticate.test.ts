@@ -417,27 +417,19 @@ describe('app lock local authentication', () => {
     expect(timelineGate).not.toContain("Alert.alert('Photo timeline locked'");
     expect(timelineGate).not.toContain('LocalAuthentication.authenticateAsync');
 
-    expect(youTab).toContain('const YouSecuritySection = memo(');
-    expect(youTab).toContain('const setAppLockChoice = useCallback(');
+    expect(youTab).toContain('async function setAppLockChoice(enabled: boolean)');
     expect(youTab).toContain('if (savingAppLockRef.current) return;');
-    expect(youTab).toContain('recordYouAppLockStart();');
-    expect(youTab).toContain('setAppLockFeedback(appLockUserMessage());');
+    expect(youTab).toContain('message: appLockUserMessage(),');
     expect(youTab).not.toContain("Alert.alert('App lock'");
 
-    const securityOwner = youTab.slice(
-      youTab.indexOf('const YouSecuritySection = memo('),
-      youTab.indexOf('const YouStaticUtilitySections = memo('),
-    );
+    const securityOwner = youTab.slice(youTab.indexOf('async function setAppLockChoice'));
     expect(securityOwner.indexOf('if (savingAppLockRef.current) return;')).toBeLessThan(
       securityOwner.indexOf('savingAppLockRef.current = true;'),
     );
     expect(securityOwner.indexOf('savingAppLockRef.current = true;')).toBeLessThan(
-      securityOwner.indexOf('recordYouAppLockStart();'),
-    );
-    expect(securityOwner.indexOf('recordYouAppLockStart();')).toBeLessThan(
       securityOwner.indexOf('await setLockEnabled(enabled);'),
     );
-    expect(securityOwner.indexOf('await waitForDuplicateActivationFrame();')).toBeLessThan(
+    expect(securityOwner.indexOf('await setLockEnabled(enabled);')).toBeLessThan(
       securityOwner.indexOf('savingAppLockRef.current = false;'),
     );
   });

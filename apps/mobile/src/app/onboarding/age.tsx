@@ -1,36 +1,33 @@
-import { router } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState, useSyncExternalStore } from 'react';
 import { Platform, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
-import { Button, Screen, StateLoading, StateNotice, Text } from '@/components/ui';
+import { Button, Screen, Text } from '@/components/ui';
 import {
   getDobValidationError,
   isValidDob,
   meetsMinimumAge,
   MINIMUM_AGE,
 } from '@/features/onboarding/ageGate';
-import { readAgeVerification, setAgeVerified } from '@/features/onboarding/ageGateStore';
+import { AGE_POLICY_STATUS_QUERY_KEY, setAgeVerified } from '@/features/onboarding/ageGateStore';
+import {
+  clearAgePolicyReverificationHandoff,
+  dismissAgePolicyReverificationHandoff,
+  getAgePolicyReverificationHandoff,
+  markAgePolicyReverificationHandoffFailed,
+  stageAgePolicyReverificationHandoff,
+  stagePostAgeConsentRoute,
+  subscribeAgePolicyReverificationHandoff,
+} from '@/features/onboarding/agePolicyRoute';
 import { track } from '@/lib/analytics/track';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
-
-const AGE_VERIFICATION_STORAGE_COPY = {
-  loading: 'Checking your age confirmation...',
-  eyebrow: 'Private age confirmation',
-  title: 'Age confirmation unavailable',
-  body: "We couldn't safely read the age confirmation saved on this phone. Nothing was reset or removed. Try again when private storage is available.",
-  retry: 'Try again',
-  retrying: 'Trying again...',
-  retryFailed: 'The saved confirmation is still unavailable. Nothing was changed.',
-  saveFailed:
-    "We couldn't save your age confirmation. Your birth date was not stored. Try again when private storage is available.",
-} as const;
-
-type VerificationStatus = 'checking' | 'ready' | 'error';
 
 // 01b · Neutral age gate (docs/01 §4). We ask for a date of birth (never "are you
 // over X?", which invites falsification) BEFORE any health-data collection, and
-// block under-threshold users. We persist only that the gate passed, never the
-// DOB itself (data minimization). Final threshold / parental-consent path: counsel.
+// block under-threshold users. We never persist the DOB: storage contains only
+// the exact affirmative receipt or a generic re-verification tombstone.
+// Final threshold / parental-consent path: counsel.
 function DobField({
   label,
   accessibilityLabel,
@@ -68,61 +65,24 @@ function DobField({
 }
 
 export default function AgeGateScreen() {
+  const queryClient = useQueryClient();
+  const { ensureAnonymousSession } = useAuth();
   const { fontScale = 1, height, width } = useWindowDimensions();
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
-  const [blocked, setBlocked] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>('checking');
-  const [retrying, setRetrying] = useState(false);
-  const [retryFailed, setRetryFailed] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [saveFailed, setSaveFailed] = useState(false);
-  const verificationRequestId = useRef(0);
-  const saveRequestId = useRef(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [localSubmitError, setLocalSubmitError] = useState(false);
+  const reverificationHandoff = useSyncExternalStore(
+    subscribeAgePolicyReverificationHandoff,
+    getAgePolicyReverificationHandoff,
+    getAgePolicyReverificationHandoff,
+  );
+  const blocked = reverificationHandoff !== 'none';
+  const submitError = localSubmitError || reverificationHandoff === 'reverification_write_failed';
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
-
-  const checkAgeVerification = useCallback(async (reason: 'initial' | 'retry') => {
-    const requestId = ++verificationRequestId.current;
-    const fromRetry = reason === 'retry';
-    setRetryFailed(false);
-    if (fromRetry) setRetrying(true);
-    else setVerificationStatus('checking');
-
-    try {
-      const result = await readAgeVerification();
-      if (verificationRequestId.current !== requestId) return;
-
-      if (result.status === 'available' && result.value) {
-        router.replace('/onboarding/goals');
-        return;
-      }
-      if (result.status === 'absent' || result.status === 'available') {
-        setVerificationStatus('ready');
-        return;
-      }
-      setRetryFailed(fromRetry);
-      setVerificationStatus('error');
-    } catch {
-      if (verificationRequestId.current !== requestId) return;
-      setRetryFailed(fromRetry);
-      setVerificationStatus('error');
-    } finally {
-      if (verificationRequestId.current === requestId) setRetrying(false);
-    }
-  }, []);
-
-  // Skip if a prior session already passed the gate (don't re-ask on re-entry).
-  useEffect(() => {
-    const timer = setTimeout(() => void checkAgeVerification('initial'), 0);
-    return () => {
-      clearTimeout(timer);
-      verificationRequestId.current += 1;
-      saveRequestId.current += 1;
-    };
-  }, [checkAgeVerification]);
 
   const dob = { year: Number(year), month: Number(month), day: Number(day) };
   const complete = day.length > 0 && month.length > 0 && year.length === 4;
@@ -132,77 +92,40 @@ export default function AgeGateScreen() {
 
   function edit(setter: (v: string) => void) {
     return (v: string) => {
-      setBlocked(false);
+      dismissAgePolicyReverificationHandoff();
+      setLocalSubmitError(false);
       setter(v);
     };
   }
 
   async function submit() {
-    if (saving) return;
+    if (submitting) return;
+    setSubmitting(true);
+    setLocalSubmitError(false);
     track('screen_viewed', { screen_name: 'age_gate' });
-    if (meetsMinimumAge(dob, today)) {
-      const requestId = ++saveRequestId.current;
-      setSaveFailed(false);
-      setSaving(true);
+    const eligible = meetsMinimumAge(dob, today);
+    if (!eligible) {
+      const reverificationGeneration = stageAgePolicyReverificationHandoff();
+      queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'missing');
       try {
-        await setAgeVerified();
-        if (saveRequestId.current !== requestId) return;
-        router.replace('/onboarding/goals');
+        await setAgeVerified(false);
       } catch {
-        if (saveRequestId.current === requestId) setSaveFailed(true);
-      } finally {
-        if (saveRequestId.current === requestId) setSaving(false);
+        markAgePolicyReverificationHandoffFailed(reverificationGeneration);
       }
-    } else {
-      setBlocked(true);
+      setSubmitting(false);
+      return;
     }
-  }
 
-  if (verificationStatus === 'checking') {
-    return (
-      <Screen>
-        <View
-          accessibilityLabel={AGE_VERIFICATION_STORAGE_COPY.loading}
-          accessibilityLiveRegion="polite"
-          className="flex-1 items-center justify-center"
-        >
-          <StateLoading label={AGE_VERIFICATION_STORAGE_COPY.loading} />
-        </View>
-      </Screen>
-    );
-  }
-
-  if (verificationStatus === 'error') {
-    return (
-      <Screen>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 32 }}
-          showsVerticalScrollIndicator={false}
-        >
-          <StateNotice
-            kind="unavailable"
-            presentation="plain"
-            align="center"
-            title={AGE_VERIFICATION_STORAGE_COPY.title}
-            body={AGE_VERIFICATION_STORAGE_COPY.body}
-            detail={retryFailed ? AGE_VERIFICATION_STORAGE_COPY.retryFailed : null}
-            accessibilityLabel={`${AGE_VERIFICATION_STORAGE_COPY.eyebrow}. ${AGE_VERIFICATION_STORAGE_COPY.title}`}
-          >
-            <Button
-              accessibilityLabel="Retry age confirmation"
-              className="mt-7 min-h-[56px]"
-              disabled={retrying}
-              label={
-                retrying
-                  ? AGE_VERIFICATION_STORAGE_COPY.retrying
-                  : AGE_VERIFICATION_STORAGE_COPY.retry
-              }
-              onPress={() => void checkAgeVerification('retry')}
-            />
-          </StateNotice>
-        </ScrollView>
-      </Screen>
-    );
+    try {
+      await setAgeVerified(true);
+      await ensureAnonymousSession();
+      clearAgePolicyReverificationHandoff();
+      stagePostAgeConsentRoute();
+      queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'current');
+    } catch {
+      setLocalSubmitError(true);
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -264,35 +187,21 @@ export default function AgeGateScreen() {
             />
           </View>
 
-          {saveFailed ? (
-            <StateNotice
-              kind="error"
-              compact
-              className="mt-5"
-              title="Age confirmation not saved"
-              body={AGE_VERIFICATION_STORAGE_COPY.saveFailed}
-            />
-          ) : validationError || blocked ? (
-            <StateNotice
-              kind="error"
-              compact
-              className="mt-5"
-              title="Check your date of birth"
-              body={
-                validationError ??
-                `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`
-              }
-            />
+          {validationError || blocked ? (
+            <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
+              {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
+            </Text>
+          ) : null}
+          {submitError ? (
+            <Text variant="bodySm" tone="clay" className="mt-3" accessibilityRole="alert">
+              We couldn&apos;t finish the age check. Nothing new was collected. Try again.
+            </Text>
           ) : null}
         </ScrollView>
       </View>
 
       <View className="bg-paper pb-4 pt-2">
-        <Button
-          label={saving ? 'Saving...' : 'Continue'}
-          disabled={!valid || saving}
-          onPress={() => void submit()}
-        />
+        <Button label="Continue" disabled={!valid || submitting} onPress={() => void submit()} />
       </View>
     </Screen>
   );

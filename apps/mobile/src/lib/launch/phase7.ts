@@ -1,5 +1,3 @@
-import type { DetectedConflict } from '@/features/intelligence/engine';
-import { isReviewedRule } from '@/features/intelligence/rules';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { normalizePublicDomain } from '@/lib/growth/attribution';
@@ -25,15 +23,19 @@ const productionSurfaceReady = env.appEnvironment !== 'production' || finalDomai
 
 // Environment flags can expose only capabilities that actually exist in the
 // release binary. These literals are intentionally not environment-driven:
-// widgets have no native targets, community has no submission/moderation or
-// aggregate-data path, and Trend has no validated engine. Keeping those facts
+// commerce has no approved retailer rail or launch evidence, widget source is
+// build-gated until lifecycle and device proof are complete, community has no
+// submission/moderation or aggregate-data path, and Trend has no validated
+// engine. Keeping those facts
 // here prevents a release configuration mistake from turning previews,
 // placeholder data, or consent scaffolding into a customer-facing promise.
 export const phase7Capabilities = Object.freeze({
+  commerce: false,
   communityQuestionSubmission: false,
   communityAggregates: false,
   trendEngine: false,
   nativeWidgets: false,
+  conflictSharePublication: false,
 } as const);
 
 // Lean V1: deployment flags cannot reopen deferred customer surfaces.
@@ -90,14 +92,16 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   },
   widgets: {
     title: 'Widgets are not in this beta',
-    body: 'Today check-offs and reminders work inside the app. No native home-screen widget or live activity target ships in this release.',
-    detail: 'This route does not offer a preview, OS control, or paid widget upgrade.',
+    body: 'Today check-offs and reminders work inside the app. This build does not enable a customer-ready home-screen widget or Live Activity.',
+    detail:
+      'Native source stays gated until lifecycle, privacy, signed-binary, and physical-device evidence pass. This route offers no preview, OS control, or paid widget upgrade.',
     cta: 'Back',
   },
   shareCard: {
     title: 'Share cards are not ready yet',
-    body: 'A card can be shared only for a real owned-product interaction backed by a reviewed rule and final brand domain.',
-    detail: 'This prevents unreviewed ingredient guidance from becoming a growth artifact.',
+    body: 'No shelf-check card or public link is admitted for sharing in this build.',
+    detail:
+      'Sharing needs separate reviewed publication authority, a private-data-safe card, and your confirmation of the exact card first.',
     cta: 'Back',
   },
   goalActiveRecommendations: {
@@ -112,30 +116,6 @@ export function isPhase7SurfaceEnabled(surface: DeferredSurfaceKind): boolean {
   return SURFACE_TO_FLAG[surface];
 }
 
-function e2eReviewedConflictSharingEnabled(): boolean {
-  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
-
-  const fixture = process.env.EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING?.trim().toLowerCase();
-  return fixture === '1' || fixture === 'true' || fixture === 'enabled';
-}
-
-export function isReviewedConflict(conflict: DetectedConflict | null | undefined): boolean {
-  if (!conflict) return false;
-  if (e2eReviewedConflictSharingEnabled()) return true;
-  return isReviewedRule(conflict.rule);
-}
-
-export function canShareConflictCard(
-  conflict: DetectedConflict | null | undefined,
-): conflict is DetectedConflict {
-  if (!phase7Flags.shareCard || !conflict || !isReviewedConflict(conflict)) return false;
-  return (
-    conflict.rule.interactionType !== 'safety' &&
-    conflict.rule.tagA !== 'pregnancy' &&
-    conflict.rule.tagB !== 'pregnancy' &&
-    Boolean(conflict.productAId) &&
-    Boolean(conflict.productBId) &&
-    Boolean(conflict.productAName) &&
-    Boolean(conflict.productBName)
-  );
+export function canShareConflictCard(_conflict?: unknown): false {
+  return false;
 }

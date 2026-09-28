@@ -1,488 +1,580 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-} from '@/lib/auth/accountGeneration';
-import * as privateKV from '@/lib/storage/privateKV';
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+import type { CompletionSyncOperation } from '@/features/today/completionSync';
 
-import {
-  COMPLETION_QUEUE_INVALID,
-  COMPLETION_QUEUE_UNAVAILABLE,
-  COMPLETION_QUEUE_UNSUPPORTED_VERSION,
-  enqueueCompletion,
-  flushCompletions,
-  getPendingCompletions,
-  pendingStepIdsForDate,
-  readCompletionQueue,
-  readCompletionSyncDiagnostics,
-  resetCompletionSyncDiagnosticsForTests,
-} from './completionQueue';
-import { completionKey, isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
+import { COMPLETION_SYNC_RESPONSE_INVALID, flushCompletions } from './completionQueue';
 
-const mocks = vi.hoisted(() => ({
-  storage: new Map<string, string>(),
-  tails: new Map<string, Promise<void>>(),
-  readFailures: new Map<string, Error>(),
-  updateFailures: new Map<string, Error>(),
-  writes: 0,
-  currentUserId: null as string | null,
-  insertCalls: [] as Record<string, unknown>[],
-  insertSignals: [] as AbortSignal[],
-  insertGate: null as Promise<void> | null,
-  onInsert: null as (() => void) | null,
-  insertError: null as { code: string; message?: string } | null,
-  insertStatus: 201,
+const h = vi.hoisted(() => ({
+  pending: [] as CompletionSyncOperation[],
+  acknowledged: [] as string[],
+  deferred: [] as string[],
+  rejected: [] as { eventId: string; code: string }[],
+  unresolvedTerminalShelfProducts: new Set<string>(),
+  onTerminalShelfLookup: null as (() => void) | null,
+  currentUserId: 'owner-a' as string | null,
+  rpc: vi.fn(),
+  recoverUnsynced: vi.fn(),
 }));
 
-vi.mock('@/lib/storage/privateKV', () => ({
-  readPrivateItem: vi.fn(async (key: string) => {
-    const failure = mocks.readFailures.get(key);
-    if (failure) return { status: 'unavailable', reason: 'storage_unavailable' };
-    const value = mocks.storage.get(key);
-    return value === undefined ? { status: 'absent' } : { status: 'available', value };
+vi.mock('@/features/today/completionsStore', () => ({
+  recoverCompletionSyncUnsynced: h.recoverUnsynced,
+  getPendingCompletionSyncOperations: vi.fn(async () => [...h.pending]),
+  acknowledgeCompletionSyncOperation: vi.fn(async (eventId: string) => {
+    const index = h.pending.findIndex((operation) => operation.eventId === eventId);
+    if (index < 0) return false;
+    h.pending.splice(index, 1);
+    h.acknowledged.push(eventId);
+    return true;
   }),
-  updatePrivateItem: vi.fn(
-    async (key: string, updater: (current: string | null) => string | null) => {
-      const previous = mocks.tails.get(key) ?? Promise.resolve();
-      let release!: () => void;
-      const ownTail = new Promise<void>((resolve) => {
-        release = resolve;
-      });
-      mocks.tails.set(key, ownTail);
-      await previous;
-      try {
-        const failure = mocks.updateFailures.get(key);
-        if (failure) throw failure;
-        const current = mocks.storage.get(key) ?? null;
-        const next = updater(current);
-        if (next === current) return;
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
-        mocks.writes += 1;
-      } finally {
-        release();
-        if (mocks.tails.get(key) === ownTail) mocks.tails.delete(key);
-      }
-    },
-  ),
+  rejectCompletionSyncOperation: vi.fn(async (eventId: string, code: string) => {
+    if (h.pending[0]?.eventId !== eventId) return false;
+    const operation = h.pending.shift()!;
+    const dependent = h.pending[0];
+    if (
+      operation.kind === 'step' &&
+      dependent?.kind === 'routine_day' &&
+      dependent.routineId === operation.routineId &&
+      dependent.completedDate === operation.completedDate &&
+      dependent.completedAt === operation.completedAt &&
+      dependent.timezone === operation.timezone
+    ) {
+      h.pending.shift();
+    }
+    h.rejected.push({ eventId, code });
+    return true;
+  }),
+  deferCompletionSyncDependencyOperation: vi.fn(async (eventId: string, userProductId: string) => {
+    if (
+      h.pending[0]?.eventId !== eventId ||
+      h.pending[0]?.kind !== 'step' ||
+      h.pending[0]?.userProductId !== userProductId
+    ) {
+      return { deferred: false, moved: 0 };
+    }
+    const operation = h.pending.shift()!;
+    const deferred = [operation];
+    const dependent = h.pending[0];
+    if (
+      dependent?.kind === 'routine_day' &&
+      dependent.routineId === operation.routineId &&
+      dependent.completedDate === operation.completedDate &&
+      dependent.completedAt === operation.completedAt &&
+      dependent.timezone === operation.timezone
+    ) {
+      deferred.push(h.pending.shift()!);
+    }
+    h.pending.push(...deferred);
+    h.deferred.push(eventId);
+    return { deferred: true, moved: deferred.length };
+  }),
+}));
+
+vi.mock('@/features/shelf/store', () => ({
+  hasUnresolvedTerminalShelfMirrorOperationForProduct: vi.fn(async (productId: string) => {
+    const unresolved = h.unresolvedTerminalShelfProducts.has(productId);
+    h.onTerminalShelfLookup?.();
+    return unresolved;
+  }),
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: {
-      getUser: vi.fn(async () => ({
-        data: { user: mocks.currentUserId ? { id: mocks.currentUserId } : null },
-      })),
-    },
-    from: vi.fn(() => ({
-      insert: vi.fn((payload: Record<string, unknown>) => ({
-        abortSignal: vi.fn(async (signal: AbortSignal) => {
-          mocks.insertCalls.push(payload);
-          mocks.insertSignals.push(signal);
-          const error = mocks.insertError;
-          const status = mocks.insertStatus;
-          mocks.onInsert?.();
-          if (mocks.insertGate) {
-            await new Promise<void>((resolve, reject) => {
-              const onAbort = () => reject(new Error('POSTGREST_ABORTED'));
-              signal.addEventListener('abort', onAbort, { once: true });
-              void mocks.insertGate?.then(() => {
-                signal.removeEventListener('abort', onAbort);
-                resolve();
-              }, reject);
-            });
-          }
-          return { error, status };
-        }),
-      })),
-    })),
-  },
+  getPersistedSupabaseUser: vi.fn(async () => ({
+    data: { user: h.currentUserId === null ? null : { id: h.currentUserId } },
+  })),
+  supabase: { rpc: h.rpc },
 }));
 
-const KEY = 'onskin.completions.pending';
+const EVENT_A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const EVENT_B = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+const EVENT_C = 'ffffffff-ffff-4fff-8fff-ffffffffffff';
 
-const base: PendingCompletion = {
-  userId: 'u1',
-  routineId: 'r1',
-  stepId: 's1',
-  completedDate: '2026-06-25',
-  enqueuedAt: '2026-06-25T08:00:00.000Z',
-};
-
-let boundaryActive = false;
-
-afterEach(() => {
-  if (boundaryActive) {
-    endAccountGenerationBoundary();
-    boundaryActive = false;
-  }
-});
-
-function storedItems(): PendingCompletion[] {
-  const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
-    version?: number;
-    items?: PendingCompletion[];
+function operation(
+  eventId: string,
+  overrides: Partial<CompletionSyncOperation> = {},
+): CompletionSyncOperation {
+  return {
+    eventId,
+    kind: 'step',
+    routineId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+    routineType: 'PM',
+    stepId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+    userProductId: 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+    stepOrder: 2,
+    completedAt: '2026-07-26T18:00:00.000Z',
+    completedDate: '2026-07-26',
+    timezone: 'America/Toronto',
+    ...overrides,
   };
-  expect(parsed.version).toBe(1);
-  return parsed.items ?? [];
 }
 
-describe('offline completion queue (docs/01 §6)', () => {
+function response(
+  eventId: string,
+  status: 'accepted' | 'idempotent' | 'retryable' | 'terminal' = 'accepted',
+  code: string | null = status === 'retryable'
+    ? 'COMPLETION_PRODUCT_RETRY_LATER'
+    : status === 'terminal'
+      ? 'COMPLETION_EVENT_CONFLICT'
+      : null,
+) {
+  return { data: { version: 1, event_id: eventId, status, code }, error: null };
+}
+
+describe('v3 completion RPC replay worker', () => {
   beforeEach(() => {
-    mocks.storage.clear();
-    mocks.tails.clear();
-    mocks.readFailures.clear();
-    mocks.updateFailures.clear();
-    mocks.writes = 0;
-    mocks.currentUserId = null;
-    mocks.insertCalls = [];
-    mocks.insertSignals = [];
-    mocks.insertGate = null;
-    mocks.onInsert = null;
-    mocks.insertError = null;
-    mocks.insertStatus = 201;
-    resetCompletionSyncDiagnosticsForTests();
-    vi.clearAllMocks();
-  });
-
-  it('dedups an identical completion by (user, routine, step, day)', () => {
-    const once = withQueued([], base);
-    const twice = withQueued(once, { ...base, enqueuedAt: '2026-06-25T09:00:00.000Z' });
-    expect(once).toHaveLength(1);
-    expect(twice).toHaveLength(1);
-  });
-
-  it('keeps distinct steps and distinct days', () => {
-    let list: PendingCompletion[] = [];
-    list = withQueued(list, base);
-    list = withQueued(list, { ...base, stepId: 's2' });
-    list = withQueued(list, { ...base, completedDate: '2026-06-24' });
-    expect(list).toHaveLength(3);
-  });
-
-  it('treats a routine-level (null step) completion as its own key', () => {
-    expect(completionKey({ ...base, stepId: null })).not.toBe(completionKey(base));
-  });
-
-  it('marks a completion stale once it is older than the ~48h server backfill cap', () => {
-    const now = new Date(2026, 5, 25);
-    expect(isStale('2026-06-25', now)).toBe(false);
-    expect(isStale('2026-06-24', now)).toBe(false);
-    expect(isStale('2026-06-23', now)).toBe(false);
-    expect(isStale('2026-06-22', now)).toBe(true);
-  });
-
-  it('treats impossible completion dates as stale', () => {
-    expect(isStale('2026-02-31', new Date(2026, 1, 28))).toBe(true);
-  });
-
-  it('treats completions beyond the timezone-tolerant future window as stale', () => {
-    const now = new Date(2026, 5, 25, 9);
-    expect(isStale('2026-06-26', now)).toBe(false);
-    expect(isStale('2026-06-27', now)).toBe(true);
-  });
-
-  it('distinguishes an absent queue from an available queue without writing', async () => {
-    await expect(readCompletionQueue()).resolves.toEqual({ status: 'absent', items: [] });
-    await expect(getPendingCompletions()).resolves.toEqual([]);
-
-    const original = JSON.stringify({ version: 1, items: [base] });
-    mocks.storage.set(KEY, original);
-
-    await expect(readCompletionQueue()).resolves.toEqual({ status: 'available', items: [base] });
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('returns typed corruption and rejects convenience reads without deleting malformed bytes', async () => {
-    const original = '{not-json';
-    mocks.storage.set(KEY, original);
-
-    await expect(readCompletionQueue()).resolves.toEqual({ status: 'corrupt', items: null });
-    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_INVALID);
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('rejects enqueue over wrong-shaped state without replacing the original bytes', async () => {
-    const original = JSON.stringify({ pending: [base] });
-    mocks.storage.set(KEY, original);
-
-    await expect(enqueueCompletion(base)).rejects.toThrow(COMPLETION_QUEUE_INVALID);
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('rejects the entire queue when any legacy row is malformed', async () => {
-    const original = JSON.stringify([base, { ...base, stepId: '' }]);
-    mocks.storage.set(KEY, original);
-
-    await expect(readCompletionQueue()).resolves.toEqual({ status: 'corrupt', items: null });
-    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_INVALID);
-    await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
-      COMPLETION_QUEUE_INVALID,
-    );
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it.each([
-    [
-      'extra envelope field',
-      { version: 1, items: [base], extra: true },
-    ],
-    [
-      'duplicate current identity',
-      { version: 1, items: [base, { ...base, enqueuedAt: '2026-06-25T09:00:00.000Z' }] },
-    ],
-    [
-      'noncanonical current row',
-      {
-        version: 1,
-        items: [{ ...base, userId: ' u1 ', enqueuedAt: '2026-06-25T08:00:00Z' }],
-      },
-    ],
-    [
-      'extra current row field',
-      { version: 1, items: [{ ...base, extra: true }] },
-    ],
-  ])('preserves strict-current corruption with %s', async (_label, value) => {
-    const original = JSON.stringify(value);
-    mocks.storage.set(KEY, original);
-
-    await expect(readCompletionQueue()).resolves.toEqual({ status: 'corrupt', items: null });
-    await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
-      COMPLETION_QUEUE_INVALID,
-    );
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('normalizes a valid legacy queue in memory without rewriting a read', async () => {
-    const original = JSON.stringify([
-      {
-        userId: ' u1 ',
-        routineId: ' r1 ',
-        stepId: ' s1 ',
-        completedDate: ' 2026-06-25 ',
-        enqueuedAt: '2026-06-25T08:00:00Z',
-      },
-    ]);
-    mocks.storage.set(KEY, original);
-
-    await expect(getPendingCompletions()).resolves.toEqual([base]);
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('migrates a valid legacy queue only inside an explicit atomic enqueue', async () => {
-    mocks.storage.set(KEY, JSON.stringify([base]));
-    const next = { ...base, stepId: 's2' };
-
-    await enqueueCompletion(next);
-
-    expect(storedItems()).toEqual([base, next]);
-  });
-
-  it('serializes 100 simultaneous enqueues without losing a writer', async () => {
-    const rows = Array.from({ length: 100 }, (_, index) => ({
-      ...base,
-      stepId: `s${index}`,
-    }));
-
-    await Promise.all(rows.map((row) => enqueueCompletion(row)));
-
-    expect(new Set(storedItems().map(completionKey))).toEqual(new Set(rows.map(completionKey)));
-    expect(mocks.writes).toBe(100);
-  });
-
-  it.each([
-    ['legacy', JSON.stringify([base])],
-    ['current', JSON.stringify({ version: 1, items: [base] })],
-  ])('does zero persisted writes for an identical %s enqueue', async (_format, original) => {
-    mocks.storage.set(KEY, original);
-
-    await enqueueCompletion({ ...base, enqueuedAt: '2026-06-25T09:00:00.000Z' });
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('preserves an enqueue that lands while an older flush is in flight', async () => {
-    mocks.storage.set(KEY, JSON.stringify({ version: 1, items: [base] }));
-    mocks.currentUserId = 'u1';
-    let releaseInsert!: () => void;
-    mocks.insertGate = new Promise<void>((resolve) => {
-      releaseInsert = resolve;
+    h.pending = [];
+    h.acknowledged = [];
+    h.deferred = [];
+    h.rejected = [];
+    h.unresolvedTerminalShelfProducts = new Set();
+    h.onTerminalShelfLookup = null;
+    h.currentUserId = 'owner-a';
+    h.rpc.mockReset();
+    h.recoverUnsynced.mockReset().mockResolvedValue(0);
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(9, {
+      ownerUserId: 'owner-a',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
     });
-    let signalInsertStarted!: () => void;
-    const insertStarted = new Promise<void>((resolve) => {
-      signalInsertStarted = resolve;
-    });
-    mocks.onInsert = signalInsertStarted;
-
-    const flushing = flushCompletions(new Date(2026, 5, 25, 9));
-    await insertStarted;
-    const concurrent = { ...base, stepId: 's2' };
-    await enqueueCompletion(concurrent);
-    releaseInsert();
-
-    await expect(flushing).resolves.toEqual({ flushed: 1, remaining: 1 });
-    await expect(getPendingCompletions()).resolves.toEqual([concurrent]);
   });
 
-  it('keeps owner-A queue bytes when a delayed flush crosses into owner B', async () => {
-    const original = JSON.stringify({ version: 1, items: [base] });
-    mocks.storage.set(KEY, original);
-    mocks.currentUserId = 'u1';
-    mocks.insertGate = new Promise<void>(() => undefined);
-    let signalInsertStarted!: () => void;
-    const insertStarted = new Promise<void>((resolve) => {
-      signalInsertStarted = resolve;
-    });
-    mocks.onInsert = signalInsertStarted;
-
-    const flushing = flushCompletions(new Date(2026, 5, 25, 9));
-    await insertStarted;
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-
-    await expect(flushing).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.insertSignals).toHaveLength(1);
-    expect(mocks.insertSignals[0]?.aborted).toBe(true);
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-  });
-
-  it('does zero persisted writes when a transient flush removes no legacy rows', async () => {
-    const original = JSON.stringify([base]);
-    mocks.storage.set(KEY, original);
-    mocks.currentUserId = 'u1';
-    mocks.insertError = { code: 'TEMPORARY_NETWORK_FAILURE' };
-
-    await expect(flushCompletions(new Date(2026, 5, 25, 9))).resolves.toEqual({
+  it('does not touch Auth or the network when there is no replay work', async () => {
+    await expect(flushCompletions()).resolves.toEqual({
       flushed: 0,
+      terminal: 0,
+      remaining: 0,
+    });
+    expect(h.rpc).not.toHaveBeenCalled();
+  });
+
+  it('retains impossible mixed-null and AM-marker payloads without touching the network', async () => {
+    const invalidOperations = [
+      operation(EVENT_A, { stepId: null }),
+      operation(EVENT_B, {
+        kind: 'routine_day',
+        routineType: 'AM',
+        stepId: null,
+        userProductId: null,
+        stepOrder: null,
+      }),
+    ];
+
+    for (const invalidOperation of invalidOperations) {
+      h.pending = [invalidOperation];
+      await expect(flushCompletions()).resolves.toEqual({
+        flushed: 0,
+        terminal: 0,
+        remaining: 1,
+      });
+    }
+
+    expect(h.rpc).not.toHaveBeenCalled();
+  });
+
+  it('never purges the exportable legacy queue from an ordinary replay wake', () => {
+    const source = readFileSync(
+      fileURLToPath(new URL('./completionQueue.ts', import.meta.url)),
+      'utf8',
+    );
+    expect(source).toContain('legacy_pending_completion_sync');
+    expect(source).not.toContain("removePrivateItem('layerwell.completions.pending')");
+    expect(source).not.toContain('LEGACY_COMPLETION_QUEUE_KEY');
+  });
+
+  it('keeps FIFO work when there is no current server session', async () => {
+    h.pending = [operation(EVENT_A)];
+    h.currentUserId = null;
+
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 0,
+      terminal: 0,
       remaining: 1,
     });
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
-    expect(readCompletionSyncDiagnostics()).toMatchObject({ result: 'pending' });
+    expect(h.rpc).not.toHaveBeenCalled();
+    expect(h.pending).toHaveLength(1);
   });
 
-  it('retries one transient insert and treats the durable uniqueness receipt as success', async () => {
-    const original = JSON.stringify({ version: 1, items: [base] });
-    mocks.storage.set(KEY, original);
-    mocks.currentUserId = 'u1';
-    mocks.insertError = {
-      code: 'TEMPORARY_NETWORK_FAILURE',
-      message: 'temporary server failure',
-    };
-    mocks.insertStatus = 503;
-    let attempts = 0;
-    mocks.onInsert = () => {
-      attempts += 1;
-      if (attempts === 1) {
-        mocks.insertError = { code: '23505' };
-        mocks.insertStatus = 409;
-      }
-    };
-    vi.spyOn(Math, 'random').mockReturnValue(0);
+  it('sends the exact owner-free RPC payload and acknowledges an accepted event', async () => {
+    h.pending = [operation(EVENT_A)];
+    h.rpc.mockResolvedValueOnce(response(EVENT_A));
 
-    await expect(flushCompletions(new Date(2026, 5, 25, 9))).resolves.toEqual({
+    await expect(flushCompletions()).resolves.toEqual({
       flushed: 1,
+      terminal: 0,
       remaining: 0,
     });
 
-    expect(mocks.insertCalls).toHaveLength(2);
-    expect(storedItems()).toEqual([]);
-    expect(readCompletionSyncDiagnostics()).toMatchObject({ result: 'synced' });
-    vi.restoreAllMocks();
+    expect(h.rpc).toHaveBeenCalledWith('record_routine_completion', {
+      p_event_id: EVENT_A,
+      p_routine_id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+      p_routine_type: 'PM',
+      p_step_id: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+      p_user_product_id: 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+      p_step_order: 2,
+      p_completed_at: '2026-07-26T18:00:00.000Z',
+      p_completed_date: '2026-07-26',
+      p_timezone: 'America/Toronto',
+    });
+    expect(JSON.stringify(h.rpc.mock.calls)).not.toContain('owner-a');
+    expect(h.acknowledged).toEqual([EVENT_A]);
   });
 
-  it('records only a content-free sync result and timestamp', async () => {
-    expect(readCompletionSyncDiagnostics()).toEqual({ result: 'not_run', at: null });
+  it('acknowledges exact idempotent replay and quarantines only explicit terminal results', async () => {
+    h.pending = [
+      operation(EVENT_A),
+      operation(EVENT_B, {
+        kind: 'routine_day',
+        stepId: null,
+        userProductId: null,
+        stepOrder: null,
+      }),
+    ];
+    h.rpc
+      .mockResolvedValueOnce(response(EVENT_A, 'idempotent'))
+      .mockResolvedValueOnce(response(EVENT_B, 'terminal'));
 
-    await expect(flushCompletions(new Date(2026, 5, 25, 9))).resolves.toEqual({
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 1,
+      terminal: 1,
+      remaining: 0,
+    });
+    expect(h.acknowledged).toEqual([EVENT_A]);
+    expect(h.rejected).toEqual([{ eventId: EVENT_B, code: 'COMPLETION_EVENT_CONFLICT' }]);
+  });
+
+  it('stops the stale snapshot after a final-step terminal cascade and never dispatches its marker', async () => {
+    h.pending = [
+      operation(EVENT_A),
+      operation(EVENT_B, {
+        kind: 'routine_day',
+        stepId: null,
+        userProductId: null,
+        stepOrder: null,
+      }),
+      operation(EVENT_C, {
+        routineType: 'AM',
+        completedAt: '2026-07-27T12:00:00.000Z',
+        completedDate: '2026-07-27',
+      }),
+    ];
+    h.rpc.mockResolvedValueOnce(response(EVENT_A, 'terminal'));
+
+    await expect(flushCompletions()).resolves.toEqual({
       flushed: 0,
+      terminal: 1,
+      remaining: 1,
+    });
+    expect(h.rejected).toEqual([{ eventId: EVENT_A, code: 'COMPLETION_EVENT_CONFLICT' }]);
+    expect(
+      h.rpc.mock.calls.filter(([functionName]) => functionName === 'record_routine_completion'),
+    ).toEqual([['record_routine_completion', expect.objectContaining({ p_event_id: EVENT_A })]]);
+    expect(h.pending.map(({ eventId }) => eventId)).toEqual([EVENT_C]);
+  });
+
+  it('stops a stale snapshot when an accepted response no longer matches the durable FIFO head', async () => {
+    h.pending = [operation(EVENT_A), operation(EVENT_B)];
+    h.rpc.mockImplementationOnce(async () => {
+      h.pending.shift();
+      return response(EVENT_A);
+    });
+
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 0,
+      terminal: 0,
+      remaining: 1,
+    });
+    expect(h.rpc).toHaveBeenCalledTimes(1);
+    expect(h.acknowledged).toEqual([]);
+    expect(h.pending.map(({ eventId }) => eventId)).toEqual([EVENT_B]);
+  });
+
+  it('stops at the first retryable, PostgREST error, or network ambiguity', async () => {
+    for (const firstResult of [
+      Promise.resolve(response(EVENT_A, 'retryable')),
+      Promise.resolve({ data: null, error: { code: '42501', message: 'not admitted' } }),
+      Promise.reject(new Error('offline')),
+    ]) {
+      h.pending = [operation(EVENT_A), operation(EVENT_B)];
+      h.acknowledged = [];
+      h.rpc.mockReset().mockReturnValueOnce(firstResult);
+
+      await expect(flushCompletions()).resolves.toEqual({
+        flushed: 0,
+        terminal: 0,
+        remaining: 2,
+      });
+      expect(h.rpc).toHaveBeenCalledTimes(1);
+      expect(h.acknowledged).toEqual([]);
+    }
+  });
+
+  it('defers a retryable missing Shelf dependency and drains later unrelated FIFO work', async () => {
+    const missingProductId = operation(EVENT_A).userProductId!;
+    h.pending = [
+      operation(EVENT_A),
+      operation(EVENT_B, {
+        kind: 'routine_day',
+        stepId: null,
+        userProductId: null,
+        stepOrder: null,
+      }),
+      operation(EVENT_C, {
+        routineType: 'AM',
+        stepId: '11111111-1111-4111-8111-111111111111',
+        userProductId: '22222222-2222-4222-8222-222222222222',
+        stepOrder: 1,
+        completedAt: '2026-07-27T12:00:00.000Z',
+        completedDate: '2026-07-27',
+      }),
+    ];
+    h.unresolvedTerminalShelfProducts.add(missingProductId);
+    h.rpc
+      .mockResolvedValueOnce(response(EVENT_A, 'retryable'))
+      .mockResolvedValueOnce(response(EVENT_C));
+
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 1,
+      terminal: 0,
+      remaining: 2,
+    });
+    expect(h.deferred).toEqual([EVENT_A]);
+    expect(h.rejected).toEqual([]);
+    expect(h.acknowledged).toEqual([EVENT_C]);
+    expect(h.pending.map(({ eventId }) => eventId)).toEqual([EVENT_A, EVENT_B]);
+    expect(h.rpc.mock.calls.map(([, args]) => args.p_event_id)).toEqual([EVENT_A, EVENT_C]);
+  });
+
+  it('retains and later replays the original event when Shelf is corrected after the terminal check', async () => {
+    const missingProductId = operation(EVENT_A).userProductId!;
+    h.pending = [
+      operation(EVENT_A),
+      operation(EVENT_C, {
+        routineType: 'AM',
+        stepId: '11111111-1111-4111-8111-111111111111',
+        userProductId: '22222222-2222-4222-8222-222222222222',
+        stepOrder: 1,
+        completedAt: '2026-07-27T12:00:00.000Z',
+        completedDate: '2026-07-27',
+      }),
+    ];
+    h.unresolvedTerminalShelfProducts.add(missingProductId);
+    h.onTerminalShelfLookup = () => {
+      h.unresolvedTerminalShelfProducts.delete(missingProductId);
+      h.onTerminalShelfLookup = null;
+    };
+    h.rpc
+      .mockResolvedValueOnce(response(EVENT_A, 'retryable'))
+      .mockResolvedValueOnce(response(EVENT_C))
+      .mockResolvedValueOnce(response(EVENT_A));
+
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 1,
+      terminal: 0,
+      remaining: 1,
+    });
+    expect(h.pending.map(({ eventId }) => eventId)).toEqual([EVENT_A]);
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 1,
+      terminal: 0,
       remaining: 0,
     });
-
-    const diagnostics = readCompletionSyncDiagnostics();
-    expect(diagnostics.result).toBe('idle');
-    expect(new Date(diagnostics.at ?? '').toISOString()).toBe(diagnostics.at);
-    expect(Object.keys(diagnostics).sort()).toEqual(['at', 'result']);
+    expect(h.acknowledged).toEqual([EVENT_C, EVENT_A]);
+    expect(h.rejected).toEqual([]);
   });
 
-  it('preserves future-version bytes and refuses to downgrade them', async () => {
-    const original = JSON.stringify({ version: 2, items: [base] });
-    mocks.storage.set(KEY, original);
+  it('does not mutate adherence authority in a separate RPC before a terminal result', async () => {
+    h.pending = [operation(EVENT_A)];
+    h.rpc.mockResolvedValueOnce(response(EVENT_A, 'terminal'));
 
-    await expect(readCompletionQueue()).resolves.toEqual({
-      status: 'unsupported_version',
-      items: null,
+    await expect(flushCompletions()).resolves.toEqual({
+      flushed: 0,
+      terminal: 1,
+      remaining: 0,
     });
-    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_UNSUPPORTED_VERSION);
-    await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
-      COMPLETION_QUEUE_UNSUPPORTED_VERSION,
+    expect(h.rpc).toHaveBeenCalledTimes(1);
+    expect(h.rpc).toHaveBeenCalledWith(
+      'record_routine_completion',
+      expect.objectContaining({ p_event_id: EVENT_A, p_timezone: 'America/Toronto' }),
     );
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
+    expect(h.rpc).not.toHaveBeenCalledWith('set_routine_adherence_timezone', expect.anything());
   });
 
-  it('does not overwrite queue state when the private key is unavailable', async () => {
-    const original = JSON.stringify({ version: 1, items: [base] });
-    mocks.storage.set(KEY, original);
-    mocks.readFailures.set(KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
+  it('fails closed on malformed, foreign-event, or over-shaped success responses', async () => {
+    for (const data of [
+      null,
+      { version: 1, event_id: EVENT_B, status: 'accepted', code: null },
+      { version: 1, event_id: EVENT_A, status: 'accepted', code: null, extra: true },
+      {
+        version: 1,
+        event_id: EVENT_A,
+        status: 'terminal',
+        code: 'permission denied',
+      },
+      {
+        version: 1,
+        event_id: EVENT_A,
+        status: 'terminal',
+        code: 'COMPLETION_NEW_UNKNOWN_CODE',
+      },
+      {
+        version: 1,
+        event_id: EVENT_A,
+        status: 'terminal',
+        code: 'COMPLETION_PRODUCT_RETRY_LATER',
+      },
+      {
+        version: 1,
+        event_id: EVENT_A,
+        status: 'retryable',
+        code: 'COMPLETION_EVENT_CONFLICT',
+      },
+    ]) {
+      h.pending = [operation(EVENT_A)];
+      h.rpc.mockReset().mockResolvedValueOnce({ data, error: null });
 
-    await expect(readCompletionQueue()).resolves.toEqual({ status: 'unavailable', items: null });
-    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_UNAVAILABLE);
-    await expect(flushCompletions()).rejects.toThrow(COMPLETION_QUEUE_UNAVAILABLE);
-    expect(mocks.storage.get(KEY)).toBe(original);
-
-    mocks.readFailures.delete(KEY);
-    mocks.updateFailures.set(KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
-    await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
-      'PRIVATE_KEY_UNAVAILABLE',
-    );
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
+      await expect(flushCompletions()).rejects.toThrow(COMPLETION_SYNC_RESPONSE_INVALID);
+      expect(h.pending).toHaveLength(1);
+      expect(h.acknowledged).toEqual([]);
+      expect(h.rejected).toEqual([]);
+    }
   });
 
-  it('leaves the prior queue intact when the atomic write fails', async () => {
-    const original = JSON.stringify({ version: 1, items: [base] });
-    mocks.storage.set(KEY, original);
-    mocks.updateFailures.set(KEY, new Error('PRIVATE_WRITE_FAILED'));
+  it('rejects a persisted-session owner mismatch before dispatch', async () => {
+    h.pending = [operation(EVENT_A)];
+    h.currentUserId = 'owner-b';
 
-    await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
-      'PRIVATE_WRITE_FAILED',
-    );
-
-    expect(mocks.storage.get(KEY)).toBe(original);
-    expect(mocks.writes).toBe(0);
+    await expect(flushCompletions()).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    expect(h.rpc).not.toHaveBeenCalled();
+    expect(h.pending).toHaveLength(1);
   });
 
-  it('keeps public behavior for invalid enqueue inputs without inventing rows', async () => {
-    await enqueueCompletion({ ...base, userId: '   ' });
-    await enqueueCompletion({ ...base, completedDate: '2026-02-31' });
+  it('coalesces concurrent wakeups into one network drain', async () => {
+    h.pending = [operation(EVENT_A)];
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    h.rpc.mockImplementationOnce(async () => {
+      await gate;
+      return response(EVENT_A);
+    });
 
-    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.storage.has(KEY)).toBe(false);
-    expect(mocks.writes).toBe(0);
+    const first = flushCompletions();
+    const second = flushCompletions();
+    expect(second).toBe(first);
+    release();
+
+    await expect(first).resolves.toEqual({ flushed: 1, terminal: 0, remaining: 0 });
+    expect(h.rpc).toHaveBeenCalledTimes(1);
   });
 
-  it('normalizes pending-read dates before matching queued step ids', async () => {
-    mocks.storage.set(KEY, JSON.stringify([base]));
+  it('runs one dirty follow-up snapshot for an event appended during the active RPC', async () => {
+    h.pending = [operation(EVENT_A)];
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    h.rpc
+      .mockImplementationOnce(async () => {
+        markStarted();
+        await gate;
+        return response(EVENT_A);
+      })
+      .mockResolvedValueOnce(response(EVENT_B));
 
-    await expect(pendingStepIdsForDate(' 2026-06-25 ')).resolves.toEqual(new Set(['s1']));
-    await expect(pendingStepIdsForDate('2026-02-31')).resolves.toEqual(new Set());
+    const first = flushCompletions();
+    await started;
+    h.pending.push(operation(EVENT_B));
+    const wake = flushCompletions();
+    expect(wake).toBe(first);
+    release();
+
+    await expect(first).resolves.toEqual({ flushed: 2, terminal: 0, remaining: 0 });
+    expect(h.rpc).toHaveBeenCalledTimes(2);
+    expect(h.acknowledged).toEqual([EVENT_A, EVENT_B]);
+  });
+
+  it('serializes a new-owner wake behind the stale flight and still drains the new lease', async () => {
+    h.pending = [operation(EVENT_A)];
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    h.rpc
+      .mockImplementationOnce(async () => {
+        markStarted();
+        await gate;
+        return response(EVENT_A);
+      })
+      .mockResolvedValueOnce(response(EVENT_B));
+
+    const ownerA = flushCompletions();
+    await started;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(10, {
+      ownerUserId: 'owner-b',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    h.currentUserId = 'owner-b';
+    h.pending = [operation(EVENT_B)];
+    const ownerB = flushCompletions();
+    expect(ownerB).not.toBe(ownerA);
+    expect(h.rpc).toHaveBeenCalledTimes(1);
+
+    release();
+    await expect(ownerA).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    await expect(ownerB).resolves.toEqual({ flushed: 1, terminal: 0, remaining: 0 });
+    expect(h.rpc).toHaveBeenCalledTimes(2);
+    expect(h.acknowledged).toEqual([EVENT_B]);
+  });
+
+  it('returns a rejected promise instead of throwing synchronously after admission closes', async () => {
+    clearActiveHealthProcessingEpoch();
+
+    const pending = flushCompletions();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(h.rpc).not.toHaveBeenCalled();
+  });
+
+  it('does not acknowledge an old response after withdrawal', async () => {
+    h.pending = [operation(EVENT_A)];
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    h.rpc.mockImplementationOnce(async () => {
+      markStarted();
+      await gate;
+      return response(EVENT_A);
+    });
+
+    const pending = flushCompletions();
+    await started;
+    clearActiveHealthProcessingEpoch();
+    release();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(h.pending).toHaveLength(1);
+    expect(h.acknowledged).toEqual([]);
   });
 });

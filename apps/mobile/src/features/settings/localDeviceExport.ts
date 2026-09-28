@@ -1,26 +1,250 @@
-import { decryptPhotoNote, isPhotoEncryptionReadError } from '@/features/photos/encryptedStorage';
-import { decodePhotoStoreItemsForExport } from '@/features/photos/photoStoreEnvelope';
+import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
 import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
-import { getPrivateItems } from '@/lib/storage/privateKV';
+import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
+import { purgeExpiredCatalogLookupQueueForPurposeLimitedExport } from '@/lib/offline/catalogLookupQueue';
+import { getPrivateItemsForPurposeLimitedExport } from '@/lib/storage/privateKV';
 
-import {
-  LOCAL_PRIVATE_EXPORT_SPECS,
-  type LocalPrivateExportSection,
-} from './localPrivateDataRegistry';
+import { LOCAL_PRIVATE_DATA_KEYS } from './localPrivateDataKeys';
 
-export const LOCAL_DEVICE_EXPORT_STORAGE_KEYS = LOCAL_PRIVATE_EXPORT_SPECS.map((spec) => spec.key);
+type LocalPrivateDataKey = (typeof LOCAL_PRIVATE_DATA_KEYS)[number];
+type LocalExportSection =
+  | 'account_and_privacy'
+  | 'profile_and_preferences'
+  | 'shelf_and_routine'
+  | 'activity_and_app_state'
+  | 'subscription';
 
-const REDACTED_LOCAL_FIELD_NAMES = new Set(
-  [
-    'encryptedLocalUri',
-    'keyId',
-    'localUri',
-    'notesCiphertext',
-    'storagePath',
-    'thumbnailLocalUri',
-    'thumbnailPath',
-  ].map((field) => field.toLowerCase()),
-);
+type LocalExportSpec = {
+  key: Exclude<
+    LocalPrivateDataKey,
+    | 'layerwell.photos.v1'
+    | 'layerwell.widgetActionMap.v1'
+    | 'layerwell.widgetActionMap.v2'
+    | 'layerwell.widgetOwnerAuthority.v1'
+  >;
+  section: LocalExportSection;
+  field: string;
+};
+
+const PHOTO_RECORDS_KEY = 'layerwell.photos.v1' as const;
+
+/** Ephemeral security capabilities are accounted for but never read into an export. */
+export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
+  'layerwell.widgetActionMap.v1',
+  'layerwell.widgetActionMap.v2',
+  'layerwell.widgetOwnerAuthority.v1',
+] as const satisfies readonly LocalPrivateDataKey[];
+
+const LOCAL_EXPORT_SPECS = [
+  {
+    key: AGE_POLICY_RECEIPT_KEY,
+    section: 'account_and_privacy',
+    field: 'age_policy_receipt',
+  },
+  {
+    key: 'layerwell.appLock.enabled',
+    section: 'account_and_privacy',
+    field: 'app_lock_enabled',
+  },
+  {
+    key: 'layerwell.ask.consent.v1',
+    section: 'account_and_privacy',
+    field: 'ask_consent',
+  },
+  {
+    key: 'layerwell.commerceConsent.v1',
+    section: 'account_and_privacy',
+    field: 'commerce_consent',
+  },
+  {
+    key: 'layerwell.catalog.lookupQueue.v1',
+    section: 'shelf_and_routine',
+    field: 'pending_catalog_lookups',
+  },
+  {
+    key: 'layerwell.communityAge16.v1',
+    section: 'account_and_privacy',
+    field: 'community_age_16_verified',
+  },
+  {
+    key: 'layerwell.communityConsent.v1',
+    section: 'account_and_privacy',
+    field: 'community_consent',
+  },
+  {
+    key: 'layerwell.healthDataCollectionConsent.v1',
+    section: 'account_and_privacy',
+    field: 'health_data_collection_consent',
+  },
+  {
+    key: 'layerwell.healthDataLifecycle.v1',
+    section: 'account_and_privacy',
+    field: 'health_data_lifecycle',
+  },
+  {
+    key: 'layerwell.photos.captureConsent',
+    section: 'account_and_privacy',
+    field: 'legacy_photo_capture_consent',
+  },
+  {
+    key: 'layerwell.photos.captureConsent.v1',
+    section: 'account_and_privacy',
+    field: 'photo_capture_consent',
+  },
+  {
+    key: 'layerwell.photos.cloudBackup',
+    section: 'account_and_privacy',
+    field: 'legacy_unavailable_cloud_backup_preference',
+  },
+  {
+    key: 'layerwell.trendInsights.v1',
+    section: 'account_and_privacy',
+    field: 'photo_trend_insights_consent',
+  },
+  {
+    key: 'layerwell.notifPrefs.v1',
+    section: 'profile_and_preferences',
+    field: 'notification_preferences',
+  },
+  {
+    key: 'layerwell.recPrefs.v1',
+    section: 'profile_and_preferences',
+    field: 'recommendation_preferences',
+  },
+  {
+    key: 'layerwell.skinprofile.v1',
+    section: 'profile_and_preferences',
+    field: 'skin_profile',
+  },
+  {
+    key: 'layerwell.completions.firstCompletion.v1',
+    section: 'shelf_and_routine',
+    field: 'first_completion_marker',
+  },
+  {
+    // Obsolete v1 transport bytes are deleted without being read by the live
+    // replay worker, but a purpose-limited export must still account for them
+    // if the user requests access before that cleanup runs. Recursive export
+    // sanitization strips the historical ownerUserId field.
+    key: 'layerwell.completions.pending',
+    section: 'shelf_and_routine',
+    field: 'legacy_pending_completion_sync',
+  },
+  {
+    key: 'layerwell.completions.v1',
+    section: 'shelf_and_routine',
+    field: 'completion_and_sync_state',
+  },
+  {
+    key: 'layerwell.conflict.overrides',
+    section: 'shelf_and_routine',
+    field: 'conflict_overrides',
+  },
+  {
+    key: 'layerwell.cycle.v1',
+    section: 'shelf_and_routine',
+    field: 'legacy_cycle_configuration',
+  },
+  {
+    key: 'layerwell.cycle.v2',
+    section: 'shelf_and_routine',
+    field: 'cycle_configuration',
+  },
+  {
+    key: 'layerwell.cycleAnchor',
+    section: 'shelf_and_routine',
+    field: 'legacy_cycle_anchor',
+  },
+  {
+    key: 'layerwell.routineOrder.v1',
+    section: 'shelf_and_routine',
+    field: 'routine_order_overrides',
+  },
+  { key: 'layerwell.ramp.v1', section: 'shelf_and_routine', field: 'active_ramps' },
+  {
+    key: 'layerwell.shelf.v1',
+    section: 'shelf_and_routine',
+    field: 'shelf_and_sync_state',
+  },
+  {
+    key: 'layerwell.ask.groundedTurns.v1',
+    section: 'activity_and_app_state',
+    field: 'ask_grounded_turn_counts',
+  },
+  {
+    key: 'layerwell.community.reactions.v1',
+    section: 'activity_and_app_state',
+    field: 'community_reactions',
+  },
+  {
+    key: 'layerwell.milestones.v1',
+    section: 'activity_and_app_state',
+    field: 'seen_milestones',
+  },
+  {
+    key: 'layerwell.notiflog.v1',
+    section: 'activity_and_app_state',
+    field: 'notification_delivery_log',
+  },
+  {
+    key: 'layerwell.recDismissed.v1',
+    section: 'activity_and_app_state',
+    field: 'dismissed_recommendations',
+  },
+  {
+    key: 'layerwell.reviewPrompt.v1',
+    section: 'activity_and_app_state',
+    field: 'review_prompt_state',
+  },
+  {
+    key: 'layerwell.routineActivation.v1',
+    section: 'activity_and_app_state',
+    field: 'routine_activation_state',
+  },
+  {
+    key: 'layerwell.trendState.v1',
+    section: 'activity_and_app_state',
+    field: 'photo_trend_state',
+  },
+  {
+    key: 'layerwell.entitlement.v1',
+    section: 'subscription',
+    field: 'legacy_entitlement_cache',
+  },
+  {
+    key: 'layerwell.entitlement.v2',
+    section: 'subscription',
+    field: 'entitlement_cache',
+  },
+  {
+    key: 'layerwell.subscription.freeConflictCheckRuleIds.v1',
+    section: 'subscription',
+    field: 'free_conflict_check_rule_ids',
+  },
+  {
+    key: 'layerwell.subscription.promptedExpiry',
+    section: 'subscription',
+    field: 'prompted_expiry',
+  },
+] as const satisfies readonly LocalExportSpec[];
+
+export const LOCAL_DEVICE_EXPORT_STORAGE_KEYS = [
+  ...LOCAL_EXPORT_SPECS.map((spec) => spec.key),
+  PHOTO_RECORDS_KEY,
+] as const;
+
+const REDACTED_LOCAL_FIELD_NAMES = new Set([
+  'encryptedLocalUri',
+  'idempotencyKey',
+  'keyId',
+  'localUri',
+  'notesCiphertext',
+  'ownerUserId',
+  'storagePath',
+  'thumbnailLocalUri',
+  'thumbnailPath',
+]);
 
 const SAFE_PHOTO_FIELDS = [
   'id',
@@ -41,13 +265,10 @@ const SAFE_PHOTO_FIELDS = [
   'faceRegionRedacted',
 ] as const;
 
-type ExportSectionRecords = Record<
-  Exclude<LocalPrivateExportSection, 'progress'>,
-  Record<string, unknown>
->;
+type ExportSectionRecords = Record<LocalExportSection, Record<string, unknown>>;
 
 export type LocalDeviceExportData = {
-  schema_version: 1;
+  schema_version: 2;
   collected_at: string;
   storage_scope: 'encrypted_private_storage_on_this_device';
   sections: ExportSectionRecords & {
@@ -64,7 +285,7 @@ export type LocalDeviceExportData = {
 };
 
 export type MobileDataExportBundle = {
-  mobile_export_schema_version: 1;
+  mobile_export_schema_version: 2;
   exported_at: string;
   server_account_data_status: 'included' | 'backend_not_configured';
   server_account_data: unknown | null;
@@ -76,90 +297,36 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-export const LOCAL_DEVICE_EXPORT_RECORD_INVALID = 'LOCAL_DEVICE_EXPORT_RECORD_INVALID';
-
-function invalidExportRecord(key: string): never {
-  throw new Error(`${LOCAL_DEVICE_EXPORT_RECORD_INVALID}:${key}`);
-}
-
-function parseStructuredStoredValue(raw: string, key: string): unknown {
+function parseStoredValue(raw: string): unknown {
   try {
     return JSON.parse(raw) as unknown;
   } catch {
-    return invalidExportRecord(key);
+    return raw;
   }
-}
-
-function parseShelfProductsForExport(raw: string, key: string): unknown[] {
-  const parsed = parseStructuredStoredValue(raw, key);
-  if (Array.isArray(parsed)) return parsed;
-  if (!isRecord(parsed) || !Array.isArray(parsed.products)) return invalidExportRecord(key);
-  const keys = Object.keys(parsed).sort();
-  if (parsed.version === 1 && keys.join(',') === 'products,version') return parsed.products;
-  if (
-    (parsed.version === 2 || parsed.version === 3) &&
-    Array.isArray(parsed.addOperations) &&
-    keys.join(',') === 'addOperations,products,version'
-  ) {
-    return parsed.products;
-  }
-  return invalidExportRecord(key);
-}
-
-const SAFE_SCALAR =
-  /^(?:v[1-9]\d*:[A-Za-z0-9._-]{1,128}|\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2}))?|true|false|0|1)$/;
-
-function parseSafeScalarOrJson(raw: string, key: string): unknown {
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (
-      parsed === null ||
-      typeof parsed === 'boolean' ||
-      (typeof parsed === 'number' && (parsed === 0 || parsed === 1)) ||
-      typeof parsed === 'object'
-    ) {
-      return parsed;
-    }
-    if (typeof parsed === 'string' && SAFE_SCALAR.test(parsed)) return parsed;
-    return invalidExportRecord(key);
-  } catch (error) {
-    if (error instanceof Error && error.message.startsWith(LOCAL_DEVICE_EXPORT_RECORD_INVALID)) {
-      throw error;
-    }
-    if (SAFE_SCALAR.test(raw)) return raw;
-    return invalidExportRecord(key);
-  }
-}
-
-function isLocalPathString(value: string): boolean {
-  return (
-    /(?:file|content|ph|assets-library|ms-appdata):\/\//i.test(value) ||
-    /(?:^|[\s"'(])\/(?:data|private|storage|var)\//i.test(value) ||
-    /(?:^|[\s"'(])[A-Za-z]:[\\/]/.test(value)
-  );
 }
 
 function redactLocalFields(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(redactLocalFields);
-  if (typeof value === 'string' && isLocalPathString(value)) return '[redacted_local_path]';
   if (!isRecord(value)) return value;
 
   const sanitized: Record<string, unknown> = {};
   for (const [key, child] of Object.entries(value)) {
-    if (!REDACTED_LOCAL_FIELD_NAMES.has(key.toLowerCase())) {
-      sanitized[key] = redactLocalFields(child);
-    }
+    if (!REDACTED_LOCAL_FIELD_NAMES.has(key)) sanitized[key] = redactLocalFields(child);
   }
   return sanitized;
 }
 
-async function exportPhotoRecords(raw: string): Promise<{
+async function exportPhotoRecords(
+  raw: string,
+  accountLease: AccountGenerationLease,
+): Promise<{
   records: Record<string, unknown>[];
   omitted_invalid_record_count: number;
   photo_files_included: false;
   thumbnails_included: false;
 }> {
-  const parsed = decodePhotoStoreItemsForExport(raw);
+  const parsed = parseStoredValue(raw);
+  if (!Array.isArray(parsed)) throw new Error('LOCAL_DEVICE_EXPORT_INVALID:progress_photo_records');
 
   const records: Record<string, unknown>[] = [];
   let omittedInvalidRecordCount = 0;
@@ -177,14 +344,10 @@ async function exportPhotoRecords(raw: string): Promise<{
 
     const legacyNote = typeof value.notes === 'string' ? value.notes : null;
     const ciphertext = typeof value.notesCiphertext === 'string' ? value.notesCiphertext : null;
-    let decryptedNote: string | null = null;
-    if (ciphertext) {
-      try {
-        decryptedNote = await decryptPhotoNote(ciphertext);
-      } catch (error) {
-        if (!isPhotoEncryptionReadError(error)) throw error;
-      }
-    }
+    const decryptedNote = ciphertext
+      ? await decryptPhotoNoteForPurposeLimitedExport(ciphertext, accountLease)
+      : null;
+    accountLease.assertCurrent();
     record.notes = ciphertext ? decryptedNote : legacyNote;
     record.notesExportStatus = ciphertext
       ? decryptedNote === null
@@ -216,34 +379,44 @@ function emptySections(): LocalDeviceExportData['sections'] {
 }
 
 export async function collectLocalDeviceExportData(
+  accountLease: AccountGenerationLease,
+  expectedUserId: string | null,
   collectedAt = new Date().toISOString(),
 ): Promise<LocalDeviceExportData> {
+  accountLease.assertCurrent();
+  await purgeExpiredCatalogLookupQueueForPurposeLimitedExport(
+    accountLease,
+    expectedUserId,
+    new Date(collectedAt),
+  );
+  accountLease.assertCurrent();
   const sections = emptySections();
-  const stored = await getPrivateItems(LOCAL_DEVICE_EXPORT_STORAGE_KEYS);
+  const stored = await getPrivateItemsForPurposeLimitedExport(
+    LOCAL_DEVICE_EXPORT_STORAGE_KEYS,
+    accountLease,
+  );
+  accountLease.assertCurrent();
 
-  for (const spec of LOCAL_PRIVATE_EXPORT_SPECS) {
+  for (const spec of LOCAL_EXPORT_SPECS) {
     const raw = stored.get(spec.key) ?? null;
-    if (raw === null) continue;
-
-    let exportValue: unknown;
-    if (spec.transform === 'photo_records') {
-      exportValue = await exportPhotoRecords(raw);
-    } else if (spec.transform === 'conflict_choices') {
-      exportValue = normalizeConflictChoicesForExport(parseStructuredStoredValue(raw, spec.key));
-    } else if (spec.transform === 'shelf_products') {
-      exportValue = parseShelfProductsForExport(raw, spec.key);
-    } else if (spec.transform === 'safe_scalar_or_json') {
-      exportValue = parseSafeScalarOrJson(raw, spec.key);
-    } else {
-      exportValue = parseStructuredStoredValue(raw, spec.key);
+    if (raw !== null) {
+      const parsed = parseStoredValue(raw);
+      const exportValue =
+        spec.key === 'layerwell.conflict.overrides'
+          ? normalizeConflictChoicesForExport(parsed)
+          : parsed;
+      sections[spec.section][spec.field] = redactLocalFields(exportValue);
     }
-
-    (sections[spec.section] as unknown as Record<string, unknown>)[spec.field] =
-      spec.transform === 'photo_records' ? exportValue : redactLocalFields(exportValue);
   }
 
+  const photoRaw = stored.get(PHOTO_RECORDS_KEY) ?? null;
+  if (photoRaw !== null) {
+    sections.progress.photo_records = await exportPhotoRecords(photoRaw, accountLease);
+  }
+  accountLease.assertCurrent();
+
   return {
-    schema_version: 1,
+    schema_version: 2,
     collected_at: collectedAt,
     storage_scope: 'encrypted_private_storage_on_this_device',
     sections,
@@ -265,6 +438,16 @@ export async function collectLocalDeviceExportData(
         data_class: 'temporary_export_and_share_cache',
         reason: 'One-time cache files are deleted after each share attempt and are not exported.',
       },
+      {
+        data_class: 'privacy_request_recovery_capabilities',
+        reason:
+          'Owner bindings, idempotency keys, and recovery capabilities used to finish deletion or consent-withdrawal requests are security control data and are never exported.',
+      },
+      {
+        data_class: 'widget_action_capabilities',
+        reason:
+          'Ephemeral widget action tokens, owner bindings, and private step mappings are security control data and are never exported.',
+      },
     ],
   };
 }
@@ -276,7 +459,7 @@ export function buildMobileDataExportBundle(params: {
   localDeviceData: LocalDeviceExportData;
 }): MobileDataExportBundle {
   return {
-    mobile_export_schema_version: 1,
+    mobile_export_schema_version: 2,
     exported_at: params.exportedAt ?? new Date().toISOString(),
     server_account_data_status: params.serverAccountDataStatus,
     server_account_data: params.serverAccountData,

@@ -19,10 +19,14 @@ describe('Conflict route contracts', () => {
       expect(source, `${route} should recover direct entries to Shelf`).toContain(
         'APP_SHELF_ROUTE',
       );
-      expect(source, `${route} should guard native back with a fallback`).toContain(
-        'backOrReplace(router, APP_SHELF_ROUTE)',
-      );
     }
+
+    expect(readAppRoute('conflict/[ruleId].tsx')).toContain(
+      'backOrReplace(router, APP_SHELF_ROUTE)',
+    );
+    expect(readAppRoute('share/conflict/[ruleId].tsx')).toContain(
+      'fallbackRoute={APP_SHELF_ROUTE}',
+    );
   });
 
   it('returns deferred share-card direct entries to Shelf', () => {
@@ -33,43 +37,20 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('fallbackLabel="Back to Shelf"');
   });
 
-  it('keeps share-card export recovery inline on the share route', () => {
+  it('keeps the share-card route zero-admission before all private hooks and side effects', () => {
     const source = readAppRoute('share/conflict/[ruleId].tsx');
 
-    expect(source).toContain('const [shareFeedback, setShareFeedback]');
-    expect(source).toContain('SHARE_LINK_UNAVAILABLE_MESSAGE');
-    expect(source).toContain('SHARE_UNAVAILABLE_MESSAGE');
-    expect(source).toContain('setShareFeedback({');
-    expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('shareCardUserMessage()');
-    expect(source).not.toContain('Alert.alert');
-  });
-
-  it('fences conflict-card externalization to one exact focused owner request', () => {
-    const route = readAppRoute('share/conflict/[ruleId].tsx');
-    const exporter = readFileSync(`${APP_DIR}/../features/growth/shareCard.ts`, 'utf8');
-
-    expect(route).toContain('const isFocused = useIsFocused();');
-    expect(route).toContain('const ownerScope = useOwnerQueryScope();');
-    expect(route).toContain('const shareRequestRef = useRef<Promise<void> | null>(null);');
-    expect(route).toContain('shareActionRef.current?.invalidate();');
-    expect(route).toContain('mountedRef.current &&');
-    expect(route).toContain('focusedRef.current &&');
-    expect(route).toContain('isOwnerQueryScopeCurrent(ownerScope)');
-    expect(route).toContain('shareRequestRef.current = completion;');
-    expect(route).toContain('const nextBusy = isFocused ? (action?.isRunning() ?? false) : false;');
-    expect(route).toContain('setBusy(nextBusy);');
-    expect(route).toContain('if (shareRequestRef.current !== completion) return;');
-    expect(route).toContain('setBusy(false);');
-
-    expect(exporter).toContain('runOwnerQueryOperation');
-    expect(exporter).toContain('awaitAccountGenerationLease');
-    expect(exporter).toContain("result: 'base64'");
-    expect(exporter).toContain("deps.reserve('conflict_share_png')");
-    expect(exporter).toContain("deps.markState(staging, 'plaintext_written')");
-    expect(exporter).toContain("deps.markState(staging, 'sharing')");
-    expect(exporter).toContain('await deps.cleanup(staging);');
-    expect(exporter).not.toContain("result: 'tmpfile'");
+    expect(source).toContain('surface="shareCard"');
+    expect(source).not.toContain('useLocalSearchParams');
+    expect(source).not.toContain('useShelf');
+    expect(source).not.toContain('DetectedConflict');
+    expect(source).not.toContain('ConflictCard');
+    expect(source).not.toContain('shareConflictCard');
+    expect(source).not.toContain('createConflictShareLink');
+    expect(source).not.toContain('captureRef');
+    expect(source).not.toContain('FileSystem');
+    expect(source).not.toContain('Sharing');
+    expect(source).not.toContain('fetch(');
   });
 
   it('recovers missing conflict-detail routes without stale guidance', () => {
@@ -91,21 +72,41 @@ describe('Conflict route contracts', () => {
     expect(source).not.toContain('<Button label="Close" variant="ghost" onPress={onDismiss} />');
   });
 
-  it('keeps safety-setting recovery status-aware and avoids dead replacement promises', () => {
+  it('keeps safety copy corpus-bound and exposes no safety override', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 
-    expect(source).toContain('setting if your status changed.');
+    expect(source).toContain('label={r.copy.primaryActionLabel}');
     expect(source).toContain("router.push('/settings/skin-profile?returnTo=shelf')");
-    expect(source).not.toContain("{' '}\n        {r.resolutionCopy}");
+    expect(source).not.toContain('Keep it on my shelf');
+    expect(source).not.toContain('talk to your doctor');
   });
 
   it('does not claim conflict-detail placement without scheduler output', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 
-    expect(source).toContain('Keep retinol and glycolic on different evenings.');
+    expect(source).toContain('return conflict.rule.copy.resolution;');
     expect(source).not.toMatch(/Already in your plan|already reflected/i);
     expect(source).not.toContain('Retinol on cycling night 2, glycolic on night 1');
     expect(source).not.toContain("We've left both in your AM routine");
+  });
+
+  it('renders interaction-specific claim copy only from the canonical corpus', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain('{r.copy.mechanism}');
+    expect(source).toContain('{r.copy.resolution}');
+    expect(source).toContain('{r.copy.sourceLimitationTitle}');
+    expect(source).toContain('{r.copy.sourceLimitationBody}');
+    expect(source).toContain('r.copy.overrideActionLabel ?');
+    expect(source).not.toContain('const COPY:');
+    expect(source).not.toContain('CopyOverride');
+    expect(source).not.toContain('dermatology literature review, 2025');
+    expect(source).not.toContain('copy.mechanism ??');
+    expect(source).not.toContain('copy.suggestion ??');
+    expect(source).not.toContain('noteForTags');
+    expect(source).not.toContain('InContextNote');
+    expect(source).not.toContain('Refuted myth');
+    expect(source).not.toContain('Use together anyway');
   });
 
   it('keeps direct conflict details behind the launch-gated shelf conflict source', () => {
@@ -114,12 +115,12 @@ describe('Conflict route contracts', () => {
     expect(source).toContain("from '@/features/shelf/useShelf';");
     expect(source).toContain('const { data } = useShelf();');
     expect(source).toContain('const requestedPair =');
-    expect(source).toContain('const ruleMatches = data?.conflicts.filter');
+    expect(source).toContain('isAdmittedDetectedConflict(candidate)');
     expect(source).toContain('ruleMatches.length === 1');
     expect(source).toContain("sort().join('+')");
     expect(source).toContain('requestedPair,');
     expect(source).not.toContain('STARTER_RULES');
-    expect(source).not.toContain('detectConflicts(');
+    expect(source).not.toContain('previewDetectConflicts(');
     expect(source).not.toContain('shippableRules(');
   });
 
@@ -138,20 +139,34 @@ describe('Conflict route contracts', () => {
     expect(identity).toContain('const subjectProductId = c.productAId ?? c.productBId');
     expect(detail).toContain('subjectProductId?: string | string[];');
     expect(detail).toContain('candidate.productAId === subjectProductId');
-    expect(shelf).toContain('router.push(conflictDetailRoute(banner))');
+    expect(shelf).toContain('router.push(conflictDetailRoute(data.banner!))');
     expect(product).toContain('router.push(conflictDetailRoute(c))');
   });
 
-  it('preserves exact pair identity when opening a share card', () => {
+  it('shows the Shelf review state only when an assessable pair is unsupported', () => {
+    const shelf = readAppRoute('(tabs)/shelf.tsx');
+
+    expect(shelf).toContain("data?.conflictCoverageStatus === 'unsupported_unreviewed'");
+    expect(shelf).toContain('data.unsupportedConflictPairs.length > 0');
+  });
+
+  it('keeps the private conflict detail launcher closed and the share route product-blind', () => {
     const detail = readAppRoute('conflict/[ruleId].tsx');
     const share = readAppRoute('share/conflict/[ruleId].tsx');
+    const phase7 = readFileSync(`${APP_DIR}/../lib/launch/phase7.ts`, 'utf8');
 
-    expect(detail).toContain('router.push(conflictShareRoute(conflict))');
-    expect(share).toContain('const requestedPair =');
-    expect(share).toContain('const ruleMatches = data?.conflicts.filter');
-    expect(share).toContain('ruleMatches.length === 1');
-    expect(share).toContain("sort().join('+')");
-    expect(share).toContain('requestedPair,');
+    expect(detail).not.toContain('router.push(conflictShareRoute(conflict))');
+    expect(detail).not.toContain('conflictShareRoute');
+    expect(detail).not.toContain('canShareConflictCard');
+    expect(phase7).toContain('shareCard: false');
+    expect(phase7).toContain('export function canShareConflictCard(_conflict?: unknown): false');
+    expect(phase7).toContain('return false;');
+    expect(share).not.toContain('requestedPair');
+    expect(share).not.toContain('isAdmittedDetectedConflict');
+    expect(share).not.toContain('ruleMatches');
+    expect(share).not.toContain('productAId');
+    expect(share).not.toContain('productBId');
+    expect(share).not.toContain('ruleId');
   });
 
   it('keeps recommendation conflict routes tied to the detected product pair', () => {
@@ -167,62 +182,75 @@ describe('Conflict route contracts', () => {
     expect(route).toContain('...(productAId && productBId ? { productAId, productBId } : {})');
   });
 
-  it('tracks conflict choices without sending rule or product identifiers', () => {
-    const source = readAppRoute('conflict/[ruleId].tsx');
-
-    expect(source).toContain("track('conflict_resolution_chosen', {");
-    expect(source).toContain("action: choice === 'use_together' ? 'use_together' : 'keep'");
-    expect(source).toContain("track('conflict_overridden', { source: 'detail' })");
-    expect(source).not.toContain("track('conflict_resolution_chosen', { rule");
-    expect(source).not.toContain("track('conflict_overridden', { rule");
-    expect(source).not.toContain("track('conflict_resolution_chosen', { product");
-    expect(source).not.toContain("track('conflict_overridden', { product");
+  it('emits no telemetry from any conflict-only route', () => {
+    for (const route of [
+      'conflict/[ruleId].tsx',
+      'share/conflict/[ruleId].tsx',
+      's/[shareId].tsx',
+    ]) {
+      const source = readAppRoute(route);
+      expect(source).not.toContain("from '@/lib/analytics/track'");
+      expect(source).not.toMatch(/\btrack\(/u);
+      expect(source).not.toContain('trackProductAddStarted');
+    }
   });
 
-  it('persists before analytics/navigation and recovers failed encrypted writes inline', () => {
+  it('keeps conflict public-link creation literal-null and side-effect-free', () => {
+    const source = readFileSync(`${APP_DIR}/../features/growth/shareLinks.ts`, 'utf8');
+
+    expect(source).toContain('createConflictShareLink(_request?: unknown): Promise<null>');
+    expect(source).toContain('return null;');
+    expect(source).not.toContain('buildPublicGrowthUrl');
+    expect(source).not.toContain('expo-crypto');
+    expect(source).not.toContain('createShareId');
+  });
+
+  it('uses only admitted conflicts and canonical corpus copy in recommendations', () => {
+    const source = readFileSync(`${APP_DIR}/../features/recommendations/engine.ts`, 'utf8');
+
+    expect(source).toContain('isAdmittedDetectedConflict(conflict)');
+    expect(source).toContain('evidence: topConflict.rule.copy.resolution');
+    expect(source).not.toContain('evidence: topConflict.rule.resolutionCopy');
+  });
+
+  it('keeps candidate-rule injection out of production plan and recommendation APIs', () => {
+    const featureDir = `${APP_DIR}/../features`;
+    const productionConsumers = [
+      readFileSync(`${featureDir}/routine/generate.ts`, 'utf8'),
+      readFileSync(`${featureDir}/scheduler/orchestrate.ts`, 'utf8'),
+      readFileSync(`${featureDir}/recommendations/engine.ts`, 'utf8'),
+    ];
+
+    for (const source of productionConsumers) {
+      expect(source).not.toContain('STARTER_RULES');
+      expect(source).not.toContain('previewConflictRules');
+      expect(source).not.toContain('previewDetectConflicts');
+      expect(source).not.toMatch(/export function preview(?:GeneratePlan|Orchestrate|Recommend)/u);
+    }
+  });
+
+  it('persists locally before navigation and recovers failed encrypted writes inline', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
     const privateKV = readFileSync(`${APP_DIR}/../lib/storage/privateKV.ts`, 'utf8');
-    const choices = readFileSync(`${APP_DIR}/../features/intelligence/overrides.ts`, 'utf8');
-    const writeIndex = source.indexOf('await setConflictChoice(c, userChoice, {');
-    const analyticsIndex = source.indexOf("track('conflict_resolution_chosen'", writeIndex);
-    const cacheIndex = source.indexOf('qc.setQueryData<ShelfData>', analyticsIndex);
-    const dismissIndex = source.indexOf('onDismiss();', analyticsIndex);
+    const writeIndex = source.indexOf('await setConflictChoice(c, userChoice);');
+    const cacheIndex = source.indexOf('qc.setQueryData<ShelfData>', writeIndex);
+    const dismissIndex = source.indexOf('onDismiss();', cacheIndex);
 
     expect(writeIndex).toBeGreaterThan(-1);
-    expect(analyticsIndex).toBeGreaterThan(writeIndex);
-    expect(cacheIndex).toBeGreaterThan(analyticsIndex);
-    expect(dismissIndex).toBeGreaterThan(analyticsIndex);
+    expect(cacheIndex).toBeGreaterThan(writeIndex);
+    expect(dismissIndex).toBeGreaterThan(cacheIndex);
     expect(source).toContain('if (saveInFlight.current) return;');
-    expect(source).toContain('const saveRequestId = useRef(0);');
-    expect(source).toContain('saveRequestId.current += 1;');
-    expect(source).toContain('saveRequestId.current !== requestId');
-    expect(source).toContain('saveRequestId.current === requestId');
-    expect(source.match(/saveRequestId\.current !== requestId/g)).toHaveLength(2);
-    expect(source).toContain(
-      'saveRequestId.current === requestId && isOwnerQueryScopeCurrent(ownerScope)',
-    );
-    expect(source).toContain(
-      'applyConflictChoicesToShelfData(current, conflictChoices, boundary.localDate)',
-    );
-    expect(source).toContain('queryKeys.shelf(ownerScope, boundary)');
-    expect(source).toContain('!isOwnerQueryScopeCurrent(ownerScope)');
-    expect(source).toContain('await failClosedShelfQueriesAfterMutationFailure(qc, ownerScope);');
-    expect(source).toContain('Recovery failure must not suppress honest mutation feedback.');
+    expect(source).toContain('applyConflictChoicesToShelfData(current, conflictChoices)');
     expect(source).not.toContain("invalidateQueries({ queryKey: ['shelf'] })");
     expect(privateKV).toContain('EXPO_PUBLIC_E2E_CONFLICT_CHOICE_SAVE_FAILURE');
     expect(privateKV).toContain('await new Promise((resolve) => setTimeout(resolve, 600));');
     expect(privateKV).toContain('key !== CONFLICT_CHOICE_STORAGE_KEY');
-    expect(source).toContain('Choice not confirmed');
-    expect(source).toContain('couldn&apos;t confirm whether this choice was saved');
-    expect(source).toContain('It did not reset or remove');
-    expect(source).not.toContain('Your previous schedule is unchanged');
+    expect(source).toContain('Choice not saved');
+    expect(source).toContain('Your previous schedule is unchanged. Try again.');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).not.toContain('mirrorConflictChoiceForOwner');
-    expect(source).not.toContain('async function mirrorChoice');
     expect(source).not.toContain('.upsert(');
-    expect(choices).toContain('updatePrivateItemsTransactionally(');
-    expect(choices).toContain('enqueueConflictChoiceOutboxOperation(outbox, {');
-    expect(choices).not.toContain('.upsert(');
+    expect(source).not.toContain('routine_conflicts');
+    expect(source).toContain('local-only');
   });
 
   it('names the exact shelf products before a timing choice is made', () => {
@@ -232,7 +260,7 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('Your products');
     expect(source).toContain('{productPairLabel}');
     expect(source).toContain('function conflictSuggestion');
-    expect(source).toContain('conflict.productAName} and ${conflict.productBName}');
+    expect(source).toContain('return conflict.rule.copy.resolution;');
     expect(source).toContain(
       "[familyTitle(conflict), productPairLabel].filter(Boolean).join('. ')",
     );
@@ -279,12 +307,9 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('contentContainerClassName="pb-10"');
     expect(source).toContain('paddingBottom: contentPaddingBottom');
     expect(source).toContain('className="min-h-[48px] items-center justify-center py-2"');
-    expect(source).toContain('className="mt-4 min-h-[48px] items-center justify-center"');
-    expect(source).toContain('className="min-h-[48px] items-center justify-center py-3"');
     expect(source).not.toContain('const sheetMaxHeight = Math.max(320, height - 24)');
     expect(source).not.toContain('height - 24');
     expect(source).not.toContain('viewportHeight > 0 ? Math.max(0, viewportHeight - 44) : 524');
     expect(source).not.toContain('className="items-center py-2"');
-    expect(source).not.toContain('className="mt-4 items-center"');
   });
 });

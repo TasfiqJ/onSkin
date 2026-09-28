@@ -8,34 +8,38 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
-describe('public share landing route analytics', () => {
-  it('tracks the Phase 8 dashboard landing event with sanitized attribution', () => {
+describe('public conflict-share landing privacy boundary', () => {
+  it('renders one generic unavailable recovery without reading or branching on the path value', () => {
     const source = readAppRoute('s/[shareId].tsx');
 
-    expect(source).toContain('import { isSafeOpaqueId, sanitizeAttribution }');
-    expect(source).toContain('const attribution = useMemo(');
-    expect(source).toContain("track('landing_viewed', { reason: 'invalid_share_id' })");
-    expect(source).toContain("track('share_link_opened', { reason: 'invalid_share_id' })");
-    expect(source).toContain("track('landing_viewed', {");
-    expect(source).toContain("track('share_link_opened', {");
-    expect(source).not.toContain('landingProps');
-    expect(source).toContain('source: firstParam(params.source)');
-    expect(source).toContain('campaign: firstParam(params.campaign)');
-    expect(source).toContain('creative_variant: firstParam(params.creative_variant)');
-    expect(source).toContain('platform: firstParam(params.platform)');
-    expect(source).toContain("sanitized.source === 'share_card'");
-    expect(source).toContain("sanitized.medium === 'organic_share'");
-    expect(source).toContain("sanitized.campaign === 'shelf_conflict_card_v1'");
-    expect(source).toContain('share_id: safeShareId');
+    expect(source).toContain('Public sharing is unavailable.');
+    expect(source).toContain('This address does not load another person&apos;s products');
+    expect(source).toContain('router.replace(APP_SHELF_ROUTE)');
+    expect(source).toContain("router.replace('/shelf/manual')");
+    expect(source).not.toContain('useLocalSearchParams');
+    expect(source).not.toContain('isSafeOpaqueId');
+    expect(source).not.toContain('shareId');
+    expect(source).not.toContain('rawShareId');
+    expect(source).not.toContain('hasValidShareId');
+    expect(source).not.toContain('Shared cards');
+    expect(source).not.toContain('BRAND');
   });
 
-  it('does not send public share route product, rule, or profile details', () => {
+  it('emits no telemetry, attribution, network request, or private context', () => {
     const source = readAppRoute('s/[shareId].tsx');
 
+    expect(source).not.toMatch(/\btrack\s*\(/u);
+    expect(source).not.toContain('trackProductAddStarted');
+    expect(source).not.toContain('sanitizeAttribution');
+    expect(source).not.toContain('campaign');
+    expect(source).not.toContain('content');
+    expect(source).not.toContain('creative_variant');
     expect(source).not.toContain('rule_id');
     expect(source).not.toContain('product_name');
     expect(source).not.toContain('product_id');
     expect(source).not.toContain('skin_profile');
     expect(source).not.toContain('pregnancy');
+    expect(source).not.toContain('fetch(');
+    expect(source).not.toContain('supabase');
   });
 });

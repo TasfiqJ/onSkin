@@ -1,0 +1,2565 @@
+{
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "c681d936-9d1d-4561-a9c3-f57845ab6157",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "79c9237b17c5e71b117d472d622457bb7dd52305",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "5d644e5887c41ea4da3f55ca738f5ca432ff40ddc6418a4cb3f69c8aa9f3e8d8",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "browser-events-failed",
+    "fixtureGroup": "failed",
+    "scenarioId": null,
+    "viewport": null
+  },
+  "events": [
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:04.639Z",
+      "requestId": "6FDB5C32A7B71316681E9AE76264ECDC",
+      "requestMethod": "GET",
+      "type": "Document",
+      "url": "http://localhost:8680/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "text/html",
+      "observedAt": "2026-07-22T06:10:05.756Z",
+      "requestId": "6FDB5C32A7B71316681E9AE76264ECDC",
+      "status": 200,
+      "type": "Document",
+      "url": "http://localhost:8680/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.2",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.3",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.4",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.5",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.6",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.7",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.8",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.9",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:05.764Z",
+      "requestId": "15440.10",
+      "requestMethod": "GET",
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.771Z",
+      "requestId": "15440.2",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.771Z",
+      "requestId": "15440.3",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.772Z",
+      "requestId": "15440.4",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.774Z",
+      "requestId": "15440.5",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.774Z",
+      "requestId": "15440.6",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.774Z",
+      "requestId": "15440.7",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.775Z",
+      "requestId": "15440.8",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:05.775Z",
+      "requestId": "15440.9",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "application/javascript",
+      "observedAt": "2026-07-22T06:10:14.986Z",
+      "requestId": "15440.10",
+      "status": 200,
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:15.138Z",
+      "params": {
+        "requestId": "15440.28",
+        "url": "ws://localhost:8680/hot",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "HMRClient",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 73020,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "setup",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72853,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72669,
+                "columnNumber": 20
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72019,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:15.138Z",
+      "params": {
+        "requestId": "15440.29",
+        "url": "ws://localhost:8680/message",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 75032,
+                "columnNumber": 26
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72020,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:15.139Z",
+      "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
+      "type": "info"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:15.185Z",
+      "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "type": "log"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:15.206Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:15.206Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:15.220Z",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "type": "warning"
+    },
+    {
+      "documentURL": "http://localhost:8680/?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:15.353Z",
+      "requestId": "15440.30",
+      "requestMethod": "GET",
+      "type": "Other",
+      "url": "http://localhost:8680/favicon.ico"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:15.392Z",
+      "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
+      "type": "warning"
+    },
+    {
+      "documentURL": "http://localhost:8680/",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:15.432Z",
+      "requestId": "15440.31",
+      "requestMethod": "GET",
+      "type": "Other",
+      "url": "http://localhost:8680/favicon.ico"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "image/x-icon",
+      "observedAt": "2026-07-22T06:10:15.438Z",
+      "requestId": "15440.30",
+      "status": 200,
+      "type": "Other",
+      "url": "http://localhost:8680/favicon.ico"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "image/x-icon",
+      "observedAt": "2026-07-22T06:10:15.508Z",
+      "requestId": "15440.31",
+      "status": 200,
+      "type": "Other",
+      "url": "http://localhost:8680/favicon.ico"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.419Z",
+      "requestId": "90E47BABB06768B97354B6322854B65B",
+      "requestMethod": "GET",
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "text/html",
+      "observedAt": "2026-07-22T06:10:16.933Z",
+      "requestId": "90E47BABB06768B97354B6322854B65B",
+      "status": 200,
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.945Z",
+      "requestId": "15440.33",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.945Z",
+      "requestId": "15440.34",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.945Z",
+      "requestId": "15440.35",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.946Z",
+      "requestId": "15440.36",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.946Z",
+      "requestId": "15440.37",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.946Z",
+      "requestId": "15440.38",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.946Z",
+      "requestId": "15440.39",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.946Z",
+      "requestId": "15440.40",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:16.946Z",
+      "requestId": "15440.41",
+      "requestMethod": "GET",
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.954Z",
+      "requestId": "15440.34",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.954Z",
+      "requestId": "15440.33",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.955Z",
+      "requestId": "15440.35",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.955Z",
+      "requestId": "15440.36",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.956Z",
+      "requestId": "15440.37",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.956Z",
+      "requestId": "15440.38",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.957Z",
+      "requestId": "15440.40",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:16.958Z",
+      "requestId": "15440.39",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "application/javascript",
+      "observedAt": "2026-07-22T06:10:17.392Z",
+      "requestId": "15440.41",
+      "status": 200,
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:17.406Z",
+      "params": {
+        "requestId": "15440.59",
+        "url": "ws://localhost:8680/hot",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "HMRClient",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 73020,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "setup",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72853,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72669,
+                "columnNumber": 20
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72019,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:17.407Z",
+      "params": {
+        "requestId": "15440.60",
+        "url": "ws://localhost:8680/message",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 75032,
+                "columnNumber": 26
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72020,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:17.407Z",
+      "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
+      "type": "info"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:17.427Z",
+      "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "type": "log"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:17.434Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:17.435Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:17.438Z",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:17.511Z",
+      "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
+      "type": "warning"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.486Z",
+      "requestId": "01EB0E4908A2F273A3640BF3B2EC1532",
+      "requestMethod": "GET",
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "text/html",
+      "observedAt": "2026-07-22T06:10:18.946Z",
+      "requestId": "01EB0E4908A2F273A3640BF3B2EC1532",
+      "status": 200,
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.956Z",
+      "requestId": "15440.62",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.956Z",
+      "requestId": "15440.63",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.956Z",
+      "requestId": "15440.64",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.957Z",
+      "requestId": "15440.65",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.957Z",
+      "requestId": "15440.66",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.957Z",
+      "requestId": "15440.67",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.957Z",
+      "requestId": "15440.68",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.957Z",
+      "requestId": "15440.69",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:18.957Z",
+      "requestId": "15440.70",
+      "requestMethod": "GET",
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:18.959Z",
+      "requestId": "15440.62",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:18.960Z",
+      "requestId": "15440.63",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:18.960Z",
+      "requestId": "15440.64",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:18.960Z",
+      "requestId": "15440.65",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:18.960Z",
+      "requestId": "15440.66",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:18.961Z",
+      "requestId": "15440.67",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:19.047Z",
+      "requestId": "15440.69",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:19.047Z",
+      "requestId": "15440.68",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "application/javascript",
+      "observedAt": "2026-07-22T06:10:19.380Z",
+      "requestId": "15440.70",
+      "status": 200,
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:19.390Z",
+      "params": {
+        "requestId": "15440.88",
+        "url": "ws://localhost:8680/hot",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "HMRClient",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 73020,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "setup",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72853,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72669,
+                "columnNumber": 20
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72019,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:19.390Z",
+      "params": {
+        "requestId": "15440.89",
+        "url": "ws://localhost:8680/message",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 75032,
+                "columnNumber": 26
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72020,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:19.390Z",
+      "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
+      "type": "info"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:19.411Z",
+      "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "type": "log"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:19.419Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:19.419Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:19.423Z",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:19.509Z",
+      "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
+      "type": "warning"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.241Z",
+      "requestId": "A3D95F7D3CB626B38AD3E42625E7F31F",
+      "requestMethod": "GET",
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "text/html",
+      "observedAt": "2026-07-22T06:10:22.777Z",
+      "requestId": "A3D95F7D3CB626B38AD3E42625E7F31F",
+      "status": 200,
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.788Z",
+      "requestId": "15440.91",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.788Z",
+      "requestId": "15440.92",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.788Z",
+      "requestId": "15440.93",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.788Z",
+      "requestId": "15440.94",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.789Z",
+      "requestId": "15440.95",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.789Z",
+      "requestId": "15440.96",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.789Z",
+      "requestId": "15440.97",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.789Z",
+      "requestId": "15440.98",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:22.789Z",
+      "requestId": "15440.99",
+      "requestMethod": "GET",
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.791Z",
+      "requestId": "15440.91",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.791Z",
+      "requestId": "15440.92",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.792Z",
+      "requestId": "15440.93",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.792Z",
+      "requestId": "15440.94",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.792Z",
+      "requestId": "15440.96",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.792Z",
+      "requestId": "15440.95",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.870Z",
+      "requestId": "15440.98",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:22.871Z",
+      "requestId": "15440.97",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "application/javascript",
+      "observedAt": "2026-07-22T06:10:23.159Z",
+      "requestId": "15440.99",
+      "status": 200,
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:23.170Z",
+      "params": {
+        "requestId": "15440.117",
+        "url": "ws://localhost:8680/hot",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "HMRClient",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 73020,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "setup",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72853,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72669,
+                "columnNumber": 20
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72019,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:23.170Z",
+      "params": {
+        "requestId": "15440.118",
+        "url": "ws://localhost:8680/message",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 75032,
+                "columnNumber": 26
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72020,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:23.170Z",
+      "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
+      "type": "info"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:23.187Z",
+      "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "type": "log"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:23.194Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:23.194Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:23.198Z",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:23.271Z",
+      "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
+      "type": "warning"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:25.765Z",
+      "requestId": "CB1C5729CB14A53E8C0E3503F3DE33BC",
+      "requestMethod": "GET",
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "text/html",
+      "observedAt": "2026-07-22T06:10:26.234Z",
+      "requestId": "CB1C5729CB14A53E8C0E3503F3DE33BC",
+      "status": 200,
+      "type": "Document",
+      "url": "http://localhost:8680/shelf/ocr?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.244Z",
+      "requestId": "15440.120",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.244Z",
+      "requestId": "15440.121",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.244Z",
+      "requestId": "15440.122",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.244Z",
+      "requestId": "15440.123",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.244Z",
+      "requestId": "15440.124",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.244Z",
+      "requestId": "15440.125",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.245Z",
+      "requestId": "15440.126",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.245Z",
+      "requestId": "15440.127",
+      "requestMethod": "GET",
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "documentURL": "http://localhost:8680/shelf/ocr?redacted-query",
+      "method": "Network.requestWillBeSent",
+      "observedAt": "2026-07-22T06:10:26.245Z",
+      "requestId": "15440.128",
+      "requestMethod": "GET",
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.249Z",
+      "requestId": "15440.121",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.249Z",
+      "requestId": "15440.120",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.250Z",
+      "requestId": "15440.123",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.250Z",
+      "requestId": "15440.122",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.251Z",
+      "requestId": "15440.124",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.251Z",
+      "requestId": "15440.125",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.251Z",
+      "requestId": "15440.126",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "font/ttf",
+      "observedAt": "2026-07-22T06:10:26.335Z",
+      "requestId": "15440.127",
+      "status": 200,
+      "type": "Font",
+      "url": "http://localhost:8680/assets/?redacted-query"
+    },
+    {
+      "method": "Network.responseReceived",
+      "mimeType": "application/javascript",
+      "observedAt": "2026-07-22T06:10:26.608Z",
+      "requestId": "15440.128",
+      "status": 200,
+      "type": "Script",
+      "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query"
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:26.629Z",
+      "params": {
+        "requestId": "15440.146",
+        "url": "ws://localhost:8680/hot",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "HMRClient",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 73020,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "setup",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72853,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72669,
+                "columnNumber": 20
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72019,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Network.webSocketCreated",
+      "observedAt": "2026-07-22T06:10:26.629Z",
+      "params": {
+        "requestId": "15440.147",
+        "url": "ws://localhost:8680/message",
+        "initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 75032,
+                "columnNumber": 26
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72020,
+                "columnNumber": 4
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 72004,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 166,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 71999,
+                "columnNumber": 2
+              },
+              {
+                "functionName": "loadModuleImplementation",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 254,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "guardedLoadModule",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 159,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "metroRequire",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 79,
+                "columnNumber": 74
+              },
+              {
+                "functionName": "",
+                "scriptId": "6",
+                "url": "http://localhost:8680/node_modules/expo-router/entry.bundle?redacted-query",
+                "lineNumber": 399210,
+                "columnNumber": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:26.629Z",
+      "text": "%cDownload the React DevTools for a better development experience: <external-network-url> font-weight:bold",
+      "type": "info"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:26.648Z",
+      "text": "Running application \"main\" with appParams:\n Object\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "type": "log"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:26.656Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:26.656Z",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:26.661Z",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "type": "warning"
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "observedAt": "2026-07-22T06:10:26.753Z",
+      "text": "props.pointerEvents is deprecated. Use style.pointerEvents",
+      "type": "warning"
+    }
+  ],
+  "retention": {
+    "ignoredEventCount": 515,
+    "inputEventCount": 659,
+    "limits": {
+      "maxRetainedBytes": 4194304,
+      "maxRetainedEvents": 5000
+    },
+    "retainedEventCount": 144,
+    "sanitizedBytes": 62198,
+    "truncated": false
+  }
+}

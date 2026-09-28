@@ -5,28 +5,36 @@
     "account-deletion": {
       "entrypoint": "supabase/functions/account-deletion/index.ts",
       "deployByDefault": true,
-      "verifyJwt": true,
-      "access": "authenticated",
-      "auth": "supabase-user-jwt",
-      "public": false,
+      "verifyJwt": false,
+      "access": "mixed",
+      "auth": "four-lane mixed boundary: bearer JWT for begin; bearer JWT plus service-only opaque barrier RPC for preflight; 256-bit capability for status; dedicated worker secret for scheduled work",
+      "public": true,
       "resourceLimits": {
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        ["ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION"],
+        ["REVENUECAT_PROJECT_ID"],
+        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION"],
+        ["APPLE_SIWA_VAULT_CURRENT_VERSION"]
+      ],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
-        ["REVENUECAT_SECRET_API_KEY", "REVENUECAT_REST_API_KEY"]
+        ["ACCOUNT_DELETION_PAYLOAD_KEY_HEX"],
+        ["ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX"],
+        ["ACCOUNT_DELETION_WORKER_SECRET"],
+        ["REVENUECAT_V2_SECRET_API_KEY"],
+        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS"],
+        ["APPLE_SIWA_VAULT_KEYS"]
       ],
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
         "EXPO_PUBLIC_POSTHOG_KEY",
-        "POSTHOG_PROJECT_ID",
-        "POSTHOG_ENVIRONMENT_ID",
-        "POSTHOG_DELETION_APPROVED_ALTERNATE",
-        "POSTHOG_API_HOST",
-        "POSTHOG_HOST",
-        "EXPO_PUBLIC_POSTHOG_HOST",
+        "POSTHOG_ABSENCE_INTERVAL_SECONDS",
         "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
         "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
         "USER_EDGE_BODY_MAX_BYTES"
@@ -34,12 +42,11 @@
       "conditionalEnvironment": [
         {
           "when": "the caller has a Sign in with Apple identity",
-          "anyOf": [
-            "APPLE_SIWA_CLIENT_ID",
-            "APPLE_SIWA_SERVICE_ID",
-            "APPLE_BUNDLE_ID",
-            "APP_IOS_BUNDLE_IDENTIFIER"
-          ]
+          "anyOf": ["APPLE_SIWA_CLIENT_ID"]
+        },
+        {
+          "when": "the caller has a Sign in with Apple identity",
+          "anyOf": ["APP_IOS_BUNDLE_IDENTIFIER"]
         },
         {
           "when": "the caller has a Sign in with Apple identity",
@@ -48,6 +55,26 @@
         {
           "when": "the caller has a Sign in with Apple identity",
           "anyOf": ["APPLE_SIWA_KEY_ID"]
+        },
+        {
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
+          "anyOf": ["POSTHOG_API_HOST"]
+        },
+        {
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
+          "anyOf": ["POSTHOG_PROJECT_ID"]
+        },
+        {
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
+          "anyOf": ["POSTHOG_CAPTURE_SHUTDOWN_AT"]
+        },
+        {
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
+          "anyOf": ["POSTHOG_NO_RECORDINGS_EVIDENCE"]
+        },
+        {
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
+          "anyOf": ["POSTHOG_NO_RECORDINGS_VERIFIED_AT"]
         }
       ],
       "conditionalSecrets": [
@@ -56,10 +83,159 @@
           "anyOf": ["APPLE_SIWA_PRIVATE_KEY"]
         },
         {
-          "when": "PostHog person deletion is enabled without an approved alternate",
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
           "anyOf": ["POSTHOG_PERSONAL_API_KEY"]
         }
       ]
+    },
+    "apple-account-events": {
+      "entrypoint": "supabase/functions/apple-account-events/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": false,
+      "access": "public",
+      "auth": "Apple RS256 server-to-server notification JWS",
+      "public": true,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        ["APPLE_SIWA_CLIENT_ID"],
+        ["APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION"]
+      ],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["APPLE_SIWA_SUBJECT_HMAC_KEYS"],
+        ["APPLE_SIWA_CODE_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_EVENT_HMAC_KEY_HEX"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "apple-auth-lifecycle": {
+      "entrypoint": "supabase/functions/apple-auth-lifecycle/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt+verified-totp+live-operator-grant",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ],
+        ["APPLE_SIWA_CLIENT_ID"],
+        ["APP_IOS_BUNDLE_IDENTIFIER"],
+        ["APPLE_TEAM_ID"],
+        ["APPLE_SIWA_KEY_ID"],
+        ["APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION"],
+        ["APPLE_SIWA_VAULT_CURRENT_VERSION"]
+      ],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["APPLE_SIWA_PRIVATE_KEY"],
+        ["APPLE_SIWA_SUBJECT_HMAC_KEYS"],
+        ["APPLE_SIWA_CODE_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_EVENT_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_VAULT_KEYS"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "apple-auth-worker": {
+      "entrypoint": "supabase/functions/apple-auth-worker/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": false,
+      "access": "scheduled",
+      "auth": "scheduler secret",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 60,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        ["APPLE_SIWA_CLIENT_ID"],
+        ["APP_IOS_BUNDLE_IDENTIFIER"],
+        ["APPLE_TEAM_ID"],
+        ["APPLE_SIWA_KEY_ID"],
+        ["APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION"],
+        ["APPLE_SIWA_VAULT_CURRENT_VERSION"]
+      ],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["APPLE_SIWA_PRIVATE_KEY"],
+        ["APPLE_SIWA_SUBJECT_HMAC_KEYS"],
+        ["APPLE_SIWA_CODE_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_EVENT_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_VAULT_KEYS"],
+        ["APPLE_AUTH_WORKER_SECRET"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "APPLE_AUTH_WORKER_CLAIM_LIMIT",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "ask-layerwell": {
+      "entrypoint": "supabase/functions/ask-layerwell/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt+health-consent",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
+      ],
+      "requiredSecrets": [],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
     },
     "catalog-lookup": {
       "entrypoint": "supabase/functions/catalog-lookup/index.ts",
@@ -75,6 +251,7 @@
       "requiredEnvironment": [
         ["SUPABASE_URL"],
         ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
         [
           "SUPABASE_PUBLISHABLE_KEYS",
           "SUPABASE_PUBLISHABLE_KEY",
@@ -89,17 +266,46 @@
         "EXPO_PUBLIC_APP_ENV",
         "CATALOG_RATE_LIMIT_MAX",
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
-        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
-        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
-        "OBF_API_ENABLED",
         "USER_EDGE_BODY_MAX_BYTES"
       ],
-      "conditionalEnvironment": [
-        {
-          "when": "OBF_API_ENABLED is true",
-          "anyOf": ["OBF_USER_AGENT"]
-        }
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "catalog-operator": {
+      "entrypoint": "supabase/functions/catalog-operator/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        ["CATALOG_OPERATOR_ALLOWED_ORIGINS"],
+        ["CATALOG_OPERATOR_SOURCE_REVISION"],
+        ["CATALOG_OPERATOR_CONTROL_GENERATION"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
       ],
+      "requiredSecrets": [
+        ["CATALOG_OPERATOR_DATABASE_URL"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "CATALOG_OPERATOR_BODY_MAX_BYTES",
+        "DENO_DEPLOYMENT_ID",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
     "catalog-report": {
@@ -116,6 +322,7 @@
       "requiredEnvironment": [
         ["SUPABASE_URL"],
         ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
         [
           "SUPABASE_PUBLISHABLE_KEYS",
           "SUPABASE_PUBLISHABLE_KEY",
@@ -148,6 +355,7 @@
       "requiredEnvironment": [
         ["SUPABASE_URL"],
         ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
         [
           "SUPABASE_PUBLISHABLE_KEYS",
           "SUPABASE_PUBLISHABLE_KEY",
@@ -178,7 +386,17 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
+      ],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
       ],
@@ -200,6 +418,7 @@
       "requiredEnvironment": [
         ["SUPABASE_URL"],
         ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
         [
           "SUPABASE_PUBLISHABLE_KEYS",
           "SUPABASE_PUBLISHABLE_KEY",
@@ -221,8 +440,38 @@
         "DATA_EXPORT_MAX_STORAGE_OBJECTS",
         "DATA_EXPORT_CONCURRENCY",
         "DATA_EXPORT_FILTER_BATCH_SIZE",
+        "USER_EDGE_BODY_MAX_BYTES",
         "EXPO_PUBLIC_APP_DISPLAY_NAME",
         "APP_DISPLAY_NAME"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "health-consent-worker": {
+      "entrypoint": "supabase/functions/health-consent-worker/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": false,
+      "access": "scheduled",
+      "auth": "scheduler-secret",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 60,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["HEALTH_CONSENT_WORKER_SECRET"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "USER_EDGE_BODY_MAX_BYTES",
+        "HEALTH_CONSENT_WORKER_CLAIM_LIMIT",
+        "HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE",
+        "HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES",
+        "HEALTH_CONSENT_WORKER_BUDGET_MS",
+        "HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS",
+        "HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS"
       ],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
@@ -238,7 +487,7 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
         ["TURNSTILE_SECRET_KEY", "CF_TURNSTILE_SECRET_KEY"]
@@ -260,25 +509,16 @@
       "entrypoint": "supabase/functions/order-report-poll/index.ts",
       "deployByDefault": true,
       "verifyJwt": false,
-      "access": "scheduled",
-      "auth": "scheduler-secret",
-      "public": false,
+      "access": "public",
+      "auth": "literal-zero-no-auth-side-effects",
+      "public": true,
       "resourceLimits": {
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
-      "requiredSecrets": [
-        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
-        ["SHOPMY_BRAND_API_KEY"],
-        ["ORDER_REPORT_POLL_SECRET", "SHOPMY_ORDER_REPORT_POLL_SECRET"]
-      ],
-      "optionalEnvironment": [
-        "EXPO_PUBLIC_APP_ENV",
-        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
-        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
-        "USER_EDGE_BODY_MAX_BYTES"
-      ],
+      "requiredEnvironment": [["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
+      "requiredSecrets": [],
+      "optionalEnvironment": ["EXPO_PUBLIC_APP_ENV"],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
@@ -293,10 +533,17 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["DB06_TRAFFIC_FREEZE"],
+        ["REVENUECAT_PROJECT_ID"],
+        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION"]
+      ],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
-        ["REVENUECAT_WEBHOOK_AUTH", "REVENUECAT_WEBHOOK_SIGNING_SECRET"]
+        ["REVENUECAT_WEBHOOK_AUTH", "REVENUECAT_WEBHOOK_SIGNING_SECRET"],
+        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS"]
       ],
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
@@ -317,11 +564,39 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
       ],
       "optionalEnvironment": ["EXPO_PUBLIC_APP_ENV", "USER_EDGE_BODY_MAX_BYTES"],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "subscription-reconciliation": {
+      "entrypoint": "supabase/functions/subscription-reconciliation/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["REVENUECAT_SECRET_API_KEY"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "ENTITLEMENT_RECONCILIATION_MAX_SNAPSHOT_AGE_SECONDS",
+        "ENTITLEMENT_RECONCILIATION_RATE_LIMIT_MAX",
+        "ENTITLEMENT_RECONCILIATION_RATE_LIMIT_WINDOW_SECONDS",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
@@ -336,7 +611,7 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"], ["DB06_TRAFFIC_FREEZE"]],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
         ["TURNSTILE_SECRET_KEY", "CF_TURNSTILE_SECRET_KEY"]

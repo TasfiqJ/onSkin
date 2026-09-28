@@ -130,7 +130,13 @@ All tables in `public`, RLS enabled, every policy uses `(select auth.uid())` and
 - `id`, `user_id`, `consent_type text` (account / health_data_collection / photo_capture / photo_cloud_backup / marketing / data_sharing), `granted bool`, `version text`, `consent_text_hash text`, `granted_at timestamptz`, `revoked_at timestamptz NULL`, `ip inet`, `user_agent text`.
 - **Append-only immutable** — revocation is a _new row_, never an UPDATE. RLS: INSERT + SELECT owner; no UPDATE/DELETE.
 
-**`notification_preferences`** — `user_id PK`, `am_reminder_time time`, `pm_reminder_time time`, `streak_nudges bool`, `replenishment_alerts bool`, `push_token text`, `timezone text`. RLS owner-only.
+**`notification_preferences`** — dormant server/future-sync scaffolding:
+`user_id PK`, `am_reminder_time time`, `pm_reminder_time time`,
+`streak_nudges bool`, `replenishment_alerts bool`, `push_token text`,
+`timezone text`; RLS owner-only. The current mobile client does not read or
+write this table or a push token. Its encrypted device record is authoritative,
+and every notification purpose defaults off. Any remote preference or token
+collection requires a separately approved privacy/consent/retention contract.
 
 **`subscriptions_events`** (optional raw webhook log) — service-role write, for audit/debugging.
 
@@ -191,9 +197,16 @@ Routine check-offs happen in bathrooms, often offline, so writes must succeed lo
 
 ### 7. Analytics / Experiment Foundation at Auth Layer
 
-**PostHog identify timing:** call `posthog.identify(userId)` at the value moment when the anonymous→permanent conversion happens (account creation), passing the Supabase user ID. This merges all prior anonymous events to the identified person. **RN caveat:** on Android, persisted anonymous IDs may not migrate across SDK upgrades (you may see inflated `Application Installed` counts) — ensure `identify` runs on app load for known users. Don't call identify repeatedly; if called multiple times with the same data without reload, PostHog ignores subsequent calls.
+**Analytics identity gate:** direct mobile PostHog capture and identify are disabled for the launch candidate until the applicable consent state, deletion barrier, approved regional configuration, retention, and live payload audit all pass. Never pass the raw Supabase user ID to analytics. A later approved transport must use an independently domain-separated analytics identifier, must stop before account deletion is accepted, and must prove queued-event removal before it can replace this fail-closed gate.
 
-**Onboarding funnel taxonomy** (event names): `onboarding_started`, `screen_viewed` (with `screen_name` property for granularity), `quiz_question_answered` (`question_id`, `axis`), `quiz_completed`, `personalization_shown`, `notification_prompt_shown`/`_granted`/`_denied`, `account_created` (`method`), `paywall_shown`, `trial_started`, `purchase_completed`, `first_routine_created`, `first_checkoff_completed`.
+**Onboarding funnel taxonomy** (event names): `onboarding_started`,
+`screen_viewed` (with `screen_name` property for granularity),
+`quiz_question_answered` (`question_id`, `axis`), `quiz_completed`,
+`personalization_shown`, `account_created` (`method`), `paywall_shown`,
+`trial_started`, `purchase_completed`, `first_routine_created`,
+`first_checkoff_completed`. Notification prompt shown/granted/denied events are
+intentionally excluded: the app cannot prove that the OS sheet was visibly
+presented, and the current notification decision path emits no analytics.
 
 **RevenueCat ↔ PostHog:** use RevenueCat's PostHog integration so subscription events become PostHog events tied to the same distinct ID, enabling subscription cohorts and trial→paid funnels in PostHog.
 

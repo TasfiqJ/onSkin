@@ -18,7 +18,7 @@ function createAnonymousCompletionClient() {
       autoRefreshToken: false,
       detectSessionInUrl: false,
       persistSession: false,
-      storageKey: 'onskin-account-deletion-completion-anonymous',
+      storageKey: 'layerwell-account-deletion-completion-anonymous',
     },
   });
 }
@@ -39,7 +39,7 @@ export type AccountDeletionCompletion = Readonly<{
 async function hashCompletionToken(token: string): Promise<string> {
   const digest = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
-    `onskin:account-deletion-completion:${token}`,
+    `layerwell:account-deletion-completion:${token}`,
   );
   if (!/^[0-9a-f]{64}$/i.test(digest)) {
     throw new Error('ACCOUNT_DELETION_COMPLETION_HASH_INVALID');

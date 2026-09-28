@@ -67,7 +67,7 @@ Required fields:
 - payment/restore issue: yes/no/not tested
 - deletion/export tested: yes/no/not tested
 - would recommend privately to someone with a skincare routine: yes/no/unsure
-- what would you miss if RoutineKind disappeared
+- what would you miss if Layerwell disappeared
 
 ## Day 30 Survey
 

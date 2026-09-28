@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 2,
+  "status": "template",
+  "provider": "revenuecat",
+  "environment": "production",
+  "redacted": true,
+  "app": {
+    "platform": "ios",
+    "revenueCatAppId": "REPLACE_WITH_EXACT_PRODUCTION_REVENUECAT_APP_ID",
+    "bundleIdentifier": "REPLACE_WITH_EXACT_PRODUCTION_BUNDLE_IDENTIFIER",
+    "buildNumber": null,
+    "sourceGitSha": null,
+    "reactNativePurchasesVersion": null,
+    "trustedEntitlementsMode": "INFORMATIONAL"
+  },
+  "entitlementId": "REPLACE_WITH_EXACT_PRODUCTION_ENTITLEMENT_ID",
+  "productIds": {
+    "annual": "REPLACE_WITH_EXACT_PRODUCTION_ANNUAL_PRODUCT_ID",
+    "monthly": "REPLACE_WITH_EXACT_PRODUCTION_MONTHLY_PRODUCT_ID"
+  },
+  "observations": {
+    "sandbox": {
+      "purchase": {
+        "environment": "sandbox",
+        "operation": "purchase",
+        "appUserIdSha256": null,
+        "artifactPath": "docs/phase-6/revenuecat-trusted-entitlements-artifacts/REPLACE_WITH_RELEASE/sandbox-purchase.txt",
+        "artifactSha256": null,
+        "productId": null,
+        "entitlementId": null,
+        "verificationResult": null,
+        "isActive": false,
+        "observedAt": null
+      },
+      "restore": {
+        "environment": "sandbox",
+        "operation": "restore",
+        "appUserIdSha256": null,
+        "artifactPath": "docs/phase-6/revenuecat-trusted-entitlements-artifacts/REPLACE_WITH_RELEASE/sandbox-restore.txt",
+        "artifactSha256": null,
+        "productId": null,
+        "entitlementId": null,
+        "verificationResult": null,
+        "isActive": false,
+        "observedAt": null
+      }
+    },
+    "testFlight": {
+      "purchase": {
+        "environment": "testflight",
+        "operation": "purchase",
+        "appUserIdSha256": null,
+        "artifactPath": "docs/phase-6/revenuecat-trusted-entitlements-artifacts/REPLACE_WITH_RELEASE/testflight-purchase.txt",
+        "artifactSha256": null,
+        "productId": null,
+        "entitlementId": null,
+        "verificationResult": null,
+        "isActive": false,
+        "observedAt": null
+      },
+      "restore": {
+        "environment": "testflight",
+        "operation": "restore",
+        "appUserIdSha256": null,
+        "artifactPath": "docs/phase-6/revenuecat-trusted-entitlements-artifacts/REPLACE_WITH_RELEASE/testflight-restore.txt",
+        "artifactSha256": null,
+        "productId": null,
+        "entitlementId": null,
+        "verificationResult": null,
+        "isActive": false,
+        "observedAt": null
+      }
+    }
+  },
+  "reviewedAt": null,
+  "reviewedBy": "REPLACE_WITH_NAMED_REVIEWER"
+}

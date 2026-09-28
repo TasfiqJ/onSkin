@@ -1,26 +1,45 @@
 import type { User } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  getAppleAuthorizationCodeForRevocation,
-  getAppleIdToken,
-  userHasAppleIdentity,
-} from './apple';
+import { getAppleAuthorizationCodeForRevocation, getAppleIdToken } from './apple';
 
 const mocks = vi.hoisted(() => ({
+  addRevokeListener: vi.fn(),
+  digestStringAsync: vi.fn(),
+  getCredentialStateAsync: vi.fn(),
+  getRandomBytesAsync: vi.fn(),
   isAvailableAsync: vi.fn(),
   refreshAsync: vi.fn(),
   signInAsync: vi.fn(),
 }));
 
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: mocks.digestStringAsync,
+  getRandomBytesAsync: mocks.getRandomBytesAsync,
+}));
+
 vi.mock('expo-apple-authentication', () => ({
+  AppleAuthenticationCredentialState: {
+    AUTHORIZED: 1,
+    NOT_FOUND: 2,
+    REVOKED: 0,
+    TRANSFERRED: 3,
+  },
   AppleAuthenticationScope: {
     EMAIL: 'EMAIL',
     FULL_NAME: 'FULL_NAME',
   },
+  addRevokeListener: mocks.addRevokeListener,
+  getCredentialStateAsync: mocks.getCredentialStateAsync,
   isAvailableAsync: mocks.isAvailableAsync,
   refreshAsync: mocks.refreshAsync,
   signInAsync: mocks.signInAsync,
+}));
+
+vi.mock('react-native', () => ({
+  AppState: { addEventListener: vi.fn() },
+  Platform: { OS: 'ios' },
 }));
 
 function userWithAppleIdentity(identity: Record<string, unknown> | null): User {
@@ -43,43 +62,132 @@ function userWithAppleIdentity(identity: Record<string, unknown> | null): User {
 
 describe('Sign in with Apple helpers', () => {
   beforeEach(() => {
+    mocks.addRevokeListener.mockReset();
+    mocks.digestStringAsync.mockReset().mockResolvedValue('a'.repeat(64));
+    mocks.getCredentialStateAsync.mockReset();
+    mocks.getRandomBytesAsync
+      .mockReset()
+      .mockResolvedValueOnce(new Uint8Array(32).fill(1))
+      .mockResolvedValueOnce(new Uint8Array(32).fill(2));
     mocks.isAvailableAsync.mockReset();
     mocks.refreshAsync.mockReset();
     mocks.signInAsync.mockReset();
   });
 
-  it('normalizes Apple sign-in token and first-run email before Supabase receives them', async () => {
-    mocks.signInAsync.mockResolvedValueOnce({
+  it('binds a 256-bit raw nonce and state to a complete bounded Apple credential', async () => {
+    mocks.signInAsync.mockImplementationOnce(async (options: { state?: string }) => ({
+      authorizationCode: ' code-1 ',
       email: ' user@example.com ',
       identityToken: ' token-1 ',
-    });
+      state: options.state,
+      user: ' apple-user ',
+    }));
 
+    const nonce = 'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE';
+    const state = 'AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI';
     await expect(getAppleIdToken()).resolves.toEqual({
+      appleUser: 'apple-user',
+      authorizationCode: 'code-1',
       email: 'user@example.com',
       idToken: 'token-1',
+      nonce,
+    });
+    expect(mocks.getRandomBytesAsync).toHaveBeenCalledTimes(2);
+    expect(mocks.getRandomBytesAsync).toHaveBeenNthCalledWith(1, 32);
+    expect(mocks.getRandomBytesAsync).toHaveBeenNthCalledWith(2, 32);
+    expect(mocks.digestStringAsync).toHaveBeenCalledWith('SHA-256', nonce);
+    expect(mocks.signInAsync).toHaveBeenCalledWith({
+      nonce: 'a'.repeat(64),
+      requestedScopes: ['EMAIL'],
+      state,
     });
   });
 
-  it('rejects blank Apple identity tokens instead of starting a Supabase sign-in', async () => {
-    mocks.signInAsync.mockResolvedValueOnce({
-      email: 'user@example.com',
-      identityToken: '   ',
-    });
+  it('treats only the native Apple cancellation code as a neutral result', async () => {
+    mocks.signInAsync.mockRejectedValueOnce(
+      Object.assign(new Error('The user canceled.'), { code: 'ERR_REQUEST_CANCELED' }),
+    );
 
     await expect(getAppleIdToken()).resolves.toBeNull();
+
+    mocks.getRandomBytesAsync
+      .mockResolvedValueOnce(new Uint8Array(32).fill(3))
+      .mockResolvedValueOnce(new Uint8Array(32).fill(4));
+    mocks.signInAsync.mockRejectedValueOnce(
+      Object.assign(new Error('Provider request failed.'), { code: 'ERR_REQUEST_FAILED' }),
+    );
+    await expect(getAppleIdToken()).rejects.toThrow('Provider request failed.');
   });
 
-  it('rechecks request ownership immediately after the native Apple prompt resolves', async () => {
+  it.each([
+    ['identity token', { authorizationCode: 'code-1', identityToken: '   ', user: 'apple-user' }],
+    [
+      'authorization code',
+      { authorizationCode: '   ', identityToken: 'token-1', user: 'apple-user' },
+    ],
+    ['Apple user', { authorizationCode: 'code-1', identityToken: 'token-1', user: '   ' }],
+  ])('rejects a missing %s instead of dispatching a partial credential', async (_label, fields) => {
+    mocks.signInAsync.mockImplementationOnce(async (options: { state?: string }) => ({
+      email: null,
+      state: options.state,
+      ...fields,
+    }));
+
+    await expect(getAppleIdToken()).rejects.toThrow('invalid credential');
+  });
+
+  it('rejects a response whose state is not the exact request state', async () => {
     mocks.signInAsync.mockResolvedValueOnce({
-      email: 'user@example.com',
-      identityToken: 'late-token',
-    });
-    const assertRequestCurrent = vi.fn(() => {
-      throw new Error('request superseded');
+      authorizationCode: 'code-1',
+      email: null,
+      identityToken: 'token-1',
+      state: 'different-state',
+      user: 'apple-user',
     });
 
-    await expect(getAppleIdToken(assertRequestCurrent)).rejects.toThrow('request superseded');
-    expect(assertRequestCurrent).toHaveBeenCalledTimes(1);
+    await expect(getAppleIdToken()).rejects.toThrow('invalid credential');
+  });
+
+  it.each([
+    ['identity token', 'identityToken', 16_385],
+    ['authorization code', 'authorizationCode', 8_193],
+    ['Apple user', 'user', 1_025],
+  ])('rejects an oversized %s before it reaches Supabase', async (_label, field, length) => {
+    mocks.signInAsync.mockImplementationOnce(async (options: { state?: string }) => ({
+      authorizationCode: field === 'authorizationCode' ? 'x'.repeat(length) : 'code-1',
+      email: null,
+      identityToken: field === 'identityToken' ? 'x'.repeat(length) : 'token-1',
+      state: options.state,
+      user: field === 'user' ? 'x'.repeat(length) : 'apple-user',
+    }));
+
+    await expect(getAppleIdToken()).rejects.toThrow('invalid credential');
+  });
+
+  it('fails before opening Apple when native randomness is malformed', async () => {
+    mocks.getRandomBytesAsync.mockReset().mockResolvedValue(new Uint8Array(31));
+
+    await expect(getAppleIdToken()).rejects.toThrow('secure request');
+    expect(mocks.digestStringAsync).not.toHaveBeenCalled();
+    expect(mocks.signInAsync).not.toHaveBeenCalled();
+  });
+
+  it('rejects identical nonce and state material before hashing or opening Apple', async () => {
+    mocks.getRandomBytesAsync
+      .mockReset()
+      .mockResolvedValueOnce(new Uint8Array(32).fill(7))
+      .mockResolvedValueOnce(new Uint8Array(32).fill(7));
+
+    await expect(getAppleIdToken()).rejects.toThrow('secure request');
+    expect(mocks.digestStringAsync).not.toHaveBeenCalled();
+    expect(mocks.signInAsync).not.toHaveBeenCalled();
+  });
+
+  it('fails before opening Apple when SHA-256 output is malformed', async () => {
+    mocks.digestStringAsync.mockResolvedValueOnce('not-a-sha256-digest');
+
+    await expect(getAppleIdToken()).rejects.toThrow('secure request');
+    expect(mocks.signInAsync).not.toHaveBeenCalled();
   });
 
   it('refreshes a revocation code with a trimmed Apple subject', async () => {
@@ -119,15 +227,18 @@ describe('Sign in with Apple helpers', () => {
     expect(mocks.refreshAsync).not.toHaveBeenCalled();
   });
 
-  it('detects Apple linkage from identity or app metadata before account deletion', () => {
-    expect(userHasAppleIdentity(userWithAppleIdentity({ id: 'apple-id' }))).toBe(true);
-    expect(
-      userHasAppleIdentity({
-        ...userWithAppleIdentity(null),
-        app_metadata: { providers: ['email', 'apple'] },
-      }),
-    ).toBe(true);
-    expect(userHasAppleIdentity(userWithAppleIdentity(null))).toBe(false);
+  it('does not refresh when multiple Apple identities bind to conflicting subjects', async () => {
+    const user = {
+      ...userWithAppleIdentity(null),
+      identities: [
+        { id: 'one', identity_data: { sub: 'apple-one' }, provider: 'apple' },
+        { id: 'two', identity_data: { sub: 'apple-two' }, provider: 'apple' },
+      ],
+    } as unknown as User;
+
+    await expect(getAppleAuthorizationCodeForRevocation(user)).resolves.toBeNull();
+    expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
+    expect(mocks.refreshAsync).not.toHaveBeenCalled();
   });
 
   it('returns no revocation code when Apple is unavailable or returns a blank code', async () => {

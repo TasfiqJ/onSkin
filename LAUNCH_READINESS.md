@@ -1,12 +1,25 @@
 # Launch Readiness
 
-> Active scope (2026-09-27): iOS lean V1 supersedes earlier all-features launch requirements. Required feature IDs: 1, 2, 3, 5, 6, 7, 8, 9, 10, 11. See `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md` and `docs/hugeToDo/launch-contract.json`. Manual Shelf/local ingredient parsing, reviewed guidance, routine/cycle, Today, private Progress, local reminders and standard subscriptions remain required. Catalog/search/barcode, custom grants/reverse trial/win-back, recommendations, Ask, public sharing, commerce, community, trends, widgets and growth experiments are post-launch and must stay closed. Existing Apple/email account functionality and all current privacy, payment, persistence, accessibility and owner-isolation safeguards are preserved. Historical sections below do not add deferred features back to the V1 launch gate.
+> Active scope (2026-09-27): the ten-feature iOS lean V1 contract in `docs/hugeToDo/launch-contract.json` governs launch. Deferred features do not block V1 merely by being deferred. All applicable privacy, clinical/legal, payment, native-device, beta and release-evidence gates remain required. Prior detailed findings below are retained; see `docs/MAIN_INTEGRATION_2026-09-27.md` for this integration.
 
 
-Date: 2026-07-12
+> Active scope (2026-09-27): the ten-feature iOS lean V1 contract in `docs/hugeToDo/launch-contract.json` governs launch. Deferred features do not block V1 merely by being deferred. All applicable privacy, clinical/legal, payment, native-device, beta and release-evidence gates remain required. Prior detailed findings below are retained; see `docs/MAIN_INTEGRATION_2026-09-27.md` for this integration.
+
+
+Date: 2026-08-05
+
+Status reviewed: 2026-08-05
 
 This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.
+
+Current-source correction (2026-09-21): the historical 71-migration/`0072`
+local proof below is not proof of the current 91-migration/`0075` source.
+Migration `0075`, not the historical `0064` rehearsal alone, binds the current
+Layerwell quiz ID, version labels, and manifest hashes. Migration `0074`
+stages corrected draft-only Ask consent hashes. Full current-chain database
+replay, hosted parity, professional review, and native release evidence remain
+open; neither successor is launch clearance.
 
 Current release contract: iOS-only, every feature ID 1-20 and every Phase 7/8
 surface required. `docs/hugeToDo/launch-contract.json` controls platform
@@ -20,10 +33,17 @@ privacy/security, and IP/FTO review logs, policy-link wiring, review packet
 generation, and claim/gate tests. This is not legal, clinical, chemistry,
 privacy, security, or IP clearance.
 
-Phase 4 catalog scaffolding exists: catalog schema/RLS, source memos, parser and
-quality logic, OBF fixture import/QA tooling, catalog lookup/search/report Edge
-Functions, and mobile source/quality disclosure. This is not source/legal
-clearance and not a real launch catalog.
+Phase 4 catalog source candidates exist: schema/RLS, source memos, parser and
+quality logic, offline source/import/curation contracts, exact-primary CAT-01/
+CAT-02 lineage, staged CAT-03 review/operator authorization, full served-state
+sealing, atomic activation/retirement, reviewer-bound append-only per-product
+served-state mutation roots, catalog lookup/search/report Edge Functions,
+mobile source/quality disclosure, and the CAT-08 identity-bound nonanonymous
+`aal2` operator source boundary with a separate publishable-key-only console
+candidate. This is not source/legal clearance, real beta evidence, professional
+curation, hosted operator or catalog proof, deployed console evidence, named
+staffing, current governed human-simulated operator E2E, or a real launch
+catalog.
 
 The dated founder, vendor, pricing, Apple-review, database, export-compliance,
 and US Wave 1 privacy/consumer-health packets now turn major launch unknowns
@@ -31,8 +51,127 @@ into explicit decision and refusal gates. They are planning evidence only. No
 account enrollment, contract, professional opinion, export classification,
 live database proof, Apple acceptance, or commercial outcome is implied.
 
-Fresh core verification through 2026-07-13, with retained phase and E2E
-evidence through 2026-07-12:
+Fresh core verification through 2026-07-26, with retained historical phase and
+E2E evidence identified by date:
+
+- CORE-01 now has a source-hardened minimized age-policy receipt, foreground
+  and fresh-downgrade fail-closed lifecycle gate, minimized re-verification
+  tombstone, frozen 12-question quiz/scorer with exact provenance hashes,
+  local/server v2 profile readers and upgrade-safe database constraints,
+  raw-answer post-save minimization, and atomic fresh-quiz recovery. The exact
+  0064 migration-byte collision rehearsal passes PostgreSQL 15 and 17 while
+  preserving legacy malformed v2 rows for quarantine and enforcing every new
+  write. Forward migration 0065 repairs both CAT-08 transition conflict targets,
+  preserves the Edge-only ACL, and installs fail-closed migration-owner function
+  defaults; its exact-byte rehearsal also passes PostgreSQL 15 and 17. The
+  corrected `0065`-head replay completes the structural pgTAP phase and the
+  focused exact-role CAT-08 pgTAP file passes 89/89. Migration `0066`'s focused
+  seal rehearsal/26-assertion plan passes; migration `0067`'s focused
+  rehearsal/seven-assertion plan passes and direct `plpgsql_check_function`
+  inspection returns no findings. That exhaustive isolated run covered 66
+  migrations through `0067`: both clean resets, exact history, structural
+  pgTAP, lint, empty drift, 6,635-line temporary type generation, and the
+  ten-assertion two-connection rehearsal passed before sandbox teardown.
+  The exact 2026-08-05 current-head gate at clean commit `57da25f63` covers all
+  71 migrations through `0072`: five cutovers including commerce 21/21, two
+  resets, focused 5 files/433 assertions, structural 16 files/1,222 assertions,
+  lint, empty drift, temporary types, CAT-08 10/10, and run-scoped teardown.
+  The later authoritative clean verifier at commit `e5588ae69` exited 0 in
+  2,200.4 seconds and completed the local canonical replacement/drift gate with
+  the exact raw CLI-generated 6,770-line `database.types.ts` artifact, SHA-256
+  `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`.
+  Client restrictions remain in a separate overlay. DB-08 is not complete:
+  DB-06 hosted evidence and repository/local/linked parity remain open, and no
+  staging parity is claimed. A
+  PostgreSQL major-version upgrade remains blocked: the PostgreSQL 17 rehearsal
+  is a superuser forward-migration check, not a full-chain
+  Supabase-equivalent nonsuperuser proof of the membership-free
+  `catalog_operator_edge` invariant. A
+  first-party Declared Age Range Expo iOS module and entitlement source exist,
+  but the adapter remains literally `launch_blocked` pending Xcode 26.2+ signed
+  archive, sandbox, notification-rescission, physical-iPhone, and professional
+  review evidence. The exact final-code 390 x 844 Expo-web first-session flow
+  passes direct age fencing through generated routine and AM/PM check-offs,
+  then proves a fresh under-threshold re-verification closes protected
+  providers and remains closed across direct Today navigation and reload at
+  `test-results/human-e2e/2026-07-26/core01-age-profile-provenance-current/`.
+  Repository typecheck/lint pass; the full mobile suite passes 319 files /
+  3,800 tests. These are source/local-web facts, not hosted Supabase, native
+  Apple, legal/privacy/clinical, App Review, market, or revenue clearance.
+
+- IOS-02 now has a reviewed, hash-pinned native lifecycle source candidate for
+  the exact installed `expo-widgets` 57.0.8 package. Layerwell timeline and
+  action authority lives in a bounded SQLite App Group store; UserDefaults is
+  presentation/layout-only. The candidate uses a rotating authority-nonce CAS,
+  opaque owner generations, outbox-before-AppIntent-return persistence,
+  two-entry current/future-stale timelines, all-or-redact reconciliation,
+  finite Layerwell ActivityKit stale dates, owner-filtered activity recovery,
+  lock-held health-lease quiescence, a durable `privacy-closing-v1` admission
+  sentinel, and a synchronous closed-admission receipt. Quiescence uses the
+  same store lock as App Intent append, captures the exact final outbox, and
+  permits only one exact receipt/authority/owner/snapshot/revision-bound commit
+  for a nonempty capture before restoring the closed sentinel; an empty capture
+  restores it under the same lock before returning. Native `outbox_pending`
+  publication and typed stale-Activity outcomes retry without purging accepted
+  actions.
+  Privacy and account cleanup starts native closure before JavaScript writer
+  drains or replacement-owner publication. The receipt proves new native
+  admission is closed; it does not prove the separately scheduled ActivityKit
+  dismissal completed. The app-side host is mounted at a stable lifecycle slot
+  and serializes activation, release, expiry, withdrawal, sign-out, deletion,
+  and account-switch cleanup without remounting the router. Exact native sources
+  are installed and verified by postinstall and CI checks.
+
+  This remains a source candidate, not a release candidate. Publication and
+  Live Activity start are literal generated Info.plist `false`. The current
+  five-minute health-status lease, with 30-second reconciliation headroom,
+  makes personalized widget display short-lived pending a reviewed longer
+  purpose-limited local-display authorization. Widget provider/render reads
+  synchronously take the exclusive `flock` and open SQLite read-write, so
+  Instruments/device contention evidence remains open. The Swift has not
+  compiled on this Windows host, and no macOS compile, signed
+  archive/`.app`/`.appex`, or physical-iPhone evidence exists. Final-brand
+  identities/deep links, enabled-flag archive binding, privacy/locked-state/
+  action/process-death/reboot/accessibility/withdrawal device QA, actual
+  ActivityKit dismissal timing, and named privacy/legal/security/release review
+  remain blockers.
+
+- IOS-09 now has a deterministic installed-source privacy audit and an
+  exact-hash repair for the invalid empty required-API array shipped in the
+  reviewed `react-native-view-shot` package. The source result is
+  `archive_required`: 72 native packages, 23/23 source-valid manifests, 23
+  source bindings still requiring archive proof, 228 podspecs, 16
+  XCFramework candidates, ten Apple SDK-list intersections, zero errors, and
+  24 warnings. First-party and generated native source use separate validators;
+  evaluated CocoaPods/SPM resolution and the production archive are outside
+  this audit. A separate hash-bound evidence-index validator now requires the
+  exact EAS build UUID/source SHA/log, full reviewed image and resolved
+  toolchain, one direct RC-only evidence commit, HEAD-bound metadata, ten
+  candidate-local archive-review artifacts, and distinct named approval metadata; its
+  package/CI wiring is structurally fail-closed. No completed production index
+  or underlying archive/report set exists, and index validation does not
+  machine-interpret opaque reports. IOS-09 and STORE-04 remain `in_progress`
+  pending the exact `.xcarchive.zip` or IPA/build/lock, merged privacy and required-API reports, SDK
+  signatures, signing/entitlements/symbols/processing review, observed
+  traffic/storage-to-label reconciliation, and named privacy/legal/device
+  signoffs. This does not establish legal compliance, Apple acceptance, or a
+  commercial outcome.
+
+- The source-only account-publication, entitlement-authority, health-consent,
+  and Sign in with Apple checkpoint now places Supabase requests, controlled
+  session refresh, RevenueCat identity, purchases/Restore, account deletion,
+  and Apple lifecycle state behind exact owner/session authority. Migration
+  `0055` adds nonce/state and one-use-code capture, owner/subject/client-bound
+  encrypted refresh-token retention, daily validation, signed terminal-event
+  reconciliation, native invalidation, deletion-vault reuse, and exact-session
+  denial across RLS, photo Storage, authenticated Edge Functions, writes, and
+  direct authenticated helper RPCs. Two clean resets pass exact 54-migration
+  history through `0055`, the full structural pgTAP suite plus 114/114 Apple
+  lifecycle assertions, schema lint, empty migration-shadow drift, temporary
+  types, 20/20 focused Apple Edge tests, and the 47-test Apple auth work lane.
+  The latest verified pre-CAT-07 integrated baseline is 301 mobile test files /
+  3,529 tests. This is not hosted Supabase/Apple/RevenueCat, StoreKit,
+  physical-iPhone, professional-review, production, or App Store evidence.
 
 - The required `Shelf freshness and replacement provenance lifecycle` gate now
   proves onboarding freshness capture, exact real-date validation, unopened
@@ -44,8 +183,9 @@ evidence through 2026-07-12:
   two fixed E2E defects, zero horizontal overflow, no sub-44 visible controls,
   no dialogs, and no unexpected browser errors. Evidence:
   `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
-  The current baseline is 209 mobile test files / 2244 tests. Staging deployment
-  of both migrations, owner/second-user RLS, reviewed region-matched catalog
+  The latest verified pre-CAT-07 integrated baseline is 301 mobile test files /
+  3,529 tests. Staging deployment of both migrations, owner/second-user RLS,
+  reviewed region-matched catalog
   responses, native notification delivery, physical-device relaunch and
   accessibility, and named cosmetic-chemistry review remain external gates.
 
@@ -63,6 +203,19 @@ evidence through 2026-07-12:
   unavailable-beta surfaces are honest and recoverable; it does not implement
   or clear the iOS all-features launch requirements for native widgets/live
   activities, validated Trend insights, or moderated Community services.
+
+- The required `Trend navigator privacy and exact-route recovery` gate in
+  `test-results/human-e2e/2026-07-13/trend-route-group-gate-current/` records
+  a same-surface fix and rerun at the 375 x 667 compact iPhone-class viewport.
+  `/trend/optin` and `/trend/fairness` retain their exact URLs through direct
+  entry and refresh while the navigator-level gate withholds disabled child
+  scenes; the fairness Monk-band query remains behind its own pre-hook guard.
+  Both routes expose zero inputs/switches, zero horizontal overflow, no dialog,
+  a visibly complete refusal surface, and a 55.99 px `Back to Progress` action
+  that replaces to `/progress` even when another Trend route is already in
+  history. Unexpected browser warnings/errors remain zero. This proves the
+  launch-blocked refusal boundary on Expo web, not a validated Trend engine or
+  native iPhone QA.
 
 - The required `Canonical multi-active Plan and Today consistency` gate now
   proves one product-level scheduler drives Plan, Today, cycle, and product
@@ -294,7 +447,7 @@ evidence through 2026-07-12:
   `test-results/human-e2e/2026-07-09/navigation-tabbar-supported-polish-postfix2/`
   and
   `test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-postfix2/`.
-- Shelf catalog wrong-match recovery now has fresh headless Chrome Expo web
+- Historical 2026-07-09 Shelf catalog wrong-match recovery has headless Chrome Expo web
   evidence before product add. With
   `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match`, catalog search exposes
   distinct 48 px `Use this match` and `Not this product` actions, reports a
@@ -305,7 +458,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   visible, 48 px+, center-hit-testable, and at zero horizontal overflow.
   Evidence:
   `test-results/human-e2e/2026-07-09/catalog-search-wrong-match-current/`.
-- Shelf catalog no-match recovery now has fresh Codex in-app browser Expo web
+- Historical 2026-07-09 Shelf catalog no-match recovery has Codex in-app browser Expo web
   evidence for privacy-safe missing-product reporting. At 390 x 844, catalog
   search no-match exposes a 48 px `Report missing product` action, renders
   inline `Report not sent` feedback with no JavaScript dialog or current-route
@@ -315,6 +468,15 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   640 support-floor spot checks keep visible controls 48 px+, fully visible,
   center-hit-testable, and at zero horizontal overflow. Evidence:
   `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`.
+- The governed `CAT04 catalog search, scan, report, and recovery Expo-web pass`
+  supersedes those narrow historical checks for the current confirmation and
+  recovery contract. The 2026-07-18 matrix passes 45/45 scenario executions
+  and 18/18 consent bootstraps
+  across 375 x 667, 390 x 844, and 430 x 932 with zero browser failures, 365
+  tracked files, and 144 screenshots. Evidence is in
+  `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`. This is
+  fixture-only evidence with `nativeDeviceProof=false`; hosted and physical-
+  iPhone gates remain open.
 - The human-simulated E2E manifest now anchors to the 2026-07-09 Expo web
   support-floor evidence. The 360 x 640 launch-floor 200% text-pressure sweep
   passed 49 / 49 routes with zero failed routes, and the supported-phone
@@ -358,10 +520,11 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-09/settings-privacy-terms-support-floor-current/`
   and
   `test-results/human-e2e/2026-07-09/progate-tall-phone-header-current/`.
-- Phase 9 dependency/SBOM evidence was refreshed with `npm audit` metadata:
-  the generated inventory records 1073 packages and zero npm vulnerabilities.
-  Strict release completion still needs the release-owner
-  `PHASE9_DEPENDENCY_AUDIT_PASS=true` signoff.
+- Phase 9 dependency/SBOM evidence was refreshed with offline `npm audit`
+  metadata: the generated inventory records 1,100 packages and zero advisories
+  in the local cache. This is not current registry-backed release evidence.
+  Strict release completion still needs the online CI audit plus release-owner
+  `PHASE9_DEPENDENCY_AUDIT_PASS=true` signoff for the exact RC artifacts.
 
 - Codex in-app browser Expo web at 320 x 568 verified the new
   `cycle_night_completed` Today PM instrumentation path through the real UI:
@@ -397,28 +560,33 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 209 mobile test files / 2244 tests.
+- At the current CORE-06A source checkpoint on 2026-07-29, `npm test`
+  passed: 337 mobile test files / 4,204 tests; the prior catalog operator
+  console baseline remains 7 files / 24 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
-  Tas-owned blocker, readiness-status, strict brand, device-support-policy,
-  generated-packet, and human-E2E manifest checks; the Phase 5 native config
-  guard; the Phase 7 core-loop and Phase 8 growth/store code gates; Phase 9
+  Tas-owned blocker, performance source-snapshot, strict brand, and
+  readiness/device/human source-contract checks; all four Phase 5 evidence
+  smoke/template gates; the Phase 5 native config guard; the Phase 7 core-loop
+  and Phase 8 growth/store code gates; Phase 9
   release smoke, Phase 10 beta readiness, the Phase 10 beta analytics audit,
   Phase 11 launch readiness, and launch ring gates; then typecheck, lint, and
   tests.
-- `npm run docs:device-support-policy-audit:check` passed as the
-  non-mutating guard that keeps the V1 cutoff explicit: iOS 17.0+, Android 10 /
+- `npm run docs:device-support-policy-audit:test` is the pre-S source contract
+  that keeps the lifecycle wiring explicit. The committed
+  `docs:device-support-policy-audit:check` replay runs after its post-E pair is
+  published and again in the post-F aggregate. The policy remains iOS 17.0+, Android 10 /
   API 29+, Android compile/target API 36, 360 x 640 as the launch-blocking Expo
   web layout floor, and 320-wide browser evidence as stress/resilience only.
 - `npm run docs:performance-readiness-audit:check` passed as the non-mutating
   guard that keeps performance readiness visible without faking benchmark
   evidence. Required physical-device measures include `app startup time`,
   `product add time`, `barcode lookup latency`, `routine generation time`,
-  `photo_capture_analysis_ms`, `local photo loading`, and
-  `memory use in photo timeline`. All must pass before closed-beta/public-launch
-  signoff.
+  `native_ocr_recognition_ms`, `photo_capture_analysis_ms`,
+  `local photo loading`, and `memory use in photo timeline`. All must pass before
+  closed-beta/public-launch signoff.
 - `npm run phase5:performance-evidence:template:check` pins the blocked JSON
-  schema v3, while `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run
+  schema v4, while `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run
 phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   thresholds, missing/invalid raw samples, hand-entered summaries that differ
   from calculated nearest-rank p50/p95/max, failed p95 targets, photo-timeline
@@ -426,13 +594,28 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   absent.
 - `npm run phase5:check-native-config` passed as the non-mutating native config
   guard for the same OS support and Android build-target posture.
+- `npm run phase5:widget-runtime-contract:smoke` passed 139 focused source tests
+  for the disabled runtime gate, reconciliation ordering/failure behavior,
+  encrypted action registry, shared schema, and privacy-sensitive views.
+- `npm run phase5:widget-lifecycle-evidence:smoke` passes 12 adversarial
+  artifact-contract groups, and
+  `npm run phase5:widget-lifecycle-evidence:template:check` pins the operator
+  schema. The non-strict `npm run phase5:widget-lifecycle-evidence` remains
+  honestly blocked until a current schema-v3 packet attaches the three typed
+  raw signed ZIPs, four canonical parsed entitlement/privacy reports, four
+  canonical scenario reports, and typed scenario proofs. Reports must repeat
+  the exact source/build/identity/raw-hash binding and, where applicable, the
+  physical-device tuple; widget booleans alone cannot clear it.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 209 test files / 2244 tests.
+- At the current CORE-06A source checkpoint on 2026-07-29,
+  `npm --workspace apps/mobile run test` passed: 337 mobile test files /
+  4,204 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
-  schema/freshness/hash audits, and generated Supabase database types remain
-  governed by regeneration plus typecheck.
+  schema/freshness/hash audits. The raw generated Supabase database artifact is
+  governed by exact regeneration, drift/hash checks, and typecheck; client
+  restrictions are governed separately by the client overlay contracts.
 - `npm run phase3:verify`, `npm run phase4:verify`,
   `npm run phase5:verify`, `npm run phase6:verify`,
   `npm run phase7:verify`, `npm run phase8:verify`,
@@ -460,8 +643,9 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
 - `npm run docs:tas-todo-audit:check` passed as the non-mutating freshness gate
   for the committed Tas-owned evidence inventory.
 - `npm run brand:audit:strict` is now part of `npm run launch:verify`, so the
-  root readiness sweep fails if public launch-risk or review-needed legacy brand
-  references return.
+  root readiness sweep fails if a public launch-risk or review-needed legacy
+  reference returns, or if the exact reviewed compatibility manifest is
+  missing, stale, duplicated, count-mismatched, or otherwise invalid.
 - `npm run phase10:beta-analytics-audit` is now part of
   `npm run launch:verify`, so the root readiness sweep fails if the beta event
   schema, analytics allowlist, runtime `track(...)` calls, or privacy-safe
@@ -472,35 +656,47 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   analytics, deferred surface gates, public link handling, review prompts,
   share-card telemetry, store-support copy, or growth/store guard rails drift
   away from the launch contracts.
-- `npm run docs:generated-packet-status-audit:check` passed as the
-  non-mutating guard that committed generated phase packets do not record a
-  dirty Git worktree, dirty-packet warning text, or stale recorded source/file
-  hash.
-- `npm run e2e:human:manifest` passed and wrote
+- Historical checkpoint only: `npm run docs:generated-packet-status-audit:check`
+  previously passed as the non-mutating guard that committed generated phase
+  packets did not record a dirty Git worktree, dirty-packet warning text, or
+  stale recorded source/file hash. Those generated packets are not current for
+  this source revision and cannot be used as release evidence until the
+  governed `E -> ... -> F` publication sequence regenerates and rechecks them.
+- Historical checkpoint only: `npm run e2e:human:manifest` previously passed
+  and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 2026-07-09 360 x 640
   launch-floor 200% text-pressure sweep and records 360 x 740, 375 x 812,
   390 x 844, 412 x 915, and 430 x 932 supported-phone 200% text-pressure sweep
   evidence.
-  It does not replace physical iOS/Android
-  device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
-  StoreKit/Play Billing, or live Supabase release gates. The support contract
-  is defined in `docs/DEVICE_SUPPORT_POLICY.md`.
-- `npm run e2e:human:manifest:check` passed as the non-mutating local human-E2E
-  evidence freshness gate.
+  It does not replace physical-iPhone QA, native
+  keyboard/text-scale/accessibility checks, RevenueCat, StoreKit, or live
+  Supabase release gates. Android/Play Billing remains later compatibility work,
+  not an iOS launch gate.
+
+  The support contract is defined in `docs/DEVICE_SUPPORT_POLICY.md`.
+
+- The retained human-E2E manifest check passed only for its recorded historical
+  source. Its recorded Git SHA is not this source revision, it has no current
+  governed-chain binding, and it must remain stale until it is republished and
+  passes `npm run e2e:human:manifest:check` at its governed commit prefix.
 - `npm run phase7:verify` passed non-strict core-loop code gates and refreshed
   `docs/phase-7/generated/core-loop-qa-packet.*` for the current Today and
   Progress route hashes. Strict Phase 7 remains blocked by missing final
   identity/policy URLs, live Supabase/RLS, clinical/reviewer, catalog,
   physical-device, RevenueCat, privacy export/delete, beta dashboard, and named
   signoff evidence.
-- `npm run phase8:verify` passed non-strict growth/store code gates and
-  refreshed `docs/phase-8/generated/growth-store-qa-packet.*` for the current
-  share-card and conflict-share route hashes. Strict Phase 8 remains blocked by
-  missing final identity/domain, marketing/support/store URLs, DNS,
-  Universal/App Links, share-card device QA, attribution privacy, store packet,
+- The Phase 8 source packet binds the CORE-07A share/public-link authority,
+  sanitized projection, routes, public fallback, and source contract. The
+  machine admissions are literal false, so strict Phase 8 must remain blocked
+  even if external QA variables are asserted. Positive release remains blocked
+  by a missing immutable issuer, exact-copy/citation/version/market/projection
+  and content-rights receipt, explicit exact-payload confirmation, independently
+  reviewed public-token privacy/retention/revocation/deletion/abuse lifecycle,
+  final identity/domain, marketing/support/store URLs, DNS, Universal/App
+  Links, share-card device QA, attribution privacy, store packet,
   creator/support/dashboard/dry-run, Apple Team ID, Android release
-  certificate, and named signoff evidence.
+  certificate, and named clinical/regulatory/privacy/IP/launch signoff evidence.
 - `npm run phase5:verify` passed non-strict native-build/device-QA code gates
   and refreshed `docs/phase-5/generated/device-qa-packet.*` for the current
   native support-floor and progress capture route hashes. The local native
@@ -509,8 +705,50 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   iOS/Android build IDs, physical-device matrix evidence, native
   camera/photo/notification/share/RevenueCat/Sentry QA, and named tester
   signoff evidence.
-- `npm run brand:audit:strict` passed with 0 public launch-risk and 0
-  review-needed hits.
+- `npm run brand:audit:strict` passed with 0 public launch-risk, 0
+  review-needed, and 23 exact reviewed `legacy-compatibility` hits. The retained
+  references are byte-bound cryptographic/domain-separation, migration,
+  live-harness, or rehearsal contracts; the audit prints an explicit
+  non-clearance notice and does not close the legal/final-identity gate. See
+  `docs/hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md`.
+- The DB-06 fresh-staging source procedure now binds an immutable clean
+  `origin/main` snapshot, all 91 migrations through `0075`, and all 17 guarded
+  Edge functions. It requires a main cutover record, one traffic/provider-freeze
+  artifact, five schema-v2 zero-cohort files, closed hosted Auth/provider/
+  client/scheduled ingress, and fresh observations. The runner sets and retains
+  `DB06_TRAFFIC_FREEZE=frozen`, canaries the exact eight `verifyJwt: false`
+  endpoints, and immediately rereads functions, frozen responses, Auth,
+  migrations, schema, Storage, and all Cron jobs before push. A `pass` cannot
+  omit these proofs; the static source expectation is now 82 public/82 RLS
+  tables, while CAT-08 separately adds 15 private operator-authority relations
+  and CORE-06A adds one sealed private zero-admission control.
+  Final acceptance requires exact `0075` counts from a new clean reset, one
+  `photos` bucket, and zero Auth cohort, Storage objects, or Cron jobs. This is
+  source hardening only: DB-06 remains `in_progress`, blocked by `ACCT-03`, no
+  hosted staging run or live packet exists, and release requires a separately
+  recorded downstream live gate.
+- The DB-09 public-table source contract classifies all 82 migrated public tables,
+  registers all 68 private/read-sealed tables exactly once, binds the 36 directly
+  queryable tables to permanent-user, signed-anonymous, and no-session probes,
+  and requires role denial for all 32 sealed tables. The seven CAT-03
+  `private`-schema authorities remain a separate exact-denial lane; CAT-08's 15
+  private relations are covered by its own exact API-role denial contract. It requires exact PostgreSQL/Storage
+  denial outcomes and makes cleanup residue blocking. The recorded behavioral-
+  smoke, static-adversarial, and policy-lint gates are source checks only. The
+  authoritative 2026-08-05 credential-free local PostgreSQL 15 verifier at clean
+  commit `e5588ae69` passed in 2,200.4 seconds across the complete 71-migration
+  chain through `0072`, including
+  all five cutovers, both resets, exact history, focused 5 files/433 assertions,
+  16-file/1,222-assertion structural pgTAP, lint, empty drift, exact canonical
+  replacement with the raw CLI-generated 6,770-line artifact at SHA-256
+  `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`,
+  CAT-08 10/10, and run-scoped teardown. The client restrictions live in a
+  separate overlay. These local source results are not governed hosted proof;
+  DB-06 repository/local/linked parity and its hosted evidence packet remain
+  open, as does redacted staging and production DB-09 evidence. Migration
+  `20260713000045_anonymous_photo_storage_guard.sql`
+  closes signed-anonymous cloud-photo insert/update access. This local result is
+  not hosted evidence; redacted staging/production runs remain required.
 - `npm run phase9:verify` passed non-strict release-engineering code gates
   after the privacy payload audit was aligned to the route-owned
   progress-photo share confirmation. Strict Phase 9 remains blocked by missing
@@ -610,12 +848,18 @@ Re-run the relevant checks after any production-readiness change.
 
 ## Launch Gates
 
-1. RoutineKind is the working local/native identity, but legal clearance,
-   domain/store reservation, and production identity evidence are unresolved.
-   Existing public `OnSkin` surfaces remain a direct customer-confusion and
+1. Layerwell is the working local/native identity and first candidate in the
+   sequence for counsel review. The sequence is `Layerwell`, `Ritunera`,
+   `Ritualoom`; `Rituvia` is suspended. The governed 2026-07-16 public knockout
+   is complete for its declared preliminary scope. Comprehensive WIPO/Madrid,
+   final-country, company/trade-name, common-law, linguistic, qualified-counsel,
+   authenticated reservation, and production-identity evidence remain
+   unresolved.
+   Existing public `Layerwell` surfaces remain a direct customer-confusion and
    trademark risk if the app reverts to the legacy name.
-2. Supabase project is not live, migrations are not applied to production, and
-   RLS has not been tested with real users.
+2. No approved hosted staging project or DB-06 live evidence packet exists;
+   migrations are not applied to production, the DB-06 freeze has not been
+   exercised against a live target, and RLS has not been tested with real users.
 3. RevenueCat is not live; purchases, restore, renewal, refunds, and webhook
    entitlement sync are not production-real.
 4. Apple Developer/App Store Connect and Google OAuth for iPhone are not
@@ -625,45 +869,89 @@ Re-run the relevant checks after any production-readiness change.
 6. Legal/privacy copy is not final for terms, privacy, consumer health data,
    subscription, commerce, photo, community, and AI/Ask consents.
 7. Real product and ingredient catalog seed is not imported; source/license
-   review, ODbL posture, curated batch, and beta coverage are not complete.
+   review, ODbL posture, separately consented/minimized beta-shelf coverage,
+   pre-outcome signed targets, qualified curation, holdout quality evidence,
+   and immutable hosted catalog activation are not complete.
 8. Native camera, barcode, guided photo capture, and encrypted local photo file
-   storage are implemented in repo but not verified in a custom dev build;
-   native OCR remains gated off.
+   storage are implemented in repo but not verified in a custom dev build.
+   CAT-06 now shares one permission/AppState/focus, camera-ready, keyed-remount,
+   and generation-bound operation lifecycle across Shelf Scan, Shelf OCR, and
+   Progress Capture. Progress keeps photo consent before the OS prompt and owns
+   raw-photo cleanup outside replacing entitlement/lock/storage gates. Exact
+   native config derives one camera purpose string and rejects drift. These are
+   source controls; no signed archive or physical-iPhone result exists.
+   Native OCR now has a staging-only Apple Vision revision-3 source candidate;
+   development and production stay disabled. Its governed
+   `CAT05 native OCR review Expo-web pass` packet was
+   bound to `fec382eddd0e79f73b4c38b5de30d996928a8fc9` and passed 15/15
+   scenarios plus 4/4 consent bootstraps with zero browser failures, 139
+   non-summary artifacts, and 55 PNGs at
+   `test-results/human-e2e/2026-07-18/cat05-native-ocr-web-ui-current/`, but
+   records `nativeDeviceProof=false`. The 375 x 667 manual-handoff PNG omits
+   Ingredients/prefill, and the multilingual fixture contains no Arabic/Hebrew
+   RTL sample. It proves no Vision/Swift/camera/iOS-binary or physical-device
+   behavior, native privacy cleanup, accuracy, latency, native accessibility,
+   archive linkage, App Review acceptance, legal clearance, or revenue. The
+   macOS compile remains unverified/pending. CAT-06 changed the camera source
+   after the CAT-04 and CAT-05 packet bindings, so both deterministic web
+   packets are historical/stale until regenerated; a fresh web result will
+   still not be native proof. `PHASE5_CAMERA_PERMISSION_QA_PASS` is ignored.
 9. Native iPhone notification delivery is not verified on physical devices.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
 11. Closed beta has not proven activation, retention, catalog usefulness, and
     willingness to pay.
+12. Health-consent withdrawal has a purpose-scoped, non-account-deleting source
+    candidate and local Expo-web/database evidence, but all 15 installed copy
+    tuples remain `draft_blocked`; hosted worker/Storage/processor/backup,
+    physical-iPhone, and professional privacy/legal approval evidence are absent.
+13. Sign in with Apple has a locally verified source candidate for one-use-code
+    plus nonce/state capture, encrypted versioned token retention, daily
+    validation, signed event ingress, and authoritative exact-session access
+    denial. Hosted deployment, primary-App-ID delivery, Vault/Cron and key-
+    rotation drills, existing-account recapture, stale-JWT proof, the exact
+    signed physical-iPhone/TestFlight build, and professional approval remain
+    open. `TRANSFERRED` is fail-closed pending an approved policy.
+14. The exact release privacy report, live policy/support URLs, and a
+    non-expiring production-like App Review demo account/instructions do not yet
+    exist.
+
+CAT-05 and CAT-06 therefore remain `in_progress` and launch-blocked. The
+retained CAT-04/CAT-05 web packets are stale for the current camera source and
+never constituted production or release evidence. CAT-06 requires the exact
+signed archive and schema-v1 two-iPhone/three-route/54-run artifact; CAT-05
+retains its separate compile, OCR accuracy, cleanup, accessibility, performance,
+and professional-review gates.
 
 ## Readiness Table
 
-| Area                           | Status                     | Production risk                                                                                                                                                                                                                          | Owner                                           | Next action                                                                                                                            | Exit criteria                                                                                                                              |
-| ------------------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Brand and app identity         | launch-blocked             | RoutineKind defaults reduce the legacy `OnSkin` conflict, but the candidate is not counsel-cleared or reserved                                                                                                                           | Founder + trademark counsel                     | Clear or reject `RoutineKind`; reserve final domain/store/package IDs and provide production identity evidence                         | Written clearance, final domain, final bundle/package IDs, and store/domain reservation evidence                                           |
-| Architecture and app shell     | implemented                | Dev foundation exists, but release build not verified                                                                                                                                                                                    | Engineering                                     | Keep typecheck/lint/test green                                                                                                         | Release candidate builds on iOS                                                                                                            |
-| Auth and onboarding foundation | implemented / live-blocked | Same-user upgrade and account-transition isolation logic plus local UI proof exist; provider credentials, manual linking, Turnstile, final quiz/legal copy, live A-to-B isolation, and physical-device proof are not production-verified | Engineering + founder + counsel                 | Complete `B-VERIFY-AUTH-LINKING`, provider setup, live account-boundary matrix, Turnstile, and reviewed copy after brand decision      | Anonymous, email, Apple, Google, conflict, sign-out/A-to-B isolation, deletion, and export flows pass live device QA                       |
-| Supabase backend               | stubbed                    | Local migrations, deploy wrapper, and RLS smoke script exist; no live project/RLS adversarial pass                                                                                                                                       | Engineering                                     | Create staging/production Supabase projects, run `phase2:check-env:strict`, deploy staging, then run `phase2:rls-smoke`                | Two-user RLS test, Edge Functions deployed, advisors clean or accepted                                                                     |
-| Ingredient conflict engine     | launch-blocked             | Deterministic logic exists; unreviewed guidance could be unsafe or misleading                                                                                                                                                            | Dermatologist + cosmetic chemist + engineering  | Clinical review and reviewed-content gating                                                                                            | Only reviewed rules exposed by production gates                                                                                            |
-| Smart Shelf manual flows       | implemented                | Local-first manual/no-match flows are useful; no real catalog match rate yet                                                                                                                                                             | Engineering                                     | Keep manual fallback honest while catalog imports are built                                                                            | Beta users can add real products even when scans miss                                                                                      |
-| Barcode/OCR shelf intake       | launch-blocked             | Live barcode camera path and editable label-capture path exist; required native OCR is disabled and no production module/device evidence exists                                                                                          | Engineering                                     | Select and implement iOS-native OCR, then run barcode/OCR device and beta-label matrices                                               | Barcode match rate tracked; editable OCR meets predeclared quality/privacy/performance thresholds                                          |
-| Product catalog                | launch-blocked             | Phase 4 schema/API/parser/source disclosure exists, but no source-cleared launch catalog or beta coverage yet                                                                                                                            | Engineering + founder + counsel                 | Clear OBF/CosIng/ODbL posture, run export-based imports, curate beta-driven launch batch, review QA                                    | Meaningful beta scan match rate, attribution obligations satisfied, only eligible products drive recs                                      |
-| Routine builder and scheduler  | implemented                | Local deterministic generation exists; AM/PM product-ID order edits persist through reload/recompute and are cleanup/export registered; required persistence behavior still needs live/native reconciliation QA                          | Engineering + clinical reviewers                | Review rules and verify native saved-order, account, timezone, and recovery behavior                                                   | Users can generate, edit, relaunch, follow, adapt, and recover routines without fake claims                                                |
-| Today check-off and streaks    | implemented                | Local-first loop exists; Expo web reload persistence evidence exists; device notification and server sync still need QA                                                                                                                  | Engineering                                     | Verify native-device persistence, notification opens, and eventual server sync                                                         | Day-level check-off and streak behavior remain correct across reinstall/upgrade                                                            |
-| Guided photo progress          | needs-device-verification  | Front-camera still capture, encrypted local storage, and post-capture face/pose plus luminance checks exist; thresholds are provisional and the preview overlay is static                                                                | Engineering + privacy counsel                   | Build fresh native binaries; calibrate framing/light states; verify no-network/temp deletion, latency, save failure, and accessibility | Physical-device capture and review pass framing, lighting, local-only, failure, latency, and assistive-technology gates                    |
-| Reminders                      | needs-device-verification  | Scheduling code exists; physical-iPhone delivery not verified                                                                                                                                                                            | Engineering                                     | Device QA on latest iOS and the iOS 17 support floor                                                                                   | Quiet hours, timezone changes, reinstall, and notification copy pass                                                                       |
-| Performance readiness          | needs-device-verification  | Local code gates exist, but startup, product-add, barcode/OCR, routine, capture/trend, Ask, community, commerce, widgets, and photo memory baselines need real-device or beta telemetry                                                  | Engineering + founder                           | Measure every contract metric on supported physical iPhones                                                                            | Named signoff with build IDs, devices, raw samples, calculated p50/p95/max, memory summary, and accepted predeclared thresholds            |
-| Widgets and live activities    | inert                      | In-app previews exist; required WidgetKit and ActivityKit targets are not built                                                                                                                                                          | Engineering                                     | Build native targets, App Group bridge, timelines, Activity lifecycle, privacy behavior, and deep links                                | Enabled WidgetKit/ActivityKit surfaces pass physical-iPhone and privacy QA                                                                 |
-| Paywall and entitlement UI     | stubbed                    | Screens/gates and guarded RevenueCat SDK wiring exist; native products/restores are not verified                                                                                                                                         | Engineering + founder                           | Configure RevenueCat after brand/account setup and test in custom dev builds                                                           | Purchase, restore, refund, expiry, renewal, and webhook matrix passes                                                                      |
-| Recommendations                | launch-blocked             | Type-first engine exists; real products and goal-active recs need catalog/review                                                                                                                                                         | Clinical reviewers + engineering                | Seed catalog and review goal-active recommendation types                                                                               | Recommendation claims are reviewed and commerce-independent                                                                                |
-| Commerce/affiliate             | inert                      | Consent, disclosure, and attribution scaffolds exist; required live rail is absent                                                                                                                                                       | Founder + counsel + engineering                 | Resolve ShopMy or an approved alternative and implement the production rail                                                            | Rail, consent, disclosure, safe handoff, monitoring, and order reports work                                                                |
-| Community/Skin Notes           | launch-blocked             | Expert read-mostly scaffold exists; peer posting needs moderation and legal floor                                                                                                                                                        | Founder + clinical reviewers + moderation owner | Recruit experts and define moderation operations                                                                                       | No open UGC until report/block/contact/EULA/human moderation are live                                                                      |
-| Trend analysis                 | launch-blocked             | No-score posture is correct; required real engine, calibration, fairness, device, and legal review are absent                                                                                                                            | Engineering + counsel + fairness reviewer       | Implement and validate the within-person trend engine                                                                                  | No score/age/percentage claims; calibration, privacy, fairness, performance, and legal gates pass                                          |
-| Ask assistant                  | launch-blocked             | Deterministic local advisor exists; required production cloud gateway/RAG/safety path is absent                                                                                                                                          | Engineering + counsel + clinical reviewers      | Select provider and implement authenticated grounded cloud Ask with consent, quotas, safety evaluations, deletion, and kill switch     | Grounded, bounded answers; no unreviewed medical claims; live quality/safety/cost gates pass                                               |
-| Growth share card              | needs-device-verification  | Card and export path exist; final domain/store fallback/attribution blocked by final identity and device QA                                                                                                                              | Engineering + founder                           | Final identity/domain and universal link                                                                                               | Shared card opens app or web fallback and tracks attribution                                                                               |
-| Analytics/crash reporting      | stubbed                    | PostHog/Sentry runtime wiring exists; projects, source maps, dashboards, deletion, and privacy review not live                                                                                                                           | Engineering + founder                           | Configure after brand/account setup                                                                                                    | Production dashboards, deletion, source maps, and crash privacy review pass                                                                |
-| Policies/support/deletion      | launch-blocked             | Copy and functions are not final/live                                                                                                                                                                                                    | Counsel + engineering                           | Finalize policy URLs and deploy account deletion/export                                                                                | Store listing URLs work; deletion/export verified against live backend                                                                     |
-| Phase 3 signoff packet         | launch-blocked             | Exact-source packets, item snapshot digests, safe signoff-template CLI, detached-signoff schema, and production gates exist; professional signoffs are absent                                                                            | Founder + counsel + clinical reviewers          | Run review packet, verify reviewer credentials, retain original approvals, and add one current detached signoff per released item      | Counsel, dermatologist, cosmetic chemist, privacy, and IP decisions pass the machine gate against exact reviewed source hashes             |
-| Closed beta                    | launch-blocked             | No real cohort or all-features TestFlight metrics yet                                                                                                                                                                                    | Founder + engineering                           | Recruit 50-100 representative iPhone users and test every required feature                                                             | Activation, D7/D14/D30, catalog, payments, AI, commerce, community, trend, native, support, safety, and willingness-to-pay thresholds pass |
+| Area                               | Status                                           | Production risk                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Owner                                                                            | Next action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Exit criteria                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Brand and app identity             | launch-blocked                                   | Layerwell defaults reduce the legacy `Layerwell` conflict, but no candidate has a qualified-counsel decision or authenticated reservation. The governed 2026-07-16 public knockout completed the declared preliminary Apple/store, national-register, UKIPO, TMview, common-law, domain, and public-handle scope; it records occupied YouTube `@layerwell`, redirecting Facebook `ritunera`, `Trunera`, `RITULIA`, and `Ritjuva` leads, while Rituvia remains suspended. Comprehensive WIPO/Madrid, final-country, company/trade-name, linguistic, and legal analysis remain open.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Founder + trademark counsel                                                      | Counsel independently searches and accepts or rejects the exact three-name sequence for the approved countries and actual goods/services; founder selects one accepted candidate; authorized owners then reserve final domain/store/package/scheme/handle assets and provide production identity evidence                                                                                                                                                                                                                                                                                                             | Written counsel decision with exact spelling/countries/classes/conditions, founder selection, final domain and native identifiers, and authenticated reservation receipts; receipts do not establish trademark availability or Apple acceptance                                                                                                                                                                     |
+| Architecture and app shell         | implemented                                      | Dev foundation exists, but release build not verified                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Engineering                                                                      | Keep typecheck/lint/test green                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Release candidate builds on iOS                                                                                                                                                                                                                                                                                                                                                                                     |
+| Auth and onboarding foundation     | implemented / live-blocked                       | Same-user upgrade, account-transition isolation, encrypted candidate restore, exact-subject controlled refresh, central remote admission, and the source-complete Apple token/event/session-fence candidate pass local lifecycle/adversarial tests. Provider credentials, manual linking, Turnstile, live A-to-B/token-expiry/cold-start proof, hosted Apple event/Cron/vault behavior, and physical-iPhone evidence are not production-verified.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Engineering + founder + counsel                                                  | Complete `B-VERIFY-AUTH-LINKING`, provider setup, live account-boundary/remote-admission matrix, Turnstile, hosted SIWA recapture/revocation/event/rotation lifecycle, and reviewed copy after brand decision                                                                                                                                                                                                                                                                                                                                                                                                         | Anonymous, email, Apple, Google, conflict, sign-out/A-to-B isolation, deletion, export, controlled refresh, and remote-request flows pass live physical-iPhone QA                                                                                                                                                                                                                                                   |
+| Supabase backend                   | source-hardened / live-blocked                   | Source contains 91 migrations through `0075`; historical `0072` is the last full local replay. The historical `0072` static source contract classifies 82 RLS-enabled public tables as 36 directly queryable private, 32 read-sealed private/authority, and 14 authenticated catalog/editorial tables; CAT-03, CAT-08, CORE-06A, and commerce-zero authorities are separately sealed in `private`. The authoritative clean-`e5588ae69` PostgreSQL 15 verifier passed in 2,200.4 seconds, including five cutovers, two resets, focused 5 files/433 assertions, 16 pgTAP files/1,222 assertions, lint, empty drift, CAT-08 10/10, teardown, and the local canonical replacement with the exact raw CLI-generated 6,770-line database artifact at SHA-256 `2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3`. Client restrictions are a separate overlay. DB-06 hosted evidence, repository/local/linked parity, and all hosted role, extension, TLS, load, provider, and deployment evidence remain open; DB-08 is not complete and no staging parity is claimed. | Engineering                                                                      | Deploy the current 91-migration/17-function revision to reviewed staging; run strict RLS and direct-service-role denial plus publication/deletion/health/Apple/catalog/adherence/recommendation/commerce/data-rights/provider/concurrency matrices; retain redacted evidence and approved old-client control.                                                                                                                                                                                                                                                                                                         | Exact local and hosted reset/drift and generated-type parity proof; current private-table classification; permanent/signed-anonymous/no-session/service-role denial artifacts with zero residue; complete exports/deletions/withdrawals; exact provider/catalog/adherence/recommendation/commerce outcomes; functions/Cron/Vault deployed; advisors accepted.                                                       |
+| Ingredient conflict engine         | launch-blocked                                   | Deterministic logic exists; unreviewed guidance could be unsafe or misleading                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Dermatologist + cosmetic chemist + engineering                                   | Clinical review and reviewed-content gating                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Only reviewed rules exposed by production gates                                                                                                                                                                                                                                                                                                                                                                     |
+| Smart Shelf search/manual/recovery | source-hardened / live-blocked                   | CAT-04 retains strict reviewed-response decoding, stale-search suppression, manual fallback, idempotent saves, explicit report confirmation, encrypted account/health-bound reconnect recovery, and minimized lookup telemetry. CAT-06 now adds the shared foreground/focus permission and camera-operation lifecycle to Scan. The retained 45-scenario/18-bootstrap Expo-web packet predates CAT-06 and is stale until regenerated; it has `nativeDeviceProof=false`. No active CAT-03 catalog, hosted ready-candidate cycle, hosted RLS/data-rights/observability proof, signed-archive CAT-06 artifact, physical-iPhone evidence, or professional approval exists.                                                                                                                                                                                                                                                                                                                                                                                                           | Engineering + qualified privacy/security/legal review                            | Regenerate the CAT-04 web matrix against the accepted CAT-06 source; deploy and verify `0059`; exercise a real hosted ready-candidate cycle and owner/withdrawal/export/deletion/backup/minimized-log proof; then complete the exact-build CAT-06 Scan permission/lifecycle/mount/offline/privacy/accessibility matrix and reconcile App Privacy                                                                                                                                                                                                                                                                      | Every search, match, wrong match, no match, offline/error, manual, report, reconnect, and native Scan branch has current exact-build evidence; reports remain owner-scoped and purpose-limited; failed/canceled/stale recovery never changes Shelf or discards retry state; CAT-03, H-07, and H-08 are closed                                                                                                       |
+| Barcode/native OCR shelf intake    | source candidate / launch-blocked                | Barcode normalization/checksum controls and the staging-only Apple Vision revision-3 OCR candidate remain source-complete. CAT-06 gives Scan/OCR fresh foreground permission verification, camera-ready admission, keyed mount retry, queued-callback invalidation, and manual fallback. Managed label capture still has drain-before-navigation/startup cleanup. Development and production OCR remain disabled. The retained CAT-05 web packet is stale after CAT-06 and never proved Swift, signed-archive linkage, physical camera/permission/interruption, accuracy, zero-network behavior, cache cleanup, VoiceOver/Dynamic Type, latency/memory, App Review, or legal clearance.                                                                                                                                                                                                                                                                                                                                                                                         | Engineering + qualified privacy/security/legal review                            | Regenerate CAT-05 web UI evidence, compile/inspect the exact staging candidate, pass the CAT-06 schema-v1 two-iPhone/three-route lifecycle artifact, the CAT-05 schema-v2 two-iPhone 25-label/50-run accuracy/RTL/network/cleanup/accessibility artifact, and the schema-v4 performance artifact; reconcile observed behavior with policy/App Privacy and named review                                                                                                                                                                                                                                                | Barcode acquisition/fallback and editable native OCR pass exact signed-build evidence; CAT-06 permission/lifecycle/mount/offline/privacy runs pass; predeclared OCR recall/insertion/order/latency thresholds pass without excluding failures; no label image/transcript disclosure or cache residue exists; accessibility/manual recovery passes; production enablement requires a later reviewed release decision |
+| Product catalog                    | source candidate / launch-blocked                | CAT-01 source/build controls, CAT-02 signed provenance/transactional promotion/rollback, and CAT-03 campaign/readback controls exist in source. Foundational `0058` remains the CAT-03 authority and each CAT-03 review/readback must attest `20260722000062`, while deployment evidence must cover the full current chain through `0075`. No source-cleared real batch, separately consented corpus, witnessed target/decision, signed review/readback, current hosted race/serving drill, untouched-holdout result, or active launch catalog exists. The self-selected beta cannot support a market-representative claim.                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Engineering + founder + counsel + qualified reviewers                            | Obtain exact source approvals/build evidence and zero-warning imports; pass hosted CAT-02/CAT-03/CAT-08; pre-witness the target/full-record decision; retain consent-minimized beta evidence; complete exact product/U.S. OTC-adjacent review; deploy and verify through `0075`; atomically release and independently sign the exact campaign readback.                                                                                                                                                                                                                                                               | Source obligations and exact lineage pass; no raw beta health data enters external sources; all catalog floors and holdout bounds pass; direct authority access stays sealed; only current active-campaign, positively eligible, reviewed, dependency-complete products serve; retirement suppresses serving immediately.                                                                                           |
+| Routine builder and scheduler      | implemented / launch-blocked                     | Local deterministic generation and persisted reordering of already-generated steps exist. Production now withholds every unreviewed sequencing role and instruction from Plan, Today, and cycle projection, while unreviewed cadence remains closed. This leaves the release routine incomplete until qualified review is recorded; the current editor cannot manually add a withheld Shelf product to AM or PM. Native saved-order/reconciliation evidence is also open.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Engineering + clinical reviewers                                                 | Obtain exact qualified sequencing/cadence review, keep the fail-closed production gate green, and verify native saved-order, account, timezone, recovery, partial-review, and closed-gate behavior                                                                                                                                                                                                                                                                                                                                                                                                                    | Only reviewed roles/instructions are published; users can generate, edit, relaunch, follow, adapt, and recover routines without fake claims; any future manual-placement recovery is implemented and human-E2E verified before it is described as available                                                                                                                                                         |
+| Today check-off and streaks        | source-hardened / live-blocked                   | CORE-05 persists visible completion and replay work atomically in encrypted local v3 state; only a fully completed PM/recovery plan can emit routine-day adherence. Migrations `0068`/`0069` add server-owned timezone-aware streak projection and owner-derived Shelf/completion replay with stable tombstones, minimized receipts, and export sources. The authoritative 2026-08-05 clean-`e5588ae69` local verifier passes the complete 71-migration chain through `0072`, including five cutovers, focused 5 files/433 assertions, structural 16 files/1,222 assertions, lint, empty drift, CAT-08 10/10, and run-scoped teardown. Hosted/two-device convergence, physical-iPhone encrypted storage/timezone behavior, native notification delivery, approved health copy, archive privacy, and named review remain open.                                                                                                                                                                                                                                                   | Engineering + privacy/security/legal review                                      | Prove hosted replay/deletion-wins/export/withdrawal/account isolation, two-device convergence, native storage/relaunch/timezone/DST/notification/accessibility, and archive-identical privacy behavior.                                                                                                                                                                                                                                                                                                                                                                                                               | Check-off, replay, adherence, streak/freeze, export, withdrawal, and notification semantics pass current local, hosted, two-device, and supported-iPhone matrices without inventing completion or outcome claims.                                                                                                                                                                                                   |
+| Guided photo progress              | source candidate / needs-device-verification     | Front-camera still capture, encrypted local storage, and post-capture face/pose plus luminance checks exist; thresholds remain provisional and the preview is static. CAT-06 now saves photo consent before the OS prompt, shares foreground/permission/camera-ready recovery, and keeps exact raw-photo ownership outside replacing gates until cleanup or atomic review handoff. No signed archive, final-purpose-string proof, two-iPhone CAT-06 artifact, native cleanup/network evidence, or calibrated physical-device result exists.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Engineering + privacy/security/legal review                                      | Build and inspect the exact signed candidate; pass all Progress permission/Settings/lifecycle/mount/capture/offline/interruption/accessibility/privacy runs in the schema-v1 CAT-06 packet, including shutter navigation drain, gate replacement, cleanup failure/retry, and no duplicate encrypted save; separately calibrate face/pose/light and performance                                                                                                                                                                                                                                                        | Exact-build physical-device capture/review passes local-only, cleanup, failure, latency, accessibility, framing, lighting, encryption/restart/delete, and no-network gates; extracted purpose string and App Privacy/policy statements match observed behavior                                                                                                                                                      |
+| Reminders                          | needs-device-verification                        | Scheduling code exists; physical-iPhone delivery not verified                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Engineering                                                                      | Device QA on latest iOS and the iOS 17 support floor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Quiet hours, timezone changes, reinstall, and notification copy pass                                                                                                                                                                                                                                                                                                                                                |
+| Performance readiness              | needs-device-verification                        | Local code gates exist, but startup, product-add, barcode/OCR, routine, capture/trend, Ask, community, commerce, widgets, and photo memory baselines need real-device or beta telemetry                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Engineering + founder                                                            | Measure every contract metric on supported physical iPhones                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Named signoff with build IDs, devices, raw samples, calculated p50/p95/max, memory summary, and accepted predeclared thresholds                                                                                                                                                                                                                                                                                     |
+| Widgets and live activities        | source candidate / launch-blocked                | A hash-pinned Layerwell SQLite authority, rotating-nonce CAS, durable native action outbox, lock-held final-outbox quiescence, two-entry stale timeline, typed concurrency retries, finite custom Live Activity lifecycle, owner-bound reconciliation, and boundary-first privacy cleanup exist in source. UserDefaults is presentation-only. Publication/start remain literal signed `false`; the five-minute health lease makes personalized display short-lived pending reviewed longer local authorization; synchronous exclusive-flock/read-write-SQLite rendering lacks Instruments proof; and Windows tests do not prove Swift compilation, signed archive embedding, physical-iPhone runtime correctness, completed ActivityKit dismissal, App Review, or legal clearance.                                                                                                                                                                                                                                                                                              | Engineering                                                                      | Resolve and review the local-display authorization lifetime; compile the exact source on reviewed macOS/Xcode; inspect the disabled signed archive; profile provider/render contention on supported iPhones; finalize cleared identities/deep links; enable only the audited Layerwell flags; rebuild and cross-bind the archive; then run the complete physical-iPhone matrix                                                                                                                                                                                                                                        | Enabled WidgetKit/ActivityKit surfaces pass signed-archive, performance, interaction/concurrency/replay, process-death/reboot, expiry/withdrawal/account-transition cleanup, locked-state privacy, ActivityKit-removal timing, accessibility, and deep-link QA                                                                                                                                                      |
+| Paywall and entitlement UI         | source-hardened / live-blocked                   | Store and app-grant authority are separate, old/no-cursor and RevenueCat `NOT_REQUESTED` evidence fails closed, selected-child verification must match the aggregate, mobile reconciliation is owner-derived, native-call uncertainty is durably journaled, and default/native positive fixtures are absent. PAY-07 blocks cached, pending, failed, expired, stale-verification, and incomplete-authority success states on a live clock; renewal/price copy requires exact billing-store evidence, `willRenew=true`, entitlement price, and configured-product cadence. Trial copy requires exact per-product eligibility. RevenueCat-granted promotions are out-of-store/non-billing, and production/staging custom grants are disabled. Real App Store products, exact-build RevenueCat SDK response-signature-verification proof, sandbox/TestFlight purchase/Restore, aliases/transfers, webhook deployment, provider deletion, and physical-iPhone recovery are not verified.                                                                                             | Engineering + founder + counsel                                                  | Configure Apple/RevenueCat after brand/account setup; complete and commit the exact-build Trusted Entitlements artifact with SDK/build/Git/product/reviewer and sandbox/TestFlight purchase/Restore bindings; deploy migration `0053` plus reconciliation before the compatible mobile reader; use the selected Apple-managed introductory offer and keep any future custom app-grant exception blocked unless Apple accepts the exact submitted build for App Store distribution with that mechanism present; run the full StoreKit/RevenueCat lifecycle and review the 29-day deletion disclosure/journal retention | Purchase, Restore, eligibility, pending/uncertain, verified-entitlement, renewal, refund, expiry, grace, alias/transfer, webhook, deletion, and reconciliation matrix passes on the exact iOS candidate; no custom digital unlock bypasses IAP or claims App Review acceptance early                                                                                                                                |
+| Recommendations                    | source-hardened / launch-blocked                 | CORE-06A is literal zero-product admission: only `type_first` and `shelf_context` provenance exist, goal-active clearance starts empty, unavailable/unreadable private inputs withhold output, and commerce admission is unconditionally false. Migration `0071` purges the untrusted recommendation cache, keeps product eligibility closed, and revokes runtime mutation authority. No named product, retailer request, professional clearance, hosted/native/archive proof, App Privacy reconciliation, or App Review outcome exists.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Dermatologist + cosmetic chemist + regulatory/privacy counsel + engineering      | Retain exact current DB and UI evidence; obtain a current CAT-03 SKU/market/readback corpus, server-minted goal authority, exact claim/reviewer receipts, and a separately reviewed versioned product-specific successor before enabling named products or commerce.                                                                                                                                                                                                                                                                                                                                                  | Only exact current, market-bound, professionally reviewed, source-cleared products can enter ranking; all commerce inputs remain ranking-independent; stale/held/withdrawn/unavailable states fail closed; hosted/native/privacy/accessibility/rollback evidence passes.                                                                                                                                            |
+| Commerce/affiliate                 | inert                                            | Consent, disclosure, and attribution scaffolds exist. The order poll now follows ShopMy's documented wire/auth/pagination contract and fails closed on incomplete provider results, but ShopMy's public Order Report exposes no documented click-token field; imported orders therefore keep `click_token = null`, and the required attributable live rail remains absent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Founder + counsel + engineering                                                  | Obtain a provider-approved correlation contract for the selected ShopMy account or choose an approved alternative, then implement and verify the production rail                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Rail, consent, disclosure, safe handoff, monitoring, attributable order reports, and reconciliation work                                                                                                                                                                                                                                                                                                            |
+| Community/Skin Notes               | launch-blocked                                   | Expert read-mostly scaffold exists; peer posting needs moderation and legal floor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Founder + clinical reviewers + moderation owner                                  | Recruit experts and define moderation operations                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | No open UGC until report/block/contact/EULA/human moderation are live                                                                                                                                                                                                                                                                                                                                               |
+| Trend analysis                     | launch-blocked                                   | No-score posture is correct; required real engine, calibration, fairness, device, and legal review are absent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Engineering + counsel + fairness reviewer                                        | Implement and validate the within-person trend engine                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | No score/age/percentage claims; calibration, privacy, fairness, performance, and legal gates pass                                                                                                                                                                                                                                                                                                                   |
+| Ask assistant                      | launch-blocked                                   | Deterministic local advisor exists; required production cloud gateway/RAG/safety path is absent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Engineering + counsel + clinical reviewers                                       | Select provider and implement authenticated grounded cloud Ask with consent, quotas, safety evaluations, deletion, and kill switch                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Grounded, bounded answers; no unreviewed medical claims; live quality/safety/cost gates pass                                                                                                                                                                                                                                                                                                                        |
+| Growth share card                  | zero-admission source candidate / launch-blocked | CORE-07A now separates private conflict, share-publication, and public-token authority. The machine contract records no issuer/token service, no positive share/public-link admission, no raw/private projection fields, and no analytics. The renderer accepts only a constructed sanitized projection; denial occurs before capture/file/link/network/native share/analytics; all public IDs are neutrally unavailable. Raw `reviewedBy`, owned match, flags, QA variables, or domain cannot authorize sharing.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Engineering + founder + exact `REV-02` through `REV-07` reviewers/signoff owners | Implement an immutable exact-content/market/projection/rights/review/expiry/revocation receipt issuer, exact-payload confirmation, and independent public-token lifecycle; obtain current `REV-02` regulatory, `REV-03` privacy/security, `REV-04` dermatology, `REV-05` chemistry, `REV-06` IP/content-rights and `REV-07` detached signoffs; then final domain, hosted, native/archive QA.                                                                                                                                                                                                                          | Only exact receipt-admitted, rights-cleared, citation-complete allowlist bytes can be exported after exact confirmation; tokens have reviewed retention/revocation/deletion/abuse controls; archive/network/analytics prove zero private/share-ID/destination leaks; native cancel/failure/accessibility/fallback pass.                                                                                             |
+| Analytics/crash reporting          | stubbed                                          | PostHog/Sentry runtime wiring exists; projects, source maps, dashboards, deletion, and privacy review not live                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Engineering + founder                                                            | Configure after brand/account setup                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Production dashboards, deletion, source maps, and crash privacy review pass                                                                                                                                                                                                                                                                                                                                         |
+| Policies/support/deletion          | source-hardened / launch-blocked                 | Durable deletion/export source handling, a truthful 29-day provider-verification disclosure, and a purpose-scoped non-account-deleting health-withdrawal candidate exist. All 15 health-copy tuples remain `draft_blocked`; policy/support URLs, exact privacy report, demo-review access, hosted withdrawal/Storage/provider erasure, physical-iPhone proof, and counsel/App Review decisions remain absent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Counsel + engineering                                                            | Obtain exact-copy privacy/legal approval, promote only reviewed consent tuples, release the privacy report/public URLs/App Review instructions, complete SIWA/provider deletion lifecycle, and deploy/verify the withdrawal worker against reviewed staging and the signed iOS candidate                                                                                                                                                                                                                                                                                                                              | Store URLs and reviewer access work; nutrition-label answers match observed traffic; withdrawal is purpose-correct with zero hosted residue; deletion/export/provider revocation pass live and physical-iPhone review                                                                                                                                                                                               |
+| Phase 3 signoff packet             | launch-blocked                                   | Exact-source packets, item snapshot digests, safe signoff-template CLI, detached-signoff schema, and production gates exist; professional signoffs are absent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Founder + counsel + clinical reviewers                                           | Run review packet, verify reviewer credentials, retain original approvals, and add one current detached signoff per released item                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Counsel, dermatologist, cosmetic chemist, privacy, and IP decisions pass the machine gate against exact reviewed source hashes                                                                                                                                                                                                                                                                                      |
+| Closed beta                        | launch-blocked                                   | No genuine cohort or all-features TestFlight metrics exist. The planned self-selected cohort may validate only its exact declared corpus; it cannot support market/population-representative claims. Optional catalog-curation use requires separate consent, minimization, restricted retention/deletion, and a sealed holdout.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Founder + engineering + privacy/legal review                                     | Recruit 50-100 genuine iPhone beta users under approved consent; test every required feature; keep raw shelves/health inferences out of Git/general analytics; report limitations and predeclared uncertainty honestly                                                                                                                                                                                                                                                                                                                                                                                                | Activation, D7/D14/D30, catalog confidence-bound holdout gates, payments, AI, commerce, community, trend, native, support, safety, privacy/withdrawal, and willingness-to-pay thresholds pass for the exact declared cohort                                                                                                                                                                                         |
 
 ## Practical Release Rule
 

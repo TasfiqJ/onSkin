@@ -38,8 +38,7 @@ function notify(event: SensitiveImageLifecycleEvent): void {
     try {
       listener(event);
     } catch {
-      // A broken view subscriber cannot interrupt the privacy boundary. The
-      // coordinator purge and native cache clear must still run.
+      // A broken view subscriber cannot interrupt the privacy boundary.
     }
   }
 }
@@ -95,13 +94,13 @@ export function subscribeToSensitiveImageLifecycle(
 ): () => void {
   listeners.add(listener);
   ensureAppStateSubscription();
+  if (shouldPurgeSensitiveImagesForAppState(previousAppState)) listener('purge');
   return () => {
     listeners.delete(listener);
     releaseAppStateSubscriptionIfUnused();
   };
 }
 
-/** Synchronous admission guard used immediately before a decrypt request. */
 export function isSensitiveImageLifecycleActive(): boolean {
   if (AppState.currentState !== 'active') return false;
   if (!appStateSubscription && latestPurge === null) return true;
@@ -109,8 +108,8 @@ export function isSensitiveImageLifecycleActive(): boolean {
 }
 
 /** Drop resolved data URIs owned by mounted views and clear expo-image's shared
- * decoded-memory cache. This function never touches disk; the startup migration
- * handles legacy disk residue before sensitive display. */
+ * decoded-memory cache. This never creates or clears a disk cache; sensitive
+ * PhotoImage instances use cachePolicy="none". */
 export function purgeSensitiveImageMemory(): Promise<boolean> {
   const epoch = ++purgeEpoch;
   lifecycleActive = false;

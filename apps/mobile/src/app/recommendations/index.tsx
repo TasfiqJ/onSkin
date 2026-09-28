@@ -1,4 +1,4 @@
-import type { RecommendationTrigger } from '@onskin/types';
+import type { RecommendationTrigger } from '@layerwell/types';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
@@ -8,10 +8,6 @@ import { goalRecsShippable } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
-import {
-  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
-  ShelfDataUnavailableNotice,
-} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -347,7 +343,7 @@ function HubIntro({
 
 export default function ForYouScreen() {
   const { height, width } = useWindowDimensions();
-  const { result, isError, isFetching, isLoading, isSuccess, retry } = useRecommendations();
+  const { result, isLoading, isUnavailable } = useRecommendations();
   const groups = grouped(result.recommendations);
   const compactHub = height < 640;
   const shortHub = height < 520;
@@ -356,29 +352,12 @@ export default function ForYouScreen() {
   const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
-    if (!isSuccess) return;
+    if (isLoading || isUnavailable) return;
     if (result.youreSet) track('youre_set_shown');
-    else track('recommendation_shown', { count: result.recommendations.length });
-  }, [isSuccess, result.youreSet, result.recommendations.length]);
-
-  if (isError) {
-    return (
-      <Screen edges={['top']}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 96 }}
-        >
-          <ShelfDataUnavailableNotice
-            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
-            onRetry={retry}
-            retrying={isFetching}
-            onExit={() => backOrReplace(router, APP_YOU_ROUTE)}
-            exitLabel="Back to You"
-          />
-        </ScrollView>
-      </Screen>
-    );
-  }
+    else if (result.recommendations.length > 0) {
+      track('recommendation_shown', { count: result.recommendations.length });
+    }
+  }, [isLoading, isUnavailable, result.youreSet, result.recommendations.length]);
 
   return (
     <Screen edges={['top']}>
@@ -406,8 +385,56 @@ export default function ForYouScreen() {
             Looking at your routine…
           </Text>
         </View>
+      ) : isUnavailable ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.unavailable.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.unavailable.body}
+          </Text>
+        </View>
+      ) : result.recommendations.length === 0 && result.goalReviewPending ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.reviewPending.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.reviewPending.body}
+          </Text>
+        </View>
       ) : result.youreSet ? (
         <YoureSet compact={compactHub} />
+      ) : result.recommendations.length === 0 &&
+        result.conflictCoverageStatus === 'unsupported_unreviewed' ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            Interaction review in progress
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            We won&apos;t show a compatibility result for these products until that review is
+            complete.
+          </Text>
+        </View>
+      ) : result.recommendations.length === 0 &&
+        result.conflictCoverageStatus === 'not_applicable' ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.noPairEvaluation.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.noPairEvaluation.body}
+          </Text>
+        </View>
+      ) : result.recommendations.length === 0 ? (
+        <View className="flex-1 items-center justify-center px-8">
+          <Text variant="title" className="text-center text-[28px]">
+            {REC_COPY.noCurrentSuggestion.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            {REC_COPY.noCurrentSuggestion.body}
+          </Text>
+        </View>
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}

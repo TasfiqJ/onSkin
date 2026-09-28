@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-const freshnessMigration = readFileSync(
+const migration = readFileSync(
   fileURLToPath(
     new URL(
       '../../../../../supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
@@ -12,71 +12,100 @@ const freshnessMigration = readFileSync(
   'utf8',
 );
 
-const localDateBoundaryMigration = readFileSync(
+const correctiveMigration = readFileSync(
   fileURLToPath(
     new URL(
-      '../../../../../supabase/migrations/20260726000056_shelf_local_date_boundary.sql',
+      '../../../../../supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
       import.meta.url,
     ),
   ),
   'utf8',
 );
 
+const shelfStore = readFileSync(fileURLToPath(new URL('./store.ts', import.meta.url)), 'utf8');
+
 describe('server Shelf freshness invariants', () => {
   it('backfills without inventing an opened date before adding coherence checks', () => {
-    expect(freshnessMigration).toContain('set is_opened = false');
-    expect(freshnessMigration).not.toMatch(/opened_at\s*=\s*(created_at|updated_at|current_date)/i);
-    expect(freshnessMigration).toContain('where opened_at > current_date');
-    expect(freshnessMigration.indexOf('set is_opened = false')).toBeLessThan(
-      freshnessMigration.indexOf('user_products_opened_state_coherent'),
+    expect(migration).toContain('set is_opened = false');
+    expect(migration).not.toMatch(/opened_at\s*=\s*(created_at|updated_at|current_date)/i);
+    expect(migration).toContain('where opened_at > current_date');
+    expect(migration.indexOf('set is_opened = false')).toBeLessThan(
+      migration.indexOf('user_products_opened_state_coherent'),
     );
   });
 
   it('requires opened, PAO, and winning expiry provenance to agree', () => {
-    expect(freshnessMigration).toContain('user_products_opened_state_coherent');
-    expect(freshnessMigration).toContain('opened_at <= current_date');
-    expect(freshnessMigration).toContain('user_products_pao_source_coherent');
-    expect(freshnessMigration).toContain('user_products_expiry_source_coherent');
-    expect(freshnessMigration).toContain('expiry_computed = expiry_date');
-    expect(freshnessMigration).toContain("else 'pao_computed'");
+    expect(migration).toContain('user_products_opened_state_coherent');
+    expect(migration).toContain('opened_at <= current_date');
+    expect(migration).toContain('user_products_pao_source_coherent');
+    expect(migration).toContain('user_products_expiry_source_coherent');
+    expect(migration).toContain('expiry_computed = expiry_date');
+    expect(migration).toContain("else 'pao_computed'");
+  });
+});
+
+describe('CAT-07 corrective freshness migration', () => {
+  it('keeps quarantined historical dates local while mirroring actionable package dates', () => {
+    expect(shelfStore).not.toContain('legacy_unverified_expiry_date');
+    expect(shelfStore).toContain('expiry_date: product.expiryDate');
   });
 
-  it('allows UTC tomorrow without depending on the database session timezone', () => {
-    const executableMigration = localDateBoundaryMigration.replace(/^--.*$/gm, '');
-
-    expect(localDateBoundaryMigration).toContain(
-      "(pg_catalog.statement_timestamp() at time zone 'UTC')::date + 1",
+  it('purges and seals the unreviewed legacy PAO table', () => {
+    expect(correctiveMigration).toContain('delete from public.ingredient_pao_defaults;');
+    expect(correctiveMigration).toContain(
+      'alter table public.ingredient_pao_defaults force row level security',
     );
-    expect(executableMigration).not.toContain('current_date');
-    expect(localDateBoundaryMigration).toContain('or (is_opened = false and opened_at is null)');
+    expect(correctiveMigration).toContain(
+      'revoke all on table public.ingredient_pao_defaults\n  from public, anon, authenticated, service_role;',
+    );
+    expect(correctiveMigration).toContain(
+      'add constraint ingredient_pao_defaults_legacy_empty check (false)',
+    );
+    expect(correctiveMigration).toContain('not current Shelf PAO authority');
   });
 
-  it('validates the replacement before retiring and renaming the canonical constraint', () => {
-    const addIndex = localDateBoundaryMigration.indexOf(
-      'add constraint user_products_opened_state_coherent_utc_tomorrow',
+  it('keeps category defaults launch-disabled while retaining product-specific catalog evidence', () => {
+    expect(correctiveMigration).toContain('set pao_months = null');
+    expect(correctiveMigration).toContain("where pao_source = 'category_default'");
+    expect(correctiveMigration).toContain(
+      'create or replace function private.resolve_catalog_pao_snapshot',
     );
-    const validateIndex = localDateBoundaryMigration.indexOf(
-      'validate constraint user_products_opened_state_coherent_utc_tomorrow',
+    expect(correctiveMigration).toContain("freshness.review_status = 'reviewed'");
+    expect(correctiveMigration).toContain(
+      "nullif(pg_catalog.btrim(freshness.reviewed_by), '') is not null",
     );
-    const dropIndex = localDateBoundaryMigration.indexOf(
-      'drop constraint user_products_opened_state_coherent',
+    expect(correctiveMigration).toContain(
+      "freshness.pao_source in ('label', 'brand_label', 'catalog')",
     );
-    const renameIndex = localDateBoundaryMigration.indexOf(
-      'rename constraint user_products_opened_state_coherent_utc_tomorrow',
+    expect(correctiveMigration).toContain(
+      'create or replace function private.guard_user_product_category_default_evidence',
+    );
+    expect(correctiveMigration).toContain("new.pao_source := 'unknown'");
+    expect(correctiveMigration).not.toContain('reviewed_category_default');
+  });
+
+  it('backfills before restoring a coherent truthful-source constraint', () => {
+    const dropConstraint = correctiveMigration.indexOf(
+      'drop constraint if exists user_products_expiry_source_coherent',
+    );
+    const expiryBackfill = correctiveMigration.indexOf(
+      'update public.user_products\nset expiry_source',
+    );
+    const addConstraint = correctiveMigration.indexOf(
+      'add constraint user_products_expiry_source_coherent',
     );
 
-    expect(localDateBoundaryMigration).toMatch(
-      /user_products_opened_state_coherent_utc_tomorrow[\s\S]*not valid;/,
+    expect(dropConstraint).toBeGreaterThanOrEqual(0);
+    expect(dropConstraint).toBeLessThan(expiryBackfill);
+    expect(expiryBackfill).toBeLessThan(addConstraint);
+    expect(correctiveMigration).toContain("where pao_source = 'unknown'");
+    expect(correctiveMigration).toContain('add constraint user_products_pao_source_coherent');
+    expect(correctiveMigration).toContain("and pao_source in ('label', 'catalog')");
+    expect(correctiveMigration).toContain("when is_opened = false then 'unknown'");
+    expect(correctiveMigration).toContain("where pao_source = 'category_default'");
+    expect(correctiveMigration).toContain(
+      "when pao_source in ('label', 'catalog') then 'pao_computed'",
     );
-    expect(addIndex).toBeGreaterThanOrEqual(0);
-    expect(validateIndex).toBeGreaterThan(addIndex);
-    expect(dropIndex).toBeGreaterThan(validateIndex);
-    expect(renameIndex).toBeGreaterThan(dropIndex);
-    expect(localDateBoundaryMigration).not.toContain(
-      'drop constraint user_products_pao_source_coherent',
-    );
-    expect(localDateBoundaryMigration).not.toContain(
-      'drop constraint user_products_expiry_source_coherent',
-    );
+    expect(correctiveMigration).not.toContain("when is_opened = false then 'estimated'");
   });
 });

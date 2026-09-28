@@ -1,17 +1,20 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useState } from 'react';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { SETTINGS_COPY } from '@/features/notifications/copy';
-import { NotificationPermissionState } from '@/features/notifications/NotificationPermissionState';
 import {
-  NotificationPreferenceAvailability,
-  NotificationPreferenceMutationFeedback,
-  useNotificationPreferenceRouteState,
-} from '@/features/notifications/NotificationPreferenceState';
-import { NotificationPreferenceSyncStatus } from '@/features/notifications/NotificationPreferenceSyncStatus';
-import { useEntitlement } from '@/features/subscription/useEntitlement';
+  isDeliverableAuthorizationState,
+  requestPermission,
+} from '@/features/notifications/deliver';
+import {
+  useNotificationAuthorization,
+  useNotifPrefs,
+  useUpdateNotifPrefs,
+} from '@/features/notifications/useNotifications';
+import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -76,9 +79,6 @@ function Row({
       {onPress ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityHint="Opens reminder timing settings"
-          accessibilityState={{ disabled }}
-          disabled={disabled}
           onPress={onPress}
           className={
             compact
@@ -133,9 +133,9 @@ function Row({
       )}
       <ToggleSwitch
         accessibilityLabel={title}
-        disabled={disabled}
         value={value}
         onChange={onChange}
+        disabled={disabled}
       />
     </View>
   );
@@ -143,21 +143,11 @@ function Row({
 
 export default function NotificationSettingsScreen() {
   const { height, width } = useWindowDimensions();
-  const preference = useNotificationPreferenceRouteState();
-  const entitlement = useEntitlement();
-  const p = preference.preferenceState.status === 'ready' ? preference.preferenceState.prefs : null;
-  const set = preference.applyPatch;
-  const activeTrialReminderIntent = Boolean(
-    entitlement.data?.isPro && entitlement.data.inTrial && entitlement.data.expiresAt,
-  );
-  const deliveryIntent =
-    p?.amEnabled === true ||
-    p?.pmEnabled === true ||
-    p?.streakNudges === true ||
-    p?.replenishmentAlerts === true ||
-    p?.captureReminders === true ||
-    p?.promotionalOptIn === true ||
-    activeTrialReminderIntent;
+  const { data: p } = useNotifPrefs();
+  const authorization = useNotificationAuthorization();
+  const update = useUpdateNotifPrefs();
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
+  const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
@@ -185,6 +175,45 @@ export default function NotificationSettingsScreen() {
           ? { marginTop: 64 }
           : undefined;
   const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
+  if (!p) return null;
+  const authorizationState = authorization.data ?? 'unavailable';
+  const authorizationPending = authorization.isPending;
+  const deliveryAuthorized = isDeliverableAuthorizationState(authorizationState);
+  const canOpenDeviceSettings = Platform.OS !== 'web';
+
+  const openDeviceSettings = async () => {
+    if (!canOpenDeviceSettings) return;
+    setSettingsOpenFailed(false);
+    const opened = await openAppSettings({ alertOnFailure: false });
+    setSettingsOpenFailed(!opened);
+  };
+
+  const setAuthorizedToggle = async (
+    key:
+      | 'amEnabled'
+      | 'pmEnabled'
+      | 'streakNudges'
+      | 'replenishmentAlerts'
+      | 'captureReminders'
+      | 'promotionalOptIn',
+    value: boolean,
+  ) => {
+    if (authorizationPending) return;
+    setSettingsOpenFailed(false);
+    if (!value || deliveryAuthorized) {
+      set({ [key]: value });
+      return;
+    }
+    if (authorizationState === 'denied') {
+      await openDeviceSettings();
+      return;
+    }
+    const outcome = await requestPermission();
+    await authorization.refetch();
+    if (isDeliverableAuthorizationState(outcome.state)) set({ [key]: true });
+  };
+
+  const effective = (value: boolean) => value && deliveryAuthorized;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -215,132 +244,135 @@ export default function NotificationSettingsScreen() {
           </Text>
         </View>
 
-        {p ? (
-          <>
-            <NotificationPreferenceMutationFeedback
-              failed={preference.mutationFailed}
-              retrying={preference.mutationPending}
-              onRetry={preference.retryLastPatch}
-            />
-            <NotificationPreferenceSyncStatus className="mb-4" />
+        {authorizationPending ? (
+          <View className="mb-2 rounded-[14px] bg-paper-raised px-4 py-3">
+            <Text variant="bodySm" tone="muted">
+              Checking notification access…
+            </Text>
+          </View>
+        ) : !deliveryAuthorized ? (
+          <View className="mb-2 rounded-[14px] bg-paper-raised px-4 py-3">
+            <Text variant="bodySm" tone="muted">
+              {authorizationState === 'denied'
+                ? Platform.OS === 'web'
+                  ? 'Notification permission is unavailable in this browser preview.'
+                  : `Notifications are blocked in ${Platform.OS === 'ios' ? 'iOS' : 'device'} Settings.`
+                : authorizationState === 'not_determined'
+                  ? 'Notification permission has not been granted. Turn on a reminder to choose.'
+                  : 'Notification authorization is unavailable right now. Reminders stay off.'}
+            </Text>
+            {authorizationState === 'denied' && canOpenDeviceSettings ? (
+              <Pressable
+                accessibilityRole="button"
+                className="min-h-[48px] justify-center"
+                onPress={() => void openDeviceSettings()}
+              >
+                <Text variant="bodySm" className="font-sans-semibold">
+                  Open Settings
+                </Text>
+              </Pressable>
+            ) : null}
+            {settingsOpenFailed ? (
+              <Text accessibilityRole="alert" variant="bodySm" tone="muted">
+                Open Settings manually to allow notifications.
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
 
-            <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-              UTILITY · YOUR ROUTINE
-            </SectionLabel>
-            <View className="rounded-[18px] bg-paper-raised px-[18px]">
+        <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+          UTILITY · YOUR ROUTINE
+        </SectionLabel>
+        <View className="rounded-[18px] bg-paper-raised px-[18px]">
+          <Row
+            title="Morning routine"
+            subtitle={fmtTime(p.amTime)}
+            value={effective(p.amEnabled)}
+            onChange={(v) => void setAuthorizedToggle('amEnabled', v)}
+            onPress={() => router.push('/settings/timing')}
+            compact={compactNotifications}
+            disabled={authorizationPending}
+          />
+          <Row
+            title="Evening · tonight’s step"
+            subtitle={fmtTime(p.pmTime)}
+            value={effective(p.pmEnabled)}
+            onChange={(v) => void setAuthorizedToggle('pmEnabled', v)}
+            onPress={() => router.push('/settings/timing')}
+            last
+            compact={compactNotifications}
+            disabled={authorizationPending}
+          />
+        </View>
+
+        <View style={nudgesSectionStyle}>
+          <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+            OPTIONAL REMINDERS
+          </SectionLabel>
+          <View className="rounded-[18px] bg-paper-raised px-[18px]">
+            <Row
+              title="Routine pacing suggestions"
+              value={effective(p.streakNudges)}
+              onChange={(v) => void setAuthorizedToggle('streakNudges', v)}
+              compact={compactNotifications}
+              disabled={authorizationPending}
+            />
+            <Row
+              title="Replenishment"
+              value={effective(p.replenishmentAlerts)}
+              onChange={(v) => void setAuthorizedToggle('replenishmentAlerts', v)}
+              last={deferCaptureNudge}
+              compact={compactNotifications}
+              disabled={authorizationPending}
+            />
+            {deferCaptureNudge ? null : (
               <Row
-                title="Morning routine"
-                subtitle={fmtTime(p.amTime)}
-                value={p.amEnabled}
-                onChange={(v) => set({ amEnabled: v })}
-                onPress={() => router.push('/settings/timing')}
-                compact={compactNotifications}
-                disabled={preference.mutationPending}
-              />
-              <Row
-                title="Evening · tonight’s step"
-                subtitle={fmtTime(p.pmTime)}
-                value={p.pmEnabled}
-                onChange={(v) => set({ pmEnabled: v })}
-                onPress={() => router.push('/settings/timing')}
+                title="Progress-photo nudge"
+                value={effective(p.captureReminders)}
+                onChange={(v) => void setAuthorizedToggle('captureReminders', v)}
                 last
                 compact={compactNotifications}
-                disabled={preference.mutationPending}
+                disabled={authorizationPending}
+              />
+            )}
+          </View>
+        </View>
+
+        {deferCaptureNudge ? (
+          <View style={deferredNudgeRowStyle}>
+            <View className="rounded-[18px] bg-paper-raised px-[18px]">
+              <Row
+                title="Progress-photo nudge"
+                value={effective(p.captureReminders)}
+                onChange={(v) => void setAuthorizedToggle('captureReminders', v)}
+                last
+                compact={compactNotifications}
+                disabled={authorizationPending}
               />
             </View>
+          </View>
+        ) : null}
 
-            <View style={nudgesSectionStyle}>
-              <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-                GENTLE NUDGES · CAPPED
-              </SectionLabel>
-              <View className="rounded-[18px] bg-paper-raised px-[18px]">
-                <Row
-                  title="Streak &amp; adherence"
-                  value={p.streakNudges}
-                  onChange={(v) => set({ streakNudges: v })}
-                  compact={compactNotifications}
-                  disabled={preference.mutationPending}
-                />
-                <Row
-                  title="Replenishment"
-                  value={p.replenishmentAlerts}
-                  onChange={(v) => set({ replenishmentAlerts: v })}
-                  last={deferCaptureNudge}
-                  compact={compactNotifications}
-                  disabled={preference.mutationPending}
-                />
-                {deferCaptureNudge ? null : (
-                  <Row
-                    title="Progress-photo nudge"
-                    value={p.captureReminders}
-                    onChange={(v) => set({ captureReminders: v })}
-                    last
-                    compact={compactNotifications}
-                    disabled={preference.mutationPending}
-                  />
-                )}
-              </View>
-            </View>
-
-            {deferCaptureNudge ? (
-              <View style={deferredNudgeRowStyle}>
-                <View className="rounded-[18px] bg-paper-raised px-[18px]">
-                  <Row
-                    title="Progress-photo nudge"
-                    value={p.captureReminders}
-                    onChange={(v) => set({ captureReminders: v })}
-                    last
-                    compact={compactNotifications}
-                    disabled={preference.mutationPending}
-                  />
-                </View>
-              </View>
-            ) : null}
-
-            <View style={promotionalSectionStyle}>
-              <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-                PROMOTIONAL
-              </SectionLabel>
-              <View className="rounded-[18px] bg-paper-raised px-[18px]">
-                <Row
-                  title="Tips &amp; announcements"
-                  subtitle="off by default"
-                  value={p.promotionalOptIn}
-                  onChange={(v) => set({ promotionalOptIn: v })}
-                  last
-                  compact={compactNotifications}
-                  disabled={preference.mutationPending}
-                />
-              </View>
-            </View>
-
-            <NotificationPermissionState
-              deliveryIntent={deliveryIntent}
-              onPermissionRecovered={preference.retryRead}
+        <View style={promotionalSectionStyle}>
+          <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+            PROMOTIONAL
+          </SectionLabel>
+          <View className="rounded-[18px] bg-paper-raised px-[18px]">
+            <Row
+              title="Tips &amp; announcements"
+              subtitle="off by default"
+              value={effective(p.promotionalOptIn)}
+              onChange={(v) => void setAuthorizedToggle('promotionalOptIn', v)}
+              last
+              compact={compactNotifications}
+              disabled={authorizationPending}
             />
+          </View>
+        </View>
 
-            <Text
-              variant="label"
-              tone="muted"
-              className="mt-6 text-center"
-              style={{ fontSize: 10.5 }}
-            >
-              {SETTINGS_COPY.capNote}
-            </Text>
-          </>
-        ) : (
-          <>
-            <NotificationPreferenceAvailability
-              state={preference.preferenceState.status === 'loading' ? 'loading' : 'unavailable'}
-              retrying={preference.readRetrying}
-              onRetry={preference.retryRead}
-            />
-            <NotificationPermissionState
-              deliveryIntent={activeTrialReminderIntent}
-              onPermissionRecovered={preference.retryRead}
-            />
-          </>
-        )}
+        <Text variant="label" tone="muted" className="mt-6 text-center" style={{ fontSize: 10.5 }}>
+          {SETTINGS_COPY.capNote}
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );

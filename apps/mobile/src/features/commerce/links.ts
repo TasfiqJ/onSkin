@@ -1,17 +1,7 @@
-import type { AffiliateSource } from '@onskin/types';
+import type { AffiliateSource } from '@layerwell/types';
 
-import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
-
-import { buildOutboundUrl } from './attribution';
-
-// Rail-agnostic "where to buy" resolution (docs/10 §5, the B-SHOPMY hedge). The
-// research surfaced a BLOCKING unknown: ShopMy's documented APIs do not confirm a
-// brand can mint affiliate links on its OWN first-party recommendations under a house
-// account (link creation is creator-OAuth-only; the Brand Partners API is reporting-
-// only, poll-based, no webhooks). So the boundary is SOURCE-TAGGED. Swapping ShopMy
-// ⇄ Skimlinks/Sovrn/direct is a localised change. Pure + testable; the live
-// resolution (ShopMy Search Catalog / Create Link, or a fallback rail) is stubbed
-// behind B-SHOPMY + B-CATALOG-SEED.
+// Dormant rail-agnostic shapes remain for compatibility. COM-01A admits no
+// retailer rows or outbound URL in any runtime.
 
 export type AffiliateLinkRow = {
   id: string;
@@ -38,76 +28,22 @@ export type WhereToBuyOption = {
   isPaid: boolean;
 };
 
-function toSource(s: string): AffiliateSource {
-  return s === 'shopmy' || s === 'skimlinks' || s === 'direct' ? s : 'none';
-}
-
-/** Resolve the disclosed retailer options for a recommended product TYPE, from the
- *  affiliate_links catalog. Pure: the hook supplies the rows (DB in prod, a dev demo
- *  set otherwise). Returns [] when none. The surface then shows the honest empty
- *  state, never a fabricated retailer. NEVER sorted by commission (church and state):
- *  there is no rate field here to sort by. */
+/** COM-01A: supplied rows cannot become a runtime retailer option. */
 export function resolveWhereToBuy(
-  productType: string,
-  rows: AffiliateLinkRow[],
+  _productType: string,
+  _rows: AffiliateLinkRow[],
 ): WhereToBuyOption[] {
-  return rows
-    .filter((r) => r.is_active && r.product_type === productType)
-    .flatMap((r) => {
-      const url = safeExternalHttpsUrl(r.url);
-      if (!url) return [];
-      return [
-        {
-          id: r.id,
-          retailer: r.retailer,
-          label: r.label,
-          url,
-          priceCents: r.price_cents,
-          currency: r.currency ?? 'USD',
-          source: toSource(r.source),
-          isPaid: r.is_paid,
-        },
-      ];
-    });
+  return [];
 }
 
-/** The final outbound URL for a tapped option. Opaque token only (attribution.ts). */
-export function outboundFor(option: WhereToBuyOption, clickToken: string): string | null {
-  return buildOutboundUrl(option.url, clickToken);
+/** No outbound retailer URL exists while commerce admission is closed. */
+export function outboundFor(_option: WhereToBuyOption, _clickToken: string): null {
+  return null;
 }
 
-/** A dev-only demo set so the "where to buy" surface renders the design before the
- *  catalogue lands (B-CATALOG-SEED). Clearly placeholder ("partner retailer"); never
- *  used in production (the prod path returns [] until real links exist). */
-export function demoWhereToBuy(productType: string): AffiliateLinkRow[] {
-  const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-  if (!isDev) return [];
-  return [
-    {
-      id: `demo-${productType}-1`,
-      product_type: productType,
-      retailer: 'Partner retailer',
-      label: 'Zinc Mineral SPF 30',
-      url: 'https://example.com/p/demo-1',
-      price_cents: 3400,
-      currency: 'USD',
-      source: 'none',
-      is_paid: true,
-      is_active: true,
-    },
-    {
-      id: `demo-${productType}-2`,
-      product_type: productType,
-      retailer: 'Another retailer',
-      label: 'Mineral Fluid SPF 30',
-      url: 'https://example.com/p/demo-2',
-      price_cents: 2900,
-      currency: 'USD',
-      source: 'none',
-      is_paid: true,
-      is_active: true,
-    },
-  ];
+/** Development and E2E runtimes receive no simulated retailer rows. */
+export function demoWhereToBuy(_productType: string): AffiliateLinkRow[] {
+  return [];
 }
 
 /** Format a price for the disclosed label (illustrative until B-CATALOG-SEED). */

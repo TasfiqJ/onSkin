@@ -21,13 +21,13 @@
     "initialVisibleText": [
       "Private data",
       "Guidance unavailable",
-      "We couldn't safely read the private data this guidance needs. OnSkin did not reset or remove it. Guidance and related actions are paused until OnSkin can read it again.",
+      "We couldn't safely read the private data this guidance needs. Layerwell did not reset or remove it. Guidance and related actions are paused until Layerwell can read it again.",
       "Try again",
       "Back to Today"
     ],
     "afterRetryVisibleText": [
       "Guidance unavailable",
-      "The private data is still unavailable. OnSkin did not reset or remove it.",
+      "The private data is still unavailable. Layerwell did not reset or remove it.",
       "Try again",
       "Back to Today"
     ],
@@ -106,7 +106,7 @@
     "unexpectedWarnings": []
   },
   "bytePreservationProof": {
-    "browserClaim": "The UI copy states that OnSkin did not reset or remove private data.",
+    "browserClaim": "The UI copy states that Layerwell did not reset or remove private data.",
     "testProof": "apps/mobile/src/features/ask/store.test.ts asserts exact malformed, unavailable, future-version, and stale-period bytes remain unchanged with zero destructive writes.",
     "nativeFilesystemProof": false
   }

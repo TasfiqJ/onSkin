@@ -2,103 +2,64 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
-import { useAuth } from '@/lib/auth/AuthProvider';
-import { scheduleOutboxFlush } from '@/lib/offline/outbox';
 import {
-  isOwnerQueryScopeCurrent,
-  ownerQueryPrefixes,
-  runOwnerQueryOperation,
-  type OwnerQueryScope,
-} from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 
 import {
-  acknowledgeProductAdd,
   addProduct,
+  applyCatalogRecoveryProductUpdate,
   reAddProduct,
   removeProduct,
   updateProduct,
   type NewShelfProduct,
+  type CatalogRecoveryProductUpdate,
+  type CatalogRecoveryProductUpdateResult,
+  type ReplacementOpeningState,
   type ShelfProduct,
 } from './store';
-import { failClosedShelfQueriesAfterMutationFailure } from './mutationFailure';
 
-type ReplenishmentAttempt = {
-  pending: Promise<ShelfProduct | null>;
-};
+// Shelf lifecycle mutations (docs/04 §5.7) write the local-first source of
+// truth (D-029). Store v3 persists owner-free replay work in the same encrypted
+// transaction, so this hook has no crash-gap-prone direct mirror.
 
-// Shared across route-local hook instances and remounts. The atomic store also
-// recovers a committed replacement from durable v1 lineage after a process
-// restart, when this in-memory coordinator no longer exists.
-const replenishmentAttempts = new Map<string, ReplenishmentAttempt>();
-
-function replenishmentAttemptKey(ownerScope: OwnerQueryScope, productId: string): string {
-  return `${ownerScope.generation}:${productId}`;
+function runShelfMutation<T>(
+  operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
+): Promise<T> {
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
+  return runHealthDataWriteOperation(expectedOwnerUserId, operation);
 }
-
-export function resetShelfMutationStateForTests(): void {
-  replenishmentAttempts.clear();
-}
-
-// Shelf lifecycle mutations commit the local-first source of truth and an
-// encrypted owner-bound outbox state mirror as one transaction. Network
-// publication is restart-safe and never blocks the local write.
 
 export function useShelfMutations() {
   const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
-  const { user } = useAuth();
-  const ownerId = user?.id.trim();
-  const invalidate = () => {
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
-    return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) });
-  };
-  const runWithFailureRecovery = async <T>(operation: () => Promise<T>): Promise<T> => {
-    try {
-      return await operation();
-    } catch (error) {
-      try {
-        await failClosedShelfQueriesAfterMutationFailure(qc, ownerScope);
-      } catch {
-        // Preserve the authoritative mutation error. The reset is best effort;
-        // the next mounted owner-scoped query still performs a strict read.
-      }
-      throw error;
-    }
-  };
+  const invalidate = () => qc.invalidateQueries({ queryKey: ['shelf'] });
 
   return {
-    async add(input: NewShelfProduct, operationId: string): Promise<ShelfProduct> {
-      return runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await addProduct(input, {
-            ...(ownerId ? { ownerId } : {}),
-            ownerGeneration: lease.generation,
-            operationId,
-            assertCurrent: lease.assertCurrent,
-          });
-          lease.assertCurrent();
-          track('product_added', { added_via: input.addedVia });
-          scheduleOutboxFlush();
-          await invalidate();
-          lease.assertCurrent();
-          return product;
-        }),
-      );
+    async add(input: NewShelfProduct): Promise<ShelfProduct> {
+      return runShelfMutation(async (lease) => {
+        const product = await addProduct(input);
+        lease.assertCurrent();
+        track('product_added', { added_via: input.addedVia });
+        await invalidate();
+        lease.assertCurrent();
+        return product;
+      });
     },
 
-    /** Clear the durable retry receipt only after the route received the row. */
-    async acknowledgeAdd(productId: string): Promise<void> {
-      await runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          await acknowledgeProductAdd(productId, {
-            ...(ownerId ? { ownerId } : {}),
-            ownerGeneration: lease.generation,
-            assertCurrent: lease.assertCurrent,
-          });
-          lease.assertCurrent();
-        }),
-      );
+    async applyCatalogRecovery(
+      input: CatalogRecoveryProductUpdate,
+    ): Promise<CatalogRecoveryProductUpdateResult> {
+      return runShelfMutation(async (lease) => {
+        const result = await applyCatalogRecoveryProductUpdate(input);
+        lease.assertCurrent();
+        await invalidate();
+        lease.assertCurrent();
+        return result;
+      });
     },
 
     /** The opened-date linchpin write (docs/04 §4.5). */
@@ -106,143 +67,77 @@ export function useShelfMutations() {
       id: string,
       patch: { openedAt: string | null; isOpened: boolean; paoMonths?: number | null },
     ): Promise<void> {
-      await runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(
-            id,
-            {
-              openedAt: patch.openedAt,
-              isOpened: patch.isOpened,
-              ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
-            },
-            {
-              ...(ownerId ? { ownerId } : {}),
-              ownerGeneration: lease.generation,
-              assertCurrent: lease.assertCurrent,
-            },
-          );
-          lease.assertCurrent();
-          if (product) scheduleOutboxFlush();
-          track('opened_date_set', { is_opened: patch.isOpened });
-          await invalidate();
-        }),
-      );
+      return runShelfMutation(async (lease) => {
+        await updateProduct(id, {
+          openedAt: patch.openedAt,
+          isOpened: patch.isOpened,
+          ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
+        });
+        lease.assertCurrent();
+        track('opened_date_set', { is_opened: patch.isOpened });
+        await invalidate();
+        lease.assertCurrent();
+      });
     },
 
     async edit(id: string, patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>): Promise<void> {
-      await runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(id, patch, {
-            ...(ownerId ? { ownerId } : {}),
-            ownerGeneration: lease.generation,
-            assertCurrent: lease.assertCurrent,
-          });
-          lease.assertCurrent();
-          if (product) scheduleOutboxFlush();
-          await invalidate();
-        }),
-      );
+      return runShelfMutation(async (lease) => {
+        await updateProduct(id, patch);
+        lease.assertCurrent();
+        await invalidate();
+        lease.assertCurrent();
+      });
     },
 
     async markFinished(id: string): Promise<void> {
-      await runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(
-            id,
-            {
-              status: 'finished',
-              finishedAt: localDateString(),
-            },
-            {
-              ...(ownerId ? { ownerId } : {}),
-              ownerGeneration: lease.generation,
-              assertCurrent: lease.assertCurrent,
-            },
-          );
-          lease.assertCurrent();
-          if (product) scheduleOutboxFlush();
-          track('product_finished', { source: 'shelf' });
-          await invalidate();
-        }),
-      );
+      return runShelfMutation(async (lease) => {
+        await updateProduct(id, {
+          status: 'finished',
+          finishedAt: localDateString(),
+        });
+        lease.assertCurrent();
+        track('product_finished', { source: 'shelf' });
+        await invalidate();
+        lease.assertCurrent();
+      });
     },
 
     async markDiscarded(id: string): Promise<void> {
-      await runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await updateProduct(
-            id,
-            {
-              status: 'discarded',
-              finishedAt: localDateString(),
-            },
-            {
-              ...(ownerId ? { ownerId } : {}),
-              ownerGeneration: lease.generation,
-              assertCurrent: lease.assertCurrent,
-            },
-          );
-          lease.assertCurrent();
-          if (product) scheduleOutboxFlush();
-          track('product_discarded', { source: 'shelf' });
-          await invalidate();
-        }),
-      );
+      return runShelfMutation(async (lease) => {
+        await updateProduct(id, {
+          status: 'discarded',
+          finishedAt: localDateString(),
+        });
+        lease.assertCurrent();
+        track('product_discarded', { source: 'shelf' });
+        await invalidate();
+        lease.assertCurrent();
+      });
     },
 
     async remove(id: string): Promise<void> {
-      await runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const removed = await removeProduct(id, {
-            ...(ownerId ? { ownerId } : {}),
-            ownerGeneration: lease.generation,
-            assertCurrent: lease.assertCurrent,
-          });
-          lease.assertCurrent();
-          if (removed) scheduleOutboxFlush();
-          await invalidate();
-        }),
-      );
+      return runShelfMutation(async (lease) => {
+        await removeProduct(id);
+        lease.assertCurrent();
+        await invalidate();
+        lease.assertCurrent();
+      });
     },
 
     /** Replenish "re-add the same one". Archives the unit, resets the clock (§6). */
-    async replace(id: string): Promise<ShelfProduct | null> {
-      const attemptKey = replenishmentAttemptKey(ownerScope, id);
-      const existing = replenishmentAttempts.get(attemptKey);
-      if (existing) {
-        return runOwnerQueryOperation(ownerScope, async (lease) => {
-          const completed = await existing.pending;
-          lease.assertCurrent();
-          return completed;
-        });
-      }
-
-      // Concurrent taps and separate route-local hooks share one in-flight write.
-      // After settlement the store's source-derived UUID—not retained product
-      // data in module memory—makes any uncertain retry idempotent.
-      const pending = runWithFailureRecovery(() =>
-        runOwnerQueryOperation(ownerScope, async (lease) => {
-          const replaced = await reAddProduct(id, {
-            ...(ownerId ? { ownerId } : {}),
-            ownerGeneration: lease.generation,
-            assertCurrent: lease.assertCurrent,
-          });
-          lease.assertCurrent();
-          if (replaced) scheduleOutboxFlush();
-          track('replenishment_nudge_tapped', { action: 're_add' });
-          await invalidate();
-          lease.assertCurrent();
-          return replaced?.fresh ?? null;
-        }),
-      );
-      replenishmentAttempts.set(attemptKey, { pending });
-      try {
-        return await pending;
-      } finally {
-        if (replenishmentAttempts.get(attemptKey)?.pending === pending) {
-          replenishmentAttempts.delete(attemptKey);
-        }
-      }
+    async replace(
+      id: string,
+      opening: ReplacementOpeningState,
+      operationId: string,
+    ): Promise<ShelfProduct | null> {
+      return runShelfMutation(async (lease) => {
+        const fresh = await reAddProduct(id, opening, operationId);
+        lease.assertCurrent();
+        track('replenishment_nudge_tapped', { action: 're_add' });
+        await invalidate();
+        lease.assertCurrent();
+        return fresh;
+      });
     },
   };
 }

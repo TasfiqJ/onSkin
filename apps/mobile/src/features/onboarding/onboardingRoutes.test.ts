@@ -15,9 +15,11 @@ describe('onboarding route contracts', () => {
   it('keeps semantic opened-date radios operable in the first-session E2E driver', () => {
     const source = readFileSync(ONBOARDING_E2E_SCRIPT, 'utf8');
 
-    expect(source).toContain('button,[role="button"],[role="checkbox"],[role="radio"],a,label');
     expect(source).toContain(
-      'button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select',
+      'button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label',
+    );
+    expect(source).toContain(
+      'button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,input,textarea,select',
     );
     expect(source.match(/\[role="radio"\]/g)).toHaveLength(3);
     expect(source).toContain(
@@ -26,64 +28,146 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('if (!visible(node)) return false;');
   });
 
+  it('keeps the ordinary first-session E2E on the truthful free-plan path', () => {
+    const source = readFileSync(ONBOARDING_E2E_SCRIPT, 'utf8');
+
+    expect(source).toContain("await waitForText(client, 'Continue with the free plan', 30_000)");
+    expect(source).toContain(
+      "await clickByText(client, 'Continue with the free plan', { exact: false })",
+    );
+    expect(source).toContain("await waitForPath(client, '/today', 30_000)");
+    expect(source).toContain("'Continuing with the free plan incorrectly exposed Pro authority.'");
+    expect(source).toContain("await clickByText(client, 'Shelf')");
+    expect(source).toContain("await clickByText(client, 'Progress', { exact: false })");
+    expect(source).toContain("await clickByText(client, 'You')");
+    expect(source).toContain("await clickByText(client, 'Today')");
+    expect(source).toContain('keyTabRoundTripPassed:');
+    expect(source).not.toContain("clickByText(client, 'Explore first'");
+    expect(source).not.toContain("waitForText(client, 'Start today'");
+  });
+
   it('keeps first-run age gate copy free of mojibake punctuation', () => {
     const source = readAppRoute('onboarding/age.tsx');
 
     expect(source).toContain("We don't store your birth date.");
     expect(source).not.toContain('donâ');
-    expect(source).not.toContain('’');
+    expect(source).not.toContain('â€™');
   });
 
-  it('keeps unreadable age-verification state out of the DOB form', () => {
-    const route = readAppRoute('onboarding/age.tsx');
-    const store = readFileSync(
-      fileURLToPath(new URL('./ageGateStore.ts', import.meta.url)),
+  it('commits the age receipt before anonymous account creation and gates direct consent links', () => {
+    const welcome = readAppRoute('index.tsx');
+    const age = readAppRoute('onboarding/age.tsx');
+    const consent = readAppRoute('onboarding/consent.tsx');
+
+    expect(welcome).toContain('const agePolicyStatus = await getAgePolicyReceiptStatus();');
+    expect(welcome.indexOf('getAgePolicyReceiptStatus()')).toBeLessThan(
+      welcome.indexOf('await ensureAnonymousSession()'),
+    );
+    expect(age).not.toContain('getAgeVerified');
+    expect(age).toContain('const eligible = meetsMinimumAge(dob, today);');
+    expect(age).toContain('await setAgeVerified(true);');
+    expect(age).toContain('await setAgeVerified(false);');
+    expect(age).toContain(
+      'const reverificationGeneration = stageAgePolicyReverificationHandoff();',
+    );
+    expect(
+      age.indexOf("queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'missing')"),
+    ).toBeLessThan(age.indexOf('await setAgeVerified(false);'));
+    expect(age.indexOf('await setAgeVerified(false);')).toBeLessThan(
+      age.indexOf('markAgePolicyReverificationHandoffFailed(reverificationGeneration);'),
+    );
+    expect(age).toContain('useSyncExternalStore(');
+    expect(age).toContain("const blocked = reverificationHandoff !== 'none';");
+    expect(age.indexOf('await setAgeVerified(true);')).toBeLessThan(
+      age.indexOf('await ensureAnonymousSession()'),
+    );
+    expect(age.indexOf('await ensureAnonymousSession()')).toBeLessThan(
+      age.indexOf('stagePostAgeConsentRoute()'),
+    );
+    const eligibleHandoffClear = age.indexOf(
+      'clearAgePolicyReverificationHandoff();',
+      age.indexOf('await ensureAnonymousSession()'),
+    );
+    expect(eligibleHandoffClear).toBeGreaterThan(age.indexOf('await ensureAnonymousSession()'));
+    expect(eligibleHandoffClear).toBeLessThan(age.indexOf('stagePostAgeConsentRoute()'));
+    expect(age.indexOf('stagePostAgeConsentRoute()')).toBeLessThan(
+      age.indexOf("queryClient.setQueryData(AGE_POLICY_STATUS_QUERY_KEY, 'current')"),
+    );
+    expect(consent).toContain('await getAgeVerified().catch(() => false)');
+    expect(consent).toContain("router.replace('/onboarding/age')");
+    expect(consent.indexOf('await getAgeVerified().catch(() => false)')).toBeLessThan(
+      consent.indexOf('grantHealthDataCollectionConsent(healthDataOwnerId)'),
+    );
+  });
+
+  it('verifies the current age-policy receipt before reading or mounting a returning profile', () => {
+    const welcome = readAppRoute('index.tsx');
+    const agePolicyQuery = welcome.indexOf('queryKey: AGE_POLICY_STATUS_QUERY_KEY');
+    const profileQuery = welcome.indexOf("queryKey: ['onboarded', session?.user.id]");
+    const profileRead = welcome.indexOf('const local = await readStoredSkinProfile();');
+
+    expect(agePolicyQuery).toBeGreaterThan(-1);
+    expect(profileQuery).toBeGreaterThan(agePolicyQuery);
+    expect(profileRead).toBeGreaterThan(profileQuery);
+    expect(welcome).toContain(
+      "enabled: !resetting && !!session && !initializing && agePolicy.data === 'current',",
+    );
+    expect(welcome).toContain("agePolicy.data !== 'current'");
+    expect(welcome).toContain("agePolicy.data !== 'unavailable'");
+    expect(welcome).toContain("router.replace('/onboarding/age')");
+    expect(welcome).toContain(
+      "if (agePolicy.data === 'current' && onboarded.data === true) router.replace('/today');",
+    );
+    expect(welcome.indexOf("agePolicy.data !== 'current'")).toBeLessThan(
+      welcome.indexOf(
+        "if (agePolicy.data === 'current' && onboarded.data === true) router.replace('/today');",
+      ),
+    );
+    expect(welcome).toContain(
+      "(!!session && (agePolicy.data !== 'current' || onboarded.isLoading))",
+    );
+    expect(welcome).toContain("if (local.status === 'available') return true;");
+    expect(welcome).toContain(
+      'if (!isServerSkinProfileFallbackPermitted(local.status)) return false;',
+    );
+    expect(welcome).toContain('applyCurrentServerSkinProfileFilters');
+    expect(welcome).toContain('parseCurrentServerSkinProfile(data)');
+  });
+
+  it('places the fail-closed age-policy gate outside every health-data route provider', () => {
+    const layout = readAppRoute('_layout.tsx');
+    const gate = readFileSync(
+      fileURLToPath(new URL('./AgePolicyGate.tsx', import.meta.url)),
       'utf8',
     );
 
-    expect(store).toContain('readAgeVerification(): Promise<PrivateBooleanReadResult>');
-    expect(store).toContain('return readPrivateBoolean(KEY);');
-    expect(store).not.toContain('getPrivateBooleanFailClosed');
-    expect(store).toContain('EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE');
-    expect(store).toContain('EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE');
-    expect(store).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return false;");
-    expect(route).toContain("type VerificationStatus = 'checking' | 'ready' | 'error';");
-    expect(route).toContain("result.status === 'absent' || result.status === 'available'");
-    expect(route).toContain("if (verificationStatus === 'error')");
-    expect(route).toContain('<StateNotice');
-    expect(route).toContain('kind="unavailable"');
-    expect(route).toContain('<StateLoading');
-    expect(route).toContain('accessibilityLabel="Retry age confirmation"');
-    expect(route).toContain('className="mt-7 min-h-[56px]"');
-    expect(route).toContain("onPress={() => void checkAgeVerification('retry')}");
-    expect(route).toContain('disabled={retrying}');
-    expect(route).toContain('verificationRequestId.current !== requestId');
-    expect(route.indexOf("if (verificationStatus === 'error')")).toBeLessThan(
-      route.indexOf('<DobField'),
+    expect(layout).toContain('<AgePolicyGate');
+    expect(layout).toContain('bootstrap={');
+    expect(layout.indexOf('<AgePolicyGate')).toBeLessThan(
+      layout.indexOf('<HealthDataLifecycleGate>'),
     );
-  });
-
-  it('does not navigate or lose DOB input when age-confirmation saving fails', () => {
-    const source = readAppRoute('onboarding/age.tsx');
-    const write = source.indexOf('await setAgeVerified();');
-    const navigate = source.indexOf("router.replace('/onboarding/goals');", write);
-    const failure = source.indexOf('setSaveFailed(true);', write);
-
-    expect(write).toBeGreaterThan(-1);
-    expect(navigate).toBeGreaterThan(write);
-    expect(failure).toBeGreaterThan(navigate);
-    expect(source).toContain('if (saving) return;');
-    expect(source).toContain('const saveRequestId = useRef(0);');
-    expect(source).toContain('const requestId = ++saveRequestId.current;');
-    expect(source).toContain('saveRequestId.current += 1;');
-    expect(source).toContain('if (saveRequestId.current !== requestId) return;');
-    expect(source).toContain('if (saveRequestId.current === requestId) setSaveFailed(true);');
-    expect(source).toContain('if (saveRequestId.current === requestId) setSaving(false);');
-    expect(source).toContain("label={saving ? 'Saving...' : 'Continue'}");
-    expect(source).toContain('disabled={!valid || saving}');
-    expect(source).toContain('Your birth date was not stored.');
-    expect(source).toContain('title="Age confirmation not saved"');
-    expect(source).toContain('kind="error"');
+    expect(gate).toContain("router.replace('/onboarding/age')");
+    expect(gate).toContain("receiptStatus === 'unavailable'");
+    expect(gate).toContain("receiptStatus === 'current'");
+    expect(gate).toContain('return <>{bootstrap}</>');
+    expect(gate.indexOf("receiptStatus === 'current'")).toBeLessThan(
+      gate.indexOf('return <>{bootstrap}</>'),
+    );
+    expect(gate).toContain("AppState.addEventListener('change'");
+    expect(gate).toContain("if (nextState !== 'active')");
+    expect(gate).toContain("setReceiptStatus('checking')");
+    expect(gate).toContain('void readActiveReceipt()');
+    expect(gate).toContain('queryClient.getQueryCache().subscribe');
+    expect(gate).toContain("event.action.type !== 'success'");
+    expect(gate).toContain("publishedStatus !== 'current'");
+    expect(gate).toContain("publishedStatus !== 'missing'");
+    expect(gate).toContain("publishedStatus !== 'unavailable'");
+    expect(gate).toContain('setReceiptStatus(publishedStatus)');
+    expect(gate).toContain('!routeAllowedWithoutReceiptRef.current');
+    expect(gate).not.toContain('staleTime: Number.POSITIVE_INFINITY');
+    expect(gate.indexOf("setReceiptStatus('checking')")).toBeLessThan(
+      gate.indexOf('nextStatus = await getAgePolicyReceiptStatus()'),
+    );
   });
 
   it('keeps account creation copy honest about local-first routine state', () => {
@@ -103,73 +187,19 @@ describe('onboarding route contracts', () => {
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
     expect(source).toContain("return value === 'local'");
-    expect(source).toContain('...onboardingStatusQueryOptions(ownerScope)');
-    expect(source).toContain('isFocused && !resetting && !initializing');
-    expect(source).toContain('useIsFocused()');
-    expect(source).toContain('if (!isFocused) {');
-    expect(source).toContain('beginRequestSeqRef.current += 1;');
-    expect(source).toContain('const resetLocalBeginState = () => {');
-    expect(source).toContain('if (!effectActive) return;');
-    expect(source).toContain('setBusy(false);');
-    expect(source).toContain('setBeginError(false);');
-    expect(source).toContain('const onboardingGate = decideWelcomeOnboardingGate({');
-    expect(source).toContain('isFetching: onboarded.isFetching');
+    expect(source).toContain('clearLocalPrivateData');
+    expect(source).toContain('clearE2ELocalControlState()');
+    expect(source).toContain('LOCAL_PRIVATE_SECURE_CONTROL_KEYS');
+    expect(source).toContain('LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES');
+    expect(source).toContain('queryClient.clear()');
+    expect(source).toContain("router.replace('/')");
     expect(source).toContain(
-      "if (onboardingGate === 'checking' || onboardingGate === 'redirect_today') return null;",
+      "enabled: !resetting && !!session && !initializing && agePolicy.data === 'current'",
     );
-  });
-
-  it('delegates the E2E local reset to AuthProvider without a route-owned fail-open', () => {
-    const source = readAppRoute('index.tsx');
-
-    expect(source).not.toMatch(
-      /import\s+{\s*clearLocalPrivateData\s*}\s+from\s+['"]@\/features\/settings\/localPrivateData['"]/,
-    );
-    expect(source).not.toContain("await import('@/features/settings/localPrivateData')");
-    expect(source).not.toContain('await clearLocalPrivateData();');
-    expect(source).not.toContain("await import('@/lib/auth/localAccountIsolation')");
-    expect(source).not.toContain('await clearAccountIsolatedState();');
-    expect(source).toContain('resetLocalStateForE2E,');
-    expect(source).toContain('const e2eResetRequestStartedRef = useRef(false);');
-    expect(source).toContain('if (e2eResetRequestStartedRef.current) return;');
-    expect(source).toContain('e2eResetRequestStartedRef.current = true;');
-    expect(source).toContain('void resetLocalStateForE2E().catch(() => undefined);');
-    expect(source.indexOf('if (!shouldRunE2ELocalReset(params.e2eReset)) return;')).toBeLessThan(
-      source.indexOf('void resetLocalStateForE2E()'),
-    );
-    expect(source).toContain('const resetting = shouldRunE2ELocalReset(params.e2eReset);');
-    expect(source).not.toContain('setResetting(');
-    expect(source).not.toContain("router.replace('/')");
-    expect(source).not.toContain('queryClient.clear()');
-  });
-
-  it('fails the startup gate closed and keeps both retries accessible', () => {
-    const source = readAppRoute('index.tsx');
-    const begin = source.indexOf('async function begin()');
-    const configuredFailure = source.indexOf('if (isSupabaseConfigured)', begin);
-    const inlineError = source.indexOf('setBeginError(true);', configuredFailure);
-    const stop = source.indexOf('return;', inlineError);
-    const navigate = source.indexOf("router.push('/onboarding/age');", begin);
-
-    expect(configuredFailure).toBeGreaterThan(begin);
-    expect(inlineError).toBeGreaterThan(configuredFailure);
-    expect(stop).toBeGreaterThan(inlineError);
-    expect(navigate).toBeGreaterThan(stop);
-    expect(source).toContain("if (onboardingGate === 'error')");
-    expect(source).toContain('<StateNotice');
-    expect(source).toContain("failureKind === 'invalid_profile' ? 'corrupt' : 'unavailable'");
-    expect(source).toContain('title="Private session not started"');
-    expect(source).toContain('accessibilityLabel="Retry checking onboarding progress"');
-    expect(source).toContain("label={onboarded.isFetching ? 'Trying again...' : 'Try again'}");
-    expect(source).toContain("label={beginError ? 'Try again' : 'Begin'}");
-    expect(source).toContain('onPress={() => void onboarded.refetch()}');
-    expect(source).toContain('disabled={accountActionPending}');
-    expect(source).toContain('accessibilityState={{ disabled: accountActionPending }}');
-    expect(source).toContain('decideAnonymousOnboardingHandoff({');
-    expect(source).toContain('settleAnonymousOnboardingHandoff(pending.requestId)');
-    expect(source).toContain('registerAnonymousOnboardingConsumer()');
-    expect(source).toContain("pending.phase === 'resolving'");
-    expect(source).toContain('if (!isFocused || !activeWelcomeRef.current) return;');
+    expect(source).toContain('if (!isSupabaseConfigured) return false;');
+    expect(source).toContain('const deciding =');
+    expect(source).toContain('resetting ||');
+    expect(source).toContain('initializing ||');
   });
 
   it('keeps onboarding chip and product-remove controls touchable on phones', () => {
@@ -187,31 +217,70 @@ describe('onboarding route contracts', () => {
     const source = readAppRoute('onboarding/products.tsx');
 
     expect(source).toContain('useLocalSearchParams<{ addedProductId?: string }>()');
-    expect(source).toContain("<ProductsScreenContent key={addedProductId ?? 'initial-add'} />");
-    expect(source).toContain('<ShelfDataAvailabilityGate');
+    expect(source).toContain(
+      "return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;",
+    );
     expect(source).toContain('function ProductsScreenContent()');
     expect(source).toContain("const [name, setName] = useState('');");
     expect(source).toContain(
       'const [category, setCategory] = useState<ProductCategory | null>(null);',
     );
     expect(source).toContain('onChangeText={setName}');
+    expect(source).toContain('SHELF_PRODUCT_NAME_MAX_LENGTH');
+    expect(source).toContain('maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}');
   });
 
-  it('keeps onboarding fixed-footer screens scrollable above phone actions', () => {
-    for (const route of ['goals', 'quiz']) {
-      const source = readAppRoute(`onboarding/${route}.tsx`);
-      expect(source).toContain('<ScrollView');
+  it('keeps onboarding fixed-footer screens scrollable, readable, and touchable', () => {
+    const age = readAppRoute('onboarding/age.tsx');
+    const goals = readAppRoute('onboarding/goals.tsx');
+    const quiz = readAppRoute('onboarding/quiz.tsx');
+    const products = readAppRoute('onboarding/products.tsx');
+
+    expect(age).toContain('useWindowDimensions');
+    expect(age).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
+    expect(age).toMatch(/<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1"\s+showsVerticalScrollIndicator/);
+    expect(age).toContain('className="bg-paper pb-4 pt-2"');
+    expect(age).toContain('confirms your age before skin-health data');
+
+    for (const source of [goals, quiz]) {
+      expect(source).toContain(
+        '<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>',
+      );
+      expect(source).toMatch(/<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1"\s+showsVerticalScrollIndicator/);
       expect(source).toContain('contentContainerClassName="pb-28"');
       expect(source).toContain('className="bg-paper pb-4 pt-2"');
-      expect(source).toContain('<OptionCard');
-      expect(source).not.toContain("width: '48%'");
-      expect(source).not.toContain('adjustsFontSizeToFit');
+      expect(source).not.toContain("style={{ width: '48%' }}");
+      expect(source).not.toContain('CompactGoalCard');
+      expect(source).not.toContain('CompactQuizOptionCard');
     }
-    const quiz = readAppRoute('onboarding/quiz.tsx');
-    expect(quiz).toContain('hasCurrentHealthDataCollectionConsent');
+
+    expect(goals).toContain('What brings you here?');
+    expect(goals).toContain('Choose up to two. We&apos;ll use these to keep your plan focused.');
+    expect(goals).toContain('<ProgressBar total={5} current={1} />');
+    expect(goals).toContain("compact ? 'mt-3 gap-2' : 'mt-6 gap-2.5'");
+    expect(goals).toContain('compact');
+
+    expect(quiz).toContain('<ProgressBar total={total} current={index + 1} />');
+    expect(quiz).toContain("label={index < total - 1 ? 'Next' : 'See my profile'}");
+    expect(quiz).toContain("compact ? 'mt-3 gap-2' : 'mt-6 gap-2.5'");
+    expect(quiz).toContain('compact');
     expect(quiz).toContain('label="Back"');
-    expect(quiz).toContain('setIndex((i) => Math.max(0, i - 1))');
-    expect(readAppRoute('onboarding/products.tsx')).toContain('<CategoryPickerSheet');
+
+    expect(products).toContain('className="flex-1 overflow-hidden"');
+    expect(products).toContain('style={{ minHeight: 0 }}');
+    expect(products).toMatch(
+      /<ScrollView\s+ref={scrollRef}\s+className="flex-1"\s+showsVerticalScrollIndicator/,
+    );
+    expect(products).toContain('const supportFloorTextPressurePhone =');
+    expect(products).toContain('const modernTextPressurePhone =');
+    expect(products).toContain('const splitShortPhone = height < 460;');
+    expect(products).toContain('const inputRef = useRef<TextInput>(null)');
+    expect(products).toContain('placeholder="e.g. Retinol serum"');
+    expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
+    expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: false })');
+    expect(products).toContain('inputRef.current?.focus()');
+    expect(products).toContain('<CategoryPickerSheet');
+    expect(products).toContain('className="bg-paper pb-4 pt-2"');
   });
 
   it('nudges onboarding product intake toward the three-product first-insight target', () => {
@@ -258,10 +327,10 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('resetIntake({');
     expect(products).toContain("addedVia: 'onboarding'");
     expect(products).toContain("pathname: '/shelf/opened'");
-    expect(products).toContain("params: { origin: 'onboarding' }");
+    expect(products).toContain("params: { intakeId, origin: 'onboarding' }");
     expect(products).not.toContain('await m.add({');
     expect(opened).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
-    expect(opened).toContain('params: { addedProductId: productId }');
+    expect(opened).toContain('params: { addedProductId: completedProductId }');
     expect(opened).toContain('router.replace(APP_SHELF_ROUTE)');
   });
 
@@ -273,35 +342,10 @@ describe('onboarding route contracts', () => {
     expect(reveal).toContain('recordFirstUsefulInsightAnalytics');
     expect(reveal).toContain("source: 'reveal'");
     expect(reveal).toContain('routineInsightCount(planResult.data.plan)');
-    expect(reveal).toContain("firstInsight?.eyebrow ?? 'Routine preview'");
-    expect(reveal).toContain("? 'Routine preview unavailable'");
-    expect(reveal).toContain('planResult.isError');
-    expect(reveal).toContain('onPress={() => void planResult.retry()}');
+    expect(reveal).toContain("(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()");
     expect(reveal).toContain('label="Continue"');
     expect(reveal).toContain("router.push('/onboarding/notifications')");
     expect(reveal).not.toContain('label="See my routine"');
-  });
-
-  it('suppresses notification-onboarding publication after an account boundary', () => {
-    const notifications = readAppRoute('onboarding/notifications.tsx');
-
-    expect(notifications).toContain('const ownerScope = useOwnerQueryScope();');
-    expect(notifications).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(notifications).toContain('await acceptRoutineReminderSoftAsk(');
-    expect(notifications.indexOf('await acceptRoutineReminderSoftAsk(')).toBeLessThan(
-      notifications.indexOf("router.push('/onboarding/account')"),
-    );
-    expect(notifications).toContain('await declineRoutineReminderSoftAsk(');
-    expect(notifications.indexOf('await declineRoutineReminderSoftAsk(')).toBeLessThan(
-      notifications.indexOf("router.push('/onboarding/account')"),
-    );
-    expect(notifications).toContain('setFailedChoice(choice)');
-    expect(notifications).toContain('Notification choice incomplete');
-    expect(notifications).toContain('nothing was silently skipped');
-    expect(notifications).toContain('finish(failedChoice, true)');
-    expect(notifications).toContain('<ScrollView');
-    expect(notifications).toContain('contentContainerStyle={{ flexGrow: 1 }}');
-    expect(notifications).not.toMatch(/finally\s*{[\s\S]*router\.push\('\/onboarding\/account'\)/);
   });
 
   it('keeps health-data consent fail-closed before quiz access', () => {
@@ -312,19 +356,22 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('setConsentSaveError(true)');
     expect(source).toContain('HEALTH_DATA_CONSENT.saveFailedTitle');
     expect(source).toContain('HEALTH_DATA_CONSENT.saveFailedBody');
-    expect(source.indexOf('grantHealthDataCollectionConsent()')).toBeLessThan(
-      source.indexOf("router.push('/onboarding/quiz')"),
+    expect(source).toContain('grantHealthDataCollectionConsent(healthDataOwnerId)');
+    expect(source.indexOf('grantHealthDataCollectionConsent(healthDataOwnerId)')).toBeLessThan(
+      source.indexOf("if (!activationRoutePending) router.replace('/onboarding/goals')"),
     );
-    expect(source.indexOf('declineHealthDataCollectionConsent()')).toBeLessThan(
+    expect(source).toContain('declineHealthDataCollectionConsent(healthDataOwnerId)');
+    expect(source.indexOf('declineHealthDataCollectionConsent(healthDataOwnerId)')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
     );
     expect(source).toContain("const isSettingsReconsent = requestedReturn === 'skin-profile';");
     expect(source).toContain('Return without changing');
     expect(source).toContain('if (router.canGoBack())');
     expect(source).toContain("pathname: '/settings/skin-profile'");
-    expect(source).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
-    expect(source).toContain('resetHealthProfileConsumers(queryClient, ownerScope)');
-    expect(source.indexOf('resetHealthProfileConsumers(queryClient, ownerScope)')).toBeLessThan(
+    expect(source).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
+    expect(source).toContain('void Promise.allSettled([');
+    expect(source).toContain('resetHealthProfileConsumers(queryClient)');
+    expect(source.indexOf('resetHealthProfileConsumers(queryClient)')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
     );
     expect(quiz).toContain('hasCurrentHealthDataCollectionConsent');
@@ -347,33 +394,31 @@ describe('onboarding route contracts', () => {
       fileURLToPath(new URL('./OnboardingContext.tsx', import.meta.url)),
       'utf8',
     );
-    const persistence = readFileSync(
-      fileURLToPath(new URL('./skinProfilePersistence.ts', import.meta.url)),
-      'utf8',
-    );
-    const mirror = readFileSync(
-      fileURLToPath(new URL('./skinProfileMirror.ts', import.meta.url)),
-      'utf8',
-    );
 
-    expect(context).toContain('persistSkinProfileWithConsentWorkflow(ownerLease, {');
-    expect(persistence).toContain('return runSerializedConsentWorkflow(lease, async () => {');
-    expect(persistence).toContain('deps.hasCurrentLocalConsent()');
-    expect(persistence).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
-    expect(persistence.indexOf('deps.hasCurrentLocalConsent()')).toBeLessThan(
-      persistence.indexOf(
-        'deps.setStoredProfile({ result, goals: [...input.goals], completedAt })',
-      ),
+    expect(context).toContain('hasCurrentHealthDataCollectionConsent()');
+    expect(context).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
+    expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
+      context.indexOf('setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt })'),
     );
-    expect(persistence).toContain('deps.mirrorInsideWorkflow(lease, {');
-    expect(context).toContain('queryClient.setQueryData(queryKeys.onboarded(ownerScope), true)');
-    expect(context).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
-    expect(context).toContain('ownerQueryPrefixes.shelf(ownerScope)');
-    expect(context).toContain('ownerQueryPrefixes.ramp(ownerScope)');
-    expect(context).not.toContain('supabase');
-    expect(mirror).toContain('hasLatestExactConsentGrantWithLease');
-    expect(mirror).toContain("endpoint: 'skin_profile_publication'");
-    expect(mirror).toContain('.abortSignal(signal)');
+    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
+    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['shelf'] })");
+    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['ramp'] })");
+
+    const insertStart = context.indexOf("supabase.from('skin_profiles').insert({");
+    const insertEnd = context.indexOf('});', insertStart);
+    const insert = context.slice(insertStart, insertEnd);
+    expect(insertStart).toBeGreaterThan(-1);
+    expect(insertEnd).toBeGreaterThan(insertStart);
+    expect(insert).toContain('version: 2');
+    expect(insert).toContain('dspt: result.dspt');
+    expect(insert).toContain('oily_dry_basis_points: result.axesBasisPoints.oily_dry');
+    expect(insert).toContain('quiz_contract_id: result.provenance.contractId');
+    expect(insert).toContain('quiz_content_sha256: result.provenance.contentSha256');
+    expect(insert).toContain('quiz_scoring_sha256: result.provenance.scoringSha256');
+    expect(insert).toContain('quiz_contract_sha256: result.provenance.contractSha256');
+    expect(insert).toContain('quiz_review_status: result.provenance.reviewStatus');
+    expect(insert).not.toContain('quizAnswers');
+    expect(insert).not.toContain('answers');
   });
 
   it('recovers direct quiz completion without inventing missing goals', () => {
@@ -382,20 +427,48 @@ describe('onboarding route contracts', () => {
     const analyzing = readAppRoute('onboarding/analyzing.tsx');
 
     expect(goals).toContain('getQuizCompletionState');
-    expect(goals).toContain('const { goals, quizAnswers, toggleGoal } = useOnboarding();');
+    expect(goals).toContain(
+      'const { goals, profileResult, quizAnswers, toggleGoal } = useOnboarding();',
+    );
     expect(goals).toContain('const quizCompletion = getQuizCompletionState(quizAnswers);');
     expect(goals).toContain(
-      "router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/consent')",
+      "router.push(hasProfileResult ? '/onboarding/products' : '/onboarding/quiz')",
     );
+    expect(goals).toContain('hasCurrentHealthDataCollectionConsent');
+    expect(goals).toContain("router.replace('/onboarding/consent')");
     expect(products).toContain('const { goals } = useOnboarding();');
     expect(products).toContain('if (goals.length === 0)');
     expect(products).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain(
-      'const { goals, persistSkinProfile, quizAnswers } = useOnboarding();',
+      'const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();',
     );
     expect(analyzing).toContain('if (goals.length === 0)');
     expect(analyzing).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain('goals.length');
+  });
+
+  it('retains only the scored profile after durable local save for remaining onboarding routes', () => {
+    const context = readFileSync(
+      fileURLToPath(new URL('./OnboardingContext.tsx', import.meta.url)),
+      'utf8',
+    );
+    const analyzing = readAppRoute('onboarding/analyzing.tsx');
+    const reveal = readAppRoute('onboarding/reveal.tsx');
+    const paywall = readAppRoute('onboarding/paywall.tsx');
+
+    const durableWrite = context.indexOf(
+      'await setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt });',
+    );
+    const retainResult = context.indexOf('setProfileResult(result);');
+    const wipeAnswers = context.indexOf('setQuizAnswers({});', retainResult);
+    expect(durableWrite).toBeGreaterThan(-1);
+    expect(retainResult).toBeGreaterThan(durableWrite);
+    expect(wipeAnswers).toBeGreaterThan(retainResult);
+    expect(analyzing).toMatch(/profileResult\s*\?\s*Promise\.resolve\(profileResult\)/);
+    expect(reveal).toContain('profileResult ?? (quizCompletion.complete ? computeResult() : null)');
+    expect(paywall).toContain(
+      'profileResult ?? (quizCompletion.complete ? computeResult() : null)',
+    );
   });
 
   it('keeps health-data consent copy scrollable above buffered phone actions', () => {
@@ -407,7 +480,7 @@ describe('onboarding route contracts', () => {
     expect(source).toMatch(
       /<ScrollView\s+ref={scrollRef}\s+className="flex-1"\s+showsVerticalScrollIndicator/,
     );
-    expect(source).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
+    expect(source).not.toMatch(/<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1 overflow-hidden"/);
     expect(source).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(source).toContain(
       'scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) })',
@@ -451,12 +524,6 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('best-effort until backend configured');
     expect(source).toContain('recordAccountConsent');
     expect(source).toContain('setError(ACCOUNT_CONSENT.saveFailedBody)');
-    expect(source).toContain('const ownerScope = useOwnerQueryScope();');
-    expect(source).toContain('await runOwnerQueryOperation(ownerScope, async (lease) => {');
-    expect(source).toContain('const owner = await captureAuthenticatedAccountOwner(lease);');
-    expect(source).toContain('await identify(lease, owner.userId)');
-    expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(source).not.toContain('supabase.auth.getUser()');
     expect(source.indexOf('await recordAccountConsent()')).toBeLessThan(
       source.indexOf("track('account_created')"),
     );
@@ -465,22 +532,12 @@ describe('onboarding route contracts', () => {
     );
     expect(source).toContain('getAccountUpgradeE2EFixture');
     expect(source).toContain("if (result === 'complete')");
-    expect(source).toContain('const result = await sendEmailOtp(email)');
+    expect(source).toContain('const result = await sendEmailOtp(normalizedEmail)');
+    expect(source).toContain('if (!accountUpgradeE2EFixture) await resendEmailOtp()');
+    expect(source).toContain('getEmailCodeChallengeState(challenge, Date.now()).expired');
+    expect(source).toContain('Resend code in ${codeState.resendSeconds}s');
+    expect(source).toContain("setCode('');");
     expect(source).toContain('if (!accountUpgradeE2EFixture) await verifyEmailOtp(email, code)');
-    expect(source).toContain('const isFocused = useIsFocused();');
-    expect(source).toContain('useLayoutEffect(() => {');
-    expect(source).toContain('canPublishAccountRouteRequest({');
-    expect(source).toContain('const requestInFlightRef = useRef<number | null>(null);');
-    expect(source).toContain('if (requestInFlightRef.current !== null) return;');
-    expect(source).toContain('requestSequence: requestSeqRef.current');
-    expect(source).toContain('focused: focusedRef.current');
-    expect(source).toContain('isOwnerQueryScopeCurrent(ownerScope)');
-    expect(source).toContain('ProviderSignInRequestSupersededError');
-    expect(source).toContain("pointerEvents={busy ? 'none' : 'auto'}");
-    expect(source).toContain('accessibilityState={{ disabled: busy }}');
-    expect(source).toContain('if (isCurrent()) await finish(isCurrent);');
-    expect(source).toContain('editable={!busy}');
-    expect(source).toContain('disabled={busy}');
   });
 
   it('does not reveal the profile after a failed local profile save', () => {

@@ -28,6 +28,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Setup Deno
+        # denoland/setup-deno v2.0.4
+        uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282
+        with:
+          deno-version: v2.7.5
+
       - name: Install
         run: npm ci
 

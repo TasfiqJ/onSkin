@@ -64,35 +64,35 @@
 - `npx vitest run src/features/notifications/claimsafety.test.ts src/features/notifications/store.test.ts src/features/notifications/policy.test.ts`
 - `npx vitest run src/lib/analytics/track.test.ts src/lib/observability/scrub.test.ts`
 - `npx vitest run src/lib/navigation/externalUrl.test.ts src/features/commerce/attribution.test.ts src/features/commerce/commerce.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/externalOpen.test.ts src/lib/navigation/externalUrl.test.ts src/features/commerce/commerce.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/appSettings.test.ts src/features/navigation/sheetRouteContracts.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/features/photos/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/community/shareNote.test.ts src/features/community/community.test.ts src/features/community/claimsafety.test.ts src/features/community/communityRoutes.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/onboarding/healthConsent.test.ts src/features/onboarding/consentCopy.test.ts src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/photos/sharePhoto.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/settings/actions.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/trend/consent.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/ask/applyConsentChoice.test.ts src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/commerce/commerce.test.ts src/features/community/community.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/externalOpen.test.ts src/lib/navigation/externalUrl.test.ts src/features/commerce/commerce.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/appSettings.test.ts src/features/navigation/sheetRouteContracts.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/features/photos/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/community/shareNote.test.ts src/features/community/community.test.ts src/features/community/claimsafety.test.ts src/features/community/communityRoutes.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/onboarding/healthConsent.test.ts src/features/onboarding/consentCopy.test.ts src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/photos/sharePhoto.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/settings/actions.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/ask/consent.test.ts src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/trend/consent.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/ask/consent.test.ts src/features/ask/applyConsentChoice.test.ts src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/commerce/commerce.test.ts src/features/community/community.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
 - `npx vitest run src/lib/launch/phase7.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/onboarding/quizCompletion.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/subscription/priceDisplay.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts src/features/today/useToday.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts`
-- `npm --workspace @onskin/mobile run test -- src/lib/navigation/externalOpen.test.ts src/features/community/shareNote.test.ts`
-- `npm --workspace @onskin/mobile run typecheck`
-- `npm --workspace @onskin/mobile run lint`
+- `npm --workspace @layerwell/mobile run test -- src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/subscription/priceDisplay.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts src/features/today/useToday.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts`
+- `npm --workspace @layerwell/mobile run test -- src/lib/navigation/externalOpen.test.ts src/features/community/shareNote.test.ts`
+- `npm --workspace @layerwell/mobile run typecheck`
+- `npm --workspace @layerwell/mobile run lint`
 - `npm run phase7:check-core-loop`
 - `npm run phase7:qa-packet`
 - `npm run phase9:store-build-inspect`
@@ -107,7 +107,7 @@
 - `$env:EXPO_PUBLIC_PERSONAL_TOKEN='blocked'; node scripts/phase2/check-env.mjs --strict` (expected failure probe for secret-looking public env key names)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase10/beta-readiness.mjs` (expected failure probe for private-looking public env values)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase11/launch-readiness.mjs` (expected failure probe for private-looking public env values)
-- Missing-app-env live Edge auth expected failure probe with `PHASE9_RUN_LIVE_EDGE_AUTH=true` and fake non-placeholder Supabase credentials; proves live harnesses classify absent real app env as production and refuse without `PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH=true`.
+- Protected-harness env/static expected-failure probes cover missing or non-exact `APP_ENV=staging`, an absent or different `PHASE9_EXPECTED_SUPABASE_PROJECT_REF`, and non-origin `SUPABASE_URL` values. They prove Edge-auth and data-rights stop before client creation or any request unless the reviewed canonical staging target matches exactly.
 - `npm audit --audit-level=moderate`
 - `npm audit --audit-level=high`
 - `npx expo-doctor`
@@ -115,13 +115,13 @@
 ## Tests added
 
 - `apps/mobile/src/features/settings/localPrivateDataKeys.test.ts`
-  - Proves every `onskin.*` local storage key in source is registered for deletion.
+  - Proves every `layerwell.*` local storage key in source is registered for deletion.
   - Proves there are no duplicate local wipe keys.
 - `apps/mobile/src/features/settings/localPrivateData.test.ts`
   - Proves local private-data cleanup clears app stores, generated cache files, scheduled notifications, and PostHog/RevenueCat client identities.
   - Proves account-boundary cleanup fails closed when a client identity reset rejects.
 - `apps/mobile/src/features/notifications/claimsafety.test.ts`
-  - Proves every lock-screen notification payload uses the generic `OnSkin` title and discreet body copy.
+  - Proves every lock-screen notification payload uses the generic `Layerwell` title and discreet body copy.
   - Proves OS notification bodies do not contain progress-photo, product, skin, treatment, ingredient, or escalation details.
 - `apps/mobile/src/features/notifications/store.test.ts`
   - Proves legacy local notification prefs with `lockscreenDiscreet: false` load as discreet.
@@ -255,11 +255,11 @@
   - Proves those functions use the Postgres rate-limit RPC before Turnstile verification, keyed-hash request identity before storage, and return `429` when limited.
   - Proves the rate-limit migration uses RLS, a pinned-search-path `SECURITY DEFINER` function, and service-role-only RPC execution.
   - Proves RevenueCat webhook rejects non-`POST` before raw body parsing.
-  - Proves the ShopMy order-report poll rejects non-`POST`, remains inert without a brand key, and requires a scheduler secret before any activated service-role poll work.
+  - Proves the COM-01A order-report endpoint rejects non-`POST`, returns the exact inert result for POST, and contains no provider/Supabase client, fetch, credential read, activation branch, or attribution write.
   - Proves every user-JWT Edge Function rejects non-`POST` before caller auth resolution and that catalog lookup cannot reintroduce GET/query-string barcode lookup.
   - Proves body-parsing user-JWT Edge Functions use `USER_EDGE_BODY_MAX_BYTES`, reject oversized bodies with `413 payload_too_large`, and check `Content-Length` before auth/body parsing work.
   - Proves catalog search/lookup use the shared Postgres rate-limit RPC with HMAC-keyed user identity, fail closed when the limiter is unavailable, return `429` when limited, and enforce the limit before request body parsing, service-role catalog reads, lookup telemetry writes, or Open Beauty Facts calls.
-  - Proves external-provider functions use `fetchWithTimeout` plus bounded response text/JSON readers, and rejects raw provider `fetch()`, `.json()`, or `.text()` parsing in account deletion, catalog lookup, public forms, and order polling.
+  - Proves active external-provider functions use `fetchWithTimeout` plus bounded response text/JSON readers, and rejects raw provider `fetch()`, `.json()`, or `.text()` parsing in account deletion, catalog lookup, and public forms. COM-01A separately requires order polling to contain no fetch or provider path at all.
 - `scripts/phase9/live-public-forms.mjs`
   - When explicitly enabled, verifies public waitlist/growth endpoints reject missing and invalid Turnstile tokens.
   - In strict evidence mode with `PHASE9_TURNSTILE_VALID_TOKEN`, verifies valid-token writes and sanitization for both endpoints.
@@ -272,8 +272,8 @@
   - Verifies `edge_rate_limits` rows for catalog scopes use 64-character keyed hashes and writes redacted `docs/phase-9/generated/live-catalog-rate-limit.*` evidence artifacts.
 - `scripts/phase9/live-order-report-poll.mjs`
   - When explicitly enabled, verifies deployed `order-report-poll` rejects non-`POST` before service-role work.
-  - Verifies missing and wrong scheduler secrets do not write `order_attributions`, while accepting either inert no-ShopMy-key responses or activated fail-closed responses according to `PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED`.
-  - Does not read or send the real scheduler secret and intentionally avoids the authorized ShopMy API path.
+  - Verifies the exact COM-01A inert POST response and proves the `order_attributions` row count does not change.
+  - Does not accept or read any provider/scheduler activation credential; no authorized commerce path exists in current source.
   - Writes `docs/phase-9/generated/live-order-report-poll.*` as an evidence packet.
 - `scripts/phase9/live-revenuecat-webhook.mjs`
   - When explicitly enabled, verifies deployed RevenueCat webhook rejects non-`POST` methods without writing subscription events.
@@ -313,7 +313,7 @@
   - Writes `docs/phase-9/generated/live-data-rights.*` as an evidence packet.
 - `scripts/phase9/live-consent-withdrawal.mjs`
   - When explicitly enabled, creates a temporary staging user and seeds each consent-gated data class.
-  - Invokes deployed `consent-withdrawal` for `photo_cloud_backup`, `ask_onskin`, `photo_trend_insights`, `community_participation`, and `data_sharing`.
+  - Invokes deployed `consent-withdrawal` for `photo_cloud_backup`, `ask_layerwell`, `photo_trend_insights`, `community_participation`, and `data_sharing`.
   - Verifies false ledger rows, cloud photo storage removal plus metadata relocalization, Ask safety-audit deletion, trend-row deletion, community row deletion, commerce click deletion, and order-attribution token detachment.
   - Refuses production unless `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL=true` and writes `docs/phase-9/generated/live-consent-withdrawal.*` as an evidence packet.
 - `scripts/phase9/data-rights-smoke.mjs`
@@ -442,8 +442,8 @@
   - Verifies Sentry default PII, performance tracing, failed-request capture, screenshot attachments, and view hierarchy attachments remain disabled.
   - Verifies Sentry events use the global before-send sanitizer and drop request, breadcrumb, context, transaction, fingerprint, log entry, thread, span, module, measurement, debug, server-name, and SDK-processing metadata fields before upload.
 - `apps/mobile/src/features/commerce/attribution.test.ts` and `apps/mobile/src/features/commerce/commerce.test.ts`
-  - Verify where-to-buy URLs fail closed for unsafe schemes or embedded credentials.
-  - Verify unsafe affiliate rows are filtered before rendering and that outbound commerce URLs still append only the opaque `oref` token.
+  - Verify dormant where-to-buy and attribution helpers remain fail-closed: no outbound URL is built, no click payload is admitted, and no retailer row is published.
+  - These are negative compatibility contracts only. They do not describe an active affiliate row, opaque-token handoff, or commerce URL; the COM-01A source contract prevents production consumers from activating the dormant modules.
 - `scripts/phase9/privacy-payload-audit.mjs`
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
   - Fails if analytics event names bypass the event-name allowlist, vendor capture uses the raw event name, or app call sites use non-literal/unapproved event names.
@@ -475,7 +475,7 @@
 - Edge Function auth tests for data export, account deletion, subscription grants, and catalog functions, including valid-JWT non-`POST` rejection for every user-JWT function and no side effects from those rejected calls.
 - Live Edge auth negative tests using `npm run phase9:live-edge-auth:strict`, then set `PHASE9_EDGE_AUTH_PASS=true` only after staging artifact review.
 - RevenueCat webhook lifecycle using `npm run phase9:live-revenuecat-webhook:strict`: non-POST rejection, invalid auth, invalid signature, stale signature, oversized body rejection, duplicate delivery, initial purchase grant, renewal, cancellation, billing issue, expiration, refund revoke, raw-payload minimization, and dashboard secret parity.
-- ShopMy order-report poll activation test before enabling commerce attribution: run `phase9:live-order-report-poll:strict`; prove `POST` only, no-op without brand key, `503` if brand key exists without `ORDER_REPORT_POLL_SECRET`, `401` with missing/wrong scheduler secret, no `order_attributions` write before authorization, and no real scheduler secret in the harness. Authorized scheduler success should be tested only in a controlled ShopMy sandbox/partner environment.
+- COM-01A order-report literal-zero test: run `phase9:live-order-report-poll:strict`; prove non-`POST` rejection, the exact inert POST body, and no `order_attributions` delta without provider or scheduler credentials. A future positive rail must first land as a separately reviewed admission/source/migration change and then receive controlled partner, legal, privacy, platform, and hosted QA.
 - Public waitlist/growth abuse-control tests: missing server secret returns 503, missing token returns 403, invalid token returns 403, oversized bodies return 413 without writes, valid token writes the expected sanitized record, and repeated requests produce `429` without persisting raw IP/user-agent values. Missing/invalid, oversized-body, valid-token, and 429/keyed-hash paths are covered by `phase9:live-public-forms:strict`; missing-secret evidence still requires staging deployment logs or a targeted staging probe.
 - Authenticated catalog abuse-control tests: run `npm run phase9:live-catalog-rate-limit:strict` with staging credentials and matching `CATALOG_RATE_LIMIT_MAX`/`PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX`; repeated `catalog-search` and `catalog-lookup` POSTs should produce `429` plus `rate_limited`, and redacted artifacts should show only keyed hashes in `edge_rate_limits`, not raw user IDs.
 - Account deletion with photos, shelf, routines, entitlement rows, RevenueCat deletion, PostHog deletion, client SDK identity reset, local cache wipe, and notification cancellation. The deployed backend portion is covered by `phase9:live-data-rights:strict`; local device wipe still needs real-device QA.

@@ -25,9 +25,9 @@ This checkpoint migrates the next account-scoped read group onto one owner/accou
 | --- | --- |
 | Ten-file recommendation/routine/cycle/Trend/query/account-generation Vitest matrix | Pass, 10 files / 120 tests |
 | `npm test` | Pass, 251 files / 3,201 tests |
-| `npm --workspace @onskin/mobile run typecheck` | Pass |
+| `npm --workspace @layerwell/mobile run typecheck` | Pass |
 | `npm run typecheck` | Pass, 2 workspaces |
-| `npm --workspace @onskin/mobile run lint` | Pass, zero warnings |
+| `npm --workspace @layerwell/mobile run lint` | Pass, zero warnings |
 | `npm run lint` | Pass, 2 workspaces, zero warnings |
 | Scoped and staged `git diff --check` | Pass |
 

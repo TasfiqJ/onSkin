@@ -11,22 +11,30 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { catalogUnknownIngredientCountBucket } from '@/features/catalog/analytics';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
-import { reviewedCategoryPao } from '@/features/intelligence/pao';
+import {
+  manualBarcodeRequiresEightDigitFormat,
+  normalizeManualBarcode,
+  type ManualEightDigitBarcodeFormat,
+} from '@/features/native/camera/barcode';
 import {
   categoryLabel,
   PRODUCT_CATEGORIES,
   type ProductCategory,
 } from '@/features/shelf/categories';
-import { useIntake } from '@/features/shelf/IntakeContext';
-import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
+import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
+import {
+  SHELF_PRODUCT_BRAND_MAX_LENGTH,
+  SHELF_PRODUCT_NAME_MAX_LENGTH,
+} from '@/features/shelf/limits';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // Add by hand (design screen 03, docs/04 §4.4). The always-works floor under
-// every other path. Name, brand, category (drives the default PAO), optional
+// every other path. Name, brand, category, and optional
 // INCI (parsed for actives). Continues to the opened-date linchpin (§4.5).
 function FieldLabel({ children }: { children: string }) {
   return (
@@ -144,22 +152,32 @@ function CategoryPickerSheet({
 }
 
 export default function ManualAddScreen() {
-  const { draft, update } = useIntake();
+  const { clear, draft, reset, sessionId } = useIntake();
   // Arriving from an accepted recommendation (docs/09 §11): the rec passes the
   // category so the form is pre-filled. With a preset we start the other fields
   // fresh rather than inheriting a stale prior-intake draft.
-  const params = useLocalSearchParams<{ presetCategory?: string }>();
+  const params = useLocalSearchParams<{ intakeId?: string; presetCategory?: string }>();
   const presetCategory =
     params.presetCategory && PRODUCT_CATEGORIES.some((c) => c.id === params.presetCategory)
       ? (params.presetCategory as ProductCategory)
       : null;
-  const [name, setName] = useState(presetCategory ? '' : draft.name);
-  const [brand, setBrand] = useState(presetCategory ? '' : (draft.brand ?? ''));
+  const useIncomingDraft =
+    presetCategory == null && isCurrentIntakeSession(sessionId, params.intakeId);
+  const sanitizedAddedVia = useIncomingDraft && draft.addedVia === 'ocr' ? 'ocr' : 'manual';
+  const [name, setName] = useState(useIncomingDraft ? draft.name : '');
+  const [brand, setBrand] = useState(useIncomingDraft ? (draft.brand ?? '') : '');
+  const initialBarcode = useIncomingDraft ? (draft.barcode ?? '') : '';
+  const [barcode, setBarcode] = useState(initialBarcode);
+  // A scanned UPC-E is already expanded to 12 digits. An eight-digit draft
+  // arriving from Scan is therefore a known EAN-8; new manual input must ask.
+  const [eightDigitFormat, setEightDigitFormat] = useState<ManualEightDigitBarcodeFormat | null>(
+    () => (manualBarcodeRequiresEightDigitFormat(initialBarcode) ? 'ean8' : null),
+  );
   const [category, setCategory] = useState<ProductCategory | null>(
-    presetCategory ?? draft.category,
+    presetCategory ?? (useIncomingDraft ? draft.category : null),
   );
   const [ingredients, setIngredients] = useState(
-    presetCategory ? '' : draft.ingredients.join(', '),
+    useIncomingDraft ? draft.ingredients.join(', ') : '',
   );
   const [pickerOpen, setPickerOpen] = useState(false);
   const { fontScale = 1, height: viewportHeight, width: viewportWidth } = useWindowDimensions();
@@ -170,9 +188,16 @@ export default function ManualAddScreen() {
   const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;
   const showManualIngredientsField = !supportFloorTextPressureManualPhone;
 
-  const paoFromCategory = reviewedCategoryPao(category);
-
-  const canContinue = name.trim().length > 0;
+  const barcodeNeedsFormat =
+    manualBarcodeRequiresEightDigitFormat(barcode) && eightDigitFormat === null;
+  const normalizedBarcode = barcode.trim()
+    ? normalizeManualBarcode(barcode, eightDigitFormat)
+    : null;
+  const barcodeInvalid =
+    barcode.trim().length > 0 && !barcodeNeedsFormat && normalizedBarcode === null;
+  const barcodeChecksumInvalid = normalizedBarcode?.validChecksum === false;
+  const canContinue =
+    name.trim().length > 0 && !barcodeNeedsFormat && !barcodeInvalid && !barcodeChecksumInvalid;
 
   const selectCategory = (nextCategory: ProductCategory) => {
     setCategory(nextCategory);
@@ -186,21 +211,23 @@ export default function ManualAddScreen() {
       track('ingredient_parse_completed', {
         source: 'manual',
         result: parsed.status,
-        count: parsed.tokens.length,
+        unknown_count_bucket: catalogUnknownIngredientCountBucket(parsed.unknownTokens.length),
       });
     }
-    update({
+    const intakeId = reset({
       name: name.trim(),
       brand: brand.trim() || null,
+      barcode: normalizedBarcode?.lookupValue ?? null,
       category,
       ingredients: tokens,
       ingredientParseStatus: parsed?.status ?? null,
       ingredientParseConfidence: parsed?.confidence ?? null,
       parserVersion: parsed?.parserVersion ?? null,
-      paoMonths: paoFromCategory,
-      paoSource: paoFromCategory != null ? 'category_default' : 'unknown',
+      paoMonths: null,
+      paoSource: 'unknown',
+      addedVia: sanitizedAddedVia,
     });
-    router.push('/shelf/opened');
+    router.push({ pathname: '/shelf/opened', params: { intakeId } });
   };
 
   return (
@@ -209,7 +236,10 @@ export default function ManualAddScreen() {
         <RouteIconButton
           accessibilityLabel="Cancel"
           glyph="x"
-          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+          onPress={() => {
+            clear();
+            backOrReplace(router, APP_SHELF_ROUTE);
+          }}
         />
         <Text variant="body" className="font-sans-semibold">
           Add by hand
@@ -236,9 +266,10 @@ export default function ManualAddScreen() {
             <FieldLabel>Product name</FieldLabel>
             <TextInput
               accessibilityLabel="Product name"
+              maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}
               value={name}
               onChangeText={setName}
-              placeholder={pseudoLocalizeString('e.g. Gentle Retinol Night Serum')}
+              placeholder="e.g. Gentle Retinol Night Serum"
               placeholderTextColor={colors.mutedLight}
               className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
             />
@@ -249,9 +280,10 @@ export default function ManualAddScreen() {
               <FieldLabel>Brand</FieldLabel>
               <TextInput
                 accessibilityLabel="Brand"
+                maxLength={SHELF_PRODUCT_BRAND_MAX_LENGTH}
                 value={brand}
                 onChangeText={setBrand}
-                placeholder={pseudoLocalizeString('Brand')}
+                placeholder="Brand"
                 placeholderTextColor={colors.mutedLight}
                 className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
               />
@@ -288,6 +320,66 @@ export default function ManualAddScreen() {
             </View>
           </View>
 
+          <View>
+            <FieldLabel>Barcode (optional)</FieldLabel>
+            <TextInput
+              accessibilityLabel="Barcode, optional"
+              accessibilityHint="Enter the numbers printed below the barcode"
+              value={barcode}
+              onChangeText={(next) => {
+                setBarcode(next);
+                if (next !== barcode) setEightDigitFormat(null);
+              }}
+              placeholder="Enter the printed numbers"
+              placeholderTextColor={colors.mutedLight}
+              keyboardType="number-pad"
+              inputMode="numeric"
+              maxLength={20}
+              className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
+            />
+            {manualBarcodeRequiresEightDigitFormat(barcode) ? (
+              <View accessibilityRole="radiogroup" className="mt-2 flex-row gap-2">
+                {(
+                  [
+                    ['ean8', 'EAN-8'],
+                    ['upc_e', 'UPC-E'],
+                  ] as const
+                ).map(([value, label]) => {
+                  const selected = eightDigitFormat === value;
+                  return (
+                    <Pressable
+                      key={value}
+                      accessibilityRole="radio"
+                      accessibilityLabel={`Eight-digit barcode type, ${label}`}
+                      accessibilityState={{ checked: selected }}
+                      onPress={() => setEightDigitFormat(value)}
+                      className={cn(
+                        'min-h-[48px] flex-1 items-center justify-center rounded-pill border px-3 py-2',
+                        selected ? 'border-clay bg-clay-tint' : 'border-hairline bg-paper-raised',
+                      )}
+                    >
+                      <Text variant="bodySm" className="font-sans-semibold">
+                        {label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            ) : null}
+            {barcodeNeedsFormat ? (
+              <Text accessibilityRole="alert" variant="label" tone="clay" className="mt-1.5">
+                Choose EAN-8 or UPC-E as printed beside the barcode.
+              </Text>
+            ) : null}
+            {barcodeInvalid || barcodeChecksumInvalid ? (
+              <Text accessibilityRole="alert" variant="label" tone="clay" className="mt-1.5">
+                {barcodeChecksumInvalid
+                  ? 'Check the numbers. This barcode checksum does not match.'
+                  : 'Enter a complete 8, 12, 13, or 14 digit barcode from the package.'}
+              </Text>
+            ) : null}
+          </View>
+
           {showManualIngredientsField ? (
             <View className={compactManualPhone ? 'mt-1' : 'mt-2'}>
               <Text variant="label" tone="muted" className="mb-1.5 uppercase">
@@ -303,7 +395,7 @@ export default function ManualAddScreen() {
                 accessibilityLabel="Ingredients"
                 value={ingredients}
                 onChangeText={setIngredients}
-                placeholder={pseudoLocalizeString('Paste or type the INCI list…')}
+                placeholder="Paste or type the INCI list…"
                 placeholderTextColor={colors.mutedLight}
                 multiline
                 className={cn(
@@ -316,24 +408,11 @@ export default function ManualAddScreen() {
           ) : null}
 
           {!ultraShortPhone ? (
-            /* PAO pre-fill note (honest, from the category default. Editable next). */
             <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3">
               <View className="h-[7px] w-[7px] rounded-full bg-clay" />
               <Text variant="bodySm" tone="muted" className="flex-1">
-                {paoFromCategory != null ? (
-                  <>
-                    We&apos;ll pre-fill the PAO from your category.{' '}
-                    <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-                      {categoryLabel(category)?.toLowerCase()} defaults to ~{paoFromCategory}{' '}
-                      months.
-                    </Text>{' '}
-                    You can change it next.
-                  </>
-                ) : category ? (
-                  <>You can set the PAO on the next step. Straight from the label.</>
-                ) : (
-                  <>Pick a category and we&apos;ll estimate the PAO. You can change it next.</>
-                )}
+                On the next step, record PAO only when it is printed beside the open-jar symbol.
+                Otherwise leave it unknown.
               </Text>
             </View>
           ) : null}

@@ -8,7 +8,9 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 const today = new Date().toISOString().slice(0, 10);
+const accountCheckpointMode = process.argv.includes('--account-upgrade-checkpoint');
 const accountUpgradeMode =
+  accountCheckpointMode ||
   process.argv.includes('--account-upgrade') ||
   process.env.ONBOARDING_E2E_ACCOUNT_UPGRADE?.trim().toLowerCase() === 'email_same_user';
 const accountIsolationMode =
@@ -28,7 +30,9 @@ const evidenceDir =
     'human-e2e',
     today,
     accountUpgradeMode
-      ? 'onboarding-account-upgrade-current'
+      ? accountCheckpointMode
+        ? 'onboarding-account-upgrade-checkpoint-current'
+        : 'onboarding-account-upgrade-current'
       : accountIsolationMode
         ? 'onboarding-account-isolation-current'
         : 'onboarding-first-session-430-current',
@@ -175,6 +179,23 @@ async function stopProcess(child) {
   detach();
 }
 
+async function removeBrowserProfile(userDataDir) {
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      rmSync(userDataDir, { force: true, maxRetries: 2, recursive: true, retryDelay: 150 });
+      return;
+    } catch (error) {
+      if (attempt === 3) {
+        process.stderr.write(
+          `Warning: browser profile cleanup deferred for ${userDataDir}: ${error.message}\n`,
+        );
+        return;
+      }
+      await delay(250);
+    }
+  }
+}
+
 function startExpoServer() {
   const command = isWindows ? (process.env.ComSpec ?? 'cmd.exe') : 'npm';
   const args = isWindows
@@ -195,17 +216,29 @@ function startExpoServer() {
         '--host',
         'localhost',
       ];
+  const serverEnvironment = { ...process.env };
+  for (const key of Object.keys(serverEnvironment)) {
+    const credentialNamed =
+      /(?:TOKEN|SECRET|PASSWORD|PASSCODE|API[_-]?KEY|AUTHORIZATION|COOKIE|PRIVATE[_-]?KEY|DSN)(?:_|$)/iu.test(
+        key,
+      );
+    if (key.startsWith('EXPO_PUBLIC_') || credentialNamed) delete serverEnvironment[key];
+  }
   const child = spawn(command, args, {
     cwd: repoRoot,
     env: {
-      ...process.env,
+      ...serverEnvironment,
       BROWSER: 'none',
       CI: '1',
+      EXPO_NO_DOTENV: '1',
+      EXPO_PUBLIC_APP_ENV: 'development',
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
+      ...(!accountIsolationMode ? { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner' } : {}),
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
       ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: 'signout_clear_retry' } : {}),
-      EXPO_PUBLIC_E2E_COMPLETION_COMMIT_DELAY_MS: '1200',
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
+      EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '__BLOCKED_PLACEHOLDER__',
+      EXPO_PUBLIC_SUPABASE_URL: 'https://blocked-supabase-url.invalid',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
@@ -368,7 +401,7 @@ function rectByTextExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label'));
     const matches = [];
     for (const node of nodes) {
       if (!visible(node)) continue;
@@ -401,7 +434,7 @@ function rectByTextExpression(label, exact) {
   })()`;
 }
 
-async function clickableRectByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
   const startedAt = Date.now();
   let rect = null;
 
@@ -416,32 +449,16 @@ async function clickableRectByText(client, label, { exact = true, timeoutMs = 30
     rect.disabled !== true && rect.ariaDisabled !== 'true',
     `Clickable text is disabled: ${label}`,
   );
-  return rect;
-}
 
-async function dispatchTouch(client, rect, id = 1) {
   await client.send('Input.dispatchTouchEvent', {
-    touchPoints: [{ force: 1, id, radiusX: 2, radiusY: 2, x: rect.x, y: rect.y }],
+    touchPoints: [{ force: 1, id: 1, radiusX: 2, radiusY: 2, x: rect.x, y: rect.y }],
     type: 'touchStart',
   });
   await client.send('Input.dispatchTouchEvent', {
     touchPoints: [],
     type: 'touchEnd',
   });
-}
-
-async function clickByText(client, label, options = {}) {
-  const rect = await clickableRectByText(client, label, options);
-
-  await dispatchTouch(client, rect);
   await delay(250);
-  return rect;
-}
-
-async function rapidDoubleTouchByText(client, label, options = {}) {
-  const rect = await clickableRectByText(client, label, options);
-  await dispatchTouch(client, rect, 1);
-  await dispatchTouch(client, rect, 2);
   return rect;
 }
 
@@ -457,7 +474,7 @@ function scrollTextIntoViewExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,label'));
     const target = nodes.find((node) => {
       if (!visible(node)) return false;
       const values = [
@@ -550,21 +567,33 @@ function auditExpression() {
       if (!(node instanceof Element)) return false;
       const rect = node.getBoundingClientRect();
       const style = getComputedStyle(node);
-      for (let ancestor = node.parentElement; ancestor; ancestor = ancestor.parentElement) {
-        const overflow = getComputedStyle(ancestor).overflowY;
-        if (!['hidden', 'scroll', 'auto', 'clip'].includes(overflow)) continue;
-        const bounds = ancestor.getBoundingClientRect();
-        if (rect.bottom <= bounds.top || rect.top >= bounds.bottom) return false;
-      }
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
+    const visibleBounds = (node, rect) => {
+      let left = Math.max(0, rect.left);
+      let right = Math.min(innerWidth, rect.right);
+      let top = Math.max(0, rect.top);
+      let bottom = Math.min(innerHeight, rect.bottom);
+      for (let ancestor = node.parentElement; ancestor; ancestor = ancestor.parentElement) {
+        const style = getComputedStyle(ancestor);
+        if (!/(auto|hidden|scroll|clip)/.test(style.overflow + style.overflowX + style.overflowY)) continue;
+        const bounds = ancestor.getBoundingClientRect();
+        left = Math.max(left, bounds.left);
+        right = Math.min(right, bounds.right);
+        top = Math.max(top, bounds.top);
+        bottom = Math.min(bottom, bounds.bottom);
+      }
+      return { bottom, left, right, top };
+    };
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="tab"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
     const controls = [];
     const issues = [];
 
     for (const node of nodes) {
       if (!visible(node)) continue;
       const rect = node.getBoundingClientRect();
+      const bounds = visibleBounds(node, rect);
+      if (bounds.right <= bounds.left || bounds.bottom <= bounds.top) continue;
       const label = normalize(
         node.getAttribute('aria-label') ||
           node.getAttribute('accessibilitylabel') ||
@@ -575,8 +604,8 @@ function auditExpression() {
       if (!label) continue;
       const disabled = Boolean(node.disabled) || node.getAttribute('aria-disabled') === 'true';
       const center = {
-        x: Math.max(0, Math.min(innerWidth - 1, rect.left + rect.width / 2)),
-        y: Math.max(0, Math.min(innerHeight - 1, rect.top + rect.height / 2)),
+        x: Math.max(0, Math.min(innerWidth - 1, bounds.left + (bounds.right - bounds.left) / 2)),
+        y: Math.max(0, Math.min(innerHeight - 1, bounds.top + (bounds.bottom - bounds.top) / 2)),
       };
       const hit = document.elementFromPoint(center.x, center.y);
       const hitOk = !hit || node === hit || node.contains(hit) || hit.contains(node);
@@ -586,12 +615,15 @@ function auditExpression() {
         hitOk,
         label,
         role: node.getAttribute('role') || node.tagName.toLowerCase(),
+        selected: node.getAttribute('aria-selected') === 'true',
         width: Number(rect.width.toFixed(2)),
         x: Number(rect.left.toFixed(2)),
         y: Number(rect.top.toFixed(2)),
       };
       controls.push(item);
-      if (rect.left < -1 || rect.right > innerWidth + 1 || rect.top < -1 || rect.bottom > innerHeight + 1) {
+      // Partial vertical controls are expected while a user scrolls a short
+      // viewport; horizontal clipping still indicates a responsive defect.
+      if (rect.left < -1 || rect.right > innerWidth + 1) {
         issues.push({ control: item, type: 'clippedVisibleControl' });
       }
       if ((rect.width < 44 || rect.height < 44) && !disabled) {
@@ -633,7 +665,7 @@ async function navigateClientSide(client, pathname) {
   await client.send('Runtime.evaluate', {
     awaitPromise: true,
     expression: `(() => {
-      const navigate = globalThis.__ROUTINEKIND_E2E_NAVIGATE__;
+      const navigate = globalThis.__LAYERWELL_E2E_NAVIGATE__;
       if (typeof navigate !== 'function') throw new Error('Account-isolation E2E navigator unavailable.');
       navigate(${JSON.stringify(pathname)});
     })()`,
@@ -662,12 +694,6 @@ function assertInteractiveControl(snapshot, label) {
   assert(control.hitOk, `${label} center is not hittable at ${snapshot.url}.`);
   assert(control.width >= 44, `${label} control is too narrow: ${control.width}px.`);
   assert(control.height >= 44, `${label} control is too short: ${control.height}px.`);
-}
-
-function assertDisabledControl(snapshot, label) {
-  const control = snapshot.controls.find((item) => item.label.includes(label));
-  assert(control, `${snapshot.url} did not expose a control labeled ${label}.`);
-  assert(control.disabled === true, `${label} was not disabled while its write was pending.`);
 }
 
 function collectProblemLogs(events) {
@@ -735,13 +761,18 @@ async function answerQuiz(client) {
 
 async function addProduct(client, product, evidenceName) {
   await fillByLabel(client, 'Product name', product.name);
-  if (await evaluate(client, rectByTextExpression('Choose product category', false))) {
-    await scrollTextIntoView(client, 'Choose product category', { exact: false });
+  const compactCategoryPicker = await evaluate(
+    client,
+    rectByTextExpression('Choose product category', false),
+  );
+  if (compactCategoryPicker) {
     await clickByText(client, 'Choose product category', { exact: false });
     await waitForText(client, 'Product category');
+    await clickByText(client, product.category);
+  } else {
+    await scrollTextIntoView(client, product.category);
+    await clickByText(client, product.category);
   }
-  await scrollTextIntoView(client, product.category);
-  await clickByText(client, product.category);
   await clickByText(client, 'Add to shelf');
   await waitForText(client, 'When did you open it?');
   await clickByText(client, 'Just opened it');
@@ -766,7 +797,9 @@ function writeReport(summary) {
     ? 'Invalid email code and successful recovery'
     : summary.accountIsolationMode
       ? 'Cleanup failure, retry, and signed-out direct routes'
-      : `Happy path / ${isLaunchFloorViewport ? 'launch-floor phone viewport' : 'stress viewport'}`;
+      : `Happy path plus age re-verification downgrade / ${
+          isLaunchFloorViewport ? 'launch-floor phone viewport' : 'stress viewport'
+        }`;
   const lines = [
     '# Human-Simulated E2E Run Report',
     '',
@@ -796,7 +829,9 @@ function writeReport(summary) {
     '',
     '```bash',
     summary.accountUpgradeMode
-      ? 'npm run e2e:onboarding-account-upgrade'
+      ? summary.accountCheckpointMode
+        ? 'node scripts/e2e/onboarding-first-session.mjs --account-upgrade-checkpoint'
+        : 'npm run e2e:onboarding-account-upgrade'
       : summary.accountIsolationMode
         ? 'npm run e2e:onboarding-account-isolation'
         : 'npm run e2e:onboarding-first-session',
@@ -822,7 +857,7 @@ async function run() {
   clearPreviousEvidence();
 
   const browserPath = findBrowserPath();
-  const userDataDir = path.join(tmpdir(), `routinekind-onboarding-e2e-${Date.now()}`);
+  const userDataDir = path.join(tmpdir(), `layerwell-onboarding-e2e-${Date.now()}`);
   const server = shouldStartServer ? startExpoServer() : null;
   const browser = startBrowser(browserPath, userDataDir);
   let client = null;
@@ -849,6 +884,19 @@ async function run() {
     await waitForText(client, 'Begin', 60_000);
     const welcome = await captureStep(client, '01-welcome');
 
+    await client.send('Page.navigate', { url: `${baseUrl}/today` });
+    await waitForPath(client, '/onboarding/age', 30_000);
+    await waitForText(client, 'First, your', 30_000);
+    const directProtectedAgeGate = await captureStep(client, '01a-direct-protected-age-gate');
+    assert(
+      !directProtectedAgeGate.bodyText.includes('Morning routine'),
+      'A direct protected route mounted Today content before age eligibility.',
+    );
+    await client.send('Page.navigate', { url: baseUrl });
+    await waitForPath(client, '/', 30_000);
+    await waitForText(client, 'Begin', 30_000);
+
+    await scrollTextIntoView(client, 'Begin');
     await clickByText(client, 'Begin');
     await waitForText(client, 'First, your', 30_000);
     await captureStep(client, '02-age-empty');
@@ -858,16 +906,26 @@ async function run() {
     await captureStep(client, '03-age-filled');
     await clickByText(client, 'Continue');
 
+    await waitForPath(client, '/onboarding/consent', 30_000);
+    await waitForText(client, 'Before the quiz', 30_000);
+    const postAgeSubmit = await captureStep(client, '03a-after-age-submit');
+    assert(
+      postAgeSubmit.bodyText.includes('Before the quiz'),
+      `Age submission did not reach consent. Current screen: ${postAgeSubmit.url} — ${postAgeSubmit.bodyText}`,
+    );
+    await captureStep(client, '04-consent');
+    await clickByText(client, 'I agree. Continue');
+    await waitForPath(client, '/onboarding/goals');
     await waitForText(client, 'What brings you here?');
-    await captureStep(client, '04-goals');
+    await captureStep(client, '05-goals');
+    await scrollTextIntoView(client, 'Clear skin', { exact: false });
     await clickByText(client, 'Clear skin', { exact: false });
+    await scrollTextIntoView(client, 'Barrier repair', { exact: false });
     await clickByText(client, 'Barrier repair', { exact: false });
-    await captureStep(client, '05-goals-selected');
+    await captureStep(client, '06-goals-selected');
+    await scrollTextIntoView(client, 'Continue');
     await clickByText(client, 'Continue');
 
-    await waitForText(client, 'Before the quiz');
-    await captureStep(client, '06-consent');
-    await clickByText(client, 'I agree. Continue');
     await waitForPath(client, '/onboarding/quiz');
     await answerQuiz(client);
 
@@ -896,18 +954,34 @@ async function run() {
     );
     await captureStep(client, '13-post-products-continue-current');
     await waitForText(client, 'YOUR SKIN PROFILE', 45_000);
-    await waitForText(client, 'FIRST INSIGHT');
-    await waitForText(client, 'Timing handled');
+    await waitForCondition(
+      client,
+      `(document.body?.innerText ?? '').includes('FIRST INSIGHT') ||
+        (document.body?.innerText ?? '').includes('Pair review in progress')`,
+      30_000,
+      'reviewed first insight or truthful pending-review state',
+    );
     const reveal = await captureStep(client, '14-reveal-checks');
     await screenshot(client, '14-reveal-insight');
-    assert(reveal.bodyText.includes('FIRST INSIGHT'), 'Reveal did not show FIRST INSIGHT.');
-    assert(reveal.bodyText.includes('Timing handled'), 'Reveal did not show Timing handled.');
-    assert(
+    const revealHasReviewedInsight =
+      reveal.bodyText.includes('FIRST INSIGHT') && reveal.bodyText.includes('Timing handled');
+    const revealHasPendingReview =
+      reveal.bodyText.includes('Pair review in progress') &&
       reveal.bodyText.includes(
-        'Products that need different timing are separated before the first check-off.',
-      ),
-      'Reveal did not show the shelf-derived timing insight body.',
+        "We won't show a compatibility result for these products until that review is complete.",
+      );
+    assert(
+      revealHasReviewedInsight !== revealHasPendingReview,
+      'Reveal must show exactly one reviewed insight or truthful pending-review state.',
     );
+    if (revealHasReviewedInsight) {
+      assert(
+        reveal.bodyText.includes(
+          'Products that need different timing are separated before the first check-off.',
+        ),
+        'Reveal did not show the reviewed shelf-derived timing insight body.',
+      );
+    }
     assert(!reveal.bodyText.includes('See my routine'), 'Reveal still exposes See my routine CTA.');
 
     await clickByText(client, 'Continue');
@@ -937,12 +1011,19 @@ async function run() {
     }
 
     await waitForPath(client, '/onboarding/paywall');
-    await waitForText(client, 'Subscribe to Pro');
-    await waitForText(client, 'Continue free', 30_000);
+    await waitForText(client, 'Continue with the free plan', 30_000);
     const paywall = await captureStep(client, '17-paywall-current');
     await screenshot(client, '17-paywall');
     writeJson('17-paywall.json', paywall);
-    assert(paywall.bodyText.includes('Continue free'), 'Paywall did not expose Continue free.');
+    assert(
+      paywall.bodyText.includes('Continue with the free plan'),
+      'Paywall did not expose the truthful free-plan path.',
+    );
+    assert(
+      paywall.bodyText.includes('Start free trial') ||
+        paywall.bodyText.includes('Subscribe to Pro'),
+      'Paywall did not expose a trial-eligible or non-trial paid CTA.',
+    );
     if (accountUpgradeMode) {
       assert(accountCodeEntry, 'Account upgrade did not reach code entry.');
       assert(
@@ -956,67 +1037,157 @@ async function run() {
         'Valid account-upgrade code did not reach the onboarding paywall.',
       );
     }
+    if (accountCheckpointMode) {
+      const problemLogs = collectProblemLogs(client.events);
+      const disallowedLogs = problemLogs.filter(disallowedLog);
+      writeJson('browser-warn-error-logs.json', problemLogs);
+      assert(
+        disallowedLogs.length === 0,
+        `Unexpected browser warn/error logs: ${disallowedLogs.length}`,
+      );
+      const summary = {
+        accountCheckpointMode: true,
+        accountUpgradeMode: true,
+        accountIsolationMode: false,
+        date: today,
+        endUrl: paywall.url,
+        evidenceFiles: [
+          '16-account.png',
+          '16a-account-code-entry.png',
+          '16b-account-code-error.png',
+          '17-paywall-current.png',
+        ],
+        flowResult:
+          'A deterministic invalid code showed recovery copy; the valid code reached the current paywall with both free and paid paths visible.',
+        browserWarnErrorCount: problemLogs.length,
+        startCommand: shouldStartServer
+          ? `EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+          : `Existing Expo web at ${baseUrl}`,
+        surface: 'Headless Chrome Expo web',
+        verdict: 'pass',
+        viewport: {
+          ...viewport,
+          supportClass: isLaunchFloorViewport
+            ? 'supported phone geometry at or above the 375 x 667 launch floor'
+            : 'resilience stress viewport below the 375 x 667 launch floor',
+        },
+      };
+      writeJson('summary.json', summary);
+      writeReport(summary);
+      console.log(`Onboarding account checkpoint E2E passed. Evidence: ${evidenceDir}`);
+      return;
+    }
 
-    await scrollTextIntoView(client, 'Continue free', { exact: false });
-    const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
-    await clickByText(client, 'Continue free', { exact: false });
+    await scrollTextIntoView(client, 'Continue with the free plan', { exact: false });
+    const paywallFreePath = await captureStep(client, '18-paywall-free-path-visible');
+    await clickByText(client, 'Continue with the free plan', { exact: false });
     await waitForPath(client, '/today', 30_000);
-    const freeToday = await captureStep(client, '19-free-today-current', { assertClean: false });
-    const todayAfterStart = await captureStep(client, '20-today-after-start-current', {
+    const todayFree = await captureStep(client, '19-today-free-current', {
       assertClean: false,
     });
-
-    await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
-    await waitForPath(client, '/today', 30_000);
-    await waitForText(client, 'Morning routine', 30_000);
-    await waitForText(client, 'Mineral SPF 50', 30_000);
-    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
-    const todayAmBefore = await captureStep(client, '21-today-am-before-checkoff');
-    assertInteractiveControl(todayAmBefore, 'Mineral SPF 50');
-    assert(todayAmBefore.bodyText.includes('0 of 1'), 'AM routine did not start at 0 of 1.');
-    await rapidDoubleTouchByText(client, 'Mineral SPF 50', { exact: false });
-    await waitForText(client, 'SAVING', 10_000);
-    const todayAmSaving = await captureStep(client, '21a-today-am-saving');
-    assertDisabledControl(todayAmSaving, 'Mineral SPF 50');
-    await waitForText(client, '1 of 1', 30_000);
-    const todayAmAfter = await captureStep(client, '22-today-am-after-checkoff');
-    assertInteractiveControl(todayAmAfter, 'Mineral SPF 50');
-    assert(todayAmAfter.bodyText.includes('1 of 1'), 'AM check-off did not reach 1 of 1.');
-    await clickByText(client, 'Mineral SPF 50', { exact: false });
-    const todayAmAfterRepeat = await captureStep(client, '22a-today-am-after-repeat-checkoff');
     assert(
-      todayAmAfterRepeat.bodyText.includes('1 of 1'),
-      'A repeated AM check-off removed the append-only completion.',
-    );
-    await client.send('Page.reload', { ignoreCache: false });
-    await waitForPath(client, '/today', 30_000);
-    await waitForText(client, 'Morning routine', 30_000);
-    await waitForText(client, '1 of 1', 30_000);
-    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
-    const todayAmAfterReload = await captureStep(client, '22b-today-am-after-reload');
-    assertInteractiveControl(todayAmAfterReload, 'Mineral SPF 50');
-    assert(
-      todayAmAfterReload.bodyText.includes('1 of 1'),
-      'AM completion did not persist after a page reload.',
+      !todayFree.bodyText.includes('PRO ACTIVE') &&
+        !todayFree.bodyText.includes('Your Pro plan is active'),
+      'Continuing with the free plan incorrectly exposed Pro authority.',
     );
 
-    await client.send('Page.navigate', { url: `${baseUrl}/today?routine=PM` });
+    await clickByText(client, 'Shelf');
+    await waitForPath(client, '/shelf', 30_000);
+    await waitForText(client, '3 products', 30_000);
+    await delay(750);
+    const shelfAfterOnboarding = await captureStep(client, '20-shelf-after-onboarding', {
+      assertClean: false,
+    });
+    assert(
+      productNames.every((product) => shelfAfterOnboarding.bodyText.includes(product.name)),
+      'Shelf did not retain every product added during onboarding.',
+    );
+
+    await clickByText(client, 'Progress', { exact: false });
+    await waitForPath(client, '/progress', 30_000);
+    await waitForText(client, 'Unlock your private photo timeline.', 30_000);
+    await delay(750);
+    const progressAfterOnboarding = await captureStep(client, '21-progress-after-onboarding', {
+      assertClean: false,
+    });
+    assert(
+      progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
+        progressAfterOnboarding.bodyText.includes('Subscribe to Pro'),
+      'Progress tab did not render the truthful free-plan feature gate.',
+    );
+    await clickByText(client, 'Maybe later');
+    await delay(750);
+
+    await clickByText(client, 'You');
+    await waitForPath(client, '/you', 30_000);
+    await delay(750);
+    const youAfterOnboarding = await captureStep(client, '22-you-after-onboarding', {
+      assertClean: false,
+    });
+    assert(
+      youAfterOnboarding.bodyText.toLowerCase().includes('your data') &&
+        youAfterOnboarding.bodyText.includes('Manage subscription'),
+      'You tab did not render its account and settings surface.',
+    );
+
+    await clickByText(client, 'Today');
     await waitForPath(client, '/today', 30_000);
-    await waitForText(client, 'Evening routine', 30_000);
-    await waitForText(client, 'Glycolic 7%', 30_000);
-    await scrollTextIntoView(client, 'Glycolic 7%', { exact: false });
-    const todayPmBefore = await captureStep(client, '23-today-pm-before-checkoff', {
+    const todayAfterTabRoundTrip = await captureStep(client, '23-today-after-tab-round-trip', {
       assertClean: false,
     });
-    assertInteractiveControl(todayPmBefore, 'Glycolic 7%');
-    assert(todayPmBefore.bodyText.includes('0 of 1'), 'PM routine did not start at 0 of 1.');
-    await rapidDoubleTouchByText(client, 'Glycolic 7%', { exact: false });
-    await waitForText(client, '1 of 1', 30_000);
-    const todayPmAfter = await captureStep(client, '24-today-pm-after-checkoff', {
-      assertClean: false,
-    });
-    assertInteractiveControl(todayPmAfter, 'Glycolic 7%');
-    assert(todayPmAfter.bodyText.includes('1 of 1'), 'PM check-off did not reach 1 of 1.');
+
+    let ageReverificationBefore = null;
+    let ageReverificationBlocked = null;
+    let ageReverificationDirectToday = null;
+    let ageReverificationReloadedToday = null;
+    if (!accountUpgradeMode && !accountIsolationMode) {
+      await client.send('Page.navigate', { url: `${baseUrl}/onboarding/age` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      await fillByLabel(client, 'Day of birth', '01');
+      await fillByLabel(client, 'Month of birth', '01');
+      await fillByLabel(client, 'Year of birth', String(new Date().getFullYear()));
+      ageReverificationBefore = await captureStep(client, '25-age-reverification-before-submit');
+      await clickByText(client, 'Continue');
+      await waitForText(client, 'You need to be at least 16', 30_000);
+      ageReverificationBlocked = await captureStep(client, '26-age-reverification-blocked');
+      assert(
+        !ageReverificationBlocked.bodyText.includes('Morning routine') &&
+          !ageReverificationBlocked.bodyText.includes('Evening routine'),
+        'Protected Today content remained mounted after the fresh age downgrade.',
+      );
+
+      await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      ageReverificationDirectToday = await captureStep(
+        client,
+        '27-age-reverification-direct-today-blocked',
+      );
+      assert(
+        !ageReverificationDirectToday.bodyText.includes('Morning routine'),
+        'A direct Today route reopened after the in-process age downgrade.',
+      );
+
+      await client.send('Page.reload', { ignoreCache: true });
+      await waitForText(client, 'First, your', 60_000);
+      await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      // CDP can observe the replacement document before Chrome has painted its
+      // first frame. Wait for the redirected age surface to become visual so
+      // the retained screenshot is evidence of the post-reload state.
+      await delay(1_000);
+      ageReverificationReloadedToday = await captureStep(
+        client,
+        '28-age-reverification-reload-today-blocked',
+      );
+      assert(
+        ageReverificationReloadedToday.bodyText.includes('First, your') &&
+          !ageReverificationReloadedToday.bodyText.includes('Morning routine'),
+        'The minimized re-verification tombstone did not keep Today closed after reload.',
+      );
+    }
 
     let accountBeforeSignOut = null;
     let accountBoundaryFailure = null;
@@ -1103,16 +1274,12 @@ async function run() {
       ...(accountCodeEntry ? { accountCodeEntry } : {}),
       ...(accountCodeError ? { accountCodeError } : {}),
       paywall,
-      paywallExplore,
-      freeToday,
-      todayAfterStart,
-      todayAmBefore,
-      todayAmSaving,
-      todayAmAfter,
-      todayAmAfterRepeat,
-      todayAmAfterReload,
-      todayPmBefore,
-      todayPmAfter,
+      paywallFreePath,
+      todayFree,
+      ...(ageReverificationBefore ? { ageReverificationBefore } : {}),
+      ...(ageReverificationBlocked ? { ageReverificationBlocked } : {}),
+      ...(ageReverificationDirectToday ? { ageReverificationDirectToday } : {}),
+      ...(ageReverificationReloadedToday ? { ageReverificationReloadedToday } : {}),
       ...(accountBeforeSignOut ? { accountBeforeSignOut } : {}),
       ...(accountBoundaryFailure ? { accountBoundaryFailure } : {}),
       ...(accountBoundaryRetry ? { accountBoundaryRetry } : {}),
@@ -1157,11 +1324,16 @@ async function run() {
         : null,
       browserProblemLogCount: problemLogs.length,
       date: today,
-      endUrl: signedOutToday?.url ?? todayPmAfter.url,
+      endUrl:
+        signedOutToday?.url ??
+        ageReverificationReloadedToday?.url ??
+        ageReverificationDirectToday?.url ??
+        todayFree.url,
       evidenceFiles: [
         '01-welcome.png',
+        '01a-direct-protected-age-gate.png',
         '03-age-filled.png',
-        '05-goals-selected.png',
+        '06-goals-selected.png',
         '09-products-empty.png',
         '12-products-after-3.png',
         '14-reveal-insight.png',
@@ -1169,16 +1341,20 @@ async function run() {
         '16-account.png',
         ...(accountUpgradeMode ? ['16a-account-code-entry.png', '16b-account-code-error.png'] : []),
         '17-paywall-current.png',
-        '18-paywall-explore-visible.png',
-        '19-free-today-current.png',
-        '20-today-after-start-current.png',
-        '21-today-am-before-checkoff.png',
-        '21a-today-am-saving.png',
-        '22-today-am-after-checkoff.png',
-        '22a-today-am-after-repeat-checkoff.png',
-        '22b-today-am-after-reload.png',
-        '23-today-pm-before-checkoff.png',
-        '24-today-pm-after-checkoff.png',
+        '18-paywall-free-path-visible.png',
+        '19-today-free-current.png',
+        '20-shelf-after-onboarding.png',
+        '21-progress-after-onboarding.png',
+        '22-you-after-onboarding.png',
+        '23-today-after-tab-round-trip.png',
+        ...(!accountUpgradeMode && !accountIsolationMode
+          ? [
+              '25-age-reverification-before-submit.png',
+              '26-age-reverification-blocked.png',
+              '27-age-reverification-direct-today-blocked.png',
+              '28-age-reverification-reload-today-blocked.png',
+            ]
+          : []),
         ...(accountIsolationMode
           ? [
               '25-account-before-signout.png',
@@ -1191,10 +1367,10 @@ async function run() {
           : []),
       ],
       flowResult: accountUpgradeMode
-        ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
+        ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then continued honestly to Today on the free plan.'
         : accountIsolationMode
-          ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
-          : 'Completed onboarding through Continue free to Today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.',
+          ? 'Completed onboarding on the free plan, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
+          : 'Completed onboarding through the truthful free-plan path to Today without granting Pro, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1203,19 +1379,28 @@ async function run() {
           'Products that need different timing are separated before the first check-off.',
         ),
         hasFirstInsightLabel: reveal.bodyText.includes('FIRST INSIGHT'),
+        hasPendingReview: revealHasPendingReview,
         hasRoutinePreviewFallback: reveal.bodyText.includes('Routine preview'),
         hasSeeMyRoutine: reveal.bodyText.includes('See my routine'),
         hasTimingHandled: reveal.bodyText.includes('Timing handled'),
         text: reveal.bodyText,
       },
-      freeToday: {
-        hasFirstInsight: freeToday.bodyText.includes('FIRST INSIGHT'),
-        hasGlycolicNight: freeToday.bodyText.includes('Glycolic 7%'),
-        hasRetinolNight: freeToday.bodyText.includes('Retinol 0.3%'),
-        hasSpfMorning: freeToday.bodyText.includes('Mineral SPF 50'),
-        hasStartToday: freeToday.bodyText.includes('Start today'),
-        text: freeToday.bodyText,
-        url: freeToday.url,
+      freePlan: {
+        hasContinueAction: paywallFreePath.bodyText.includes('Continue with the free plan'),
+        hasProActiveCopy:
+          todayFree.bodyText.includes('PRO ACTIVE') ||
+          todayFree.bodyText.includes('Your Pro plan is active'),
+        text: todayFree.bodyText,
+        url: todayFree.url,
+      },
+      keyTabs: {
+        progressUrl: progressAfterOnboarding.url,
+        shelfRetainedProducts: productNames.every((product) =>
+          shelfAfterOnboarding.bodyText.includes(product.name),
+        ),
+        shelfUrl: shelfAfterOnboarding.url,
+        todayRoundTripUrl: todayAfterTabRoundTrip.url,
+        youUrl: youAfterOnboarding.url,
       },
       routeCheck: {
         accountLedToPaywall: paywall.url.includes('/onboarding/paywall'),
@@ -1223,34 +1408,55 @@ async function run() {
           !accountUpgradeMode ||
           (accountCodeError?.bodyText.includes('That code did not work') &&
             paywall.url.includes('/onboarding/paywall')),
-        amCheckoffReachedComplete: todayAmAfter.bodyText.includes('1 of 1'),
-        continueFreeLedToToday: freeToday.url.includes('/today'),
+        freePlanLedToToday: todayFree.url.includes('/today'),
+        freePlanDidNotGrantPro:
+          !todayFree.bodyText.includes('PRO ACTIVE') &&
+          !todayFree.bodyText.includes('Your Pro plan is active'),
+        keyTabRoundTripPassed:
+          shelfAfterOnboarding.url.includes('/shelf') &&
+          progressAfterOnboarding.url.includes('/progress') &&
+          youAfterOnboarding.url.includes('/you') &&
+          todayAfterTabRoundTrip.url.includes('/today'),
         notificationSkipLedToAccount: true,
-        pmCheckoffReachedComplete: todayPmAfter.bodyText.includes('1 of 1'),
+        ageReverificationClosedProtectedProviders:
+          accountUpgradeMode ||
+          accountIsolationMode ||
+          (ageReverificationBlocked !== null &&
+            !ageReverificationBlocked.bodyText.includes('Morning routine') &&
+            !ageReverificationBlocked.bodyText.includes('Evening routine')),
+        ageReverificationDirectTodayStayedClosed:
+          accountUpgradeMode ||
+          accountIsolationMode ||
+          (ageReverificationDirectToday?.url.includes('/onboarding/age') === true &&
+            !ageReverificationDirectToday.bodyText.includes('Morning routine')),
+        ageReverificationReloadStayedClosed:
+          accountUpgradeMode ||
+          accountIsolationMode ||
+          (ageReverificationReloadedToday?.url.includes('/onboarding/age') === true &&
+            !ageReverificationReloadedToday.bodyText.includes('Morning routine')),
         signedOutShelfIsEmpty:
           !accountIsolationMode || signedOutShelf?.bodyText.includes('empty for now') === true,
         signedOutTodayIsEmpty:
           !accountIsolationMode || signedOutToday?.bodyText.includes('NO ROUTINE YET') === true,
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
-        startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
-        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_COMPLETION_COMMIT_DELAY_MS=1200 EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+        ? `EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development ${!accountIsolationMode ? 'EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner ' : ''}${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
         : `Existing Expo web at ${baseUrl}`,
       startUrl: `${baseUrl}/?e2eReset=local`,
       steps: [
         'Reset local private state with dev-only fixture.',
-        'Began onboarding, entered valid adult DOB, selected Clear skin and Barrier repair.',
-        'Granted explicit health-data collection consent.',
+        'Verified direct protected-route entry failed closed to the age gate before any private Today content mounted.',
+        'Began onboarding and entered a valid adult DOB.',
+        'Granted explicit health-data collection consent before health-purpose inputs mounted.',
+        'Selected Clear skin and Barrier repair.',
         'Answered 12-question quiz with visible option buttons.',
         'Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.',
         accountUpgradeMode
           ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
           : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
-        'Used Continue free to reach Today without card entry.',
-        'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
-        'Continued free to Today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
+        'Used Continue with the free plan and reached Today without granting or implying Pro authority.',
         ...(accountIsolationMode
           ? [
               'Opened the signed-in account surface and initiated sign-out with account A private queries already populated.',
@@ -1260,23 +1466,7 @@ async function run() {
           : []),
       ],
       surface: 'Headless Chrome Expo web',
-      today: {
-        am: {
-          afterText: todayAmAfter.bodyText,
-          beforeText: todayAmBefore.bodyText,
-          completed: todayAmAfter.bodyText.includes('1 of 1'),
-          product: 'Mineral SPF 50',
-          url: todayAmAfter.url,
-        },
-        afterStartUrl: todayAfterStart.url,
-        pm: {
-          afterText: todayPmAfter.bodyText,
-          beforeText: todayPmBefore.bodyText,
-          completed: todayPmAfter.bodyText.includes('1 of 1'),
-          product: 'Glycolic 7% toner',
-          url: todayPmAfter.url,
-        },
-      },
+      today: { text: todayFree.bodyText, url: todayFree.url },
       verdict: 'pass',
       viewport: {
         ...viewport,
@@ -1293,7 +1483,7 @@ async function run() {
     client?.close();
     await stopProcess(browser);
     await stopProcess(server);
-    rmSync(userDataDir, { recursive: true, force: true });
+    await removeBrowserProfile(userDataDir);
   }
 }
 

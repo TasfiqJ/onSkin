@@ -1,0 +1,20 @@
+{
+  "artifactPrefix": "manual-barcode-validation-iphone-390x844",
+  "completedAt": "2026-07-22T06:05:02.100Z",
+  "error": null,
+  "fixture": "manual_barcode_validation",
+  "fixtureGroup": "ocr-capture-failure",
+  "nativeDeviceProof": false,
+  "route": "/shelf/manual",
+  "scenarioId": "manual-barcode-validation",
+  "startedAt": "2026-07-22T06:04:53.557Z",
+  "surface": "expo-web",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-390x844",
+    "width": 390,
+    "height": 844
+  },
+  "browserFailures": [],
+  "endUrl": "http://localhost:8560/shelf/d6dc1150-4dc8-4149-b92c-f53c34af5cd0"
+}

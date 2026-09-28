@@ -1,5 +1,4 @@
-inci_name,display_name,cas_number,ec_number,annex_status,synonyms
-NIACINAMIDE,Niacinamide,98-92-0,202-713-4,,Nicotinamide
-RETINOL,Retinol,68-26-8,200-683-7,restricted,Vitamin A
-ZINC OXIDE,Zinc Oxide,1314-13-2,215-222-5,uv_filter,
-
+inci_name,display_name,cas_number,ec_number,annex_status,synonyms,cosing_ref,record_status,glossary_decision
+NIACINAMIDE,Niacinamide,98-92-0,202-713-4,,Nicotinamide,FIXTURE-COSING-001,active,EU_2025_1175
+RETINOL,Retinol,68-26-8,200-683-7,restricted,Vitamin A,FIXTURE-COSING-002,active,EU_2025_1175
+ZINC OXIDE,Zinc Oxide,1314-13-2,215-222-5,uv_filter,,FIXTURE-COSING-003,active,EU_2025_1175

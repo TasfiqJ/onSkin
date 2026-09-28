@@ -26,10 +26,21 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - Wrong match and no match are understandable.
 - Source and confidence labels are visible where data is not first-party.
 - Impossible/future opened dates cannot save; unopened units retain no opened date.
-- PAO/expiry labels distinguish explicitly confirmed label, reviewed catalog, printed date, and unknown/estimate sources.
-- Printed expiry versus opened-date-plus-PAO uses the actual winning date source.
-- Re-add creates a new unit UUID, archives the old package, and does not inherit its printed expiry.
-- Replenishment uses tracked freshness or user-marked-finished history; alerts stay off until explicit Settings opt-in.
+- Unopened + printed date surfaces `printed`; unopened without one surfaces `unknown`, no date, and no freshness signal.
+- Opened + winning printed date surfaces `printed`; opened + winning explicit label or reviewed catalog PAO surfaces `pao_computed` with its exact `label` or `catalog` source.
+- Actionable `printed` means the user explicitly recorded or reconfirmed the date from this physical package. Product-level catalog expiry rows have no lot/package binding and never populate Shelf `expiryDate`.
+- V1/catalog-linked dates with ambiguous package origin survive only in the legacy-unverified quarantine for user reconfirmation; they must not drive badges, filters, recommendations, notifications, or replacement prompts.
+- Direct product-label entry alone persists Shelf `label`; reviewed catalog-delivered `label`, `brand_label`, or `catalog` evidence persists Shelf `catalog`, and historical label copy never claims who entered it.
+- New catalog/Shelf-v2 PAO accepts exact integer months `1..120`; `120` remains eligible and `121` fails closed. Treat the ceiling only as technical input validation, never a shelf-life claim.
+- Printed versus opened-date-plus-PAO uses the actual earlier candidate; an exact tie resolves to `printed`.
+- An externally reviewed catalog-linked category fallback surfaces `estimated` and visibly approximate; `unknown` remains a separate no-date/no-estimate state.
+- Current category-only catalog payloads and v1 upgrades fail to `unknown` because they cannot prove `product_categories` authority. Do not enable `estimated` intake until an exact bounded server-attested category marker retained locally, the database guard, and named cosmetic-chemistry review prove the exact reviewed non-sunscreen rule.
+- Exactly one reviewed matching-source/region product-specific catalog evidence row is required; same-month duplicates fail closed, while a category row does not invalidate one unique product-specific winner.
+- Provenance decoding independently rejects a noncanonical product/source UUID, unreviewed product, quality below `usable`, or missing normalized product region, even when called outside the production network decoder.
+- Category estimate and unknown never drive countdown, expired, Expiring-filter, or replenishment state. No sunscreen-specific numeric fallback or universal printed-date assumption exists.
+- Re-add creates a new unit UUID, archives the old package, retains product/PAO provenance, clears inherited package-specific date evidence, and requires an explicit **Just opened it / exact past date / Not opened yet** choice.
+- Canonical local schema-v1 bytes are unchanged after read and failed mutation; the first successful authorized atomic mutation writes canonical v2. Future/non-canonical envelopes remain byte-preserved and reject mutation.
+- Replenishment uses only trusted printed or label/catalog-PAO freshness, or user-marked-finished history; alerts stay off until explicit Settings opt-in.
 - Offline add/edit/delete does not corrupt local shelf.
 
 ## Intelligence and recommendations
@@ -44,6 +55,9 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 
 - AM/PM plan persists after app restart.
 - Check-off works offline, then online, without duplicate records.
+- Concurrent final PM check-offs use the atomic post-mutation snapshot and make
+  exactly one cycle-night analytics decision; repeated same-key taps make one
+  insertion and one routine-check-off decision.
 - Undo/re-check behaves predictably.
 - Timezone and date rollover do not reset the wrong day.
 - Recovery/pause/skipped states do not contradict the routine.
@@ -54,7 +68,9 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - App lock gates existing photo timeline.
 - Settings and locked Progress label photo storage as device-only; no cloud-backup control is exposed.
 - Saving a photo emits no automatic image or metadata request to Supabase under any current UI state.
-- Trend opt-in is hidden unless `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
+- Trend opt-in and results remain unavailable even when
+  `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`: literal capability, flag, and
+  machine admission are zero until a versioned real-engine successor exists.
 - No AI score/grade/age/percent wording appears.
 
 ## Reminders
@@ -77,7 +93,8 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - `/commerce/*`, `/ask/*`, `/trend/*`, `/routine/widgets`, `/community/ask`, `/community/people-like-you`, and `/share/conflict/*` are unavailable by default.
 - You tab does not show deferred rows by default.
 - Today does not show Ask teaser by default.
-- Progress does not show trend insight or opt-in by default.
+- Progress does not show any Trend insight or opt-in under the current
+  zero-admission contract.
 - Where-to-buy rows return null by default.
 
 ## Share card
@@ -100,14 +117,18 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   gates and upstream evidence packets that produced it.
 
 - 2026-07-11: Codex in-app browser Expo web at 360 x 640 and 390 x 844
-  completes the Shelf freshness and replacement provenance lifecycle. It covers
+  produced historical Shelf freshness/replacement UI evidence, including
   onboarding handoff, invalid/future dates, unopened state, explicit open-jar
-  PAO, winning expiry-source precedence, reload, new-UUID replacement, archived
-  package history, opt-in notification posture, and supported-floor geometry.
-  Two discovered UI defects were fixed and rerun. Evidence is in
-  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`;
-  native encrypted storage/relaunch, notifications, accessibility, live
-  migration/RLS, reviewed catalog rows, and named chemistry review remain open.
+  PAO, precedence, reload, new-UUID replacement, archived package history, and
+  geometry. Evidence is in
+  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
+  That packet predates CAT-07's explicit replacement opening choice,
+  non-actionable reviewed-category estimate, separate unknown state, and
+  byte-preserving v1→v2 local-envelope contract. It is stale for current
+  acceptance. Green integrated source checks, native encrypted-storage/relaunch
+  and physical-device accessibility evidence, hosted migration/RLS/live catalog
+  truth-table readback, notifications, and named chemistry/legal review remain
+  open. CAT-07 is `in_progress`, not complete.
 
 - 2026-07-06: Vitest covers `shippableRules()` production withholding/reviewed
   pass-through and `generatePlan()` default production behavior for an unreviewed
@@ -183,18 +204,18 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   VoiceOver/TalkBack, or a stable modal-open browser run.
 - 2026-07-07: Expo web E2E at 320 x 568 covers runtime brand identity on
   `/ask`, `/paywall/upsell?feature=full_routine`, and
-  `/settings/subscription`: the checked surfaces render `Ask RoutineKind` and
-  `RoutineKind Pro`, no visible `OnSkin` labels appear, and browser console
+  `/settings/subscription`: the checked surfaces render `Ask Layerwell` and
+  `Layerwell Pro`, no visible `Layerwell` labels appear, and browser console
   errors are empty. `npm run brand:audit:strict` also reports zero
   public-launch-risk and zero review-needed references. Evidence is in
   `test-results/human-e2e/2026-07-07/runtime-brand-identity/`; it does not
   replace final brand/legal clearance, native identifier QA, store listing QA, or
   final-domain/share-card QA.
 - 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the
-  public-copy smoke with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind`.
+  public-copy smoke with `EXPO_PUBLIC_APP_DISPLAY_NAME=Layerwell`.
   `/onboarding/age`, `/s/sharecard01`, `/shelf/search`, and `/settings/timing`
-  show `RoutineKind`, all six captured states including free `/routine/widgets`
-  before and after `Explore first. 7 days of Pro` show no visible `OnSkin`, the
+  show `Layerwell`, all six captured states including free `/routine/widgets`
+  before and after `Explore first. 7 days of Pro` show no visible `Layerwell`, the
   no-card Pro week reaches the widgets deferred surface (`Widgets are not in
 this beta` / `Back to Today`), visible controls are 48 px+, horizontal
   overflow is zero, and current-origin browser warn/error logs are empty.
@@ -224,31 +245,22 @@ this beta` / `Back to Today`), visible controls are 48 px+, horizontal
   `test-results/human-e2e/2026-07-08/full-routine-intelligence-current/`; this
   does not replace native iOS/Android safe-area, screen-reader, Dynamic Type,
   RevenueCat, or real non-example shelf/profile beta QA.
-- 2026-07-07: Expo web E2E at 320 x 568 covers local Trend route recovery in
-  both launch-gated and enabled modes. Default `/trend/optin` and
-  `/trend/fairness` show the deferred Trend surface with `Back to Progress` and
-  return to `/progress`; the enabled local-only consent fixture starts the
-  `Read my progress` switch off, toggles on/off, opens fairness after a user-like
-  scroll, returns nested/direct fairness to `/trend/optin`, and returns direct
-  opt-in to `/progress`, with zero horizontal overflow and no browser errors.
-  Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`; it
-  does not replace native photo/toggle QA, live authenticated consent-ledger/RLS
-  evidence, fairness validation, or final legal consent-copy review.
-- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers installed-base
-  Trend reconsent with populated local Progress photos and no
-  `photo_trend_insights` consent. A clean-origin returning photo user sees
-  `12 weeks · 3 photos · all on this phone` while the Trend insight is hidden;
-  the no-score refusal remains visible with optional/off-by-default opt-in copy;
-  `/trend/optin` starts with `Read my progress` off and separate revocable
-  consent copy; one explicit switch tap sets `aria-checked=true`; and reopening
-  Progress renders the on-device Trend card. The scoped Trend output has no
-  score, grade, skin age, or percentage, visible controls are 48 px+, and
-  horizontal overflow is zero. Evidence is in
-  `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/`;
-  focused tests now ensure a configured consent ledger with legacy
-  `photo_capture` but no `photo_trend_insights` fails closed. This does not
-  replace native secure-storage/biometric-lock QA or live Supabase
-  consent-ledger/RLS evidence.
+- 2026-07-07 and 2026-07-08 enabled-fixture Trend observations are historical
+  regression context only. They do not describe the PHOTO-05A contract and
+  cannot support engine, consent, fairness, privacy, device, store, or launch
+  acceptance. PHOTO-05A removes the simulated output and positive consent
+  path. Current direct `/trend/optin` and `/trend/fairness` entries must retain
+  their exact URLs, show only the complete unavailable recovery state, and
+  return to Progress; Progress must retain its private photo timeline and
+  no-score explanation without a Trend entry or result.
+- Exact-current PHOTO-05A human-simulated E2E remains required. Run with every
+  historical environment, development, E2E, consent, positive-delta, tone,
+  fixture, legacy-state, domain, and QA override enabled. Verify zero consent
+  controls, zero results, zero photo/profile/tone/Trend-store reads, zero
+  simulated delta/MDC/fairness/narrative evaluation, zero positive writes,
+  zero content analytics, zero network/native/file side effects, and safe
+  recovery at all supported iPhone viewports. Explicit legacy withdrawal
+  cleanup must be tested separately and must never activate Trend.
 - 2026-07-07: Codex in-app browser Expo web E2E at 320 x 568 covers the
   first-use `/progress/capture` local-only consent gate after the safe-area
   overlay hardening. The gate renders complete on-device/no-faceprint/cloud-
@@ -354,12 +366,18 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it does not
   replace native iOS/Android home-indicator, Dynamic Type, VoiceOver, or
   TalkBack QA.
-- 2026-07-07: Expo web E2E at 320 x 568 covers commerce trust route recovery in
+- **COM-01A supersession (2026-07-29):** The next two commerce entries are
+  historical evidence for source that no longer has runtime authority. The
+  `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED` flag is retired, positive commerce UI
+  cannot be reproduced from current source, and those packets cannot satisfy a
+  current launch gate. The literal-zero checkpoint and its honestly bounded
+  current web observation are authoritative.
+- 2026-07-07: Historical Expo web E2E at 320 x 568 covered commerce trust route recovery in
   default deferred and enabled local modes. Default `/commerce/stacks`,
   `/commerce/transparency`, `/commerce/consent`, and
   `/commerce/stack/sensitive-skin-starter-set` show the deferred beta surface and
   return `Back to You` to `/you`. With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`
-  and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, direct
+  and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://layerwell.app`, direct
   transparency/stacks/consent recover to `/you`, direct stack detail recovers to
   `/commerce/stacks`, stack hierarchy keeps paid-link disclosure and 48 px
   transparency control visible, unavailable stack recovery exposes no retailer
@@ -372,7 +390,7 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   replace real retailer link handoff/failure QA, native modal/outbound-link QA,
   ShopMy or fallback partner approval, source-cleared catalog QA, final legal
   paid-link consent copy, or production domain verification.
-- 2026-07-08: Source-contract and Expo web follow-up hardens the enabled
+- 2026-07-08: Historical source-contract and Expo web follow-up hardened the enabled
   `/commerce/consent` MHMDA consent sheet for native safe areas and modal
   semantics. With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`, in-app browser
   evidence at 320 px verifies one `Before we show where to buy` dialog with
@@ -387,7 +405,7 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, direct
   `/paywall/upsell?feature=full_routine` renders row-local `Link unavailable`
   after Terms/Privacy failure and a visible restore-empty message after Restore.
-  Direct `/settings/subscription` renders store-backed `RoutineKind Pro`,
+  Direct `/settings/subscription` renders store-backed `Layerwell Pro`,
   `Manage in App Store`, Restore, Terms, and Privacy; failed billing management
   renders visible recovery copy and policy/restore failures stay on the current
   surface. Paywall compliance controls are 48 px+ tall, subscription rows are
@@ -674,7 +692,7 @@ FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`;
   it does not replace native iOS/Android share-sheet and encrypted export QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers Ask route parity: `/ask`
-  renders the free deterministic `Ask RoutineKind` advisor, a 48 px composer
+  renders the free deterministic `Ask Layerwell` advisor, a 48 px composer
   and Send control, and the disclosure footer with zero horizontal overflow;
   `/ask/consent` renders cloud-Ask deferred beta copy plus a 56 px `Back to Ask`
   CTA that returns to `/ask`. Evidence is in
@@ -796,10 +814,20 @@ FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   Shelf bug where `View archive (1)` was covered by the floating tab bar, and
   reruns the archive path so `/shelf/archive` opens with the finished product
   visible. Evidence and the bug report are in
-  `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; this does
-  not replace native barcode camera/OCR QA, live Open Beauty Facts lookup,
-  hosted Supabase `shelf_scans` outbox-RPC/RLS/replay evidence, or real-device safe-area and
-  screen-reader QA.
+  `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; this is
+  historical evidence and does not replace first-party hosted catalog,
+  migration `0059`, lookup-observability, physical barcode camera/OCR,
+  real-device safe-area, or screen-reader QA. Open Beauty Facts remains an
+  offline ingestion source only, and legacy `shelf_scans` is purged and sealed.
+- 2026-07-18: Governed deterministic Expo-web CAT-04 evidence passes 45/45
+  catalog search, scan, reporting, permission, validation, and recovery
+  scenario executions plus 18/18 explicit-consent bootstraps across 375 x 667,
+  390 x 844, and 430 x 932. The 365-file packet includes 144 screenshots and
+  reports zero browser failures. Evidence is in
+  `test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/`. It has
+  `nativeDeviceProof=false` and does not clear hosted restart-to-ready,
+  migration/RLS/data-rights/observability, physical camera/OCR/accessibility,
+  professional review, or App Store gates.
 - 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the Shelf
   opened-date and replenishment boundary branch. `/shelf/opened` shows all three
   core opened-state choices before PAO/save controls on a short phone, a

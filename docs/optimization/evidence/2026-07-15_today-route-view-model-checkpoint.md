@@ -41,7 +41,7 @@ The total source-level query-observer graph falls by 8 of 17 observers (about 47
 - Completion read/write work is owner-generation bound. An old-scope retry cannot erase a newer scope's failure, and delayed post-reservation haptic/review/cycle effects are suppressed after owner replacement.
 - Completion read or write uncertainty replaces the routine with the named `Check-ins unavailable` recovery surface; unreadable bytes are not represented as `0 of N` or reset.
 - Recommendation dismissal persistence is single-flight outside the gap-prompt lifetime. Route-owned success/failure publication survives prompt/query/phase remounts, while stale-owner settlement publishes no callback, cache update, or reset.
-- The private-data registry now contains 47 exhaustive entries, including the owner-bound `onskin.cycleNightAnalytics.v1` receipt ledger and its export/cleanup contract.
+- The private-data registry now contains 47 exhaustive entries, including the owner-bound `layerwell.cycleNightAnalytics.v1` receipt ledger and its export/cleanup contract.
 
 ## Commands And Results
 

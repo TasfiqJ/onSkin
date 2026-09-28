@@ -4,7 +4,10 @@
 
 - Added central Phase 7 launch flags in `apps/mobile/src/lib/launch/phase7.ts`.
 - Added reusable deferred route screen in `apps/mobile/src/components/launch/DeferredSurface.tsx`.
-- Gated commerce, trend, cloud Ask, community posting, widgets/live activity, and share-card routes.
+- Gated commerce, cloud Ask, community posting, widgets/live activity, and
+  share-card routes. PHOTO-05A separately closes Trend with literal
+  capability, flag, and machine-admission values rather than relying on an
+  environment gate.
 - Added a production runtime guard requiring a real final brand domain before deferred Phase 7 surfaces can open.
 - Hid deferred entry points from Today, Progress, and You.
 - Hid where-to-buy affordances when commerce is disabled.
@@ -33,6 +36,18 @@
   shelf intake, reviewed guidance, routine builder, Today check-off, photos,
   reminders, payments, privacy controls, share cards, deferred surfaces, and
   analytics instead of accepting only broad Phase 7 evidence flags.
+- Today completion persistence now returns the exact post-insert day snapshot
+  from its serialized encrypted-store mutation. Cycle-night eligibility uses
+  that snapshot plus the exact scheduled PM keys, so concurrent final-step
+  writes produce one eligible event and repeated same-key taps remain one
+  insertion. Phase 7 hashes the persistence, decision helper, route, and tests.
+- PHOTO-05A removes the historical simulated-Trend output path. Progress has no
+  Trend result or consent entry, direct Trend routes recover truthfully, and
+  disabled hooks do not read photo/consent/profile/tone/Trend state, compute
+  simulated metrics, persist, call external/native/file services, or emit
+  content analytics. Positive consent grant refuses before mutation; explicit
+  legacy withdrawal cleanup remains a data-rights path only. The Phase 7 and
+  Phase 9 inventories bind the complete current Trend authority set.
 
 ## Seven-figure readiness assessment
 
@@ -56,8 +71,25 @@ The idea is not validated as a seven-figure business until a closed beta proves 
 - RevenueCat store QA evidence from Phase 6 strict gates.
 - Export/delete/withdraw QA evidence.
 - Beta evidence dashboard connected to real analytics.
+- A consent-aware durable analytics transport/outbox with delivery evidence;
+  the local event-decision fixes do not make the current sanitizer-only
+  `track()` path a production analytics pipeline.
 - Granular scenario QA evidence for every Phase 7 core-loop checklist group.
+- A real PHOTO-05 on-device result issuer, PHOTO-06 predeclared
+  diverse-condition calibration/fairness report, PHOTO-07 exact consent and
+  data-lifecycle disclosures, archive-identical local-only proof,
+  supported-iPhone/accessibility/performance evidence, and independent
+  `B-AI-ONDEVICE`, `B-AI-FAIRNESS`, and `B-AI-LEGAL` closure.
 
 ## Do-not-ship rule
 
-Do not ship public production while strict Phase 7 checks fail. Production public flags for commerce, community posting, trend, cloud Ask, widgets, share cards, or goal-active recommendations require a real final brand domain, matching Phase 7 evidence, and `PHASE7_SIGNED_OFF_BY`; closed beta may proceed only when route gates remain closed for unavailable surfaces and the beta cohort understands which surfaces are intentionally unavailable.
+Do not ship public production while strict Phase 7 checks fail. Production
+public flags for commerce, community posting, cloud Ask, widgets, share cards,
+or goal-active recommendations require a real final brand domain, matching
+Phase 7 evidence, and `PHASE7_SIGNED_OFF_BY`; closed beta may proceed only when
+route gates remain closed for unavailable surfaces and the beta cohort
+understands which surfaces are intentionally unavailable. Trend cannot be
+enabled by a public flag or Phase 7 signoff: the current machine admission is
+literal zero. A future positive successor requires a versioned result issuer
+and every PHOTO-05/06/07, professional, archive, native, privacy, legal, and
+release gate described in the PHOTO-05A checkpoint.

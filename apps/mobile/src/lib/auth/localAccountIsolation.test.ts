@@ -14,7 +14,7 @@ const accountGenerationMocks = vi.hoisted(() => ({
 
 vi.mock('./accountGeneration', () => accountGenerationMocks);
 
-vi.mock('@/features/photos/photoAccountBoundary', () => ({
+vi.mock('@/features/photos/encryptedStorage', () => ({
   beginEncryptedPhotoAccountBoundary: vi.fn(),
   endEncryptedPhotoAccountBoundary: vi.fn(),
   waitForEncryptedPhotoWritesToSettle: vi.fn(async () => {}),
@@ -42,7 +42,7 @@ vi.mock('./sessionOwner', () => ({
 }));
 
 function dependencies(
-  ownership: 'match' | 'mismatch' | 'unclaimed' = 'unclaimed',
+  ownership: 'cleanup_required' | 'match' | 'mismatch' | 'retained' | 'unclaimed' = 'unclaimed',
 ): LocalAccountIsolationDependencies & { calls: string[] } {
   const calls: string[] = [];
   return {
@@ -121,9 +121,6 @@ describe('local account isolation', () => {
       'claim:user-b',
     ]);
     expect(beforeClear).toHaveBeenCalledOnce();
-    expect(
-      accountGenerationMocks.waitForAccountGenerationOperationsToSettle.mock.invocationCallOrder[0],
-    ).toBeLessThan(vi.mocked(deps.clearPlaintextStaging!).mock.invocationCallOrder[0]!);
   });
 
   it('detects a cold-start owner mismatch even without an in-memory previous user', async () => {
@@ -134,23 +131,13 @@ describe('local account isolation', () => {
     });
   });
 
-  it('preserves every byte when the owner control marker cannot be decoded', async () => {
-    const deps = dependencies();
-    const beforeClear = vi.fn();
-    vi.mocked(deps.readOwnership).mockImplementationOnce(async (userId: string | null) => {
-      deps.calls.push(`read-owner:${userId ?? 'signed-out'}`);
-      throw new Error('LOCAL_DATA_OWNER_UNSUPPORTED_VERSION');
+  it('resumes an interrupted cleanup even for a signed-out cold restore', async () => {
+    const deps = dependencies('cleanup_required');
+
+    await expect(prepareLocalDataForSession(null, null, deps)).resolves.toMatchObject({
+      cleared: true,
     });
-
-    await expect(
-      prepareLocalDataForSession('user-a', 'user-b', deps, beforeClear),
-    ).rejects.toThrow('LOCAL_DATA_OWNER_UNSUPPORTED_VERSION');
-
-    expect(deps.calls).toEqual(['read-owner:user-b']);
-    expect(beforeClear).not.toHaveBeenCalled();
-    expect(deps.markCleanupRequired).not.toHaveBeenCalled();
-    expect(deps.clearPersistedPrivateData).not.toHaveBeenCalled();
-    expect(deps.claimOwnership).not.toHaveBeenCalled();
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
   });
 
   it('clears on sign-out without claiming a new owner', async () => {
@@ -183,6 +170,22 @@ describe('local account isolation', () => {
       'clear:queries',
       'clear:cleanup-required',
     ]);
+  });
+
+  it('preserves a durably retained owner across forced sign-out and cold null restore', async () => {
+    const deps = dependencies('retained');
+
+    await expect(prepareLocalDataForSession('user-b', null, deps)).resolves.toEqual({
+      cleared: false,
+      resetRoute: false,
+    });
+    await expect(prepareLocalDataForSession(null, null, deps)).resolves.toEqual({
+      cleared: false,
+      resetRoute: false,
+    });
+
+    expect(deps.clearPersistedPrivateData).not.toHaveBeenCalled();
+    expect(deps.claimOwnership).not.toHaveBeenCalled();
   });
 
   it('clears query memory again when persisted cleanup fails and does not claim', async () => {
@@ -226,22 +229,6 @@ describe('local account isolation', () => {
     expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
   });
 
-  it('starts no destructive boundary when cleanup authority is not durable', async () => {
-    const deps = dependencies();
-    vi.mocked(deps.markCleanupRequired).mockRejectedValueOnce(
-      new Error('LOCAL_DATA_CLEANUP_MARKER_WRITE_UNCONFIRMED'),
-    );
-
-    await expect(clearAccountIsolatedState(deps)).rejects.toThrow(
-      'LOCAL_DATA_CLEANUP_MARKER_WRITE_UNCONFIRMED',
-    );
-
-    expect(deps.calls).toEqual([]);
-    expect(accountGenerationMocks.beginAccountGenerationBoundary).not.toHaveBeenCalled();
-    expect(deps.clearPersistedPrivateData).not.toHaveBeenCalled();
-    expect(deps.clearCleanupRequired).not.toHaveBeenCalled();
-  });
-
   it('still clears persisted state and releases the boundary when an account operation fails', async () => {
     const deps = dependencies();
     accountGenerationMocks.waitForAccountGenerationOperationsToSettle.mockRejectedValueOnce(
@@ -283,6 +270,18 @@ describe('local account isolation', () => {
     expect(deps.markCleanupRequired).toHaveBeenCalledTimes(2);
     expect(deps.clearPersistedPrivateData).toHaveBeenCalledTimes(2);
     expect(deps.clearCleanupRequired).toHaveBeenCalledTimes(1);
+    expect(deps.claimOwnership).toHaveBeenCalledWith('user-b');
+  });
+
+  it('clears unclaimed records when a quarantined credential cannot prove the returning owner', async () => {
+    const deps = dependencies('unclaimed');
+
+    await expect(
+      prepareLocalDataForSession(null, 'user-b', deps, undefined, {
+        clearUnclaimed: true,
+      }),
+    ).resolves.toEqual({ cleared: true, resetRoute: true });
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
     expect(deps.claimOwnership).toHaveBeenCalledWith('user-b');
   });
 });

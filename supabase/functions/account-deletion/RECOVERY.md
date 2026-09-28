@@ -41,4 +41,4 @@ Any hosted schema error, GoTrue regression, or inability to run these tests is a
 
 ## External provider residual
 
-RevenueCat and PostHog do not expose an account-scoped write lock that OnSkin can enforce. Mobile freezes the initiating client, other Supabase sessions are revoked, database webhook/projection paths suppress tombstoned identities, and a final provider delete narrows the race. A provider event accepted independently after that final delete remains an external residual. Production evidence must confirm provider deletion behavior and retention settings; do not describe this as a cryptographic provider-write freeze.
+RevenueCat and PostHog do not expose an account-scoped write lock that Layerwell can enforce. Mobile freezes the initiating client, other Supabase sessions are revoked, database webhook/projection paths suppress tombstoned identities, and a final provider delete narrows the race. A provider event accepted independently after that final delete remains an external residual. Production evidence must confirm provider deletion behavior and retention settings; do not describe this as a cryptographic provider-write freeze.

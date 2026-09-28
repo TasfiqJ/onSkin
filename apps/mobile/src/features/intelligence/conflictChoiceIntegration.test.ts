@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
-const ROOT_DIR = fileURLToPath(new URL('../../../../../', import.meta.url));
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
@@ -13,7 +12,7 @@ describe('conflict choice integration contracts', () => {
   it('loads choices once at the Shelf boundary and separates detected from unresolved rows', () => {
     const source = readSource('features/shelf/useShelf.ts');
 
-    expect(source).toContain('loadConflictChoices()');
+    expect(source).toContain('getConflictChoices()');
     expect(source).toContain(
       'const unresolvedConflicts = filterUnresolvedConflicts(conflicts, conflictChoices);',
     );
@@ -37,62 +36,73 @@ describe('conflict choice integration contracts', () => {
     const cycle = readSource('features/scheduler/useCycle.ts');
     const scheduler = readSource('features/scheduler/orchestrate.ts');
 
-    expect(plan).toContain('shelf.data.conflictChoices');
+    expect(plan).toContain('shelf.data?.conflictChoices');
     expect(cycle).toContain('conflictChoices: shelf.data.conflictChoices');
     expect(cycle).toContain('subflags: i.engineProduct.subflags');
     expect(scheduler).toContain('choiceForConflict(choices, conflict)');
     expect(scheduler).toContain("conflict.rule.interactionType === 'safety'");
-    expect(scheduler).toContain('if (!canUseRoutineCadence())');
+    expect(scheduler).toContain('const cadencePolicy = shippableRoutineCadencePolicy();');
+    expect(scheduler).toContain('const guidanceCopy = shippableRoutineGuidanceCopy();');
+    expect(scheduler).toContain('if (!cadencePolicy || !guidanceCopy)');
   });
 
-  it('suppresses repeat separation copy for use-together while keeping the guided schedule firm', () => {
-    const today = readSource('app/(tabs)/today.tsx');
+  it('keeps future admitted choices version-matched without hardcoded product-detail guidance', () => {
+    const todayProjection = readSource('features/today/routineProjection.ts');
     const week = readSource('app/cycle/week.tsx');
     const whyTonight = readSource('app/cycle/why-tonight.tsx');
     const detail = readSource('app/shelf/[id].tsx');
 
-    expect(today).toContain('hasUseTogetherChoiceBetween(');
+    expect(todayProjection).toContain('hasUseTogetherChoiceBetween(');
     expect(week).toContain('hasUseTogetherChoiceBetween(');
     expect(whyTonight).toContain('Guided check-offs keep one potent active per night');
-    expect(detail).toContain('Guided check-offs stay on the reviewed one-active schedule.');
-    expect(detail).toContain("resolved ? 'Change →' : 'Review →'");
+    expect(detail).toContain('choiceForConflict(data.conflictChoices, c)');
+    expect(detail).toContain('{c.rule.copy.primaryActionLabel}');
+    expect(detail).not.toContain('Guided check-offs stay on the reviewed one-active schedule.');
+    expect(detail).not.toContain("resolved ? 'Change →' : 'Review →'");
   });
 
-  it('gives the durable server projection one canonical owner-derived identity', () => {
-    const migration = readFileSync(
-      `${ROOT_DIR}/supabase/migrations/20260718000051_conflict_choice_outbox_rpc.sql`,
-      'utf8',
-    );
+  it('keeps conflict choices local-only and emits no health-data server mirror', () => {
     const route = readSource('app/conflict/[ruleId].tsx');
-    const choices = readSource('features/intelligence/overrides.ts');
 
-    expect(migration).toContain('apply_conflict_choice_outbox_batch');
-    expect(migration).toContain('conflict_choice_mirror_versions');
-    expect(migration).toContain("v_status := 'retry'");
-    expect(migration).toContain("v_error_class := 'dependency'");
-    expect(migration).toContain("v_rule_interaction_type in ('safety', 'myth', 'synergy')");
-    expect(migration).toContain('for key share');
-    expect(migration).toContain('auth.uid()');
-    expect(route).not.toContain('mirrorConflictChoiceForOwner');
-    expect(choices).toContain(
-      'updatePrivateItemsTransactionally(\n      [KEY, SHELF_STORAGE_KEY, OUTBOX_STORAGE_KEY]',
-    );
-    expect(choices).toContain('enqueueShelfOutboxOperation(outbox, {');
-    expect(choices).toContain('enqueueConflictChoiceOutboxOperation(outbox, {');
+    expect(route).toContain('local-only');
+    expect(route).not.toContain('routine_conflicts');
+    expect(route).not.toContain('.upsert(');
+    expect(route).not.toContain('onConflict:');
   });
 
-  it('queues shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
+  it('requests a nonblocking review only after an exact reviewed choice is durable and dismissed', () => {
+    const route = readSource('app/conflict/[ruleId].tsx');
+    const saveIndex = route.indexOf('const conflictChoices = await recordChoice(conflict, choice)');
+    const dismissIndex = route.indexOf('onDismiss()', saveIndex);
+    const reviewIndex = route.indexOf(
+      "void requestReviewAfterValue('first_reviewed_conflict').catch(() => undefined)",
+      dismissIndex,
+    );
+
+    expect(saveIndex).toBeGreaterThan(-1);
+    expect(dismissIndex).toBeGreaterThan(saveIndex);
+    expect(reviewIndex).toBeGreaterThan(dismissIndex);
+    expect(route).not.toContain("await requestReviewAfterValue('first_reviewed_conflict')");
+  });
+
+  it('journals shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {
     const mutations = readSource('features/shelf/mutations.ts');
     const store = readSource('features/shelf/store.ts');
+    const worker = readSource('lib/offline/shelfMirrorQueue.ts');
 
-    expect(store).toContain('entityId: product.id');
-    expect(store).toContain("operationKind: 'upsert'");
+    expect(store).toContain('id: product.id,');
     expect(store).toContain('status: product.status');
     expect(store).toContain('finished_at: product.finishedAt');
-    expect(store).toContain('enqueueShelfOutboxOperation(outbox, {');
-    expect(store).toContain('updatePrivateItemsTransactionally([KEY, OUTBOX_STORAGE_KEY]');
-    expect(mutations).toContain('scheduleOutboxFlush()');
-    expect(mutations).not.toContain('mirrorShelfUpsertForOwner');
-    expect(mutations).not.toContain('mirrorShelfDeleteForOwner');
+    expect(store).toContain('appendMirrorUpsert(mirrorOutbox, product, ts)');
+    expect(store).toContain('appendMirrorDelete(mirrorOutbox, id, ts)');
+    expect(mutations).toContain('runHealthDataWriteOperation(expectedOwnerUserId, operation)');
+    expect(mutations).toContain('lease.assertCurrent()');
+    expect(mutations).not.toContain('.upsert(');
+    expect(mutations).not.toContain('.delete()');
+    expect(mutations).not.toContain("from('user_products')");
+    expect(worker).toContain("'sync_shelf_product'");
+    expect(worker).toContain('p_product_id:');
+    expect(worker).toContain('p_payload:');
+    expect(worker).not.toContain("from('user_products')");
   });
 });

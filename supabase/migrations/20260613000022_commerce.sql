@@ -52,7 +52,7 @@ create table public.creator_stacks (
   slug         text not null unique,
   title        text not null,
   subtitle     text,
-  curator      text not null,                                         -- 'RoutineKind editorial' | a named verified expert
+  curator      text not null,                                         -- 'Layerwell editorial' | a named verified expert
   curator_kind text not null default 'editorial'
     check (curator_kind in ('editorial', 'derm', 'creator')),
   reviewed_by  text,                                                  -- B-DERM-REVIEW: null until clinical sign-off

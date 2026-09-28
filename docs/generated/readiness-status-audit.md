@@ -1,7 +1,7 @@
 # Readiness Status Audit
 
-Generated: 2026-07-13T04:29:38.968Z
-Status: pass
+Generated: 2026-07-19T03:48:19.853Z
+Status: blocked
 Strict mode: yes
 
 This generated audit keeps the launch source-of-truth docs aligned with
@@ -13,18 +13,18 @@ Required release platforms: ios. Android release evidence: not_applicable.
 
 ## Summary
 
-- Evidence date: 2026-07-12
-- Expected mobile test baseline: 204 mobile test files / 2137 tests
-- Actual mobile test files found: 204
-- Blockers: 0
+- Evidence date: 2026-07-18
+- Expected mobile test baseline: 299 mobile test files / 3486 tests
+- Actual mobile test files found: 299
+- Blockers: 1
 - Warnings: 0
 
 ## Docs
 
 | Doc                      | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
 | ------------------------ | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
-| LAUNCH_READINESS.md      | 2026-07-12 | 2026-07-12    | yes                 | yes               | 0              | 0                |
-| BLOCKERS.md              | 2026-07-12 | 2026-07-12    | yes                 | yes               | 0              | 0                |
+| LAUNCH_READINESS.md      | 2026-07-18 | 2026-07-18    | yes                 | yes               | 0              | 0                |
+| BLOCKERS.md              | 2026-07-18 | 2026-07-18    | yes                 | yes               | 0              | 0                |
 | docs/TESTING_STRATEGY.md | n/a        | n/a           | n/a                 | n/a               | n/a            | 0                |
 
 ## Required Launch Commands
@@ -41,6 +41,8 @@ Required release platforms: ios. Android release evidence: not_applicable.
 - `npm run e2e:human:manifest:check`
 - `npm run docs:generated-packet-status-audit:check`
 - `npm run phase5:check-native-config`
+- `npm run phase5:widget-runtime-contract:smoke`
+- `npm run phase5:widget-lifecycle-evidence`
 - `npm run phase7:check-core-loop`
 - `npm run phase8:check-growth-store`
 - `npm run phase10:beta-analytics-audit`
@@ -49,7 +51,7 @@ Required release platforms: ios. Android release evidence: not_applicable.
 
 ## Blockers
 
-- None.
+- docs/e2e/generated/human-e2e-manifest.json status is blocked.
 
 ## Warnings
 

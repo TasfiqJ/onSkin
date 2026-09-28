@@ -1,9 +1,65 @@
 {
-  "generatedAt": "2026-07-08T19:38:07.298Z",
+  "generatedAt": "2026-07-22T17:40:37.702Z",
+  "schemaVersion": 2,
   "status": "fixture",
+  "source": "cosing",
+  "sourceComponentId": "cosing_reference_component",
+  "sourcePolicy": {
+    "policyId": "catalog-source-policy-v1",
+    "sha256": "55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4"
+  },
+  "sourceApproval": null,
+  "transformerCandidate": null,
+  "sourceSnapshot": {
+    "date": null,
+    "url": null,
+    "artifactSha256": "7bb4651229ab07aa7fd70f11168ddfcc41da75cd61279d7f0d413b1ea809e3a4",
+    "bytes": 390
+  },
+  "importMode": "fixture",
+  "parserVersion": "phase4-cosing-transform-v2",
+  "transformedPayloadContract": {
+    "contractId": "catalog-transformed-payload-v1",
+    "schemaVersion": 1,
+    "digestAlgorithm": "SHA-256",
+    "canonicalization": "canonical-json-sorted-object-keys",
+    "recordStage": "before-source-snapshot-date-enrichment",
+    "excludedRecordFields": [
+      "sourceSnapshotDate"
+    ],
+    "sourceSnapshotDateBinding": {
+      "signedApprovalPath": "artifact.snapshotDate",
+      "manifestPath": "sourceSnapshot.date",
+      "recordField": "sourceSnapshotDate"
+    }
+  },
+  "transformedPayloadSha256": "81172042f6df5c824df696f6f07eab6a448d341bf050490a77ed8886636598e7",
+  "projectedFields": [
+    "inci_name",
+    "display_name",
+    "cas_number",
+    "ec_number",
+    "annex_status",
+    "synonyms",
+    "cosing_ref",
+    "record_status",
+    "glossary_decision"
+  ],
+  "sourceIsolationMode": "provenance_tagged_reference_component",
+  "reuseBasis": {
+    "name": "European Commission reuse framework; source-specific and third-party rights review required",
+    "url": "https://eur-lex.europa.eu/eli/dec/2011/833/oj/eng"
+  },
+  "controls": {
+    "runtimeRequests": false,
+    "imagesIncluded": false,
+    "contributionBack": false,
+    "productionApprovalRequired": true,
+    "claimsAuthority": "informative_reference_only"
+  },
   "warning": "CosIng is informative only. Do not treat ingredient presence as approval or safety.",
-  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\scripts\\phase4\\fixtures\\cosing-sample.csv",
-  "inputSha256": "ebb22fd29c4265597fa0b791092bf9e546c93583934e56812200fb57ea4abfac",
+  "inputPath": "scripts/phase4/fixtures/cosing-sample.csv",
+  "inputSha256": "7bb4651229ab07aa7fd70f11168ddfcc41da75cd61279d7f0d413b1ea809e3a4",
   "totals": {
     "inputRows": 3,
     "ingredients": 3,
@@ -16,11 +72,17 @@
       "casNumber": "98-92-0",
       "ecNumber": "202-713-4",
       "annexStatus": null,
+      "sourceRef": "FIXTURE-COSING-001",
+      "sourceRecordStatus": "active",
+      "glossaryDecision": "EU_2025_1175",
       "source": "cosing",
+      "sourceComponentId": "cosing_reference_component",
+      "sourceArtifactSha256": "7bb4651229ab07aa7fd70f11168ddfcc41da75cd61279d7f0d413b1ea809e3a4",
       "reviewStatus": "unreviewed",
       "synonyms": [
         "Nicotinamide"
-      ]
+      ],
+      "sourceSnapshotDate": null
     },
     {
       "inciName": "RETINOL",
@@ -28,11 +90,17 @@
       "casNumber": "68-26-8",
       "ecNumber": "200-683-7",
       "annexStatus": "restricted",
+      "sourceRef": "FIXTURE-COSING-002",
+      "sourceRecordStatus": "active",
+      "glossaryDecision": "EU_2025_1175",
       "source": "cosing",
+      "sourceComponentId": "cosing_reference_component",
+      "sourceArtifactSha256": "7bb4651229ab07aa7fd70f11168ddfcc41da75cd61279d7f0d413b1ea809e3a4",
       "reviewStatus": "unreviewed",
       "synonyms": [
         "Vitamin A"
-      ]
+      ],
+      "sourceSnapshotDate": null
     },
     {
       "inciName": "ZINC OXIDE",
@@ -40,9 +108,15 @@
       "casNumber": "1314-13-2",
       "ecNumber": "215-222-5",
       "annexStatus": "uv_filter",
+      "sourceRef": "FIXTURE-COSING-003",
+      "sourceRecordStatus": "active",
+      "glossaryDecision": "EU_2025_1175",
       "source": "cosing",
+      "sourceComponentId": "cosing_reference_component",
+      "sourceArtifactSha256": "7bb4651229ab07aa7fd70f11168ddfcc41da75cd61279d7f0d413b1ea809e3a4",
       "reviewStatus": "unreviewed",
-      "synonyms": []
+      "synonyms": [],
+      "sourceSnapshotDate": null
     }
   ]
 }

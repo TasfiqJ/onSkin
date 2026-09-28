@@ -28,27 +28,27 @@ describe('photo time-lapse', () => {
   it('plays only real local frames in deterministic oldest-to-newest order', () => {
     expect(
       timelapseFrames([
-        photo('latest', '2026-06-24', 'file:///latest.onskinphoto'),
+        photo('latest', '2026-06-24', 'file:///latest.layerwellphoto'),
         photo('missing', '2026-05-01', null),
-        photo('same-day-b', '2026-04-01', 'file:///b.onskinphoto'),
+        photo('same-day-b', '2026-04-01', 'file:///b.layerwellphoto'),
         photo('blank', '2026-03-01', '   '),
-        photo('same-day-a', '2026-04-01', 'file:///a.onskinphoto'),
+        photo('same-day-a', '2026-04-01', 'file:///a.layerwellphoto'),
       ]),
     ).toEqual([
       {
         id: 'same-day-a',
         takenLocalDate: '2026-04-01',
-        localUri: 'file:///a.onskinphoto',
+        localUri: 'file:///a.layerwellphoto',
       },
       {
         id: 'same-day-b',
         takenLocalDate: '2026-04-01',
-        localUri: 'file:///b.onskinphoto',
+        localUri: 'file:///b.layerwellphoto',
       },
       {
         id: 'latest',
         takenLocalDate: '2026-06-24',
-        localUri: 'file:///latest.onskinphoto',
+        localUri: 'file:///latest.layerwellphoto',
       },
     ]);
   });

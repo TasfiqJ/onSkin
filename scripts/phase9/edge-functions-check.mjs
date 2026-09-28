@@ -72,7 +72,7 @@ if (errors.length === 0) {
       [
         'check',
         '--no-config',
-        '--node-modules-dir=auto',
+        '--node-modules-dir=none',
         `--lock=${lockPath}`,
         '--frozen=true',
         ...entrypoints,

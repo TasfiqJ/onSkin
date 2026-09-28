@@ -5,13 +5,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { REMINDER_COPY, SETTINGS_COPY } from '@/features/notifications/copy';
-import {
-  NotificationPreferenceAvailability,
-  NotificationPreferenceMutationFeedback,
-  useNotificationPreferenceRouteState,
-} from '@/features/notifications/NotificationPreferenceState';
-import { NotificationPreferenceSyncStatus } from '@/features/notifications/NotificationPreferenceSyncStatus';
-import type { NotifPrefs } from '@/features/notifications/store';
+import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
 import {
   motionAwareModalAnimation,
   useReduceMotionPreference,
@@ -32,25 +26,17 @@ for (let h = 0; h < 24; h++)
     TIMES.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
 
 type Field = 'am' | 'pm' | 'qstart' | 'qend';
-const FIELD_KEY = {
-  am: 'amTime',
-  pm: 'pmTime',
-  qstart: 'quietStart',
-  qend: 'quietEnd',
-} as const satisfies Record<Field, keyof NotifPrefs>;
 
 function TimePickerModal({
   field,
   value,
   onSelect,
   onClose,
-  disabled,
 }: {
   field: Field | null;
   value: string;
   onSelect: (hm: string) => void;
   onClose: () => void;
-  disabled: boolean;
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -107,8 +93,7 @@ function TimePickerModal({
                   accessibilityRole="button"
                   accessibilityLabel={`${title}, ${formattedTime}`}
                   accessibilityHint={`Sets ${title.toLowerCase()} to ${formattedTime}`}
-                  accessibilityState={{ disabled, selected: sel }}
-                  disabled={disabled}
+                  accessibilityState={{ selected: sel }}
                   onPress={() => onSelect(t)}
                   className="min-h-[48px] flex-row items-center justify-between py-2.5"
                 >
@@ -134,20 +119,16 @@ function TimePill({
   accessibilityLabel,
   label,
   onPress,
-  disabled = false,
 }: {
   accessibilityLabel: string;
   label: string;
   onPress: () => void;
-  disabled?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint="Opens time picker"
-      accessibilityState={{ disabled }}
-      disabled={disabled}
       onPress={onPress}
       className="min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px] px-3 py-1.5"
       style={{ backgroundColor: colors.greigeChip }}
@@ -161,35 +142,28 @@ function TimePill({
 
 export default function TimingScreen() {
   const { height } = useWindowDimensions();
-  const preference = useNotificationPreferenceRouteState();
-  const p = preference.preferenceState.status === 'ready' ? preference.preferenceState.prefs : null;
+  const { data: p } = useNotifPrefs();
+  const update = useUpdateNotifPrefs();
   const [picking, setPicking] = useState<Field | null>(null);
-  const pickerFallback = picking === 'qend' ? '07:00' : '22:00';
-  const currentValue =
-    p && picking ? ((p[FIELD_KEY[picking]] as string | null) ?? pickerFallback) : pickerFallback;
-  const amTimeLabel = p ? fmtTime(p.amTime) : '';
-  const pmTimeLabel = p ? fmtTime(p.pmTime) : '';
-  const quietStartTimeLabel = p ? (p.quietStart ? fmtTime(p.quietStart) : 'Off') : '';
-  const quietEndTimeLabel = p ? (p.quietEnd ? fmtTime(p.quietEnd) : 'Off') : '';
-  const quietHoursEnabled = p?.quietStart != null && p.quietEnd != null;
+  if (!p) return null;
+
+  const fieldKey: Record<Field, keyof typeof p> = {
+    am: 'amTime',
+    pm: 'pmTime',
+    qstart: 'quietStart',
+    qend: 'quietEnd',
+  };
+  const currentValue = picking ? ((p[fieldKey[picking]] as string | null) ?? '22:00') : '22:00';
+  const amTimeLabel = fmtTime(p.amTime);
+  const pmTimeLabel = fmtTime(p.pmTime);
+  const quietStartTimeLabel = fmtTime(p.quietStart ?? '22:00');
+  const quietEndTimeLabel = fmtTime(p.quietEnd ?? '07:00');
   const compactTiming = height < 460;
   const splitShortTiming = height < 380;
 
   function choose(hm: string) {
-    if (p && picking) preference.applyPatch({ [FIELD_KEY[picking]]: hm });
+    if (picking) update.mutate({ [fieldKey[picking]]: hm } as Parameters<typeof update.mutate>[0]);
     setPicking(null);
-  }
-
-  function toggleQuietHours() {
-    if (!p) return;
-    preference.applyPatch(
-      quietHoursEnabled
-        ? { quietStart: null, quietEnd: null }
-        : {
-            quietStart: p.quietStart ?? '22:00',
-            quietEnd: p.quietEnd ?? '07:00',
-          },
-    );
   }
 
   const discreetBody = REMINDER_COPY.pm_step.discreet;
@@ -216,217 +190,177 @@ export default function TimingScreen() {
           </Text>
         </View>
 
-        {p ? (
-          <>
-            <NotificationPreferenceMutationFeedback
-              failed={preference.mutationFailed}
-              retrying={preference.mutationPending}
-              onRetry={preference.retryLastPatch}
+        {/* time pickers */}
+        <View className="rounded-[18px] bg-paper-raised px-[18px]">
+          <View
+            className={
+              compactTiming
+                ? 'min-h-[48px] flex-row items-center justify-between py-0'
+                : 'flex-row items-center justify-between py-3.5'
+            }
+            style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
+          >
+            <Text variant="body" className="font-sans-semibold">
+              Morning
+            </Text>
+            <TimePill
+              accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}
+              label={amTimeLabel}
+              onPress={() => setPicking('am')}
             />
-            <NotificationPreferenceSyncStatus className="mb-4" />
-
-            {/* time pickers */}
-            <View className="rounded-[18px] bg-paper-raised px-[18px]">
-              <View
-                className={
-                  compactTiming
-                    ? 'min-h-[48px] flex-row items-center justify-between py-0'
-                    : 'flex-row items-center justify-between py-3.5'
-                }
-                style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
-              >
-                <Text variant="body" className="font-sans-semibold">
-                  Morning
-                </Text>
-                <TimePill
-                  accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}
-                  label={amTimeLabel}
-                  onPress={() => setPicking('am')}
-                  disabled={preference.mutationPending}
-                />
-              </View>
-              <View
-                className={
-                  compactTiming
-                    ? 'min-h-[48px] flex-row items-center justify-between py-0'
-                    : 'flex-row items-center justify-between py-3.5'
-                }
-              >
-                <Text variant="body" className="font-sans-semibold">
-                  Evening
-                </Text>
-                <TimePill
-                  accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}
-                  label={pmTimeLabel}
-                  onPress={() => setPicking('pm')}
-                  disabled={preference.mutationPending}
-                />
-              </View>
-            </View>
-
-            {/* quiet hours */}
-            <Text
-              variant="label"
-              tone="muted"
-              className={
-                splitShortTiming
-                  ? 'mb-1 ml-2 mt-2'
-                  : compactTiming
-                    ? 'mb-1.5 ml-2 mt-3'
-                    : 'mb-2 ml-2 mt-5'
-              }
-              style={{ fontSize: compactTiming ? 9.5 : 10, letterSpacing: 1 }}
-            >
-              QUIET HOURS
+          </View>
+          <View
+            className={
+              compactTiming
+                ? 'min-h-[48px] flex-row items-center justify-between py-0'
+                : 'flex-row items-center justify-between py-3.5'
+            }
+          >
+            <Text variant="body" className="font-sans-semibold">
+              Evening
             </Text>
-            <View
-              className={
-                compactTiming
-                  ? 'rounded-[18px] bg-paper-raised px-[18px] py-2'
-                  : 'rounded-[18px] bg-paper-raised px-[18px] py-4'
-              }
+            <TimePill
+              accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}
+              label={pmTimeLabel}
+              onPress={() => setPicking('pm')}
+            />
+          </View>
+        </View>
+
+        {/* quiet hours */}
+        <Text
+          variant="label"
+          tone="muted"
+          className={
+            splitShortTiming
+              ? 'mb-1 ml-2 mt-2'
+              : compactTiming
+                ? 'mb-1.5 ml-2 mt-3'
+                : 'mb-2 ml-2 mt-5'
+          }
+          style={{ fontSize: compactTiming ? 9.5 : 10, letterSpacing: 1 }}
+        >
+          QUIET HOURS
+        </Text>
+        <View
+          className={
+            compactTiming
+              ? 'rounded-[18px] bg-paper-raised px-[18px] py-2'
+              : 'rounded-[18px] bg-paper-raised px-[18px] py-4'
+          }
+        >
+          <View
+            className={compactTiming ? 'gap-2' : 'gap-3'}
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text
+              variant="body"
+              className="font-sans-semibold"
+              style={{ flexShrink: 1, minWidth: 0 }}
             >
-              <View
-                className={compactTiming ? 'gap-2' : 'gap-3'}
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text
-                  variant="body"
-                  className="font-sans-semibold"
-                  style={{ flexShrink: 1, minWidth: 0 }}
-                >
-                  {quietHoursEnabled ? SETTINGS_COPY.quietLabel : 'Quiet hours off'}
-                </Text>
-                <View className="flex-row items-center gap-2">
-                  <TimePill
-                    accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}
-                    label={quietStartTimeLabel}
-                    onPress={() => setPicking('qstart')}
-                    disabled={preference.mutationPending}
-                  />
-                  <Text tone="muted">→</Text>
-                  <TimePill
-                    accessibilityLabel={`Quiet hours end, ${quietEndTimeLabel}`}
-                    label={quietEndTimeLabel}
-                    onPress={() => setPicking('qend')}
-                    disabled={preference.mutationPending}
-                  />
-                </View>
-              </View>
-              <Text
-                variant="bodySm"
-                tone="muted"
-                className={compactTiming ? 'mt-1 text-[12px]' : 'mt-2'}
-                style={compactTiming ? { lineHeight: 15 } : undefined}
-              >
-                {quietHoursEnabled
-                  ? 'Nothing fires inside this window. Even your routine reminders wait until morning.'
-                  : 'Quiet hours are off until both a start and end time are set.'}
+              {SETTINGS_COPY.quietLabel}
+            </Text>
+            <View className="flex-row items-center gap-2">
+              <TimePill
+                accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}
+                label={quietStartTimeLabel}
+                onPress={() => setPicking('qstart')}
+              />
+              <Text tone="muted">→</Text>
+              <TimePill
+                accessibilityLabel={`Quiet hours end, ${quietEndTimeLabel}`}
+                label={quietEndTimeLabel}
+                onPress={() => setPicking('qend')}
+              />
+            </View>
+          </View>
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className={compactTiming ? 'mt-1 text-[12px]' : 'mt-2'}
+            style={compactTiming ? { lineHeight: 15 } : undefined}
+          >
+            {p.quietStart === p.quietEnd
+              ? 'Quiet hours are off because the start and end match.'
+              : 'Routine and weekly photo reminders scheduled inside this window move to its end. Event-triggered suggestions are skipped. Trial billing reminders follow the date shown at checkout.'}
+          </Text>
+        </View>
+
+        {/* lock-screen discretion */}
+        <Text
+          variant="label"
+          tone="muted"
+          className="mb-2 ml-2 mt-5"
+          style={{ fontSize: 10, letterSpacing: 1 }}
+        >
+          LOCK SCREEN
+        </Text>
+        <View className="rounded-[18px] bg-paper-raised px-[18px]">
+          <View
+            className="flex-row items-center justify-between py-3.5"
+            style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
+          >
+            <View className="flex-1 pr-3">
+              <Text variant="body" className="font-sans-semibold">
+                {SETTINGS_COPY.discreetLabel}
               </Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ disabled: preference.mutationPending }}
-                className="mt-2 min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
-                disabled={preference.mutationPending}
-                onPress={toggleQuietHours}
-                style={{ backgroundColor: colors.greigeChip }}
-              >
-                <Text variant="bodySm" className="font-sans-semibold">
-                  {quietHoursEnabled ? 'Turn off quiet hours' : 'Turn on quiet hours'}
-                </Text>
-              </Pressable>
+              <Text variant="bodySm" tone="muted">
+                {SETTINGS_COPY.discreetHint}
+              </Text>
             </View>
-
-            {/* lock-screen discretion */}
+            <View
+              className="rounded-[8px] px-3 py-1.5"
+              style={{ backgroundColor: colors.greigeChip }}
+            >
+              <Text className="font-sans-semibold" style={{ color: colors.clay, fontSize: 13 }}>
+                On
+              </Text>
+            </View>
+          </View>
+          {/* discreet preview */}
+          <View className="py-3.5">
+            <View
+              className="flex-row items-center gap-2.5 rounded-[12px] p-3"
+              style={{ backgroundColor: '#16130F' }}
+            >
+              <View className="h-6 w-6 rounded-[7px]" style={{ backgroundColor: colors.clay }} />
+              <View className="flex-1">
+                <Text className="font-sans-bold" style={{ color: colors.cream, fontSize: 12.5 }}>
+                  {BRAND.appName}
+                </Text>
+                <Text
+                  style={{
+                    color: 'rgba(244,239,231,0.7)',
+                    fontSize: 12,
+                    fontFamily: 'HankenGrotesk-Regular',
+                  }}
+                >
+                  {discreetBody}
+                </Text>
+              </View>
+            </View>
             <Text
               variant="label"
               tone="muted"
-              className="mb-2 ml-2 mt-5"
-              style={{ fontSize: 10, letterSpacing: 1 }}
+              className="mt-2 text-center"
+              style={{ fontSize: 11 }}
             >
-              LOCK SCREEN
+              Always generic on the lock screen
             </Text>
-            <View className="rounded-[18px] bg-paper-raised px-[18px]">
-              <View
-                className="flex-row items-center justify-between py-3.5"
-                style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
-              >
-                <View className="flex-1 pr-3">
-                  <Text variant="body" className="font-sans-semibold">
-                    {SETTINGS_COPY.discreetLabel}
-                  </Text>
-                  <Text variant="bodySm" tone="muted">
-                    {SETTINGS_COPY.discreetHint}
-                  </Text>
-                </View>
-                <View
-                  className="rounded-[8px] px-3 py-1.5"
-                  style={{ backgroundColor: colors.greigeChip }}
-                >
-                  <Text className="font-sans-semibold" style={{ color: colors.clay, fontSize: 13 }}>
-                    On
-                  </Text>
-                </View>
-              </View>
-              {/* discreet preview */}
-              <View className="py-3.5">
-                <View
-                  className="flex-row items-center gap-2.5 rounded-[12px] p-3"
-                  style={{ backgroundColor: '#16130F' }}
-                >
-                  <View
-                    className="h-6 w-6 rounded-[7px]"
-                    style={{ backgroundColor: colors.clay }}
-                  />
-                  <View className="flex-1">
-                    <Text
-                      className="font-sans-bold"
-                      style={{ color: colors.cream, fontSize: 12.5 }}
-                    >
-                      {BRAND.appName}
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'rgba(244,239,231,0.7)',
-                        fontSize: 12,
-                        fontFamily: 'HankenGrotesk-Regular',
-                      }}
-                    >
-                      {discreetBody}
-                    </Text>
-                  </View>
-                </View>
-                <Text
-                  variant="label"
-                  tone="muted"
-                  className="mt-2 text-center"
-                  style={{ fontSize: 11 }}
-                >
-                  Always generic on the lock screen
-                </Text>
-              </View>
-            </View>
-          </>
-        ) : (
-          <NotificationPreferenceAvailability
-            state={preference.preferenceState.status === 'loading' ? 'loading' : 'unavailable'}
-            retrying={preference.readRetrying}
-            onRetry={preference.retryRead}
-          />
-        )}
+          </View>
+        </View>
       </ScrollView>
 
       <TimePickerModal
-        field={p ? picking : null}
+        field={picking}
         value={currentValue}
         onSelect={choose}
         onClose={() => setPicking(null)}
-        disabled={preference.mutationPending}
       />
     </SafeAreaView>
   );

@@ -311,7 +311,7 @@ async function clickAriaLabel(client, label) {
 
 function progressSnapshotExpression() {
   return `(() => {
-    const diagnostics = globalThis.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__ ?? {};
+    const diagnostics = globalThis.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__ ?? {};
     const photoActions = Array.from(document.querySelectorAll('[aria-label^="Photo "]'));
     return {
       diagnostics: { queryExecutions: diagnostics.queryExecutions ?? 0 },
@@ -354,7 +354,7 @@ function isExpectedDevelopmentLog(entry) {
 }
 
 async function main() {
-  const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-progress-cache-'));
+  const userDataDir = mkdtempSync(path.join(tmpdir(), 'layerwell-progress-cache-'));
   let server;
   let browser;
   let client;
@@ -384,7 +384,7 @@ async function main() {
         `Array.from(document.querySelectorAll('[role="button"]')).some(
            (node) => node.textContent?.trim() === 'Timeline'
          ) &&
-         (globalThis.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0) >= 1`,
+         (globalThis.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0) >= 1`,
       );
     } catch (error) {
       const entryState = await evaluate(
@@ -392,7 +392,7 @@ async function main() {
         `({
           pathname: location.pathname,
           queryExecutions:
-            globalThis.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0,
+            globalThis.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0,
           text: document.body.innerText.slice(0, 1_000),
         })`,
       );
@@ -413,7 +413,7 @@ async function main() {
     await waitForExpression(client, `location.pathname === '/progress'`);
     await waitForExpression(
       client,
-      `(globalThis.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0) === ${
+      `(globalThis.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0) === ${
         initial.diagnostics.queryExecutions + 1
       } && Boolean(document.getElementById('progress-timeline-list'))`,
     );
@@ -431,7 +431,7 @@ async function main() {
     await waitForExpression(client, `location.pathname === '/progress'`);
     await waitForExpression(
       client,
-      `(globalThis.__ONSKIN_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0) === ${
+      `(globalThis.__LAYERWELL_PHOTO_QUERY_CACHE_DIAGNOSTICS__?.queryExecutions ?? 0) === ${
         initial.diagnostics.queryExecutions + 2
       } && Boolean(document.getElementById('progress-timeline-list'))`,
     );

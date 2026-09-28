@@ -15,18 +15,18 @@ import {
 
 const runtime = globalThis as typeof globalThis & {
   __DEV__?: boolean;
-  __ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__?: unknown;
+  __LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__?: unknown;
 };
 const originalDev = runtime.__DEV__;
 
 describe('catalog-search content-free render diagnostics', () => {
   beforeEach(() => {
     runtime.__DEV__ = true;
-    delete runtime.__ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__;
+    delete runtime.__LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__;
   });
 
   afterEach(() => {
-    delete runtime.__ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__;
+    delete runtime.__LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__;
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
   });
@@ -137,6 +137,6 @@ describe('catalog-search content-free render diagnostics', () => {
       publications: 0,
       duplicateSubmits: 0,
     });
-    expect(runtime.__ONSKIN_CATALOG_SEARCH_RENDER_DIAGNOSTICS__).toBeUndefined();
+    expect(runtime.__LAYERWELL_CATALOG_SEARCH_RENDER_DIAGNOSTICS__).toBeUndefined();
   });
 });

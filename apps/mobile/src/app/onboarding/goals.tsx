@@ -1,9 +1,11 @@
-import { GOALS, type GoalId } from '@onskin/types';
+import { GOALS, type GoalId } from '@layerwell/types';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
@@ -12,8 +14,41 @@ import { track } from '@/lib/analytics/track';
 export default function GoalsScreen() {
   const { height } = useWindowDimensions();
   const compact = height < 740;
-  const { goals, quizAnswers, toggleGoal } = useOnboarding();
+  const { goals, profileResult, quizAnswers, toggleGoal } = useOnboarding();
+  const [consentChecked, setConsentChecked] = useState(false);
   const quizCompletion = getQuizCompletionState(quizAnswers);
+  const hasProfileResult = profileResult !== null || quizCompletion.complete;
+
+  useEffect(() => {
+    let active = true;
+    void hasCurrentHealthDataCollectionConsent()
+      .then((hasCurrentConsent) => {
+        if (!active) return;
+        if (hasCurrentConsent) setConsentChecked(true);
+        else router.replace('/onboarding/consent');
+      })
+      .catch(() => {
+        if (active) router.replace('/onboarding/consent');
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!consentChecked) {
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <Text variant="eyebrow" tone="clay" className="text-center">
+            Privacy check
+          </Text>
+          <Text variant="title" className="mt-2 text-center">
+            Checking your privacy choice
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen>
@@ -38,20 +73,20 @@ export default function GoalsScreen() {
           <Text variant="title" className={compact ? 'mt-3' : 'mt-7'}>
             What brings you here?
           </Text>
-          <Text variant="bodySm" tone="muted" className="mt-2">
+          <Text variant="body" tone="muted" className="mt-2">
             Choose up to two. We&apos;ll use these to keep your plan focused.
           </Text>
 
           <View className={compact ? 'mt-3 gap-2' : 'mt-6 gap-2.5'}>
             {GOALS.map((g) => (
               <OptionCard
+                tight={compact}
                 key={g.id}
                 title={g.title}
                 subtitle={g.subtitle}
                 selected={goals.includes(g.id)}
                 onPress={() => toggleGoal(g.id as GoalId)}
                 compact
-                tight={compact}
               />
             ))}
           </View>
@@ -67,7 +102,7 @@ export default function GoalsScreen() {
           disabled={goals.length === 0}
           onPress={() => {
             track('screen_viewed', { screen_name: 'goals' });
-            router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/consent');
+            router.push(hasProfileResult ? '/onboarding/products' : '/onboarding/quiz');
           }}
         />
       </View>

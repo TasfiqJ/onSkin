@@ -1,39 +1,27 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Platform } from 'react-native';
 
-import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
+import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
+import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
-import { clearAccountDeletionVendorFreezeAfterCleanup } from '@/lib/auth/accountDeletionVendorFreeze';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
 import {
-  clearPrivateKVContentKey,
-  removePrivateItemsForAuthorizedReset,
-} from '@/lib/storage/privateKV';
+  LOCAL_DATA_OWNER_HASH_KEY,
+  LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
+  LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
+} from '@/lib/auth/sessionOwnerKey';
+import { clearPrivateKVContentKey } from '@/lib/storage/privateKV';
 
-import { LOCAL_PRIVATE_CACHE_FILENAMES, localPrivateCachePrefixes } from './localPrivateDataKeys';
-import { LOCAL_PRIVATE_BULK_CLEANUP_KEYS } from './localPrivateDataRegistry';
+import {
+  LOCAL_PRIVATE_CACHE_FILENAMES,
+  LOCAL_PRIVATE_DATA_KEYS,
+  LOCAL_PRIVATE_METADATA_KEYS,
+  localPrivateCachePrefixes,
+} from './localPrivateDataKeys';
 
-const LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT_MS = 2_000;
-
-async function resetVendorIdentityWithinBound(operation: () => Promise<void>): Promise<void> {
-  let timeout: ReturnType<typeof setTimeout> | undefined;
-  const reset = Promise.resolve().then(operation);
-  const deadline = new Promise<void>((_resolve, reject) => {
-    timeout = setTimeout(
-      () => reject(new Error('LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT')),
-      LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT_MS,
-    );
-  });
-
-  try {
-    await Promise.race([reset, deadline]);
-  } finally {
-    if (timeout) clearTimeout(timeout);
-  }
-}
-
-async function clearGeneratedCacheFiles(): Promise<void> {
+export async function clearGeneratedPrivateCacheFiles(): Promise<void> {
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory) return;
 
@@ -56,39 +44,55 @@ async function clearGeneratedCacheFiles(): Promise<void> {
 }
 
 export async function clearLocalPrivateData(): Promise<void> {
+  const ownerProofKeys = [
+    LOCAL_DATA_OWNER_HASH_KEY,
+    LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
+    LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
+  ] as const;
+  const metadataWithoutOwnerProof = LOCAL_PRIVATE_METADATA_KEYS.filter(
+    (key) => !ownerProofKeys.includes(key as (typeof ownerProofKeys)[number]),
+  );
+  const failed: string[] = [];
+  // Complete the owner-agnostic native privacy kill lane before starting any
+  // destructive JS storage operation. If it fails, continue attempting every
+  // other purge but retain all ownership/quarantine proofs for a safe retry.
+  try {
+    await clearRoutineWidgetLifecycleForPrivacy();
+  } catch {
+    failed.push('routine_widget_native_state');
+  }
   const operations = [
     {
       label: 'registered_records',
-      promise: removePrivateItemsForAuthorizedReset(
-        LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
-        'account_isolation',
-      ),
+      promise: AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS, ...metadataWithoutOwnerProof]),
     },
     { label: 'encrypted_photos', promise: clearEncryptedPhotoStorage() },
     { label: 'private_kv_key', promise: clearPrivateKVContentKey() },
-    { label: 'generated_cache', promise: clearGeneratedCacheFiles() },
+    { label: 'generated_cache', promise: clearGeneratedPrivateCacheFiles() },
     {
       label: 'scheduled_notifications',
       promise:
-        Platform.OS === 'web' ? Promise.resolve() : clearNativeNotificationsForAccountIsolation(),
+        Platform.OS === 'web'
+          ? Promise.resolve()
+          : clearNativeNotificationsForAccountIsolation(),
     },
-    {
-      label: 'analytics_identity',
-      promise: resetVendorIdentityWithinBound(resetAnalyticsIdentity),
-    },
-    {
-      label: 'revenuecat_identity',
-      promise: resetVendorIdentityWithinBound(resetRevenueCatIdentity),
-    },
+    { label: 'analytics_identity', promise: resetAnalyticsIdentity() },
+    { label: 'revenuecat_identity', promise: resetRevenueCatIdentity() },
   ] as const;
   const results = await Promise.allSettled(operations.map(({ promise }) => promise));
-  const failed = results.flatMap((result, index) =>
-    result.status === 'rejected' ? [operations[index]!.label] : [],
+  failed.push(
+    ...results.flatMap((result, index) =>
+      result.status === 'rejected' ? [operations[index]!.label] : [],
+    ),
   );
   if (failed.length > 0) throw new Error(`LOCAL_PRIVATE_DATA_CLEAR_FAILED:${failed.join(',')}`);
 
-  // This is intentionally last. A persisted deletion freeze is the recovery
-  // receipt for an interrupted account boundary and may only be removed after
-  // every account-bound private store and vendor identity proved clean.
-  await clearAccountDeletionVendorFreezeAfterCleanup();
+  // Keep every ownership/quarantine proof across every partial-cleanup outcome.
+  // A later session cannot mount or claim retained private state while any
+  // sensitive cleanup stage remains uncommitted.
+  try {
+    await AsyncStorage.multiRemove([...ownerProofKeys]);
+  } catch {
+    throw new Error('LOCAL_PRIVATE_DATA_CLEAR_FAILED:owner_proof');
+  }
 }

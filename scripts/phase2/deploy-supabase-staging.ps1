@@ -1,13 +1,14 @@
 param(
   [string]$ProjectRef = $env:SUPABASE_PROJECT_REF,
+  [string]$OperatorRole = $env:DB06_OPERATOR_ROLE,
+  [string]$RollbackRef = $env:DB06_ROLLBACK_REF,
+  [string]$CutoverRecord = $env:DB06_CUTOVER_RECORD,
+  [string]$CutoverEvidenceDirectory = $env:DB06_CUTOVER_EVIDENCE_DIR,
+  [string]$EvidenceId = $env:DB06_EVIDENCE_ID,
   [switch]$DeployCommerce
 )
 
 $ErrorActionPreference = "Stop"
-
-. (Join-Path $PSScriptRoot "supabase-cli-version-gate.ps1")
-$supabaseCliPath = Resolve-SupabaseCliApplicationPath
-$null = Assert-SupabaseCliMinimumVersion -CliPath $supabaseCliPath
 
 function Read-AppEnvironment {
   $helperPath = Join-Path $PSScriptRoot "read-edge-app-environment.ts"
@@ -42,107 +43,65 @@ $appEnv = Read-AppEnvironment
 if ($appEnv -ne "staging") {
   throw "STAGING_DEPLOY_REQUIRES_APP_ENV_STAGING"
 }
-
 if (-not $ProjectRef) {
-  throw "SUPABASE_PROJECT_REF is required. Set it to the staging project ref before deploying."
+  throw "SUPABASE_PROJECT_REF_REQUIRED"
 }
 if ($ProjectRef -notmatch '^[a-z0-9]{20}$') {
   throw "SUPABASE_PROJECT_REF_INVALID"
 }
-$manifestPath = Join-Path $PSScriptRoot "..\..\supabase\functions\manifest.json"
-if (-not (Test-Path -LiteralPath $manifestPath)) {
-  throw "Edge Function manifest is missing: $manifestPath"
+if ($env:PHASE9_EXPECTED_SUPABASE_PROJECT_REF -ne $ProjectRef) {
+  throw "EXPECTED_SUPABASE_PROJECT_REF_MISMATCH"
 }
-$manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-$functionEntries = @(
-  $manifest.functions.PSObject.Properties |
-    Where-Object { $_.Value.deployByDefault -eq $true } |
-    Sort-Object Name
-)
-if ($functionEntries.Count -eq 0) {
-  throw "Edge Function manifest has no deployByDefault functions."
+if (-not $OperatorRole) {
+  throw "DB06_OPERATOR_ROLE_REQUIRED"
 }
-
-$missingSecrets = @()
-foreach ($entry in $functionEntries) {
-  foreach ($group in $entry.Value.requiredSecrets) {
-    $names = @($group)
-    $hasAny = $false
-    foreach ($name in $names) {
-      if ([Environment]::GetEnvironmentVariable("$name")) {
-        $hasAny = $true
-        break
-      }
-    }
-    if (-not $hasAny) {
-      $missingSecrets += "$($entry.Name): one of [$($names -join ', ')]"
-    }
-  }
+if (-not $RollbackRef) {
+  throw "DB06_ROLLBACK_REF_REQUIRED"
 }
-
-if ($missingSecrets.Count -gt 0) {
-  Write-Warning "Required Edge Function secret groups not set in this shell: $($missingSecrets -join '; ')"
-  Write-Warning "Set them in Supabase with: supabase secrets set NAME=value --project-ref $ProjectRef"
+if (-not $CutoverRecord) {
+  throw "DB06_CUTOVER_RECORD_REQUIRED"
+}
+if (-not $CutoverEvidenceDirectory) {
+  throw "DB06_CUTOVER_EVIDENCE_DIRECTORY_REQUIRED"
+}
+if (-not (Test-Path -LiteralPath $CutoverRecord -PathType Leaf)) {
+  throw "DB06_CUTOVER_RECORD_UNAVAILABLE"
+}
+if (-not (Test-Path -LiteralPath $CutoverEvidenceDirectory -PathType Container)) {
+  throw "DB06_CUTOVER_EVIDENCE_DIRECTORY_UNAVAILABLE"
+}
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+  throw "NODE_RUNTIME_UNAVAILABLE"
 }
 
 if ($PSBoundParameters.ContainsKey("DeployCommerce")) {
-  Write-Warning "-DeployCommerce is retained for command compatibility; every manifest function is now deployed."
+  Write-Warning "-DeployCommerce is retained for command compatibility; the reviewed manifest is always deployed in full."
 }
 
-Write-Host "Validating declarative Edge Function manifest"
-node scripts/phase9/edge-function-manifest-check.mjs
-if ($LASTEXITCODE -ne 0) {
-  throw "Edge Function manifest validation failed."
+$orchestratorPath = Join-Path $PSScriptRoot "deploy-supabase-staging.mjs"
+if (-not (Test-Path -LiteralPath $orchestratorPath -PathType Leaf)) {
+  throw "DB06_DEPLOY_ORCHESTRATOR_UNAVAILABLE"
 }
 
-Write-Host "Linking Supabase project $ProjectRef"
-& $supabaseCliPath link --project-ref $ProjectRef
-if ($LASTEXITCODE -ne 0) {
-  throw "SUPABASE_LINK_FAILED"
+$arguments = @(
+  $orchestratorPath,
+  "--project-ref", $ProjectRef,
+  "--operator-role", $OperatorRole,
+  "--rollback-ref", $RollbackRef,
+  "--cutover-record", (Resolve-Path -LiteralPath $CutoverRecord).Path,
+  "--cutover-evidence-dir", (Resolve-Path -LiteralPath $CutoverEvidenceDirectory).Path
+)
+if ($EvidenceId) {
+  $arguments += @("--evidence-id", $EvidenceId)
 }
 
-Write-Host "Setting the explicit Edge Function app environment"
-& $supabaseCliPath secrets set "APP_ENV=$appEnv" "EXPO_PUBLIC_APP_ENV=$appEnv" --project-ref $ProjectRef
-if ($LASTEXITCODE -ne 0) {
-  throw "APP_ENV_REMOTE_CONFIGURATION_FAILED"
-}
-
-Write-Host "Applying linked migrations with the non-transactional migration runner"
-& $supabaseCliPath migration up --linked
-if ($LASTEXITCODE -ne 0) {
-  throw "SUPABASE_MIGRATION_UP_FAILED"
-}
-
-Write-Host "Deploying every manifest Edge Function"
-foreach ($entry in $functionEntries) {
-  & $supabaseCliPath functions deploy $entry.Name --project-ref $ProjectRef
-  if ($LASTEXITCODE -ne 0) {
-    throw "SUPABASE_FUNCTION_DEPLOY_FAILED:$($entry.Name)"
-  }
-}
-
-Write-Host "Generating local database types"
-$typesPath = Join-Path $PSScriptRoot "..\..\packages\types\src\database.types.ts"
-$typesTempPath = "$typesPath.pending-$PID"
+$previousPowerShellVersion = $env:DB06_POWERSHELL_VERSION
 try {
-  $generatedTypes = @(& $supabaseCliPath gen types typescript --linked --schema public)
+  $env:DB06_POWERSHELL_VERSION = $PSVersionTable.PSVersion.ToString()
+  & node @arguments
   if ($LASTEXITCODE -ne 0) {
-    throw "SUPABASE_TYPE_GENERATION_FAILED"
+    throw "DB06_STAGING_DEPLOY_FAILED"
   }
-  $generatedTypesText = (($generatedTypes -join "`n").TrimEnd() + "`n")
-  if ($generatedTypesText.Length -lt 100 -or $generatedTypesText -notmatch 'export type Database') {
-    throw "SUPABASE_TYPE_GENERATION_INVALID"
-  }
-  [System.IO.File]::WriteAllText(
-    $typesTempPath,
-    $generatedTypesText,
-    [System.Text.UTF8Encoding]::new($false)
-  )
-  Move-Item -LiteralPath $typesTempPath -Destination $typesPath -Force
 } finally {
-  if (Test-Path -LiteralPath $typesTempPath) {
-    Remove-Item -LiteralPath $typesTempPath -Force
-  }
+  $env:DB06_POWERSHELL_VERSION = $previousPowerShellVersion
 }
-
-Write-Host "Run npm run phase2:rls-smoke against this staging project before any EAS production build."

@@ -1,1123 +1,927 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  ACCOUNT_GENERATION_CHANGED,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
-  getAccountGeneration,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 import {
-  decodeOutboxEnvelope,
-  OUTBOX_STORAGE_KEY,
-  OUTBOX_UNSUPPORTED_VERSION,
-} from '@/lib/offline/outbox.pure';
-import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import {
   addPhoto,
+  addPhotoWithOutcome,
   clearPhotos,
   loadPhotos,
+  PHOTO_CAPTURE_SESSION_CONFLICT,
+  PHOTO_CAPTURE_SESSION_DUPLICATE,
+  PHOTO_CAPTURE_SESSION_INVALID,
   PHOTO_METADATA_INVALID,
-  PHOTO_METADATA_UNSUPPORTED,
-  PHOTO_MUTATION_JOURNAL_INCONSISTENT,
-  PHOTO_MUTATION_RECOVERY_REQUIRED,
-  readPhotos,
-  recoverPhotoStoreMutations,
   removePhoto,
-  setReference,
-  updatePhoto,
 } from './store';
 
-const KEY = 'onskin.photos.v1';
-const PHOTO_DIR = 'file://document/photos/v1/';
-const CAPTURE_A = 'a'.repeat(32);
-const CAPTURE_B = 'b'.repeat(32);
-
-function uuid(index: number): string {
-  return `00000000-0000-4000-8000-${String(index).padStart(12, '0')}`;
-}
-
-function photoUri(id: string): string {
-  return `${PHOTO_DIR}${id}.onskinphoto`;
-}
-
-function thumbnailUri(id: string): string {
-  return `${PHOTO_DIR}${id}-thumbnail.onskinphoto`;
-}
-
 const mocks = vi.hoisted(() => ({
-  cleanupCalls: [] as string[],
-  cleanupErrorOnce: null as Error | null,
-  decryptPhotoNote: vi.fn(),
-  discardPendingEncryptedPhotoForRetry: vi.fn(),
-  encryptCapturedPhoto: vi.fn(),
-  encryptPhotoNote: vi.fn(),
-  finalFiles: new Set<string>(),
-  finalizeErrorAfterDeleteOnce: null as Error | null,
-  finalizeEncryptedPhotoDeletions: vi.fn(),
-  getPrivateItem: vi.fn(),
-  getPrivateItemError: null as Error | null,
-  hashOutboxOwner: vi.fn(),
-  lookupPlaintextStaging: vi.fn(),
-  plaintext: new Map<string, string>(),
-  quarantines: new Set<string>(),
-  randomCounter: 1,
-  randomIds: [] as string[],
-  readPrivateItem: vi.fn(),
-  readPrivateItemOverride: null as PrivateKVReadResult | null,
-  recoverPreparedEncryptedPhoto: vi.fn(),
-  setFailureAfter: new Set<number>(),
-  setFailureBefore: new Set<number>(),
-  setPrivateItem: vi.fn(),
-  stageErrorAfterMoveOnce: null as Error | null,
-  stageEncryptedPhotoDeletions: vi.fn(),
+  decryptPhotoNoteError: null as Error | null,
+  clearEncryptedPhotoStorage: vi.fn(),
   storage: new Map<string, string>(),
-  transactionErrorAfterCommit: null as Error | null,
-  transactionErrorBeforeCommit: null as Error | null,
-  transactionSnapshots: [] as Map<string, string | null>[],
-  transactionHook: null as (() => void) | null,
-  updatePrivateItemsTransactionally: vi.fn(),
-  verifyEncryptedPhotoDeletionSources: vi.fn(),
-  writeAttempts: 0,
+  deleteCapturedPhotoSource: vi.fn(),
+  deleteEncryptedPhoto: vi.fn(),
+  deleteQuarantinedPhoto: vi.fn(),
+  encryptedFiles: new Set<string>(),
+  encryptCapturedPhoto: vi.fn(),
+  createEncryptedPhotoThumbnail: vi.fn(),
+  from: vi.fn(),
+  getPrivateItemError: null as Error | null,
+  getPrivateItemGate: null as Promise<void> | null,
+  getPrivateItemStarted: null as (() => void) | null,
+  quarantineEncryptedPhoto: vi.fn(),
+  quarantineError: null as Error | null,
+  randomIds: [] as string[],
+  reconcileEncryptedPhotoStorage: vi.fn(),
+  beginPhotoRenditionPublication: vi.fn(),
+  markPhotoRenditionPublication: vi.fn(),
+  recoverPhotoRenditionPublication: vi.fn(),
+  settlePhotoRenditionPublication: vi.fn(),
+  removePrivateItem: vi.fn(),
+  restoreQuarantinedPhoto: vi.fn(),
+  setPrivateItemCommitThenError: null as Error | null,
+  setPrivateItemError: null as Error | null,
+  setPrivateItemGate: null as Promise<void> | null,
+  setPrivateItemStarted: null as (() => void) | null,
 }));
 
 vi.mock('expo-crypto', () => ({
-  randomUUID: vi.fn(() => mocks.randomIds.shift() ?? uuid(mocks.randomCounter++)),
+  randomUUID: vi.fn(() => mocks.randomIds.shift() ?? 'photo-id'),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: mocks.getPrivateItem,
-  PRIVATE_KV_CONTENT_KEY_CONFLICT: 'PRIVATE_KV_CONTENT_KEY_CONFLICT',
-  PRIVATE_KV_CONTENT_KEY_INVALID: 'PRIVATE_KV_CONTENT_KEY_INVALID',
-  PRIVATE_KV_CONTENT_KEY_MISSING: 'PRIVATE_KV_CONTENT_KEY_MISSING',
-  PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE: 'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
-  PRIVATE_KV_DECRYPTION_FAILED: 'PRIVATE_KV_DECRYPTION_FAILED',
-  PRIVATE_KV_ENVELOPE_INVALID: 'PRIVATE_KV_ENVELOPE_INVALID',
-  PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY: 'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
-  readPrivateItem: mocks.readPrivateItem,
-  setPrivateItem: mocks.setPrivateItem,
-  updatePrivateItemsTransactionally: mocks.updatePrivateItemsTransactionally,
-}));
-
-vi.mock('@/lib/offline/outboxIdentity', () => ({
-  hashOutboxOwner: mocks.hashOutboxOwner,
-}));
-
-vi.mock('@/lib/storage/plaintextStaging', () => ({
-  lookupPlaintextStaging: mocks.lookupPlaintextStaging,
-  cleanupPlaintextStagingOperation: vi.fn(async (operationId: string) => {
-    mocks.cleanupCalls.push(operationId);
-    if (mocks.cleanupErrorOnce) {
-      const error = mocks.cleanupErrorOnce;
-      mocks.cleanupErrorOnce = null;
-      throw error;
-    }
-    mocks.plaintext.delete(operationId);
+  getPrivateItem: vi.fn(async (key: string) => {
+    if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
+    mocks.getPrivateItemStarted?.();
+    if (mocks.getPrivateItemGate) await mocks.getPrivateItemGate;
+    return mocks.storage.get(key) ?? null;
   }),
+  setPrivateItem: vi.fn(async (key: string, value: string) => {
+    if (mocks.setPrivateItemError) throw mocks.setPrivateItemError;
+    mocks.setPrivateItemStarted?.();
+    if (mocks.setPrivateItemGate) await mocks.setPrivateItemGate;
+    mocks.storage.set(key, value);
+    const commitError = mocks.setPrivateItemCommitThenError;
+    mocks.setPrivateItemCommitThenError = null;
+    if (commitError) throw commitError;
+  }),
+  removePrivateItem: mocks.removePrivateItem,
+}));
+
+vi.mock('@/lib/supabase/client', () => ({
+  supabase: {
+    from: mocks.from,
+  },
 }));
 
 vi.mock('./encryptedStorage', () => ({
-  PHOTO_CONTENT_KEY_INVALID: 'PHOTO_CONTENT_KEY_INVALID',
-  PHOTO_CONTENT_KEY_MISSING: 'PHOTO_CONTENT_KEY_MISSING',
-  PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE: 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE',
-  PHOTO_DECRYPTION_FAILED: 'PHOTO_DECRYPTION_FAILED',
-  PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED: 'PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED',
-  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY: 'PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
-  decryptPhotoNote: mocks.decryptPhotoNote,
-  discardPendingEncryptedPhotoForRetry: mocks.discardPendingEncryptedPhotoForRetry,
-  encryptedPhotoUriForId: (id: string) => photoUri(id.replace(/[^A-Za-z0-9_-]/g, '') || 'photo'),
-  encryptedPhotoThumbnailUriForId: (id: string) =>
-    thumbnailUri(id.replace(/[^A-Za-z0-9_-]/g, '') || 'photo'),
+  beginPhotoRenditionPublication: mocks.beginPhotoRenditionPublication,
+  canonicalPhotoRenditionUri: vi.fn(({ photoId, rendition }) =>
+    `file:///captured.jpg.${photoId}${rendition === 'thumbnail' ? '-thumbnail' : ''}.layerwellphoto`,
+  ),
+  clearEncryptedPhotoStorage: mocks.clearEncryptedPhotoStorage,
+  decryptPhotoNote: vi.fn(async (ciphertext: string) => {
+    if (mocks.decryptPhotoNoteError) throw mocks.decryptPhotoNoteError;
+    return `note:${ciphertext}`;
+  }),
+  deleteCapturedPhotoSource: mocks.deleteCapturedPhotoSource,
+  deleteEncryptedPhoto: mocks.deleteEncryptedPhoto,
+  deleteQuarantinedPhoto: mocks.deleteQuarantinedPhoto,
   encryptCapturedPhoto: mocks.encryptCapturedPhoto,
-  encryptPhotoNote: mocks.encryptPhotoNote,
-  finalizeEncryptedPhotoDeletions: mocks.finalizeEncryptedPhotoDeletions,
-  isEncryptedPhotoUri: (uri?: string | null) => Boolean(uri?.endsWith('.onskinphoto')),
-  isOwnedEncryptedPhotoUri: (uri?: string | null) =>
-    Boolean(
-      uri?.startsWith(PHOTO_DIR) &&
-      /^[A-Za-z0-9_-]+\.onskinphoto$/.test(uri.slice(PHOTO_DIR.length)),
-    ),
-  photoEncryptionInfo: { keyId: 'photo-key', version: 'photo-v1' },
-  recoverPreparedEncryptedPhoto: mocks.recoverPreparedEncryptedPhoto,
-  stageEncryptedPhotoDeletions: mocks.stageEncryptedPhotoDeletions,
-  verifyEncryptedPhotoDeletionSources: mocks.verifyEncryptedPhotoDeletionSources,
+  encryptPhotoRendition: mocks.encryptCapturedPhoto,
+  encryptPhotoNote: vi.fn(async (note: string | null) => (note ? `enc:${note}` : null)),
+  isPhotoEncryptionReadError: vi.fn(
+    (error: unknown) => error instanceof Error && error.message.startsWith('PHOTO_'),
+  ),
+  isEncryptedPhotoUri: vi.fn((uri: string | null | undefined) =>
+    Boolean(uri?.endsWith('.layerwellphoto')),
+  ),
+  quarantineEncryptedPhoto: mocks.quarantineEncryptedPhoto,
+  reconcileEncryptedPhotoStorage: mocks.reconcileEncryptedPhotoStorage,
+  recoverPhotoRenditionPublication: mocks.recoverPhotoRenditionPublication,
+  markPhotoRenditionPublication: mocks.markPhotoRenditionPublication,
+  settlePhotoRenditionPublication: mocks.settlePhotoRenditionPublication,
+  restoreQuarantinedPhoto: mocks.restoreQuarantinedPhoto,
+  photoEncryptionInfo: {
+    keyId: 'photo-key',
+    version: 'photo-v1',
+  },
 }));
 
-type StoredEnvelope = {
-  version: number;
-  items: Record<string, unknown>[];
-  mutation: null | { kind: 'add' | 'delete' | 'clear'; operationId: string; phase: string };
-  retainedItems: Record<string, unknown>[];
-};
+vi.mock('./photoThumbnail', () => ({
+  createEncryptedPhotoThumbnail: mocks.createEncryptedPhotoThumbnail,
+}));
 
-function envelope(): StoredEnvelope {
-  return JSON.parse(mocks.storage.get(KEY) ?? '{}') as StoredEnvelope;
-}
+const KEY = 'layerwell.photos.v1';
+const CAPTURE_SESSION_ID = '123e4567-e89b-42d3-a456-426614174000';
+let testAccountGeneration = 0;
 
-function storedPhoto(id: string, overrides: Record<string, unknown> = {}): Record<string, unknown> {
-  const uri = photoUri(id);
-  return {
-    id,
-    series: 'front',
-    takenLocalDate: '2026-07-01',
-    takenAt: '2026-07-01T12:00:00.000Z',
-    timeOfDay: null,
-    alignmentScore: null,
-    lightingScore: null,
-    isReference: true,
-    referencePhotoId: null,
-    localUri: uri,
-    notes: null,
-    notesCiphertext: null,
-    captureSessionId: null,
-    headRoll: null,
-    headYaw: null,
-    headPitch: null,
-    qualitySource: null,
-    localOnly: true,
-    storagePath: null,
-    faceRegionRedacted: false,
-    isEncrypted: true,
-    encryptedLocalUri: uri,
-    thumbnailLocalUri: null,
-    encryptionVersion: 'photo-v1',
-    keyId: 'photo-key',
-    ...overrides,
-  };
-}
-
-function seedSettled(items: Record<string, unknown>[]): string {
-  const raw = JSON.stringify({ version: 2, items, mutation: null, retainedItems: [] });
-  mocks.storage.set(KEY, raw);
-  return raw;
-}
-
-function capture(operationId: string, uri = `file://cache/${operationId}.jpg`): string {
-  mocks.plaintext.set(operationId, uri);
-  return uri;
-}
-
-function quarantineKey(uri: string, operationId: string): string {
-  return `${uri}.pending-delete-${operationId}`;
-}
-
-function authenticatedPhotoOwner() {
-  return { ownerId: 'owner-a', ownerGeneration: getAccountGeneration() } as const;
-}
-
-describe('photo local store journal', () => {
+describe('photo local store recovery', () => {
   beforeEach(() => {
-    mocks.cleanupCalls = [];
-    mocks.cleanupErrorOnce = null;
-    mocks.decryptPhotoNote.mockReset().mockImplementation(async (value: string) => `note:${value}`);
-    mocks.discardPendingEncryptedPhotoForRetry.mockReset().mockResolvedValue(true);
-    mocks.encryptCapturedPhoto
-      .mockReset()
-      .mockImplementation(async (_source: string, id: string) => {
-        const uri = photoUri(id);
-        mocks.finalFiles.add(uri);
-        return { encryptedLocalUri: uri, keyId: 'photo-key', encryptionVersion: 'photo-v1' };
-      });
-    mocks.encryptPhotoNote
-      .mockReset()
-      .mockImplementation(async (note: string | null) => (note ? `enc:${note}` : null));
-    mocks.finalFiles.clear();
-    mocks.finalizeErrorAfterDeleteOnce = null;
-    mocks.finalizeEncryptedPhotoDeletions
-      .mockReset()
-      .mockImplementation(async (uris: readonly string[], operationId: string) => {
-        for (const uri of uris) {
-          if (mocks.finalFiles.has(uri)) throw new Error('PHOTO_RECOVERY_CONFLICT');
-          mocks.quarantines.delete(quarantineKey(uri, operationId));
-        }
-        if (mocks.finalizeErrorAfterDeleteOnce) {
-          const error = mocks.finalizeErrorAfterDeleteOnce;
-          mocks.finalizeErrorAfterDeleteOnce = null;
-          throw error;
-        }
-      });
-    mocks.getPrivateItem.mockReset().mockImplementation(async (key: string) => {
-      if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
-      return mocks.storage.get(key) ?? null;
-    });
+    mocks.decryptPhotoNoteError = null;
+    mocks.clearEncryptedPhotoStorage.mockReset();
+    mocks.storage.clear();
+    mocks.deleteCapturedPhotoSource.mockReset();
+    mocks.deleteEncryptedPhoto.mockReset();
+    mocks.deleteQuarantinedPhoto.mockReset();
+    mocks.encryptedFiles.clear();
+    mocks.encryptCapturedPhoto.mockReset();
+    mocks.createEncryptedPhotoThumbnail.mockReset();
+    mocks.from.mockClear();
     mocks.getPrivateItemError = null;
-    mocks.readPrivateItemOverride = null;
-    mocks.readPrivateItem.mockReset().mockImplementation(async (key: string) => {
-      if (mocks.readPrivateItemOverride) return mocks.readPrivateItemOverride;
-      try {
-        const value = await mocks.getPrivateItem(key);
-        return value === null
-          ? ({ status: 'absent' } as const)
-          : ({ status: 'available', value } as const);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : '';
-        if (message === 'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE') {
-          return {
-            status: 'unavailable',
-            reason: 'content_key_storage_unavailable',
-          } as const;
-        }
-        return { status: 'unavailable', reason: 'storage_unavailable' } as const;
+    mocks.getPrivateItemGate = null;
+    mocks.getPrivateItemStarted = null;
+    mocks.quarantineEncryptedPhoto.mockReset();
+    mocks.quarantineError = null;
+    mocks.randomIds = [];
+    mocks.reconcileEncryptedPhotoStorage.mockReset();
+    mocks.beginPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.markPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.recoverPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.settlePhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.removePrivateItem.mockReset();
+    mocks.restoreQuarantinedPhoto.mockReset();
+    mocks.setPrivateItemCommitThenError = null;
+    mocks.setPrivateItemError = null;
+    mocks.setPrivateItemGate = null;
+    mocks.setPrivateItemStarted = null;
+
+    mocks.deleteCapturedPhotoSource.mockResolvedValue(undefined);
+    mocks.deleteEncryptedPhoto.mockImplementation(async (uri: string) => {
+      mocks.encryptedFiles.delete(uri);
+    });
+    mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
+    mocks.deleteQuarantinedPhoto.mockResolvedValue(undefined);
+    mocks.encryptCapturedPhoto.mockImplementation(
+      async (uri: string, identity: string | { photoId: string }) => {
+        const id = typeof identity === 'string' ? identity : identity.photoId;
+        const encryptedLocalUri = `${uri}.${id}.layerwellphoto`;
+        mocks.encryptedFiles.add(encryptedLocalUri);
+        return {
+          encryptedLocalUri,
+          keyId: 'photo-key',
+          encryptionVersion: 'photo-v1',
+        };
+      },
+    );
+    mocks.createEncryptedPhotoThumbnail.mockImplementation(
+      async ({ sourceUri, photoId }: { sourceUri: string; photoId: string }) => {
+        const encryptedLocalUri = `${sourceUri}.${photoId}-thumbnail.layerwellphoto`;
+        mocks.encryptedFiles.add(encryptedLocalUri);
+        return {
+          encryptedLocalUri,
+          keyId: 'photo-key',
+          encryptionVersion: 'photo-v1',
+        };
+      },
+    );
+    mocks.quarantineEncryptedPhoto.mockImplementation(
+      async (uri: string | null, operationId: string) => {
+        if (mocks.quarantineError) throw mocks.quarantineError;
+        if (!uri?.endsWith('.layerwellphoto')) return null;
+        const quarantinedUri = `${uri}.pending-delete-${operationId}`;
+        mocks.encryptedFiles.delete(uri);
+        mocks.encryptedFiles.add(quarantinedUri);
+        return { originalUri: uri, quarantinedUri };
+      },
+    );
+    mocks.reconcileEncryptedPhotoStorage.mockImplementation(async (referencedUris: string[]) => {
+      const referenced = new Set(referencedUris);
+      for (const uri of [...mocks.encryptedFiles]) {
+        const match = /^(.+\.layerwellphoto)\.pending-delete-.+$/u.exec(uri);
+        if (!match) continue;
+        mocks.encryptedFiles.delete(uri);
+        if (referenced.has(match[1])) mocks.encryptedFiles.add(match[1]);
       }
     });
-    mocks.hashOutboxOwner.mockReset().mockResolvedValue('a'.repeat(64));
-    mocks.lookupPlaintextStaging.mockReset().mockImplementation(async (operationId: string) => {
-      const uri = mocks.plaintext.get(operationId);
-      return uri ? { operationId, purpose: 'photo_capture_jpeg', uri } : null;
+    mocks.removePrivateItem.mockImplementation(async (key: string) => {
+      mocks.storage.delete(key);
     });
-    mocks.plaintext.clear();
-    mocks.quarantines.clear();
-    mocks.randomCounter = 1;
-    mocks.randomIds = [];
-    mocks.recoverPreparedEncryptedPhoto
-      .mockReset()
-      .mockImplementation(async (uri: string) => mocks.finalFiles.has(uri));
-    mocks.setFailureAfter.clear();
-    mocks.setFailureBefore.clear();
-    mocks.setPrivateItem.mockReset().mockImplementation(async (key: string, value: string) => {
-      const attempt = ++mocks.writeAttempts;
-      if (mocks.setFailureBefore.delete(attempt)) throw new Error(`WRITE_BEFORE_${attempt}`);
-      mocks.storage.set(key, value);
-      if (mocks.setFailureAfter.delete(attempt)) throw new Error(`WRITE_AFTER_${attempt}`);
+    mocks.restoreQuarantinedPhoto.mockResolvedValue(undefined);
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration: testAccountGeneration,
     });
-    mocks.stageErrorAfterMoveOnce = null;
-    mocks.stageEncryptedPhotoDeletions
-      .mockReset()
-      .mockImplementation(async (uris: readonly string[], operationId: string) => {
-        for (const uri of uris) {
-          const key = quarantineKey(uri, operationId);
-          if (mocks.finalFiles.has(uri) && mocks.quarantines.has(key)) {
-            throw new Error('PHOTO_RECOVERY_CONFLICT');
-          }
-          if (mocks.finalFiles.delete(uri)) mocks.quarantines.add(key);
-          else if (!mocks.quarantines.has(key)) throw new Error('PHOTO_RECOVERY_CONFLICT');
-        }
-        if (mocks.stageErrorAfterMoveOnce) {
-          const error = mocks.stageErrorAfterMoveOnce;
-          mocks.stageErrorAfterMoveOnce = null;
-          throw error;
-        }
-      });
-    mocks.storage.clear();
-    mocks.transactionErrorAfterCommit = null;
-    mocks.transactionErrorBeforeCommit = null;
-    mocks.transactionSnapshots = [];
-    mocks.transactionHook = null;
-    mocks.updatePrivateItemsTransactionally
-      .mockReset()
-      .mockImplementation(
-        async (
-          keys: readonly string[],
-          updater: (
-            current: ReadonlyMap<string, string | null>,
-          ) => ReadonlyMap<string, string | null>,
-        ) => {
-          const current = new Map(
-            keys.map((key) => [key, mocks.storage.get(key) ?? null] as const),
-          );
-          const requested = new Map(updater(current));
-          mocks.transactionSnapshots.push(new Map(requested));
-          mocks.transactionHook?.();
-          if (mocks.transactionErrorBeforeCommit) {
-            const error = mocks.transactionErrorBeforeCommit;
-            mocks.transactionErrorBeforeCommit = null;
-            throw error;
-          }
-          for (const key of keys) {
-            const value = requested.get(key);
-            if (value === null || value === undefined) mocks.storage.delete(key);
-            else mocks.storage.set(key, value);
-          }
-          if (mocks.transactionErrorAfterCommit) {
-            const error = mocks.transactionErrorAfterCommit;
-            mocks.transactionErrorAfterCommit = null;
-            throw error;
-          }
-        },
-      );
-    mocks.verifyEncryptedPhotoDeletionSources
-      .mockReset()
-      .mockImplementation(async (uris: readonly string[]) => {
-        if (uris.some((uri) => !mocks.finalFiles.has(uri))) {
-          throw new Error('PHOTO_RECOVERY_CONFLICT');
-        }
-      });
-    mocks.writeAttempts = 0;
   });
 
-  it('propagates private-store failures without replacing metadata', async () => {
+  it('propagates encrypted private-store failures without replacing photo metadata', async () => {
     const stored = JSON.stringify([{ id: 'photo-1', takenLocalDate: '2026-07-01' }]);
     mocks.storage.set(KEY, stored);
     mocks.getPrivateItemError = new Error('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
 
-    await expect(readPhotos()).resolves.toEqual({
-      status: 'unavailable',
-      photos: null,
-      reason: 'content_key_storage_unavailable',
-    });
     await expect(loadPhotos()).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
+
     expect(mocks.storage.get(KEY)).toBe(stored);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('returns typed private-envelope failures without decoding or changing bytes', async () => {
-    const original = JSON.stringify([{ id: 'photo-1', takenLocalDate: '2026-07-01' }]);
-    mocks.storage.set(KEY, original);
-
-    for (const [stored, expected] of [
-      [
-        { status: 'corrupt', reason: 'decryption_failed' } as const,
-        { status: 'corrupt', photos: null, reason: 'decryption_failed' } as const,
-      ],
-      [
-        { status: 'unsupported_version' } as const,
-        { status: 'unsupported_version', photos: null } as const,
-      ],
-      [
-        { status: 'unavailable', reason: 'content_key_missing' } as const,
-        { status: 'unavailable', photos: null, reason: 'content_key_missing' } as const,
-      ],
-    ] satisfies readonly (readonly [PrivateKVReadResult, object])[]) {
-      mocks.readPrivateItemOverride = stored;
-      await expect(readPhotos()).resolves.toEqual(expected);
-      expect(mocks.storage.get(KEY)).toBe(original);
-      expect(mocks.decryptPhotoNote).not.toHaveBeenCalled();
-      expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    }
-  });
-
-  it('distinguishes a valid absent timeline from typed read failures', async () => {
-    await expect(readPhotos()).resolves.toEqual({ status: 'absent', photos: [] });
-  });
-
-  it('classifies photo-note key and decryption failures without publishing metadata', async () => {
-    const raw = seedSettled([storedPhoto(uuid(1), { notesCiphertext: 'encrypted-note' })]);
-
-    for (const [code, expected] of [
-      [
-        'PHOTO_CONTENT_KEY_MISSING',
-        {
-          status: 'unavailable',
-          photos: null,
-          reason: 'photo_content_key_missing',
-        } as const,
-      ],
-      [
-        'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE',
-        {
-          status: 'unavailable',
-          photos: null,
-          reason: 'photo_content_key_storage_unavailable',
-        } as const,
-      ],
-      [
-        'PHOTO_CONTENT_KEY_INVALID',
-        { status: 'corrupt', photos: null, reason: 'photo_content_key_invalid' } as const,
-      ],
-      [
-        'PHOTO_DECRYPTION_FAILED',
-        { status: 'corrupt', photos: null, reason: 'photo_decryption_failed' } as const,
-      ],
-    ] as const) {
-      mocks.decryptPhotoNote.mockRejectedValueOnce(new Error(code));
-      await expect(readPhotos()).resolves.toEqual(expected);
-      expect(mocks.storage.get(KEY)).toBe(raw);
-      expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    }
-  });
-
-  it('loads legacy photos with zero writes or file recovery', async () => {
+  it('propagates photo-note key failures without rewriting ciphertext', async () => {
     const stored = JSON.stringify([
       {
         id: 'photo-1',
         takenLocalDate: '2026-07-01',
-        localUri: 'file:///legacy/photo-1.onskinphoto',
-        notesCiphertext: 'ciphertext',
+        notesCiphertext: 'encrypted-note',
       },
     ]);
     mocks.storage.set(KEY, stored);
+    mocks.decryptPhotoNoteError = new Error('PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE');
 
-    await expect(loadPhotos()).resolves.toMatchObject([
-      { id: 'photo-1', notes: 'note:ciphertext' },
-    ]);
+    await expect(loadPhotos()).rejects.toThrow('PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE');
+
     expect(mocks.storage.get(KEY)).toBe(stored);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.recoverPreparedEncryptedPhoto).not.toHaveBeenCalled();
-    expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
   });
 
-  it('uses a one-read settled startup fast path without notes, files, or writes', async () => {
-    seedSettled([storedPhoto(uuid(1), { notesCiphertext: 'secret-note' })]);
-
-    await recoverPhotoStoreMutations();
-
-    expect(mocks.getPrivateItem).toHaveBeenCalledTimes(1);
-    expect(mocks.decryptPhotoNote).not.toHaveBeenCalled();
-    expect(mocks.recoverPreparedEncryptedPhoto).not.toHaveBeenCalled();
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-  });
-
-  it('keeps ordinary reads side-effect-free and rejects staged metadata publication', async () => {
-    const id = uuid(1);
-    mocks.storage.set(
-      KEY,
-      JSON.stringify({
-        version: 2,
-        items: [
-          storedPhoto(id, {
-            captureSessionId: CAPTURE_A,
-            localUri: photoUri(id),
-            encryptedLocalUri: photoUri(id),
-          }),
-        ],
-        mutation: { kind: 'add', operationId: id, phase: 'prepared' },
-        retainedItems: [],
-      }),
-    );
-
-    await expect(readPhotos()).resolves.toEqual({ status: 'recovery_required', photos: null });
-    await expect(loadPhotos()).rejects.toThrow(PHOTO_MUTATION_RECOVERY_REQUIRED);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.recoverPreparedEncryptedPhoto).not.toHaveBeenCalled();
-  });
-
-  it.each([
-    [
-      '{not-json',
-      PHOTO_METADATA_INVALID,
-      { status: 'corrupt', photos: null, reason: 'invalid_payload' },
-    ],
-    [
-      JSON.stringify({ version: 3, items: [] }),
-      PHOTO_METADATA_UNSUPPORTED,
-      { status: 'unsupported_version', photos: null },
-    ],
-    [
-      JSON.stringify({ id: 'wrong-shape' }),
-      PHOTO_METADATA_INVALID,
-      { status: 'corrupt', photos: null, reason: 'invalid_payload' },
-    ],
-  ])('preserves invalid/future metadata %s', async (stored, code, expected) => {
+  it('preserves malformed persisted photo JSON behind a recovery error', async () => {
+    const stored = '{not-json';
     mocks.storage.set(KEY, stored);
-    await expect(readPhotos()).resolves.toEqual(expected);
-    await expect(loadPhotos()).rejects.toThrow(code);
+
+    await expect(loadPhotos()).rejects.toThrow(PHOTO_METADATA_INVALID);
     expect(mocks.storage.get(KEY)).toBe(stored);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ['invalid series', { ...storedPhoto(uuid(1)), series: 'diagonal' }],
-    ['non-canonical timestamp', { ...storedPhoto(uuid(1)), takenAt: '2026-07-01T08:00:00-04:00' }],
-    ['invalid local date', { ...storedPhoto(uuid(1)), takenLocalDate: '2026-02-30' }],
-    ['wrong boolean type', { ...storedPhoto(uuid(1)), localOnly: 1 }],
-    ['non-local current row', { ...storedPhoto(uuid(1)), localOnly: false }],
-    ['cloud storage path', { ...storedPhoto(uuid(1)), storagePath: 'owner/photo.jpg' }],
-    ['plaintext URI', { ...storedPhoto(uuid(1)), localUri: 'file://private/plaintext.jpg' }],
-    [
-      'capture marker without encrypted authority',
+  it('treats an empty persisted payload as malformed instead of an empty library', async () => {
+    mocks.storage.set(KEY, '');
+
+    await expect(loadPhotos()).rejects.toThrow(PHOTO_METADATA_INVALID);
+    expect(mocks.storage.get(KEY)).toBe('');
+  });
+
+  it('preserves wrong-shaped persisted photo state behind a recovery error', async () => {
+    const stored = JSON.stringify({ id: 'not-an-array' });
+    mocks.storage.set(KEY, stored);
+
+    await expect(loadPhotos()).rejects.toThrow(PHOTO_METADATA_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(stored);
+  });
+
+  it('preserves a mixed valid and malformed record set instead of dropping rows', async () => {
+    const stored = JSON.stringify([
       {
-        ...storedPhoto(uuid(1)),
-        captureSessionId: CAPTURE_A,
-        localUri: null,
-        encryptedLocalUri: null,
-        isEncrypted: false,
-        encryptionVersion: 'none',
-        keyId: null,
+        id: ' photo-1 ',
+        series: ' left ',
+        takenLocalDate: ' 2026-07-01 ',
+        timeOfDay: ' morning ',
+        localUri: ' file:///photo-1.layerwellphoto ',
+        notesCiphertext: ' ciphertext ',
+        thumbnailLocalUri: ' file:///photo-1-thumb.layerwellphoto ',
+        alignmentScore: 2,
+        lightingScore: 0.75,
+        isReference: 'yes',
       },
-    ],
-    [
-      'mismatched encrypted authority',
-      { ...storedPhoto(uuid(1)), encryptedLocalUri: photoUri(uuid(2)) },
-    ],
-    ['extra field', { ...storedPhoto(uuid(1)), unexpected: true }],
-    [
-      'missing field',
-      (() => {
-        const { series: _series, ...record } = storedPhoto(uuid(1));
-        return record;
-      })(),
-    ],
-  ])('preserves a malformed current V2 row: %s', async (_label, row) => {
-    const raw = seedSettled([row]);
+      { id: '', takenLocalDate: '2026-07-02' },
+      'bad-row',
+    ]);
+    mocks.storage.set(KEY, stored);
 
-    await expect(readPhotos()).resolves.toMatchObject({ status: 'corrupt', photos: null });
-    await expect(loadPhotos()).rejects.toThrow();
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    await expect(loadPhotos()).rejects.toThrow(PHOTO_METADATA_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(stored);
   });
 
-  it('never consumes plaintext staging for a malformed V2 capture marker', async () => {
-    const id = uuid(1);
-    seedSettled([
-      storedPhoto(id, {
-        captureSessionId: CAPTURE_A,
-        localUri: null,
-        encryptedLocalUri: null,
-        isEncrypted: false,
-        encryptionVersion: 'none',
-        keyId: null,
-      }),
-    ]);
-    const source = capture(CAPTURE_A);
+  it('does not overwrite malformed state when a new photo is attempted', async () => {
+    const stored = JSON.stringify({ stale: true });
+    mocks.storage.set(KEY, stored);
 
     await expect(
       addPhoto({
         takenLocalDate: '2026-07-03',
-        captureSessionId: CAPTURE_A,
-        localUri: source,
+        localUri: null,
+        notes: 'baseline',
       }),
-    ).rejects.toThrow(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
+    ).rejects.toThrow(PHOTO_METADATA_INVALID);
 
-    expect(mocks.plaintext.get(CAPTURE_A)).toBe(source);
-    expect(mocks.cleanupCalls).toEqual([]);
-    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(stored);
+    expect(mocks.from).not.toHaveBeenCalled();
   });
 
-  it('migrates the complete historical V1 placeholder without inventing file authority', async () => {
-    const id = uuid(1);
-    const legacy = JSON.stringify([
-      {
-        id,
-        series: 'front',
-        takenLocalDate: '2026-06-13',
-        takenAt: '2026-06-13T12:00:00.000Z',
-        timeOfDay: 'morning',
-        alignmentScore: 0.9,
+  it('keeps measured photo metadata off the network during local save', async () => {
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      qualitySource: 'post_capture_measurement',
+    });
+
+    expect(mocks.from).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledWith('file:///captured.jpg');
+  });
+
+  it('keeps durable publication state and the capture source when metadata fails ambiguously', async () => {
+    mocks.setPrivateItemError = new Error('metadata unavailable');
+
+    await expect(
+      addPhoto({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///captured.jpg',
+      }),
+    ).rejects.toThrow('metadata unavailable');
+
+    expect(mocks.beginPhotoRenditionPublication).toHaveBeenCalledOnce();
+    expect(mocks.markPhotoRenditionPublication).toHaveBeenCalledWith(
+      expect.objectContaining({ photoId: 'photo-id' }),
+      'pair_adopted',
+    );
+    expect(mocks.settlePhotoRenditionPublication).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('returns one canonical capture replay without re-encrypting or replacing measured metadata', async () => {
+    mocks.randomIds = ['photo-canonical', 'unused-photo-id'];
+
+    const created = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      timeOfDay: 'morning',
+      localUri: 'file:///first.jpg',
+      captureSessionId: CAPTURE_SESSION_ID.toUpperCase(),
+      alignmentScore: 0.7,
+      lightingScore: 0.8,
+    });
+    const replay = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      timeOfDay: 'morning',
+      localUri: 'file:///replayed.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+      alignmentScore: 0.99,
+      lightingScore: 0.1,
+      headYaw: 12,
+    });
+
+    expect(created).toMatchObject({ createdNow: true, photo: { id: 'photo-canonical' } });
+    expect(replay).toMatchObject({
+      createdNow: false,
+      photo: {
+        id: 'photo-canonical',
+        captureSessionId: CAPTURE_SESSION_ID,
+        alignmentScore: 0.7,
         lightingScore: 0.8,
-        headRoll: 0,
-        headYaw: 0,
-        headPitch: 0,
-        isReference: true,
-        referencePhotoId: null,
-        captureSessionId: null,
-        localUri: null,
-        notes: 'legacy note',
-        localOnly: true,
-        storagePath: null,
-        faceRegionRedacted: false,
-        isEncrypted: true,
+        headYaw: null,
       },
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(mocks.deleteCapturedPhotoSource.mock.calls).toEqual([
+      ['file:///first.jpg'],
+      ['file:///replayed.jpg'],
     ]);
-    mocks.storage.set(KEY, legacy);
-
-    await expect(readPhotos()).resolves.toMatchObject({
-      status: 'available',
-      format: 'legacy',
-      photos: [{ id, isEncrypted: false, localUri: null, localOnly: true, storagePath: null }],
-    });
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-
-    await updatePhoto(id, { timeOfDay: 'evening' });
-
-    expect(envelope()).toMatchObject({
-      version: 2,
-      mutation: null,
-      retainedItems: [],
-      items: [
-        {
-          id,
-          timeOfDay: 'evening',
-          localUri: null,
-          isEncrypted: false,
-          encryptedLocalUri: null,
-          encryptionVersion: 'none',
-          keyId: null,
-          localOnly: true,
-          storagePath: null,
-          notes: null,
-          notesCiphertext: 'enc:legacy note',
-        },
-      ],
-    });
+    expect(mocks.randomIds).toEqual(['unused-photo-id']);
   });
 
-  it('preserves a legacy plaintext file row when no owner-bound migration exists', async () => {
-    const id = uuid(1);
-    const legacy = JSON.stringify([
-      {
-        ...storedPhoto(id),
-        localUri: 'file://document/legacy-photo.jpg',
-        notes: 'must remain plaintext until a real migration owns the file',
-        encryptedLocalUri: null,
-        encryptionVersion: 'none',
-        keyId: null,
-      },
-    ]);
-    mocks.storage.set(KEY, legacy);
+  it('publishes an encrypted thumbnail bound to the canonical photo and capture session', async () => {
+    mocks.randomIds = ['photo-with-thumbnail'];
 
-    await expect(readPhotos()).resolves.toMatchObject({ status: 'available', format: 'legacy' });
-    await expect(updatePhoto(id, { timeOfDay: 'evening' })).rejects.toThrow(
-      PHOTO_MUTATION_JOURNAL_INCONSISTENT,
+    const result = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+
+    expect(mocks.createEncryptedPhotoThumbnail).toHaveBeenCalledWith({
+      sourceUri: 'file:///captured.jpg',
+      photoId: 'photo-with-thumbnail',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    expect(result.photo).toMatchObject({
+      id: 'photo-with-thumbnail',
+      encryptedLocalUri: 'file:///captured.jpg.photo-with-thumbnail.layerwellphoto',
+      thumbnailLocalUri: 'file:///captured.jpg.photo-with-thumbnail-thumbnail.layerwellphoto',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledAfter(
+      mocks.createEncryptedPhotoThumbnail,
     );
-
-    expect(mocks.storage.get(KEY)).toBe(legacy);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.encryptPhotoNote).not.toHaveBeenCalled();
   });
 
-  it('drops a delayed stale read at an account boundary before note decryption or publication', async () => {
-    const raw = JSON.stringify({
-      version: 2,
-      items: [storedPhoto(uuid(1), { notesCiphertext: 'owner-a-note' })],
-      mutation: null,
-      retainedItems: [],
-    });
-    let releaseRead!: (result: PrivateKVReadResult) => void;
-    mocks.readPrivateItem.mockImplementationOnce(
-      () =>
-        new Promise<PrivateKVReadResult>((resolve) => {
-          releaseRead = resolve;
-        }),
-    );
-
-    const read = readPhotos();
-    await vi.waitFor(() => expect(mocks.readPrivateItem).toHaveBeenCalledOnce());
-    beginAccountGenerationBoundary();
-    try {
-      releaseRead({ status: 'available', value: raw });
-      await expect(read).resolves.toEqual({
-        status: 'unavailable',
-        photos: null,
-        reason: 'account_boundary',
-      });
-    } finally {
-      endAccountGenerationBoundary();
-    }
-
-    expect(mocks.decryptPhotoNote).not.toHaveBeenCalled();
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-  });
-
-  it('rejects a plaintext capture unless its opaque handle resolves to the exact URI', async () => {
-    const actual = capture(CAPTURE_A);
+  it('deletes an uncommitted original and preserves the raw source when thumbnail creation fails', async () => {
+    mocks.randomIds = ['photo-thumbnail-failure'];
+    mocks.createEncryptedPhotoThumbnail.mockRejectedValueOnce(new Error('thumbnail failed'));
 
     await expect(
-      addPhoto({
+      addPhotoWithOutcome({
         takenLocalDate: '2026-07-03',
-        captureSessionId: CAPTURE_A,
-        localUri: `${actual}.x`,
+        localUri: 'file:///captured.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
       }),
-    ).rejects.toThrow('PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED');
-    await expect(addPhoto({ takenLocalDate: '2026-07-03', localUri: actual })).rejects.toThrow(
-      'PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED',
-    );
+    ).rejects.toThrow('thumbnail failed');
 
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.recoverPhotoRenditionPublication).toHaveBeenCalledWith(new Set());
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+  });
+
+  it('serializes simultaneous retries for one capture session into one encrypted photo', async () => {
+    mocks.randomIds = ['photo-concurrent', 'unused-photo-id'];
+    let releaseFirstWrite!: () => void;
+    let markFirstWriteStarted!: () => void;
+    mocks.setPrivateItemGate = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve;
+    });
+    const firstWriteStarted = new Promise<void>((resolve) => {
+      markFirstWriteStarted = resolve;
+    });
+    mocks.setPrivateItemStarted = markFirstWriteStarted;
+
+    const first = addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      timeOfDay: 'evening',
+      localUri: 'file:///first.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    await firstWriteStarted;
+    const retry = addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      timeOfDay: 'evening',
+      localUri: 'file:///retry.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+
+    await Promise.resolve();
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    releaseFirstWrite();
+    const [created, replayed] = await Promise.all([first, retry]);
+
+    expect(created).toMatchObject({ createdNow: true, photo: { id: 'photo-concurrent' } });
+    expect(replayed).toMatchObject({ createdNow: false, photo: { id: 'photo-concurrent' } });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(mocks.deleteCapturedPhotoSource.mock.calls).toEqual([
+      ['file:///first.jpg'],
+      ['file:///retry.jpg'],
+    ]);
+    expect(mocks.randomIds).toEqual(['unused-photo-id']);
+  });
+
+  it('does not return a queued replay or delete its source after health-lease replacement', async () => {
+    await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///first.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    mocks.deleteCapturedPhotoSource.mockClear();
+    mocks.encryptCapturedPhoto.mockClear();
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.getPrivateItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.getPrivateItemStarted = markReadStarted;
+
+    const blocker = loadPhotos();
+    await readStarted;
+    const replay = addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///retry.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(2, {
+      ownerUserId: 'user-a',
+      accountGeneration: testAccountGeneration,
+    });
+    releaseRead();
+
+    await expect(blocker).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    await expect(replay).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
     expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
   });
 
-  it('commits an encrypted capture then removes its plaintext authority', async () => {
-    const source = capture(CAPTURE_A);
-    const id = uuid(1);
-    mocks.randomIds = [id];
-
-    await expect(
-      addPhoto({
-        takenLocalDate: '2026-07-03',
-        captureSessionId: CAPTURE_A,
-        localUri: source,
-        alignmentScore: 0.91,
-        lightingScore: 0.88,
-        qualitySource: 'post_capture_measurement',
-      }),
-    ).resolves.toMatchObject({
-      result: { id, localUri: photoUri(id), localOnly: true },
-      photos: [{ id, localUri: photoUri(id), localOnly: true }],
-    });
-
-    expect(envelope()).toMatchObject({ version: 2, mutation: null });
-    expect(envelope().items).toHaveLength(1);
-    expect(mocks.finalFiles.has(photoUri(id))).toBe(true);
-    expect(mocks.plaintext.has(CAPTURE_A)).toBe(false);
-  });
-
-  it('recovers a prepared add after final encryption but before metadata commit', async () => {
-    const source = capture(CAPTURE_A);
-    const id = uuid(1);
-    mocks.randomIds = [id];
-    mocks.setFailureBefore.add(2);
-
-    await expect(
-      addPhoto({ takenLocalDate: '2026-07-03', captureSessionId: CAPTURE_A, localUri: source }),
-    ).rejects.toThrow('WRITE_BEFORE_2');
-
-    expect(envelope().mutation).toEqual({ kind: 'add', operationId: id, phase: 'prepared' });
-    expect(mocks.finalFiles.has(photoUri(id))).toBe(true);
-    expect(mocks.plaintext.has(CAPTURE_A)).toBe(true);
-
-    await recoverPhotoStoreMutations();
-    expect(envelope().mutation).toBeNull();
-    expect(envelope().items).toHaveLength(1);
-    expect(mocks.plaintext.has(CAPTURE_A)).toBe(false);
-  });
-
-  it('retries committed-add plaintext cleanup without duplicating metadata', async () => {
-    const source = capture(CAPTURE_A);
-    const id = uuid(1);
-    mocks.randomIds = [id];
-    mocks.cleanupErrorOnce = new Error('PLAINTEXT_CLEANUP_FAILED');
-
-    await expect(
-      addPhoto({ takenLocalDate: '2026-07-03', captureSessionId: CAPTURE_A, localUri: source }),
-    ).rejects.toThrow('PLAINTEXT_CLEANUP_FAILED');
-    expect(envelope().mutation?.phase).toBe('metadata_committed');
-
-    await recoverPhotoStoreMutations();
-    expect(envelope().mutation).toBeNull();
-    expect(envelope().items).toHaveLength(1);
-    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledTimes(1);
-    expect(mocks.cleanupCalls).toEqual([CAPTURE_A, CAPTURE_A]);
-  });
-
-  it('resolves private-KV commit-then-reject by exact readback', async () => {
-    const source = capture(CAPTURE_A);
-    mocks.setFailureAfter.add(1);
-    mocks.setFailureAfter.add(2);
-    mocks.setFailureAfter.add(3);
-
-    await expect(
-      addPhoto({ takenLocalDate: '2026-07-03', captureSessionId: CAPTURE_A, localUri: source }),
-    ).resolves.toBeDefined();
-    expect(envelope().mutation).toBeNull();
-  });
-
-  it('serializes 100 simultaneous metadata-only additions without dropping a row', async () => {
-    mocks.randomIds = Array.from({ length: 100 }, (_, index) => uuid(index + 1));
-
-    await Promise.all(
-      Array.from({ length: 100 }, (_, index) =>
-        addPhoto({ takenLocalDate: `2026-07-${String((index % 28) + 1).padStart(2, '0')}` }),
-      ),
-    );
-
-    expect(envelope().items).toHaveLength(100);
-    expect(new Set(envelope().items.map((item) => item.id))).toHaveLength(100);
-  });
-
-  it('does zero writes for missing and identical updates or an already-exclusive reference', async () => {
-    const id = uuid(1);
-    seedSettled([storedPhoto(id, { notes: null, isReference: true })]);
-    const before = mocks.writeAttempts;
-
-    await updatePhoto('missing', { notes: 'x' });
-    await updatePhoto(id, { notes: null });
-    await setReference(id);
-
-    expect(mocks.writeAttempts).toBe(before);
-  });
-
-  it('encrypts a note, reloads it exactly, preserves bytes on failure, and converges on retry', async () => {
-    const id = uuid(1);
-    const plaintextByCiphertext = new Map<string, string>();
-    let ciphertextSequence = 0;
-    seedSettled([storedPhoto(id, { notes: null, notesCiphertext: null })]);
-    mocks.encryptPhotoNote.mockImplementation(async (notes: string | null) => {
-      if (notes === null) return null;
-      const ciphertext = `opaque-note-${++ciphertextSequence}`;
-      plaintextByCiphertext.set(ciphertext, notes);
-      return ciphertext;
-    });
-    mocks.decryptPhotoNote.mockImplementation(async (ciphertext: string) => {
-      const plaintext = plaintextByCiphertext.get(ciphertext);
-      if (plaintext === undefined) throw new Error('PHOTO_DECRYPTION_FAILED');
-      return plaintext;
-    });
-
-    const firstNote = 'Started retinol after travel.';
-    await expect(updatePhoto(id, { notes: firstNote })).resolves.toMatchObject({
-      photos: [{ id, notes: firstNote }],
-    });
-    expect(mocks.storage.get(KEY)).not.toContain(firstNote);
-    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: firstNote }]);
-
-    const settledBeforeFailure = mocks.storage.get(KEY);
-    const failedWriteAttempt = mocks.writeAttempts + 1;
-    mocks.setFailureBefore.add(failedWriteAttempt);
-    await expect(updatePhoto(id, { notes: 'Draft retained for retry.' })).rejects.toThrow(
-      `WRITE_BEFORE_${failedWriteAttempt}`,
-    );
-    expect(mocks.storage.get(KEY)).toBe(settledBeforeFailure);
-    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: firstNote }]);
-
-    const retriedNote = 'Draft retained for retry.';
-    await expect(updatePhoto(id, { notes: retriedNote })).resolves.toMatchObject({
-      photos: [{ id, notes: retriedNote }],
-    });
-    expect(mocks.storage.get(KEY)).not.toContain(retriedNote);
-    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: retriedNote }]);
-
-    const ambiguousNote = 'The write completed before its response was lost.';
-    mocks.setFailureAfter.add(mocks.writeAttempts + 1);
-    await expect(updatePhoto(id, { notes: ambiguousNote })).resolves.toMatchObject({
-      photos: [{ id, notes: ambiguousNote }],
-    });
-    expect(mocks.storage.get(KEY)).not.toContain(ambiguousNote);
-    await expect(loadPhotos()).resolves.toMatchObject([{ id, notes: ambiguousNote }]);
-  });
-
-  it('returns the exact post-commit snapshot for update, reference, and remove', async () => {
-    const firstId = uuid(1);
-    const secondId = uuid(2);
-    seedSettled([
-      storedPhoto(firstId, { isReference: true }),
-      storedPhoto(secondId, { isReference: false }),
-    ]);
-    mocks.finalFiles.add(photoUri(firstId));
-
-    await expect(updatePhoto(secondId, { timeOfDay: 'evening' })).resolves.toMatchObject({
-      result: undefined,
-      photos: [
-        { id: firstId, isReference: true, notes: null },
-        { id: secondId, isReference: false, notes: null, timeOfDay: 'evening' },
-      ],
-    });
-    const referenceCommit = await setReference(secondId);
-    expect(referenceCommit).toMatchObject({
-      result: undefined,
-      photos: [
-        { id: firstId, isReference: false },
-        { id: secondId, isReference: true },
-      ],
-    });
-    const removeCommit = await removePhoto(firstId);
-    expect(removeCommit).toMatchObject({
-      result: undefined,
-      photos: [{ id: secondId, isReference: true }],
-    });
-
-    await expect(loadPhotos()).resolves.toEqual(removeCommit.photos);
-  });
-
-  it('recovers delete after a crash midway through exact quarantine staging', async () => {
-    const id = uuid(1);
-    const uri = photoUri(id);
-    seedSettled([storedPhoto(id)]);
-    mocks.finalFiles.add(uri);
-    mocks.stageErrorAfterMoveOnce = new Error('PROCESS_DIED_AFTER_MOVE');
-
-    await expect(removePhoto(id)).rejects.toThrow('PROCESS_DIED_AFTER_MOVE');
-    const prepared = envelope().mutation!;
-    expect(prepared).toMatchObject({ kind: 'delete', phase: 'prepared' });
-    expect(mocks.finalFiles.has(uri)).toBe(false);
-    expect(mocks.quarantines.has(quarantineKey(uri, prepared.operationId))).toBe(true);
-
-    await recoverPhotoStoreMutations();
-    expect(envelope().items).toEqual([]);
-    expect(envelope().mutation).toBeNull();
-    expect(mocks.quarantines.size).toBe(0);
-  });
-
-  it('recovers delete after irreversible cleanup commits then rejects', async () => {
-    const id = uuid(1);
-    const uri = photoUri(id);
-    seedSettled([storedPhoto(id)]);
-    mocks.finalFiles.add(uri);
-    mocks.finalizeErrorAfterDeleteOnce = new Error('DELETE_RESPONSE_LOST');
-
-    await expect(removePhoto(id)).rejects.toThrow('DELETE_RESPONSE_LOST');
-    expect(envelope().mutation?.phase).toBe('metadata_committed');
-    expect(mocks.finalFiles.has(uri)).toBe(false);
-    expect(mocks.quarantines.size).toBe(0);
-
-    await recoverPhotoStoreMutations();
-    expect(envelope().items).toEqual([]);
-    expect(envelope().mutation).toBeNull();
-  });
-
-  it('atomically co-commits one owner-bound tombstone with the prepared photo journal', async () => {
-    const id = uuid(1);
-    seedSettled([storedPhoto(id)]);
-    mocks.finalFiles.add(photoUri(id));
-
-    const owner = authenticatedPhotoOwner();
-    await removePhoto(id, owner);
-
-    expect(mocks.updatePrivateItemsTransactionally).toHaveBeenCalledExactlyOnceWith(
-      [KEY, OUTBOX_STORAGE_KEY],
-      expect.any(Function),
-    );
-    const committed = mocks.transactionSnapshots[0]!;
-    const preparedPhoto = JSON.parse(committed.get(KEY)!) as StoredEnvelope;
-    const queued = decodeOutboxEnvelope(committed.get(OUTBOX_STORAGE_KEY) ?? null);
-    expect(preparedPhoto.mutation).toMatchObject({
-      kind: 'delete',
-      phase: 'prepared',
-    });
-    expect(queued.rows).toEqual([
-      expect.objectContaining({
-        operationId: preparedPhoto.mutation!.operationId,
-        ownerHash: 'a'.repeat(64),
-        ownerGeneration: owner.ownerGeneration,
-        entityType: 'photo_delete',
-        entityId: id,
-        operationKind: 'delete',
-        payload: null,
-        tombstone: true,
-        idempotencyKey: `photo_delete:${preparedPhoto.mutation!.operationId}`,
-      }),
-    ]);
-    expect(envelope().mutation).toBeNull();
-    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY) ?? null).rows).toEqual(
-      queued.rows,
-    );
-  });
-
-  it('recovers the local deletion after an atomic commit response is lost without duplicating intent', async () => {
-    const id = uuid(1);
-    seedSettled([storedPhoto(id)]);
-    mocks.finalFiles.add(photoUri(id));
-    mocks.transactionErrorAfterCommit = new Error('TRANSACTION_RESPONSE_LOST');
-
-    await expect(removePhoto(id, authenticatedPhotoOwner())).rejects.toThrow(
-      'TRANSACTION_RESPONSE_LOST',
-    );
-    const preparedOperationId = envelope().mutation!.operationId;
-    const queuedBeforeRecovery = mocks.storage.get(OUTBOX_STORAGE_KEY)!;
-    expect(decodeOutboxEnvelope(queuedBeforeRecovery).rows[0]?.operationId).toBe(
-      preparedOperationId,
-    );
-    expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
-
-    await recoverPhotoStoreMutations();
-    expect(envelope().mutation).toBeNull();
-    expect(envelope().items).toEqual([]);
-    expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(queuedBeforeRecovery);
-
-    await removePhoto(id, authenticatedPhotoOwner());
-    expect(mocks.updatePrivateItemsTransactionally).toHaveBeenCalledTimes(1);
-    expect(decodeOutboxEnvelope(mocks.storage.get(OUTBOX_STORAGE_KEY)!).rows).toHaveLength(1);
-  });
-
-  it('fails atomically on malformed or future outbox state before moving photo files', async () => {
-    for (const [raw, error] of [
-      ['{"version":6,"rows":"bad","revisions":[]}', 'OUTBOX_INVALID'],
-      ['{"version":999,"rows":[],"revisions":[]}', OUTBOX_UNSUPPORTED_VERSION],
-    ]) {
-      const id = uuid(1);
-      const photoRaw = seedSettled([storedPhoto(id)]);
-      mocks.storage.set(OUTBOX_STORAGE_KEY, raw);
-      mocks.finalFiles.add(photoUri(id));
-
-      await expect(removePhoto(id, authenticatedPhotoOwner())).rejects.toThrow(error);
-      expect(mocks.storage.get(KEY)).toBe(photoRaw);
-      expect(mocks.storage.get(OUTBOX_STORAGE_KEY)).toBe(raw);
-      expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
-
-      mocks.storage.clear();
-      mocks.finalFiles.clear();
-      mocks.updatePrivateItemsTransactionally.mockClear();
-    }
-  });
-
-  it('rejects an owner A to B boundary before the atomic tombstone commit', async () => {
-    const id = uuid(1);
-    const photoRaw = seedSettled([storedPhoto(id)]);
-    mocks.finalFiles.add(photoUri(id));
-    mocks.transactionHook = () => {
-      beginAccountGenerationBoundary();
-      mocks.transactionErrorBeforeCommit = new Error('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
+  it('reconciles a metadata write that commits before throwing and returns it on retry', async () => {
+    mocks.randomIds = ['photo-ambiguous', 'unused-photo-id'];
+    mocks.setPrivateItemCommitThenError = new Error('ambiguous private-store response');
+    const input = {
+      takenLocalDate: '2026-07-03',
+      timeOfDay: 'morning' as const,
+      localUri: 'file:///ambiguous.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
     };
 
+    await expect(addPhotoWithOutcome(input)).rejects.toThrow('ambiguous private-store response');
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.beginPhotoRenditionPublication).toHaveBeenCalledOnce();
+    expect(mocks.settlePhotoRenditionPublication).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+
+    const replay = await addPhotoWithOutcome(input);
+
+    expect(replay).toMatchObject({ createdNow: false, photo: { id: 'photo-ambiguous' } });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenLastCalledWith([
+      'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
+      'file:///ambiguous.jpg.photo-ambiguous-thumbnail.layerwellphoto',
+    ]);
+    expect(mocks.encryptedFiles).toEqual(new Set([
+      'file:///ambiguous.jpg.photo-ambiguous.layerwellphoto',
+      'file:///ambiguous.jpg.photo-ambiguous-thumbnail.layerwellphoto',
+    ]));
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledOnce();
+    expect(mocks.randomIds).toEqual(['unused-photo-id']);
+  });
+
+  it('keeps a committed replay fail-closed until its raw source deletion succeeds', async () => {
+    await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///first.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    mocks.deleteCapturedPhotoSource.mockClear();
+    mocks.deleteCapturedPhotoSource.mockRejectedValueOnce(new Error('source busy'));
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///retry.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
+      }),
+    ).rejects.toThrow('source busy');
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledWith('file:///retry.jpg');
+  });
+
+  it('fails closed when one capture session is replayed with conflicting route metadata', async () => {
+    await addPhotoWithOutcome({
+      series: 'front',
+      takenLocalDate: '2026-07-03',
+      timeOfDay: 'morning',
+      localUri: 'file:///first.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    mocks.deleteCapturedPhotoSource.mockClear();
+
+    for (const conflict of [
+      { series: 'front' as const, takenLocalDate: '2026-07-04', timeOfDay: 'morning' as const },
+      { series: 'front' as const, takenLocalDate: '2026-07-03', timeOfDay: 'evening' as const },
+      { series: 'left' as const, takenLocalDate: '2026-07-03', timeOfDay: 'morning' as const },
+    ]) {
+      await expect(
+        addPhotoWithOutcome({
+          ...conflict,
+          localUri: 'file:///conflict.jpg',
+          captureSessionId: CAPTURE_SESSION_ID,
+        }),
+      ).rejects.toThrow(PHOTO_CAPTURE_SESSION_CONFLICT);
+    }
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+  });
+
+  it('rejects malformed capture-session input before creating or deleting photo bytes', async () => {
+    mocks.randomIds = ['unused-photo-id'];
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///untrusted.jpg',
+        captureSessionId: 'not-a-canonical-capture-session',
+      }),
+    ).rejects.toThrow(PHOTO_CAPTURE_SESSION_INVALID);
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+    expect(mocks.randomIds).toEqual(['unused-photo-id']);
+  });
+
+  it('rejects malformed persisted session IDs and ambiguous duplicate canonical sessions', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify([
+        {
+          id: 'legacy-photo',
+          series: 'front',
+          takenLocalDate: '2026-07-01',
+          captureSessionId: 'legacy-unbounded-session',
+        },
+      ]),
+    );
+    await expect(loadPhotos()).rejects.toThrow(PHOTO_METADATA_INVALID);
+    expect(mocks.storage.get(KEY)).toContain('legacy-unbounded-session');
+    expect(mocks.reconcileEncryptedPhotoStorage).not.toHaveBeenCalled();
+
+    mocks.storage.set(
+      KEY,
+      JSON.stringify([
+        {
+          id: 'duplicate-a',
+          series: 'front',
+          takenLocalDate: '2026-07-03',
+          captureSessionId: CAPTURE_SESSION_ID,
+        },
+        {
+          id: 'duplicate-b',
+          series: 'front',
+          takenLocalDate: '2026-07-03',
+          captureSessionId: CAPTURE_SESSION_ID.toUpperCase(),
+        },
+      ]),
+    );
+    mocks.deleteCapturedPhotoSource.mockClear();
+    mocks.encryptCapturedPhoto.mockClear();
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///duplicate.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
+      }),
+    ).rejects.toThrow(PHOTO_CAPTURE_SESSION_DUPLICATE);
+
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+  });
+
+  it('retains normal non-capture additions without an idempotency key', async () => {
+    mocks.randomIds = ['photo-a', 'photo-b'];
+
+    const first = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: null,
+    });
+    const second = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: null,
+    });
+
+    expect(first.createdNow).toBe(true);
+    expect(second.createdNow).toBe(true);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(2);
+  });
+
+  it('serializes concurrent photo additions so neither metadata update is lost', async () => {
+    mocks.randomIds = ['photo-a', 'photo-b'];
+    let releaseFirstWrite!: () => void;
+    let markFirstWriteStarted!: () => void;
+    mocks.setPrivateItemGate = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve;
+    });
+    const firstWriteStarted = new Promise<void>((resolve) => {
+      markFirstWriteStarted = resolve;
+    });
+    mocks.setPrivateItemStarted = markFirstWriteStarted;
+
+    const first = addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///first.jpg',
+    });
+    await firstWriteStarted;
+    const second = addPhoto({
+      takenLocalDate: '2026-07-04',
+      localUri: 'file:///second.jpg',
+    });
+
+    await Promise.resolve();
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledTimes(1);
+    releaseFirstWrite();
+    await Promise.all([first, second]);
+
+    const stored = JSON.parse(mocks.storage.get(KEY) ?? '[]') as {
+      id: string;
+      takenLocalDate: string;
+    }[];
+    expect(stored).toHaveLength(2);
+    expect(stored.map((photo) => photo.id)).toEqual(['photo-b', 'photo-a']);
+    expect(stored.map((photo) => photo.takenLocalDate)).toEqual(['2026-07-04', '2026-07-03']);
+  });
+
+  it('rejects an account-A mutation queued before the account generation changes', async () => {
+    let releaseFirstWrite!: () => void;
+    let markFirstWriteStarted!: () => void;
+    mocks.setPrivateItemGate = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve;
+    });
+    const firstWriteStarted = new Promise<void>((resolve) => {
+      markFirstWriteStarted = resolve;
+    });
+    mocks.setPrivateItemStarted = markFirstWriteStarted;
+
+    const first = addPhoto({ takenLocalDate: '2026-07-03', localUri: null });
+    await firstWriteStarted;
+    const queuedClear = clearPhotos();
+    beginAccountGenerationBoundary();
+    testAccountGeneration += 1;
+
     try {
-      await expect(removePhoto(id, authenticatedPhotoOwner())).rejects.toThrow();
-      expect(mocks.storage.get(KEY)).toBe(photoRaw);
-      expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
-      expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
+      let drainFinished = false;
+      const drain = waitForAccountGenerationOperationsToSettle().then(() => {
+        drainFinished = true;
+      });
+      await Promise.resolve();
+      expect(drainFinished).toBe(false);
+
+      releaseFirstWrite();
+      await expect(first).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      await expect(queuedClear).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      await drain;
+
+      expect(drainFinished).toBe(true);
+      expect(mocks.removePrivateItem).not.toHaveBeenCalled();
     } finally {
       endAccountGenerationBoundary();
     }
   });
 
-  it('keeps signed-out and authenticated legacy IDs on the local-only delete path', async () => {
-    for (const owner of [
-      { ownerGeneration: getAccountGeneration() },
-      authenticatedPhotoOwner(),
-    ] as const) {
-      const id = 'ownerId' in owner ? 'legacy-photo-id' : uuid(1);
-      seedSettled([storedPhoto(id)]);
-      mocks.finalFiles.add(photoUri(id));
+  it('rejects an epoch-1 photo queued behind a write after withdrawal and epoch-2 re-grant', async () => {
+    mocks.randomIds = ['photo-a', 'photo-b'];
+    let releaseFirstWrite!: () => void;
+    let markFirstWriteStarted!: () => void;
+    mocks.setPrivateItemGate = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve;
+    });
+    const firstWriteStarted = new Promise<void>((resolve) => {
+      markFirstWriteStarted = resolve;
+    });
+    mocks.setPrivateItemStarted = markFirstWriteStarted;
 
-      await removePhoto(id, owner);
-      expect(envelope().items).toEqual([]);
-      expect(mocks.updatePrivateItemsTransactionally).not.toHaveBeenCalled();
-      expect(mocks.storage.has(OUTBOX_STORAGE_KEY)).toBe(false);
+    const first = addPhoto({ takenLocalDate: '2026-07-03', localUri: 'file:///first.jpg' });
+    await firstWriteStarted;
+    const queued = addPhoto({ takenLocalDate: '2026-07-04', localUri: 'file:///second.jpg' });
 
-      mocks.storage.clear();
-      mocks.finalFiles.clear();
-      mocks.setPrivateItem.mockClear();
-    }
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(2, {
+      ownerUserId: 'user-a',
+      accountGeneration: testAccountGeneration,
+    });
+    releaseFirstWrite();
+
+    await expect(first).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    await expect(queued).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledTimes(1);
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalledWith(
+      'file:///second.jpg',
+      expect.anything(),
+    );
   });
 
-  it('fails before destructive authority for an unsafe legacy ID', async () => {
-    const unsafeId = 'photo/../other';
-    const raw = JSON.stringify([
-      storedPhoto(unsafeId, {
-        localUri: photoUri('photoother'),
-        encryptedLocalUri: photoUri('photoother'),
-      }),
-    ]);
-    mocks.storage.set(KEY, raw);
-    mocks.finalFiles.add(photoUri('photoother'));
+  it('does not return account-A photo plaintext after an A-to-B same-epoch switch', async () => {
+    mocks.storage.set(KEY, JSON.stringify([{ id: 'photo-a', takenLocalDate: '2026-07-01' }]));
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.getPrivateItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.getPrivateItemStarted = markReadStarted;
 
-    await expect(removePhoto(unsafeId)).rejects.toThrow(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.verifyEncryptedPhotoDeletionSources).not.toHaveBeenCalled();
-    expect(mocks.stageEncryptedPhotoDeletions).not.toHaveBeenCalled();
+    const pending = loadPhotos();
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-b',
+      accountGeneration: testAccountGeneration,
+    });
+    releaseRead();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    expect(mocks.reconcileEncryptedPhotoStorage).not.toHaveBeenCalled();
   });
 
-  it('clears canonical primary and thumbnail files through one replayable journal', async () => {
-    const id = uuid(1);
-    const primary = photoUri(id);
-    const thumbnail = thumbnailUri(id);
-    seedSettled([
-      storedPhoto(id, {
-        thumbnailLocalUri: thumbnail,
-      }),
-    ]);
-    mocks.finalFiles.add(primary);
-    mocks.finalFiles.add(thumbnail);
-
-    await clearPhotos();
-
-    expect(envelope().items).toEqual([]);
-    expect(envelope().mutation).toBeNull();
-    expect(mocks.finalFiles.size).toBe(0);
-    expect(mocks.quarantines.size).toBe(0);
-  });
-
-  it('preserves duplicate or malformed settled authority without mutation', async () => {
-    const id = uuid(1);
-    const raw = seedSettled([storedPhoto(id), storedPhoto(id)]);
-
-    await expect(clearPhotos()).rejects.toThrow(PHOTO_METADATA_INVALID);
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-  });
-
-  it('keeps an absent delete a local and remote no-op', async () => {
-    await removePhoto('missing', authenticatedPhotoOwner());
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.updatePrivateItemsTransactionally).not.toHaveBeenCalled();
-  });
-
-  it('requires the capture session only when plaintext encryption is requested', async () => {
-    await expect(addPhoto({ takenLocalDate: '2026-07-03' })).resolves.toMatchObject({
-      result: {
-        localUri: null,
-        captureSessionId: null,
+  it('keeps metadata intact when a photo cannot be quarantined for deletion', async () => {
+    const stored = JSON.stringify([
+      {
+        id: 'photo-1',
+        series: 'front',
+        takenLocalDate: '2026-07-01',
+        localUri: 'file:///photo-1.layerwellphoto',
       },
-      photos: [
-        {
-          localUri: null,
-          captureSessionId: null,
-        },
-      ],
+    ]);
+    mocks.storage.set(KEY, stored);
+    mocks.quarantineError = new Error('file busy');
+
+    await expect(removePhoto('photo-1')).rejects.toThrow('file busy');
+
+    expect(mocks.storage.get(KEY)).toBe(stored);
+    expect(mocks.restoreQuarantinedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
+  });
+
+  it('restores quarantined files when delete metadata persistence fails', async () => {
+    const stored = JSON.stringify([
+      {
+        id: 'photo-1',
+        series: 'front',
+        takenLocalDate: '2026-07-01',
+        localUri: 'file:///photo-1.layerwellphoto',
+      },
+    ]);
+    mocks.storage.set(KEY, stored);
+    mocks.setPrivateItemError = new Error('metadata unavailable');
+
+    await expect(removePhoto('photo-1')).rejects.toThrow('metadata unavailable');
+
+    expect(mocks.restoreQuarantinedPhoto).toHaveBeenCalledWith({
+      originalUri: 'file:///photo-1.layerwellphoto',
+      quarantinedUri: expect.stringContaining(
+        'file:///photo-1.layerwellphoto.pending-delete-delete-photo-1-',
+      ),
+    });
+    expect(mocks.storage.get(KEY)).toBe(stored);
+    expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
+  });
+
+  it('does not issue a remote delete when the local record does not exist', async () => {
+    await removePhoto('missing-photo');
+
+    expect(mocks.from).not.toHaveBeenCalled();
+    expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenCalledWith([], {
+      removeUnreferencedFinals: false,
+    });
+  });
+
+  it('keeps measured pose and provenance inside the encrypted local record', async () => {
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      headRoll: 1,
+      headYaw: 2,
+      headPitch: -1,
+      qualitySource: 'post_capture_measurement',
     });
 
-    capture(CAPTURE_B);
-    await expect(
-      addPhoto({ takenLocalDate: '2026-07-04', captureSessionId: CAPTURE_B }),
-    ).rejects.toThrow('PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED');
+    const [stored] = JSON.parse(mocks.storage.get(KEY) ?? '[]') as Record<string, unknown>[];
+    expect(stored).toMatchObject({
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      headRoll: 1,
+      headYaw: 2,
+      headPitch: -1,
+      qualitySource: 'post_capture_measurement',
+      localOnly: true,
+      storagePath: null,
+    });
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('keeps unproven legacy-style quality values local and untrusted', async () => {
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: null,
+      alignmentScore: 0.99,
+      lightingScore: 0.99,
+      headRoll: 1,
+      headYaw: 2,
+      headPitch: 3,
+    });
+
+    const [stored] = JSON.parse(mocks.storage.get(KEY) ?? '[]') as Record<string, unknown>[];
+    expect(stored?.qualitySource).toBeNull();
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('persists measured provenance without trusting legacy quality scores', async () => {
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: null,
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      qualitySource: 'post_capture_measurement',
+    });
+
+    const [stored] = JSON.parse(mocks.storage.get(KEY) ?? '[]') as {
+      qualitySource?: string;
+    }[];
+    expect(stored?.qualitySource).toBe('post_capture_measurement');
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('clears photo metadata and encrypted envelopes without decrypting the metadata log', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify([
+        {
+          id: 'photo-1',
+          series: 'front',
+          takenLocalDate: '2026-07-01',
+          localUri: 'file:///photo-1.layerwellphoto',
+          thumbnailLocalUri: 'file:///photo-1-thumb.layerwellphoto',
+        },
+      ]),
+    );
+
+    clearActiveHealthProcessingEpoch();
+    await clearPhotos();
+
+    expect(mocks.getPrivateItemStarted).toBeNull();
+    expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledOnce();
+    expect(mocks.quarantineEncryptedPhoto).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

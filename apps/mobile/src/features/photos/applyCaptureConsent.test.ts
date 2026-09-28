@@ -12,10 +12,10 @@ function readSource(path: string): string {
 }
 
 const deps = {
-  grant: vi.fn<() => Promise<'saved'>>(),
+  grant: vi.fn<() => Promise<void>>(),
   requestPermission: vi.fn<() => Promise<unknown>>(),
-  onSaved: vi.fn<(result: 'saved') => boolean>(),
-  onFailure: vi.fn<(error: unknown) => void>(),
+  onSaved: vi.fn<() => boolean>(),
+  onFailure: vi.fn<() => void>(),
 };
 
 describe('photo capture consent application', () => {
@@ -24,7 +24,7 @@ describe('photo capture consent application', () => {
     deps.requestPermission.mockReset();
     deps.onSaved.mockReset();
     deps.onFailure.mockReset();
-    deps.grant.mockResolvedValue('saved');
+    deps.grant.mockResolvedValue(undefined);
     deps.requestPermission.mockResolvedValue(undefined);
     deps.onSaved.mockReturnValue(true);
   });
@@ -33,18 +33,17 @@ describe('photo capture consent application', () => {
     await expect(applyPhotoCaptureConsent(deps)).resolves.toBe(true);
 
     expect(deps.grant).toHaveBeenCalledTimes(1);
-    expect(deps.onSaved).toHaveBeenCalledWith('saved');
+    expect(deps.onSaved).toHaveBeenCalledTimes(1);
     expect(deps.requestPermission).toHaveBeenCalledTimes(1);
     expect(deps.onFailure).not.toHaveBeenCalled();
   });
 
   it('fails closed when consent cannot be saved', async () => {
-    const error = new Error('private storage unavailable');
-    deps.grant.mockRejectedValueOnce(error);
+    deps.grant.mockRejectedValueOnce(new Error('private storage unavailable'));
 
     await expect(applyPhotoCaptureConsent(deps)).resolves.toBe(false);
 
-    expect(deps.onFailure).toHaveBeenCalledWith(error);
+    expect(deps.onFailure).toHaveBeenCalledTimes(1);
     expect(deps.onSaved).not.toHaveBeenCalled();
     expect(deps.requestPermission).not.toHaveBeenCalled();
   });
@@ -58,69 +57,6 @@ describe('photo capture consent application', () => {
     expect(deps.onFailure).not.toHaveBeenCalled();
   });
 
-  it('contains a synchronous OS permission request failure', async () => {
-    deps.requestPermission.mockImplementationOnce(() => {
-      throw new Error('permission prompt unavailable');
-    });
-
-    await expect(applyPhotoCaptureConsent(deps)).resolves.toBe(true);
-
-    expect(deps.requestPermission).toHaveBeenCalledTimes(1);
-    expect(deps.onSaved).toHaveBeenCalledTimes(1);
-    expect(deps.onFailure).not.toHaveBeenCalled();
-  });
-
-  it('does not request permission after the current route can no longer publish', async () => {
-    deps.onSaved.mockReturnValueOnce(false);
-
-    await expect(applyPhotoCaptureConsent(deps)).resolves.toBe(true);
-
-    expect(deps.onSaved).toHaveBeenCalledWith('saved');
-    expect(deps.requestPermission).not.toHaveBeenCalled();
-    expect(deps.onFailure).not.toHaveBeenCalled();
-  });
-
-  it('launches permission synchronously before a queued owner invalidation can run', async () => {
-    let ownerInvalidated = false;
-    deps.onSaved.mockImplementationOnce(() => {
-      queueMicrotask(() => {
-        ownerInvalidated = true;
-      });
-      return true;
-    });
-    deps.requestPermission.mockImplementationOnce(async () => {
-      expect(ownerInvalidated).toBe(false);
-    });
-
-    await expect(applyPhotoCaptureConsent(deps)).resolves.toBe(true);
-    await Promise.resolve();
-
-    expect(ownerInvalidated).toBe(true);
-    expect(deps.requestPermission).toHaveBeenCalledTimes(1);
-  });
-
-  it('deduplicates permission requests across concurrent consent helpers', async () => {
-    let finishPermission!: () => void;
-    deps.requestPermission.mockImplementationOnce(
-      () =>
-        new Promise<void>((resolve) => {
-          finishPermission = resolve;
-        }),
-    );
-
-    await expect(
-      Promise.all([applyPhotoCaptureConsent(deps), applyPhotoCaptureConsent(deps)]),
-    ).resolves.toEqual([true, true]);
-
-    expect(deps.grant).toHaveBeenCalledTimes(2);
-    expect(deps.onSaved).toHaveBeenCalledTimes(2);
-    expect(deps.requestPermission).toHaveBeenCalledTimes(1);
-
-    finishPermission();
-    await Promise.resolve();
-    await Promise.resolve();
-  });
-
   it('keeps the capture route on the failure-handled consent helper', () => {
     const source = readSource('app/progress/capture.tsx');
 
@@ -130,22 +66,16 @@ describe('photo capture consent application', () => {
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(source).toContain('simulatedPhotoConsentFailureUsed.current = true');
     expect(source).toContain("new Error('E2E_PHOTO_CONSENT_FAILURE')");
-    expect(source).toContain(
-      'const [consentSaveFailure, setConsentSaveFailure] = useState<ConsentSaveFailure>(null)',
-    );
-    expect(source).toContain('saveFailure={consentSaveFailure}');
+    expect(source).toContain('const [consentSaveFailed, setConsentSaveFailed] = useState(false)');
+    expect(source).toContain('saveFailed={consentSaveFailed}');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('const shortPhone = height < 520');
-    expect(source).toContain(
-      'const showPrepReminder = !(shortPhone || (compact && (saveFailed || reconsentRequired)))',
-    );
+    expect(source).toContain('const showPrepReminder = !(shortPhone || (compact && saveFailed))');
     expect(source).toContain('{showPrepReminder ? (');
     expect(source).toContain('PHOTO_COPY.capture.consentFailedTitle');
     expect(source).toContain('PHOTO_COPY.capture.consentFailedBody');
-    expect(source).toContain('consentGrantInFlightRef.current = true');
-    expect(source).toContain('PhotoCaptureConsentWriteUncertainError');
-    expect(source).toContain("? 'uncertain' : 'failed'");
-    expect(source).toContain('setConsentSaveFailure(null)');
+    expect(source).toContain('setConsentSaveFailed(true)');
+    expect(source).toContain('setConsentSaveFailed(false)');
     expect(source).toContain('disabled={granting}');
     expect(source).toContain('Saving choice');
     expect(source).not.toContain('Alert.alert(PHOTO_COPY.capture.consentFailedTitle');
@@ -154,15 +84,5 @@ describe('photo capture consent application', () => {
     expect(source.indexOf('simulatedPhotoConsentFailureUsed.current = true')).toBeLessThan(
       source.indexOf("new Error('E2E_PHOTO_CONSENT_FAILURE')"),
     );
-  });
-
-  it('does not let a never-settling native permission request pin consent completion', async () => {
-    deps.requestPermission.mockReturnValueOnce(new Promise<never>(() => undefined));
-
-    await expect(applyPhotoCaptureConsent(deps)).resolves.toBe(true);
-
-    expect(deps.requestPermission).toHaveBeenCalledTimes(1);
-    expect(deps.onSaved).toHaveBeenCalledTimes(1);
-    expect(deps.onFailure).not.toHaveBeenCalled();
   });
 });

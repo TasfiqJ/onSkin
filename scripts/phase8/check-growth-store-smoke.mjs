@@ -9,6 +9,10 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const checkPath = resolve(scriptDir, 'check-growth-store-readiness.mjs');
 const packetPath = resolve(scriptDir, 'build-growth-store-qa-packet.mjs');
+const core07aContractPath = resolve(
+  root,
+  'scripts/core07/share-admission-source-contract.test.mjs',
+);
 
 const passthroughKeys = [
   'ComSpec',
@@ -30,11 +34,11 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const validPublicIdentity = {
-  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.app',
-  EXPO_PUBLIC_MARKETING_URL: 'https://routinekind.app',
-  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@routinekind.app',
+  EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.app',
+  EXPO_PUBLIC_MARKETING_URL: 'https://layerwell.app',
+  EXPO_PUBLIC_SUPPORT_EMAIL: 'support@layerwell.app',
   EXPO_PUBLIC_APP_STORE_URL: 'https://apps.apple.com/app/id123456789',
-  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.routinekind.app',
+  EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.layerwell.app',
 };
 
 const validEvidence = {
@@ -56,6 +60,18 @@ const validEvidence = {
     'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
 };
 
+const core07aPacketBlockers = [
+  'CORE-07A share publication is not admitted; no runtime flag, final domain, reviewedBy field, or QA flag can authorize export.',
+  'CORE-07A public links are not admitted; the repository has no production token service or reviewed retention, revocation, deletion, and abuse contract.',
+];
+
+function hasCore07aPacketBlockers(packet) {
+  return (
+    packet?.status === 'blocked' &&
+    core07aPacketBlockers.every((blocker) => packet.blockers.includes(blocker))
+  );
+}
+
 function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
@@ -68,8 +84,16 @@ function run(extraEnv) {
   });
 }
 
+function runCore07aContract() {
+  return spawnSync(process.execPath, ['--test', core07aContractPath], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
 function runPacket(extraEnv) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase8-packet-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'layerwell-phase8-packet-'));
   try {
     const result = spawnSync(process.execPath, [packetPath], {
       cwd: root,
@@ -95,6 +119,13 @@ function runPacketWithDirtyWorktree(extraEnv) {
 
 const cases = [
   {
+    name: 'CORE-07A share admission remains literal-closed and side-effect free',
+    result: runCore07aContract(),
+    expect(result) {
+      return result.status === 0;
+    },
+  },
+  {
     name: 'Phase 8 accepts production public identity from process env',
     result: run(validPublicIdentity),
     expect(result) {
@@ -113,7 +144,7 @@ const cases = [
     name: 'Phase 8 rejects reserved final domains',
     result: run({
       ...validPublicIdentity,
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'layerwell.local',
     }),
     expect(result) {
       return result.status === 0 && /Missing final brand domain/.test(output(result));
@@ -217,7 +248,8 @@ const cases = [
     result: runPacket({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
       return (
-        result.status === 0 &&
+        result.status === 1 &&
+        hasCore07aPacketBlockers(result.packet) &&
         result.packet.evidence.brandSourceOfTruth === true &&
         result.packet.evidence.appleTeamId === true &&
         result.packet.evidence.androidAppLinks === null &&
@@ -266,7 +298,8 @@ const cases = [
     result: runPacketWithDirtyWorktree({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
       return (
-        result.status === 0 &&
+        result.status === 1 &&
+        hasCore07aPacketBlockers(result.packet) &&
         result.packet.gitStatus.includes(`.phase8-smoke-dirty-${process.pid}.tmp`) &&
         result.packet.warnings.includes(
           'Phase 8 QA packet generated with a dirty Git worktree; do not use it as final growth/store evidence.',
@@ -286,7 +319,8 @@ const cases = [
     }),
     expect(result) {
       return (
-        result.status === 0 &&
+        result.status === 1 &&
+        hasCore07aPacketBlockers(result.packet) &&
         result.packet.evidence.signedOffBy === '' &&
         result.packet.evidence.appleTeamId === false &&
         result.packet.evidence.androidCertificateFingerprints === null &&

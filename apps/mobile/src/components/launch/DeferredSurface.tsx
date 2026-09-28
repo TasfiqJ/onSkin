@@ -5,21 +5,25 @@ import { ScrollView, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { deferredSurfaceCopy, type DeferredSurfaceKind } from '@/lib/launch/phase7';
-import { backOrReplace, type AppFallbackRoute } from '@/lib/navigation/safeBack';
+import {
+  backOrReplace,
+  replaceWithFallback,
+  type AppFallbackRoute,
+} from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 export function DeferredSurface({
   surface,
   fallbackRoute,
   fallbackLabel,
+  fallbackBehavior = 'back-or-replace',
   trackView = true,
-  replaceFallback = false,
 }: {
   surface: DeferredSurfaceKind;
   fallbackRoute?: AppFallbackRoute;
   fallbackLabel?: string;
+  fallbackBehavior?: 'back-or-replace' | 'replace';
   trackView?: boolean;
-  replaceFallback?: boolean;
 }) {
   const copy = deferredSurfaceCopy[surface];
 
@@ -63,11 +67,14 @@ export function DeferredSurface({
           label={fallbackLabel ?? copy.cta}
           variant="ghost"
           className="mb-6"
-          onPress={() =>
-            replaceFallback && fallbackRoute
-              ? router.replace(fallbackRoute)
-              : backOrReplace(router, fallbackRoute)
-          }
+          onPress={() => {
+            if (fallbackBehavior === 'replace') {
+              replaceWithFallback(router, fallbackRoute);
+              return;
+            }
+
+            backOrReplace(router, fallbackRoute);
+          }}
         />
       </View>
     </Screen>

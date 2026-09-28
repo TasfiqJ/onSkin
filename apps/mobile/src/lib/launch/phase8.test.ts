@@ -1,13 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
-import { productionUrlReady, supportEmailReady } from './phase8';
+import {
+  phase8Flags,
+  productionStoreUrlReady,
+  productionUrlReady,
+  supportEmailReady,
+} from './phase8';
 
 describe('Phase 8 production URL readiness', () => {
+  it('keeps public conflict links independently closed', () => {
+    expect(phase8Flags.publicLinks).toBe(false);
+  });
+
   it('accepts real HTTPS production URLs', () => {
-    expect(productionUrlReady('https://routinekind.app')).toBe(true);
+    expect(productionUrlReady('https://layerwell.app')).toBe(true);
     expect(productionUrlReady('https://apps.apple.com/app/id123456789')).toBe(true);
     expect(
-      productionUrlReady('https://play.google.com/store/apps/details?id=com.routinekind.app'),
+      productionUrlReady('https://play.google.com/store/apps/details?id=com.layerwell.app'),
     ).toBe(true);
   });
 
@@ -17,24 +26,54 @@ describe('Phase 8 production URL readiness', () => {
     expect(productionUrlReady('https://localhost/support')).toBe(false);
     expect(productionUrlReady('https://127.0.0.1/support')).toBe(false);
     expect(productionUrlReady('https://10.0.0.1/support')).toBe(false);
-    expect(productionUrlReady('https://routinekind.local/support')).toBe(false);
-    expect(productionUrlReady('https://routinekind.test/support')).toBe(false);
-    expect(productionUrlReady('https://routinekind.invalid/support')).toBe(false);
-    expect(productionUrlReady('https://user:pass@routinekind.app/support')).toBe(false);
-    expect(productionUrlReady('http://routinekind.app/support')).toBe(false);
+    expect(productionUrlReady('https://layerwell.local/support')).toBe(false);
+    expect(productionUrlReady('https://layerwell.test/support')).toBe(false);
+    expect(productionUrlReady('https://layerwell.invalid/support')).toBe(false);
+    expect(productionUrlReady('https://user:pass@layerwell.app/support')).toBe(false);
+    expect(productionUrlReady('http://layerwell.app/support')).toBe(false);
     expect(productionUrlReady('not a url')).toBe(false);
     expect(productionUrlReady('')).toBe(false);
   });
 
+  it('accepts only the matching official storefront host for store fallbacks', () => {
+    expect(productionStoreUrlReady('https://apps.apple.com/app/id123456789', 'app_store')).toBe(
+      true,
+    );
+    expect(
+      productionStoreUrlReady(
+        'https://play.google.com/store/apps/details?id=com.layerwell.app',
+        'play_store',
+      ),
+    ).toBe(true);
+    expect(productionStoreUrlReady('https://layerwell.app/app/id123456789', 'app_store')).toBe(
+      false,
+    );
+    expect(productionStoreUrlReady('https://apps.apple.com/app/id123456789', 'play_store')).toBe(
+      false,
+    );
+    expect(
+      productionStoreUrlReady(
+        'https://downloads.layerwell.app/store/apps/details?id=com.layerwell.app',
+        'play_store',
+      ),
+    ).toBe(false);
+    expect(
+      productionStoreUrlReady('https://apps.apple.com/search?term=layerwell', 'app_store'),
+    ).toBe(false);
+    expect(
+      productionStoreUrlReady('https://play.google.com/store/apps/details', 'play_store'),
+    ).toBe(false);
+  });
+
   it('accepts only real production support emails', () => {
-    expect(supportEmailReady('support@routinekind.app')).toBe(true);
-    expect(supportEmailReady(' support@routinekind.app ')).toBe(true);
+    expect(supportEmailReady('support@layerwell.app')).toBe(true);
+    expect(supportEmailReady(' support@layerwell.app ')).toBe(true);
     expect(supportEmailReady('support@example.com')).toBe(false);
     expect(supportEmailReady('support@EXAMPLE.COM')).toBe(false);
     expect(supportEmailReady('support@localhost')).toBe(false);
-    expect(supportEmailReady('support@routinekind.local')).toBe(false);
-    expect(supportEmailReady('support@routinekind.test')).toBe(false);
-    expect(supportEmailReady('support@routinekind.invalid')).toBe(false);
+    expect(supportEmailReady('support@layerwell.local')).toBe(false);
+    expect(supportEmailReady('support@layerwell.test')).toBe(false);
+    expect(supportEmailReady('support@layerwell.invalid')).toBe(false);
     expect(supportEmailReady('not an email')).toBe(false);
   });
 });

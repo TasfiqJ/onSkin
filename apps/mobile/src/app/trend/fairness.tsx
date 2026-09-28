@@ -10,6 +10,7 @@ export default function FairnessScreen() {
       surface="trend"
       fallbackRoute={APP_PROGRESS_ROUTE}
       fallbackLabel="Back to Progress"
+      fallbackBehavior="replace"
       trackView={false}
     />
   );

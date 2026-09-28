@@ -25,7 +25,7 @@ describe('persistent routine order route contracts', () => {
 
   it('awaits the encrypted save before updating cache, tracking success, and leaving', () => {
     const source = readSource('app/routine/reorder.tsx');
-    const saveIndex = source.indexOf('const saved = await saveRoutineOrderOverridePatch');
+    const saveIndex = source.indexOf('const saved = await saveRoutineOrderOverrides');
     const cacheIndex = source.indexOf('queryClient.setQueryData', saveIndex);
     const trackIndex = source.indexOf("track('routine_edited'", cacheIndex);
     const exitIndex = source.indexOf('backOrReplace(router);', trackIndex);
@@ -34,30 +34,39 @@ describe('persistent routine order route contracts', () => {
     expect(source).toContain('if (saveInFlight.current || persistenceUnavailable) return;');
     expect(source).toContain('saveInFlight.current = true;');
     expect(source).toContain('saveInFlight.current = false;');
-    expect(source).toContain('...(amChanged');
-    expect(source).toContain('...(pmChanged');
+    expect(source).toContain('previous: previousOverrides');
+    expect(source).toContain('next: {');
     expect(source).toContain('mode: changedPhase');
     expect(source).not.toContain('phase: changedPhase');
     expect(cacheIndex).toBeGreaterThan(saveIndex);
     expect(trackIndex).toBeGreaterThan(cacheIndex);
     expect(exitIndex).toBeGreaterThan(trackIndex);
     expect(source).toContain('Order not saved');
-    expect(source).toContain('Your previous routine is still in place. Try Save again.');
+    expect(source).toContain(
+      'We could not confirm the save. Reload to check your saved routine, then try again.',
+    );
+    expect(source).not.toContain('Your previous routine is still in place.');
     expect(source).toContain('EXPO_PUBLIC_E2E_ROUTINE_ORDER_SAVE_FAILURE');
   });
 
   it('applies overrides centrally without changing canonical cycle-night authority', () => {
     const usePlan = readSource('features/routine/usePlan.ts');
     const today = readSource('app/(tabs)/today.tsx');
+    const todayProjection = readSource('features/today/routineProjection.ts');
 
     expect(usePlan).toContain('applyRoutineOrderOverrides(canonicalPlan, orderOverrides)');
-    expect(usePlan).toContain('...deterministicLocalQueryPolicy');
     expect(usePlan).toContain('canonicalPlan,');
-    expect(today).toContain('const scheduledCyclePlanStep =');
-    expect(today).toContain('order: scheduledCyclePlanStep?.order ?? 40');
-    expect(today).toContain('cTonight?.night.productId');
-    expect(today).toContain("const hasScheduledRetinoid = cycledStep?.role === 'treatment';");
-    expect(today).toContain('pmDisplaySub(s, hasScheduledRetinoid)');
+    expect(todayProjection).toContain('const scheduledCyclePlanStep =');
+    expect(todayProjection).toContain('scheduledCyclePlanStep &&');
+    expect(todayProjection).toContain('instruction: scheduledCyclePlanStep.instruction');
+    expect(todayProjection).toContain('order: scheduledCyclePlanStep.order');
+    expect(todayProjection).not.toContain('slotInstruction');
+    expect(todayProjection).toContain('tonight?.night.productId');
+    expect(todayProjection).toContain(
+      "const hasScheduledRetinoid = cycledStep?.role === 'treatment';",
+    );
+    expect(today).toContain('sub={s.instruction}');
+    expect(today).not.toContain('pmDisplaySub');
   });
 
   it('offers phase-specific editor entry points from the generated Plan', () => {

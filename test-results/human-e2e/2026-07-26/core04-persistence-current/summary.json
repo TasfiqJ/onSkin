@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "feature": "CORE-04",
+  "status": "passed_bounded_development_web",
+  "sourceCommit": "b4560797b52e6910c17b03d8f66c6ef53c20900d",
+  "surface": "expo_web_development",
+  "url": "http://localhost:8161",
+  "startingState": "retained_same_origin_anonymous_owner_onboarding_data",
+  "requestedViewports": [
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 360,
+      "height": 640
+    }
+  ],
+  "reportedViewports": [
+    {
+      "width": 390,
+      "height": 845
+    },
+    {
+      "width": 360,
+      "height": 641
+    }
+  ],
+  "assertions": {
+    "amSaveFailureCopySafe": true,
+    "amRetrySucceeded": true,
+    "amReloadPersisted": true,
+    "amCancelPreservedSavedOrder": true,
+    "pmRetrySucceeded": true,
+    "amPreservedAcrossPmSave": true,
+    "pmReloadPersisted": true,
+    "customEightNightSaveSucceeded": true,
+    "customReloadPersisted": true,
+    "customCancelPreservedSavedDefinition": true,
+    "todayProjectedNightEight": true,
+    "compactPlanHorizontalOverflow": false,
+    "compactCustomHorizontalOverflow": false,
+    "browserConsoleErrors": 0
+  },
+  "notProven": [
+    "clean_install",
+    "native_ios_storage",
+    "securestore_keychain",
+    "physical_device_relaunch",
+    "process_death",
+    "storage_pressure",
+    "backup_restore",
+    "offline_failure_recovery",
+    "hermes_timezone_dst",
+    "accessibility",
+    "archive_identity",
+    "app_store_acceptance",
+    "legal_compliance",
+    "revenue"
+  ]
+}

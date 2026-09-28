@@ -122,7 +122,7 @@ Safe independent work remains listed so an open choice does not stop unrelated c
   active OTA claims. EAS Update is disabled, is not a direct dependency, has no
   URL/channel configuration, and is not an incident-recovery path.
 - Authoritative policy: `docs/UPDATE_DELIVERY_POLICY.md`,
-  `docs/ARCHITECTURE.md` A-007, and `docs/DECISIONS.md`.
+  `docs/ARCHITECTURE.md` A-014, and `docs/DECISIONS.md`.
 - Alternatives: fully governed EAS Update with immutable runtime versions and a tested rollback
   channel.
 - User impact: delivery speed versus binary/runtime consistency and rollback confidence.

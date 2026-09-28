@@ -21,8 +21,8 @@ describe('conflict-choice outbox migration contract', () => {
   });
 
   it('binds canonical identity, payload, operation, and revision replay evidence', () => {
-    expect(migration).toContain("'onskin:conflict-choice-identity:v1'");
-    expect(migration).toContain("'onskin:conflict-choice-payload:v1'");
+    expect(migration).toContain("'layerwell:conflict-choice-identity:v1'");
+    expect(migration).toContain("'layerwell:conflict-choice-payload:v1'");
     expect(migration).toContain("'conflict_choice:' || v_operation_id::text");
     expect(migration).toContain('receipt.payload_hash = v_payload_hash');
     expect(migration).toContain('conflict_choice_mirror_versions');

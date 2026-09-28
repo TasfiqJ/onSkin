@@ -1,68 +1,37 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
-
 const mocks = vi.hoisted(() => ({
-  deleteTrendState: vi.fn(),
-  setTrendInsightsLocal: vi.fn(),
+  clearTrendStore: vi.fn(),
   track: vi.fn(),
-  withdrawConsent: vi.fn(),
+  withdrawHealthDependentConsent: vi.fn(),
 }));
-
-const lease = {
-  assertCurrent: vi.fn(),
-} as unknown as AccountGenerationLease;
 
 vi.mock('@/lib/analytics/track', () => ({
   track: mocks.track,
 }));
 
-vi.mock('@/lib/auth/accountGeneration', () => ({
-  awaitAccountGenerationLease: async (
-    _lease: AccountGenerationLease,
-    operation: () => Promise<unknown>,
-  ) => operation(),
-  runAccountGenerationOperation: async (
-    operation: (ownerLease: AccountGenerationLease) => Promise<unknown>,
-  ) => operation(lease),
-}));
-
-vi.mock('@/lib/consent/workflow', () => ({
-  runSerializedConsentWorkflow: async (
-    _lease: AccountGenerationLease,
-    operation: () => Promise<unknown>,
-  ) => operation(),
-}));
-
-vi.mock('@/lib/consent/withdrawal', () => ({
-  withdrawConsent: mocks.withdrawConsent,
+vi.mock('@/lib/consent/dependentConsentLifecycle', () => ({
+  withdrawHealthDependentConsent: mocks.withdrawHealthDependentConsent,
 }));
 
 vi.mock('./store', () => ({
-  deleteTrendState: mocks.deleteTrendState,
-  setTrendInsightsLocal: mocks.setTrendInsightsLocal,
+  clearTrendStore: mocks.clearTrendStore,
 }));
 
 describe('PHOTO-05A Trend consent zero admission', () => {
   beforeEach(() => {
-    mocks.deleteTrendState.mockReset().mockResolvedValue(undefined);
-    mocks.setTrendInsightsLocal.mockReset().mockResolvedValue(undefined);
+    mocks.clearTrendStore.mockReset().mockResolvedValue(undefined);
     mocks.track.mockReset();
-    mocks.withdrawConsent.mockReset().mockResolvedValue(undefined);
-    vi.mocked(lease.assertCurrent).mockReset();
+    mocks.withdrawHealthDependentConsent.mockReset().mockResolvedValue(undefined);
   });
 
   it('ignores legacy consent without reading or mutating private state', async () => {
-    const { isTrendInsightsConsented, isTrendInsightsConsentedWithLease } =
-      await import('./consent');
+    const { isTrendInsightsConsented } = await import('./consent');
 
     await expect(isTrendInsightsConsented()).resolves.toBe(false);
-    await expect(isTrendInsightsConsentedWithLease(lease)).resolves.toBe(false);
 
-    expect(lease.assertCurrent).toHaveBeenCalledOnce();
-    expect(mocks.setTrendInsightsLocal).not.toHaveBeenCalled();
-    expect(mocks.deleteTrendState).not.toHaveBeenCalled();
-    expect(mocks.withdrawConsent).not.toHaveBeenCalled();
+    expect(mocks.clearTrendStore).not.toHaveBeenCalled();
+    expect(mocks.withdrawHealthDependentConsent).not.toHaveBeenCalled();
     expect(mocks.track).not.toHaveBeenCalled();
   });
 
@@ -71,33 +40,31 @@ describe('PHOTO-05A Trend consent zero admission', () => {
 
     await expect(grantTrendInsightsConsent()).rejects.toThrow(TREND_ENGINE_UNAVAILABLE);
 
-    expect(mocks.setTrendInsightsLocal).not.toHaveBeenCalled();
-    expect(mocks.deleteTrendState).not.toHaveBeenCalled();
-    expect(mocks.withdrawConsent).not.toHaveBeenCalled();
+    expect(mocks.clearTrendStore).not.toHaveBeenCalled();
+    expect(mocks.withdrawHealthDependentConsent).not.toHaveBeenCalled();
     expect(mocks.track).not.toHaveBeenCalled();
   });
 
-  it('preserves explicit legacy revocation cleanup and records analytics only after success', async () => {
+  it('preserves explicit legacy revocation through the shared cleanup lifecycle', async () => {
     const { revokeTrendInsightsConsent } = await import('./consent');
 
     await expect(revokeTrendInsightsConsent()).resolves.toBeUndefined();
 
-    expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(false);
-    expect(mocks.deleteTrendState).toHaveBeenCalledOnce();
-    expect(mocks.withdrawConsent).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'photo_trend_insights' }),
-    );
+    expect(mocks.withdrawHealthDependentConsent).toHaveBeenCalledWith({
+      type: 'photo_trend_insights',
+      deleteLocal: mocks.clearTrendStore,
+    });
     expect(mocks.track).toHaveBeenCalledWith('trend_consent_revoked');
   });
 
-  it('keeps legacy state disabled and withholds analytics when withdrawal recording fails', async () => {
-    mocks.withdrawConsent.mockRejectedValueOnce(new Error('withdrawal unavailable'));
+  it('withholds analytics when the revocation lifecycle fails', async () => {
+    mocks.withdrawHealthDependentConsent.mockRejectedValueOnce(
+      new Error('withdrawal unavailable'),
+    );
     const { revokeTrendInsightsConsent } = await import('./consent');
 
     await expect(revokeTrendInsightsConsent()).rejects.toThrow('withdrawal unavailable');
 
-    expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(false);
-    expect(mocks.deleteTrendState).toHaveBeenCalledOnce();
     expect(mocks.track).not.toHaveBeenCalled();
   });
 });

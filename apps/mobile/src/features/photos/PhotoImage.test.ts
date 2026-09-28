@@ -13,13 +13,17 @@ describe('PhotoImage sensitive-memory contract', () => {
     expect(source).not.toContain('transition={120}');
     expect(source).toContain('recyclingKey={recyclingKey ?? undefined}');
     expect(source).toContain('`${ownerGeneration}:${photoId}:${storageRendition}:${rendition}`');
+    expect(source).toContain('onLoad={onDisplayReady}');
+    expect(source).toContain('onError={onDisplayError}');
+    expect(source).toContain('if (reportDisplayError) onDisplayError?.();');
   });
 
   it('uses the bounded in-flight coordinator and detaches off-screen demand', () => {
     expect(source).toContain('requestSensitiveImage(');
-    expect(source).toContain('ownerGeneration, requestPriority');
+    expect(source).toContain('photoId,');
+    expect(source).toContain('captureSessionId,');
     expect(source).toContain('request.cancel()');
-    expect(source).toContain('if (!active || !canDisplaySensitivePhoto || identityUnavailable)');
+    expect(source).toContain('if (!active)');
     expect(source).toContain('key={stateIdentity}');
     expect(source).toContain('!isSensitiveImageLifecycleActive()');
     expect(source).toContain('!diskCacheReady');
@@ -49,5 +53,22 @@ describe('PhotoImage sensitive-memory contract', () => {
     expect(lifecycleGate).toBeGreaterThan(-1);
     expect(plaintextDisplay).toBeGreaterThan(lifecycleGate);
     expect(nativeImage).toBeGreaterThan(plaintextDisplay);
+  });
+
+  it('reports every terminal pre-image failure so frame-gated playback cannot hang', () => {
+    const lifecycleFallback = source.indexOf('if (!lifecycleActive)');
+    const identityFallback = source.indexOf('if (!canDisplaySensitivePhoto || identityUnavailable || rejectedEncryptedLikeUri)');
+    const diskMigrationFailure = source.indexOf('setDiskCacheFailed(true)');
+
+    expect(lifecycleFallback).toBeGreaterThan(-1);
+    expect(source.indexOf('reportDisplayError={encrypted}', lifecycleFallback)).toBeGreaterThan(
+      lifecycleFallback,
+    );
+    expect(identityFallback).toBeGreaterThan(-1);
+    expect(source.indexOf('reportDisplayError', identityFallback)).toBeGreaterThan(identityFallback);
+    expect(diskMigrationFailure).toBeGreaterThan(-1);
+    expect(source).toContain('const failed = encrypted && (diskCacheFailed ||');
+    expect(source).toContain('reportDisplayError={failed}');
+    expect(source).toContain('onDisplayError={props.onDisplayError}');
   });
 });

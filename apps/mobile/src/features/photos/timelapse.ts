@@ -4,6 +4,7 @@ export const TIMELAPSE_FRAME_DURATION_MS = 1_800;
 
 export type TimelapseFrame = Pick<PhotoMeta, 'id' | 'localUri' | 'takenLocalDate'> & {
   localUri: string;
+  captureSessionId?: string | null;
 };
 
 export function timelapseFrames(photos: PhotoMeta[]): TimelapseFrame[] {
@@ -14,7 +15,19 @@ export function timelapseFrames(photos: PhotoMeta[]): TimelapseFrame[] {
       (left, right) =>
         left.takenLocalDate.localeCompare(right.takenLocalDate) || left.id.localeCompare(right.id),
     )
-    .map(({ id, localUri, takenLocalDate }) => ({ id, localUri, takenLocalDate }));
+    .map((photo) => ({
+      id: photo.id,
+      localUri: photo.localUri,
+      takenLocalDate: photo.takenLocalDate,
+      ...('captureSessionId' in photo
+        ? { captureSessionId: (photo as PhotoMeta & { captureSessionId?: string | null }).captureSessionId }
+        : {}),
+    }));
+}
+
+/** In-memory controller identity. It is never persisted or emitted. */
+export function timelapseFrameSignature(frames: readonly TimelapseFrame[]): string {
+  return JSON.stringify(frames.map(({ id, localUri, takenLocalDate, captureSessionId }) => [id, localUri, takenLocalDate, captureSessionId]));
 }
 
 export function clampTimelapseIndex(index: number, frameCount: number): number {

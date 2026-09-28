@@ -1,4 +1,4 @@
-export const ASK_RENDER_DIAGNOSTICS_GLOBAL = '__ONSKIN_ASK_RENDER_DIAGNOSTICS__' as const;
+export const ASK_RENDER_DIAGNOSTICS_GLOBAL = '__LAYERWELL_ASK_RENDER_DIAGNOSTICS__' as const;
 
 export type AskRenderDiagnosticsSnapshot = Readonly<{
   acceptedTurns: number;
@@ -17,7 +17,7 @@ type MutableAskRenderDiagnostics = {
 };
 
 type AskDiagnosticsGlobal = typeof globalThis & {
-  __ONSKIN_ASK_RENDER_DIAGNOSTICS__?: MutableAskRenderDiagnostics;
+  __LAYERWELL_ASK_RENDER_DIAGNOSTICS__?: MutableAskRenderDiagnostics;
 };
 
 const EMPTY_DIAGNOSTICS: AskRenderDiagnosticsSnapshot = Object.freeze({
@@ -35,8 +35,8 @@ function diagnosticsEnabled(): boolean {
 function mutableDiagnostics(): MutableAskRenderDiagnostics | null {
   if (!diagnosticsEnabled()) return null;
   const root = globalThis as AskDiagnosticsGlobal;
-  root.__ONSKIN_ASK_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
-  return root.__ONSKIN_ASK_RENDER_DIAGNOSTICS__;
+  root.__LAYERWELL_ASK_RENDER_DIAGNOSTICS__ ??= { ...EMPTY_DIAGNOSTICS };
+  return root.__LAYERWELL_ASK_RENDER_DIAGNOSTICS__;
 }
 
 /** Content-free local counters for the human-simulated keystroke profile. */

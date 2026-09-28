@@ -1,4 +1,4 @@
-# OnSkin Agent Instructions
+# Layerwell Agent Instructions
 
 This repo is an Expo React Native skincare app. Read `CLAUDE.md` before changing behavior, then read the source-of-truth docs for the feature area being touched. Keep changes scoped to the requested feature or launch gate.
 
@@ -58,7 +58,7 @@ For UI-facing work:
 
 1. Read `docs/HUMAN_SIMULATED_E2E_TESTING.md`.
 2. Check `docs/USER_FLOW_TREE.md` for the target feature. If the branch is missing, update the tree before testing.
-3. Start or open the actual app surface. For OnSkin this is usually Expo iOS Simulator, Android emulator/device, or Expo web when the flow is web-compatible.
+3. Start or open the actual app surface. For Layerwell this is usually Expo iOS Simulator, Android emulator/device, or Expo web when the flow is web-compatible.
 4. Confirm the expected starting screen is visible before interacting.
 5. Drive the app like a user: tap, click, type, scroll, navigate back/forward, refresh/relaunch where relevant, and exercise critical error or empty-state branches.
 6. Capture evidence such as screenshots, videos, Playwright traces, simulator logs, console logs, UI snapshots, or terminal transcripts.

@@ -9,7 +9,7 @@ Decision: OPT-DEC-003 / Architecture A-009
 ## Implemented Boundary
 
 - Encrypted private-KV transactions use a bounded encrypted intent journal and roll every committed target forward before ordinary private reads or writes.
-- Authenticated Shelf add, edit, lifecycle, delete, and replenish mutations commit the unchanged Shelf v3 value and `onskin.outbox.v1` together.
+- Authenticated Shelf add, edit, lifecycle, delete, and replenish mutations commit the unchanged Shelf v3 value and `layerwell.outbox.v1` together.
 - Outbox payloads exclude raw owner identity, credentials, ingredients, and local paths. Owner binding is a domain-separated SHA-256 hash plus account generation.
 - Ready Shelf mirrors coalesce per entity. Leased and dead-letter rows remain. Revisions and operation/idempotency identities are monotonic and persisted.
 - The worker is single-flight, account-generation fenced, foreground/reconnect/mutation triggered, lease based, limited to 25 rows per batch and four batches per wake, and persists full-jitter backoff plus bounded `Retry-After`.

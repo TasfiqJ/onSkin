@@ -1,21 +1,11 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import {
-  DirectPaywallLoading,
-  DirectPaywallRecovery,
-  DirectPaywallRedirecting,
-} from '@/features/subscription/DirectPaywallResolution';
-import { directPaywallDecision } from '@/features/subscription/directPaywallPolicy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
-import {
-  acknowledgeLifecyclePromptPresented,
-  supersedeLifecyclePrompt,
-} from '@/features/subscription/lifecycle';
 import {
   PAYWALL_FEEDBACK,
   PaywallFeedback,
@@ -23,41 +13,26 @@ import {
 } from '@/features/subscription/PaywallFeedback';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { usePaidActionHold } from '@/features/subscription/usePaidActionHold';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // Reverse-trial keep/re-offer surface (design 02/03, docs/08 §3.2/§6).
 // Active trials can choose a plan without store-management confusion; expired
 // trials get the honest loss-aversion re-offer. Never a data-deleting lock.
 export default function ReofferScreen() {
-  const params = useLocalSearchParams<{ lifecyclePromptId?: string | string[] }>();
-  const lifecyclePromptId = Array.isArray(params.lifecyclePromptId)
-    ? params.lifecyclePromptId[0]
-    : params.lifecyclePromptId;
   const { height } = useWindowDimensions();
-  const ownerScope = useOwnerQueryScope();
-  const entitlement = useEntitlement();
-  const { data } = entitlement;
-  const decision = directPaywallDecision('reoffer', {
-    state: data,
-    isLoading: entitlement.isLoading,
-    isError: entitlement.isError,
-  });
-  const activeReverseTrial = data?.inReverseTrial === true;
-  const { purchase, downgrade } = useEntitlementActions();
-  const offering = useSubscriptionOffering({ enabled: decision.loadOffering });
+  const { data, isLoading } = useEntitlement();
+  const { startTrial, downgrade } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const paidAction = usePaidActionHold(ownerScope.generation);
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const unavailableReason =
     offering.data?.status && offering.data.status !== 'available' ? offering.data.reason : null;
+  const activeReverseTrial = data?.inReverseTrial === true;
   const compactPaywall = height < 640;
   const screenCopy = activeReverseTrial
     ? {
@@ -76,116 +51,44 @@ export default function ReofferScreen() {
       };
 
   function onStartTrial() {
-    if (!decision.allowPurchase || paidAction.isHeld) return;
     setActionFeedback(null);
     if (!canPurchase) {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    purchase.mutate(
-      {
-        kind: 'reoffer_purchase',
-        expectedEvidenceIdentity: data?.evidenceIdentity ?? null,
+    startTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
+        else setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      {
-        onSuccess: (result) => {
-          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          const outcome = paidAction.resolve(result);
-          if (outcome.kind === 'success') {
-            router.replace({
-              pathname: '/paywall/success',
-              params: { receipt: outcome.receiptId },
-            });
-          } else if (outcome.kind === 'active_without_receipt') {
-            router.replace('/(tabs)/today');
-          } else if (outcome.kind === 'inactive' && !result.cancelled) {
-            setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
-          }
-        },
-        onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-      },
-    );
+      onError: (error) => setActionFeedback(PAYWALL_FEEDBACK.purchaseError(error)),
+    });
   }
 
   function onDecline() {
-    if (!decision.allowPurchase) return;
     if (activeReverseTrial) {
       dismissPaywall(router, APP_YOU_ROUTE);
       return;
     }
-    if (paidAction.isHeld) return;
 
-    downgrade.mutate(
-      {
-        kind: 'decline_expired_reverse_trial',
-        expectedEvidenceIdentity: data?.evidenceIdentity ?? null,
-      },
-      {
-        onSettled: () => {
-          if (isOwnerQueryScopeCurrent(ownerScope)) router.replace('/(tabs)/today');
-        },
-      },
-    );
+    downgrade.mutate(undefined, { onSettled: () => router.replace('/(tabs)/today') });
   }
 
   useEffect(() => {
-    if (!decision.trackPresentation) return;
+    if (isLoading) return;
     track('paywall_shown', {
       context: activeReverseTrial ? 'reverse_trial_keep_options' : 'reverse_trial_reoffer',
     });
-  }, [activeReverseTrial, decision.trackPresentation]);
+  }, [activeReverseTrial, isLoading]);
 
-  useEffect(() => {
-    // This effect runs only after the non-loading target surface has committed.
-    // Direct settings navigation has no lifecyclePromptId and acknowledges
-    // nothing; only the durable startup delivery can settle its journal.
-    if (decision.phase !== 'offer' || !lifecyclePromptId) return;
-    const prompt = {
-      promptId: lifecyclePromptId,
-      route: '/paywall/reoffer' as const,
-    };
-    if (decision.lifecycleDisposition === 'present') {
-      void acknowledgeLifecyclePromptPresented(prompt);
-    } else if (decision.lifecycleDisposition === 'supersede') {
-      void supersedeLifecyclePrompt(prompt);
-    }
-  }, [decision.lifecycleDisposition, decision.phase, lifecyclePromptId]);
-
-  useEffect(() => {
-    if (decision.phase !== 'redirect') return;
-    if (decision.lifecycleDisposition === 'supersede' && lifecyclePromptId) {
-      void supersedeLifecyclePrompt({
-        promptId: lifecyclePromptId,
-        route: '/paywall/reoffer',
-      });
-    }
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    if (decision.redirect === 'downgrade') {
-      router.replace('/paywall/downgrade');
-    } else if (decision.redirect === 'upsell') {
-      router.replace('/paywall/upsell?feature=full_routine');
-    } else {
-      router.replace('/(tabs)/today');
-    }
-  }, [
-    decision.lifecycleDisposition,
-    decision.phase,
-    decision.redirect,
-    lifecyclePromptId,
-    ownerScope,
-  ]);
-
-  if (decision.phase === 'loading') return <DirectPaywallLoading />;
-  if (decision.phase === 'recovery') {
+  if (isLoading) {
     return (
-      <DirectPaywallRecovery
-        isRetrying={entitlement.isVerificationRetrying}
-        onClose={() => dismissPaywall(router, APP_YOU_ROUTE)}
-        onRetry={() => void entitlement.retryVerification()}
-      />
+      <Screen edges={['top', 'bottom']}>
+        <View />
+      </Screen>
     );
   }
-  if (decision.phase === 'redirect') return <DirectPaywallRedirecting />;
 
   function renderPriceSummary(compact: boolean) {
     return (
@@ -323,20 +226,13 @@ export default function ReofferScreen() {
           </Text>
         ) : null}
         {compactPaywall ? <ComplianceRow /> : null}
-        <PaywallFeedback
-          compact={compactPaywall}
-          feedback={paidAction.feedback ?? actionFeedback}
-        />
+        <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
         <Pressable
           accessibilityRole="button"
-          disabled={
-            !decision.allowPurchase || !canPurchase || paidAction.isHeld || purchase.isPending
-          }
+          disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{
-            backgroundColor: canPurchase && !paidAction.isHeld ? colors.clay : colors.mutedLight,
-          }}
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
             {screenCopy.cta}
@@ -344,7 +240,6 @@ export default function ReofferScreen() {
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          disabled={!activeReverseTrial && (paidAction.isHeld || downgrade.isPending)}
           onPress={onDecline}
           className="h-[48px] items-center justify-center"
         >

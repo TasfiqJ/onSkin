@@ -15,6 +15,7 @@ export function routineInsightCount(plan: GeneratedPlan): number {
     plan.unplacedProducts.length +
     plan.safetyExclusions.length +
     plan.cadenceWithheld.length +
+    plan.sequencingWithheld.length +
     1
   );
 }
@@ -56,6 +57,32 @@ export function routineFirstInsightCopy(
           : `${firstName} and ${remaining} more active${
               remaining === 1 ? '' : 's'
             } do not have reviewed routine timing yet, so they stay off Today for now.`,
+    };
+  }
+
+  if (plan.sequencingWithheld.length > 0) {
+    const firstName = plan.sequencingWithheld[0]?.name ?? 'One product';
+    const remaining = plan.sequencingWithheld.length - 1;
+    return {
+      eyebrow: 'Application order',
+      title: 'Automatic order not set',
+      body:
+        remaining === 0
+          ? `${firstName} does not have reviewed application-order guidance yet, so it stays on your shelf but out of your routine and Today for now. No use instructions are added.`
+          : `${firstName} and ${remaining} more product${
+              remaining === 1 ? '' : 's'
+            } do not have reviewed application-order guidance yet, so they stay on your shelf but out of your routine and Today for now. No use instructions are added.`,
+    };
+  }
+
+  if (
+    plan.conflictCoverageStatus === 'unsupported_unreviewed' &&
+    plan.unsupportedConflictPairs.length > 0
+  ) {
+    return {
+      eyebrow: 'Interaction checking',
+      title: 'Pair review in progress',
+      body: "We won't show a compatibility result for these products until that review is complete.",
     };
   }
 

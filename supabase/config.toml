@@ -1,8 +1,8 @@
 # Supabase local config. The CLI (`supabase init`) normally generates a much
 # larger file; this is a hand-authored minimal config documenting the settings
-# RoutineKind's auth flow requires. Provider secrets live in the dashboard / env, not
+# Layerwell's auth flow requires. Provider secrets live in the dashboard / env, not
 # here. BLOCKED: B-SUPABASE (project ref + keys).
-project_id = "routinekind"
+project_id = "layerwell"
 
 [api]
 enabled = true
@@ -14,6 +14,14 @@ max_rows = 1000
 [db]
 port = 54322
 major_version = 15
+
+[db.migrations]
+enabled = true
+schema_paths = []
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
 
 [studio]
 enabled = true
@@ -27,23 +35,32 @@ file_size_limit = "10MiB"
 [auth]
 enabled = true
 # Deep-link scheme for OAuth / OTP redirects (docs/01 §5).
-site_url = "routinekind://"
-additional_redirect_urls = ["routinekind://auth/callback"]
+site_url = "layerwell://"
+additional_redirect_urls = ["layerwell://auth/callback"]
 jwt_expiry = 3600
 enable_refresh_token_rotation = true
 # Guest-first: anonymous sessions are the default entry (docs/01 §1).
 enable_anonymous_sign_ins = true
 # Required for anon->permanent identity linking (docs/01 §1).
 enable_manual_linking = true
-# Leaked-password protection (HaveIBeenPwned) — low cost, real value (docs/01 §5).
-enable_leaked_password_protection = true
+# The local CLI config has no leaked-password-protection key. Hosted staging
+# and production must still enable Auth's `password_hibp_enabled` control in
+# the dashboard/Management API on a supported plan; see supabase/README.md.
 
 [auth.email]
 enable_signup = true
+# Keep ordinary email changes protected at both old and new mailboxes. Supabase
+# handles the documented anonymous conversion separately because no old email
+# identity exists; the app only enters that exact anonymous update path.
+double_confirm_changes = true
 # OTP codes over magic links for mobile reliability (docs/01 §1).
 enable_confirmations = false
 otp_length = 6
 otp_expiry = 3600
+
+[auth.email.template.email_change]
+subject = "Your Layerwell verification code"
+content_path = "./supabase/templates/email_change.html"
 
 # Social providers — enabled + configured with secrets in the dashboard.
 # BLOCKED: B-APPLE / B-GOOGLE.
@@ -60,12 +77,32 @@ provider = "turnstile"
 # Per-function JWT behavior is source controlled here. Extended auth, secret,
 # public-access, and resource-budget metadata lives in functions/manifest.json.
 [functions.account-deletion]
-verify_jwt = true
+verify_jwt = false
 entrypoint = "./functions/account-deletion/index.ts"
+
+[functions.apple-account-events]
+verify_jwt = false
+entrypoint = "./functions/apple-account-events/index.ts"
+
+[functions.apple-auth-lifecycle]
+verify_jwt = true
+entrypoint = "./functions/apple-auth-lifecycle/index.ts"
+
+[functions.apple-auth-worker]
+verify_jwt = false
+entrypoint = "./functions/apple-auth-worker/index.ts"
+
+[functions.ask-layerwell]
+verify_jwt = true
+entrypoint = "./functions/ask-layerwell/index.ts"
 
 [functions.catalog-lookup]
 verify_jwt = true
 entrypoint = "./functions/catalog-lookup/index.ts"
+
+[functions.catalog-operator]
+verify_jwt = true
+entrypoint = "./functions/catalog-operator/index.ts"
 
 [functions.catalog-report]
 verify_jwt = true
@@ -83,6 +120,10 @@ entrypoint = "./functions/consent-withdrawal/index.ts"
 verify_jwt = true
 entrypoint = "./functions/data-export/index.ts"
 
+[functions.health-consent-worker]
+verify_jwt = false
+entrypoint = "./functions/health-consent-worker/index.ts"
+
 [functions.growth-event]
 verify_jwt = false
 entrypoint = "./functions/growth-event/index.ts"
@@ -98,6 +139,10 @@ entrypoint = "./functions/revenuecat-webhook/index.ts"
 [functions.subscription-grants]
 verify_jwt = true
 entrypoint = "./functions/subscription-grants/index.ts"
+
+[functions.subscription-reconciliation]
+verify_jwt = true
+entrypoint = "./functions/subscription-reconciliation/index.ts"
 
 [functions.waitlist]
 verify_jwt = false

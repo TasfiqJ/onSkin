@@ -4,14 +4,20 @@
   "effectiveDate": "2026-09-27",
   "status": "active",
   "release": {
-    "platforms": ["ios"],
+    "platforms": [
+      "ios"
+    ],
     "mode": "lean-v1",
     "androidRelease": false,
     "minimumIosVersion": "17.0",
     "supportsIpad": false
   },
   "requiredFeatures": [
-    { "id": 1, "key": "brand_identity", "name": "Final brand and public identity" },
+    {
+      "id": 1,
+      "key": "brand_identity",
+      "name": "Final brand and public identity"
+    },
     {
       "id": 2,
       "key": "onboarding_consent",
@@ -22,25 +28,83 @@
       "key": "shelf_intake",
       "name": "Manual Shelf intake and local ingredient parsing; optional local label OCR"
     },
-    { "id": 5, "key": "conflict_engine", "name": "Reviewed conflict guidance" },
-    { "id": 6, "key": "routine_builder", "name": "Owned-product routine builder" },
-    { "id": 7, "key": "today_adherence", "name": "Today check-off and adherence" },
-    { "id": 8, "key": "cycle_scheduler", "name": "Reviewed cadence, cycle and recovery scheduler" },
-    { "id": 9, "key": "photo_progress", "name": "Private local photo progress" },
-    { "id": 10, "key": "reminders", "name": "Local routine reminders" },
-    { "id": 11, "key": "subscriptions", "name": "StoreKit and RevenueCat subscriptions" }
+    {
+      "id": 5,
+      "key": "conflict_engine",
+      "name": "Reviewed conflict guidance"
+    },
+    {
+      "id": 6,
+      "key": "routine_builder",
+      "name": "Owned-product routine builder"
+    },
+    {
+      "id": 7,
+      "key": "today_adherence",
+      "name": "Today check-off and adherence"
+    },
+    {
+      "id": 8,
+      "key": "cycle_scheduler",
+      "name": "Reviewed cadence, cycle and recovery scheduler"
+    },
+    {
+      "id": 9,
+      "key": "photo_progress",
+      "name": "Private local photo progress"
+    },
+    {
+      "id": 10,
+      "key": "reminders",
+      "name": "Local routine reminders"
+    },
+    {
+      "id": 11,
+      "key": "subscriptions",
+      "name": "StoreKit and RevenueCat subscriptions"
+    }
   ],
   "deferredFeatures": [
-    { "id": 4, "key": "catalog" },
-    { "id": 12, "key": "reverse_trial" },
-    { "id": 13, "key": "recommendations" },
-    { "id": 14, "key": "ask_advisor" },
-    { "id": 15, "key": "conflict_share" },
-    { "id": 16, "key": "commerce" },
-    { "id": 17, "key": "community" },
-    { "id": 18, "key": "trend_insights" },
-    { "id": 19, "key": "widgets_live_activities" },
-    { "id": 20, "key": "admin_tooling" }
+    {
+      "id": 4,
+      "key": "catalog"
+    },
+    {
+      "id": 12,
+      "key": "reverse_trial"
+    },
+    {
+      "id": 13,
+      "key": "recommendations"
+    },
+    {
+      "id": 14,
+      "key": "ask_advisor"
+    },
+    {
+      "id": 15,
+      "key": "conflict_share"
+    },
+    {
+      "id": 16,
+      "key": "commerce"
+    },
+    {
+      "id": 17,
+      "key": "community"
+    },
+    {
+      "id": 18,
+      "key": "trend_insights"
+    },
+    {
+      "id": 19,
+      "key": "widgets_live_activities"
+    },
+    {
+      "id": 20,
+      "key": "admin_tooling"
+    }
   ],
   "requiredSurfaces": [],
   "evidenceLevels": [
@@ -102,6 +166,55 @@
         "reviewerRole": "regulatory_counsel",
         "taskId": "H-03",
         "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "recommendations": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "clinical_order_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "formulation_order_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-07",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "conflict_share": [
+      {
+        "reviewerRole": "regulatory_claims_counsel",
+        "taskId": "REV-02",
+        "scope": "exact_share_claims_copy_citations_and_market_positioning"
+      },
+      {
+        "reviewerRole": "privacy_security_reviewer",
+        "taskId": "REV-03",
+        "scope": "share_projection_destination_retention_revocation_and_data_flow"
+      },
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+      },
+      {
+        "reviewerRole": "ip_content_rights_counsel",
+        "taskId": "REV-06",
+        "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+      },
+      {
+        "reviewerRole": "release_signoff_operator",
+        "taskId": "REV-07",
+        "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
       }
     ]
   },

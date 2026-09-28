@@ -1,70 +1,40 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createOwnerQueryScope } from '@/lib/query/queryKeys';
-import {
-  beginAccountGenerationBoundary,
-  endAccountGenerationBoundary,
-} from '@/lib/auth/accountGeneration';
-
-import {
-  anyBehaviouralTriggerEnabled,
-  BehaviouralTriggers,
-  createBehaviouralEvaluationCoordinator,
-  EnabledBehaviouralTriggers,
-} from './BehaviouralTriggers';
+import { anyBehaviouralTriggerEnabled, BehaviouralTriggers } from './BehaviouralTriggers';
 
 const mocks = vi.hoisted(() => ({
   addEventListener: vi.fn(),
-  notifyBehavioural: vi.fn(),
-  readSnapshot: vi.fn(),
-  useEffect: vi.fn((effect: () => void | (() => void)) => {
-    effect();
-  }),
-  useAuth: vi.fn((): { user: { id: string } | null } => ({ user: { id: 'owner-a' } })),
+  canUseRoutineCadence: vi.fn(),
   useNotifPrefs: vi.fn(),
-  useOwnerQueryScope: vi.fn(),
+  useProgress: vi.fn(),
+  useRamp: vi.fn(),
+  useShelf: vi.fn(),
 }));
 
-vi.mock('react', () => ({ useEffect: mocks.useEffect }));
 vi.mock('react-native', () => ({
   AppState: { addEventListener: mocks.addEventListener },
 }));
+vi.mock('@/features/routine/reviewGate', () => ({
+  canUseRoutineCadence: mocks.canUseRoutineCadence,
+}));
 vi.mock('./useNotifications', () => ({ useNotifPrefs: mocks.useNotifPrefs }));
-vi.mock('./deliver', () => ({ notifyBehavioural: mocks.notifyBehavioural }));
-vi.mock('./behaviouralSnapshot', () => ({
-  readBehaviouralTriggerSnapshot: mocks.readSnapshot,
+vi.mock('./deliver', () => ({ notifyBehavioural: vi.fn(), nowHHMM: vi.fn(() => '12:00') }));
+vi.mock('@/features/recommendations/replenishment', () => ({
+  hasReplenishmentSignal: vi.fn(() => false),
 }));
-vi.mock('@/lib/auth/AuthProvider', () => ({ useAuth: mocks.useAuth }));
-vi.mock('@/lib/query/useOwnerQueryScope', () => ({
-  useOwnerQueryScope: mocks.useOwnerQueryScope,
-}));
+vi.mock('@/features/routine/useProgress', () => ({ useProgress: mocks.useProgress }));
+vi.mock('@/features/routine/useRamp', () => ({ useRamp: mocks.useRamp }));
+vi.mock('@/features/shelf/useShelf', () => ({ useShelf: mocks.useShelf }));
 
-describe('behavioural trigger lifecycle gate', () => {
-  it('single-flights evaluations and applies a per-owner cooldown', async () => {
-    let now = 1_000;
-    const coordinator = createBehaviouralEvaluationCoordinator(60_000, () => now);
-    const scope = createOwnerQueryScope();
-    let release!: () => void;
-    const gate = new Promise<void>((resolve) => {
-      release = resolve;
-    });
-    const operation = vi.fn(async () => gate);
+beforeEach(() => {
+  mocks.canUseRoutineCadence.mockReset();
+  mocks.canUseRoutineCadence.mockReturnValue(true);
+});
 
-    const first = coordinator.evaluate(scope, operation);
-    const duplicate = coordinator.evaluate(scope, operation);
-    expect(duplicate).toBe(first);
-    release();
-    await expect(first).resolves.toBe(true);
-    expect(operation).toHaveBeenCalledOnce();
-
-    await expect(coordinator.evaluate(scope, operation)).resolves.toBe(false);
-    now += 60_000;
-    await expect(coordinator.evaluate(scope, async () => undefined)).resolves.toBe(true);
-  });
-
-  it('treats only notification preferences with behavioural work as enabled', () => {
+describe('behavioural trigger preference gate', () => {
+  it('treats only the preferences used by mounted background triggers as relevant', () => {
     expect(anyBehaviouralTriggerEnabled(undefined)).toBe(false);
     expect(
       anyBehaviouralTriggerEnabled({ promotional: false, ramp: false, replenishment: false }),
@@ -80,109 +50,63 @@ describe('behavioural trigger lifecycle gate', () => {
     ).toBe(true);
   });
 
-  it.each([
-    { isError: true, isSuccess: false, data: undefined },
-    { isError: false, isSuccess: true, data: { status: 'absent', prefs: {} } },
-    {
-      isError: false,
-      isSuccess: true,
-      data: { status: 'corrupt', prefs: null, reason: 'invalid_payload' },
-    },
-    {
-      isError: false,
-      isSuccess: true,
+  it('mounts no Shelf, ramp, Progress, or AppState work while all relevant preferences are off', () => {
+    mocks.useNotifPrefs.mockReturnValue({
       data: {
-        status: 'available',
-        prefs: {
-          promotionalOptIn: false,
-          replenishmentAlerts: false,
-          streakNudges: false,
-        },
+        amEnabled: true,
+        pmEnabled: true,
+        captureReminders: true,
+        promotionalOptIn: false,
+        replenishmentAlerts: false,
+        streakNudges: false,
       },
-    },
-  ])('mounts no lifecycle or domain work for non-authoritative/disabled prefs', (query) => {
-    mocks.addEventListener.mockReset();
-    mocks.useNotifPrefs.mockReturnValue(query);
+    });
 
     expect(BehaviouralTriggers()).toBeNull();
+    expect(mocks.useShelf).not.toHaveBeenCalled();
+    expect(mocks.useRamp).not.toHaveBeenCalled();
+    expect(mocks.useProgress).not.toHaveBeenCalled();
     expect(mocks.addEventListener).not.toHaveBeenCalled();
   });
 
-  it('reads once only on background and sends only the highest-priority signal', async () => {
-    mocks.addEventListener.mockReset();
-    mocks.notifyBehavioural.mockReset();
-    mocks.readSnapshot.mockReset();
-    const ownerScope = createOwnerQueryScope();
-    mocks.useOwnerQueryScope.mockReturnValue(ownerScope);
-    mocks.readSnapshot.mockResolvedValue({
-      replenishment: true,
-      ramp: true,
-      promotional: true,
-    });
-    let listener!: (state: string) => void;
-    mocks.addEventListener.mockImplementation((_event, nextListener) => {
-      listener = nextListener;
-      return { remove: vi.fn() };
+  it('does not mount the ramp trigger when cadence admission is closed', () => {
+    mocks.canUseRoutineCadence.mockReturnValue(false);
+    mocks.useNotifPrefs.mockReturnValue({
+      data: {
+        promotionalOptIn: false,
+        replenishmentAlerts: false,
+        streakNudges: true,
+      },
     });
 
-    EnabledBehaviouralTriggers({
-      enabled: { promotional: true, ramp: true, replenishment: true },
-    });
-    expect(mocks.readSnapshot).not.toHaveBeenCalled();
-
-    listener('active');
-    expect(mocks.readSnapshot).not.toHaveBeenCalled();
-    listener('background');
-    await vi.waitFor(() => expect(mocks.notifyBehavioural).toHaveBeenCalledOnce());
-
-    expect(mocks.readSnapshot).toHaveBeenCalledOnce();
-    expect(mocks.notifyBehavioural).toHaveBeenCalledWith(
-      'replenishment',
-      undefined,
-      expect.objectContaining({ ownerId: 'owner-a', ownerGeneration: ownerScope.generation }),
-    );
+    expect(BehaviouralTriggers()).toBeNull();
+    expect(mocks.canUseRoutineCadence).toHaveBeenCalledOnce();
+    expect(mocks.useRamp).not.toHaveBeenCalled();
+    expect(mocks.addEventListener).not.toHaveBeenCalled();
   });
 
-  it('keeps signed-out background delivery local-only', async () => {
-    mocks.addEventListener.mockReset();
-    mocks.notifyBehavioural.mockReset();
-    mocks.readSnapshot.mockReset();
-    beginAccountGenerationBoundary();
-    endAccountGenerationBoundary();
-    mocks.useAuth.mockReturnValueOnce({ user: null });
-    mocks.useOwnerQueryScope.mockReturnValue(createOwnerQueryScope());
-    mocks.readSnapshot.mockResolvedValue({
-      replenishment: true,
-      ramp: false,
-      promotional: false,
-    });
-    let listener!: (state: string) => void;
-    mocks.addEventListener.mockImplementation((_event, nextListener) => {
-      listener = nextListener;
-      return { remove: vi.fn() };
-    });
-
-    EnabledBehaviouralTriggers({
-      enabled: { promotional: false, ramp: false, replenishment: true },
-    });
-    listener('background');
-    await vi.waitFor(() => expect(mocks.notifyBehavioural).toHaveBeenCalledOnce());
-
-    expect(mocks.notifyBehavioural).toHaveBeenCalledWith('replenishment', undefined, undefined);
-  });
-
-  it('contains no continuously mounted Shelf, Ramp, or Progress query hook', () => {
+  it('keeps expensive hooks and the lifecycle subscription behind the enabled child boundary', () => {
     const source = readFileSync(
       fileURLToPath(new URL('./BehaviouralTriggers.tsx', import.meta.url)),
       'utf8',
     );
+    const innerStart = source.indexOf('function EnabledBehaviouralTriggers');
+    const outerStart = source.indexOf('export function BehaviouralTriggers()');
+    const inner = source.slice(innerStart, outerStart);
+    const outer = source.slice(outerStart);
 
-    expect(source).not.toContain('useShelf');
-    expect(source).not.toContain('useRamp');
-    expect(source).not.toContain('useProgress');
-    expect(source).toContain("if (state !== 'background') return;");
-    expect(source).toContain("await import('./behaviouralSnapshot')");
-    expect(source).toContain('readBehaviouralTriggerSnapshot(lease, currentEnabled)');
-    expect(source.match(/notifyBehavioural\('/g)).toHaveLength(3);
+    expect(innerStart).toBeGreaterThan(-1);
+    expect(outerStart).toBeGreaterThan(innerStart);
+    expect(inner).toContain('useShelf()');
+    expect(inner).toContain('useRamp()');
+    expect(inner).toContain('useProgress()');
+    expect(inner).toContain("AppState.addEventListener('change'");
+    expect(outer).toContain('useNotifPrefs().data');
+    expect(outer).toContain('canUseRoutineCadence()');
+    expect(outer).toContain('<EnabledBehaviouralTriggers enabled={enabled} />');
+    expect(outer).not.toContain('useShelf()');
+    expect(outer).not.toContain('useRamp()');
+    expect(outer).not.toContain('useProgress()');
+    expect(outer).not.toContain('AppState.addEventListener');
   });
 });

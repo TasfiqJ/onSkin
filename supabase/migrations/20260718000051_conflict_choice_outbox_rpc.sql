@@ -184,7 +184,7 @@ begin
         v_identity_hash := pg_catalog.encode(
           extensions.digest(
             pg_catalog.convert_to(
-              'onskin:conflict-choice-identity:v1' || E'\n' ||
+              'layerwell:conflict-choice-identity:v1' || E'\n' ||
               v_rule_id::text || E'\n' || v_product_a_id::text || E'\n' ||
               v_product_b_id::text,
               'UTF8'
@@ -203,7 +203,7 @@ begin
         v_payload_hash := pg_catalog.encode(
           extensions.digest(
             pg_catalog.convert_to(
-              'onskin:conflict-choice-payload:v1' || E'\n' ||
+              'layerwell:conflict-choice-payload:v1' || E'\n' ||
               v_rule_id::text || E'\n' || v_product_a_id::text || E'\n' ||
               v_product_b_id::text || E'\n' || v_computed_severity || E'\n' ||
               v_user_choice || E'\n' || v_rule_version::text,

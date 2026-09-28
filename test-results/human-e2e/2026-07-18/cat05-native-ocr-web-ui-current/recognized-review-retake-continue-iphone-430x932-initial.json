@@ -1,0 +1,74 @@
+{
+  "alerts": [],
+  "bodyText": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. Development-only deterministic OCR state. It does not exercise Apple Vision or a device photo. Capture label",
+  "controls": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Capture label",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 382,
+      "x": 24,
+      "y": 380
+    }
+  ],
+  "inputs": [],
+  "issues": [],
+  "liveRegions": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8620/shelf/ocr?redacted-query",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  },
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "fec382eddd0e79f73b4c38b5de30d996928a8fc9",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "46a63dbb-ddcf-47aa-8229-6b2eaec7d864",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "fec382eddd0e79f73b4c38b5de30d996928a8fc9",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "66c79fc1647536c65378d5846a98e9e3765239b62edb195103b80d8e468d2863",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "recognized-review-retake-continue-iphone-430x932-initial",
+    "fixtureGroup": "recognized",
+    "scenarioId": "recognized-review-retake-continue",
+    "viewport": {
+      "height": 932,
+      "id": "iphone-430x932",
+      "width": 430
+    }
+  }
+}

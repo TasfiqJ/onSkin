@@ -1,0 +1,104 @@
+{
+  "alerts": [
+    "No readable text foundRetake in even light, or type or paste the list below."
+  ],
+  "bodyText": "< Read the label Deterministic OCR review fixture This development state proves only the review interface and interactions. Development-only deterministic OCR state. It does not exercise Apple Vision or a device photo. No readable text found Retake in even light, or type or paste the list below. Retake label photo Editable label text Looks right. Continue",
+  "controls": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": false,
+      "fullyExposed": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Retake label photo",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 525
+    },
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "disabled": true,
+      "fullyExposed": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Looks right. Continue",
+      "role": "button",
+      "scrollClipped": false,
+      "unsafeClipped": false,
+      "width": 327,
+      "x": 24,
+      "y": 611
+    }
+  ],
+  "inputs": [
+    {
+      "ariaDescription": null,
+      "ariaDescribedBy": null,
+      "label": "Ingredient label text",
+      "value": ""
+    }
+  ],
+  "issues": [],
+  "liveRegions": [
+    {
+      "live": "polite",
+      "role": "alert",
+      "text": "No readable text foundRetake in even light, or type or paste the list below."
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8640/shelf/ocr?redacted-query",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "fec382eddd0e79f73b4c38b5de30d996928a8fc9",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "46a63dbb-ddcf-47aa-8229-6b2eaec7d864",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "fec382eddd0e79f73b4c38b5de30d996928a8fc9",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "66c79fc1647536c65378d5846a98e9e3765239b62edb195103b80d8e468d2863",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "no-text-manual-recovery-iphone-375x667-no-text",
+    "fixtureGroup": "no-text",
+    "scenarioId": "no-text-manual-recovery",
+    "viewport": {
+      "height": 667,
+      "id": "iphone-375x667",
+      "width": 375
+    }
+  }
+}

@@ -1,13 +1,223 @@
 {
-  "generatedAt": "2026-07-11T18:48:36.609Z",
-  "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "de9bee6b829c97a89c2f0e08a83e59c788baffa9",
+  "schemaVersion": 1,
+  "kind": "phase5_device_qa_packet",
+  "generatedAt": "2026-08-10T01:43:48.073Z",
+  "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
+  "launchContract": {
+    "schemaVersion": 1,
+    "programId": "ios-all-features-2026",
+    "effectiveDate": "2026-07-12",
+    "releaseMode": "all-features",
+    "platforms": [
+      "ios"
+    ],
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false,
+    "requiredFeatureIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "requiredFeatureKeys": [
+      "brand_identity",
+      "onboarding_consent",
+      "shelf_intake",
+      "catalog",
+      "conflict_engine",
+      "routine_builder",
+      "today_adherence",
+      "cycle_scheduler",
+      "photo_progress",
+      "reminders",
+      "subscriptions",
+      "reverse_trial",
+      "recommendations",
+      "ask_advisor",
+      "conflict_share",
+      "commerce",
+      "community",
+      "trend_insights",
+      "widgets_live_activities",
+      "admin_tooling"
+    ],
+    "requiredSurfaces": [
+      "commerce",
+      "community_posting",
+      "community_aggregates",
+      "trend_insights",
+      "cloud_ask",
+      "widgets",
+      "live_activities",
+      "share_cards",
+      "reviewed_conflict_sharing",
+      "goal_active_recommendations",
+      "public_links",
+      "review_prompts",
+      "creator_links",
+      "paid_measurement"
+    ],
+    "featureProfessionalReviewRequirements": {
+      "routine_builder": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "cycle_scheduler": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "recommendations": [
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "clinical_order_eligibility_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "formulation_order_and_application_copy"
+        },
+        {
+          "reviewerRole": "regulatory_counsel",
+          "taskId": "H-07",
+          "scope": "claims_jurisdiction_and_market_clearance"
+        }
+      ],
+      "conflict_share": [
+        {
+          "reviewerRole": "regulatory_claims_counsel",
+          "taskId": "REV-02",
+          "scope": "exact_share_claims_copy_citations_and_market_positioning"
+        },
+        {
+          "reviewerRole": "privacy_security_reviewer",
+          "taskId": "REV-03",
+          "scope": "share_projection_destination_retention_revocation_and_data_flow"
+        },
+        {
+          "reviewerRole": "board_certified_dermatologist",
+          "taskId": "REV-04",
+          "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+        },
+        {
+          "reviewerRole": "cosmetic_chemist",
+          "taskId": "REV-05",
+          "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+        },
+        {
+          "reviewerRole": "ip_content_rights_counsel",
+          "taskId": "REV-06",
+          "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+        },
+        {
+          "reviewerRole": "release_signoff_operator",
+          "taskId": "REV-07",
+          "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+        }
+      ]
+    },
+    "conflictShareAdmission": {
+      "sharePublicationAdmitted": false,
+      "publicLinksAdmitted": false,
+      "shareReceiptIssuerAvailable": false,
+      "publicTokenServiceAvailable": false,
+      "sanitizedProjectionAllowlistRequired": true,
+      "exactPayloadConfirmationRequired": true,
+      "rawPrivateFieldsAllowed": false,
+      "analyticsAllowed": false
+    },
+    "trendInsightAdmission": {
+      "trendInsightAdmitted": false,
+      "validatedOnDeviceEngineAvailable": false,
+      "resultIssuerAvailable": false,
+      "calibrationAuthorityAvailable": false,
+      "fairnessAuthorityAvailable": false,
+      "simulatedMetricsAllowed": false,
+      "contentAnalyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false,
+      "cloudPhotoProcessingAllowed": false,
+      "scoreAgeGradePercentageAllowed": false
+    },
+    "commerceAdmission": {
+      "commerceAdmitted": false,
+      "affiliateRailAvailable": false,
+      "publicationAuthorityAvailable": false,
+      "reviewedCatalogAvailable": false,
+      "reviewedStacksAvailable": false,
+      "partnerPollingAllowed": false,
+      "consentGrantAllowed": false,
+      "catalogReadsAllowed": false,
+      "clickRecordingAllowed": false,
+      "externalNavigationAllowed": false,
+      "analyticsAllowed": false,
+      "disabledPathSideEffectsAllowed": false
+    },
+    "iosWinBackOfferAdmission": {
+      "schemaVersion": 1,
+      "winBackOfferAdmitted": false,
+      "automaticInAppMessagesAllowed": false,
+      "winBackInAppMessageAllowed": false,
+      "disabledWinBackProviderCallsAllowed": false,
+      "eligibilityDerivedOfferRequired": true,
+      "localizedStorePricingRequired": true,
+      "hardcodedDiscountAllowed": false
+    }
+  },
+  "gitSha": "7d503129c9e1d0a16818c532286b46a97daf636e",
   "gitStatus": "",
   "buildEvidence": {
-    "iosBuildId": "",
-    "androidBuildId": "",
+    "iosBuildId": null,
+    "iosBuildProfile": "",
+    "androidBuildId": null,
     "iosDevice": "",
-    "androidDevice": "",
+    "androidDevice": null,
+    "platformStatus": {
+      "ios": "required",
+      "android": "not_applicable"
+    },
     "qaSignedOff": false,
     "signedOffBy": ""
   },
@@ -19,11 +229,6 @@
     },
     "PHASE5_INSTALL_QA_PASS": {
       "label": "fresh install, update, reinstall, and dev/staging variants",
-      "required": true,
-      "passed": false
-    },
-    "PHASE5_CAMERA_PERMISSION_QA_PASS": {
-      "label": "native camera permission denial, retry, and settings recovery",
       "required": true,
       "passed": false
     },
@@ -48,7 +253,7 @@
       "passed": false
     },
     "PHASE5_NOTIFICATION_QA_PASS": {
-      "label": "iOS/Android reminder delivery and permission behavior",
+      "label": "iOS reminder delivery and permission behavior",
       "required": true,
       "passed": false
     },
@@ -73,19 +278,162 @@
       "passed": false
     },
     "PHASE5_ACCESSIBILITY_QA_PASS": {
-      "label": "VoiceOver/TalkBack labels, traversal, and 44 pt controls",
+      "label": "VoiceOver labels, traversal, and 44 pt controls",
       "required": true,
       "passed": false
     },
-    "PHASE5_NATIVE_OCR_QA_PASS": {
-      "label": "native OCR real-label text recognition",
-      "required": false,
+    "PHASE5_WIDGET_ARCHIVE_QA_PASS": {
+      "label": "signed archive extension, App Group entitlement, target privacy manifest, and capability inspection",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_WIDGET_DEVICE_QA_PASS": {
+      "label": "physical-iPhone widget families, cold-start deep links, process death, and accessibility",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS": {
+      "label": "atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_LIVE_ACTIVITY_QA_PASS": {
+      "label": "physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior",
+      "required": true,
       "passed": false
     }
   },
+  "widgetLifecycleEvidence": {
+    "path": null,
+    "status": "blocked",
+    "sha256": null,
+    "artifacts": [],
+    "summary": {
+      "artifactCount": 0,
+      "baseArtifactCount": 0,
+      "requiredBaseArtifactCount": 11,
+      "minimumProofAttachmentCount": 4,
+      "proofAttachmentCount": 0,
+      "scenarioCount": 0
+    },
+    "binding": null
+  },
   "nativeOcr": {
-    "enabledInAnyBuild": false,
-    "qaRequired": false
+    "enabledInAnyBuild": true,
+    "enabledInCandidateBuild": true,
+    "qaRequired": true,
+    "evidence": {
+      "required": true,
+      "path": null,
+      "status": "blocked",
+      "sha256": null,
+      "artifacts": [],
+      "summary": {
+        "devices": 0,
+        "corpusItems": 0,
+        "rtlCorpusItems": 0,
+        "runs": 0,
+        "requiredRuns": 0,
+        "labelClasses": 0
+      },
+      "binding": null
+    }
+  },
+  "cameraLifecycleEvidence": {
+    "required": true,
+    "path": null,
+    "status": "blocked",
+    "sha256": null,
+    "artifacts": [],
+    "summary": {
+      "devices": 0,
+      "routes": 0,
+      "scenarioDefinitions": 27,
+      "runs": 0,
+      "requiredRuns": 0,
+      "artifacts": 0,
+      "proofArtifacts": 0
+    },
+    "binding": null
+  },
+  "performanceEvidence": {
+    "required": true,
+    "path": null,
+    "status": "blocked",
+    "sha256": null,
+    "summary": {
+      "requiredMeasurements": 0,
+      "found": 0,
+      "metrics": 0,
+      "platforms": 0
+    },
+    "binding": null
+  },
+  "governedEvidenceChain": {
+    "schemaVersion": 1,
+    "kind": "phase5_governed_evidence_chain_binding",
+    "status": "blocked",
+    "sourceGitSha": null,
+    "evidenceCommitSha": null,
+    "currentGitSha": "7d503129c9e1d0a16818c532286b46a97daf636e",
+    "releaseCandidateDir": null,
+    "ledgerPath": null,
+    "ledgerSha256": null,
+    "ledgerEntryCount": 0,
+    "directEvidenceCommit": false,
+    "evidenceOnlyCommit": false,
+    "cleanWorktree": false,
+    "normalIndexState": false,
+    "hashesValid": false,
+    "downstreamGeneratedOnly": false,
+    "downstreamCommitCount": 0,
+    "roleInventories": {
+      "phase5-widget-lifecycle": {
+        "claimed": false,
+        "entries": [],
+        "ledgerEntryCount": 0
+      },
+      "phase5-native-ocr": {
+        "claimed": false,
+        "entries": [],
+        "ledgerEntryCount": 0
+      },
+      "phase5-camera-lifecycle": {
+        "claimed": false,
+        "entries": [],
+        "ledgerEntryCount": 0
+      },
+      "phase5-performance": {
+        "claimed": false,
+        "entries": [],
+        "ledgerEntryCount": 0
+      }
+    },
+    "errors": []
+  },
+  "evidenceStatuses": {
+    "widgetLifecycle": "blocked",
+    "nativeOcr": "blocked",
+    "cameraLifecycle": "blocked",
+    "performance": "blocked",
+    "governedEvidenceChain": "blocked"
+  },
+  "cat07CommittedEvidence": {
+    "errors": [
+      "test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD"
+    ],
+    "headSha": "7d503129c9e1d0a16818c532286b46a97daf636e",
+    "manifestSha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0",
+    "markdownSha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd",
+    "status": "blocked",
+    "summarySha256": null
+  },
+  "cat07FullEvidenceContract": {
+    "errors": [
+      "full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD"
+    ],
+    "headSha": "7d503129c9e1d0a16818c532286b46a97daf636e",
+    "status": "blocked"
   },
   "scenarios": [
     {
@@ -139,164 +487,234 @@
     {
       "surface": "Performance",
       "scenario": "predeclared thresholds plus supported-device startup, intake, barcode, routine, and encrypted-photo load/memory evidence"
+    },
+    {
+      "surface": "Widget archive",
+      "scenario": "macOS archive contains the signed extension, expected App Group entitlement, target privacy manifest, final identities, and no unapproved capabilities"
+    },
+    {
+      "surface": "Widget families and deep links",
+      "scenario": "small, medium, inline, and rectangular families render and redact correctly; final-brand Today deep links survive cold start and recovery"
+    },
+    {
+      "surface": "Widget interaction and privacy lifecycle",
+      "scenario": "concurrent/repeated check-offs, app killed/relaunched, lock state, stale/unknown tokens, sign-out, account switch, consent withdrawal, expiry, and corrupt shared bytes"
+    },
+    {
+      "surface": "Live Activity lifecycle",
+      "scenario": "start, update, stale, complete, explicit end, app process death, device restart, lock-screen redaction, and disabled-state cleanup"
     }
   ],
   "files": [
     {
+      "path": ".env.example",
+      "exists": true,
+      "bytes": 29662,
+      "sha256": "d9825f22149f8d15e491d4f1d97fbc8311ce739564a36e1f0ed0ecc64464e091"
+    },
+    {
       "path": "package.json",
       "exists": true,
-      "bytes": 18313,
-      "sha256": "5714a4b7bd35cffa77b9951ebfcad3b090cc707a89bf0e0f6001ae7ad49c81b3"
+      "bytes": 44354,
+      "sha256": "af6cec1697c363daf266bcd4032a184aa9a994a51cc6a8c0991da4c67b0d8c8e"
+    },
+    {
+      "path": "package-lock.json",
+      "exists": true,
+      "bytes": 607493,
+      "sha256": "c7d3880abf0211eadd0644ee2531fbba507d8661ed379c8cead68095c7bd1318"
+    },
+    {
+      "path": "docs/hugeToDo/launch-contract.json",
+      "exists": true,
+      "bytes": 7174,
+      "sha256": "ef6a34e9e8de58380296f08473211f4915ab81817cde4ee5394f6210f08ca3bb"
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "exists": true,
+      "bytes": 15776,
+      "sha256": "7bec15c6d8aa7a5f744e094fa74c84969b6b09eeb23d97e94e05498315d5708b"
     },
     {
       "path": "apps/mobile/app.base.json",
       "exists": true,
-      "bytes": 2883,
-      "sha256": "a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5"
+      "bytes": 4105,
+      "sha256": "66fc0841d96e53d8d5eb4a789fe3afd87b4425882b250e1ccc56218390322fc6"
     },
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 10351,
-      "sha256": "1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec"
+      "bytes": 19140,
+      "sha256": "81851010e4eb58d23f8e61ca270d979776390f3607d4a6afdf6106936756eb5c"
+    },
+    {
+      "path": "apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js",
+      "exists": true,
+      "bytes": 11727,
+      "sha256": "97bdd94c58767d1ecfbe8754016ef29d1760732d9315dd543dd67628ae127915"
     },
     {
       "path": "apps/mobile/eas.json",
       "exists": true,
-      "bytes": 1240,
-      "sha256": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51"
+      "bytes": 1636,
+      "sha256": "c66faf6c37639471d73e0c168622534210d4f074cce1265d05e443e8b4a9bb04"
     },
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2697,
-      "sha256": "029029cd91efd292ccc768a774234a5425612860f6c7aa4698bda67c9faaaf86"
+      "bytes": 2895,
+      "sha256": "ec8cadff66f59066df4e91e59ac04dc035568bf2fdaabadb7f2f07542531d248"
     },
     {
       "path": "apps/mobile/src/app/_layout.tsx",
       "exists": true,
-      "bytes": 2381,
-      "sha256": "e894aa085c1f78b8ea48b892d3038297ae207150d37eb692f87c39c69f4426cf"
+      "bytes": 4046,
+      "sha256": "d2d7bae5a6eb88250d21a81cf09ec2ac2523673b429e7df4fcb4ba45539a08f6"
+    },
+    {
+      "path": "apps/mobile/src/lib/appConfig.test.ts",
+      "exists": true,
+      "bytes": 44061,
+      "sha256": "3b388b79f457e01533c66c5a4827da6576966d1f1bf2e292e2aab725e42613a8"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 5454,
+      "sha256": "1d198075b9eed13f1b0b9cfcdff59043368999a46f2845df4c81ab518afa4f36"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 10212,
+      "sha256": "c2e3fa53a0f06bc6ca7466d5260cca5fc403500d847eb32fb38699ff1f3f0cf5"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
       "exists": true,
-      "bytes": 20519,
-      "sha256": "d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125"
+      "bytes": 20084,
+      "sha256": "5ca24d30673f0f0e79ea4ded5e2758e17ecda5505ca6a94862271b9614c6b030"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/shelf.tsx",
       "exists": true,
-      "bytes": 16085,
-      "sha256": "bfc542c49770247668411df13067245b1b5310bf23e48e19bdfc4dd5673e45be"
+      "bytes": 21848,
+      "sha256": "aaf21f3b9567103e0c35b2fdeec4f535f164b592942e76b091e25ba19ab0fb43"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 37119,
-      "sha256": "b13fdc0f555048e214cda72affba45497b2d340b0e60a0ab4ae020a2ccc54c24"
+      "bytes": 36392,
+      "sha256": "c5e534632a0dc98b33dc23aef4c0fa491f614a339d44ee6c24692712f9133620"
     },
     {
       "path": "apps/mobile/src/app/onboarding/products.tsx",
       "exists": true,
-      "bytes": 15266,
-      "sha256": "2ffd9ecd06b6480c94a8b91d1545a638cf0bd7295cfa55359467be33d905b0d9"
+      "bytes": 15830,
+      "sha256": "d4dc65741eeee9852dda1c99c8b7ab18d47a58ff5783619c57008a450f69b94b"
     },
     {
       "path": "apps/mobile/src/app/shelf/[id].tsx",
       "exists": true,
-      "bytes": 37135,
-      "sha256": "dfae778efed66e57e151c5bfc14e00c7ce473fd2b4ec02002d90ff27e18770fd"
+      "bytes": 45428,
+      "sha256": "1b2fddb06a6809c09987635c672c9a43026226805481c5438df09950c8d6cc3d"
     },
     {
       "path": "apps/mobile/src/app/shelf/_layout.tsx",
       "exists": true,
-      "bytes": 916,
-      "sha256": "9cd36d104cc8929fc4cf6bf7b9a805b904c3820df627fe160989a3924c6b27d4"
+      "bytes": 963,
+      "sha256": "5223360e4b730ffc7fd37d356211a5aab42cae6aba388474ea1af61999d8203c"
     },
     {
       "path": "apps/mobile/src/app/shelf/opened.tsx",
       "exists": true,
-      "bytes": 11777,
-      "sha256": "444f54a85bb001ec16759d304fbb754305aa590ec5018eefbfcf1c3bbfdb80ec"
+      "bytes": 18282,
+      "sha256": "1e7108e64c4b12f462a51745f1e15d465990ed2dc8f7cf0b76f027afbc677c85"
     },
     {
       "path": "apps/mobile/src/app/shelf/replenish.tsx",
       "exists": true,
-      "bytes": 7631,
-      "sha256": "5addfea202ebc15850feacc3a18c79d6216310c61a341a101c300a497cd94644"
+      "bytes": 10694,
+      "sha256": "e4dee732e65c6bbdb7870597941390d5e53416940cce96d02d3f4d7eb8d2aec1"
     },
     {
       "path": "apps/mobile/src/app/shelf/scan.tsx",
       "exists": true,
-      "bytes": 23220,
-      "sha256": "81712f3391afccaadd7f86d1f3ccd546d696e842654fbd01fb3cc9cf9df0eb6c"
+      "bytes": 33673,
+      "sha256": "a8ec4e910593e3e4917e75b170b300cff88eefac35f46b1ea332d0b544279248"
     },
     {
       "path": "apps/mobile/src/app/shelf/search.tsx",
       "exists": true,
-      "bytes": 15482,
-      "sha256": "01ae00b96fa0a378ae140b8f54c342a268e5b34c0e32e0a76349e4b9493176d6"
+      "bytes": 24504,
+      "sha256": "193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087"
     },
     {
       "path": "apps/mobile/src/app/shelf/ocr.tsx",
       "exists": true,
-      "bytes": 16348,
-      "sha256": "b50aa03a149f978434829bc60bcfa9c6bc599d9c7c41cac1a59cb16b5c8da321"
+      "bytes": 47515,
+      "sha256": "8081c8eec75eb8a0781c66a1f2e5f093ad6f54c067e261a155bf33412f2b61a2"
     },
     {
       "path": "apps/mobile/src/app/progress/capture.tsx",
       "exists": true,
-      "bytes": 27795,
-      "sha256": "843e4347b948b4720a4415e499e0f14a4bd3c020adb6d9814ffe1dddea1cb7dc"
+      "bytes": 40361,
+      "sha256": "6687c26e6fcccedf226c15b1d3a70a679d37e795e34f87380315a14f17a75294"
     },
     {
       "path": "apps/mobile/src/app/progress/review.tsx",
       "exists": true,
-      "bytes": 15828,
-      "sha256": "04cb2815f6498d8b67a30ac817191092ebad3b895546fca890f824ced89689ad"
+      "bytes": 23655,
+      "sha256": "8c9757618e664de8a56bc46981348d8b04fe3fe818c1993182e6d69b7b6e0719"
     },
     {
       "path": "apps/mobile/src/app/progress/[id].tsx",
       "exists": true,
-      "bytes": 19776,
-      "sha256": "4543b6d031a2b869fd61ebc0a3832eaa5deab7ebc220e7074b9ea4dc8e475d64"
+      "bytes": 19719,
+      "sha256": "6c30541e68f2f7e1acd9a7b366f7531eaaebdf12e284ab831eb4aa3b7d2e02d2"
     },
     {
       "path": "apps/mobile/src/features/catalog/client.ts",
       "exists": true,
-      "bytes": 9984,
-      "sha256": "2700b12181daaf103dd4768c646b40a18d921c8bc0d5877f399e6ce55375078c"
+      "bytes": 23824,
+      "sha256": "85b771f782010e99cd4061ed331557de73e68a16fb838d92f720f58d042f693e"
     },
     {
       "path": "apps/mobile/src/features/catalog/client.test.ts",
       "exists": true,
-      "bytes": 11141,
-      "sha256": "f37eac5b03f95b060b2b5f7b1c92983a5906135541ba0422b6fa01e9752a5f4c"
+      "bytes": 31695,
+      "sha256": "42dc1c9e4d29c565827535836cf635c37bc19399f663859695a1546df518d297"
     },
     {
       "path": "apps/mobile/src/features/intelligence/pao.ts",
       "exists": true,
-      "bytes": 8291,
-      "sha256": "fcf9d36c694715069f527a60586ca9c0d075a00d9162263cd4b7d71f1d4baa27"
+      "bytes": 5160,
+      "sha256": "32209515587ba1136c72abcd9703f25ef46c0aa6a289bff5fac685a08a0eafde"
     },
     {
       "path": "apps/mobile/src/features/intelligence/pao.test.ts",
       "exists": true,
-      "bytes": 5134,
-      "sha256": "1304cbbd30e91abd5ec841c4f71598fe0dcb6ce5437eec6d78849e169c1742b2"
+      "bytes": 3875,
+      "sha256": "d4ff777e1b13717b1fd7b6d01a695070e34f065a311b1f98e04d3b0bb737a385"
     },
     {
       "path": "apps/mobile/src/features/native/camera/barcode.ts",
       "exists": true,
-      "bytes": 2771,
-      "sha256": "355dce6a0e9c326fc95cc7076cab2fa7e82e64720f9cedc8b366e10ffeac8fdd"
+      "bytes": 7501,
+      "sha256": "6d30151a0e7c01cde010c77dcf26d91080c3ac93109d538e6a752cfadffec911"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/labelPhotoStartup.ts",
+      "exists": true,
+      "bytes": 6124,
+      "sha256": "5fe0049c8a5576425b2aaeb5ec75510ecce722b42b340b8324e49980253ca125"
     },
     {
       "path": "apps/mobile/src/features/notifications/BehaviouralTriggers.tsx",
       "exists": true,
-      "bytes": 2497,
-      "sha256": "69712801b1f76253c941b1e18dd4d382660c3e42334df4d84d7dadfcd7bf225c"
+      "bytes": 3485,
+      "sha256": "a1d607269e8beef3e56d0694fd80fb7f9f6f77b42278d7e7f5dc8cb1db4a5ffd"
     },
     {
       "path": "apps/mobile/src/features/notifications/claimsafety.test.ts",
@@ -307,26 +725,218 @@
     {
       "path": "apps/mobile/src/features/notifications/copy.ts",
       "exists": true,
-      "bytes": 4426,
-      "sha256": "a5b7cc3a1a0a512d21e61c49b0041ac0430c0194ab8adda45c09124a45f7787b"
+      "bytes": 5151,
+      "sha256": "9aa46a886898cf55ff2b436c7a555f8df7eba7ed6f715dd173d0a5f652daee5d"
     },
     {
       "path": "apps/mobile/src/features/notifications/store.ts",
       "exists": true,
-      "bytes": 7206,
-      "sha256": "5428036c530d7d50627328f91e4f8ab9c1813f123e5e09a5ccb4d4799311bb97"
+      "bytes": 9910,
+      "sha256": "396f23be42696512500e46c8250b149f07a7100f0c2e503805fe1bf28cae1b88"
     },
     {
       "path": "apps/mobile/src/features/notifications/store.test.ts",
       "exists": true,
-      "bytes": 5085,
-      "sha256": "a9276a89222c09c14fcf7856ea1b9e9462058ebc1d1510c5abad8e1e18d7a637"
+      "bytes": 7931,
+      "sha256": "b8a63af36c9facd9806f11a4057ddd65a506c53bc6a7383afa91af23a2663366"
     },
     {
       "path": "apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts",
       "exists": true,
       "bytes": 718,
       "sha256": "2b34153c9a4a85b29bbf8483217a65e4ee99b15837a50128bc7cf572c09fb4a0"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateDataKeys.ts",
+      "exists": true,
+      "bytes": 4107,
+      "sha256": "3c1b24ac6cafd2392de8da9174de38629744e170c5c8d538381075d172fb8bdb"
+    },
+    {
+      "path": "apps/mobile/src/features/today/completionsStore.ts",
+      "exists": true,
+      "bytes": 36567,
+      "sha256": "2bcd01245770ca3b1055a88ee26d75278fe49cc4d360f6662aa62550b18df5bc"
+    },
+    {
+      "path": "apps/mobile/src/features/today/completionsStore.test.ts",
+      "exists": true,
+      "bytes": 31521,
+      "sha256": "26f5616f33bb413563e9e25ba9957cae0178ffc803dc8ec6dfeb268ee56e166d"
+    },
+    {
+      "path": "apps/mobile/src/features/today/routineProjection.ts",
+      "exists": true,
+      "bytes": 7275,
+      "sha256": "6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0"
+    },
+    {
+      "path": "apps/mobile/src/features/today/routineProjection.test.ts",
+      "exists": true,
+      "bytes": 7637,
+      "sha256": "c89b88c5a960fc77fec7508528b5d0f10699600a17bc917a7b4371f0d1f761ed"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/actionRegistry.ts",
+      "exists": true,
+      "bytes": 22054,
+      "sha256": "61fdcec688ca9c6eca4d2ed32e8a8301b87c4e0ec2c59f76d4a692f4cc1294c1"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/actionRegistry.test.ts",
+      "exists": true,
+      "bytes": 14076,
+      "sha256": "9f97d586f1cc6c5560efca341b0f8f7dfa0ba8176a602e3ee2bd5401113901b6"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/contract.ts",
+      "exists": true,
+      "bytes": 14777,
+      "sha256": "30b301c08a56dc2ba830a7ebd1b4d506fb5704f30efb6bc26fc7a4d908fa2283"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/contract.test.ts",
+      "exists": true,
+      "bytes": 11167,
+      "sha256": "b075df444c5a818a54fc17a5ef862ac847b31db36fadeb23f00cdf2505aafeba"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/controllerCore.ts",
+      "exists": true,
+      "bytes": 15274,
+      "sha256": "86765f983473dcaa6934f166450e08caec0f889fdd4cc7bb8099390f861c8171"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/controllerCore.test.ts",
+      "exists": true,
+      "bytes": 14670,
+      "sha256": "468d73e40a10bdbe2d07d7e7a03004800511baf200eb117b3e3a124978dd4aca"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycle.ts",
+      "exists": true,
+      "bytes": 2570,
+      "sha256": "0ecc49ad825975855551a777221e656e7fa102e10c63373c4994d4e3a6f77a96"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycle.ios.ts",
+      "exists": true,
+      "bytes": 7206,
+      "sha256": "d0946321228ee5247083fdea3749f0a310cbed0cc3adf08889bd3443dcfa78ef"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.ts",
+      "exists": true,
+      "bytes": 13864,
+      "sha256": "1aaa8a94df26295c8a481a45f3a7cc0ed63667e548cb4525e86a59a88b852c43"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts",
+      "exists": true,
+      "bytes": 10173,
+      "sha256": "2ec44850621de46c3d9281fe83c813ab50b858b7270aa06acd4a1db8ecaa8429"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts",
+      "exists": true,
+      "bytes": 8073,
+      "sha256": "ec0f23430d14c6c669513db771a5d7aed626839535bb27872eb0134d6dfdec29"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeOutboxModel.ts",
+      "exists": true,
+      "bytes": 14365,
+      "sha256": "2db73d4539a00dafde867f44867a1cb7a5fefa8886532b613a6ffaf366e38606"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeOutboxModel.test.ts",
+      "exists": true,
+      "bytes": 9995,
+      "sha256": "ba15ba05b87b92465a6db1aecdb85619f195b51588960cef6ffcfa860d431da3"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/ownerAuthority.ts",
+      "exists": true,
+      "bytes": 6311,
+      "sha256": "604a4f1948d955d051991962946b779575c4281a6f1b6b284627176f8c42eebb"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/ownerAuthority.test.ts",
+      "exists": true,
+      "bytes": 5295,
+      "sha256": "a360db685b2e7e62d74c35328ddd4af48d4541908da32a69fe47139b000c534c"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleCoordinator.ts",
+      "exists": true,
+      "bytes": 7164,
+      "sha256": "ab1c66830cda9363df3d65cb35da475fc28d5f70c24c31b48b928032be7e011f"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts",
+      "exists": true,
+      "bytes": 9735,
+      "sha256": "529860dd43fe49b64a9db8d317b95f9758cfb7f1e0567792520eb6528059e9c6"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.ts",
+      "exists": true,
+      "bytes": 709,
+      "sha256": "f9ed010986a993bb429a30a234d2bcc8aefe5f8bce3f9a580dcb0a62443f33a4"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts",
+      "exists": true,
+      "bytes": 23536,
+      "sha256": "138c3b432e773e0a501938edae8ed6a956aa3b5aba796a06b2465448aa641184"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.test.ts",
+      "exists": true,
+      "bytes": 28407,
+      "sha256": "22d7775932d0c278a9c51536dd48b588e0710513bff7307476df33db1df23dfd"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx",
+      "exists": true,
+      "bytes": 7497,
+      "sha256": "6bff134c0afb37c1c9eb5ea7bef662e24fae3ebfa28955dd45ad7e11f70b4efc"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts",
+      "exists": true,
+      "bytes": 11866,
+      "sha256": "fe83b689aab10197e2182dd7a1739889c4e5b3278a2ae51e25589c03945bcbc9"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/runtimeGate.ts",
+      "exists": true,
+      "bytes": 1822,
+      "sha256": "942a2d9d0814b66a81c88f7efd3fa6f42728e04668710cd96c3ff19f9be1de62"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/runtimeGate.test.ts",
+      "exists": true,
+      "bytes": 2749,
+      "sha256": "ab36b67f279f124cd5e7bc617e9c8c0130e65443923992414788ada0c43f88ba"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/TodayWidget.ios.tsx",
+      "exists": true,
+      "bytes": 10961,
+      "sha256": "1dd66b8d929b85d78c580462c7b468fe3d4fbf8245a31005274c6d2a66eee9e5"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/TonightActivity.ios.tsx",
+      "exists": true,
+      "bytes": 6019,
+      "sha256": "9b0a990044c36aed513c1ce22503fee1c2a0b9906341f4cfdfc45a04eff75146"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/widgetViews.test.ts",
+      "exists": true,
+      "bytes": 15996,
+      "sha256": "b4a2a8b9057d0ed171b5dc583198241a05d33f5f97e2cc2d8d82a49fcec444b5"
     },
     {
       "path": "apps/mobile/src/features/photos/analyzePhotoLighting.ts",
@@ -355,20 +965,20 @@
     {
       "path": "apps/mobile/src/features/photos/consent.ts",
       "exists": true,
-      "bytes": 5144,
-      "sha256": "d3a68a10c0db38348b7b17e18622016f917fc1c2e100a08d5698afcd2e0385b9"
+      "bytes": 1270,
+      "sha256": "a45ef22356ec2352568bd4ed847c88d96a4565357233054021d0a5d9c3422042"
     },
     {
       "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
       "exists": true,
-      "bytes": 15047,
-      "sha256": "4eb6cdfb74b5527392cd8da48397458fe119922ac330605988c6669050a470d2"
+      "bytes": 25302,
+      "sha256": "71e898527cc8bd7541fed4bccd6c8280c6c38e978639c55ac1048e642a8de90f"
     },
     {
       "path": "apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx",
       "exists": true,
-      "bytes": 4454,
-      "sha256": "deccd291d391bbd6654664b00920622bbad9051e1deb2c79ad2e282503846218"
+      "bytes": 4451,
+      "sha256": "f5c45a73af3712462acd4f3b1a393ead4c9aee1067e32b82a14b6e865a23af67"
     },
     {
       "path": "apps/mobile/src/features/photos/PhotoStorageGate.tsx",
@@ -379,14 +989,14 @@
     {
       "path": "apps/mobile/src/features/photos/store.ts",
       "exists": true,
-      "bytes": 10089,
-      "sha256": "1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b"
+      "bytes": 20374,
+      "sha256": "ef12cfc85396755b088efd142136d19b92a954b6d13a60fa7f8c0ad8f9177b9d"
     },
     {
       "path": "apps/mobile/src/features/photos/usePhotos.ts",
       "exists": true,
-      "bytes": 5255,
-      "sha256": "7bfcfda545ab719de32f460c859d6aa66075e97a84d200194360c114f2fb16a5"
+      "bytes": 6056,
+      "sha256": "38d1eab390e521697767d8f2e962b4600780a190b9652aae8aee85bd7b2abc8c"
     },
     {
       "path": "apps/mobile/src/features/photos/useCaptureAnalysis.ts",
@@ -409,56 +1019,56 @@
     {
       "path": "apps/mobile/src/features/recommendations/replenishment.ts",
       "exists": true,
-      "bytes": 2237,
-      "sha256": "c1283d8602f70730433bc4009a6049ffe21c369682bf2bdf3832b64766a09420"
+      "bytes": 3829,
+      "sha256": "ad0658a4a88071c1991c13c1d8d797d6250cdf5fa70fc33f2613cef380b4e610"
     },
     {
       "path": "apps/mobile/src/features/recommendations/replenishment.test.ts",
       "exists": true,
-      "bytes": 3505,
-      "sha256": "9594da62265838c9628bc8dbfcc9eb81c24709a2510cb69fe1a88cde68b2f4cc"
+      "bytes": 6348,
+      "sha256": "412f2d66356e09df6c9766a156b754978d7fdf5874e960204cd491844bfdcfc7"
     },
     {
       "path": "apps/mobile/src/features/shelf/IntakeContext.tsx",
       "exists": true,
-      "bytes": 2833,
-      "sha256": "afc1156ac26b2a759511c95e8acc7f84ab8b6487d46f72c359c3dc4fee6c3252"
+      "bytes": 2707,
+      "sha256": "e0cd87f56b16cb77fcc474b06050235bc72c732108c82c0316d09bc72411b3a4"
     },
     {
       "path": "apps/mobile/src/features/shelf/LocalDateField.tsx",
       "exists": true,
-      "bytes": 1765,
-      "sha256": "e0b6cc071362f286582498c4333650d0ead57b58dbc6cc9f270e53c70e1e87a4"
+      "bytes": 1878,
+      "sha256": "e5cf3e8c0700e99944dcf1d515e511d4d78464277643599a6ba704daec7b9503"
     },
     {
       "path": "apps/mobile/src/features/shelf/freshness.ts",
       "exists": true,
-      "bytes": 3758,
-      "sha256": "db7f03175302ca10c75668056d8ca1ce0ff3f41de06b36e8428e09437ddc1ee2"
+      "bytes": 7302,
+      "sha256": "15e49e4d6e0911eb7cb465c15c8b2a836affe16d09f6f122c1d4ddb3ee1294b3"
     },
     {
       "path": "apps/mobile/src/features/shelf/freshness.test.ts",
       "exists": true,
-      "bytes": 2976,
-      "sha256": "3ab2cc0066fb2c9880b8a294424fcf15b21b749e39106b95fda14153bab5b962"
+      "bytes": 8351,
+      "sha256": "fee1fd4da816079fe1e3cd10a33af16c74e7244ec996905605013f7884699a0a"
     },
     {
       "path": "apps/mobile/src/features/shelf/freshnessMigration.test.ts",
       "exists": true,
-      "bytes": 1325,
-      "sha256": "39696409e00d951d5a8d57b065b35f051bdc12a791471d8564c146446dc1dd73"
+      "bytes": 4858,
+      "sha256": "03808fae36a3a74134bcda3d5db0e729729dcde2653b0331a7d481a5a71f9689"
     },
     {
       "path": "apps/mobile/src/features/shelf/mutations.ts",
       "exists": true,
-      "bytes": 4996,
-      "sha256": "f589aa77cb90e541e0e0c7db52406825f9b535bd1f0c64af7dbf37acebe33e65"
+      "bytes": 4655,
+      "sha256": "13dfde9b8a5490f67b5269271ae0bdf6bb3910ba5b55b4db60560690d7a56eac"
     },
     {
       "path": "apps/mobile/src/features/shelf/paoProvenance.ts",
       "exists": true,
-      "bytes": 508,
-      "sha256": "dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3"
+      "bytes": 511,
+      "sha256": "a9688d11fda1c37ac1aae3d66426d82f470ba7a04252d7b4558cb9e361c90910"
     },
     {
       "path": "apps/mobile/src/features/shelf/paoProvenance.test.ts",
@@ -469,38 +1079,80 @@
     {
       "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
       "exists": true,
-      "bytes": 46618,
-      "sha256": "0d4af97d8fc892571f9eeb045e7c2c1d7c48d59f54143db3ff1634309ff1c9dc"
+      "bytes": 69844,
+      "sha256": "4e25d81e10f9bba5eead0e597eaabec9f1e459600b73bc922fe8bb75528d3a71"
     },
     {
       "path": "apps/mobile/src/features/shelf/store.ts",
       "exists": true,
-      "bytes": 12717,
-      "sha256": "a5cc27b4d691a9e37f38ad49a58a6c5bed5d6c4d9c7d166ba5509ac94057dc16"
+      "bytes": 58802,
+      "sha256": "29efebed92401a8cdb627f382977eb65c9343a35d90f1c947febd6407d4808e7"
     },
     {
       "path": "apps/mobile/src/features/shelf/store.test.ts",
       "exists": true,
-      "bytes": 7202,
-      "sha256": "a2b05b14d6c45725f50768611345f98f4d7f90733840eac2d1a56fc9dff2f81d"
+      "bytes": 57316,
+      "sha256": "b36dde3201cc2abedb699a9a9b16e572ad19f04142ea894ab757c548898bb650"
     },
     {
       "path": "apps/mobile/src/features/shelf/useShelf.ts",
       "exists": true,
-      "bytes": 10380,
-      "sha256": "950087e8f98dbc6a89d81a512bb5aaf37b5927415220c236dbc742f4cf4f718c"
+      "bytes": 10548,
+      "sha256": "5c77df5d4c09c62315d94976afb745cd564242f2ec49efe8fd5ea4656b36b1fc"
     },
     {
       "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
       "exists": true,
-      "bytes": 4753,
-      "sha256": "63d228877532e01ded924cfc5693c6789ee2a311207ebc840e8bc88a1b6b69ac"
+      "bytes": 5075,
+      "sha256": "2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9"
     },
     {
       "path": "packages/types/src/database.types.ts",
       "exists": true,
-      "bytes": 36886,
-      "sha256": "d385c47f16ad8cab7627fa8fb028521d3785d044a7761f9ba2bbab17b099f95e"
+      "bytes": 213300,
+      "sha256": "2c14252f882294d2ca42832405fb0fe157f855a85a9d3fc5d47999457be9b1d3"
+    },
+    {
+      "path": "packages/types/src/client-database.types.ts",
+      "exists": true,
+      "bytes": 3194,
+      "sha256": "7527a744c009f23b87c9ca88dee22df8192fcd7f288a1ef427e2efb42eab2c95"
+    },
+    {
+      "path": "packages/types/src/client-database.types.contract.ts",
+      "exists": true,
+      "bytes": 3849,
+      "sha256": "3de1fbfa0648aabd8f4f07a0e41ccba3a8992cfc7301b1248ffcecfa731ec00a"
+    },
+    {
+      "path": "packages/types/src/index.ts",
+      "exists": true,
+      "bytes": 19452,
+      "sha256": "03fbf4e84f93a35a8ea72da9c69f184f06ce0b3a9e5bef0fc4569859d2f22c91"
+    },
+    {
+      "path": "packages/types/package.json",
+      "exists": true,
+      "bytes": 398,
+      "sha256": "ef2fb4ad105532c389467886cc2035de955078f4ae1a8b08db122241592b62c2"
+    },
+    {
+      "path": "apps/mobile/src/lib/supabase/client.ts",
+      "exists": true,
+      "bytes": 7619,
+      "sha256": "c200f014b9edf07064523fe97da18d4020e5404f0ad364d01cb3aa6fb33322c5"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract-lib.mjs",
+      "exists": true,
+      "bytes": 1380,
+      "sha256": "315402e9a0b8f77d8c922022ff9040c342769c9a57a122912ef5cff43f35355d"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract.test.mjs",
+      "exists": true,
+      "bytes": 5663,
+      "sha256": "8b8617536c1877200480db460683f3e476bc77f80affea00be4d9f61b79907d3"
     },
     {
       "path": "supabase/migrations/20260710000036_photo_quality_provenance.sql",
@@ -521,22 +1173,256 @@
       "sha256": "eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299"
     },
     {
+      "path": "supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql",
+      "exists": true,
+      "bytes": 1185,
+      "sha256": "18b423bcae63f63c6f533efd1fab3ea9e6918fcebaa6480a35d396b214f89040"
+    },
+    {
+      "path": "supabase/migrations/20260718000060_cat07_truthful_freshness.sql",
+      "exists": true,
+      "bytes": 24465,
+      "sha256": "8bc2c35bfff443a3c3bf7ab76e52ed17e7d6b961a8b35bdde17701de5c7f574a"
+    },
+    {
+      "path": "supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql",
+      "exists": true,
+      "bytes": 28316,
+      "sha256": "4048342265ef103e6915411494911a98485528707c7413555725ba4ff427c1e9"
+    },
+    {
+      "path": "supabase/migrations/20260722000062_catalog_curation_statement_guard.sql",
+      "exists": true,
+      "bytes": 53193,
+      "sha256": "f7bba7300939fd1f95247c464c49cc01544684637ff25d66076f137475ef9ef1"
+    },
+    {
+      "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
+      "exists": true,
+      "bytes": 109814,
+      "sha256": "d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899"
+    },
+    {
+      "path": "supabase/tests/database/catalog_launch_curation.test.sql",
+      "exists": true,
+      "bytes": 202040,
+      "sha256": "2792fc6c16e7ce655d60a6edb229cf24bb0b61ec662b161ec8b55ac39eddb376"
+    },
+    {
+      "path": "supabase/tests/database/catalog_serving_gate.test.sql",
+      "exists": true,
+      "bytes": 36707,
+      "sha256": "1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9"
+    },
+    {
+      "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
+      "exists": true,
+      "bytes": 36165,
+      "sha256": "24fe6b485009f9733568b3e101c5278380d620e9a75894898a114a9f1670d6f3"
+    },
+    {
       "path": "apps/mobile/src/features/notifications/deliver.ts",
       "exists": true,
-      "bytes": 10239,
-      "sha256": "ca29520076d73c796695bb512f8e49951a5ec5c21ba2b8b2c2ea5e477d74e697"
+      "bytes": 16645,
+      "sha256": "48945f3cc19b6cebb7ac04f8bac15e6f9ea93275fe6b796f2efc5583138e3646"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 18317,
-      "sha256": "f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105"
+      "bytes": 40781,
+      "sha256": "8eec8ea1c909208d44552a1d417728027eaef2bc8a6738d43f81a150bdef1a67"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
+      "exists": true,
+      "bytes": 6036,
+      "sha256": "a038cbb00c3b74ddcb61bf7cd1a052c6ca4b6e67ed1c42f338da6be73195a16a"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx",
+      "exists": true,
+      "bytes": 3261,
+      "sha256": "aef498d084e3233bba3ed43315193e52a3b308e5a6d0f37108cb66ea3c114611"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts",
+      "exists": true,
+      "bytes": 6015,
+      "sha256": "959dc00e71eaf0053908c2ad3095177b9dab19d535ea21e3549f9d76ec1bd8b7"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "exists": true,
+      "bytes": 31585,
+      "sha256": "9caaf70078a24d3aacec87691bbe56a73314726d3c2f89edad33f340079478a9"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "exists": true,
+      "bytes": 6504,
+      "sha256": "f56e2bbb8c971ac55fa0f677c351f3a1bbd323a981f0ce15fbba4dc61b446f71"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
+      "exists": true,
+      "bytes": 12568,
+      "sha256": "164120b5e44c20a2b720fb5f2bcb85a579deda5623a401bb09b121f9e58896ab"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+      "exists": true,
+      "bytes": 6449,
+      "sha256": "06c7c5d8c7129d01d28ff258339e09ff114d5f8077fe35462832cb52380aee71"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+      "exists": true,
+      "bytes": 9445,
+      "sha256": "2701491bbd718585ed539c17da32c695cd819611b84d6aa640a152ae0e89feb5"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/accountDeletionRecovery.ts",
+      "exists": true,
+      "bytes": 27535,
+      "sha256": "99fe75f7e600a0f196320a327f6e87129374cd61f037a83a8d895bea1607802f"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/accountDeletionRecovery.test.ts",
+      "exists": true,
+      "bytes": 47485,
+      "sha256": "a462392d1194d1b1a646df7fb097be052553c1027ea8511c00a09516853da72b"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateData.ts",
+      "exists": true,
+      "bytes": 3951,
+      "sha256": "ba17444995321551319ebbfcdfad029236c833ba5a7e28e04d738c9a99d80f47"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateData.test.ts",
+      "exists": true,
+      "bytes": 8825,
+      "sha256": "215159bae51c9e38864831c1266a5724e57618c42eab33d6ba08fee8239db9ad"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
+      "exists": true,
+      "bytes": 104599,
+      "sha256": "a5ec29e322da555255bb66fe3785ab1874306a81f39f3aa7637fd20c424825c4"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts",
+      "exists": true,
+      "bytes": 3206,
+      "sha256": "f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.ts",
+      "exists": true,
+      "bytes": 2303,
+      "sha256": "6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts",
+      "exists": true,
+      "bytes": 4294,
+      "sha256": "84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642"
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "exists": true,
+      "bytes": 732,
+      "sha256": "0d68d89b51fda8a8c8c64ebfb12d5abf95c64add1c158f36786a8e3ca3f97bf7"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "exists": true,
+      "bytes": 16623,
+      "sha256": "3e7ba9810b5fd56a5a430d661f27360109aa65b5fd0eed686b33d9d88c1e3f74"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
+      "exists": true,
+      "bytes": 9749,
+      "sha256": "e2ca52731a559d659962c49b239bc09d409170f154ff69beb41eae6df28e2bb8"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
+      "exists": true,
+      "bytes": 21198,
+      "sha256": "966d4938688e106cd9d9993a97def8aa69db5d9b745cceda7813d565dc577c29"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/LayerwellWidgetLifecycleStore.swift",
+      "exists": true,
+      "bytes": 74844,
+      "sha256": "b688c74b340c6ec36a38602d5466e57f1723f8fee5f43abd12a45e78f24959c4"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/AppIntent.swift",
+      "exists": true,
+      "bytes": 5224,
+      "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/EntryView.swift",
+      "exists": true,
+      "bytes": 1562,
+      "sha256": "67df36562fd9d2d64069ae9ad7b300f88717599ce492febdb5ba61fda38f0450"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/ExpoWidgets.podspec",
+      "exists": true,
+      "bytes": 1933,
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/LiveActivity.swift",
+      "exists": true,
+      "bytes": 4623,
+      "sha256": "3a3783e3a3246ecda6a2299c81af7749078360287d20e10bb80cbd3fdae4a5ab"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/LiveActivityFactory.swift",
+      "exists": true,
+      "bytes": 3567,
+      "sha256": "5d3e0860a06d29e6b96b0ed1287ba735499b6c012c039d706114238e6db4a5af"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/TimelineProvider.swift",
+      "exists": true,
+      "bytes": 1538,
+      "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/Utils.swift",
+      "exists": true,
+      "bytes": 4383,
+      "sha256": "ee604723e5a8ffe531d01892a5e5cd4776ff920c5ab37520f19ba27a10da8074"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/WidgetLiveActivity.swift",
+      "exists": true,
+      "bytes": 3643,
+      "sha256": "01b0084d8dce0bd253007d936a6a5ea597159533913250d3daeba805b91d9256"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/WidgetObject.swift",
+      "exists": true,
+      "bytes": 1324,
+      "sha256": "2ccab1755d4889c93def15e2fa2715672d6f578fb982f81824496c749e5bf83d"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.8/WidgetsModule.swift",
+      "exists": true,
+      "bytes": 7505,
+      "sha256": "79fac38010abcd9a2b2b6dee7203fc61d053fc3b953e4097d8a6c34296b8cba4"
     },
     {
       "path": "apps/mobile/src/lib/applock/AppLockProvider.tsx",
       "exists": true,
-      "bytes": 8463,
-      "sha256": "3fa65fa22ba7c689861afb0bc6fa1d6492cbedc80b900891e574e8929ef31a75"
+      "bytes": 9016,
+      "sha256": "e9375b8aad7427794167cd67ea76149668e3d9004acd19ff8d2bec4a4c9cab50"
     },
     {
       "path": "apps/mobile/src/lib/applock/authenticate.ts",
@@ -547,150 +1433,567 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 16645,
-      "sha256": "7130c0c366d49fa326747463ac1ec233ce907be1cee85ba81aded69a10627001"
+      "bytes": 73060,
+      "sha256": "35867aad3490dd88f583cdb4dabe6f5e0e2869a1a50c756b4ed547bcb61d47f5"
+    },
+    {
+      "path": "scripts/phase5/device-qa-packet-contract.mjs",
+      "exists": true,
+      "bytes": 2100,
+      "sha256": "c7bb801c99819e83ad4971cfbea573c60e41c074ca31e6d9dd068b2579cdc8ee"
+    },
+    {
+      "path": "scripts/launch/governed-evidence-chain.mjs",
+      "exists": true,
+      "bytes": 64289,
+      "sha256": "e0ca8221da0ed5561fb68ae32c1eec28fc0291dd94518ddaeabb5e191c58ca1a"
+    },
+    {
+      "path": "scripts/phase9/release-qa-integrity.mjs",
+      "exists": true,
+      "bytes": 56470,
+      "sha256": "ff2f7724d4cc0bdd4058f76acb8c31ea3b4d2e80a1e1dba531066a1750b727db"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 11892,
-      "sha256": "6782adb76dbaa148cff4c0661e927dde1c869eefef64c2dd4d791d5a36ed4459"
+      "bytes": 37783,
+      "sha256": "67446122f67615dc853d7e7917e899b89e39663a5d33a46493b8ee6718428704"
+    },
+    {
+      "path": "scripts/phase5/ios-extension-contract.mjs",
+      "exists": true,
+      "bytes": 8251,
+      "sha256": "ecb003e2f9a05d831c37c68f6a2f5a4c620e97c4fa3851242fd94d9c5e2a3de5"
+    },
+    {
+      "path": "scripts/phase5/ios-extension-contract.test.mjs",
+      "exists": true,
+      "bytes": 5484,
+      "sha256": "1039c3ccae1bc28132a95b104fb22eac347b4a5f245644081f3db3a025d2e1c4"
+    },
+    {
+      "path": "scripts/phase5/widget-privacy-manifest.test.mjs",
+      "exists": true,
+      "bytes": 9641,
+      "sha256": "d0b497873405ee539e1bb4a257b43f0480998d846b9c6d7f481be827abd06fdc"
+    },
+    {
+      "path": "scripts/phase5/widget-lifecycle-evidence-contract.mjs",
+      "exists": true,
+      "bytes": 34280,
+      "sha256": "b5cd96596c331b63d47f841dbd08cdfeb649c63a6254ff2667f78b8965955a25"
+    },
+    {
+      "path": "scripts/phase5/check-widget-lifecycle-evidence.mjs",
+      "exists": true,
+      "bytes": 7250,
+      "sha256": "0a798ae02d8b418d9f880f9ba847278c2f39e75d0d7fc3ae482afadf65d0d4a9"
+    },
+    {
+      "path": "scripts/phase5/widget-lifecycle-evidence-smoke.mjs",
+      "exists": true,
+      "bytes": 28474,
+      "sha256": "d68ac46e94fe828f391b0d032cce8d2134b3a3bb9ce03333939e872ee1190096"
+    },
+    {
+      "path": "scripts/phase5/resolve-ios-extension-config.mjs",
+      "exists": true,
+      "bytes": 1012,
+      "sha256": "4e5cc6f1ef16034e8fa3ee2d42abc85725bcd498b571fc46efa92378999d571d"
     },
     {
       "path": "scripts/phase5/check-performance-evidence.mjs",
       "exists": true,
-      "bytes": 4394,
-      "sha256": "09bf084e616633b8a4f545404e53e03f3e8be63234ac508ead9ab2a73d3dd0ae"
+      "bytes": 6448,
+      "sha256": "326dfec8c3a2806bda81140b7d367e6a0f3efc03d4e405df52edd65b24969c0f"
     },
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 10429,
-      "sha256": "b3bd50ceb53e7b5bcc5b475e0762242545d1c961358d6a0e1fd6fd9d44a0cec4"
+      "bytes": 100355,
+      "sha256": "465c33b31373f94aa33d4a1dcfbe2a4320b0467e307437b5068645933fe45994"
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
       "exists": true,
-      "bytes": 14316,
-      "sha256": "ac32812994397bb5c51a9b43af25808cf4f337df245600e9f2a4aa5242c27fc9"
+      "bytes": 16263,
+      "sha256": "4f66af8bf2df062235913435c4fe31dbbcced88d8c24c5cb014c8dd204c16bc4"
     },
     {
       "path": "scripts/phase5/performance-evidence-smoke.mjs",
       "exists": true,
-      "bytes": 7388,
-      "sha256": "2faaf583b3a0203219a66af4cf0e288dff636057bb21545888cf7b5280809dbd"
+      "bytes": 12065,
+      "sha256": "cd5e4aa13ed5438ea856d5e8599215954224a5616818b0b3cbf17a2857c3e8a1"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 45000,
-      "sha256": "6dcd67a5ebf050e4416c0bae9192e1b2ac1e80edd9439b0b1078fc8215785730"
+      "bytes": 366877,
+      "sha256": "7c887ba017a91d47840b79496513c9d3a178286ce652e1e267b1f8a806e89751"
+    },
+    {
+      "path": "scripts/e2e/evidence-diagnostic-hygiene.mjs",
+      "exists": true,
+      "bytes": 26880,
+      "sha256": "0a57e0f2b5e086be1313a33174b98ac54e79cd9a996db0bdc3a5fdb0f99fd911"
+    },
+    {
+      "path": "scripts/e2e/cat07-png-contract.mjs",
+      "exists": true,
+      "bytes": 7174,
+      "sha256": "9c1f9d93dc8e2ee70a7490b8355808a628b86eb75da423fb94f5df958928a29a"
+    },
+    {
+      "path": "scripts/e2e/cat07-committed-evidence.mjs",
+      "exists": true,
+      "bytes": 27592,
+      "sha256": "3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa"
+    },
+    {
+      "path": "scripts/e2e/cat07-shelf-freshness-audit.mjs",
+      "exists": true,
+      "bytes": 164470,
+      "sha256": "786634bcf91a0799ad7957ee3416c95b4ed0c021dfa529c1fcc07c47afa4f93d"
+    },
+    {
+      "path": "scripts/e2e/cat07-shelf-freshness-audit.test.mjs",
+      "exists": true,
+      "bytes": 70903,
+      "sha256": "8e0c5806f0bb448b2b3f81446110a867d8041bb375625b822b1a088d93804006"
+    },
+    {
+      "path": "scripts/phase2/local-supabase-contract.mjs",
+      "exists": true,
+      "bytes": 53244,
+      "sha256": "f104824ecde526d55740a72515422b78faec7243afe8b58219c984fd1f6b4c21"
+    },
+    {
+      "path": "scripts/phase2/supabase-rls-smoke.mjs",
+      "exists": true,
+      "bytes": 18269,
+      "sha256": "03e2c7ecffa214c030de4f168f3600a7b149354a17ceec76db16ee563420fcc9"
+    },
+    {
+      "path": "scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql",
+      "exists": true,
+      "bytes": 12249,
+      "sha256": "e2ffde42d3da2cf35e19c717cb85d6ddf9ba576b99d21cf46806d5e83ebc30dc"
+    },
+    {
+      "path": "scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql",
+      "exists": true,
+      "bytes": 28021,
+      "sha256": "b1d3464bc9b20a6bc432082b8b01832b980ea231338427fa1e187c238dcd7919"
+    },
+    {
+      "path": "scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql",
+      "exists": true,
+      "bytes": 22993,
+      "sha256": "64102fcd36e69ff58ab957c94866e215f2f72900758bc98926a46057230e45e9"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 14020,
-      "sha256": "af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083"
+      "bytes": 22873,
+      "sha256": "2432468891aa67b138785021580caadcc27ab5d1c7aca8c5015e1ddc531d021c"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
       "exists": true,
-      "bytes": 47774,
-      "sha256": "1219259653e4040ab4d31233d5a2906c44843189e30b859574a540f05be82c8d"
+      "bytes": 94312,
+      "sha256": "b8f3f91358fce1690bdbdf13d70d643c7e9b3f1982b1ef8d057021b3f592620d"
+    },
+    {
+      "path": "scripts/phase9/rls-adversarial-smoke.mjs",
+      "exists": true,
+      "bytes": 12932,
+      "sha256": "3674c5483fb6517b718ddcda2da5841923289ec47bf71206d369535136721d40"
     },
     {
       "path": "scripts/phase9/rls-adversarial.mjs",
       "exists": true,
-      "bytes": 9642,
-      "sha256": "1fbe4e90ce280a9d4c9c8e642ea7beb718cee6d1647ea399e1fd6e9511bfcf89"
+      "bytes": 30221,
+      "sha256": "7564ed294043e656348d9db8a2676722db9ee400f0507a785aa779533c774c99"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
       "exists": true,
-      "bytes": 4847,
-      "sha256": "c70803a2740a7002c7172f6d301c054bc6463a483a1b1ad8c4174832c80599cf"
+      "bytes": 4075,
+      "sha256": "5c1baa8e38fd346cae314f78b09b61d3db6d2994bea7eef438ccef6083a0eb45"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
       "exists": true,
-      "bytes": 10167,
-      "sha256": "d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149"
+      "bytes": 10413,
+      "sha256": "109f35402903500e5bc61054e52bf8f0dbe090d3ade395d96303ea008bb7bc50"
     },
     {
       "path": "docs/E2E_TESTING_CHECKLIST.md",
       "exists": true,
-      "bytes": 3556,
-      "sha256": "014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e"
+      "bytes": 6998,
+      "sha256": "34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026"
     },
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 358477,
-      "sha256": "7fc8375b5a219f6cf1d8e335d353d66999fdd68d8ec57aeea1cac49ed1136ab3"
+      "bytes": 479007,
+      "sha256": "c9bea260d50a17c937c8cf0f0765cc30d3c0eb073a962db0fc9cf132a76dc0d9"
+    },
+    {
+      "path": "docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md",
+      "exists": true,
+      "bytes": 16940,
+      "sha256": "ca7efbb26ae9a36e1936b04c50f03b92acdac8e930fa81fb022f6483dd5cf77a"
+    },
+    {
+      "path": "docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md",
+      "exists": true,
+      "bytes": 16872,
+      "sha256": "c18c9e5e06ed350257c2640c755e8f47a85d68d01e65bb8a304c22625a0786ec"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 38560,
-      "sha256": "4c194a4360f1a6376f060c5a2e0fbfcc0249b260b4c84f1771ee260183593832"
+      "bytes": 299477,
+      "sha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 11329,
-      "sha256": "f4ff33f094697bba7d29bd7eb8596043fd455a90d033ad266bd8385070850d70"
+      "bytes": 2244721,
+      "sha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd"
+    },
+    {
+      "path": "test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json",
+      "exists": false
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 5736,
-      "sha256": "24bd660cb5edc916e981e51c2609ac0685cf76cc1ecc9625b8c8113871165937"
+      "bytes": 18334,
+      "sha256": "bec4b984d01047e454d877d3445d228473984254fbdb82e0cc69cec5b29e1b55"
+    },
+    {
+      "path": "docs/phase-5/widget-lifecycle-evidence.template.json",
+      "exists": true,
+      "bytes": 1817,
+      "sha256": "3fc18b04333f85bcdc1344dd9553b97d55818692de0046ba96e9f98435cc2936"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 9089,
-      "sha256": "2d46136a54dcc3e02e3879ae0ee9b4d7c49fa2100853f81761da5bfc302adf44"
+      "bytes": 22056,
+      "sha256": "10aedd8414871d9a16ea966c3833e21b80840daf45326e7a2d0cf39228d887b8"
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
       "exists": true,
-      "bytes": 3888,
-      "sha256": "a0845ac381b4096b00d17ddd051164a08dc840d1edd487c8b0d9f92ad807d3d4"
+      "bytes": 5098,
+      "sha256": "1b780916e7a7c713a92daac27c5f02f779331595e03a13e010ae330238f31512"
     },
     {
       "path": "docs/phase-5/performance-evidence.template.json",
       "exists": true,
-      "bytes": 10191,
-      "sha256": "1941215f2330aad311f658828b6a0de5aeee5799dfdfe79fcfe1d186a3bfdabd"
+      "bytes": 6663,
+      "sha256": "003585197223ec35920d0d54f822f93e1eb2db68f745e4248cb8c0055395f2df"
     },
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 5408,
-      "sha256": "3ae5daed33d72173ac86a2acf7e9fb3f0859ce938e4353711c17e47aeb1e515f"
+      "bytes": 12055,
+      "sha256": "e7904a38124a7c6061c6ce07c1964f25366e0a24ccceee4bec8f0d5e4f6445dd"
+    },
+    {
+      "path": "apps/mobile/src/features/catalog/normalization.ts",
+      "exists": true,
+      "bytes": 2647,
+      "sha256": "16317a4fcfc871414a1b902e8323f24eceb9982c9b40959d49225827c5aeb9ff"
+    },
+    {
+      "path": "apps/mobile/src/features/catalog/ingredientParser.ts",
+      "exists": true,
+      "bytes": 7818,
+      "sha256": "4c3290b955c68859cd63d4aeddae374a5c0c7efb9730b1359aa72e3b09af2a88"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/labelPhotoLifecycle.ts",
+      "exists": true,
+      "bytes": 6900,
+      "sha256": "df10d9c09879f900a86be4f3af728bdcb65fe57a3b92c4870e894299c7b0cd5e"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/accessibility.ts",
+      "exists": true,
+      "bytes": 1016,
+      "sha256": "2ef4cf77c1faee4f14d6763709419db783eb9e410362a31ed5f45ae109e88009"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/analytics.ts",
+      "exists": true,
+      "bytes": 2071,
+      "sha256": "a3d172bc04c8dd272faf037229f58071e0c009dad5b7261264a14b67d3a745e0"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/contract.ts",
+      "exists": true,
+      "bytes": 10068,
+      "sha256": "06f36c0fb92258e9d665c349d2be5b5e866450ac47f31921c4752978bfe00db8"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/coordinator.ts",
+      "exists": true,
+      "bytes": 10718,
+      "sha256": "ae3f03329432201117895cb762a7c963e1568ddaaa288b59af562483a2a5352b"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/index.ts",
+      "exists": true,
+      "bytes": 215,
+      "sha256": "eaf0f6654db7fd74c13894b5b2acc1c3de10ef66f7a1eb1034e23587fa13fbce"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/nativeAdapter.ios.ts",
+      "exists": true,
+      "bytes": 4374,
+      "sha256": "cba01637694c2efd79bd7baa5de28c5e71117c42885b4daad4ad08f56a1e8221"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/nativeAdapter.ts",
+      "exists": true,
+      "bytes": 1268,
+      "sha256": "5a62cd0fd1dc1850dd5dbabac81710c89f3308113af034b702e9c299861435bb"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/reviewState.ts",
+      "exists": true,
+      "bytes": 2975,
+      "sha256": "19597905048d5002001ed70756a6cd4ac257b21a2490365ad284e727f36d40a3"
+    },
+    {
+      "path": "apps/mobile/src/features/native/ocr/transcript.ts",
+      "exists": true,
+      "bytes": 7244,
+      "sha256": "0bc40ef550f4f3435a6f81667c9017f1195a37f8c736165ce968de56eb453738"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressCapturePrivacy.ts",
+      "exists": true,
+      "bytes": 5147,
+      "sha256": "e7d74a1017dd0479223349632cf9197b0d6428f51f0aa663c21263bd9034a4ef"
+    },
+    {
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 7874,
+      "sha256": "d01f2db0a98f0537663312adc42bb375ca8523cdec282f2548a610b1f98383f1"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/expo-module.config.json",
+      "exists": true,
+      "bytes": 85,
+      "sha256": "d044e8c81b6a722f65ee2d27b86546eb287ace0cd9cdfe94ab43b3117930e24c"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/index.ts",
+      "exists": true,
+      "bytes": 126,
+      "sha256": "19b5b1bc405cbe7f31ca16889e44007be780682752d3d6b4a2da800b0788ff9f"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/package.json",
+      "exists": true,
+      "bytes": 96,
+      "sha256": "33c518541b93764c117597617050d7e25158fa0cd0deeedd3a4f7b8cb163c68b"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/ios/NativeLabelOcr.podspec",
+      "exists": true,
+      "bytes": 898,
+      "sha256": "7de71d233dde9de4e1af2cb732d0206a80dee58b7f7256abe94d2ae79cea9ed4"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/ios/NativeLabelOcrModule.swift",
+      "exists": true,
+      "bytes": 25393,
+      "sha256": "24ad81f23f258119714c39920cc41c0401a3d3597bd4d3632d99444db4bb4846"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/src/NativeLabelOcr.types.ts",
+      "exists": true,
+      "bytes": 405,
+      "sha256": "a92cd3c93b7fa8eadc898baeba931bb812b2315a64714591c2fd92032ea83337"
+    },
+    {
+      "path": "apps/mobile/modules/native-label-ocr/src/NativeLabelOcrModule.ts",
+      "exists": true,
+      "bytes": 206,
+      "sha256": "5edf41c57b8268967e081ff7a97cc212e04cd3fc2e4e1d2ac76c5be0784fbd71"
+    },
+    {
+      "path": "scripts/cat05/native-label-ocr-source-contract.test.mjs",
+      "exists": true,
+      "bytes": 26466,
+      "sha256": "0b2d04af53adb1092ed34025e17704b4cd2411662d2a823f2e20f6ffedd15df6"
+    },
+    {
+      "path": "scripts/e2e/cat05-native-ocr-ui-audit.mjs",
+      "exists": true,
+      "bytes": 104235,
+      "sha256": "07cb95ff9c61567ac0830a7a960a9aa1bf74f6eea24d7965a1cb585e8ebb834b"
+    },
+    {
+      "path": "scripts/e2e/cat05-native-ocr-ui-audit.test.mjs",
+      "exists": true,
+      "bytes": 40553,
+      "sha256": "0c2fea8c6ddcfd75d7370d3a2b151adfd9382d2e49c1f5f4f4d5e33f02fb4d1d"
+    },
+    {
+      "path": "scripts/phase5/check-native-ocr-evidence.mjs",
+      "exists": true,
+      "bytes": 6910,
+      "sha256": "11792f4bb99fd1688b372be7fa4179b81288b9147348f36bce8601b21c49003f"
+    },
+    {
+      "path": "scripts/phase5/native-ocr-evidence-contract.mjs",
+      "exists": true,
+      "bytes": 49093,
+      "sha256": "5887a041967cf189f0f6f38119578785bd2798279a408c89e1ca979e5ef99d34"
+    },
+    {
+      "path": "scripts/phase5/native-ocr-evidence-smoke.mjs",
+      "exists": true,
+      "bytes": 37272,
+      "sha256": "c15ae94123be105c9b5cddb55e009003065d02b27948a5baa6beceda841bfcb7"
+    },
+    {
+      "path": "docs/phase-5/native-ocr-evidence-runbook.md",
+      "exists": true,
+      "bytes": 11062,
+      "sha256": "4e263331c15ba534a50f147be5d15485b2a8ddc6d3e78b7927f39cee91647fd4"
+    },
+    {
+      "path": "docs/phase-5/native-ocr-evidence.template.json",
+      "exists": true,
+      "bytes": 48884,
+      "sha256": "1167be7a18423cebc634292f79bae1856a8d3c525309b482db3670a59bb06767"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/failureCopy.ts",
+      "exists": true,
+      "bytes": 1682,
+      "sha256": "13d397d8ec83b9ceb6e407a07057097a58342319ad34b46dc9b8418c69107fe6"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/useCameraAccessLifecycle.ts",
+      "exists": true,
+      "bytes": 18557,
+      "sha256": "4933858bdba1b62ee1d49948f4f26745b46674f08b5aa7384c53d94b99689026"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/useCameraAccessLifecycle.test.ts",
+      "exists": true,
+      "bytes": 17025,
+      "sha256": "29fabc1e7b85eb7c29dda20b6cf52f31212b03e3a03c81d7941a081af2b80ad1"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/applyCaptureConsent.ts",
+      "exists": true,
+      "bytes": 454,
+      "sha256": "b94b11adf9a5322f9b60eac0244cb8f3dce76e5a704a0e65bd6d66c93908a47c"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressCapturePrivacy.test.ts",
+      "exists": true,
+      "bytes": 13462,
+      "sha256": "129896e2489b5df374b009ca570e5df526867b915926f8d1f0d845c4d817997f"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressCaptureRouteBoundary.ts",
+      "exists": true,
+      "bytes": 8866,
+      "sha256": "814ace0f7a14c86861e00488f439725d3990bdd4b0030a4729a93cc3900958fe"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressCaptureRouteBoundary.test.ts",
+      "exists": true,
+      "bytes": 8889,
+      "sha256": "2b44c4a09c3cc5d9bb4289fd8d36228ed78a99dbd0a215e6a6344022945d589a"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressRoutes.test.ts",
+      "exists": true,
+      "bytes": 34170,
+      "sha256": "e01bdba92f07cf29f3bdb4f522b455b86505c0b200305b9b3802fd024cb4b747"
+    },
+    {
+      "path": "apps/mobile/src/features/navigation/sheetRouteContracts.test.ts",
+      "exists": true,
+      "bytes": 7590,
+      "sha256": "c8de1491e666c401bee8d27d73c0088eb7d1999767fe47d88b0767772240fea9"
+    },
+    {
+      "path": "scripts/phase5/camera-lifecycle-evidence-contract.mjs",
+      "exists": true,
+      "bytes": 80984,
+      "sha256": "c9d71aefaafbdcebd0ed75ed27d1124abf09407996e412c57f2f9dce9d27887c"
+    },
+    {
+      "path": "scripts/phase5/camera-lifecycle-evidence-smoke.mjs",
+      "exists": true,
+      "bytes": 39569,
+      "sha256": "3a790cc26cd262c5e08be413d339019839825420596c0e18d7b937ebed653457"
+    },
+    {
+      "path": "scripts/phase5/check-camera-lifecycle-evidence.mjs",
+      "exists": true,
+      "bytes": 10266,
+      "sha256": "079be633ea16d856781f982fe5cd1722b1372cc02fa59d7db0db1a57ae49c784"
+    },
+    {
+      "path": "docs/phase-5/camera-lifecycle-evidence-runbook.md",
+      "exists": true,
+      "bytes": 16625,
+      "sha256": "4abf089430be0a499d10d81e6d177bc80cf4ab375674a298eee26919c1125544"
+    },
+    {
+      "path": "docs/phase-5/camera-lifecycle-evidence.template.json",
+      "exists": true,
+      "bytes": 91279,
+      "sha256": "54028d37fd42447e5f3a86d592bc08cbefe513477fdae861cbfb7699df874174"
     }
   ],
   "blockers": [
+    "Phase 5 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json does not exist as a blob in pinned HEAD.",
+    "Phase 5 source snapshot: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json is missing in the working tree.",
+    "Missing PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH; widget booleans do not substitute for artifact-bound archive/device/lifecycle evidence.",
+    "Missing PHASE5_NATIVE_OCR_EVIDENCE_PATH; a Boolean pass flag cannot substitute for exact-build physical-iPhone OCR evidence.",
+    "Missing PHASE5_CAMERA_LIFECYCLE_EVIDENCE_PATH; camera QA Booleans cannot substitute for exact-build, signed-archive, two-physical-iPhone lifecycle evidence.",
+    "Missing PHASE5_PERFORMANCE_EVIDENCE_PATH; real supported-device performance evidence is not attached.",
     "Missing PHASE5_IOS_BUILD_ID.",
-    "Missing PHASE5_ANDROID_BUILD_ID.",
+    "Missing PHASE5_IOS_BUILD_PROFILE.",
     "Missing PHASE5_IOS_DEVICE.",
-    "Missing PHASE5_ANDROID_DEVICE.",
     "Missing PHASE5_QA_SIGNOFF=true.",
     "Missing PHASE5_SIGNED_OFF_BY.",
     "Missing PHASE5_DEVICE_QA_PASS=true (overall native-device QA matrix).",
     "Missing PHASE5_INSTALL_QA_PASS=true (fresh install, update, reinstall, and dev/staging variants).",
-    "Missing PHASE5_CAMERA_PERMISSION_QA_PASS=true (native camera permission denial, retry, and settings recovery).",
     "Missing PHASE5_BARCODE_QA_PASS=true (physical-device barcode scan and checksum matrix).",
     "Missing PHASE5_LABEL_CAPTURE_QA_PASS=true (real label capture, editable text, and manual fallback).",
     "Missing PHASE5_PROGRESS_PHOTO_QA_PASS=true (progress still capture, retake, review, and recovery).",
     "Missing PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS=true (encrypted photo save, restart, key-missing recovery, and delete).",
-    "Missing PHASE5_NOTIFICATION_QA_PASS=true (iOS/Android reminder delivery and permission behavior).",
+    "Missing PHASE5_NOTIFICATION_QA_PASS=true (iOS reminder delivery and permission behavior).",
     "Missing PHASE5_SHARE_SHEET_QA_PASS=true (native share sheet success, cancel, and unavailable states).",
     "Missing PHASE5_REVENUECAT_NATIVE_QA_PASS=true (RevenueCat native configure, offering, purchase, and restore smoke).",
     "Missing PHASE5_SENTRY_NATIVE_QA_PASS=true (Sentry native crash/source-map smoke).",
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
-    "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver/TalkBack labels, traversal, and 44 pt controls)."
+    "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver labels, traversal, and 44 pt controls).",
+    "Missing PHASE5_WIDGET_ARCHIVE_QA_PASS=true (signed archive extension, App Group entitlement, target privacy manifest, and capability inspection).",
+    "Missing PHASE5_WIDGET_DEVICE_QA_PASS=true (physical-iPhone widget families, cold-start deep links, process death, and accessibility).",
+    "Missing PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS=true (atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup).",
+    "Missing PHASE5_LIVE_ACTIVITY_QA_PASS=true (physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior).",
+    "Missing test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json.",
+    "CAT07 committed evidence: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in HEAD.",
+    "CAT07 full evidence contract: full CAT07 manifest validator failed: FAIL committed CAT07 full evidence contract: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json must exist in the pinned HEAD."
   ],
   "warnings": []
 }

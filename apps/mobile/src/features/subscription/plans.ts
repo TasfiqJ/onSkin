@@ -1,4 +1,4 @@
-import type { PlanId } from '@onskin/types';
+import type { PlanId } from '@layerwell/types';
 
 import { env } from '@/lib/env';
 
@@ -44,9 +44,6 @@ export const PLANS: Record<PlanId, Plan> = {
 export const DEFAULT_PLAN: PlanId = 'annual';
 /** The reverse trial: full Pro, no card, for this many days (docs/08 §2.2). */
 export const REVERSE_TRIAL_DAYS = 7;
-
-/** A respectful, ARL-clean win-back offer after a lapse (docs/08 §6, design 09). */
-export const WINBACK = { priceLabel: '$34.99', originalLabel: '$49.99', percentOff: 30 } as const;
 
 /** Parse "$49.99" → 49.99 (fallback-label math only; never for real billing). */
 export function priceAmount(label: string): number {

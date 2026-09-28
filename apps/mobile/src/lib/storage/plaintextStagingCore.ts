@@ -1,23 +1,97 @@
-export const PLAINTEXT_STAGING_JOURNAL_KEY = 'onskin.plaintext_staging_journal.v1';
+export const PLAINTEXT_STAGING_JOURNAL_KEY = 'layerwell.plaintext_staging_journal.v1';
+export const LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY = 'onskin.plaintext_staging_journal.v1';
 export const PLAINTEXT_STAGING_CACHE_UNAVAILABLE = 'PLAINTEXT_STAGING_CACHE_UNAVAILABLE';
 export const PLAINTEXT_STAGING_JOURNAL_INVALID = 'PLAINTEXT_STAGING_JOURNAL_INVALID';
 export const PLAINTEXT_STAGING_ENTRY_UNOWNED = 'PLAINTEXT_STAGING_ENTRY_UNOWNED';
-export const PLAINTEXT_STAGING_ENTRY_MISSING = 'PLAINTEXT_STAGING_ENTRY_MISSING';
 export const PLAINTEXT_STAGING_STATE_INVALID = 'PLAINTEXT_STAGING_STATE_INVALID';
-export const PLAINTEXT_STAGING_SCAVENGE_FAILED = 'PLAINTEXT_STAGING_SCAVENGE_FAILED';
 
 const JOURNAL_VERSION = 1;
 const MAX_JOURNAL_ENTRIES = 128;
 const STAGING_DIRECTORY_NAME = 'private-plaintext-staging-v1/';
-const OWNED_INGRESS_DIRECTORY_NAMES = ['Camera/', 'ImageManipulator/'] as const;
 const OPAQUE_OPERATION_ID = /^[0-9a-f]{32}$/;
+const IMAGE_MANIPULATOR_JPEG =
+  /^(?:[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\.jpg$/u;
+
+export function isCanonicalImageManipulatorJpegName(value: string): boolean {
+  return IMAGE_MANIPULATOR_JPEG.test(value);
+}
+
+export function createPlaintextStagingStartupRecovery(run: () => Promise<number>) {
+  let current: Promise<number> | null = null;
+  let rejected = false;
+  const launch = () => {
+    rejected = false;
+    current = Promise.resolve()
+      .then(run)
+      .catch((error: unknown) => {
+        rejected = true;
+        throw error;
+      });
+    return current;
+  };
+  return Object.freeze({
+    start: () => current ?? launch(),
+    retry: () => (current === null || rejected ? launch() : current),
+  });
+}
+
+export class ImageManipulatorPlaintextCleanupError extends Error {
+  readonly retryCleanup: () => Promise<void>;
+
+  constructor(retryCleanup: () => Promise<void>, cause?: unknown) {
+    super('IMAGE_MANIPULATOR_PLAINTEXT_CLEANUP_REQUIRED', { cause });
+    this.name = 'ImageManipulatorPlaintextCleanupError';
+    this.retryCleanup = retryCleanup;
+  }
+}
+
+export function isImageManipulatorPlaintextCleanupError(
+  error: unknown,
+): error is ImageManipulatorPlaintextCleanupError {
+  return error instanceof ImageManipulatorPlaintextCleanupError;
+}
+
+/** Serializes native generation through adoption so a failure rescan cannot delete another run. */
+export function createImageManipulatorPlaintextCoordinator(scavenge: () => Promise<number>) {
+  let tail: Promise<void> = Promise.resolve();
+
+  const serialize = <T>(operation: () => Promise<T>): Promise<T> => {
+    const pending = tail.then(operation, operation);
+    tail = pending.then(
+      () => undefined,
+      () => undefined,
+    );
+    return pending;
+  };
+
+  const scavengeSerialized = (): Promise<number> => serialize(scavenge);
+  const retryCleanup = (): Promise<void> =>
+    serialize(async () => {
+      await scavenge();
+    });
+
+  return Object.freeze({
+    run: <T>(operation: () => Promise<T>): Promise<T> =>
+      serialize(async () => {
+        try {
+          return await operation();
+        } catch (primaryError) {
+          try {
+            await scavenge();
+          } catch (cleanupError) {
+            throw new ImageManipulatorPlaintextCleanupError(retryCleanup, cleanupError);
+          }
+          throw primaryError;
+        }
+      }),
+    scavenge: scavengeSerialized,
+  });
+}
 
 export type PlaintextStagingPurpose =
-  | 'conflict_share_png'
   | 'data_export_json'
-  | 'label_capture_jpeg'
   | 'photo_analysis_jpeg'
-  | 'photo_capture_jpeg'
+  | 'photo_thumbnail_jpeg'
   | 'photo_share_jpeg'
   | 'photo_share_png';
 
@@ -77,11 +151,9 @@ function hasExactKeys(record: Record<string, unknown>, expected: readonly string
 
 function isPurpose(value: unknown): value is PlaintextStagingPurpose {
   return (
-    value === 'conflict_share_png' ||
     value === 'data_export_json' ||
-    value === 'label_capture_jpeg' ||
     value === 'photo_analysis_jpeg' ||
-    value === 'photo_capture_jpeg' ||
+    value === 'photo_thumbnail_jpeg' ||
     value === 'photo_share_jpeg' ||
     value === 'photo_share_png'
   );
@@ -147,7 +219,7 @@ function parseJournal(raw: string | null): PlaintextStagingJournal {
 
 function extensionForPurpose(purpose: PlaintextStagingPurpose): string {
   if (purpose === 'data_export_json') return 'json';
-  return purpose === 'conflict_share_png' || purpose === 'photo_share_png' ? 'png' : 'jpg';
+  return purpose === 'photo_share_png' ? 'png' : 'jpg';
 }
 
 function fileNameForEntry(
@@ -180,15 +252,33 @@ export function createPlaintextStagingCoordinator(deps: PlaintextStagingDependen
   }
 
   async function readJournal(): Promise<PlaintextStagingJournal> {
-    return parseJournal(await deps.storage.getItem(PLAINTEXT_STAGING_JOURNAL_KEY));
+    const currentRaw = await deps.storage.getItem(PLAINTEXT_STAGING_JOURNAL_KEY);
+    const legacyRaw = await deps.storage.getItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
+    const current = parseJournal(currentRaw);
+    if (legacyRaw === null) return current;
+
+    const legacy = parseJournal(legacyRaw);
+    if (currentRaw !== null && JSON.stringify(current) !== JSON.stringify(legacy)) {
+      // Two different ownership ledgers could cause either an orphaned plaintext
+      // file or deletion of an unowned file. Preserve both and fail closed.
+      throw new Error(PLAINTEXT_STAGING_JOURNAL_INVALID);
+    }
+
+    if (currentRaw === null) {
+      await deps.storage.setItem(PLAINTEXT_STAGING_JOURNAL_KEY, JSON.stringify(legacy));
+    }
+    await deps.storage.removeItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
+    return legacy;
   }
 
   async function writeJournal(journal: PlaintextStagingJournal): Promise<void> {
     if (journal.entries.length === 0) {
       await deps.storage.removeItem(PLAINTEXT_STAGING_JOURNAL_KEY);
+      await deps.storage.removeItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
       return;
     }
     await deps.storage.setItem(PLAINTEXT_STAGING_JOURNAL_KEY, JSON.stringify(journal));
+    await deps.storage.removeItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
   }
 
   function uriForEntry(
@@ -299,79 +389,16 @@ export function createPlaintextStagingCoordinator(deps: PlaintextStagingDependen
       });
     },
 
-    lookup(
-      operationId: string,
-      purpose: PlaintextStagingPurpose,
-    ): Promise<PlaintextStagingHandle | null> {
-      return serialize(async () => {
-        if (!OPAQUE_OPERATION_ID.test(operationId)) return null;
-        const journal = await readJournal();
-        await assertDirectoryOwned(journal);
-        const entry = journal.entries.find(
-          (candidate) =>
-            candidate.operationId === operationId &&
-            candidate.purpose === purpose &&
-            candidate.state === 'plaintext_written',
-        );
-        if (!entry) return null;
-        const uri = uriForEntry(entry);
-        const info = await deps.fileSystem.getInfoAsync(uri);
-        if (!info.exists) throw new Error(PLAINTEXT_STAGING_ENTRY_MISSING);
-        return { operationId: entry.operationId, purpose: entry.purpose, uri };
-      });
-    },
-
     cleanup(handle: PlaintextStagingHandle): Promise<void> {
       return serialize(async () => {
-        if (
-          !OPAQUE_OPERATION_ID.test(handle.operationId) ||
-          !isPurpose(handle.purpose) ||
-          handle.uri !== uriForEntry(handle)
-        ) {
-          throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-        }
         const journal = await readJournal();
         const index = journal.entries.findIndex(
           (entry) => entry.operationId === handle.operationId,
         );
-        if (index < 0) {
-          if ((await deps.fileSystem.getInfoAsync(handle.uri)).exists) {
-            throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-          }
-          return;
-        }
+        if (index < 0) return;
         const entry = journal.entries[index]!;
         assertOwnedHandle(handle, entry);
         await cleanupJournalEntry(journal, index);
-      });
-    },
-
-    cleanupOperation(
-      operationId: string,
-      purpose: PlaintextStagingPurpose,
-    ): Promise<void> {
-      return serialize(async () => {
-        if (!OPAQUE_OPERATION_ID.test(operationId) || !isPurpose(purpose)) {
-          throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-        }
-        const journal = await readJournal();
-        await assertDirectoryOwned(journal);
-        const index = journal.entries.findIndex(
-          (entry) => entry.operationId === operationId && entry.purpose === purpose,
-        );
-        if (index >= 0) {
-          await cleanupJournalEntry(journal, index);
-          return;
-        }
-
-        // An absent exact entry is successful only when its deterministic owned
-        // path is absent too. This lets a photo transaction prove plaintext
-        // cleanup after a prior scavenger, while a lost/forged journal never
-        // converts an existing plaintext file into an untracked success.
-        const uri = uriForEntry({ operationId, purpose });
-        if ((await deps.fileSystem.getInfoAsync(uri)).exists) {
-          throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-        }
       });
     },
 
@@ -386,49 +413,14 @@ export function createPlaintextStagingCoordinator(deps: PlaintextStagingDependen
 
     scavenge(): Promise<number> {
       return serialize(async () => {
-        if (!stagingDirectory) throw new Error(PLAINTEXT_STAGING_CACHE_UNAVAILABLE);
+        if (!stagingDirectory) return 0;
+        const journal = await readJournal();
+        const hasUnownedEntry = await directoryHasUnownedEntry(journal);
 
-        let journal: PlaintextStagingJournal = { version: JOURNAL_VERSION, entries: [] };
-        let journalError: unknown = null;
-        let inspectionError: unknown = null;
-        let hasUnownedEntry = false;
-        try {
-          journal = await readJournal();
-        } catch (error) {
-          journalError = error;
+        for (const entry of journal.entries) {
+          await deps.fileSystem.deleteAsync(uriForEntry(entry), { idempotent: true });
         }
-        if (!journalError) {
-          try {
-            hasUnownedEntry = await directoryHasUnownedEntry(journal);
-          } catch (error) {
-            inspectionError = error;
-          }
-        }
-
-        // This directory is dedicated to content-free journal handles. Startup
-        // queues this serialized operation before mounting any producer; account
-        // boundaries call it only after owner operations drain. Deleting the
-        // entire directory therefore closes tamper/orphan cases without racing a
-        // legitimate reservation and guarantees unowned plaintext is gone before
-        // its diagnostic is surfaced.
-        const cleanupResults = await Promise.allSettled([
-          deps.fileSystem.deleteAsync(stagingDirectory, { idempotent: true }),
-          ...OWNED_INGRESS_DIRECTORY_NAMES.map((name) =>
-            deps.fileSystem.deleteAsync(`${deps.cacheDirectory!.replace(/\/+$/, '')}/${name}`, {
-              idempotent: true,
-            }),
-          ),
-        ]);
-        if (cleanupResults.some((result) => result.status === 'rejected')) {
-          throw new Error(PLAINTEXT_STAGING_SCAVENGE_FAILED);
-        }
-        try {
-          await writeJournal({ version: JOURNAL_VERSION, entries: [] });
-        } catch {
-          throw new Error(PLAINTEXT_STAGING_SCAVENGE_FAILED);
-        }
-        if (journalError) throw journalError;
-        if (inspectionError) throw new Error(PLAINTEXT_STAGING_SCAVENGE_FAILED);
+        await writeJournal({ version: JOURNAL_VERSION, entries: [] });
         if (hasUnownedEntry) throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
         return journal.entries.length;
       });

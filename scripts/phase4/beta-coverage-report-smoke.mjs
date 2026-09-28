@@ -95,9 +95,9 @@ const validInput = {
   },
   evidence: {
     realBetaData: true,
-    dashboardUrl: 'https://posthog.routinekind.app/project/1/dashboard/phase4-catalog',
-    analyticsDashboardUrl: 'https://posthog.routinekind.app/project/1/dashboard/beta',
-    supportDashboardUrl: 'https://support.routinekind.app/dashboard/beta',
+    dashboardUrl: 'https://posthog.layerwell.app/project/1/dashboard/phase4-catalog',
+    analyticsDashboardUrl: 'https://posthog.layerwell.app/project/1/dashboard/beta',
+    supportDashboardUrl: 'https://support.layerwell.app/dashboard/beta',
     sourceExportHash: '8d71fdbb3d6f9a48e31ac99e60f1c7800a9aa2a8e81a6adf73f2f56f0a9f4e1a',
     signedOffBy: 'Avery Chen',
   },
@@ -109,10 +109,18 @@ const requiredSourceHashes = [
   'supabase/functions/catalog-report/privacy.ts',
   'supabase/functions/catalog-report/privacy.test.ts',
   'supabase/functions/deno.lock',
+  'supabase/migrations/20260718000059_catalog_scan_minimization.sql',
+  'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
+  'supabase/tests/database/cat07_truthful_freshness.test.sql',
 ];
 
 function runReport({ input = validInput, strict = false, missingInput = false } = {}) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase4-beta-coverage-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'layerwell-phase4-beta-coverage-'));
   const inputPath = resolve(outDir, 'beta-coverage-input.json');
   const outputPath = resolve(outDir, 'beta-coverage-report.json');
   if (!missingInput) writeFileSync(inputPath, `${JSON.stringify(input, null, 2)}\n`);
@@ -137,18 +145,29 @@ function runReport({ input = validInput, strict = false, missingInput = false } 
 
 const cases = [
   {
-    name: 'beta coverage report accepts real-shaped beta evidence',
+    name: 'legacy beta coverage report never accepts self-attested evidence as authority',
     result: runReport(),
     expect(result) {
       const sourceHashes = Object.fromEntries(
         result.packet.sourceHashes.map((sourceHash) => [sourceHash.path, sourceHash]),
       );
+      const serialized = JSON.stringify(result.packet);
       return (
         result.status === 0 &&
-        result.packet.evidenceBlockers.length === 0 &&
+        result.packet.status === 'blocked' &&
+        result.packet.localBetaCoverageClear === false &&
+        result.packet.evidenceBlockers.some((item) => item.includes('Governed evidence chain')) &&
+        result.packet.authorityLimitations.some((item) =>
+          item.includes('cannot authorize CAT-03'),
+        ) &&
         result.packet.metrics.completedUsers === 60 &&
         result.packet.metrics.usersAddedThreePlusRate === 1 &&
-        result.packet.evidence.signedOffBy === 'Avery Chen' &&
+        result.packet.evidence.namedSignoffPresent === true &&
+        result.packet.privacy.rawShelfLabelsCommitted === false &&
+        !serialized.includes('madecassoside derivative') &&
+        !serialized.includes('regional sunscreen barcode') &&
+        !serialized.includes('posthog.layerwell.app') &&
+        !Object.hasOwn(result.packet, 'topNoMatches') &&
         requiredSourceHashes.every((path) => sourceHashes[path]?.exists === true) &&
         result.markdown.includes('Completed beta users')
       );
@@ -174,7 +193,7 @@ const cases = [
       return (
         result.status === 0 &&
         result.packet.status === 'blocked' &&
-        result.packet.evidence.realBetaData === false &&
+        result.packet.evidence.realBetaDataClaimed === false &&
         result.packet.evidenceBlockers.includes(
           'Evidence must explicitly set evidence.realBetaData=true for real beta exports.',
         ) &&
@@ -258,6 +277,46 @@ const cases = [
         result.packet.evidenceBlockers.includes(
           'Products below usable quality must not be used in product-specific recommendations.',
         )
+      );
+    },
+  },
+  {
+    name: 'beta coverage report rejects coercible, negative, fractional, and impossible counts',
+    result: runReport({
+      input: {
+        ...validInput,
+        cohort: { ...validInput.cohort, completedUsers: '60' },
+        productAddCompletion: {
+          ...validInput.productAddCompletion,
+          usersAddedThreePlusProducts: -1,
+        },
+        catalog: {
+          ...validInput.catalog,
+          barcodeLookups: { total: 2, matched: 3 },
+          searches: { total: 4.5, matched: 3 },
+          ocr: { attempts: 2, parsed: 3 },
+          parser: { ...validInput.catalog.parser, unknownTokenRate: 1.2 },
+          categoryCoverage: [
+            { category: 'cleanser', added: 2, matched: 3 },
+            { category: 'CLEANSER', added: 2, matched: 1 },
+          ],
+        },
+      },
+    }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.status === 'blocked' &&
+        result.packet.evidenceBlockers.includes('Missing cohort.completedUsers.') &&
+        result.packet.evidenceBlockers.includes(
+          'barcode lookup matched count cannot exceed its total.',
+        ) &&
+        result.packet.evidenceBlockers.includes('OCR parsed count cannot exceed attempts.') &&
+        result.packet.evidenceBlockers.includes(
+          'Category cleanser matched count cannot exceed added count.',
+        ) &&
+        result.packet.evidenceBlockers.includes('Category CLEANSER appears more than once.') &&
+        result.packet.evidenceBlockers.includes('Missing parser unknown-token rate.')
       );
     },
   },

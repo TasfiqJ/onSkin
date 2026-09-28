@@ -45,10 +45,8 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('function FirstRun({ compact = false }: { compact?: boolean })');
     expect(source).toContain('const { height } = useWindowDimensions();');
     expect(source).toContain('const compactFirstRun = height < 520;');
-    expect(source).toContain('const compactEmptyFirstRun = height < 700;');
-    expect(source).toContain("contentContainerClassName={compactEmptyFirstRun ? 'pb-28' : 'pb-8'}");
     expect(source).toContain("contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}");
-    expect(source).toContain('<FirstRun compact={compactEmptyFirstRun} />');
+    expect(source).toContain('<FirstRun compact={compactFirstRun} />');
     expect(source).toContain("compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'");
     expect(source).toContain("compact ? 'mb-2 p-3' : 'mb-5'");
     expect(source).toContain('fontSize: compact ? 22 : 26');
@@ -72,24 +70,6 @@ describe('Progress route mobile contracts', () => {
     expect(copy).not.toContain('cloudOff');
   });
 
-  it('keeps photo deletion cleanup status inside both locked Progress scroll states', () => {
-    const source = readAppRoute('(tabs)/progress.tsx');
-    const status = readSource('features/photos/PhotoDeleteSyncStatus.tsx');
-    const copy = readSource('features/photos/copy.ts');
-
-    expect(source).toContain(
-      "import { PhotoDeleteSyncStatus } from '@/features/photos/PhotoDeleteSyncStatus';",
-    );
-    expect(source.match(/<PhotoDeleteSyncStatus className=/g)).toHaveLength(2);
-    expect(source).toContain('<PhotoDeleteSyncStatus className="mt-3" />');
-    expect(source).toContain('<PhotoDeleteSyncStatus className="mt-4" />');
-    expect(status).toContain('readPhotoDeleteOutboxStatus');
-    expect(status).toContain('retryPhotoDeleteOutbox');
-    expect(copy).toContain("savedTitle: 'Deletion saved'");
-    expect(copy).toContain("attentionTitle: 'Deletion needs attention'");
-    expect(copy).toContain('Progress photo images are not uploaded in this build.');
-  });
-
   it('gates every sensitive Progress entry with one shared timeline unlock', () => {
     const routes = [
       readAppRoute('(tabs)/progress.tsx'),
@@ -100,14 +80,20 @@ describe('Progress route mobile contracts', () => {
     const provider = readSource('lib/applock/AppLockProvider.tsx');
     const gate = readSource('features/photos/PhotoTimelineLockGate.tsx');
 
-    for (const source of routes) {
+    routes.forEach((source, index) => {
       expect(source).toContain(
         "import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';",
       );
       expect(source).toContain('<PhotoTimelineLockGate>');
       expect(source).toContain('</PhotoTimelineLockGate>');
-      expect(source.indexOf('<ProGate')).toBeLessThan(source.indexOf('<PhotoTimelineLockGate>'));
-    }
+      const normalProGate =
+        index === 1 ? source.lastIndexOf('<ProGate') : source.indexOf('<ProGate');
+      const normalTimelineGate =
+        index === 1
+          ? source.lastIndexOf('<PhotoTimelineLockGate>')
+          : source.indexOf('<PhotoTimelineLockGate>');
+      expect(normalProGate).toBeLessThan(normalTimelineGate);
+    });
     expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoTimelineLockGate');
     expect(provider).toContain('photoTimelineUnlocked');
     expect(provider).toContain('setPhotoTimelineUnlocked(false);');
@@ -124,61 +110,40 @@ describe('Progress route mobile contracts', () => {
       readAppRoute('progress/[id].tsx'),
     ];
     const storageGate = readSource('features/photos/PhotoStorageGate.tsx');
-    const routeSource = readSource('features/photos/ProgressPhotoRouteSource.tsx');
     const photosHook = readSource('features/photos/usePhotos.ts');
     const copy = readSource('features/photos/copy.ts');
 
-    const [progressTab, ...standaloneRoutes] = routeSources;
-    expect(progressTab).toContain(
-      "import { PhotoStorageBoundary } from '@/features/photos/PhotoStorageGate';",
-    );
-    expect(progressTab).toContain('<PhotoStorageBoundary query={viewModel.photos} tone="paper">');
-    expect(progressTab).toContain('</PhotoStorageBoundary>');
-    expect(progressTab.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
-      progressTab.indexOf('<ProgressRouteBoundary'),
-    );
-
-    for (const source of standaloneRoutes) {
+    for (const source of routeSources) {
       expect(source).toContain(
-        "import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';",
+        "import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';",
       );
-      expect(source).toContain('<ProgressPhotoRouteSource');
-      expect(source).toContain('</ProgressPhotoRouteSource>');
+      expect(source).toContain('<PhotoStorageGate');
+      expect(source).toContain('</PhotoStorageGate>');
       expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
-        source.indexOf('<ProgressPhotoRouteSource'),
+        source.indexOf('<PhotoStorageGate'),
       );
     }
-    for (const source of standaloneRoutes) {
-      expect(source).toContain(
-        '<ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
-      );
-      expect(source).not.toContain("usePhotos('front')");
-    }
-    expect(readAppRoute('progress/about.tsx')).not.toContain('ProgressPhotoRouteSource');
-
-    expect(storageGate).toContain('export function PhotoStorageBoundary({');
-    expect(storageGate).toContain(
-      'const { isError, isFetchedAfterMount, isFetching, isPending, refetch } = query;',
+    expect(routeSources[0]).toContain('<PhotoStorageGate tone="paper">');
+    expect(routeSources[1]).toContain(
+      '<PhotoStorageGate onExit={captureBoundary.requestProgressExit}>',
     );
-    expect(storageGate).toContain('export function PhotoStorageGate(props: PhotoStorageGateProps)');
-    expect(storageGate).toContain("const query = usePhotos('front');");
-    expect(storageGate).toContain('<PhotoStorageBoundary {...props} query={query} />');
-    expect(storageGate).toContain("'observing' | 'forcing' | 'failed' | 'validated'");
-    expect(storageGate).toContain('const [forceValidationOnMount] = useState(');
-    expect(storageGate).toContain('const result = await entryRefetch();');
+    for (const source of routeSources.slice(2)) {
+      expect(source).toContain(
+        '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
+      );
+    }
+    expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
+
+    expect(storageGate).toContain(
+      "const { isError, isFetching, isPending, refetch } = usePhotos('front');",
+    );
+    expect(storageGate).toContain('if (!isPending && !isError) return children;');
     expect(storageGate).toContain('const result = await refetch();');
-    expect(storageGate).toContain('if (result.isError)');
-    expect(storageGate).toContain('if (entryValidated && !isPending && !storageUnavailable)');
-    expect(storageGate).toContain('<StateNotice');
-    expect(storageGate).toContain('kind="unavailable"');
-    expect(storageGate).toContain('<StateLoading');
-    expect(storageGate).toContain('disabled={retryBusy}');
-    expect(storageGate).toContain('accessibilityLabel="Retry opening progress photos"');
+    expect(storageGate).toContain('if (result.isError) setRetryFailed(true);');
+    expect(storageGate).toContain('accessibilityRole="alert"');
+    expect(storageGate).toContain('accessibilityState={{ disabled: isFetching }}');
+    expect(storageGate).toContain('className="min-h-[56px]');
     expect(storageGate).toContain('className="min-h-[48px]');
-    expect(routeSource.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
-    expect(routeSource.match(/usePhotosFromBoundary\(boundary, 'front'\)/g)).toHaveLength(1);
-    expect(routeSource).toContain('<PhotoStorageBoundary query={query} onExit={onExit}>');
-    expect(routeSource).toContain('{query.data ? children(query.data) : null}');
     expect(copy).toContain("title: 'Your timeline could not open.'");
     expect(copy).toContain('Your photos and notes were not changed.');
 
@@ -235,9 +200,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('const height = useWindowDimensions().height;');
     expect(source).toContain('const compact = height < 640;');
     expect(source).toContain('const shortPhone = height < 520;');
-    expect(source).toContain(
-      'const showPrepReminder = !(shortPhone || (compact && (saveFailed || reconsentRequired)));',
-    );
+    expect(source).toContain('const showPrepReminder = !(shortPhone || (compact && saveFailed));');
     expect(source).toContain('fontSize: shortPhone ? 25 : compact ? 27 : 30');
     expect(source).toContain('lineHeight: shortPhone ? 27 : compact ? 29 : undefined');
     expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 10 : 16');
@@ -246,7 +209,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('fontSize: shortPhone ? 10 : compact ? 10.5 : 11');
     expect(source).toContain('lineHeight: shortPhone ? 13 : compact ? 15 : undefined');
     expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 8 : 14');
-    expect(source.match(/height: 48/g)?.length ?? 0).toBeGreaterThanOrEqual(6);
+    expect(source.match(/height: 48/g)).toHaveLength(6);
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)'");
     expect(source).toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)'");
@@ -266,6 +229,32 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('{canAttemptCapture ? (');
     expect(source).toContain('Try photo again');
     expect(source).toContain('Open settings');
+    expect(source).toContain('canRetryCameraPermission');
+    expect(source).toContain('CAMERA_PERMISSION_FAILURE_COPY[cameraAccess.permissionFailure]');
+    expect(source).toContain('permissionFailureCopy={permissionFailureCopy}');
+    expect(source).toContain('{permissionFailureCopy.title}');
+    expect(source).toContain('{permissionFailureCopy.body}');
+    expect(source).toContain('permissionFailureCopy?.retryLabel ?? askLabel');
+    expect(source).toContain('askLabel="Allow camera"');
+    expect(source).toContain('cameraAccess.beginCameraOperation()');
+    expect(source).toContain('cameraAccess.isCameraOperationCurrent(cameraOperation)');
+    expect(source).toContain('createProgressCaptureReviewLifecycle(FileSystem, {');
+    expect(source).toContain('await retryPendingProgressReviewCleanup();');
+    expect(source).toContain('createProgressCaptureRouteBoundary<NavigationAction>({');
+    expect(source).toContain('useSyncExternalStore(');
+    expect(source).toContain('captureBoundary.retryCleanup()');
+    expect(source).toContain('captureBoundary.cleanupPending');
+    expect(source).toContain('captureBoundary.beginShutter()');
+    expect(source).toContain('captureBoundary.finishShutter()');
+    expect(source).toContain('RawCaptureCleanupGate');
+    expect(source).toContain('usePreventRemove(!boundaryState.routeRemovalReady');
+    expect(source).toContain('const captureBoundary = useProgressCaptureBoundary();');
+    expect(source.indexOf('const captureBoundary = useProgressCaptureBoundary();')).toBeLessThan(
+      source.indexOf('<ProGate feature="photo_timeline">'),
+    );
+    expect(source).not.toContain(
+      'FileSystem.deleteAsync(rawCaptureUri, { idempotent: true }).catch(() => undefined)',
+    );
     expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(source).not.toContain('backgroundColor="rgba(10,8,6,0.92)"');
     expect(source).not.toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)'");
@@ -277,38 +266,23 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });
 
-  it('does not render capture chrome until exact current photo consent is proven', () => {
+  it('does not render capture chrome until photo consent is saved', () => {
     const source = readAppRoute('progress/capture.tsx');
-    const consentGateIndex = source.indexOf('if (!consentIsCurrent) {');
+    const consentGateIndex = source.indexOf('if (consented !== true) {');
     const captureHeaderIndex = source.indexOf(
       '<View className="flex-row items-center justify-between px-6">',
     );
 
     expect(consentGateIndex).toBeGreaterThan(-1);
     expect(captureHeaderIndex).toBeGreaterThan(consentGateIndex);
+    expect(source).toContain('useCameraAccessLifecycle({');
+    expect(source).toContain('available: cameraEnabled && !forceDeniedCameraPermission');
+    expect(source).toContain('mountAllowed: consented === true && !captureBoundary.cleanupPending');
+    expect(source).toContain('const canShowCamera =');
     expect(source).toContain(
-      'const canShowCamera =\n    consentIsCurrent &&\n    env.nativeCameraEnabled',
+      'consented === true && !captureBoundary.cleanupPending && cameraAccess.cameraActive;',
     );
-    expect(source).toContain('readPhotoCaptureConsent()');
-    expect(source).toContain('photoCaptureConsentNeedsChoice(consentResult)');
-    expect(source).toContain('function ConsentReadRecoveryGate');
-    expect(source).toContain('function ConsentReadLoadingGate');
-    expect(source).toContain('accessibilityLabel={PHOTO_COPY.capture.consentReadLoadingTitle}');
-    expect(source).toContain('accessibilityRole="progressbar"');
-    expect(source).toContain(
-      'accessibilityValue={{ text: PHOTO_COPY.capture.consentReadLoadingBody }}',
-    );
-    expect(source).toContain('accessibilityState={{ busy: retrying, disabled: retrying }}');
-    expect(source).toContain("'Retry reading saved photo choice'");
-    expect(source).toContain('retrying={currentConsentReadState.retrying}');
-    expect(source).toContain('onRetry={() => loadPhotoCaptureConsent(true)}');
-    expect(source).toContain('PHOTO_CONSENT_READ_TIMEOUT_MS');
-    expect(source).toContain('consentReadGenerationRef.current += 1');
-    expect(source).toContain('consentGrantInFlightRef.current = true');
-    expect(source).toContain('PhotoCaptureConsentStateChangedError');
-    expect(source).toContain('result: error.result');
-    expect(source).toContain("writeUncertain={consentSaveFailure === 'uncertain'}");
-    expect(source).toContain('router.replace(APP_PROGRESS_ROUTE)');
+    expect(source).toContain('requestPermission: cameraAccess.requestPermission');
   });
 
   it('uses measured post-capture quality and never timer-generated scores', () => {
@@ -319,19 +293,12 @@ describe('Progress route mobile contracts', () => {
     const nativeProvider = readSource('features/photos/CaptureAnalysisProvider.native.tsx');
     const fallbackProvider = readSource('features/photos/CaptureAnalysisProvider.tsx');
     const nativeDetector = readSource('features/photos/useDetectedFaces.native.ts');
+    const detectorOperation = readSource('features/photos/detectedFacesOperation.ts');
     const lighting = readSource('features/photos/analyzePhotoLighting.ts');
 
     expect(capture).toContain("signal_source: 'post_capture_measurement'");
-    expect(capture).toContain('photoWidth: String(stagedCapture.width)');
-    expect(capture).toContain('photoHeight: String(stagedCapture.height)');
-    expect(capture).toContain('captureSessionId: stagedCapture.handle.operationId');
-    expect(capture).toContain('CaptureStagingCleanupError');
-    expect(capture).toContain('captureCleanupRetryRef');
-    expect(capture).toContain('retryCaptureCleanup');
-    expect(capture).toContain('disabled={capturing}');
-    expect(capture).not.toContain('capturedUri:');
-    expect(review).not.toContain('capturedUri?: string;');
-    expect(review).toContain('resolveCapturedPhoto(captureSessionId)');
+    expect(capture).toContain('photoWidth: String(shot.width)');
+    expect(capture).toContain('photoHeight: String(shot.height)');
     expect(capture).toContain('PHOTO_COPY.capture.qualityCheck');
     expect(capture).not.toContain('useGuidedCaptureSignals');
     expect(capture).not.toContain('camera_preview_estimate');
@@ -345,27 +312,19 @@ describe('Progress route mobile contracts', () => {
     expect(review).toContain('lightingScore: analysis.lighting.score');
     expect(review).toContain("? ('post_capture_measurement' as const)");
     expect(review).toContain('qualitySource,');
-    expect(review).toContain("photos.reference?.qualitySource === 'post_capture_measurement'");
-    expect(review).toContain('.mutateAsync({');
-    expect(review).toContain('.then(() => {');
-    expect(review).toContain('const saveInFlightRef = useRef(false);');
-    expect(review).toContain('saveInFlightRef.current = true;');
-    expect(review).toContain('saveInFlightRef.current = false;');
-    expect(review).toContain('if (saveInFlightRef.current) return;');
-    expect(review).toContain('disabled={add.isPending || cleanupInFlight}');
-    expect(review).toContain('.catch(() => {');
+    expect(review).not.toContain('refLighting');
+    expect(review).toContain('await add.mutateAsync({');
+    expect(review).toContain('await lifecycle.save(persist');
+    expect(review).toContain('navigationInFlightRef.current = true;');
+    expect(review).toContain('navigationInFlightRef.current = false;');
+    expect(review).toContain('if (navigationInFlightRef.current) return');
+    expect(review).toContain('disabled={add.isPending || actionBusy}');
+    expect(review).toContain("if (result === 'save_failed') setSaveFailed(true);");
     expect(review).toContain('setSaveFailed(true);');
-    expect(review).toContain('const discardAndNavigate = (navigate: () => void) => {');
-    expect(review).toContain('usePreventRemove(Boolean(captureSessionId)');
-    expect(review).toContain('await resolveCapturedPhoto(captureSessionId)');
-    expect(review).toContain('if (handle) await cleanupCapturedPhoto(handle);');
-    expect(review).toContain('navigation.dispatch(action);');
-    expect(review).not.toContain('cleanupCapturedPhoto(handle).catch(() => undefined)');
-    expect(review).toContain('setCleanupFailed(true)');
-    expect(review).toContain('outside every conditional storage, lock,');
-    expect(review).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(review).not.toContain('cleanupCapturedPhoto(handle).catch(() => undefined)');
-    expect(review).not.toContain('onSettled: () => {');
+    expect(review).toContain('await lifecycle.discard();');
+    expect(review).toContain('usePreventRemove(source !== null && !routeRemovalReady');
+    expect(review).toContain('cachePolicy="none"');
+    expect(review).not.toContain('FileSystem.deleteAsync(capturedUri');
     expect(review).not.toContain('Number(params.alignment');
     expect(review).not.toContain('Number(params.lighting');
 
@@ -374,9 +333,13 @@ describe('Progress route mobile contracts', () => {
     expect(analysis).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_ANALYSIS');
     expect(analysis).toContain('ANALYSIS_TIMEOUT_MS');
     expect(analysis).toContain('const analysisTerminal =');
+    expect(analysis).toContain('activeCoordinator.activate(analysisUri ?? null);');
+    expect(analysis).toContain('useSyncExternalStore(');
+    expect(analysis).toContain('return () => activeCoordinator.abort();');
+    expect(analysis).not.toContain('useMemo(() => activeCoordinator.activate');
     expect(analysis).toContain('if (!analysisUri || analysisTerminal) return;');
-    expect(analysis).toContain('}, [analysisTerminal, analysisUri, ownerScope]);');
-    expect(analysis).toContain('isOwnerQueryScopeCurrent(ownerScope)');
+    expect(analysis).toContain('activeCoordinator.abort();');
+    expect(analysis).toContain('}, [activeCoordinator, analysisTerminal, analysisUri]);');
     expect(analysis.indexOf('if (timedOutUri === analysisUri)')).toBeLessThan(
       analysis.indexOf("} else if (faceResult.status === 'done')"),
     );
@@ -388,14 +351,14 @@ describe('Progress route mobile contracts', () => {
     expect(nativeProvider).toContain("performanceMode: 'accurate'");
     expect(fallbackProvider).not.toContain('@infinitered/react-native-mlkit-face-detection');
     expect(nativeDetector).toContain('useFaceDetection');
-    expect(nativeDetector).toContain('await detector.initialize()');
-    expect(nativeDetector).toContain('runOwnerQueryOperation(ownerScope');
-    expect(nativeDetector).toContain('detector.detectFaces(uri)');
-    expect(nativeDetector).toContain('lease.assertCurrent()');
-    expect(nativeDetector).toContain('isOwnerQueryScopeCurrent(ownerScope)');
-    expect(nativeDetector).toContain('if (!faces)');
+    expect(nativeDetector).toContain('runDetectedFacesOperation({');
+    expect(nativeDetector).toContain('publish: (result) => setRun({ uri, ...result })');
+    expect(detectorOperation).toContain('await detector.initialize()');
+    expect(detectorOperation).toContain('control.assertActive();');
     expect(lighting).toContain('SAMPLE_WIDTH = 64');
-    expect(lighting).toContain('withStagedPhotoAnalysisJpeg');
+    expect(lighting).toContain("reservePlaintextStaging('photo_analysis_jpeg')");
+    expect(lighting).toContain('await deps.moveAsync({ from: generatedUri, to: handle.uri });');
+    expect(lighting).toContain('throw new PhotoAnalysisCleanupError(retryCleanup');
     expect(detail).toContain("photo.qualitySource === 'post_capture_measurement'");
     expect(detail).toContain("? 'Capture checks recorded'");
     expect(detail).toContain(": 'Quality not measured'");
@@ -492,85 +455,6 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('onPress: () => void sharePhotoImageOnly(photo)');
   });
 
-  it('isolates single-photo note typing below the full detail image shell', () => {
-    const source = readAppRoute('progress/[id].tsx');
-    const coordinator = readSource('features/photos/photoNoteSaveCoordinator.ts');
-    const copy = readSource('features/photos/copy.ts');
-    const editorStart = source.indexOf('function PhotoNoteEditor({');
-    const detailStart = source.indexOf('function PhotoDetailScreenContent({ photos }');
-    const editor = source.slice(editorStart, detailStart);
-    const detail = source.slice(detailStart);
-
-    expect(editorStart).toBeGreaterThan(-1);
-    expect(detailStart).toBeGreaterThan(editorStart);
-    expect(editor).toContain('initialNotes: string;');
-    expect(editor).toContain('onCommit: (notes: string) => Promise<void>;');
-    expect(editor).toContain('createPhotoNoteSaveCoordinator({');
-    expect(editor).toContain('createPhotoNoteSaveCoordinator({ commit: onCommit, initialNotes })');
-    expect(editor).toContain('coordinator.setCommit(onCommit)');
-    expect(editor).toContain(
-      'const [noteState, setNoteState] = useState(coordinator.getSnapshot);',
-    );
-    expect(editor).toContain('coordinator.subscribe(setNoteState)');
-    expect(editor).toContain('coordinator.updateDraft(notes);');
-    expect(editor).toContain('<TextInput');
-    expect(editor).toContain('value={noteState.draft}');
-    expect(editor).toContain('onChangeText={updateDraft}');
-    expect(editor).toContain('onBlur={() => void coordinator.requestSave()}');
-    expect(editor).toContain('onEndEditing={() => void coordinator.requestSave()}');
-    expect(editor).toContain('maxLength={MAX_PHOTO_NOTE_PLAINTEXT_CHARS}');
-    expect(editor).toContain(
-      'placeholder={pseudoLocalizeString(PHOTO_COPY.detail.notePlaceholder)}',
-    );
-    expect(editor).toContain('placeholderTextColor="rgba(244,239,231,0.35)"');
-    expect(editor).toContain('multiline');
-    expect(editor).toContain('borderRadius: 16');
-    expect(editor).toContain("backgroundColor: 'rgba(244,239,231,0.06)'");
-    expect(editor).toContain('padding: 16');
-    expect(editor).toContain("marginBottom: 'auto'");
-    expect(editor).toContain("fontFamily: 'HankenGrotesk-Regular'");
-    expect(editor).toContain('fontSize: 13.5');
-    expect(editor).toContain('lineHeight: 20');
-    expect(editor).toContain('minHeight: 24');
-    expect(editor).toContain("noteState.status === 'saving'");
-    expect(editor).toContain("noteState.status === 'saved'");
-    expect(editor).toContain("noteState.status === 'error'");
-    expect(editor).toContain('accessibilityRole="alert"');
-    expect(editor).toContain('{PHOTO_COPY.detail.noteSaveRetry}');
-    expect(editor).toContain('{PHOTO_COPY.detail.noteSave}');
-    expect(editor).toContain('noteState.draft !== noteState.persisted');
-    expect(editor).toContain("accessibilityState={{ disabled: noteState.status === 'saving' }}");
-    expect(editor).toContain('minHeight: 48');
-    expect(editor).not.toContain('usePhotoActions');
-    expect(editor).not.toContain('<PhotoImage');
-
-    expect(coordinator).toContain('if (savePromise) {');
-    expect(coordinator).toContain(
-      'if (requestedDraft !== inFlightDraft) queuedDraft = requestedDraft;',
-    );
-    expect(coordinator).toContain("publish({ ...snapshot, status: 'error' });");
-    expect(copy).toContain("noteSaving: 'Saving on this device…'");
-    expect(copy).toContain("noteSaved: 'Saved on this device'");
-    expect(copy).toContain("noteSave: 'Save note'");
-    expect(copy).toContain("noteSaveRetry: 'Try save again'");
-    expect(copy).toContain("We couldn't confirm this note was saved. Your text is still here.");
-
-    expect(detail).toContain('const { reference, remove, note } = usePhotoActions();');
-    expect(detail).toContain('uri={photo.localUri}');
-    expect(detail).toContain('photoId={photo.id}');
-    expect(detail).toContain('rendition="display"');
-    expect(detail).toContain('requestPriority="interactive"');
-    expect(detail).toContain('<PhotoNoteEditor');
-    expect(detail).toContain('key={photo.id}');
-    expect(detail).toContain("initialNotes={photo.notes ?? ''}");
-    expect(detail).toContain('await note.mutateAsync({ id, notes });');
-    expect(detail).toContain('onCommit={commitPhotoNote}');
-    expect(source).toContain('EXPO_PUBLIC_E2E_PHOTO_NOTE_SAVE_FAILURE');
-    expect(detail).not.toContain('const [noteState, setNoteState]');
-    expect(detail).not.toContain('<TextInput');
-    expect(source).not.toContain('memo(PhotoImage');
-  });
-
   it('recovers direct review entries without a captured photo', () => {
     const source = readAppRoute('progress/review.tsx');
     const copy = readSource('features/photos/copy.ts');
@@ -578,25 +462,26 @@ describe('Progress route mobile contracts', () => {
     expect(copy).toContain("missingEyebrow: 'Photo not captured'");
     expect(copy).toContain("missingTitle: 'No photo to review yet.'");
     expect(source).toContain('function isNonBlank(value: string | null): value is string');
-    expect(source).toContain("const hasCapturedPhoto = captureSource.status === 'ready';");
-    expect(source).toContain('await resolveCapturedPhoto(captureSessionId)');
-    expect(source).toContain('if (handle) await cleanupCapturedPhoto(handle);');
-    expect(source).toContain('<PhotoImage uri={capturedUri}');
-    expect(source).toContain(
-      'if (!hasCapturedPhoto || add.isPending || saveInFlightRef.current) return;',
-    );
+    expect(source).toContain('const hasCapturedPhoto = isNonBlank(capturedUri);');
+    expect(source).toContain('if (!hasCapturedPhoto || add.isPending || actionBusy) return;');
     expect(source).toContain('if (!hasCapturedPhoto) {');
     expect(source).toContain('PHOTO_COPY.review.missingEyebrow');
     expect(source).toContain('PHOTO_COPY.review.missingCapture');
     expect(source).toContain('PHOTO_COPY.review.missingBack');
-    expect(source).toContain("router.replace('/progress/capture')");
+    expect(source).toContain("discardAndNavigate('retake')");
     expect(source).not.toContain('your photo');
   });
 
   it('keeps the first saved photo wired to both baseline analytics names', () => {
     const source = readAppRoute('progress/review.tsx');
+    const replayGuard = source.indexOf('if (!createdNow) return;');
+    const capturedEvent = source.indexOf("track('photo_captured', { on_device: true })");
 
-    expect(source).toContain('const wasEmpty = photos.count === 0;');
+    expect(source).toContain('const wasEmpty = (data?.count ?? 0) === 0;');
+    expect(source).toContain('const outcome = await add.mutateAsync({');
+    expect(source).toContain('createdNow = outcome.createdNow;');
+    expect(replayGuard).toBeGreaterThan(-1);
+    expect(replayGuard).toBeLessThan(capturedEvent);
     expect(source).toContain("track('photo_captured', { on_device: true })");
     expect(source).not.toContain('result: verdict.flag');
     expect(source).toContain("track('first_photo_captured')");
@@ -605,49 +490,39 @@ describe('Progress route mobile contracts', () => {
 
   it('keeps the populated progress fixture gated to explicit E2E runs', () => {
     const source = readSource('features/photos/usePhotos.ts');
-    const fixture = readSource('features/photos/progressStressFixture.ts');
     const entitlement = readSource('features/subscription/useEntitlement.ts');
+    const webEntitlementFixture = readSource('features/subscription/entitlementE2EFixture.web.ts');
+    const nativeEntitlementFixture = readSource(
+      'features/subscription/entitlementE2EFixture.native.ts',
+    );
 
     expect(source).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return null;");
-    expect(source).toContain(
-      'parseProgressE2EPhotoCount(process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS)',
-    );
-    expect(source).toContain('buildProgressE2EPhotos(count, E2E_PROGRESS_PHOTO_URI)');
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated'");
     expect(source).toContain("'data:image/png;base64,");
+    expect(source).toContain('localUri: E2E_PROGRESS_PHOTO_URI');
+    expect(source).toContain('e2e-front-2026-04-01');
+    expect(source).toContain('e2e-front-2026-05-12');
+    expect(source).toContain('e2e-front-2026-06-24');
     expect(source).toContain('const fixture = e2eProgressPhotoFixture();');
-    expect(source).toContain('if (!fixture) await recoverPhotoStoreMutations();');
-    expect(source).toContain('let photos = fixture ?? (await loadPhotos());');
-    expect(fixture).toContain(
-      "if (normalized === 'populated') return DEFAULT_PROGRESS_E2E_PHOTOS;",
+    expect(source).toContain('const photos = fixture ?? (await loadPhotos());');
+    expect(source.indexOf('lease.assertCurrent();')).toBeLessThan(
+      source.indexOf('const photos = fixture ?? (await loadPhotos());'),
     );
-    expect(fixture).toContain('export const MAX_PROGRESS_E2E_PHOTOS = 250;');
-    expect(fixture).toContain('e2e-front-2026-04-01');
-    expect(fixture).toContain('e2e-front-2026-05-12');
-    expect(fixture).toContain('e2e-front-2026-06-24');
-    expect(entitlement).toContain("fixture !== 'expired_store'");
-    expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
-    expect(entitlement).toContain("if (fixture === 'store_pro')");
-    expect(entitlement).toContain("store: 'app_store'");
-    expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
-    expect(entitlement).toContain('function e2eEntitlementState(): SubscriptionState | null');
-  });
-
-  it('seeds persisted-note E2E evidence through the real store with a dev-only web key', () => {
-    const source = readSource('features/photos/usePhotos.ts');
-    const encryptedStorage = readSource('features/photos/encryptedStorage.ts');
-
-    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1'");
-    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
-    expect(source).toContain("series === 'front' && photos.length === 0");
-    expect(source).toContain('photos = (');
-    expect(source).toContain('await addPhoto({');
-    expect(source).toContain('takenLocalDate: todayYmd');
-    expect(source).not.toContain('EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED=');
-    expect(encryptedStorage).toContain('function e2eWebPhotoContentKeyEnabled(): boolean');
-    expect(encryptedStorage).toContain("Platform.OS !== 'web'");
-    expect(encryptedStorage).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_NOTE_SEED === '1'");
-    expect(encryptedStorage).toContain('AsyncStorage.getItem(KEY_STORE_NAME)');
-    expect(encryptedStorage).toContain('AsyncStorage.setItem(KEY_STORE_NAME, value)');
+    expect(entitlement).toContain("from './entitlementE2EFixture'");
+    expect(webEntitlementFixture).toContain("fixture !== 'expired_store'");
+    expect(webEntitlementFixture).toContain("fixture !== 'expired_reverse_trial'");
+    expect(webEntitlementFixture).toContain("if (fixture === 'store_pro')");
+    expect(webEntitlementFixture).toContain("store: 'app_store'");
+    expect(webEntitlementFixture).toContain(
+      "managementUrl: 'https://apps.apple.com/account/subscriptions'",
+    );
+    expect(webEntitlementFixture).toContain(
+      'export function e2eEntitlementState(): SubscriptionState | null',
+    );
+    expect(nativeEntitlementFixture).not.toContain('EXPO_PUBLIC_E2E_ENTITLEMENT');
+    expect(nativeEntitlementFixture).not.toContain("store: 'app_store'");
+    expect(nativeEntitlementFixture).not.toContain("tier: 'pro'");
+    expect(nativeEntitlementFixture).toContain('return null;');
   });
 
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {
@@ -664,7 +539,6 @@ describe('Progress route mobile contracts', () => {
     );
     expect(source).toContain('FlatList,');
     expect(source).toContain('SectionList,');
-    expect(source).toContain("} from 'react-native';");
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
     expect(source).toContain('const insets = useSafeAreaInsets();');
@@ -677,109 +551,16 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }');
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain(
-      'accessibilityLabel={`Choose ${short(takenLocalDate)} as the ${target} comparison photo`}',
+      'accessibilityLabel={`Choose ${short(photo.takenLocalDate)} as the ${target} comparison photo`}',
     );
     expect(source).not.toContain('role="dialog"');
     expect(source).not.toContain('aria-modal');
     expect(source).not.toContain('onPress={() => {}}');
   });
 
-  it('virtualizes and viewability-gates thumbnail-first comparison picker demand', () => {
-    const source = readAppRoute('(tabs)/progress.tsx');
-    const pickerStart = source.indexOf('function PairPickerPhoto');
-    const picker = source.slice(pickerStart, source.indexOf('function CompareView', pickerStart));
-
-    expect(picker).toContain('function PairPickerPhoto({');
-    expect(picker).toContain('<FlatList');
-    expect(picker).toContain('horizontal');
-    expect(picker).toContain(
-      'const latestFirstPhotos = useMemo(() => photos.slice().reverse(), [photos]);',
-    );
-    expect(picker).toContain('data={latestFirstPhotos}');
-    expect(picker).toContain('nativeID="progress-comparison-picker-list"');
-    expect(picker).toContain('keyExtractor={(photo) => photo.id}');
-    expect(picker).toContain('showsHorizontalScrollIndicator={false}');
-    expect(picker).toContain('contentContainerStyle={{ gap: 10 }}');
-    expect(picker).toContain('renderItem={({ item: photo }) => (');
-    expect(picker).toContain('localUri={photo.localUri}');
-    expect(picker).toContain('thumbnailLocalUri={photo.thumbnailLocalUri}');
-    expect(picker).toContain('{(thumbnailLocalUri ?? localUri) ? (');
-    expect(picker).toContain('uri={thumbnailLocalUri ?? localUri}');
-    expect(picker).toContain('photoId={id}');
-    expect(picker).toContain('rendition="thumbnail"');
-    expect(picker).toContain('requestPriority="visible"');
-    expect(picker).toContain('active={which !== null && visiblePhotoIds.has(photo.id)}');
-    expect(picker).toContain('viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}');
-    expect(picker).toContain('onViewableItemsChanged={onPickerViewableItemsChanged}');
-    expect(picker).toContain('style={{ width: 92, aspectRatio: 3 / 4 }}');
-    expect(picker).toContain('accessibilityHint="Updates the side-by-side comparison pair"');
-    expect(picker).toContain('accessibilityState={{ selected }}');
-    expect(picker).toContain('onPress={() => onSelect(id)}');
-    expect(picker).not.toContain('<ScrollView');
-    expect(picker).toContain('initialNumToRender={4}');
-    expect(picker).toContain('maxToRenderPerBatch={4}');
-    expect(picker).toContain('windowSize={5}');
-    expect(picker).not.toContain('removeClippedSubviews');
-  });
-
-  it('owns one Progress photo/date source and virtualizes timeline rows with SectionList', () => {
-    const source = readAppRoute('(tabs)/progress.tsx');
-    const viewModel = readSource('features/photos/useProgressRouteViewModel.ts');
-    const photosHook = readSource('features/photos/usePhotos.ts');
-
-    expect(source.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
-    expect(source.match(/useProgressRouteViewModel\(boundary\)/g)).toHaveLength(1);
-    expect(source).not.toContain("usePhotos('front')");
-    expect(viewModel).toContain("const photos = usePhotosFromBoundary(boundary, 'front');");
-    expect(photosHook).toContain('export function usePhotosFromBoundary(');
-    expect(photosHook).toContain('return usePhotosFromBoundary(boundary, series);');
-    expect(source).toContain('<SectionList');
-    expect(source).toContain('nativeID="progress-timeline-list"');
-    expect(source).toContain('sections={sections}');
-    expect(source).toContain('keyExtractor={(item) => item.key}');
-    expect(source).toContain('renderItem={renderTimelineRow}');
-    expect(source).toContain('viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}');
-    expect(source).toContain('onViewableItemsChanged={onTimelineViewableItemsChanged}');
-    expect(source).toContain('uri={photo.thumbnailLocalUri ?? photo.localUri}');
-    expect(source).toContain('active={!timelapseVisible && visibleRowKeys.has(item.key)}');
-    expect(source).toContain('stickySectionHeadersEnabled={false}');
-    expect(source).toContain('initialNumToRender={6}');
-    expect(source).toContain('maxToRenderPerBatch={6}');
-    expect(source).toContain('windowSize={7}');
-    expect(source).toContain('const TimelinePhotosRow = memo(');
-    expect(source).not.toContain('{data.monthGroups.map(');
-  });
-
-  it('tears down image-bearing Progress content while retaining lightweight presentation state', () => {
-    const source = readAppRoute('(tabs)/progress.tsx');
-    const gate = readSource('features/subscription/ProGate.tsx');
-
-    expect(gate).toContain('const isFocused = useIsFocused();');
-    expect(gate).toContain('if (!isFocused) return null;');
-    expect(source.indexOf('<ProGate feature="photo_timeline">')).toBeLessThan(
-      source.indexOf('<ProgressRouteBoundary'),
-    );
-    expect(source).toContain(
-      "const [mode, setMode] = useState<'compare' | 'timeline'>('compare');",
-    );
-    expect(source).toContain(
-      'const [compareSelection, setCompareSelection] = useState<CompareSelection>({});',
-    );
-    expect(source).toContain('const selectComparisonPhoto = useCallback(');
-    expect(source).toContain('compareSelection={compareSelection}');
-    expect(source).toContain('onSelectComparisonPhoto={selectComparisonPhoto}');
-    expect(source).toContain('selection={compareSelection}');
-    expect(source).toContain('if (picking) onSelectPhoto(picking, id);');
-    expect(source).not.toContain('ProgressTrendBoundary');
-    expect(source).not.toContain('phase7Flags.trend');
-    expect(source).not.toContain('useTrendInsightFromPhotos');
-    expect(source).not.toContain("from '@/features/trend/");
-  });
-
   it('plays real local time-lapse frames with finite and reduced-motion-safe controls', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
     const player = readSource('features/photos/PhotoTimelapse.tsx');
-    const preference = readSource('lib/accessibility/useReduceMotionPreference.ts');
 
     expect(source).toContain("import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';");
     expect(source).toContain("import { timelapseFrames } from '@/features/photos/timelapse';");
@@ -795,24 +576,30 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('TIMELAPSE_UNAVAILABLE');
 
     expect(player).toContain('useReduceMotionPreference()');
-    expect(preference).toContain('AccessibilityInfo.isReduceMotionEnabled()');
-    expect(preference).toContain("AccessibilityInfo.addEventListener('reduceMotionChanged'");
+    expect(player).toContain('timelapsePlaybackReducer');
     expect(player).toContain("AppState.addEventListener('change'");
-    expect(player).toContain("if (state !== 'active') setPlaying(false);");
-    expect(player).toContain('reduceMotion !== false');
-    expect(player).toContain('if (reduceMotion !== false || frameCount < 2) return;');
+    expect(player).toContain("dispatch({ type: 'app-state', active: state === 'active' });");
+    expect(player).toContain("type: 'frame-ready', index: safeIndex, revision:");
+    expect(player).toContain("type: 'frame-error', index: safeIndex, revision:");
+    expect(player).toContain("playback.frameStatus !== 'ready'");
     expect(player).toContain('{reduceMotion === false ? (');
-    expect(player).toContain('if (next >= frameCount - 1) setPlaying(false);');
     expect(player).toContain('accessibilityRole="adjustable"');
     expect(player).toContain('animationType="none"');
     expect(player).toContain('accessibilityLabel="Quiet photo time-lapse"');
     expect(player).toContain('accessibilityViewIsModal');
+    expect(player).toContain('onAccessibilityEscape={close}');
+    expect(player).toContain('focusTimelapseElementAfterLayout');
+    expect(player).toContain('toLocaleDateString(undefined');
+    expect(source).toContain('ref={timelapseTriggerRef}');
+    expect(source).toContain('focusTimelapseElementAfterLayout');
     expect(player).not.toContain('role="dialog"');
     expect(player).not.toContain('aria-modal');
     expect(player).toContain("{ name: 'decrement', label: 'Previous photo' }");
     expect(player).toContain("{ name: 'increment', label: 'Next photo' }");
     expect(player).toContain('On this phone only. No scores or automatic judgments.');
     expect(player).not.toContain("track('");
+    expect(player).not.toContain('expo-sharing');
+    expect(player).not.toContain('expo-file-system');
     expect(source).not.toContain("Alert.alert('Quiet time-lapse'");
   });
 
@@ -846,26 +633,5 @@ describe('Progress route mobile contracts', () => {
       'className="min-h-[48px] min-w-[72px] items-center justify-center rounded-pill px-3.5 py-2"',
     );
     expect(slider).not.toContain('className="rounded-pill px-3.5 py-1.5"');
-  });
-
-  it('exposes an adjustable comparison value and a non-gesture presentation', () => {
-    const source = readAppRoute('(tabs)/progress.tsx');
-    const slider = readSource('features/photos/CompareSlider.tsx');
-
-    expect(slider).toContain('accessibilityRole="adjustable"');
-    expect(slider).toContain('accessibilityValue={{');
-    expect(slider).toContain('aria-valuenow={dividerPercent}');
-    expect(slider).toContain('aria-valuetext={compareDividerValueText(dividerPercent)}');
-    expect(slider).toContain("width: '100%',");
-    expect(slider).toContain("height: '100%',");
-    expect(slider).toContain("{ name: 'decrement', label: 'Show less of the before photo' }");
-    expect(slider).toContain("{ name: 'increment', label: 'Show more of the before photo' }");
-    expect(slider).toContain(
-      'onAccessibilityAction={(event) => adjustDivider(event.nativeEvent.actionName)}',
-    );
-    expect(slider).toContain('Use Side by side for a non-gesture view.');
-    expect(source).toContain("'Use side-by-side comparison'");
-    expect(source).toContain("'Use draggable comparison'");
-    expect(source).toContain('Provides a non-gesture view of both selected photos');
   });
 });

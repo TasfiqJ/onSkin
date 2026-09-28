@@ -1,4 +1,4 @@
-import type { PlanId } from '@onskin/types';
+import type { PlanId } from '@layerwell/types';
 
 import type { SubscriptionOfferingView, SubscriptionPackageView } from '@/lib/iap/revenuecat';
 
@@ -12,9 +12,8 @@ export type PlanPriceDisplay = {
 };
 
 function packageDisplay(pack: SubscriptionPackageView, reason: string | null): PlanPriceDisplay {
-  const eligibleTrialDays = pack.trialEligibility === 'eligible' ? pack.trialDays : null;
   return {
-    introLabel: eligibleTrialDays ? `Start ${eligibleTrialDays} days free, then` : 'Subscribe for',
+    introLabel: pack.trialDays ? `Start ${pack.trialDays} days free, then` : 'Subscribe for',
     priceLabel: pack.priceLabel,
     periodLabel: pack.periodLabel,
     pricePerMonthLabel: pack.pricePerMonthLabel,

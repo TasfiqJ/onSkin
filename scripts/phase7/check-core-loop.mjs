@@ -12,6 +12,15 @@ import {
   loadLaunchContract,
   REQUIRED_SURFACE_KEYS,
 } from '../launch/contract.mjs';
+import { auditCore07aShareAdmission } from '../core07/share-admission-source-contract.mjs';
+import {
+  auditPhoto05aTrendAdmission,
+  PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS,
+} from '../photo05/trend-admission-source-contract.mjs';
+import {
+  auditCom01aCommerceAdmission,
+  COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS,
+} from '../com01/commerce-admission-source-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -66,6 +75,16 @@ function hasSelfClosingJsxWithProps(source, component, propPatterns) {
   return tags.some((tag) => propPatterns.every((pattern) => pattern.test(tag)));
 }
 
+for (const error of auditCore07aShareAdmission(root)) {
+  require(false, `CORE-07A share-admission source contract: ${error}`);
+}
+for (const error of auditPhoto05aTrendAdmission(root)) {
+  require(false, `PHOTO-05A Trend-admission source contract: ${error}`);
+}
+for (const error of auditCom01aCommerceAdmission(root)) {
+  require(false, `COM-01A commerce-admission source contract: ${error}`);
+}
+
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile('.env');
 const launchEnv = { ...exampleEnv, ...localEnv, ...process.env };
@@ -76,12 +95,26 @@ const requiredFiles = [
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
+  'apps/mobile/src/app/(tabs)/today.tsx',
+  'apps/mobile/src/features/today/completionsStore.ts',
+  'apps/mobile/src/features/today/completionsStore.test.ts',
+  'apps/mobile/src/features/today/cycleCompletion.ts',
+  'apps/mobile/src/features/today/cycleCompletion.test.ts',
+  'apps/mobile/src/features/today/routineProjection.ts',
+  'apps/mobile/src/features/today/routineProjection.test.ts',
+  'apps/mobile/src/features/today/todayRoute.test.ts',
   'docs/phase-7/surface-inventory.md',
   'docs/phase-7/launch-claim-matrix.md',
   'docs/phase-7/beta-evidence-dashboard.md',
   'docs/phase-7/core-loop-qa-checklist.md',
   'docs/phase-7/phase-7-exit-review.md',
 ];
+for (const path of PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
+for (const path of COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS) {
+  if (!requiredFiles.includes(path)) requiredFiles.push(path);
+}
 
 for (const file of requiredFiles) {
   require(existsSync(abs(file)), `${file} is missing.`);
@@ -89,7 +122,6 @@ for (const file of requiredFiles) {
 
 const phase7PublicFlags = [
   'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
-  'EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED',
   'EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED',
   'EXPO_PUBLIC_PHASE7_TREND_ENABLED',
   'EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED',
@@ -103,10 +135,6 @@ for (const key of phase7PublicFlags) {
   require(Object.prototype.hasOwnProperty.call(exampleEnv, key), `.env.example is missing ${key}.`);
 }
 
-require(has(
-  'apps/mobile/src/lib/env.ts',
-  /phase7CommerceEnabled/,
-), 'env.ts is missing Phase 7 commerce flag.');
 require(has(
   'apps/mobile/src/lib/env.ts',
   /phase7ReviewedConflictSharingEnabled/,
@@ -129,16 +157,62 @@ require(has(
 ), 'phase7.ts must keep unimplemented community, Trend, and native-widget capabilities non-environment-driven.');
 const qaPacketBuilder = read('scripts/phase7/build-core-loop-qa-packet.mjs');
 const humanE2eManifestBuilder = read('scripts/e2e/human-e2e-manifest.mjs');
-require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
-  /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
-  /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+const coreLoopSmoke = read('scripts/phase7/check-core-loop-smoke.mjs');
+require(/const defaultPacketOutDir = 'docs\/phase-7\/generated'/.test(qaPacketBuilder) &&
+  /--test-fixture-output/.test(qaPacketBuilder) &&
+  /\.tmp\\\/phase7-packet-fixtures/.test(qaPacketBuilder) &&
+  /captureReleaseQaSnapshot\(\{[\s\S]*inputPaths: check \? \[\.\.\.requiredFiles, \.\.\.packetOutputPaths\] : requiredFiles,[\s\S]*outputPaths: check \? \[\] : packetOutputPaths,/.test(
     qaPacketBuilder,
-  ), 'Phase 7 core-loop QA packet must ignore only its own generated outputs when recording Git status.');
+  ) &&
+  /atomicWriteReleaseQaOutputs\(\{[\s\S]*snapshot: sourceSnapshot,[\s\S]*path: packetOutputPaths\[0\],[\s\S]*path: packetOutputPaths\[1\],/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 core-loop QA packet must use fixed normal outputs, a constrained test fixture, and atomic pinned-snapshot publication.');
+require(/record\?\.workingKind !== 'file'/.test(qaPacketBuilder) &&
+  /!record\.workingTreeMatchesHead/.test(qaPacketBuilder) &&
+  /canonicalJsonBytes\(recordedPacket\)\.equals\(jsonRecord\.workingBytes\)/.test(
+    qaPacketBuilder,
+  ) &&
+  /exactIsoTimestamp\(recordedPacket\.generatedAt\)/.test(qaPacketBuilder) &&
+  /phase7AssemblyStabilityErrors\(\{ includeSourceSnapshot: true \}\)/.test(qaPacketBuilder) &&
+  /PHASE7_QA_PACKET_CHECK_COMPARISON_COMPLETE/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 check mode must validate committed canonical output bytes and recheck its source snapshot after the adversarial drift window.');
 require(/Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+  /if \(strict\) blockers\.push\(dirtyMessage\)/.test(qaPacketBuilder) &&
   /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
     qaPacketBuilder,
-  ), 'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.');
+  ), 'Phase 7 core-loop QA packet must block strict dirty worktrees and expose Git status in Markdown.');
+require(/validateCat07CommittedEvidence\(root, \{ expectedHeadSha: gitSha \}\)/.test(
+  qaPacketBuilder,
+) &&
+  /validateCat07FullEvidenceContract\(root, \{\s*expectedHeadSha: gitSha,\s*\}\)/.test(
+    qaPacketBuilder,
+  ) &&
+  /initialCommittedEvidenceJson/.test(qaPacketBuilder) &&
+  /initialFullEvidenceJson/.test(qaPacketBuilder) &&
+  /verifyAdditional\(\)/.test(qaPacketBuilder) &&
+  /CAT07 committed evidence:/.test(qaPacketBuilder) &&
+  /CAT07 full evidence contract:/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 core-loop QA packet must require byte-identical committed CAT07 inputs and the full manifest contract.');
+require(/auditGovernedEvidenceChain\(\{[\s\S]*sourceGitSha: governedSourceGitSha,[\s\S]*releaseCandidateDir: governedReleaseCandidateDir,[\s\S]*expectedHeadSha: gitSha,/.test(
+  qaPacketBuilder,
+) &&
+  /new Set\(packetOutputPaths\)/.test(qaPacketBuilder) &&
+  /humanManifestChain\?\.\[field\] !== expected/.test(qaPacketBuilder) &&
+  /sourcePacketCodeBoundToSourceCommit/.test(qaPacketBuilder) &&
+  /captureGovernedEvidenceWorkingBindings\([\s\S]*governedEvidenceChainAudit,[\s\S]*root,/.test(
+    qaPacketBuilder,
+  ) &&
+  /if \(!governedEvidenceBindings\) \{[\s\S]*no retained governed evidence file bindings/.test(
+    qaPacketBuilder,
+  ) &&
+  /verifyGovernedEvidenceWorkingBindings\(governedEvidenceBindings, root, \{[\s\S]*context: 'Phase 7 packet assembly'/.test(
+    qaPacketBuilder,
+  ) &&
+  /Governed Evidence Chain/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 packet must consume the central S-to-E-to-current audit, exclude only its own output pair from dirty status, retain pinned human-manifest/ledger binding, and recheck evidence at publication time.');
 for (const file of [
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
@@ -147,6 +221,7 @@ for (const file of [
   'apps/mobile/src/app/cycle/week.tsx',
   'apps/mobile/src/app/cycle/why-tonight.tsx',
   'apps/mobile/src/app/routine/plan.tsx',
+  'apps/mobile/src/app/(tabs)/today.tsx',
   'apps/mobile/src/features/scheduler/cadence.ts',
   'apps/mobile/src/features/scheduler/customCycle.ts',
   'apps/mobile/src/features/scheduler/customCycle.test.ts',
@@ -156,20 +231,60 @@ for (const file of [
   'apps/mobile/src/features/scheduler/orchestrate.ts',
   'apps/mobile/src/features/scheduler/orchestrate.test.ts',
   'apps/mobile/src/features/scheduler/useCycle.ts',
+  'apps/mobile/src/features/today/completionsStore.ts',
+  'apps/mobile/src/features/today/completionsStore.test.ts',
   'apps/mobile/src/features/today/cycleCompletion.ts',
   'apps/mobile/src/features/today/cycleCompletion.test.ts',
+  'apps/mobile/src/features/today/routineProjection.ts',
+  'apps/mobile/src/features/today/routineProjection.test.ts',
+  'apps/mobile/src/features/today/todayRoute.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
+  'apps/mobile/src/components/launch/DeferredSurface.tsx',
+  'apps/mobile/src/components/launch/DeferredSurface.test.ts',
+  'apps/mobile/src/lib/navigation/safeBack.ts',
+  'apps/mobile/src/lib/navigation/safeBack.test.ts',
+  'apps/mobile/src/app/trend/_layout.tsx',
+  'apps/mobile/src/app/trend/fairness.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
+  'apps/mobile/src/features/trend/copy.ts',
+  'apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts',
+  'apps/mobile/src/features/trend/trendRoutes.test.ts',
+  'apps/mobile/src/features/trend/useTrend.ts',
   'scripts/phase7/build-core-loop-qa-packet.mjs',
   'scripts/phase7/check-core-loop.mjs',
   'scripts/phase7/check-core-loop-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
+  'scripts/e2e/human-e2e-manifest-render.mjs',
+  'scripts/e2e/evidence-diagnostic-hygiene.mjs',
+  'scripts/e2e/cat07-png-contract.mjs',
+  'scripts/e2e/cat07-committed-evidence.mjs',
+  'scripts/e2e/cat07-shelf-freshness-audit.mjs',
+  'scripts/e2e/cat07-shelf-freshness-audit.test.mjs',
+  'scripts/phase2/local-supabase-contract.mjs',
+  'scripts/phase9/cat07-truthful-freshness-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-import-0061-upgrade-postgres-rehearsal.sql',
+  'scripts/phase9/catalog-curation-0062-upgrade-postgres-rehearsal.sql',
   'scripts/phase9/lib.mjs',
+  'scripts/phase9/release-qa-integrity.mjs',
+  'scripts/launch/governed-evidence-chain.mjs',
+  'scripts/launch/governed-evidence-chain.test.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.mjs',
+  'scripts/phase9/build-evidence-chain-ledger.test.mjs',
+  'supabase/migrations/20260718000060_cat07_truthful_freshness.sql',
+  'supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql',
+  'supabase/migrations/20260722000062_catalog_curation_statement_guard.sql',
+  'supabase/tests/database/catalog_import_lifecycle.test.sql',
+  'supabase/tests/database/catalog_launch_curation.test.sql',
+  'supabase/tests/database/catalog_serving_gate.test.sql',
+  'supabase/tests/database/cat07_truthful_freshness.test.sql',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',
   'docs/USER_FLOW_TREE.md',
+  'docs/hugeToDo/CAT-07-SHELF-FRESHNESS-SOURCE-CHECKPOINT-2026-07-19.md',
   'docs/e2e/generated/human-e2e-manifest.json',
   'docs/e2e/generated/human-e2e-manifest.md',
+  'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json',
   'docs/phase-5/generated/device-qa-packet.json',
   'docs/phase-5/generated/device-qa-packet.md',
   'docs/phase-6/generated/payments-qa-packet.json',
@@ -178,16 +293,30 @@ for (const file of [
   'docs/phase-7/phase-7-exit-review.md',
 ]) {
   require(qaPacketBuilder.includes(`'${file}'`) ||
-    qaPacketBuilder.includes(`"${file}"`), `Phase 7 core-loop QA packet must hash ${file}.`);
+    qaPacketBuilder.includes(`"${file}"`) ||
+    (file === 'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json' &&
+      qaPacketBuilder.includes(
+        'cat07ShelfFreshnessSummaryPath',
+      )), `Phase 7 core-loop QA packet must hash ${file}.`);
 }
 require(/id: 'authored-cycle-customization-supported-phone'/.test(humanE2eManifestBuilder) &&
   /cycle-customization-current/.test(
     humanE2eManifestBuilder,
   ), 'The human E2E manifest must require authored-cycle customization evidence.');
-require(/id: 'shelf-freshness-provenance-supported-phone'/.test(humanE2eManifestBuilder) &&
-  /shelf-freshness-provenance-current/.test(
+require(/id: 'cat07-shelf-freshness-supported-phone'/.test(humanE2eManifestBuilder) &&
+  /kind: 'cat07-shelf-freshness'/.test(humanE2eManifestBuilder) &&
+  /cat07-shelf-freshness-current/.test(humanE2eManifestBuilder) &&
+  /else if \(gate\.kind === 'cat07-shelf-freshness'\) \{[\s\S]{0,800}collectCat07ShelfFreshnessFailures\(\{[\s\S]{0,800}inspectCat07SourceGitState\(String\(summary\?\.sourceGitSha/.test(
     humanE2eManifestBuilder,
-  ), 'The human E2E manifest must require Shelf freshness and replacement provenance evidence.');
+  ), 'The human E2E manifest must require the dedicated CAT07 Shelf freshness evidence contract.');
+require(/runHumanE2eCat07ContractSmoke/.test(coreLoopSmoke) &&
+  /--cat07-contract-smoke/.test(
+    coreLoopSmoke,
+  ), 'Phase 7 smoke must execute the dedicated CAT07 evidence contract.');
+require(/--cat07-committed-check/.test(humanE2eManifestBuilder) &&
+  /collectCat07CommittedHeadByteFailures/.test(
+    humanE2eManifestBuilder,
+  ), 'The CAT07 full manifest check must bind every evidence byte to HEAD.');
 require(has(
   'apps/mobile/src/lib/launch/phase7.test.ts',
   /keeps production Phase 7 surfaces disabled without a final brand domain/,
@@ -197,14 +326,21 @@ require(has(
     /keeps unimplemented capabilities closed even when staging flags are enabled/,
   ), 'phase7.test.ts must cover production identity gates and non-bypassable unavailable capabilities.');
 
-const gatedRoutes = [
-  ['apps/mobile/src/app/commerce/_layout.tsx', /phase7Flags\.commerce/, 'commerce route group'],
-  ['apps/mobile/src/app/trend/_layout.tsx', /phase7Flags\.trend/, 'trend route group'],
-];
-for (const [path, pattern, label] of gatedRoutes) {
-  require(has(path, /DeferredSurface/), `${label} must render DeferredSurface when gated.`);
-  require(has(path, pattern), `${label} is missing its Phase 7 flag check.`);
-}
+require(
+  has('apps/mobile/src/app/commerce/_layout.tsx', /return <Slot \/>/) &&
+    !has(
+      'apps/mobile/src/app/commerce/_layout.tsx',
+      /CommerceDeferredSurface|phase7Flags|isPhase7SurfaceEnabled|track\(/,
+    ),
+  'commerce route group must preserve exact direct URLs through a transparent Slot while every leaf renders the shared analytics-free COM-01A unavailable surface.',
+);
+require(
+  has('apps/mobile/src/app/trend/_layout.tsx', /screenLayout=\{\(\{ children \}\) => <TrendScreenGate>\{children\}<\/TrendScreenGate>\}/) &&
+    has('apps/mobile/src/app/trend/_layout.tsx', /function TrendScreenGate\((?:_props|\{ children: _children \})/) &&
+    has('apps/mobile/src/app/trend/_layout.tsx', /trackView=\{false\}/) &&
+    !has('apps/mobile/src/app/trend/_layout.tsx', /phase7Flags|isPhase7SurfaceEnabled/),
+  'trend route group must unconditionally withhold matched children behind an analytics-free unavailable surface.',
+);
 
 for (const [path, surface, label] of [
   ['apps/mobile/src/app/community/ask.tsx', 'communityPosting', 'community ask screen'],
@@ -237,6 +373,17 @@ require(!/dry, sensitive|alternate-night cycling|Aggregated & anonymised/.test(
 require(!/grantTrendInsightsConsent|revokeTrendInsightsConsent|setTrendInsightsLocal|ToggleSwitch/.test(
   trendOptIn,
 ), 'Unavailable Trend must not solicit or persist engine consent.');
+for (const path of [
+  'apps/mobile/src/app/trend/_layout.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
+  'apps/mobile/src/app/trend/fairness.tsx',
+]) {
+  require(hasSelfClosingJsxWithProps(read(path), 'DeferredSurface', [
+    /fallbackRoute=\{APP_PROGRESS_ROUTE\}/,
+    /fallbackLabel="Back to Progress"/,
+    /fallbackBehavior="replace"/,
+  ]), `${path} must replace to Progress instead of following stale navigation history.`);
+}
 require(!/Check it off right from the home screen|Show on the Lock Screen|ToggleSwitch/.test(
   widgetsRoute,
 ) &&
@@ -263,52 +410,59 @@ require(has(
   'apps/mobile/src/app/(tabs)/today.tsx',
   /phase7Flags\.cloudAsk[\s\S]{0,120}<AskTeaser/,
 ), 'Today must hide AskTeaser unless cloud Ask is enabled.');
-require(has(
-  'apps/mobile/src/app/(tabs)/progress.tsx',
-  /phase7Flags\.trend[\s\S]*<TrendInsight/,
-), 'Progress must hide TrendInsight unless trend is enabled.');
-require(has(
-  'apps/mobile/src/app/progress/about.tsx',
-  /phase7Flags\.trend[\s\S]*trend\/optin/,
-), 'Progress no-score explainer must hide trend opt-in unless trend is enabled.');
-require(has('apps/mobile/src/features/commerce/WhereToBuy.tsx', /phase7Flags\.commerce/) &&
-  has(
-    'apps/mobile/src/features/commerce/WhereToBuy.tsx',
-    /EnabledWhereToBuy/,
-  ), 'WhereToBuy must be hidden behind the commerce flag without conditional hooks.');
+require(!/features\/trend|TrendInsight|phase7Flags\.trend/.test(
+  read('apps/mobile/src/app/(tabs)/progress.tsx'),
+), 'Progress must not import, mount, or retain a hidden Trend result branch while PHOTO-05A is zero-admission.');
+require(!/features\/trend|useTrendConsent|phase7Flags\.trend|trend\/optin/.test(
+  read('apps/mobile/src/app/progress/about.tsx'),
+), 'Progress no-score explainer must not read Trend consent or retain an opt-in branch while PHOTO-05A is zero-admission.');
+require(
+  !/import|useQuery|useState|track|EnabledWhereToBuy|phase7Flags|isAdmittedCatalogProductProvenance/u.test(
+    read('apps/mobile/src/features/commerce/WhereToBuy.tsx'),
+  ) &&
+    /return null/u.test(read('apps/mobile/src/features/commerce/WhereToBuy.tsx')),
+  'WhereToBuy must remain an import-free, caller-agnostic null renderer while COM-01A is zero-admission.',
+);
 require(has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.widgets/) &&
   has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.cloudAsk/) &&
-  has('apps/mobile/src/app/(tabs)/you.tsx', /phase7Flags\.commerce/) &&
+  !has('apps/mobile/src/app/(tabs)/you.tsx', /isCommerceConsented|commerceConsent|\/commerce\//) &&
   has(
     'apps/mobile/src/app/(tabs)/you.tsx',
     /phase7Flags\.trend/,
-  ), 'You tab must gate widgets, cloud Ask, commerce, and trend entry points.');
+  ), 'You tab must gate widgets, cloud Ask, and trend while removing every COM-01A consent read and commerce entry point.');
 
 const shareRoute = read('apps/mobile/src/app/share/conflict/[ruleId].tsx');
-require(/phase7Flags\.shareCard/.test(
+require(/<DeferredSurface\b[\s\S]*?surface=["']shareCard["']/u.test(
   shareRoute,
-), 'Share route must be gated by phase7Flags.shareCard.');
-require(/canShareConflictCard/.test(shareRoute), 'Share route must require canShareConflictCard.');
-require(!/\?\?\s*data\?\.conflicts\[0\]/.test(
+), 'Share route must remain an unconditional truthful deferred surface.');
+require(!/useShelf|useLocalSearchParams|ConflictCard|shareConflictCard|createConflictShareLink/u.test(
   shareRoute,
-), 'Share route must not fallback to the first conflict.');
-require(/share_card_exported/.test(shareRoute), 'Share route must track share_card_exported.');
-require(/share_sheet_opened/.test(shareRoute), 'Share route must track share_sheet_opened.');
-require(has(
-  'apps/mobile/src/app/conflict/[ruleId].tsx',
-  /canShareConflictCard/,
-), 'Conflict sheet must hide share launcher unless share card is eligible.');
+), 'Share route must not read private conflict state or invoke export/link helpers.');
+require(!/canShareConflictCard|\/share\/conflict|conflictShareRoute/u.test(
+  read('apps/mobile/src/app/conflict/[ruleId].tsx'),
+), 'Conflict detail must not expose a launcher into literal-zero-admission sharing.');
 
 const analyticsRegistry = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
 const shelfTab = read('apps/mobile/src/app/(tabs)/shelf.tsx');
 const onboardingProducts = read('apps/mobile/src/app/onboarding/products.tsx');
 const routinePlan = read('apps/mobile/src/app/routine/plan.tsx');
 const routineActivationAnalytics = read('apps/mobile/src/features/routine/activationAnalytics.ts');
+const routineActivationAnalyticsTest = read(
+  'apps/mobile/src/features/routine/activationAnalytics.test.ts',
+);
 const routineGenerate = read('apps/mobile/src/features/routine/generate.ts');
 const routineGenerateTest = read('apps/mobile/src/features/routine/generate.test.ts');
+const intelligenceClaimSafetyTest = read(
+  'apps/mobile/src/features/intelligence/claimsafety.test.ts',
+);
 const routineReviewGateTest = read('apps/mobile/src/features/routine/reviewGate.test.ts');
 const schedulerOrchestrateTest = read('apps/mobile/src/features/scheduler/orchestrate.test.ts');
 const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
+const todayCompletionsStore = read('apps/mobile/src/features/today/completionsStore.ts');
+const todayCompletionsStoreTest = read('apps/mobile/src/features/today/completionsStore.test.ts');
+const todayCycleCompletion = read('apps/mobile/src/features/today/cycleCompletion.ts');
+const todayCycleCompletionTest = read('apps/mobile/src/features/today/cycleCompletion.test.ts');
+const todayRouteTest = read('apps/mobile/src/features/today/todayRoute.test.ts');
 const progressReview = read('apps/mobile/src/app/progress/review.tsx');
 const shelfMutations = read('apps/mobile/src/features/shelf/mutations.ts');
 const betaDashboard = read('docs/phase-7/beta-evidence-dashboard.md');
@@ -318,7 +472,6 @@ const coreLoopEvents = [
   'routine_plan_viewed',
   'routine_created',
   'first_useful_insight',
-  'conflict_detected',
   'routine_checkoff_completed',
   'first_checkoff_completed',
   'cycle_night_completed',
@@ -338,6 +491,17 @@ for (const event of coreLoopEvents) {
   ), `Phase 7 beta dashboard must reference emitted event: ${event}.`);
 }
 
+for (const event of [
+  'conflict_detected',
+  'conflict_detail_viewed',
+  'conflict_overridden',
+  'conflict_resolution_chosen',
+]) {
+  require(!analyticsRegistry.includes(
+    `'${event}'`,
+  ), `Analytics registry must prohibit conflict-state event: ${event}.`);
+}
+
 require(/track\('product_added'/.test(
   shelfMutations,
 ), 'Shelf add flow must emit product_added for product-add activation.');
@@ -351,22 +515,60 @@ require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
   /track\('routine_created'/.test(routineActivationAnalytics) &&
   /const hasRoutineSteps = routineStepCount > 0;/.test(routineActivationAnalytics) &&
   /if \(hasRoutineSteps\) \{\s*track\('routine_created'/.test(routineActivationAnalytics) &&
-  /if \(hasRoutineSteps && !flags\.firstRoutineCreated\)/.test(routineActivationAnalytics) &&
+  /async function reserveFirstEvents/.test(routineActivationAnalytics) &&
+  /await updatePrivateItem\(KEY/.test(routineActivationAnalytics) &&
+  /if \(input\.routineCreated && !current\.firstRoutineCreated\)/.test(
+    routineActivationAnalytics,
+  ) &&
+  /routineCreated: hasRoutineSteps/.test(routineActivationAnalytics) &&
+  /if \(reserved\.firstRoutineCreated\)/.test(routineActivationAnalytics) &&
+  /does not count a real plan with no executable steps as routine creation/.test(
+    routineActivationAnalyticsTest,
+  ) &&
+  /serializes simultaneous first-insight reservations/.test(routineActivationAnalyticsTest) &&
+  /does not emit a first event when its durable reservation fails/.test(
+    routineActivationAnalyticsTest,
+  ) &&
   /track\('first_useful_insight'/.test(routineActivationAnalytics) &&
-  /track\('conflict_detected'/.test(
+  !/track\('conflict_(?:detected|detail_viewed|overridden|resolution_chosen)'/.test(
     routinePlan,
-  ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans with executable steps, and emit first_useful_insight plus conflict_detected.');
-require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
-  /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
-    todayTab,
-  ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
-require(/shippableRules\(\)/.test(routineGenerate) &&
+  ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans with executable steps, emit first_useful_insight, and prohibit conflict-state analytics.');
+require(/if\s*\(result\.inserted\)\s*\{[\s\S]{0,200}track\(\s*'routine_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);[\s\S]{0,120}if\s*\(result\.firstEver\)\s*track\(\s*'first_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);/.test(
+  todayTab,
+), 'Today check-off flow must emit routine_checkoff_completed only for a newly inserted completion and first_checkoff_completed only for the first-ever completion.');
+require(/completedStepKeysAfter:\s*ReadonlySet<string>/.test(todayCompletionsStore) &&
+  /completedStepKeysAfter:\s*new Set\(day\)/.test(todayCompletionsStore) &&
+  /serializes simultaneous retries of one step as exactly one insertion/.test(
+    todayCompletionsStoreTest,
+  ) &&
+  /identifies exactly one completed cycle night when the final two steps race/.test(
+    todayCompletionsStoreTest,
+  ), 'Today completion persistence must return the exact post-insert day snapshot from its serialized mutation and pin same-key plus final-two-step concurrency tests.');
+require(/completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab) &&
+  /completionInserted:\s*result\.inserted/.test(todayTab) &&
+  !/completedBefore:\s*done/.test(todayTab) &&
+  /!stepKeys\.includes\(completedKey\)/.test(todayCycleCompletion) &&
+  /stepKeys\.every\(\(key\)\s*=>\s*completedStepKeysAfter\.has\(key\)\)/.test(
+    todayCycleCompletion,
+  ) &&
+  /does not fire when the inserted key is outside the scheduled PM step set/.test(
+    todayCycleCompletionTest,
+  ) &&
+  /completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayRouteTest) &&
+  /expect\(source\)\.not\.toContain\('completedBefore: done'\)/.test(
+    todayRouteTest,
+  ), 'Today cycle-night analytics must use the atomic post-insert snapshot, require inserted-key membership, and reject the stale render snapshot.');
+require(/if\s*\(result\.completionDayInserted\s*&&\s*\(progress\?\.streak\s*\?\?\s*0\)\s*>=\s*6\)\s*\{[\s\S]{0,100}requestReviewAfterValue\('seven_checkoff_days'\)/.test(
+  todayTab,
+), 'Today must request a review only after a newly completed routine day reaches the value threshold.');
+require(/evaluateConflicts\(/.test(routineGenerate) &&
   /canUseRoutineCadence\(\)/.test(routineGenerate) &&
   /does not surface unreviewed conflict guidance through the default production generator/.test(
     routineGenerateTest,
   ) &&
-  /surfaces reviewed conflict guidance when production rules are reviewed/.test(
-    routineGenerateTest,
+  /withholds compatibility guidance until the exact corpus is admitted/.test(routineGenerateTest) &&
+  /does not treat an arbitrary legacy reviewedBy marker as professional admission/.test(
+    intelligenceClaimSafetyTest,
   ) &&
   /withDevFlag\(false/.test(routineGenerateTest) &&
   /withholds cadence outside dev until clinical review flips the gate/.test(
@@ -375,8 +577,10 @@ require(/shippableRules\(\)/.test(routineGenerate) &&
   /does not let the E2E fixture open unreviewed cadence outside dev/.test(routineReviewGateTest) &&
   /withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes/.test(
     schedulerOrchestrateTest,
-  ), 'Phase 7 must pin production-mode tests that withhold unreviewed conflict and routine-cadence guidance until B-DERM-REVIEW closes.');
+  ), 'Phase 7 must pin production-mode tests that withhold conflict guidance until exact corpus admission and routine cadence until B-DERM-REVIEW closes.');
 require(/shouldTrackCycleNightCompleted/.test(todayTab) &&
+  /completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab) &&
+  /completionInserted:\s*result\.inserted/.test(todayTab) &&
   /track\('cycle_night_completed', \{ moment: 'pm', source: 'today' \}/.test(
     todayTab,
   ), 'Today PM check-off flow must emit privacy-safe cycle_night_completed when a cycle night is completed.');

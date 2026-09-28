@@ -2,11 +2,9 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
-
 import { TrendInsight, TrendInsightFromSource } from './TrendInsight';
 import {
-  readMonkBandWithLease,
+  readMonkBand,
   useMonkBand,
   useTrendConsent,
   useTrendInsight,
@@ -93,11 +91,7 @@ describe('PHOTO-05A zero-admission trend hooks', () => {
   });
 
   it('keeps the reserved Monk read local and null without profile transport', async () => {
-    const assertCurrent = vi.fn();
-    const lease = { assertCurrent } as unknown as AccountGenerationLease;
-
-    await expect(readMonkBandWithLease(lease)).resolves.toBeNull();
-    expect(assertCurrent).toHaveBeenCalledOnce();
+    await expect(readMonkBand()).resolves.toBeNull();
   });
 
   it('contains no query, photo, consent, classifier, narrative, env, or analytics producer', () => {

@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { DetectedConflict } from '@/features/intelligence/engine';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const ENV_KEYS = [
@@ -65,22 +64,6 @@ function enableAllPhase7Flags(): Partial<Record<EnvKey, string>> {
   };
 }
 
-function reviewedConflict(overrides: Partial<DetectedConflict> = {}): DetectedConflict {
-  return {
-    rule: {
-      tagA: 'retinoid',
-      tagB: 'aha',
-      interactionType: 'routine',
-      reviewedBy: 'clinical-reviewer',
-    },
-    productAId: 'product-a',
-    productBId: 'product-b',
-    productAName: 'Product A',
-    productBName: 'Product B',
-    ...overrides,
-  } as DetectedConflict;
-}
-
 afterEach(() => {
   vi.resetModules();
   for (const key of ENV_KEYS) setEnv(key, ORIGINAL_ENV[key]);
@@ -122,10 +105,10 @@ describe('Phase 7 launch flags', () => {
 
   it('rejects reserved or malformed final domains in production', async () => {
     const invalidDomains = [
-      'https://routinekind.localhost',
-      'https://user:pass@routinekind.app',
-      'routinekind.app?redirect=https://evil.example',
-      'routinekind',
+      'https://layerwell.localhost',
+      'https://user:pass@layerwell.app',
+      'layerwell.app?redirect=https://evil.example',
+      'layerwell',
       'http://127.0.0.1',
     ];
 
@@ -152,10 +135,12 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.productionSurfaceReady).toBe(true);
     expect(Object.isFrozen(phase7Capabilities)).toBe(true);
     expect(phase7Capabilities).toEqual({
+      commerce: false,
       communityQuestionSubmission: false,
       communityAggregates: false,
       trendEngine: false,
       nativeWidgets: false,
+      conflictSharePublication: false,
     });
     expect(phase7Flags.communityPosting).toBe(false);
     expect(phase7Flags.communityAggregates).toBe(false);
@@ -167,10 +152,10 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.shareCard).toBe(false);
   });
 
-  it('keeps deferred production surfaces closed even with public identity ready', async () => {
+  it('keeps deferred production surfaces closed even when public identity is ready', async () => {
     const { phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
       ...enableAllPhase7Flags(),
     });
 
@@ -190,7 +175,7 @@ describe('Phase 7 launch flags', () => {
     const { phase7Capabilities, phase7Flags, isPhase7SurfaceEnabled } = await loadPhase7With(
       {
         EXPO_PUBLIC_APP_ENV: 'development',
-        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
         ...enableAllPhase7Flags(),
       },
       { dev: true },
@@ -209,55 +194,74 @@ describe('Phase 7 launch flags', () => {
     expect(source).toMatch(/\btrend:\s*false/);
     expect(source).not.toContain('trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled');
   });
+
+  it('keeps commerce issuerless under env, dev, public-domain, and mutation attempts', async () => {
+    const { phase7Capabilities, phase7Flags, isPhase7SurfaceEnabled } = await loadPhase7With(
+      {
+        EXPO_PUBLIC_APP_ENV: 'development',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
+        ...enableAllPhase7Flags(),
+      },
+      { dev: true },
+    );
+
+    expect(phase7Capabilities.commerce).toBe(false);
+    expect(phase7Flags.commerce).toBe(false);
+    expect(isPhase7SurfaceEnabled('commerce')).toBe(false);
+    expect(Object.isFrozen(phase7Capabilities)).toBe(true);
+    expect(Object.isFrozen(phase7Flags)).toBe(true);
+    expect(Reflect.set(phase7Flags as object, 'commerce', true)).toBe(false);
+    expect(phase7Flags.commerce).toBe(false);
+
+    const source = readFileSync(PHASE7_SOURCE_PATH, 'utf8');
+    expect(source).toMatch(/\bcommerce:\s*false/);
+    expect(source).not.toContain('commerce: env.phase7CommerceEnabled');
+  });
 });
 
 describe('Phase 7 share-card eligibility', () => {
-  it('requires reviewed, non-safety, non-pregnancy owned-product conflicts', async () => {
+  it('rejects every conflict even when all flags and public identity look ready', async () => {
     const { canShareConflictCard } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
       ...enableAllPhase7Flags(),
     });
 
-    expect(canShareConflictCard(reviewedConflict())).toBe(false);
     expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: null } }),
-      ),
+      canShareConflictCard({
+        rule: {
+          id: 'forged-rule',
+          interactionType: 'routine',
+          reviewedBy: 'clinical-reviewer',
+        },
+        productAId: 'product-a',
+        productBId: 'product-b',
+        productAName: 'Product A',
+        productBName: 'Product B',
+        sharePublicationReceipt: { decision: 'admitted' },
+      }),
     ).toBe(false);
-    expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: '   ' } }),
-      ),
-    ).toBe(false);
-    expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, interactionType: 'safety' } }),
-      ),
-    ).toBe(false);
-    expect(
-      canShareConflictCard(
-        reviewedConflict({ rule: { ...reviewedConflict().rule, tagA: 'pregnancy' } }),
-      ),
-    ).toBe(false);
-    expect(canShareConflictCard(reviewedConflict({ productAId: null }))).toBe(false);
   });
 
-  it('allows dev-only reviewed-conflict sharing fixtures without changing production review gates', async () => {
+  it('does not let a development fixture grant share authority', async () => {
     const flags = {
       EXPO_PUBLIC_APP_ENV: 'development',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://layerwell.app',
       ...enableAllPhase7Flags(),
       EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING: 'true',
     };
-    const unreviewed = reviewedConflict({
-      rule: { ...reviewedConflict().rule, reviewedBy: null },
-    });
+    const validLookingConflict = {
+      rule: { reviewedBy: 'reviewer', interactionType: 'routine' },
+      productAId: 'product-a',
+      productBId: 'product-b',
+    };
 
     const devModule = await loadPhase7With(flags, { dev: true });
-    expect(devModule.canShareConflictCard(unreviewed)).toBe(false);
+    expect(devModule.phase7Flags.shareCard).toBe(false);
+    expect(devModule.canShareConflictCard(validLookingConflict)).toBe(false);
 
     const productionModule = await loadPhase7With(flags, { dev: false });
-    expect(productionModule.canShareConflictCard(unreviewed)).toBe(false);
+    expect(productionModule.phase7Flags.shareCard).toBe(false);
+    expect(productionModule.canShareConflictCard(validLookingConflict)).toBe(false);
   });
 });

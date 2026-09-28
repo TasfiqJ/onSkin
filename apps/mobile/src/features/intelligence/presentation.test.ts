@@ -18,18 +18,17 @@ function conflictFor(ruleId: string): DetectedConflict {
 }
 
 describe('conflict presentation copy', () => {
-  it('does not claim alternate-night placement without scheduler output', () => {
+  it('does not render candidate timing copy as production guidance', () => {
     const copy = bannerSubhead(conflictFor('00000000-0000-4000-8000-000000000001'));
 
-    expect(copy).toBe('Use them on alternate nights.');
-    expect(copy).not.toMatch(/\bwe('ve| have)?\b/i);
-    expect(copy).not.toMatch(/\b(set|placed)\b/i);
+    expect(copy).toContain("won't show a compatibility result");
+    expect(copy).not.toContain('alternate nights');
   });
 
-  it('does not claim safety items were already set aside from shelf detection alone', () => {
+  it('does not render candidate pregnancy copy as production guidance', () => {
     const copy = bannerSubhead(conflictFor('00000000-0000-4000-8000-00000000000b'));
 
-    expect(copy).toBe('Set this aside until you can ask your doctor.');
-    expect(copy).not.toMatch(/\bwe('ve| have)?\b/i);
+    expect(copy).toContain("won't show a compatibility result");
+    expect(copy).not.toMatch(/\bdoctor|pregnan|set this aside/iu);
   });
 });

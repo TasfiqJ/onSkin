@@ -1,0 +1,48 @@
+{
+  "artifactPrefix": "recognized-review-retake-continue-iphone-430x932",
+  "browserFailures": [],
+  "completedAt": "2026-07-19T03:34:27.667Z",
+  "evidenceBinding": {
+    "candidateNativeBuild": {
+      "archiveSha256": null,
+      "easIosBuildId": null,
+      "executedByThisAudit": false,
+      "profile": "staging",
+      "proofStatus": "not_applicable_to_expo_web_ui_audit"
+    },
+    "evidenceSchemaVersion": 2,
+    "expectedSourceGitSha": "fec382eddd0e79f73b4c38b5de30d996928a8fc9",
+    "fixtureConfigurationSha256": "5a90182418ac88787c2acce7339553bfbad97c070a4ff93893fc13ba67970bde",
+    "runId": "46a63dbb-ddcf-47aa-8229-6b2eaec7d864",
+    "scenarioMatrixSha256": "84580edb5d3e5bc424a030e38d64bf5af5a3ddeb6e99859ffceac91d6d04c0d2",
+    "sourceGitSha": "fec382eddd0e79f73b4c38b5de30d996928a8fc9",
+    "viewportMatrixSha256": "72a7f83a6f3ceb8f5414f91bb4d84d71c3c5f1b911b62b5cacad3d4bd1e7fcb9",
+    "webFixtureBuild": {
+      "buildId": "66c79fc1647536c65378d5846a98e9e3765239b62edb195103b80d8e468d2863",
+      "profile": "development-only-deterministic-expo-web"
+    },
+    "artifactName": "recognized-review-retake-continue-iphone-430x932-result",
+    "fixtureGroup": "recognized",
+    "scenarioId": "recognized-review-retake-continue",
+    "viewport": {
+      "height": 932,
+      "id": "iphone-430x932",
+      "width": 430
+    }
+  },
+  "error": null,
+  "fixture": "recognized",
+  "fixtureGroup": "recognized",
+  "kind": "scenario",
+  "nativeDeviceProof": false,
+  "scenarioId": "recognized-review-retake-continue",
+  "startedAt": "2026-07-19T03:34:23.753Z",
+  "surface": "expo-web-deterministic-ui-fixture",
+  "verdict": "pass",
+  "viewport": {
+    "id": "iphone-430x932",
+    "width": 430,
+    "height": 932
+  },
+  "endUrl": "http://localhost:8620/shelf/manual"
+}
