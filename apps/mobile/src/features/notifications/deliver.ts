@@ -45,6 +45,11 @@ export type EventTriggeredNotificationKind = Extract<
   'replenishment' | 'rampup' | 'deescalation' | 'winback'
 >;
 
+export type NotificationScheduleLifecycle = Readonly<{
+  isCurrent: () => boolean;
+  signal: AbortSignal;
+}>;
+
 type HealthNotificationOperation = Readonly<{
   assertCurrent: () => void;
   schedule: (
@@ -55,12 +60,45 @@ type HealthNotificationOperation = Readonly<{
 const inFlightHealthNotificationOperations = new Set<Promise<unknown>>();
 let healthNotificationOperationTail: Promise<void> = Promise.resolve();
 
+function assertNotificationScheduleLifecycleCurrent(
+  lifecycle?: NotificationScheduleLifecycle,
+): void {
+  if (!lifecycle) return;
+  if (lifecycle.signal.aborted || !lifecycle.isCurrent()) {
+    throw new AccountGenerationLeaseError();
+  }
+}
+
 function assertHealthNotificationOperationCurrent(
   accountLease: AccountGenerationLease,
   healthLease: HealthDataWriteLease,
+  lifecycle?: NotificationScheduleLifecycle,
 ): void {
   accountLease.assertCurrent();
   assertHealthDataWriteLease(healthLease);
+  assertNotificationScheduleLifecycleCurrent(lifecycle);
+}
+
+async function scheduleNativeNotificationUnderLifecycle(
+  accountSignal: AbortSignal,
+  lifecycle: NotificationScheduleLifecycle | undefined,
+  request: Parameters<typeof scheduleNativeNotificationExact>[1],
+): Promise<string> {
+  if (!lifecycle) return scheduleNativeNotificationExact(accountSignal, request);
+
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  accountSignal.addEventListener('abort', abort, { once: true });
+  lifecycle.signal.addEventListener('abort', abort, { once: true });
+  if (accountSignal.aborted || lifecycle.signal.aborted) controller.abort();
+
+  try {
+    assertNotificationScheduleLifecycleCurrent(lifecycle);
+    return await scheduleNativeNotificationExact(controller.signal, request);
+  } finally {
+    accountSignal.removeEventListener('abort', abort);
+    lifecycle.signal.removeEventListener('abort', abort);
+  }
 }
 
 async function cancelCreatedHealthNotifications(ids: ReadonlySet<string>): Promise<void> {
@@ -69,13 +107,14 @@ async function cancelCreatedHealthNotifications(ids: ReadonlySet<string>): Promi
 
 async function runHealthNotificationOperation<T>(
   operation: (context: HealthNotificationOperation) => Promise<T>,
+  lifecycle?: NotificationScheduleLifecycle,
 ): Promise<T> {
   const execute = () =>
     runAccountGenerationOperation(async (accountLease) => {
       const healthLease = captureHealthDataWriteLease();
       const createdIds = new Set<string>();
       const assertCurrent = () =>
-        assertHealthNotificationOperationCurrent(accountLease, healthLease);
+        assertHealthNotificationOperationCurrent(accountLease, healthLease, lifecycle);
       const schedule = async (
         request: Parameters<typeof scheduleNativeNotificationExact>[1],
       ) => {
@@ -84,7 +123,11 @@ async function runHealthNotificationOperation<T>(
           throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
         }
         assertCurrent();
-        const id = await scheduleNativeNotificationExact(accountLease.signal, request);
+        const id = await scheduleNativeNotificationUnderLifecycle(
+          accountLease.signal,
+          lifecycle,
+          request,
+        );
         createdIds.add(id);
         try {
           assertCurrent();
@@ -102,8 +145,8 @@ async function runHealthNotificationOperation<T>(
         assertCurrent();
         return result;
       } catch (error) {
-        // If authorization closes between two schedules, remove every reminder
-        // this exact operation already published before allowing cleanup to drain.
+        // If authorization or the active-app lifecycle closes between schedules,
+        // remove every reminder this exact operation already published.
         await cancelCreatedHealthNotifications(createdIds);
         throw error;
       }
@@ -248,23 +291,67 @@ export async function requestPermission(): Promise<NotificationPermissionOutcome
   }
 }
 
+const AM_REMINDER_ID = 'layerwell-local-am_reminder-v1';
+const PM_REMINDER_ID = 'layerwell-local-pm_step-v1';
+const CAPTURE_REMINDER_ID = 'layerwell-local-capture-v1';
+const PREFERENCE_REMINDER_IDS = [
+  AM_REMINDER_ID,
+  PM_REMINDER_ID,
+  CAPTURE_REMINDER_ID,
+] as const;
+
+async function cancelPreferenceReminderSchedules(assertCurrent: () => void): Promise<void> {
+  const failures: unknown[] = [];
+  for (const identifier of PREFERENCE_REMINDER_IDS) {
+    assertCurrent();
+    try {
+      await cancelNativeScheduledNotificationExact(identifier);
+    } catch (error) {
+      failures.push(error);
+    }
+  }
+  assertCurrent();
+  if (failures.length > 0) throw failures[0];
+}
+
 /**
  * Cancel + reschedule the utility AM/PM reminders from the user's prefs. A reminder
  * whose chosen time falls inside quiet hours is shifted to the quiet-hours end so
  * routine scheduling waits until the window ends. The OS still controls actual
  * presentation. Idempotent and safe to call on every prefs change.
+ *
+ * Root lifecycle reconciliation passes `lifecycle`. In that mode, only the three
+ * preference-owned fixed IDs are cancelled, billing/behavioural notifications are
+ * left alone, and a background transition aborts/compensates in-flight schedules.
  */
-export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
+export async function rescheduleReminders(
+  prefs?: NotifPrefs,
+  lifecycle?: NotificationScheduleLifecycle,
+): Promise<void> {
+  let lifecycleFailure: unknown = null;
   try {
     await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {
       assertCurrent();
       const p = prefs ?? (await loadNotifPrefs());
       assertCurrent();
-      await clearNativeNotificationsForAccountIsolation();
+      if (lifecycle) {
+        await cancelPreferenceReminderSchedules(assertCurrent);
+      } else {
+        await clearNativeNotificationsForAccountIsolation();
+      }
       assertCurrent();
-      if (!isDeliverableAuthorizationState(await getPermissionStatus())) return;
+      const authorization = await getPermissionStatus();
+      if (!isDeliverableAuthorizationState(authorization)) {
+        if (lifecycle && authorization === 'unavailable') {
+          throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+        }
+        return;
+      }
       assertCurrent();
-      if ((await configureNotifications()) !== 'ready') return;
+      if ((await configureNotifications()) !== 'ready') {
+        if (lifecycle) throw new Error('NOTIFICATION_RUNTIME_UNAVAILABLE');
+        return;
+      }
       assertCurrent();
       const channelId = Platform.OS === 'android' ? 'routine' : undefined;
       const scheduleRoutine = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
@@ -273,7 +360,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
         if (mins == null) return;
         assertCurrent();
         await schedule({
-          identifier: `layerwell-local-${kind}-v1`,
+          identifier: kind === 'am_reminder' ? AM_REMINDER_ID : PM_REMINDER_ID,
           content: {
             ...notificationContentForLockScreen(kind),
             categoryIdentifier: notificationCategoryForKind(kind),
@@ -301,7 +388,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
         if (mins != null) {
           assertCurrent();
           await schedule({
-            identifier: 'layerwell-local-capture-v1',
+            identifier: CAPTURE_REMINDER_ID,
             content: {
               ...notificationContentForLockScreen('capture'),
               categoryIdentifier: notificationCategoryForKind('capture'),
@@ -318,11 +405,16 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
           assertCurrent();
         }
       }
-      // cancelAll also removes the billing reminder; it is rebuilt below after
-      // this health-purpose operation and admission scope have ended.
-    });
-  } catch {
-    /* unsupported environment. No-op (B-NOTIF-VERIFY) */
+      // The ordinary settings/onboarding path intentionally keeps the existing
+      // global sweep + billing rebuild behavior. Root lifecycle mode stays local.
+    }, lifecycle);
+  } catch (error) {
+    if (lifecycle) lifecycleFailure = error;
+  }
+
+  if (lifecycle) {
+    if (lifecycleFailure) throw lifecycleFailure;
+    return;
   }
 
   // Billing safety is deliberately outside health admission and its tracked

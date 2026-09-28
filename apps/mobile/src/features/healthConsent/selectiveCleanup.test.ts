@@ -32,9 +32,6 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
   default: { multiRemove: mocks.multiRemove },
 }));
 vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
-vi.mock('expo-notifications', () => ({
-  cancelAllScheduledNotificationsAsync: mocks.cancelNotifications,
-}));
 vi.mock('@/features/photos/encryptedStorage', () => ({
   beginEncryptedPhotoAccountBoundary: mocks.beginPhoto,
   clearEncryptedPhotoStorage: mocks.clearPhotos,
@@ -44,6 +41,9 @@ vi.mock('@/features/photos/encryptedStorage', () => ({
 vi.mock('@/features/notifications/deliver', () => ({
   scheduleTrialReminder: mocks.scheduleTrialReminder,
   waitForHealthNotificationOperationsToSettle: mocks.waitNotifications,
+}));
+vi.mock('@/features/notifications/nativeMutation', () => ({
+  clearNativeNotificationsForAccountIsolation: mocks.cancelNotifications,
 }));
 vi.mock('@/features/photos/sensitiveImageMemory', () => ({
   purgeSensitiveImageMemory: mocks.purgeImages,

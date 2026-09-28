@@ -3,7 +3,7 @@ import '../global.css';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -29,6 +29,11 @@ import { queryClient } from '@/lib/query/queryClient';
 import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
 import { startPlaintextStagingRecovery } from '@/lib/storage/plaintextStaging';
 import { useFontDecision } from '@/theme/fontLoader';
+
+// Defer notification scheduling code until private-data + health admission has mounted.
+const NotificationPreferenceScheduleReconciler = lazy(
+  () => import('@/features/notifications/NotificationPreferenceScheduleReconciler'),
+);
 
 initSentry();
 markStartupPhase('javascript_started');
@@ -81,6 +86,9 @@ export default function RootLayout() {
                       }
                     >
                       <HealthDataLifecycleGate>
+                        <Suspense fallback={null}>
+                          <NotificationPreferenceScheduleReconciler />
+                        </Suspense>
                         <OnboardingProvider>
                           <IntakeProvider>
                             <NotificationResponseHost />
