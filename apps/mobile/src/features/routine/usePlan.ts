@@ -1,9 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import { useMemo, useSyncExternalStore } from 'react';
 
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
-import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  captureHealthDataWriteLease,
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import {
   generatePlan,
@@ -14,7 +23,7 @@ import {
 import {
   applyRoutineOrderOverrides,
   loadRoutineOrderOverrides,
-  ROUTINE_ORDER_QUERY_KEY,
+  routineOrderQueryKeyForLease,
   type RoutineOrderOverrides,
 } from './orderStore';
 import { routineGenerationProfileForRealShelf } from './planProfileAdmission';
@@ -49,6 +58,8 @@ export type PlanResult = {
 };
 
 export type PlanHookResult = {
+  /** Exact authority used for the local order read; never persisted in the record. */
+  orderLease?: HealthDataWriteLease;
   data: PlanResult | undefined;
   /** True only while one or more canonical inputs are still loading. */
   isLoading: boolean;
@@ -60,27 +71,63 @@ export type PlanHookResult = {
   isExample: boolean;
 };
 
-function loadRoutineOrderForCurrentHealthLease(): Promise<RoutineOrderOverrides> {
-  return runCurrentHealthDataOperation(async (lease) => {
-    lease.assertCurrent();
-    const overrides = await loadRoutineOrderOverrides();
-    lease.assertCurrent();
-    return overrides;
+function subscribeRoutineOrderLease(onChange: () => void): () => void {
+  let expiryTimer: ReturnType<typeof setTimeout> | undefined;
+  const scheduleExpiry = () => {
+    if (expiryTimer !== undefined) clearTimeout(expiryTimer);
+    const expiresAt = activeHealthProcessingLeaseSnapshot()?.expiresAt;
+    if (expiresAt !== null && expiresAt !== undefined) {
+      expiryTimer = setTimeout(() => {
+        onChange();
+        scheduleExpiry();
+      }, Math.max(1, Math.min(expiresAt - Date.now(), 2_147_483_647)));
+    }
+  };
+  const unsubscribe = subscribeActiveHealthProcessingLeaseChanges(() => {
+    scheduleExpiry();
+    onChange();
   });
+  scheduleExpiry();
+  return () => {
+    unsubscribe();
+    if (expiryTimer !== undefined) clearTimeout(expiryTimer);
+  };
 }
 
 export function usePlan(): PlanHookResult {
   const shelf = useShelf();
   const profile = useProfileBits();
+  const activeLease = useSyncExternalStore(
+    subscribeRoutineOrderLease,
+    activeHealthProcessingLeaseSnapshot,
+    activeHealthProcessingLeaseSnapshot,
+  );
+  const orderLease = useMemo(() => {
+    if (activeLease === null) return undefined;
+    try {
+      return captureHealthDataWriteLease();
+    } catch {
+      return undefined;
+    }
+  }, [activeLease]);
+  const loadRoutineOrderForCurrentHealthLease = (): Promise<RoutineOrderOverrides> => {
+    if (!orderLease) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
+    return loadRoutineOrderOverrides(orderLease);
+  };
   const routineOrder = useQuery({
-    queryKey: ROUTINE_ORDER_QUERY_KEY,
+    queryKey: routineOrderQueryKeyForLease(orderLease),
     queryFn: loadRoutineOrderForCurrentHealthLease,
-    retry: 1,
+    enabled: orderLease !== undefined,
+    // This query reads local encrypted storage, not the network. Do not pause it
+    // in airplane mode or automatically retry a corrupt/private read failure.
+    networkMode: 'always',
+    retry: false,
     staleTime: Infinity,
   });
   const isLoading = shelf.isLoading || profile.isLoading || routineOrder.isLoading;
   const isError = shelf.isError || profile.isError || routineOrder.isError;
   const sourceReady = Boolean(
+    orderLease &&
     !isLoading &&
     !isError &&
     shelf.data !== undefined &&
@@ -88,11 +135,13 @@ export function usePlan(): PlanHookResult {
     profile.data.source !== 'unavailable' &&
     routineOrder.data !== undefined,
   );
-  if (isLoading) {
-    return { data: undefined, isLoading: true, isError, sourceReady: false, isExample: false };
+  if (isLoading || !orderLease || routineOrder.data === undefined) {
+    // A failed/closed read is not a new empty routine. A genuine absent record
+    // is already represented by the store's successfully decoded empty value.
+    return { orderLease, data: undefined, isLoading, isError, sourceReady: false, isExample: false };
   }
 
-  const orderOverrides = routineOrder.data ?? { schemaVersion: 1, am: [], pm: [] };
+  const orderOverrides = routineOrder.data;
 
   const items = shelf.data?.items ?? [];
   if (items.length > 0) {
@@ -101,6 +150,7 @@ export function usePlan(): PlanHookResult {
     const real = routineGenerationProfileForRealShelf(profile.data);
     if (!real) {
       return {
+        orderLease,
         data: undefined,
         isLoading: false,
         isError,
@@ -131,6 +181,7 @@ export function usePlan(): PlanHookResult {
       activeProductIds: items.map((item) => item.id),
     };
     return {
+      orderLease,
       data,
       isLoading: false,
       isError,
@@ -149,6 +200,7 @@ export function usePlan(): PlanHookResult {
     activeProductIds: [],
   };
   return {
+    orderLease,
     data,
     isLoading: false,
     isError,

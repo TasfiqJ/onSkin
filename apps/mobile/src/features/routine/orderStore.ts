@@ -1,5 +1,9 @@
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
-import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  assertHealthDataWriteLease,
+  runCurrentHealthDataOperation,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 
 import type { GeneratedPlan, PlanStep } from './generate';
 
@@ -9,6 +13,15 @@ export const ROUTINE_ORDER_INVALID = 'ROUTINE_ORDER_INVALID';
 export const ROUTINE_ORDER_UNSUPPORTED_VERSION = 'ROUTINE_ORDER_UNSUPPORTED_VERSION';
 
 export const ROUTINE_ORDER_QUERY_KEY = ['routineOrder', 'v1'] as const;
+
+/** In-memory only: old owners/consent generations cannot supply a new editor. */
+export function routineOrderQueryKeyForLease(lease?: HealthDataWriteLease) {
+  return [
+    ...ROUTINE_ORDER_QUERY_KEY,
+    lease?.accountGeneration ?? 'closed',
+    lease?.generation ?? 'closed',
+  ] as const;
+}
 
 export type RoutineOrderPhase = 'am' | 'pm';
 
@@ -149,19 +162,30 @@ function decodeOverrides(raw: string): RoutineOrderOverrides {
   } catch {
     throw new Error(ROUTINE_ORDER_INVALID);
   }
-  if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
-    throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+  // Current-schema validation is structural, not JSON property-order equality.
+  // This also rejects partial/current records instead of repairing them on read.
+  if (isRecord(parsed) && parsed.schemaVersion !== undefined) {
+    return validateOverridesForWrite(parsed);
+  }
+  // Recognize only the historical AM/PM envelope. Keep its existing ID cleanup
+  // (trim/deduplicate/filter) in memory; reads never migrate or delete bytes.
+  if (
+    !isRecord(parsed) ||
+    (!('am' in parsed) && !('pm' in parsed)) ||
+    Object.keys(parsed).some((key) => key !== 'am' && key !== 'pm')
+  ) {
+    throw new Error(ROUTINE_ORDER_INVALID);
   }
   const normalized = normalizeOverrides(parsed);
   if (!normalized) throw new Error(ROUTINE_ORDER_INVALID);
-  if (isRecord(parsed) && parsed.schemaVersion === 1 && normalized.changed) {
-    throw new Error(ROUTINE_ORDER_INVALID);
-  }
   return normalized.value;
 }
 
-export function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
+export function loadRoutineOrderOverrides(
+  expectedLease?: HealthDataWriteLease,
+): Promise<RoutineOrderOverrides> {
   return runCurrentHealthDataOperation(async (lease) => {
+    if (expectedLease) assertHealthDataWriteLease(expectedLease);
     lease.assertCurrent();
     const raw = await getPrivateItem(STORAGE_KEY);
     lease.assertCurrent();
@@ -173,6 +197,7 @@ export function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
 
 export async function saveRoutineOrderOverrides(
   transaction: RoutineOrderSaveTransaction,
+  expectedLease?: HealthDataWriteLease,
 ): Promise<RoutineOrderOverrides> {
   const { previous, next } = validateSaveTransaction(transaction);
   const changed = {
@@ -181,6 +206,8 @@ export async function saveRoutineOrderOverrides(
   };
 
   return runCurrentHealthDataOperation(async (lease) => {
+    // Bind an editor's original authority, not whichever account is active now.
+    if (expectedLease) assertHealthDataWriteLease(expectedLease);
     let committed: RoutineOrderOverrides | null = null;
     lease.assertCurrent();
     await updatePrivateItem(STORAGE_KEY, (current) => {
