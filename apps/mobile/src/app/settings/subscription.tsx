@@ -7,6 +7,10 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
 import { shouldTrackSubscriptionCancelIntent } from '@/features/subscription/cancelIntent';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { confirmedFreePlan } from '@/features/subscription/clientEntitlement';
+import { billingStatusCopy } from '@/features/subscription/clientBilling';
+import { useSubscriptionBilling } from '@/features/subscription/useSubscriptionBilling';
+import { restoreFeedbackMessage } from '@/features/subscription/restoreFeedback';
 import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
@@ -34,8 +38,8 @@ const RESTORE_UNAVAILABLE_MESSAGE = 'We could not restore purchases. Please try 
 // OS cancel deep-link, Restore, Terms/Privacy. ARL-compliant: cancel as easy as
 // signup, no maze. Shows a calm free-state when not subscribed.
 function fmtDate(iso: string | null): string {
-  if (!iso) return 'date unavailable';
-  return new Date(iso).toLocaleDateString('en-US', {
+  if (!iso || !Number.isFinite(Date.parse(iso))) return 'date unavailable';
+  return new Date(iso).toLocaleDateString(undefined, {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
@@ -49,6 +53,7 @@ function Row({
   onPress,
   compact = false,
   supportFloor = false,
+  disabled = false,
 }: {
   label: string;
   accessibilityLabel?: string;
@@ -56,11 +61,14 @@ function Row({
   onPress: () => void;
   compact?: boolean;
   supportFloor?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
+      disabled={disabled}
+      accessibilityState={{ disabled }}
       onPress={onPress}
       className={
         supportFloor
@@ -86,7 +94,12 @@ function Row({
 
 export default function SubscriptionScreen() {
   const { height, width } = useWindowDimensions();
-  const { data } = useEntitlement();
+  const entitlement = useEntitlement();
+  const { data } = entitlement;
+  const billing = useSubscriptionBilling(data);
+  const billingCopy = billingStatusCopy(billing.data);
+  const recovery = !data?.isPro && !confirmedFreePlan(entitlement);
+  const checkingAccess = entitlement.isPending || entitlement.isFetching;
   const { restore } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
@@ -95,8 +108,11 @@ export default function SubscriptionScreen() {
   const supportFloorSubscription = width <= 320 && height < 520;
   const compactSubscription = true;
   const hideFreeSubscriptionBody = true;
-  const freePlanTitle = supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;
-  const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;
+  const freePlanTitle = recovery
+    ? checkingAccess ? 'Checking your plan...' : 'Plan status unavailable'
+    : data?.expired ? 'Pro ended · free plan' : supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;
+  const upgradeCtaLabel = recovery
+    ? 'Check access' : supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;
   const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;
   const isPro = data?.isPro ?? false;
   const eligibleWinBackOffer =
@@ -122,7 +138,10 @@ export default function SubscriptionScreen() {
       });
     }
     const openedNative = await showNativeManageSubscriptions();
-    if (openedNative) return;
+    if (openedNative) {
+      await Promise.allSettled([entitlement.refetch(), billing.refetch()]);
+      return;
+    }
     const fallbackUrl =
       Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS;
     const url = safeExternalHttpsUrl(data?.managementUrl) ?? fallbackUrl;
@@ -141,13 +160,12 @@ export default function SubscriptionScreen() {
     router.push('/paywall/upsell?feature=full_routine');
   }
   function onRestore() {
+    if (restore.isPending) return;
     setSubscriptionFeedback(null);
     restore.mutate(undefined, {
       onSuccess: (result) => {
-        const message = result.active
-          ? 'Your active subscription is restored on this device.'
-          : 'No active subscription was found for this account.';
-        setSubscriptionFeedback(message);
+        setSubscriptionFeedback(restoreFeedbackMessage(result));
+        void billing.refetch();
       },
       onError: (error) => {
         setSubscriptionFeedback(
@@ -167,7 +185,7 @@ export default function SubscriptionScreen() {
     ? 'Reverse trial'
     : data?.inTrial
       ? 'Free trial'
-      : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
+      : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : ''}`;
   const isAppGrantedAccess = data?.store === 'app_granted';
   const isReverseTrialAccess = isAppGrantedAccess && data?.inReverseTrial === true;
   const manageLabel = isReverseTrialAccess
@@ -242,7 +260,7 @@ export default function SubscriptionScreen() {
                     className="font-sans-bold"
                     style={{ color: '#9DB18A', fontSize: 11 }}
                   >
-                    {statusPillLabel}
+                    {billing.data.kind === 'grace' || billing.data.kind === 'billing_issue' || billing.data.kind === 'renewal_off' ? billingCopy.label : statusPillLabel}
                   </Text>
                 </View>
               </View>
@@ -263,7 +281,7 @@ export default function SubscriptionScreen() {
               </View>
               <View className="flex-row justify-between py-2">
                 <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.55)' }}>
-                  {data?.inReverseTrial ? 'Free until' : data?.willRenew ? 'Renews' : 'Ends'}
+                  {data?.willRenew === true ? 'Verified through' : data?.willRenew === false ? 'Ends' : 'Verified through'}
                 </Text>
                 <Text
                   variant="bodySm"
@@ -280,6 +298,7 @@ export default function SubscriptionScreen() {
               <Row
                 label={PAYWALL_COPY.manage.restoreRow}
                 onPress={onRestore}
+                disabled={restore.isPending}
                 compact={compactSubscription}
               />
               <Row
@@ -333,20 +352,22 @@ export default function SubscriptionScreen() {
               >
                 {freePlanTitle}
               </Text>
-              {hideFreeSubscriptionBody ? null : (
+              {hideFreeSubscriptionBody && !recovery ? null : (
                 <Text
                   variant="bodySm"
                   tone="muted"
                   className={compactSubscription ? 'mt-1.5' : 'mt-2'}
                   style={{ lineHeight: compactSubscription ? 19 : 21 }}
                 >
-                  {PAYWALL_COPY.manage.freeBody}
+                  {recovery ? 'We could not confirm your plan. Do not buy again yet. Your free-plan features remain available; use Check access, Restore, or Manage subscriptions.' : PAYWALL_COPY.manage.freeBody}
                 </Text>
               )}
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={PAYWALL_COPY.manage.upgradeCta}
-                onPress={() => router.push('/paywall/upsell?feature=full_routine')}
+                accessibilityLabel={upgradeCtaLabel}
+                disabled={recovery && checkingAccess}
+                accessibilityState={{ disabled: recovery && checkingAccess }}
+                onPress={() => recovery ? void entitlement.refetch() : router.push('/paywall/upsell?feature=full_routine')}
                 className={
                   supportFloorSubscription
                     ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
@@ -378,9 +399,16 @@ export default function SubscriptionScreen() {
               }
             >
               <Row
+                label={SUBSCRIPTION_STOREFRONT_COPY.manageLabel}
+                onPress={() => void openStore()}
+                compact={compactSubscription}
+                supportFloor={supportFloorSubscription}
+              />
+              <Row
                 label={restoreLabel}
                 accessibilityLabel={PAYWALL_COPY.manage.restoreRow}
                 onPress={onRestore}
+                disabled={restore.isPending}
                 compact={compactSubscription}
                 supportFloor={supportFloorSubscription}
               />
@@ -399,7 +427,7 @@ export default function SubscriptionScreen() {
               />
               {feedbackLabel}
             </View>
-            {data?.expired ? (
+            {data?.expired && !recovery ? (
               <Pressable
                 accessibilityRole="button"
                 onPress={openExpiredPlanOptions}
@@ -412,6 +440,19 @@ export default function SubscriptionScreen() {
             ) : null}
           </>
         )}
+        <View className="mt-4 rounded-card bg-paper-raised p-4">
+          <Text variant="bodySm" className="font-sans-semibold">{billingCopy.label}</Text>
+          <Text variant="bodySm" tone="muted" className="mt-2">{billingCopy.message}</Text>
+          {billing.data.kind === 'grace' && billing.data.date ? (
+            <Text variant="bodySm" tone="muted">Store-reported grace end: {fmtDate(billing.data.date)}</Text>
+          ) : null}
+          <Pressable accessibilityRole="button" accessibilityLabel="Refresh subscription status"
+            disabled={billing.isFetching || entitlement.isFetching}
+            onPress={() => { void billing.refetch(); void entitlement.refetch(); }}
+            className="mt-2 min-h-[48px] justify-center">
+            <Text variant="bodySm" tone="clay">Refresh subscription status</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

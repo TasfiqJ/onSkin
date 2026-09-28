@@ -25,11 +25,11 @@ describe('root Store transaction notice contracts', () => {
 
   it('funnels every purchase, win-back, and restore mutation through one owner-aware coordinator', () => {
     const entitlement = source('features/subscription/useEntitlement.ts');
-    expect(entitlement.match(/runOwnedStoreTransaction\(\{/g)).toHaveLength(4);
-    expect(entitlement.match(/action: 'purchase'/g)).toHaveLength(3);
+    expect(entitlement.match(/runOwnedStoreTransaction\(\{/g)).toHaveLength(5);
+    expect(entitlement.match(/action: 'purchase'/g)).toHaveLength(4);
     expect(entitlement.match(/action: 'restore'/g)).toHaveLength(1);
-    expect(entitlement.match(/const ownerUserId = user\?\.id;/g)).toHaveLength(4);
-    expect(entitlement.match(/ownerUserId,/g)).toHaveLength(4);
+    expect(entitlement.match(/const ownerUserId = user\?\.id;/g)).toHaveLength(5);
+    expect(entitlement.match(/ownerUserId,/g)).toHaveLength(5);
     expect(entitlement).toContain('publishCustomerInfoEvidence({');
     expect(entitlement).toContain('ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED');
     expect(entitlement).toContain('isDurablyAdmissibleStoreResult(');

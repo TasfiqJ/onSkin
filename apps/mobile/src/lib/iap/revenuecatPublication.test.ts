@@ -73,6 +73,12 @@ vi.mock('react-native', () => ({
   },
 }));
 vi.mock('react-native-purchases', () => ({ default: mocks.purchases }));
+// These are publication-controller tests. Real preflight policy and service
+// ordering are exercised separately in p1PurchasePreflight.test.ts.
+vi.mock('@/features/subscription/purchasePreflight', () => ({
+  assertSubscriptionCheckoutDependencies: async () => {},
+  assertStandardPurchaseReady: async () => {},
+}));
 vi.mock('@/features/settings/accountDeletionBarrier', () => ({
   isAccountActivityBlockedForDeletion: () => false,
   isAccountActivityDurablyBlockedForDeletion: () => mocks.durableDeletionBlock,
@@ -83,6 +89,8 @@ vi.mock('@/lib/env', () => ({
     appEnvironment: 'production',
     revenueCatAndroidKey: 'goog_known_key',
     revenueCatEntitlementId: 'pro',
+    revenueCatAnnualProductId: 'layerwell_pro_annual',
+    revenueCatMonthlyProductId: 'layerwell_pro_monthly',
     revenueCatIosKey: 'appl_known_key',
     revenueCatTestStoreKey: '',
     get iosWinBackEnabled() {
@@ -300,10 +308,13 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_annual',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
+        price: 49.99,
+        subscriptionPeriod: 'P1Y',
         title: 'Layerwell Pro Annual',
         priceString: 'US$49.99',
         pricePerMonthString: 'US$4.17',
-        subscriptionPeriod: 'P1Y',
         introPrice: null,
       },
     };
@@ -312,10 +323,13 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_monthly',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
+        price: 9.99,
+        subscriptionPeriod: 'P1M',
         title: 'Layerwell Pro Monthly',
         priceString: 'US$9.99',
         pricePerMonthString: 'US$9.99',
-        subscriptionPeriod: 'P1M',
         introPrice: null,
       },
     };
@@ -338,7 +352,7 @@ describe('RevenueCat publication integration', () => {
     expect(mocks.purchases.configure).toHaveBeenCalledOnce();
     expect(mocks.purchases.isConfigured).toHaveBeenCalledOnce();
     expect(mocks.purchases.logIn).not.toHaveBeenCalled();
-    expect(mocks.purchases.getOfferings).toHaveBeenCalledOnce();
+    expect(mocks.purchases.getOfferings).toHaveBeenCalledTimes(2);
   });
 
   it('advertises an introductory trial only for an exact eligible App Store product result', async () => {
@@ -347,10 +361,13 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_annual',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
+        price: 49.99,
+        subscriptionPeriod: 'P1Y',
         title: 'Layerwell Pro Annual',
         priceString: '$49.99',
         pricePerMonthString: '$4.17',
-        subscriptionPeriod: 'P1Y',
         introPrice: {
           price: 0,
           periodUnit: 'DAY',
@@ -364,10 +381,13 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_monthly',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
+        price: 9.99,
+        subscriptionPeriod: 'P1M',
         title: 'Layerwell Pro Monthly',
         priceString: '$7.99',
         pricePerMonthString: '$7.99',
-        subscriptionPeriod: 'P1M',
         introPrice: null,
       },
     };
@@ -456,11 +476,13 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_annual',
-        title: 'Layerwell Pro Annual',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
         price: 49.99,
+        subscriptionPeriod: 'P1Y',
+        title: 'Layerwell Pro Annual',
         priceString: 'US$49.99',
         pricePerMonthString: 'US$4.17',
-        subscriptionPeriod: 'P1Y',
         introPrice: null,
       },
     };
@@ -469,11 +491,13 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_monthly',
-        title: 'Layerwell Pro Monthly',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
         price: 9.99,
+        subscriptionPeriod: 'P1M',
+        title: 'Layerwell Pro Monthly',
         priceString: 'US$9.99',
         pricePerMonthString: 'US$9.99',
-        subscriptionPeriod: 'P1M',
         introPrice: null,
       },
     };
@@ -556,12 +580,16 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_annual',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
+        price: 49.99,
+        subscriptionPeriod: 'P1Y',
         priceString: '$49.99',
       },
     };
     mocks.purchases.isConfigured.mockResolvedValue(false);
     mocks.purchases.getOfferings.mockResolvedValue({
-      current: { annual: pack, availablePackages: [pack] },
+      current: { identifier: 'default', annual: pack, monthly: null, availablePackages: [pack] },
     });
     await reserveRevenueCatPublication(USER_ID, 'session-token-hook');
     await activateRevenueCatPublication(USER_ID, 'session-token-hook');
@@ -595,12 +623,16 @@ describe('RevenueCat publication integration', () => {
       offeringIdentifier: 'default',
       product: {
         identifier: 'layerwell_pro_annual',
+        productCategory: 'SUBSCRIPTION',
+        currencyCode: 'USD',
+        price: 49.99,
+        subscriptionPeriod: 'P1Y',
         priceString: '$49.99',
       },
     };
     mocks.purchases.isConfigured.mockResolvedValue(false);
     mocks.purchases.getOfferings.mockResolvedValue({
-      current: { annual: pack, availablePackages: [pack] },
+      current: { identifier: 'default', annual: pack, monthly: null, availablePackages: [pack] },
     });
     mocks.purchases.purchasePackage
       .mockRejectedValueOnce({ code: 'PURCHASE_CANCELLED_ERROR', userCancelled: false })

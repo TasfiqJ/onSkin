@@ -52,6 +52,7 @@ export function ComplianceRow({
   }
 
   function onRestore() {
+    if (restore.isPending) return;
     setFeedback(null);
     restore.mutate(undefined, {
       onSuccess: (result) => {
@@ -111,6 +112,8 @@ export function ComplianceRow({
         <Pressable
           accessibilityRole="button"
           onPress={onRestore}
+          disabled={restore.isPending}
+          accessibilityState={{ disabled: restore.isPending }}
           className={
             compactHeader
               ? 'min-h-[48px] min-w-[48px] items-center justify-center px-0'
@@ -118,7 +121,7 @@ export function ComplianceRow({
           }
           style={{ minHeight: 48, minWidth: 48 }}
         >
-          {label('Restore')}
+          {label(restore.isPending ? 'Restoring...' : 'Restore')}
         </Pressable>
       </View>
       {feedback ? (

@@ -1,5 +1,9 @@
+import type { PlanId } from '@layerwell/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { AppState } from 'react-native';
+import { env } from '@/lib/env';
+import { advanceSubscriptionState, canFinishEmptyRestore, stateFromEntitlementSnapshot, stateWithoutServerEvidence } from './clientEntitlement';
 
 import { cancelTrialReminder, scheduleTrialReminder } from '@/features/notifications/deliver';
 import { track } from '@/lib/analytics/track';
@@ -34,6 +38,7 @@ import {
   startReverseTrialOnServer,
 } from './store';
 import { e2eEntitlementDelayMs, e2eEntitlementState } from './entitlementE2EFixture';
+import { prepareRevenueCatActionProof } from './entitlementPurchaseAttribution';
 
 const UNRESOLVED_OWNER_BINDING = '0'.repeat(64);
 
@@ -60,11 +65,13 @@ type PersistedRevenueCatResult = Readonly<{
   entitlement: StoredEntitlement | null;
   storeActive: boolean;
   providerResultPersisted: boolean;
+  verifiedEmptyRestore: boolean;
 }>;
 
 async function persistRevenueCatResult(
   input: {
     customerInfo?: Parameters<typeof customerInfoToStoredEntitlement>[0];
+    productId?: string;
     packageId?: string;
     offeringId?: string;
     priceLabel?: string;
@@ -77,14 +84,8 @@ async function persistRevenueCatResult(
   return runRevenueCatResultWrite(input, async () => {
     assertRevenueCatResultCurrent(input);
     const entitlement = customerInfoToStoredEntitlement(input.customerInfo!);
-    const withAttribution: StoredEntitlement | null = entitlement
-      ? {
-          ...entitlement,
-          packageId: input.packageId ?? entitlement.packageId ?? null,
-          offeringId: input.offeringId ?? entitlement.offeringId ?? null,
-          priceLabel: input.priceLabel ?? entitlement.priceLabel ?? null,
-        }
-      : null;
+    const proof = entitlement ? prepareRevenueCatActionProof(entitlement, input) : null;
+    const withAttribution = proof?.entitlement ?? null;
     const published = await publishCustomerInfoEvidence({
       context: ownerContext,
       customerInfo: input.customerInfo!,
@@ -112,14 +113,19 @@ async function persistRevenueCatResult(
       assertRevenueCatResultCurrent(input);
     }
 
-    const providerResultPersisted = isDurablyAdmissibleStoreResult(
+    const providerResultPersisted = proof?.actionProductMatched === true && isDurablyAdmissibleStoreResult(
       input.customerInfo!.entitlements.verification,
       published,
     );
     return {
       entitlement: published.snapshot?.entitlement ?? null,
-      storeActive: committed?.isActive === true,
+      storeActive: providerResultPersisted,
       providerResultPersisted,
+      verifiedEmptyRestore: canFinishEmptyRestore(
+        input.customerInfo!.entitlements.verification,
+        entitlement?.isActive === true,
+        published,
+      ),
     };
   });
 }
@@ -179,7 +185,7 @@ export function useEntitlement(options?: { refetchOnMount?: 'always' }) {
   const owner = useEntitlementOwnerContext(user?.id ?? null);
   const ownerContext = owner.status === 'ready' ? owner.context : null;
   const queryKey = entitlementQueryKey(ownerContext?.ownerBinding ?? UNRESOLVED_OWNER_BINDING);
-  return useQuery<SubscriptionState>({
+  const query = useQuery<SubscriptionState>({
     queryKey,
     retry: 0,
     enabled: owner.status !== 'resolving',
@@ -202,22 +208,45 @@ export function useEntitlement(options?: { refetchOnMount?: 'always' }) {
         const server = await fetchServerEvidence(ownerContext, lease.signal);
         lease.assertCurrent();
         if (server.status !== 'evidence') {
-          if (local) return deriveState(local.entitlement, local.effectiveNowISO);
-          if (localRead.status === 'absent' || localRead.status === 'legacy_unbound') {
-            return deriveState(null, new Date().toISOString());
-          }
-          throw new Error(`ENTITLEMENT_CACHE_READ_${localRead.status.toUpperCase()}`);
+          return stateWithoutServerEvidence({
+            local, localStatus: localRead.status, serverStatus: server.status,
+            nowISO: new Date().toISOString(), development: env.appEnvironment === 'development',
+          });
         }
 
         const merged = await mergeEntitlementEvidenceBatch(ownerContext, server.evidence);
         lease.assertCurrent();
         if (merged.snapshot) {
-          return deriveState(merged.snapshot.entitlement, merged.snapshot.effectiveNowISO);
+          return stateFromEntitlementSnapshot(merged.snapshot);
         }
-        if (local) return deriveState(local.entitlement, local.effectiveNowISO);
+        if (local) return stateFromEntitlementSnapshot(local);
         throw new Error(merged.reason ?? ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
       }),
   });
+  const [observedNow, setObservedNow] = useState(Date.now);
+  const { refetch } = query;
+  const expiry = query.data?.expiresAt ?? null;
+  useEffect(() => {
+    const tick = () => setObservedNow((previous) => Math.max(previous, Date.now()));
+    const interval = setInterval(tick, 60_000);
+    const endsAt = expiry === null ? NaN : Date.parse(expiry);
+    const delay = endsAt - Math.max(observedNow, Date.now());
+    const timer = Number.isFinite(delay) && delay > 0 && delay <= 2_147_483_647
+      ? setTimeout(() => {
+          setObservedNow((previous) => Math.max(previous, endsAt, Date.now()));
+          if (owner.status === 'ready' && ownerContext) void refetch();
+        }, delay)
+      : null;
+    const subscription = AppState.addEventListener('change', (next) => {
+      if (next === 'active') { tick(); if (owner.status === 'ready' && ownerContext) void refetch(); }
+    });
+    return () => {
+      clearInterval(interval);
+      if (timer !== null) clearTimeout(timer);
+      subscription.remove();
+    };
+  }, [expiry, observedNow, refetch, owner.status, ownerContext]);
+  return { ...query, data: query.data ? advanceSubscriptionState(query.data, observedNow) : query.data };
 }
 
 export function useEntitlementActions() {
@@ -242,7 +271,7 @@ export function useEntitlementActions() {
     if (read.status !== 'available') return null;
     qc.setQueryData(
       entitlementQueryKey(context.ownerBinding),
-      deriveState(read.snapshot.entitlement, read.snapshot.effectiveNowISO),
+      stateFromEntitlementSnapshot(read.snapshot),
     );
     return read.snapshot.entitlement;
   };
@@ -292,6 +321,33 @@ export function useEntitlementActions() {
     onSettled: invalidate,
   });
 
+  const purchasePlan = useMutation({
+    mutationFn: async (plan: PlanId) => {
+      const ownerUserId = user?.id;
+      return runOwnedStoreTransaction({
+        action: 'purchase',
+        ownerUserId,
+        operation: async (nativeCall) => {
+          const ownerContext = await entitlementOwnerContextForUser(ownerUserId!);
+          const result = await purchasePackage(plan, ownerUserId!, nativeCall);
+          const persisted = await persistRevenueCatResult(result, ownerContext, qc);
+          if (!persisted) {
+            if (result.cancelled) nativeCall.markDefinitiveCancellation();
+            return activeResult(null, { cancelled: result.cancelled });
+          }
+          if (persisted.storeActive) {
+            track(persisted.entitlement?.periodType === 'trial' ? 'trial_started' : 'purchase_completed', {
+              source: 'revenuecat', period_type: persisted.entitlement?.periodType ?? null,
+            });
+          }
+          nativeCall.markProviderResultPersisted(persisted.providerResultPersisted);
+          return activeResult(persisted.entitlement, { cancelled: result.cancelled });
+        },
+      });
+    },
+    onSettled: invalidate,
+  });
+
   const purchase = useMutation({
     mutationFn: async () => {
       const ownerUserId = user?.id;
@@ -331,9 +387,12 @@ export function useEntitlementActions() {
           track('restore_tapped');
           const result = await restorePurchases(ownerUserId!, nativeCall);
           const persisted = await persistRevenueCatResult(result, ownerContext, qc);
-          if (persisted) {
-            nativeCall.markProviderResultPersisted(persisted.providerResultPersisted);
+          if (persisted?.providerResultPersisted) {
+            nativeCall.markProviderResultPersisted(true);
+          } else if (persisted?.verifiedEmptyRestore) {
+            nativeCall.markProviderResultPersisted(false);
           }
+          // Unconfirmed outcomes intentionally leave resolution to the journal.
           return activeResult(persisted?.entitlement ?? null);
         },
       });
@@ -382,5 +441,5 @@ export function useEntitlementActions() {
     onSettled: invalidate,
   });
 
-  return { startReverseTrial, startTrial, purchase, restore, downgrade, winback };
+  return { startReverseTrial, startTrial, purchase, purchasePlan, restore, downgrade, winback };
 }

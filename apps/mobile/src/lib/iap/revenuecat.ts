@@ -28,6 +28,9 @@ import {
   type AccountPublicationSessionBinding,
 } from '@/lib/auth/accountPublicationFence';
 import { PLANS } from '@/features/subscription/plans';
+import { storeEntitlementExpiry } from '@/features/subscription/clientBilling';
+import { exactIntroDays, standardStorePackage, subscriptionClientMessage } from '@/features/subscription/clientPolicy';
+import { assertStandardPurchaseReady, assertSubscriptionCheckoutDependencies } from '@/features/subscription/purchasePreflight';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
@@ -536,13 +539,7 @@ function periodDays(
   units: number | undefined,
   cycles = 1,
 ): number | null {
-  if (!unit || !units) return null;
-  const total = units * cycles;
-  if (unit === 'DAY') return total;
-  if (unit === 'WEEK') return total * 7;
-  if (unit === 'MONTH') return total * 30;
-  if (unit === 'YEAR') return total * 365;
-  return null;
+  return exactIntroDays(unit, units, cycles);
 }
 
 function trialDaysForPackage(pack: PurchasesPackage): number | null {
@@ -623,14 +620,10 @@ function unavailableOffering(reason: string): SubscriptionOfferingView {
 }
 
 function findPackage(offerings: PurchasesOfferings, plan: PlanId): PurchasesPackage | null {
-  const current = offerings.current;
-  if (!current) return null;
-
-  const standardPackage = plan === 'annual' ? current.annual : current.monthly;
-  if (standardPackage) return standardPackage;
-
-  const productId = PLANS[plan].productId;
-  return current.availablePackages.find((pack) => pack.product.identifier === productId) ?? null;
+  return standardStorePackage(offerings.current, plan, {
+    annual: PLANS.annual.productId,
+    monthly: PLANS.monthly.productId,
+  });
 }
 
 async function eligibleIntroProductIds(
@@ -688,11 +681,14 @@ async function requireConfigured(ticket: AccountPublicationTicket, action: strin
 
 async function fetchOfferings(
   ticket: AccountPublicationTicket,
+  refresh = false,
 ): Promise<PurchasesOfferings | null> {
   const Purchases = await requireConfigured(ticket, 'offerings');
   if (!Purchases) return null;
   const binding = ticketBinding(ticket);
-  if (bindingMatches(cachedOfferings, binding)) return cachedOfferings.value;
+  // Let the SDK own its documented cache. A UI retry must not reuse an empty
+  // or obsolete application-level snapshot forever.
+  if (!refresh && bindingMatches(cachedOfferings, binding)) return cachedOfferings.value;
   const offerings = await Purchases.getOfferings();
   ticket.assertCurrent();
   cachedOfferings = { ...binding, value: offerings };
@@ -822,7 +818,7 @@ export async function getSubscriptionOffering(
   appUserId?: string,
 ): Promise<SubscriptionOfferingView> {
   if (!canUseRevenueCat()) {
-    if (env.appEnvironment === 'production') {
+    if (env.appEnvironment !== 'development') {
       return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
     }
     return {
@@ -836,11 +832,12 @@ export async function getSubscriptionOffering(
   }
 
   try {
+    await assertSubscriptionCheckoutDependencies();
     if (appUserId) await configureRevenueCat(appUserId);
     return await accountPublicationController.runOperation(
       'offering',
       async (ticket) => {
-        const offerings = await fetchOfferings(ticket);
+        const offerings = await fetchOfferings(ticket, true);
         const current = offerings?.current ?? null;
         const annual = offerings ? findPackage(offerings, 'annual') : null;
         const monthly = offerings ? findPackage(offerings, 'monthly') : null;
@@ -871,8 +868,8 @@ export async function getSubscriptionOffering(
       },
       appUserId,
     );
-  } catch {
-    return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
+  } catch (error) {
+    return unavailableOffering(subscriptionClientMessage(error) ?? STORE_CHECKOUT_UNAVAILABLE_REASON);
   }
 }
 
@@ -899,7 +896,7 @@ export function customerInfoToStoredEntitlement(
     periodType: mapPeriod(info.periodType),
     store: mapStore(info.store),
     productId: info.productIdentifier ?? null,
-    expiresAt: info.expirationDate,
+    expiresAt: storeEntitlementExpiry(customerInfo, env.revenueCatEntitlementId),
     willRenew: info.willRenew,
     grantedAt: info.originalPurchaseDate,
     source: 'revenuecat',
@@ -936,6 +933,10 @@ export async function purchasePackage(
       const Purchases = await requireConfigured(ticket, 'purchase');
       if (!Purchases) return bindResultToTicket({ purchased: false }, ticket, 'purchase');
 
+      // A deep link or stale enabled button must not bypass purchase prerequisites.
+      // Restore and Manage intentionally do not call this purchase-only guard.
+      await assertStandardPurchaseReady(expectedSubject);
+      ticket.assertCurrent();
       const offerings = await fetchOfferings(ticket);
       const selectedPackage = offerings ? findPackage(offerings, plan) : null;
       if (!selectedPackage) {
@@ -949,6 +950,11 @@ export async function purchasePackage(
         nativeCall.markNativeCallStarted();
         const result = await Purchases.purchasePackage(selectedPackage);
         ticket.assertCurrent();
+        if (result.productIdentifier !== selectedPackage.product.identifier) {
+          // The native call already started. Keep the existing durable recovery
+          // journal and do not attribute the displayed price to another product.
+          throw new AccountPublicationControllerError('ACCOUNT_PUBLICATION_STOREKIT_COMPLETION_UNCONFIRMED');
+        }
         return bindResultToTicket(
           {
             purchased: hasActiveEntitlement(result.customerInfo),
@@ -1058,7 +1064,7 @@ export async function restorePurchases(
     'restore',
     async (ticket) => {
       const Purchases = await requireConfigured(ticket, 'restore');
-      if (!Purchases) return bindResultToTicket({ restored: false }, ticket, 'restore');
+      if (!Purchases) throw new Error('REVENUECAT_RESTORE_UNAVAILABLE');
       ticket.assertCurrent();
       await nativeCall.beforeNativeStoreCall();
       ticket.assertCurrent();

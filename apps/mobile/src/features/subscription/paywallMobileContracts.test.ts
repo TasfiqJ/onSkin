@@ -163,7 +163,7 @@ describe('paywall mobile contracts', () => {
       "microShortPaywall\n            ? 'mt-0 h-[48px] items-center justify-center rounded-pill'",
     );
     expect(upsell).toContain('disabled={startTrial.isPending}');
-    expect(upsell).not.toContain('disabled={!canPurchase || startTrial.isPending}');
+    expect(upsell).toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(upsell).toContain('fontSize: microShortPaywall ? 15.5 : 17');
     expect(upsell).toContain(
       '{shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
@@ -606,7 +606,7 @@ describe('paywall mobile contracts', () => {
 
     const subscriptionSettings = readAppRoute('settings/subscription.tsx');
     expect(subscriptionSettings).toContain('alertOnFailure: false');
-    expect(subscriptionSettings).toContain('setSubscriptionFeedback(message);');
+    expect(subscriptionSettings).toContain('setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);');
     expect(subscriptionSettings).toContain(
       "storeTransactionRecoveryMessage(error, 'restore') ?? RESTORE_UNAVAILABLE_MESSAGE",
     );

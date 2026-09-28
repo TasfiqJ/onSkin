@@ -6,7 +6,7 @@ import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
-import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { PAYWALL_COPY, standardSubscriptionDisclosure } from '@/features/subscription/copy';
 import {
   PAYWALL_FEEDBACK,
   PaywallFeedback,
@@ -14,7 +14,7 @@ import {
 } from '@/features/subscription/PaywallFeedback';
 import { planLineLabel, planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
+import { SubscriptionPlanSelector, SubscriptionPurchaseRecovery, useStandardSubscriptionOffering } from '@/features/subscription/SubscriptionPurchaseRecovery';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
@@ -53,17 +53,16 @@ function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
 export default function PaywallScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { goals, quizAnswers, profileResult, computeResult } = useOnboarding();
-  const { startTrial } = useEntitlementActions();
-  const offering = useSubscriptionOffering();
+  const { purchasePlan: startTrial } = useEntitlementActions();
+  const { access, offering, canPurchase, plan, setPlan } = useStandardSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const annual = offering.data?.annual ?? null;
-  const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const annual = offering.data?.[plan] ?? null;
   const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;
   const primaryCtaLabel = hasEligibleIntroTrial
     ? PAYWALL_COPY.offer.cta
     : PAYWALL_COPY.offer.subscribeCta;
-  const annualDisplay = planPriceDisplay('annual', offering.data);
-  const monthlyDisplay = planPriceDisplay('monthly', offering.data);
+  const annualDisplay = planPriceDisplay(plan, offering.data);
+  const monthlyDisplay = planPriceDisplay(plan === 'annual' ? 'monthly' : 'annual', offering.data);
   const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const supportFloorTextPressurePaywall =
@@ -79,7 +78,7 @@ export default function PaywallScreen() {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    startTrial.mutate(undefined, {
+    startTrial.mutate(plan, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
         else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
@@ -138,6 +137,8 @@ export default function PaywallScreen() {
           ))}
         </View>
 
+        <SubscriptionPlanSelector plan={plan} onChange={setPlan} disabled={startTrial.isPending} />
+
         {/* the offer. Billed amount most conspicuous (Apple 3.1.2) */}
         <View
           className={compactPaywall ? 'mt-2.5 rounded-card p-3' : 'mt-5 rounded-card p-5'}
@@ -152,7 +153,7 @@ export default function PaywallScreen() {
             style={{ backgroundColor: colors.clay }}
           >
             <Text variant="label" style={{ color: colors.paper, fontSize: 10.5 }}>
-              {PAYWALL_COPY.offer.annualBadge.toUpperCase()}
+              {plan === 'annual' ? 'ANNUAL' : 'MONTHLY'}
             </Text>
           </View>
           <View className="flex-row items-baseline justify-between">
@@ -206,7 +207,7 @@ export default function PaywallScreen() {
           style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}
         >
           <Text variant="bodySm" className="font-sans-semibold" tone="muted">
-            Monthly
+            {plan === 'annual' ? 'Monthly option' : 'Annual option'}
           </Text>
           <Text variant="label" tone="muted" style={{ fontSize: 13 }}>
             {planLineLabel(monthlyDisplay)}
@@ -223,6 +224,8 @@ export default function PaywallScreen() {
             {offering.data.reason}
           </Text>
         ) : null}
+
+        <SubscriptionPurchaseRecovery access={access} offering={offering} />
 
         {/* primary CTA */}
         <Pressable
@@ -314,9 +317,7 @@ export default function PaywallScreen() {
           className="px-2 text-center"
           style={{ fontSize: 10.5, lineHeight: 15 }}
         >
-          {hasEligibleIntroTrial
-            ? PAYWALL_COPY.offer.autoRenewDisclosure
-            : PAYWALL_COPY.offer.subscriptionDisclosure}
+          {standardSubscriptionDisclosure(plan, hasEligibleIntroTrial)}
         </Text>
 
         {/* trust block. Below the plans (Flo pattern) */}

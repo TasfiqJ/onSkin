@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Text } from '@/components/ui';
 import { storeTransactionRecoveryMessage } from '@/lib/iap/storeTransactionNotice';
 import { colors } from '@/theme/tokens';
+import { subscriptionClientMessage } from './clientPolicy';
 
 export type PaywallFeedbackState = {
   title: string;
@@ -32,7 +33,7 @@ export const PAYWALL_FEEDBACK = {
       ? { title: 'Purchase status needs confirmation', body: uncertain }
       : {
           title: 'Purchase unavailable',
-          body: 'We could not open the store purchase sheet. Please try again.',
+          body: subscriptionClientMessage(error) ?? 'We could not open the store purchase sheet. Please try again.',
         };
   },
   exploreFirstUnavailable: {
