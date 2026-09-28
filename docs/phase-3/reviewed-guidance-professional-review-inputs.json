@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "packetId": "core02-reviewed-guidance-authority-v1",
+  "status": "review_pending_fail_closed",
+  "professionalReviewComplete": false,
+  "baseSha": "44c21a02de6d81dee10562909d9fabf7d9ebe66b",
+  "launchContract": {
+    "path": "docs/hugeToDo/launch-contract.json",
+    "sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f",
+    "featureKey": "conflict_engine"
+  },
+  "publicationBoundary": {
+    "default": "deny",
+    "currentCorpusStatus": "draft_blocked",
+    "currentTrustedAuthorityCount": 0,
+    "currentReviewReceiptCount": 0,
+    "detachedSignatureVerifierAvailable": false,
+    "positiveAdmissionRequiresAll": [
+      "The exact canonical corpus is marked approved and its content SHA-256 matches its bytes.",
+      "Every source record is reviewed and has a retainedArtifactId, retainedArtifactRef, and non-zero retainedArtifactSha256 for the exact evidence bytes or exact evidence manifest reviewed.",
+      "Every rule is explicitly reviewed, has exact applicability conditions, and preserves fail-closed behavior for missing or ambiguous facts.",
+      "The pregnancy/trying profile semantic is explicitly approved as the current combined stored context or the profile contract is versioned and split before admission.",
+      "Breastfeeding is separately reviewed and cannot inherit pregnancy guidance.",
+      "Exactly one board-certified dermatologist, one cosmetic chemist, and one regulatory counsel approval receipt are present.",
+      "Each reviewer receipt binds credential evidence, a distinct independence/conflict disclosure artifact, exact source/corpus/rule hashes, jurisdiction/market hashes, decision, signed time, and expiry.",
+      "Three distinct validated trust authorities and Ed25519 public-key fingerprints exist.",
+      "Every detached receipt signature verifies against the exact signed body.",
+      "The resulting admitted runtime corpus is created only by the module-private admission path and provenance brand."
+    ]
+  },
+  "requiredReviewers": [
+    {
+      "reviewerRole": "board_certified_dermatologist",
+      "taskId": "H-03",
+      "launchScope": "exact_conflict_clinical_meaning_eligibility_and_user_copy",
+      "receiptReviewScope": "clinical_safety_evidence_and_user_copy",
+      "requiredOutputs": [
+        "Approve, reject, or defer each exact rule and each severity branch.",
+        "Approve exact clinical meaning, severity, referral behavior, and user-facing copy.",
+        "Record included and excluded molecules, formulations, concentrations, exposure conditions, and unknown-data behavior.",
+        "Make pregnancy and breastfeeding decisions separately, and explicitly address the current combined Pregnant or trying stored semantic.",
+        "Identify any doctor-reminder or escalation language required by the final surface."
+      ]
+    },
+    {
+      "reviewerRole": "cosmetic_chemist",
+      "taskId": "H-03",
+      "launchScope": "exact_ingredient_compatibility_and_application_copy",
+      "receiptReviewScope": "ingredient_compatibility_formulation_and_user_copy",
+      "requiredOutputs": [
+        "Approve, reject, or defer exact compatibility, stability, layering, order, and application claims.",
+        "Record molecule, concentration, pH, vehicle, delivery system, packaging, exposure, and finished-formulation limitations.",
+        "Approve any fixed-formulation exemption only by exact retained formulation identity and supporting evidence.",
+        "Reject class-wide extrapolation where evidence supports only a molecule, formulation, or test condition."
+      ]
+    },
+    {
+      "reviewerRole": "regulatory_counsel",
+      "taskId": "H-03",
+      "launchScope": "claims_jurisdiction_and_market_clearance",
+      "receiptReviewScope": "regulatory_claims_and_jurisdiction_clearance",
+      "requiredOutputs": [
+        "Clear or reject exact claims and net impression for the intended U.S. launch scope.",
+        "Classify product-versus-drug and medical/wellness boundaries for the exact release behavior and copy.",
+        "Review referral/disclaimer language and any jurisdiction-specific handling, including hydroquinone status.",
+        "Clear any public statement about professional or independent review; reviewer independence is not inferred from distinct signing keys alone."
+      ]
+    }
+  ],
+  "sourceArtifactContract": {
+    "currentState": "no_retained_source_artifacts_asserted",
+    "candidateSourceIds": [
+      "src-retinoid-acids-candidate",
+      "src-bp-retinoid-martin-1998-candidate",
+      "src-niacinamide-vitamin-c-1963-candidate",
+      "src-vitamin-c-aha-candidate",
+      "src-copper-peptide-candidate-held",
+      "src-dermatology-consensus-candidate",
+      "src-pregnancy-retinoid-candidate",
+      "src-pregnancy-bha-candidate",
+      "src-pregnancy-hydroquinone-candidate"
+    ],
+    "requiredFieldsPerSource": [
+      "retainedArtifactId",
+      "retainedArtifactRef",
+      "retainedArtifactSha256"
+    ],
+    "compoundCitationRule": "If one source record summarizes multiple publications or pages, retainedArtifactRef must identify a retained evidence manifest that itemizes the exact reviewed artifacts and their hashes; the manifest itself must be retained and hashed by retainedArtifactSha256.",
+    "citationBinding": "The detached signed review body includes sourceId, SHA-256 of the exact citation string, retained artifact identity/reference, and retained artifact SHA-256."
+  },
+  "reproductiveApplicability": {
+    "profileSourcePath": "apps/mobile/src/features/onboarding/quizContract.ts",
+    "storedValue": "pregnant",
+    "storedSemantic": "pregnant_or_trying_combined",
+    "candidateSafetyContext": "pregnant",
+    "breastfeedingMayBorrowPregnancyGuidance": false,
+    "unknownMayBorrowPregnancyGuidance": false,
+    "preferNotToAnswerMayBorrowPregnancyGuidance": false,
+    "separateTryingFactPreservedByCurrentQuizPersistence": false,
+    "positiveAdmissionRequirement": "A reviewer must approve the safety rule for the combined Pregnant or trying semantic exactly as stored, or require a versioned profile split before admission. A separately supplied trying context, breastfeeding, unknown, or prefer-not-to-answer context remains unsupported unless its own reviewed applicability exists."
+  },
+  "requiredTechnicalInputs": [
+    "docs/hugeToDo/launch-contract.json",
+    "docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md",
+    "docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md",
+    "apps/mobile/src/features/onboarding/quizContract.ts",
+    "apps/mobile/src/features/intelligence/rules.ts",
+    "apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts",
+    "apps/mobile/src/features/intelligence/engine.ts",
+    "apps/mobile/src/features/intelligence/pregnancySafety.ts",
+    "scripts/core02/clinical-rule-source-contract.test.mjs"
+  ],
+  "reviewSnapshotRule": "Professional decisions must be made against the generated Phase 3 review-packet manifest from the exact candidate commit. The base SHA in this file identifies the source-closure starting point only and is not professional approval evidence.",
+  "notIncludedAndNotClaimed": [
+    "Professional approval or credentials",
+    "Retained underlying scientific-source bytes or evidence manifests",
+    "Reviewer independence/conflict disclosures",
+    "Trusted reviewer public keys",
+    "Valid detached signatures",
+    "A reviewed Hermes/native detached-signature verifier",
+    "Legal or regulatory market clearance",
+    "Physical-device or submitted-build evidence",
+    "Live-service or App Store evidence"
+  ]
+}

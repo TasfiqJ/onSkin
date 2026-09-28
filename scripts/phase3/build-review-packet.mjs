@@ -26,6 +26,17 @@ const packetOutputPaths = [
   `${packetOutDir}/review-packet.md`,
 ].map((path) => path.replace(/\\/g, '/'));
 
+const core02GuidanceAuthorityReviewSources = Object.freeze([
+  'docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md',
+  'docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md',
+  'docs/phase-3/reviewed-guidance-professional-review-inputs.json',
+  'apps/mobile/src/features/onboarding/quizContract.ts',
+  'apps/mobile/src/features/intelligence/rules.ts',
+  'apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts',
+  'apps/mobile/src/features/intelligence/engine.ts',
+  'apps/mobile/src/features/intelligence/pregnancySafety.ts',
+]);
+
 const core06RecommendationReviewSources = Object.freeze([
   'apps/mobile/src/features/onboarding/serverSkinProfile.ts',
   'apps/mobile/src/features/recommendations/admission.ts',
@@ -110,7 +121,7 @@ const packets = {
   legalRegulatory: [
     'docs/phase-3/legal-regulatory-review-log.md',
     'docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md',
-    'docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md',
+    ...core02GuidanceAuthorityReviewSources,
     'docs/phase-3/regulatory-positioning-memo.md',
     'docs/phase-3/launch-claims-vocabulary.md',
     'docs/phase-3/data-inventory.md',
@@ -130,14 +141,12 @@ const packets = {
   ],
   clinical: [
     'docs/phase-3/clinical-review-log.md',
-    'docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md',
+    ...core02GuidanceAuthorityReviewSources,
     'docs/phase-3/generated/review-worklist.json',
     'docs/phase-3/generated/review-worklist.md',
     'docs/phase-3/generated/review-operator-queue.json',
     'docs/phase-3/generated/review-operator-queue.md',
     'docs/hugeToDo/launch-contract.json',
-    'apps/mobile/src/features/intelligence/rules.ts',
-    'apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts',
     'apps/mobile/src/features/intelligence/pao.ts',
     ...core06RecommendationReviewSources,
     ...core07ConflictShareReviewSources,
@@ -147,13 +156,12 @@ const packets = {
   ],
   cosmeticChemistry: [
     'docs/phase-3/cosmetic-chemistry-review-log.md',
-    'docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md',
+    ...core02GuidanceAuthorityReviewSources,
     'docs/phase-3/generated/review-worklist.json',
     'docs/phase-3/generated/review-worklist.md',
     'docs/phase-3/generated/review-operator-queue.json',
     'docs/phase-3/generated/review-operator-queue.md',
     'docs/hugeToDo/launch-contract.json',
-    'apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts',
     'apps/mobile/src/features/intelligence/tags.ts',
     'apps/mobile/src/features/intelligence/pao.ts',
     'apps/mobile/src/features/catalog/quality.ts',
