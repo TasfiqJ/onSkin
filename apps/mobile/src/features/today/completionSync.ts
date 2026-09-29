@@ -648,13 +648,37 @@ export function decodeCompletionSyncState(
 
   const unsynced = (value.unsynced ?? []).map((candidate) => decodeUnsynced(candidate, evidence));
   const allEventIds = new Set(eventIndex.keys());
-  const unsyncedFacts = new Set<string>();
+  const localStepFacts = new Set(
+    journal
+      .filter((operation) => operation.kind === 'step')
+      .map((operation) =>
+        `${operation.routineType}:${operation.userProductId}|${operation.completedDate}`,
+      ),
+  );
+  const completionDayClaims = new Set(
+    journal
+      .filter((operation) => operation.kind === 'routine_day')
+      .map((operation) => operation.completedDate),
+  );
   for (const unavailable of unsynced) {
     const semantic = `${unavailable.stepKey}|${unavailable.completedDate}`;
-    if (allEventIds.has(unavailable.eventId) || unsyncedFacts.has(semantic)) invalid();
+    // Recovery moves a fact between lanes; it never creates a second copy.
+    if (allEventIds.has(unavailable.eventId) || localStepFacts.has(semantic)) invalid();
+    if (unavailable.completionDayInserted) {
+      if (completionDayClaims.has(unavailable.completedDate)) invalid();
+      completionDayClaims.add(unavailable.completedDate);
+    }
     allEventIds.add(unavailable.eventId);
-    unsyncedFacts.add(semantic);
+    localStepFacts.add(semantic);
   }
+  const identityIds = [
+    ...Object.values(routineIds).filter((id): id is string => id !== null),
+    ...Object.values(stepIds).map(({ id }) => id),
+    ...allEventIds,
+  ];
+  // The writer allocates these from one disjoint identity set. Reusing an ID
+  // across roles is corrupt local provenance, not a migration opportunity.
+  if (new Set(identityIds).size !== identityIds.length) invalid();
 
   return { routineIds, stepIds, journal, outbox, terminal, unsynced };
 }
