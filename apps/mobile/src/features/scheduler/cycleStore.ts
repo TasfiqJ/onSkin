@@ -1,7 +1,6 @@
 import type { CycleVariant, DisruptionReason } from '@layerwell/types';
 
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
-import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { shippableRoutineCadencePolicy } from '@/features/routine/sequencing';
 import { localDateString } from '@/features/today/useToday';
 import {
@@ -189,6 +188,17 @@ function normalizeStoredConfig(
       return null;
     }
   }
+  if (
+    !allowMissingSchemaVersion &&
+    (typeof value.variant !== 'string' ||
+      typeof value.anchorISO !== 'string' ||
+      !Array.isArray(value.skips) ||
+      !Array.isArray(value.stagingOverrides))
+  ) {
+    // Only legacy records may omit fields. A present current record with null
+    // required values is malformed, not permission to write default intent.
+    return null;
+  }
   const base = defaults(fallbackAnchorISO);
   const schemaVersion =
     value.schemaVersion ?? (allowMissingSchemaVersion ? CYCLE_CONFIG_SCHEMA_VERSION : undefined);
@@ -336,7 +346,7 @@ async function normalizeLatestStoredConfig(
   lease.assertCurrent();
   await updatePrivateItem(KEY, (currentRaw) => {
     lease.assertCurrent();
-    if (!currentRaw) return null;
+    if (currentRaw === null) return null;
     const { config: current } = parseStoredConfig(currentRaw, fallbackAnchorISO);
     const recoveryAllowed = canUseRoutineRecovery();
     if (current.recovery && !recoveryAllowed) {
@@ -350,15 +360,35 @@ async function normalizeLatestStoredConfig(
   return latest;
 }
 
+/** Read legacy input only after v2 absence is proved. An unavailable source
+ * is not evidence that the user started today; never repair it during a read. */
+async function readLegacyCycleInput(
+  todayISO: string,
+  lease: HealthDataWriteOperationLease,
+): Promise<{ legacyRaw: string | null; fallbackAnchor: string }> {
+  const legacyRaw = await getPrivateItem(LEGACY_KEY);
+  lease.assertCurrent();
+  if (legacyRaw !== null) {
+    const decoded = parseStoredConfig(legacyRaw, todayISO, true);
+    if (isRecord(decoded.parsed) && decoded.parsed.anchorISO != null) {
+      return { legacyRaw, fallbackAnchor: decoded.config.anchorISO };
+    }
+  }
+  const legacyAnchor = await getPrivateItem(LEGACY_ANCHOR_KEY);
+  lease.assertCurrent();
+  const fallbackAnchor = legacyAnchor === null ? todayISO : normalizeLocalDateISO(legacyAnchor);
+  if (fallbackAnchor === null) throw new Error('CYCLE_CONFIG_INVALID');
+  return { legacyRaw, fallbackAnchor };
+}
+
 async function migrateLegacyConfig(
+  legacyRaw: string | null,
   fallbackAnchorISO: string,
   todayISO: string,
   lease: HealthDataWriteOperationLease,
 ): Promise<CycleConfig | null> {
   lease.assertCurrent();
-  const legacyRaw = await getPrivateItem(LEGACY_KEY);
-  lease.assertCurrent();
-  if (!legacyRaw) return null;
+  if (legacyRaw === null) return null;
   const legacyStored = parseStoredConfig(legacyRaw, fallbackAnchorISO, true).config;
   if (legacyStored.recovery && !canUseRoutineRecovery()) return legacyStored;
   let migrated: CycleConfig | null = null;
@@ -370,7 +400,7 @@ async function migrateLegacyConfig(
   await updatePrivateItem(KEY, (currentRaw) => {
     lease.assertCurrent();
     const recoveryAllowed = canUseRoutineRecovery();
-    if (currentRaw) {
+    if (currentRaw !== null) {
       const current = parseStoredConfig(currentRaw, fallbackAnchorISO).config;
       if (current.recovery && !recoveryAllowed) {
         migrated = current;
@@ -393,28 +423,29 @@ async function migrateLegacyConfig(
 
 async function loadCycleConfigForLease(lease: HealthDataWriteOperationLease): Promise<CycleConfig> {
   lease.assertCurrent();
-  const fallbackAnchor = await getCycleAnchor();
-  lease.assertCurrent();
   const today = localDateString();
-  lease.assertCurrent();
   const raw = await getPrivateItem(KEY);
   lease.assertCurrent();
-  if (!raw) {
-    const migrated = await migrateLegacyConfig(fallbackAnchor, today, lease);
+  if (raw === null) {
+    const { legacyRaw, fallbackAnchor } = await readLegacyCycleInput(today, lease);
+    lease.assertCurrent();
+    const migrated = await migrateLegacyConfig(legacyRaw, fallbackAnchor, today, lease);
     lease.assertCurrent();
     return migrated ?? defaults(fallbackAnchor);
   }
 
-  const { parsed, config: normalized } = parseStoredConfig(raw, fallbackAnchor);
+  // Current records require their own anchor. Obsolete fallback bytes have no
+  // read, repair, or overwrite authority once the isolated v2 record exists.
+  const { parsed, config: normalized } = parseStoredConfig(raw, today);
   const recoveryAllowed = canUseRoutineRecovery();
   if (normalized.recovery && !recoveryAllowed) return normalized;
   const reconciled = reconcileStoredConfig(normalized, today, recoveryAllowed);
   lease.assertCurrent();
   if (JSON.stringify(parsed) === JSON.stringify(reconciled)) return reconciled;
 
-  const latest = await normalizeLatestStoredConfig(fallbackAnchor, today, lease);
+  const latest = await normalizeLatestStoredConfig(today, today, lease);
   lease.assertCurrent();
-  return latest ?? defaults(fallbackAnchor);
+  return latest ?? defaults(today);
 }
 
 export async function loadCycleConfig(): Promise<CycleConfig> {
@@ -448,21 +479,11 @@ async function mutateCycleConfig(
   return runCurrentHealthDataOperation(async (lease) => {
     const today = localDateString();
     lease.assertCurrent();
-    let fallbackAnchor = today;
-    try {
-      const legacyAnchor = await getPrivateItem(LEGACY_ANCHOR_KEY);
-      lease.assertCurrent();
-      fallbackAnchor = normalizeLocalDateISO(legacyAnchor) ?? today;
-    } catch {
-      // The v2 transform below remains authoritative and re-reads its own key.
-      // A failed legacy-anchor read must not trigger a repair write before the
-      // requested cycle mutation has committed.
-      lease.assertCurrent();
-    }
-
     const currentRaw = await getPrivateItem(KEY);
     lease.assertCurrent();
-    const legacyRaw = currentRaw ? null : await getPrivateItem(LEGACY_KEY);
+    const { legacyRaw, fallbackAnchor } = currentRaw === null
+      ? await readLegacyCycleInput(today, lease)
+      : { legacyRaw: null, fallbackAnchor: today };
     lease.assertCurrent();
     let next: CycleConfig | null = null;
 
@@ -472,7 +493,7 @@ async function mutateCycleConfig(
     await updatePrivateItem(KEY, (raw) => {
       lease.assertCurrent();
       const sourceRaw = raw ?? legacyRaw;
-      const stored = sourceRaw
+      const stored = sourceRaw !== null
         ? parseStoredConfig(sourceRaw, fallbackAnchor, raw === null).config
         : defaults(fallbackAnchor);
       const recoveryAllowed = canUseRoutineRecovery();

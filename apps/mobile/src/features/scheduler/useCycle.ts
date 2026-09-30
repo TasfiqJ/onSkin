@@ -1,6 +1,6 @@
 import type { DisruptionReason } from '@layerwell/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
@@ -15,7 +15,6 @@ import {
   assertRoutineCadenceMutationAdmission,
   assertRoutineRecoveryAvailable,
   endRecovery,
-  loadCycleConfig,
   overrideStagingProducts,
   pauseCycle,
   recoveryProgress,
@@ -40,6 +39,17 @@ import {
   type ScheduledConflictChoice,
   type SchedulerActive,
 } from './orchestrate';
+import {
+  assertCycleConfigAuthority,
+  closedCycleConfigAuthoritySnapshot,
+  CYCLE_CONFIG_DAY_CHANGED,
+  cycleConfigAuthoritySnapshot,
+  cycleConfigQueryKey,
+  cycleConfigQueryScope,
+  readCycleConfigForAuthority,
+  serializeCycleConfigPublication,
+  subscribeCycleConfigAuthorityChanges,
+} from './cycleConfigAuthority';
 import { useProfileBits } from './profile';
 import { nextSlotDate, nightFor, nightIndex, weekAhead, type ProjectedNight } from './projection';
 
@@ -166,10 +176,40 @@ export type CycleHookResult = {
   isExample: boolean;
 };
 
+function useCycleConfigAuthority() {
+  return useSyncExternalStore(
+    subscribeCycleConfigAuthorityChanges,
+    cycleConfigAuthoritySnapshot,
+    closedCycleConfigAuthoritySnapshot,
+  );
+}
+
+/** The same authoritative read boundary is shared by projection and cycle routes. */
+export function useCycleConfig() {
+  const today = useCycleLocalDate();
+  const authority = useCycleConfigAuthority();
+  const query = useQuery({
+    queryKey: authority === null ? ['cycleConfig', 'closed'] : cycleConfigQueryKey(authority, today),
+    queryFn: () => readCycleConfigForAuthority(authority, today),
+    enabled: authority !== null,
+    retry: false,
+  });
+  const current = authority !== null && today === localDateString();
+  return {
+    ...query,
+    today,
+    authority,
+    // React Query may retain previous data after a refetch error. That is not
+    // an authoritative cycle read and must not mount an editable/default cycle.
+    data: current && !query.isError ? query.data : undefined,
+    isLoading: !current || query.isLoading,
+  };
+}
+
 export function useCycle(): CycleHookResult {
   const shelf = useShelf();
-  const today = useCycleLocalDate();
-  const cfg = useQuery({ queryKey: ['cycleConfig', today], queryFn: loadCycleConfig });
+  const cfg = useCycleConfig();
+  const today = cfg.today;
   const profile = useProfileBits();
   // Live ramp state (the same source tolerance.tsx writes), so the user's actual
   // ramped frequency reaches the scheduler instead of every active defaulting to
@@ -303,6 +343,7 @@ export function useCycle(): CycleHookResult {
 
 export function useCycleMutations() {
   const qc = useQueryClient();
+  const authority = useCycleConfigAuthority();
   const commit = (
     operation: () => Promise<CycleConfig>,
     afterCommit?: () => void,
@@ -311,17 +352,60 @@ export function useCycleMutations() {
     // publication, analytics, or any storage call. cycleStore repeats the check
     // so direct/non-React callers are fail-closed too.
     assertRoutineCadenceMutationAdmission();
-    return runCurrentHealthDataOperation(async (lease) => {
-      lease.assertCurrent();
-      await qc.cancelQueries({ queryKey: ['cycleConfig'] });
-      lease.assertCurrent();
-      const next = await operation();
-      lease.assertCurrent();
-      qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
-      lease.assertCurrent();
-      afterCommit?.();
-      lease.assertCurrent();
-    });
+    // A handler captured before close/re-grant may not borrow the new lease.
+    assertCycleConfigAuthority(authority);
+    const capturedAuthority = authority;
+    const queryKey = cycleConfigQueryScope(capturedAuthority);
+    return runCurrentHealthDataOperation((lease) =>
+      serializeCycleConfigPublication(capturedAuthority, async () => {
+        const assertCurrent = () => {
+          lease.assertCurrent();
+          assertCycleConfigAuthority(capturedAuthority);
+        };
+        try {
+          assertCurrent();
+          await qc.cancelQueries({ queryKey });
+          assertCurrent();
+          const operationDay = localDateString();
+          const next = await operation();
+          assertCurrent();
+          // A read begun during the write must not overwrite its committed state.
+          await qc.cancelQueries({ queryKey });
+          assertCurrent();
+          const publicationDay = localDateString();
+          const published = publicationDay === operationDay
+            ? next
+            : await readCycleConfigForAuthority(capturedAuthority, publicationDay);
+          assertCurrent();
+          if (publicationDay !== localDateString()) throw new Error(CYCLE_CONFIG_DAY_CHANGED);
+          qc.setQueryData<CycleConfig>(
+            cycleConfigQueryKey(capturedAuthority, publicationDay),
+            published,
+          );
+          assertCurrent();
+          afterCommit?.();
+          assertCurrent();
+        } catch (error) {
+          // Only explicit ambiguous/conflicting outcomes discard prior cache
+          // immediately. Ordinary compensated failures retain the draft while
+          // a fresh read checks the prior state. Neither path confirms the save
+          // or changes privateKV's original error.
+          try {
+            assertCurrent();
+            const unknownOutcome = error instanceof Error && (
+              error.message === 'PRIVATE_KV_WRITE_ROLLBACK_FAILED' ||
+              error.message === 'PRIVATE_KV_WRITE_CONFLICT'
+            );
+            if (unknownOutcome) await qc.resetQueries({ queryKey });
+            else await qc.invalidateQueries({ queryKey });
+          } catch {
+            // Stale authority must do nothing to successor queries. A failed
+            // reset/read also cannot replace the original persistence failure.
+          }
+          throw error;
+        }
+      }),
+    );
   };
   return {
     setVariant(variant: CycleConfig['variant']) {
