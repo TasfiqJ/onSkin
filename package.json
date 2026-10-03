@@ -266,6 +266,7 @@
     "docs:readiness-status-audit:check": "npm run docs:readiness-status-audit:test && node scripts/docs/readiness-status-audit.mjs --strict --check",
     "docs:device-support-policy-audit": "node scripts/docs/device-support-policy-audit.mjs",
     "docs:device-support-policy-audit:test": "node --test scripts/docs/device-support-policy-audit.test.mjs",
+    "docs:device-support-policy-audit:source": "node scripts/docs/device-support-policy-audit.mjs --strict --source-integration",
     "docs:device-support-policy-audit:strict": "node scripts/docs/device-support-policy-audit.mjs --strict",
     "docs:device-support-policy-audit:check": "node scripts/docs/device-support-policy-audit.mjs --strict --check",
     "docs:performance-readiness-audit": "node scripts/docs/performance-readiness-audit.mjs",
