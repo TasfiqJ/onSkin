@@ -192,7 +192,15 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completionStorageKey = JSON.stringify(scope)');
     expect(source).toContain('actionState.storageKey !== completionStorageKey');
     expect(source).toContain('staleTime: 0');
-    expect(source).toContain('return completionView.isActive() && completionDateScopeCurrent() && currentRoutineType() === type');
+    const viewGuardStart = source.indexOf('function completionViewCurrent()');
+    const viewGuardEnd = source.indexOf('function assertCompletionViewCurrent()', viewGuardStart);
+    expect(viewGuardStart).toBeGreaterThanOrEqual(0);
+    expect(viewGuardEnd).toBeGreaterThan(viewGuardStart);
+    const viewGuard = source.slice(viewGuardStart, viewGuardEnd);
+    expect(viewGuard).toContain('planSource.isSourceCurrent()');
+    expect(viewGuard).toContain('completionView.isActive()');
+    expect(viewGuard).toContain('completionDateScopeCurrent()');
+    expect(viewGuard).toContain('currentRoutineType() === type');
     const storageGuard = source.slice(source.indexOf('function completionStorageScopeCurrent()'),
       source.indexOf('function assertCompletionStorageScopeCurrent()'));
     expect(storageGuard).toContain('assertHealthDataWriteLease(completionLease)');

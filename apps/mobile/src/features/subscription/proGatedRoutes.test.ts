@@ -158,7 +158,9 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('onReviewSafety={');
     expect(plan).toContain("? () => router.push('/settings/skin-profile?returnTo=plan')");
     expect(plan).toContain('Review pregnancy and breastfeeding setting');
-    expect(plan).toContain('const { data: cycleData } = useCycle();');
+    expect(plan).toContain('const cycleSource = useCycle();');
+    expect(plan).toContain('const cycleState = routineCycleViewState(planSource, cycleSource);');
+    expect(plan).toContain("const cycleData = cycleState === 'ready' ? cycleSource.data : undefined;");
     expect(plan).toContain(
       'const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;',
     );

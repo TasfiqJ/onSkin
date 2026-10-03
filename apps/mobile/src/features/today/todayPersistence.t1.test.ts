@@ -23,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   active: undefined as HealthDataWriteLease | undefined,
   disk: new Set<string>(), events: [] as string[],
   get: vi.fn(), unsynced: vi.fn(), toggle: vi.fn(), recover: vi.fn(), progressGet: vi.fn(),
+  shelfRead: vi.fn(), profileRead: vi.fn(), orderRead: vi.fn(),
   success: vi.fn(), track: vi.fn(), review: vi.fn(), push: vi.fn(),
   phase: 'AM' as 'AM' | 'PM',
   assert: (expected: HealthDataWriteLease | undefined): void => {
@@ -43,7 +44,54 @@ vi.mock('expo-router', () => ({ router: { push: mocks.push } }));
 vi.mock('@/features/ask/AskTeaser', () => ({ AskTeaser: 'AskTeaser' }));
 vi.mock('@/features/recommendations/RecommendationsTeaser', () => ({ RecommendationsTeaser: 'RecommendationsTeaser' }));
 vi.mock('@/features/subscription/ReverseTrialBanner', () => ({ ReverseTrialBanner: 'ReverseTrialBanner' }));
-vi.mock('@/features/routine/usePlan', () => ({ usePlan: () => ({ data: {}, orderLease: mocks.active }) }));
+// PLAN-R1: exercise the actual usePlan and real query observers. Only canonical
+// IO and clinical generation are controlled here; readiness is never mocked.
+vi.mock('@/features/shelf/useShelf', async () => {
+  const { useQuery } = await import('@tanstack/react-query');
+  return { useShelf: () => useQuery({
+    queryKey: ['shelf'], networkMode: 'always', retry: false, staleTime: Infinity,
+    queryFn: async () => {
+      const lease = mocks.active;
+      mocks.assert(lease);
+      const data = await mocks.shelfRead();
+      mocks.assert(lease);
+      return data;
+    },
+  }) };
+});
+vi.mock('@/features/scheduler/profile', async () => {
+  const { useQuery } = await import('@tanstack/react-query');
+  return { useProfileBits: () => useQuery({
+    queryKey: ['skinProfileBits'], networkMode: 'always', retry: false, staleTime: Infinity,
+    queryFn: async () => {
+      const lease = mocks.active;
+      mocks.assert(lease);
+      const data = await mocks.profileRead();
+      mocks.assert(lease);
+      return data;
+    },
+  }) };
+});
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: (...args: unknown[]) => mocks.orderRead(...args),
+  updatePrivateItem: vi.fn(),
+}));
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingLeaseSnapshot: () => mocks.active ?? null,
+  subscribeActiveHealthProcessingLeaseChanges: () => () => undefined,
+}));
+vi.mock('@/features/scheduler/profileMapping', () => ({ routinePlanProfileLabel: () => 'Your profile' }));
+vi.mock('@/features/routine/generate', () => ({
+  generatePlan: (products: { id: string; name: string }[]) => ({
+    am: products.map((product, index) => ({
+      productId: product.id, name: product.name, instruction: 'Use as directed.',
+      order: index, cadence: 'stable', role: 'cleanser',
+    })),
+    pm: [], cycle: null, ramp: [], safetyExclusions: [], cadenceWithheld: [],
+    sequencingWithheld: [], unplacedProducts: [], gaps: [], conflicts: [],
+    conflictCoverageStatus: 'compatible', unsupportedConflictPairs: [],
+  }),
+}));
 vi.mock('@/features/routine/useProgress', async () => {
   const { useQuery } = await import('@tanstack/react-query');
   return { useProgress: () => {
@@ -96,6 +144,7 @@ vi.mock('@/features/today/routineProjection', () => ({
 }));
 vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
   HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'CLOSED',
+  captureHealthDataWriteLease: () => { mocks.assert(mocks.active); return { ...mocks.active! }; },
   assertHealthDataWriteLease: (lease: HealthDataWriteLease) => mocks.assert(lease),
   runCurrentHealthDataOperation: async <T,>(operation: (lease: HealthDataWriteOperationLease) => T | Promise<T>): Promise<T> => {
     const expected = mocks.active;
@@ -109,6 +158,7 @@ vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
 vi.mock('@/features/review/prompt', () => ({ requestReviewAfterValue: mocks.review }));
 vi.mock('@/lib/launch/phase7', () => ({ phase7Flags: { cloudAsk: false } }));
 vi.mock('@/theme/haptics', () => ({ haptics: { success: mocks.success, select: () => undefined } }));
+vi.mock('@/lib/navigation/safeBack', () => ({ APP_YOU_ROUTE: '/you', backOrReplace: vi.fn() }));
 vi.mock('@/theme/tokens', () => ({ colors: {} }));
 vi.mock('@/lib/cn', () => ({ cn: (...values: unknown[]) => values.filter(Boolean).join(' ') }));
 
@@ -179,6 +229,15 @@ beforeEach(() => {
   completionActionStateForLease(undefined);
   mocks.active = { generation: 1, epoch: 1, ownerUserId: 'owner-a', accountGeneration: 0, expiresAt: null };
   mocks.disk = new Set(); mocks.events = []; mocks.phase = 'AM';
+  for (const read of [mocks.shelfRead, mocks.profileRead, mocks.orderRead]) read.mockReset();
+  mocks.shelfRead.mockResolvedValue({
+    items: [{ id: 'product', engineProduct: { id: 'product', name: 'Test product', tags: [] } }],
+    conflictChoices: [],
+  });
+  mocks.profileRead.mockResolvedValue({
+    source: 'local', sensitivity: 'normal', pregnancy: false, pregnancyStatus: 'none', goals: [],
+  });
+  mocks.orderRead.mockResolvedValue(null);
   for (const mock of [mocks.get, mocks.unsynced, mocks.toggle, mocks.recover, mocks.progressGet, mocks.success, mocks.track, mocks.review, mocks.push]) mock.mockReset();
   mocks.get.mockImplementation(async () => { mocks.events.push('read'); return new Set(mocks.disk); });
   mocks.unsynced.mockResolvedValue([]);

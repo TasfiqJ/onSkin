@@ -10,6 +10,7 @@ import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
+import { PlanSourceNotice, planSourceViewState, routineCycleViewState } from '@/features/routine/PlanSourceNotice';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { requestReviewAfterValue } from '@/features/review/prompt';
@@ -43,6 +44,7 @@ import {
   runCurrentHealthDataOperation,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -465,9 +467,20 @@ export default function TodayScreen() {
   const clock = useRoutineClock({ includeMinuteUpdates: true });
   const type = clock.phase;
   const dark = type === 'PM';
-  const { data: planData, orderLease: completionLease } = usePlan();
+  const planSource = usePlan();
+  const sourceState = planSourceViewState(planSource);
+  const completionLease = planSource.orderLease;
   const { data: progress } = useProgress();
-  const { data: cycleData } = useCycle();
+  const cycleSource = useCycle();
+  const cycleState = routineCycleViewState(planSource, cycleSource);
+  const planData = sourceState === 'ready' &&
+    (cycleState === 'ready' || cycleState === 'not-required') ? planSource.data : undefined;
+  // Never pass unconfirmed cycle data into presentation, including neutral paths.
+  const cycleData = cycleState === 'ready' ? cycleSource.data : undefined;
+  function cycleCurrent(): boolean {
+    const current = routineCycleViewState(planSource, cycleSource);
+    return current === cycleState && (current === 'not-required' || current === 'ready');
+  }
   const qc = useQueryClient();
   const today = clock.localDate;
   // usePlan already observes exact health/account lease changes and expiry.
@@ -556,7 +569,8 @@ export default function TodayScreen() {
   }
 
   function completionViewCurrent(): boolean {
-    return completionView.isActive() && completionDateScopeCurrent() && currentRoutineType() === type;
+    return planSource.isSourceCurrent() && completionView.isActive() &&
+      completionDateScopeCurrent() && currentRoutineType() === type;
   }
 
   function assertCompletionViewCurrent(): void {
@@ -651,16 +665,23 @@ export default function TodayScreen() {
       stepOrder: number;
     },
   ) {
-    if (completionUnavailable || !completionViewCurrent() || !actionState.begin(key)) return;
+    if (completionUnavailable || !completionViewCurrent() ||
+        !cycleCurrent() || !actionState.begin(key)) return;
     let persistenceConfirmed = false;
     let completionReadsConfirmed = false;
     let reviewMomentEarned = false;
     try {
       await runCurrentHealthDataOperation(async (lease) => {
         lease.assertCurrent();
+        // Admission can yield before this callback. An unavailable plan is not
+        // evidence that a completion write was attempted or failed.
+        if (!planSource.isSourceCurrent() || !cycleCurrent()) return;
         assertCompletionViewCurrent();
         await cancelCompletionReads();
         lease.assertCurrent();
+        // A source refetch can start during cancellation. Do not dispatch a
+        // checkoff from the old plan, or mark a never-dispatched write as failed.
+        if (!planSource.isSourceCurrent() || !cycleCurrent()) return;
         // New checkoffs require both the captured date and its presentation
         // phase. Once dispatched, settlement belongs to storage, not that view.
         assertCompletionViewCurrent();
@@ -844,6 +865,21 @@ export default function TodayScreen() {
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
 
+  // Plan admission is additional to (never a replacement for) T1 read-back.
+  // Neither absent data nor retained cached data can become a current routine.
+  if (sourceState !== 'ready') {
+    return (
+      <Screen tone={dark ? 'night' : undefined} edges={['top']}>
+        <PlanSourceNotice
+          dark={dark}
+          loading={sourceState === 'loading'}
+          onRetry={() => void planSource.retry().catch(() => undefined)}
+          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+        />
+      </Screen>
+    );
+  }
+
   // Unknown is not zero. Keep cached counts, checkboxes, streaks and empty-plan
   // copy off this surface until both local reads are confirmed for this lease.
   if (completionUnavailable) {
@@ -855,6 +891,22 @@ export default function TodayScreen() {
         </Text>
         <Text style={{ color: dark ? colors.cream : colors.muted }}>{dateLabel}</Text>
         <CompletionStatusNotice dark={dark} loading={completionLoading} onRetry={retryCompletions} />
+      </Screen>
+    );
+  }
+
+  // Completion read-back remains independently reachable above. A failed or
+  // pending cycle cannot erase T1's latch, and T1 recovery cannot confirm a cycle.
+  if (cycleState === 'loading' || cycleState === 'unavailable') {
+    return (
+      <Screen tone={dark ? 'night' : undefined} edges={['top']}>
+        <PlanSourceNotice
+          cycle
+          dark={dark}
+          loading={cycleState === 'loading'}
+          onRetry={() => void cycleSource.retry().catch(() => undefined)}
+          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+        />
       </Screen>
     );
   }

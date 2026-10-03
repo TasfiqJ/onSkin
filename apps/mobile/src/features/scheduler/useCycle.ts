@@ -176,6 +176,15 @@ export type CycleHookResult = {
   isExample: boolean;
 };
 
+/** Additional read-side contract for Plan/Today; CYCLE-R2 storage is unchanged. */
+export type RecoverableCycleHookResult = CycleHookResult & {
+  isRefreshing: boolean;
+  /** Only navigation AFTER a confirmed start may accept that start's new config.
+   * Checklist admission always requires the exact captured config snapshot. */
+  isSourceCurrent: (options?: { afterConfigCommit?: boolean }) => boolean;
+  retry: () => Promise<void>;
+};
+
 function useCycleConfigAuthority() {
   return useSyncExternalStore(
     subscribeCycleConfigAuthorityChanges,
@@ -206,7 +215,8 @@ export function useCycleConfig() {
   };
 }
 
-export function useCycle(): CycleHookResult {
+export function useCycle(): RecoverableCycleHookResult {
+  const qc = useQueryClient();
   const shelf = useShelf();
   const cfg = useCycleConfig();
   const today = cfg.today;
@@ -323,21 +333,64 @@ export function useCycle(): CycleHookResult {
 
   const isLoading = shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading;
   const isError = shelf.isError || cfg.isError || profile.isError || ramp.isError;
+  const isRefreshing = Boolean(
+    shelf.isFetching || cfg.isFetching || profile.isFetching || ramp.isRefreshing,
+  );
+  const sourceReady = Boolean(
+    !isLoading && !isError && !isRefreshing && !cfg.isPaused &&
+    shelf.data !== undefined && cfg.data !== undefined && profile.data !== undefined &&
+    profile.data.source !== 'unavailable' && ramp.sourceReady && data !== undefined,
+  );
+  function assertReadAuthority(): void {
+    assertCycleConfigAuthority(cfg.authority);
+    if (today !== localDateString()) throw new Error(CYCLE_CONFIG_DAY_CHANGED);
+  }
+  function isSourceCurrent({ afterConfigCommit = false } = {}): boolean {
+    if (!sourceReady || !cadenceReady || !canUseRoutineCadence() ||
+        recoveryReady !== canUseRoutineRecovery() ||
+        phasedIntroductionDelayDays !== routinePhasedIntroductionDelayDays() ||
+        !ramp.isSourceCurrent()) return false;
+    try {
+      assertReadAuthority();
+      if (!cfg.authority) return false;
+      // Live cache checks reject a stale handler before React Query's batched
+      // observer notification. Shelf/Profile freshness proof is owned by ramp's
+      // real usePlan; compare this hook's own snapshots as well.
+      const inputs = [
+        { key: ['shelf'], snapshot: shelf.data },
+        { key: ['skinProfileBits'], snapshot: profile.data },
+        { key: cycleConfigQueryKey(cfg.authority, today), snapshot: cfg.data },
+      ];
+      return inputs.every(({ key, snapshot }, index) => {
+        const current = qc.getQueryState(key);
+        return current?.status === 'success' && current.fetchStatus === 'idle' &&
+          !current.isInvalidated && current.data !== undefined &&
+          ((afterConfigCommit && index === 2) || current.data === snapshot);
+      });
+    } catch {
+      return false;
+    }
+  }
+  async function retry(): Promise<void> {
+    assertReadAuthority();
+    // Ramp retry also checks the exact plan authority before and after reading.
+    // Never clear cache, alter config, or seed a default to acknowledge failure.
+    await ramp.retry();
+    assertReadAuthority();
+    await cfg.refetch({ cancelRefetch: false, throwOnError: true });
+    assertReadAuthority();
+  }
   return {
+    // Retained computed data is NOT authority; Plan/Today use the contract above.
+    // Keep other CYCLE-R2 projection and closed-cadence semantics unchanged.
     data,
     isLoading,
     isError,
-    sourceReady: Boolean(
-      !isLoading &&
-      !isError &&
-      shelf.data !== undefined &&
-      cfg.data !== undefined &&
-      profile.data !== undefined &&
-      profile.data.source !== 'unavailable' &&
-      ramp.sourceReady &&
-      data !== undefined,
-    ),
+    sourceReady,
     isExample: ramp.isExample,
+    isRefreshing,
+    isSourceCurrent,
+    retry,
   };
 }
 

@@ -59,15 +59,34 @@ vi.mock('@/lib/consent/healthDataWriteAdmission', () => {
   };
 });
 vi.mock('@/lib/storage/privateKV', () => ({ getPrivateItem: mocks.read, updatePrivateItem: vi.fn() }));
-vi.mock('@/features/shelf/useShelf', () => ({
-  useShelf: () => ({ isLoading: false, isError: false, data: { items: [
-    { id: 'a', engineProduct: { id: 'a', name: 'a', tags: [] }, category: 'toner' },
-    { id: 'b', engineProduct: { id: 'b', name: 'b', tags: [] }, category: 'toner' },
-  ] } }),
-}));
-vi.mock('@/features/scheduler/profile', () => ({
-  useProfileBits: () => ({ isLoading: false, isError: false, data: { source: 'local' } }),
-}));
+// PLAN-R2: real canonical QueryClient observers replace inert data-only mocks.
+// The exact-authority proof must perform actual successful reads, not receive a
+// pre-labelled ready source. G2 orderStore/privateKV boundaries stay unchanged.
+vi.mock('@/features/shelf/useShelf', async () => {
+  const { useQuery } = await import('@tanstack/react-query');
+  const { runCurrentHealthDataOperation } = await import('@/lib/consent/healthDataWriteAdmission');
+  return { useShelf: () => useQuery({
+    queryKey: ['shelf'], networkMode: 'always', retry: false, staleTime: Infinity,
+    queryFn: () => runCurrentHealthDataOperation(async (lease) => {
+      lease.assertCurrent();
+      return { items: [
+        { id: 'a', engineProduct: { id: 'a', name: 'a', tags: [] }, category: 'toner' },
+        { id: 'b', engineProduct: { id: 'b', name: 'b', tags: [] }, category: 'toner' },
+      ] };
+    }),
+  }) };
+});
+vi.mock('@/features/scheduler/profile', async () => {
+  const { useQuery } = await import('@tanstack/react-query');
+  const { runCurrentHealthDataOperation } = await import('@/lib/consent/healthDataWriteAdmission');
+  return { useProfileBits: () => useQuery({
+    queryKey: ['skinProfileBits'], networkMode: 'always', retry: false, staleTime: Infinity,
+    queryFn: () => runCurrentHealthDataOperation(async (lease) => {
+      lease.assertCurrent();
+      return { source: 'local' };
+    }),
+  }) };
+});
 vi.mock('@/features/scheduler/profileMapping', () => ({ routinePlanProfileLabel: () => 'Test' }));
 vi.mock('./planProfileAdmission', () => ({
   routineGenerationProfileForRealShelf: () => ({ sensitivity: 'neutral', pregnancy: false, reproductiveStatus: 'none', goals: [] }),

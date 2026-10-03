@@ -270,8 +270,12 @@ test('ramp state and cadence-derived notifications close before reads or side ef
   const behaviouralTriggers = read(paths.behaviouralTriggers);
   const notificationDelivery = read(paths.notificationDelivery);
 
-  assert.match(useRamp, /enabled:\s*cadenceReady\s*&&\s*!planLoading/u);
-  assert.match(useRamp, /const items\s*=\s*!cadenceReady\s*\?\s*\[\]/u);
+  assert.match(
+    useRamp,
+    /const planCurrent\s*=\s*plan\.sourceReady\s*&&\s*!plan\.isError\s*&&\s*!plan\.isLoading\s*&&\s*!plan\.isRefreshing\s*&&\s*plan\.isSourceCurrent\(\)/u,
+  );
+  assert.match(useRamp, /enabled:\s*cadenceReady\s*&&\s*planCurrent/u);
+  assert.match(useRamp, /const items\s*=\s*!cadenceReady\s*\|\|\s*!planCurrent\s*\?\s*\[\]/u);
   assert.match(
     useRamp,
     /recoveryReady\s*\|\|\s*item\.state\.toleranceState\s*!==\s*['"]paused_irritation['"]/u,

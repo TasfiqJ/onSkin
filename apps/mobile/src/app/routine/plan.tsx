@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
@@ -16,6 +16,7 @@ import {
   canUseRoutineSequencing,
 } from '@/features/routine/reviewGate';
 import { usePlan } from '@/features/routine/usePlan';
+import { PlanSourceNotice, planSourceViewState, routineCycleViewState } from '@/features/routine/PlanSourceNotice';
 import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
@@ -180,29 +181,70 @@ function FirstInsightCard({
 
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
-  const { data } = usePlan();
-  const { data: cycleData } = useCycle();
+  const planSource = usePlan();
+  const sourceState = planSourceViewState(planSource);
+  const data = sourceState === 'ready' ? planSource.data : undefined;
+  const cycleSource = useCycle();
+  const cycleState = routineCycleViewState(planSource, cycleSource);
+  // Never pass unconfirmed cycle data into presentation, including neutral paths.
+  const cycleData = cycleState === 'ready' ? cycleSource.data : undefined;
+  function cycleCurrent(afterConfigCommit = false): boolean {
+    const current = routineCycleViewState(planSource, cycleSource, { afterConfigCommit });
+    return current === cycleState && (current === 'not-required' || current === 'ready');
+  }
   const cycleMutations = useCycleMutations();
-  const [starting, setStarting] = useState(false);
-  const [startFailed, setStartFailed] = useState(false);
+  // State from a predecessor lease is invisible on the successor's first render.
+  // The attempt identity also protects queued settlement updates within a lease.
+  const [startUi, setStartUi] = useState<{
+    authority: typeof planSource.orderLease;
+    attempt: object;
+    status: 'starting' | 'failed' | 'idle';
+  } | null>(null);
+  const starting = startUi?.authority === planSource.orderLease && startUi?.status === 'starting';
+  const startFailed = startUi?.authority === planSource.orderLease && startUi?.status === 'failed';
+  const mounted = useRef(false);
+  const startAttempt = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    mounted.current = true;
+    startAttempt.current = null;
+    return () => {
+      mounted.current = false;
+      startAttempt.current = null;
+    };
+  }, [planSource.orderLease]);
   const plan = data?.plan;
   const trackedPlanView = useRef(false);
   const compactPlan = height <= 640;
   const planScrollBottomPadding = compactPlan ? 144 : 112;
 
   async function startToday() {
-    if (starting) return;
-    setStarting(true);
-    setStartFailed(false);
+    if (!mounted.current || starting || startAttempt.current ||
+        !planSource.isSourceCurrent() || !cycleCurrent()) return;
+    const attempt = {};
+    startAttempt.current = attempt;
+    setStartUi({ authority: planSource.orderLease, attempt, status: 'starting' });
     try {
+      let configCommitted = false;
       if (canUseRoutineCadence() && canUseRoutineRecovery() && cycleData?.cycle) {
         await cycleMutations.start();
+        configCommitted = true;
       }
+      if (!mounted.current || startAttempt.current !== attempt ||
+          !planSource.isSourceCurrent() || !cycleCurrent(configCommitted)) return;
       router.replace('/today');
     } catch {
-      setStartFailed(true);
+      if (mounted.current && startAttempt.current === attempt && planSource.isSourceCurrent()) {
+        setStartUi({ authority: planSource.orderLease, attempt, status: 'failed' });
+      }
     } finally {
-      setStarting(false);
+      if (mounted.current && startAttempt.current === attempt) {
+        startAttempt.current = null;
+        setStartUi((current) =>
+          current?.attempt === attempt && current.status === 'starting'
+            ? { ...current, status: 'idle' }
+            : current,
+        );
+      }
     }
   }
 
@@ -231,7 +273,8 @@ export default function PlanScreen() {
   const firstInsight = plan ? routineFirstInsightCopy(plan, data?.isExample ?? true) : null;
 
   useEffect(() => {
-    if (!data || trackedPlanView.current) {
+    if (!data || !planSource.isSourceCurrent() ||
+        (cycleState !== 'ready' && cycleState !== 'not-required') || trackedPlanView.current) {
       return;
     }
 
@@ -247,12 +290,37 @@ export default function PlanScreen() {
       isExample: data.isExample,
       source,
     });
-  }, [data]);
+  }, [data, planSource, cycleState]);
 
   const planNote =
     canUseRoutineSequencing() && plan && plan.unplacedProducts.length === 0
       ? (plan.gaps[0] ?? null)
       : null;
+
+  if (sourceState !== 'ready') {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <PlanSourceNotice
+          loading={sourceState === 'loading'}
+          onRetry={() => void planSource.retry().catch(() => undefined)}
+          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+        />
+      </Screen>
+    );
+  }
+
+  if (cycleState === 'loading' || cycleState === 'unavailable') {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <PlanSourceNotice
+          cycle
+          loading={cycleState === 'loading'}
+          onRetry={() => void cycleSource.retry().catch(() => undefined)}
+          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+        />
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -543,7 +611,7 @@ export default function PlanScreen() {
       >
         {startFailed ? <CycleMutationError className="mb-2 mt-0" /> : null}
         <Button
-          disabled={starting}
+          disabled={starting || !cycleCurrent()}
           label={starting ? 'Starting...' : startFailed ? 'Try again' : 'Start today'}
           variant="accent"
           onPress={() => void startToday()}

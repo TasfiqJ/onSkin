@@ -343,7 +343,14 @@ test('Today publishes success only after persistence and fails closed on unreada
   assert.match(today, /useSyncExternalStore\(/u);
   assert.doesNotMatch(today, /setActionState|renderCompletionState|actionState\.deactivate/u);
   assert.match(today, /staleTime:\s*0/u);
-  assert.match(today, /return completionView\.isActive\(\) && completionDateScopeCurrent\(\) && currentRoutineType\(\) === type/u);
+  const viewGuardStart = today.indexOf('function completionViewCurrent()');
+  const viewGuardEnd = today.indexOf('function assertCompletionViewCurrent()', viewGuardStart);
+  assert.ok(viewGuardStart !== -1 && viewGuardEnd > viewGuardStart);
+  const viewGuard = today.slice(viewGuardStart, viewGuardEnd);
+  assert.match(
+    viewGuard,
+    /return\s+planSource\.isSourceCurrent\(\)\s*&&\s*completionView\.isActive\(\)\s*&&\s*completionDateScopeCurrent\(\)\s*&&\s*currentRoutineType\(\)\s*===\s*type/u,
+  );
   assert.match(today, /return completionStorageScopeCurrent\(\) && localDateString\(\) === date/u);
   assert.match(today, /if \(completionView\.isActive\(\) && completionDateScopeCurrent\(\)\) \{/u);
   assert.match(today, /predicate: completionQueryInStorageScope/u);
