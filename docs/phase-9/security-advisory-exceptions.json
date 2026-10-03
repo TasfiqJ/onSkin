@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "exceptions": [
+    {
+      "package": "braces",
+      "version": "3.0.3",
+      "advisory": "GHSA-vfj7-8cjw-p6xm",
+      "rationale": "No patched release exists. Expo/Metro requires micromatch, and the supported Tailwind 3 toolchain requires chokidar; both require braces. Replacing either build toolchain would change the supported Expo and NativeWind setup.",
+      "scope": "Development and build tooling only: Expo/Metro file mapping and Tailwind pattern watching; not imported by app runtime source.",
+      "reviewedOn": "2026-10-03",
+      "expiresOn": "2026-10-17",
+      "reviewCondition": "Review immediately when braces, micromatch, Expo/Metro, or the affected Tailwind toolchain publishes a safe replacement; CI fails on any newer braces release or fixed advisory range."
+    },
+    {
+      "package": "node-forge",
+      "version": "1.4.0",
+      "advisory": "GHSA-86w9-cpqp-85rv",
+      "rationale": "No patched release exists. The archive privacy evidence verifier parses PKCS#7 data with node-forge, and the supported Expo CLI and certificate package still require it. Replacing only the direct verifier use would leave both Expo paths.",
+      "scope": "Development, CI, archive evidence, and Expo certificate tooling only; not imported by app runtime source.",
+      "reviewedOn": "2026-10-03",
+      "expiresOn": "2026-10-17",
+      "reviewCondition": "Review immediately when node-forge or the Expo certificate toolchain publishes a safe replacement; CI fails on any newer node-forge release or fixed advisory range."
+    }
+  ]
+}

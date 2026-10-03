@@ -61,12 +61,25 @@ jobs:
         env:
           PHASE9_RUN_NPM_AUDIT: 'true'
 
-      - name: Fail on high or critical npm advisories
+      - name: Capture high or critical npm advisories
         id: npm_audit_high
         continue-on-error: true
         run: |
           mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          set +e
           npm audit --audit-level=high --json > docs/phase-9/generated/ci-scanner-evidence/npm-audit-high.json
+          audit_exit=$?
+          set -e
+          echo "$audit_exit" > docs/phase-9/generated/ci-scanner-evidence/npm-audit-high.exit-code
+          exit "$audit_exit"
+
+      - name: Test reviewed security exceptions
+        run: node --test scripts/phase9/security-advisory-exceptions.test.mjs
+
+      - name: Enforce reviewed npm advisory exceptions
+        id: npm_exception_gate
+        continue-on-error: true
+        run: node scripts/phase9/security-advisory-exceptions.mjs npm
 
       - name: Write code-gate evidence manifest
         if: always()
@@ -79,7 +92,8 @@ jobs:
             "run_id": "${{ github.run_id }}",
             "phase9_verify": "${{ steps.phase9_verify.outcome }}",
             "dependency_sbom": "${{ steps.dependency_sbom.outcome }}",
-            "npm_audit_high": "${{ steps.npm_audit_high.outcome }}"
+            "npm_audit_high": "${{ steps.npm_audit_high.outcome }}",
+            "npm_exception_gate": "${{ steps.npm_exception_gate.outcome }}"
           }
           JSON
 
@@ -98,7 +112,7 @@ jobs:
         run: |
           test "${{ steps.phase9_verify.outcome }}" = "success"
           test "${{ steps.dependency_sbom.outcome }}" = "success"
-          test "${{ steps.npm_audit_high.outcome }}" = "success"
+          test "${{ steps.npm_exception_gate.outcome }}" = "success"
 
   secret-scan:
     name: Secret scanning
@@ -195,6 +209,9 @@ jobs:
             --config p/react \
             --config p/secrets .
 
+      - name: Prepare OSV evidence directory
+        run: mkdir -p docs/phase-9/generated/ci-scanner-evidence
+
       - name: OSV scanner
         id: osv
         continue-on-error: true
@@ -202,8 +219,15 @@ jobs:
         uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2
         with:
           scan-args: |-
+            --format=json
+            --output=docs/phase-9/generated/ci-scanner-evidence/osv-scan.json
             --recursive
             .
+
+      - name: Enforce reviewed OSV advisory exceptions
+        id: osv_exception_gate
+        continue-on-error: true
+        run: node scripts/phase9/security-advisory-exceptions.mjs osv
 
       - name: Write static scanner evidence manifest
         if: always()
@@ -215,7 +239,8 @@ jobs:
             "sha": "${{ github.sha }}",
             "run_id": "${{ github.run_id }}",
             "semgrep": "${{ steps.semgrep.outcome }}",
-            "osv": "${{ steps.osv.outcome }}"
+            "osv": "${{ steps.osv.outcome }}",
+            "osv_exception_gate": "${{ steps.osv_exception_gate.outcome }}"
           }
           JSON
 
@@ -233,7 +258,7 @@ jobs:
         if: always()
         run: |
           test "${{ steps.semgrep.outcome }}" = "success"
-          test "${{ steps.osv.outcome }}" = "success"
+          test "${{ steps.osv_exception_gate.outcome }}" = "success"
 
   live-supabase-adversarial:
     name: Live Supabase adversarial evidence

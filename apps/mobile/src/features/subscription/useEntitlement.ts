@@ -335,9 +335,15 @@ export function useEntitlementActions() {
             if (result.cancelled) nativeCall.markDefinitiveCancellation();
             return activeResult(null, { cancelled: result.cancelled });
           }
-          if (persisted.storeActive) {
-            track(persisted.entitlement?.periodType === 'trial' ? 'trial_started' : 'purchase_completed', {
-              source: 'revenuecat', period_type: persisted.entitlement?.periodType ?? null,
+          if (persisted.storeActive && persisted.entitlement?.periodType === 'trial') {
+            track('trial_started', {
+              source: 'revenuecat',
+              period_type: persisted.entitlement.periodType,
+            });
+          } else if (persisted.storeActive) {
+            track('purchase_completed', {
+              source: 'revenuecat',
+              period_type: persisted.entitlement?.periodType ?? null,
             });
           }
           nativeCall.markProviderResultPersisted(persisted.providerResultPersisted);
