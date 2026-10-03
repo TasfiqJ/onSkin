@@ -192,9 +192,9 @@ describe('cycle week route scheduler notes', () => {
     );
     expect(admissionIndex).toBeGreaterThan(-1);
     expect(healthOperationIndex).toBeGreaterThan(admissionIndex);
-    expect(
-      useCycle.indexOf('await qc.cancelQueries({ queryKey });'),
-    ).toBeGreaterThan(healthOperationIndex);
+    expect(useCycle.indexOf('await qc.cancelQueries({ queryKey });')).toBeGreaterThan(
+      healthOperationIndex,
+    );
     expect(useCycle).toContain('cycleConfigQueryKey(capturedAuthority, publicationDay)');
     expect(useCycle).toContain('readCycleConfigForAuthority(capturedAuthority, publicationDay)');
     expect(useCycle).toContain('assertCycleConfigAuthority(capturedAuthority);');
@@ -252,12 +252,12 @@ describe('cycle week route scheduler notes', () => {
 
   it('keeps scheduler safety notes visible when no cycle is formed', () => {
     const source = readAppRoute('cycle/week.tsx');
-    const noteRenderCount = source.match(/<SchedulerNote note=\{schedulerNote\} \/>/g) ?? [];
+    const noteRenderCount = source.match(/note=\{schedulerNote\}/g) ?? [];
 
     expect(source).toContain('const schedulerNote = data?.notes[0] ?? null;');
     expect(noteRenderCount).toHaveLength(2);
     expect(source.indexOf('No actives to cycle yet.')).toBeLessThan(
-      source.lastIndexOf('<SchedulerNote note={schedulerNote} />'),
+      source.lastIndexOf('note={schedulerNote}'),
     );
   });
 

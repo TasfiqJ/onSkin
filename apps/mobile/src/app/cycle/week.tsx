@@ -9,6 +9,10 @@ import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { withProGate } from '@/features/subscription/ProGate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
+import {
   hasUseTogetherChoiceBetween,
   useCycle,
   type CycleData,
@@ -26,12 +30,21 @@ function WeekScreen() {
 }
 
 function AdmittedWeekScreen() {
-  const { data } = useCycle();
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
+  const { data } = readiness;
+
+  if (!data) return <CycleWeekSourceState readiness={readiness} />;
 
   const cycle = data?.cycle ?? null;
   const variantLabel = cycle ? `${cycle.variant}, ${cycle.lengthNights} nights` : 'simple daily';
   const resolution = data ? resolutionNote(data) : null;
   const schedulerNote = data?.notes[0] ?? null;
+
+  function runCurrent(action: () => void) {
+    if (!readiness.isCurrent()) return;
+    action();
+  }
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
@@ -46,10 +59,12 @@ function AdmittedWeekScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Cycle settings"
-            onPress={() => {
-              haptics.select();
-              router.push('/cycle/settings');
-            }}
+            onPress={() =>
+              runCurrent(() => {
+                haptics.select();
+                router.push('/cycle/settings');
+              })
+            }
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
             <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
@@ -73,12 +88,12 @@ function AdmittedWeekScreen() {
         {data?.paused ? (
           <Banner
             text="Your cycle is paused. Resume whenever you're ready."
-            onPress={() => router.push('/cycle/disruption')}
+            onPress={() => runCurrent(() => router.push('/cycle/disruption'))}
           />
         ) : data?.recovery.active ? (
           <Banner
             text={`Recovery mode · day ${data.recovery.day} of ${data.recovery.days}. Barrier support only.`}
-            onPress={() => router.push('/cycle/recovery')}
+            onPress={() => runCurrent(() => router.push('/cycle/recovery'))}
           />
         ) : null}
 
@@ -115,13 +130,15 @@ function AdmittedWeekScreen() {
                     key={p.dateISO}
                     accessibilityRole="button"
                     accessibilityLabel={`${p.weekday}: ${slotLabel(p.night.slot)} night, cycle night ${cycleNightNumber} of ${cycle.lengthNights}${tonight ? ', tonight' : ''}`}
-                    onPress={() => {
-                      haptics.select();
-                      router.push({
-                        pathname: '/cycle/why-tonight',
-                        params: { date: p.dateISO },
-                      });
-                    }}
+                    onPress={() =>
+                      runCurrent(() => {
+                        haptics.select();
+                        router.push({
+                          pathname: '/cycle/why-tonight',
+                          params: { date: p.dateISO },
+                        });
+                      })
+                    }
                     className="flex-row items-center gap-3.5 rounded-2xl px-4 py-3.5"
                     style={
                       tonight
@@ -201,14 +218,26 @@ function AdmittedWeekScreen() {
               </View>
             ) : null}
 
-            {schedulerNote ? <SchedulerNote note={schedulerNote} /> : null}
+            {schedulerNote ? (
+              <SchedulerNote
+                note={schedulerNote}
+                onOpen={() =>
+                  runCurrent(() => {
+                    haptics.select();
+                    router.push('/cycle/phased-intro');
+                  })
+                }
+              />
+            ) : null}
 
             <Pressable
               accessibilityRole="button"
-              onPress={() => {
-                haptics.select();
-                router.push('/cycle/disruption');
-              }}
+              onPress={() =>
+                runCurrent(() => {
+                  haptics.select();
+                  router.push('/cycle/disruption');
+                })
+              }
               className="mt-6 min-h-[48px] items-center justify-center py-2"
             >
               <Text variant="label" style={{ color: colors.clayBright }}>
@@ -233,10 +262,51 @@ function AdmittedWeekScreen() {
                 acid and we&apos;ll build your cycle.
               </Text>
             </View>
-            {schedulerNote ? <SchedulerNote note={schedulerNote} /> : null}
+            {schedulerNote ? (
+              <SchedulerNote
+                note={schedulerNote}
+                onOpen={() =>
+                  runCurrent(() => {
+                    haptics.select();
+                    router.push('/cycle/phased-intro');
+                  })
+                }
+              />
+            ) : null}
           </>
         )}
       </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function CycleWeekSourceState({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
+  return (
+    <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
+      <StatusBar style={statusBarStyleForSurface('night')} />
+      <View className="flex-1 px-7 pb-10">
+        <View className="mt-2 flex-row items-center justify-between">
+          <RouteIconButton
+            accessibilityLabel="Back"
+            tone="night"
+            onPress={() => backOrReplace(router)}
+          />
+          <View className="min-h-[48px] min-w-[48px]" />
+        </View>
+        <CycleRouteReadinessNotice
+          className="mt-6"
+          state={readiness.state}
+          retrying={readiness.retrying}
+          onRetry={() => void readiness.retry()}
+          tone="night"
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -305,7 +375,7 @@ function ReviewGateEmptyState() {
   );
 }
 
-function SchedulerNote({ note }: { note: string }) {
+function SchedulerNote({ note, onOpen }: { note: string; onOpen: () => void }) {
   const opensPhasedIntro = /add your/i.test(note);
   const noteStyle = {
     backgroundColor: 'rgba(217,161,131,0.08)',
@@ -318,10 +388,7 @@ function SchedulerNote({ note }: { note: string }) {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Review phased introduction"
-        onPress={() => {
-          haptics.select();
-          router.push('/cycle/phased-intro');
-        }}
+        onPress={onOpen}
         className="mt-4 min-h-[48px] flex-row items-center gap-3 rounded-[18px] px-4 py-3"
         style={noteStyle}
       >

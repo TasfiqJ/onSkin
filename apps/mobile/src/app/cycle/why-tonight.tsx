@@ -8,7 +8,15 @@ import {
   canUseRoutineExplainabilityCopy,
 } from '@/features/routine/reviewGate';
 import type { NightReconciliationReason } from '@/features/scheduler/orchestrate';
-import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
+import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
+import {
+  hasUseTogetherChoiceBetween,
+  useCycle,
+  type CycleData,
+} from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -75,7 +83,15 @@ export default function WhyTonightScreen() {
 }
 
 function AdmittedWhyTonightScreen() {
-  const { data } = useCycle();
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
+  const { data } = readiness;
+
+  if (!data) return <WhyTonightSourceState readiness={readiness} />;
+  return <CurrentWhyTonightScreen data={data} />;
+}
+
+function CurrentWhyTonightScreen({ data }: { data: CycleData }) {
   const params = useLocalSearchParams<{ date?: string }>();
   const cycle = data?.cycle ?? null;
   const tonight = data?.tonight ?? null;
@@ -211,6 +227,31 @@ function AdmittedWhyTonightScreen() {
       </View>
 
       <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
+    </Sheet>
+  );
+}
+
+function WhyTonightSourceState({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
+  return (
+    <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
+      <CycleRouteReadinessNotice
+        state={readiness.state}
+        retrying={readiness.retrying}
+        onRetry={() => void readiness.retry()}
+        tone="night"
+      />
+      <Button
+        label="Got it"
+        variant="inverse"
+        className="mt-4"
+        onPress={() => backOrReplace(router)}
+      />
     </Sheet>
   );
 }
