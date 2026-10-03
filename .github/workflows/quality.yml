@@ -275,8 +275,10 @@ jobs:
       - name: Check performance readiness docs
         run: npm run docs:performance-readiness-audit:check
 
-      - name: Check device support policy
-        run: npm run docs:device-support-policy-audit:check
+      - name: Check device support source contract
+        run: |
+          npm run docs:device-support-policy-audit:source
+          npm run docs:device-support-policy-audit:test
 
       - name: Check source packet
         run: npm run docs:source-packet-audit:check

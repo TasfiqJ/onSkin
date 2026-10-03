@@ -406,6 +406,28 @@ test('validates an upstream packet at an exact R prefix when the fresh audit is 
   const releaseAudit = audit(value);
   assert.equal(releaseAudit.status, 'pass');
   assert.equal(validateGovernedPublicationCompletion(releaseAudit, { stage: 'R' }).status, 'pass');
+  const launchSnapshot = releaseAudit.ledger.publicationPolicy.launchContract.snapshot;
+  for (const snapshot of [
+    { ...launchSnapshot, releaseMode: 'all-features' },
+    { ...launchSnapshot, requiredFeatureIds: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11] },
+  ]) {
+    const forgedAudit = {
+      ...releaseAudit,
+      ledger: {
+        ...releaseAudit.ledger,
+        publicationPolicy: {
+          ...releaseAudit.ledger.publicationPolicy,
+          launchContract: {
+            ...releaseAudit.ledger.publicationPolicy.launchContract,
+            snapshot,
+          },
+        },
+      },
+    };
+    const validation = validateGovernedPublicationCompletion(forgedAudit, { stage: 'R' });
+    assert.equal(validation.status, 'blocked');
+    assert.deepEqual(validation.errors, ['pinned S launch contract is not the active iOS lean V1 policy']);
+  }
   publishUnit(value, GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID, 'readiness F');
   const result = audit(value);
   assert.equal(result.status, 'pass');

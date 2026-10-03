@@ -2,6 +2,12 @@ import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
 import { useCycle } from './useCycle';
 
 const mocks = vi.hoisted(() => ({
@@ -90,7 +96,10 @@ function CycleProbe({ publish }: { publish: (value: ReturnType<typeof useCycle>)
 }
 
 describe('useCycle closed-admission publication', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    clearActiveHealthProcessingEpoch();
+    const generation = await runAccountGenerationOperation((lease) => lease.generation);
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: generation });
     (
       globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
     ).IS_REACT_ACT_ENVIRONMENT = true;
@@ -150,6 +159,7 @@ describe('useCycle closed-admission publication', () => {
   afterEach(async () => {
     if (renderer) await act(async () => renderer?.unmount());
     renderer = null;
+    clearActiveHealthProcessingEpoch();
   });
 
   it('preserves stale stored recovery, pause, and skip bytes but publishes only neutral state', async () => {

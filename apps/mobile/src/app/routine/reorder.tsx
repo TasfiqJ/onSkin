@@ -1,12 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import type { PlanStep } from '@/features/routine/generate';
 import {
-  ROUTINE_ORDER_QUERY_KEY,
+  routineOrderQueryKeyForLease,
   routineOrderOverrideForPhase,
   saveRoutineOrderOverrides,
   type RoutineOrderPhase,
@@ -15,6 +15,10 @@ import {
 import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import {
+  assertHealthDataWriteLease,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -51,7 +55,7 @@ function phaseName(phase: RoutineOrderPhase): string {
 }
 
 function phaseOrderKey(steps: readonly PlanStep[]): string {
-  return steps.map((step) => step.productId).join('\u0000');
+  return JSON.stringify(steps.map((step) => step.productId));
 }
 
 function devRoutineOrderSaveFailure(): boolean {
@@ -63,7 +67,7 @@ export default function ReorderScreen() {
   const params = useLocalSearchParams<{ phase?: string | string[] }>();
   const requestedPhase = Array.isArray(params.phase) ? params.phase[0] : params.phase;
   const initialPhase: RoutineOrderPhase = requestedPhase === 'pm' ? 'pm' : 'am';
-  const { data, isLoading } = usePlan();
+  const { data, isLoading, sourceReady, orderLease } = usePlan();
   const canonical = useMemo<PhaseSteps>(
     () => ({
       am: data?.canonicalPlan.am ?? [],
@@ -78,9 +82,16 @@ export default function ReorderScreen() {
     }),
     [data?.plan.am, data?.plan.pm],
   );
-  const editorKey = `${phaseOrderKey(canonical.am)}|${phaseOrderKey(canonical.pm)}|${phaseOrderKey(
-    initial.am,
-  )}|${phaseOrderKey(initial.pm)}|${initialPhase}`;
+  // A saved-order refresh must not remount an open draft. Canonical input or
+  // owner changes still create a fresh editor; saved AM/PM changes do not.
+  const editorKey = JSON.stringify([
+    routineOrderQueryKeyForLease(orderLease),
+    Boolean(data),
+    phaseOrderKey(canonical.am),
+    phaseOrderKey(canonical.pm),
+    [...(data?.activeProductIds ?? [])].sort(),
+    initialPhase,
+  ]);
 
   return (
     <ReorderEditor
@@ -91,6 +102,8 @@ export default function ReorderScreen() {
       activeProductIds={data?.activeProductIds ?? []}
       isExample={Boolean(data?.isExample)}
       isLoading={isLoading}
+      sourceReady={sourceReady && Boolean(data)}
+      orderLease={orderLease}
       persistenceUnavailable={Boolean(data?.orderPersistenceUnavailable)}
       previousOverrides={data?.orderOverrides ?? { schemaVersion: 1, am: [], pm: [] }}
     />
@@ -105,7 +118,9 @@ function ReorderEditor({
   isExample,
   isLoading,
   persistenceUnavailable,
-  previousOverrides,
+  sourceReady,
+  orderLease,
+  previousOverrides: incomingOverrides,
 }: {
   canonical: PhaseSteps;
   initial: PhaseSteps;
@@ -114,9 +129,29 @@ function ReorderEditor({
   isExample: boolean;
   isLoading: boolean;
   persistenceUnavailable: boolean;
+  sourceReady: boolean;
+  orderLease: HealthDataWriteLease | undefined;
   previousOverrides: RoutineOrderOverrides;
 }) {
   const queryClient = useQueryClient();
+  // These snapshots belong to this editor, not to a later cache refresh.
+  const [original] = useState(() => ({
+    initial: { am: [...initial.am], pm: [...initial.pm] },
+    previousOverrides: {
+      ...incomingOverrides,
+      am: [...incomingOverrides.am],
+      pm: [...incomingOverrides.pm],
+    },
+    lease: orderLease,
+  }));
+  const previousOverrides = original.previousOverrides;
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const simulatedSaveFailureUsed = useRef(false);
   const saveInFlight = useRef(false);
   const [orders, setOrders] = useState<PhaseSteps>(initial);
@@ -125,6 +160,20 @@ function ReorderEditor({
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [reloading, setReloading] = useState(false);
+  const reloadInFlight = useRef(false);
+  const editingUnavailable =
+    saving || reloading || isLoading || !sourceReady || persistenceUnavailable || !original.lease;
+
+  function editorIsCurrent(): boolean {
+    if (!mounted.current || !original.lease) return false;
+    try {
+      assertHealthDataWriteLease(original.lease);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   const order = orders[phase];
   const canonicalOrder = canonical[phase];
@@ -136,12 +185,12 @@ function ReorderEditor({
   );
   const selectedIndex = selectedId ? order.findIndex((step) => step.productId === selectedId) : -1;
   const selectedStep = selectedIndex >= 0 ? order[selectedIndex] : null;
-  const amChanged = phaseOrderKey(orders.am) !== phaseOrderKey(initial.am);
-  const pmChanged = phaseOrderKey(orders.pm) !== phaseOrderKey(initial.pm);
+  const amChanged = phaseOrderKey(orders.am) !== phaseOrderKey(original.initial.am);
+  const pmChanged = phaseOrderKey(orders.pm) !== phaseOrderKey(original.initial.pm);
   const hasChanges = amChanged || pmChanged;
 
   function choosePhase(next: RoutineOrderPhase) {
-    if (next === phase || saving) return;
+    if (next === phase || editingUnavailable || saveInFlight.current) return;
     haptics.select();
     setPhase(next);
     setSelectedId(null);
@@ -149,7 +198,7 @@ function ReorderEditor({
   }
 
   function moveSelected(direction: -1 | 1) {
-    if (selectedIndex < 0) return;
+    if (editingUnavailable || saveInFlight.current || selectedIndex < 0) return;
     const nextIndex = selectedIndex + direction;
     if (nextIndex < 0 || nextIndex >= order.length) return;
 
@@ -167,6 +216,7 @@ function ReorderEditor({
 
   async function saveOrder() {
     if (saveInFlight.current || persistenceUnavailable) return;
+    if (editingUnavailable || !editorIsCurrent()) return;
     saveInFlight.current = true;
     if (isExample) {
       backOrReplace(router);
@@ -176,30 +226,53 @@ function ReorderEditor({
     setSaving(true);
     setSaveFailed(false);
     try {
+      const lease = original.lease;
+      if (!lease) return;
+      assertHealthDataWriteLease(lease);
+      const queryKey = routineOrderQueryKeyForLease(lease);
+      // A pre-save disk read must not overwrite the newly committed cache.
+      await queryClient.cancelQueries({ queryKey, exact: true });
+      if (!editorIsCurrent()) return;
       if (devRoutineOrderSaveFailure() && !simulatedSaveFailureUsed.current) {
         simulatedSaveFailureUsed.current = true;
         throw new Error('E2E_ROUTINE_ORDER_SAVE_FAILURE');
       }
 
-      const saved = await saveRoutineOrderOverrides({
-        previous: previousOverrides,
-        next: {
-          schemaVersion: 1,
-          am: routineOrderOverrideForPhase(
-            canonical.am,
-            orders.am,
-            previousOverrides.am,
-            activeProductIds,
-          ),
-          pm: routineOrderOverrideForPhase(
-            canonical.pm,
-            orders.pm,
-            previousOverrides.pm,
-            activeProductIds,
-          ),
+      const saved = await saveRoutineOrderOverrides(
+        {
+          previous: previousOverrides,
+          next: {
+            schemaVersion: 1,
+            // Unedited phases retain the original intent so the store merges
+            // the latest independent edit rather than overwriting that phase.
+            am: amChanged
+              ? routineOrderOverrideForPhase(
+                  canonical.am,
+                  orders.am,
+                  previousOverrides.am,
+                  activeProductIds,
+                )
+              : previousOverrides.am,
+            pm: pmChanged
+              ? routineOrderOverrideForPhase(
+                  canonical.pm,
+                  orders.pm,
+                  previousOverrides.pm,
+                  activeProductIds,
+                )
+              : previousOverrides.pm,
+          },
         },
-      });
-      queryClient.setQueryData(ROUTINE_ORDER_QUERY_KEY, saved);
+        lease,
+      );
+      assertHealthDataWriteLease(lease);
+      if (!mounted.current) {
+        // A user may leave through native navigation after dispatch. Refresh
+        // the same owner's next view, but never navigate or report UI success.
+        void queryClient.invalidateQueries({ queryKey, exact: true });
+        return;
+      }
+      queryClient.setQueryData(queryKey, saved);
 
       if (hasChanges) {
         const changedPhase = amChanged && pmChanged ? 'both' : amChanged ? 'am' : 'pm';
@@ -217,14 +290,33 @@ function ReorderEditor({
       haptics.success();
       backOrReplace(router);
     } catch {
-      setSaveFailed(true);
+      if (editorIsCurrent()) setSaveFailed(true);
     } finally {
       saveInFlight.current = false;
-      setSaving(false);
+      if (mounted.current) setSaving(false);
+    }
+  }
+
+  async function reloadSavedOrder() {
+    if (saveInFlight.current || reloadInFlight.current || !editorIsCurrent()) return;
+    reloadInFlight.current = true;
+    setReloading(true);
+    try {
+      await queryClient.refetchQueries(
+        { queryKey: routineOrderQueryKeyForLease(original.lease), exact: true },
+        { throwOnError: true },
+      );
+      if (editorIsCurrent()) setSaveFailed(false);
+    } catch {
+      if (editorIsCurrent()) setSaveFailed(true);
+    } finally {
+      reloadInFlight.current = false;
+      if (mounted.current) setReloading(false);
     }
   }
 
   function resetPhaseOrder() {
+    if (editingUnavailable || saveInFlight.current) return;
     setOrders((current) => ({ ...current, [phase]: canonicalOrder }));
     setSelectedId(null);
     setNudgeDismissed(true);
@@ -243,8 +335,10 @@ function ReorderEditor({
           <Pressable
             accessibilityRole="button"
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
-            disabled={saving}
-            onPress={() => backOrReplace(router)}
+            disabled={saving || reloading}
+            onPress={() => {
+              if (!saveInFlight.current) backOrReplace(router);
+            }}
           >
             <Text variant="body" tone="muted" className="font-sans-semibold text-[15px]">
               Cancel
@@ -255,11 +349,11 @@ function ReorderEditor({
           </Text>
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ disabled: saving || persistenceUnavailable }}
+            accessibilityState={{ disabled: editingUnavailable }}
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
-            disabled={saving || persistenceUnavailable}
+            disabled={editingUnavailable}
             onPress={() => void saveOrder()}
-            style={{ opacity: saving || persistenceUnavailable ? 0.55 : 1 }}
+            style={{ opacity: editingUnavailable ? 0.55 : 1 }}
           >
             <Text variant="body" tone="clay" className="font-sans-semibold text-[15px]">
               {isExample ? 'Done' : saving ? 'Saving' : 'Save'}
@@ -285,9 +379,9 @@ function ReorderEditor({
                 key={option}
                 aria-selected={selected}
                 accessibilityRole="tab"
-                accessibilityState={{ disabled: saving, selected }}
+                accessibilityState={{ disabled: editingUnavailable, selected }}
                 className="h-[48px] flex-1 items-center justify-center rounded-[6px]"
-                disabled={saving}
+                disabled={editingUnavailable}
                 onPress={() => choosePhase(option)}
                 style={{ backgroundColor: selected ? colors.paper : 'transparent' }}
               >
@@ -334,6 +428,31 @@ function ReorderEditor({
           </View>
         ) : null}
 
+        {!isLoading && !sourceReady && !persistenceUnavailable ? (
+          <View accessibilityRole="alert" className="mt-3 rounded-[8px] bg-clay-tint p-3.5">
+            <Text variant="bodySm" tone="muted">
+              Routine inputs are unavailable. Nothing can be saved until they can be read.
+              If reloading the order does not help, go back and reopen your routine.
+            </Text>
+          </View>
+        ) : null}
+
+        {(persistenceUnavailable || saveFailed || (!isLoading && !sourceReady)) && original.lease ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Reload saved order"
+            accessibilityState={{ disabled: saving || reloading }}
+            disabled={saving || reloading}
+            className="mt-3 min-h-[48px] items-center justify-center rounded-[8px] bg-paper-raised p-3"
+            onPress={() => void reloadSavedOrder()}
+          >
+            <Text variant="bodySm" tone="clay">
+              {reloading ? 'Reloading saved order' : 'Reload saved order'}
+            </Text>
+            <Text variant="bodySm" tone="muted">Your open draft is kept while reloading.</Text>
+          </Pressable>
+        ) : null}
+
         <View className="mt-3 gap-2">
           {isLoading ? (
             <View className="rounded-[8px] bg-paper-raised p-4">
@@ -342,7 +461,7 @@ function ReorderEditor({
               </Text>
             </View>
           ) : null}
-          {!isLoading && order.length === 0 ? (
+          {!isLoading && sourceReady && order.length === 0 ? (
             <View className="rounded-[8px] bg-paper-raised p-4">
               <Text variant="bodySm" tone="muted">
                 {`No ${phaseName(phase).toLowerCase()} steps yet. Add products to your shelf to build this out.`}
@@ -358,16 +477,20 @@ function ReorderEditor({
                 accessibilityHint="Select to reveal Earlier and Later controls"
                 accessibilityLabel={`${step.name}. Step ${index + 1} of ${order.length}`}
                 accessibilityRole="button"
-                accessibilityState={{ selected }}
+                accessibilityState={{ selected, disabled: editingUnavailable }}
                 className={cn(
                   'min-h-[56px] flex-row items-center gap-3 rounded-[8px] bg-paper-raised p-3.5',
                   moving || selected ? 'border-clay' : 'border-hairline',
                 )}
-                disabled={saving || persistenceUnavailable}
-                onPress={() => setSelectedId(selected ? null : step.productId)}
+                disabled={editingUnavailable}
+                onPress={() => {
+                  if (!editingUnavailable && !saveInFlight.current) {
+                    setSelectedId(selected ? null : step.productId);
+                  }
+                }}
                 style={{
                   borderWidth: moving || selected ? 1.5 : 1,
-                  opacity: saving || persistenceUnavailable ? 0.62 : 1,
+                  opacity: editingUnavailable ? 0.62 : 1,
                   ...(moving ? { ...MOVING_SHADOW, transform: [{ translateY: -2 }] } : {}),
                 }}
               >
@@ -400,13 +523,13 @@ function ReorderEditor({
               <Pressable
                 accessibilityLabel={`Move ${selectedStep.name} earlier`}
                 accessibilityRole="button"
-                disabled={selectedIndex === 0 || saving}
+                disabled={selectedIndex === 0 || editingUnavailable}
                 className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
                 style={{
                   backgroundColor: selectedIndex === 0 ? colors.greige : colors.paper,
                   borderColor: colors.hairline,
                   borderWidth: 1,
-                  opacity: selectedIndex === 0 || saving ? 0.55 : 1,
+                  opacity: selectedIndex === 0 || editingUnavailable ? 0.55 : 1,
                 }}
                 onPress={() => moveSelected(-1)}
               >
@@ -417,14 +540,14 @@ function ReorderEditor({
               <Pressable
                 accessibilityLabel={`Move ${selectedStep.name} later`}
                 accessibilityRole="button"
-                disabled={selectedIndex === order.length - 1 || saving}
+                disabled={selectedIndex === order.length - 1 || editingUnavailable}
                 className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
                 style={{
                   backgroundColor:
                     selectedIndex === order.length - 1 ? colors.greige : colors.paper,
                   borderColor: colors.hairline,
                   borderWidth: 1,
-                  opacity: selectedIndex === order.length - 1 || saving ? 0.55 : 1,
+                  opacity: selectedIndex === order.length - 1 || editingUnavailable ? 0.55 : 1,
                 }}
                 onPress={() => moveSelected(1)}
               >
@@ -448,21 +571,23 @@ function ReorderEditor({
             <View className="mt-3 flex-row gap-2">
               <Pressable
                 accessibilityRole="button"
-                accessibilityState={{ disabled: saving }}
+                accessibilityState={{ disabled: editingUnavailable }}
                 className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
-                disabled={saving}
-                style={{ backgroundColor: colors.ink, opacity: saving ? 0.55 : 1 }}
+                disabled={editingUnavailable}
+                style={{ backgroundColor: colors.ink, opacity: editingUnavailable ? 0.55 : 1 }}
                 onPress={resetPhaseOrder}
               >
                 <Text className="font-sans-semibold text-[13px] text-paper">Fix the order</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                accessibilityState={{ disabled: saving }}
+                accessibilityState={{ disabled: editingUnavailable }}
                 className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
-                disabled={saving}
-                style={{ backgroundColor: 'rgba(255,255,255,0.6)', opacity: saving ? 0.55 : 1 }}
-                onPress={() => setNudgeDismissed(true)}
+                disabled={editingUnavailable}
+                style={{ backgroundColor: 'rgba(255,255,255,0.6)', opacity: editingUnavailable ? 0.55 : 1 }}
+                onPress={() => {
+                  if (!editingUnavailable) setNudgeDismissed(true);
+                }}
               >
                 <Text className="font-sans-semibold text-[13px]" style={{ color: colors.muted }}>
                   Keep mine

@@ -18,6 +18,7 @@ export function useSubscriptionOffering({ enabled = true }: SubscriptionOffering
     enabled,
     retry: 1,
     staleTime: 5 * 60 * 1000,
+    refetchOnMount: 'always',
     queryFn: () => getSubscriptionOffering(user?.id),
   });
 }

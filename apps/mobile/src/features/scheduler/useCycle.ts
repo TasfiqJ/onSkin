@@ -1,6 +1,6 @@
 import type { DisruptionReason } from '@layerwell/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
@@ -15,7 +15,6 @@ import {
   assertRoutineCadenceMutationAdmission,
   assertRoutineRecoveryAvailable,
   endRecovery,
-  loadCycleConfig,
   overrideStagingProducts,
   pauseCycle,
   recoveryProgress,
@@ -40,6 +39,17 @@ import {
   type ScheduledConflictChoice,
   type SchedulerActive,
 } from './orchestrate';
+import {
+  assertCycleConfigAuthority,
+  closedCycleConfigAuthoritySnapshot,
+  CYCLE_CONFIG_DAY_CHANGED,
+  cycleConfigAuthoritySnapshot,
+  cycleConfigQueryKey,
+  cycleConfigQueryScope,
+  readCycleConfigForAuthority,
+  serializeCycleConfigPublication,
+  subscribeCycleConfigAuthorityChanges,
+} from './cycleConfigAuthority';
 import { useProfileBits } from './profile';
 import { nextSlotDate, nightFor, nightIndex, weekAhead, type ProjectedNight } from './projection';
 
@@ -166,10 +176,50 @@ export type CycleHookResult = {
   isExample: boolean;
 };
 
-export function useCycle(): CycleHookResult {
-  const shelf = useShelf();
+/** Additional read-side contract for Plan/Today; CYCLE-R2 storage is unchanged. */
+export type RecoverableCycleHookResult = CycleHookResult & {
+  isRefreshing: boolean;
+  /** Only navigation AFTER a confirmed start may accept that start's new config.
+   * Checklist admission always requires the exact captured config snapshot. */
+  isSourceCurrent: (options?: { afterConfigCommit?: boolean }) => boolean;
+  retry: () => Promise<void>;
+};
+
+function useCycleConfigAuthority() {
+  return useSyncExternalStore(
+    subscribeCycleConfigAuthorityChanges,
+    cycleConfigAuthoritySnapshot,
+    closedCycleConfigAuthoritySnapshot,
+  );
+}
+
+/** The same authoritative read boundary is shared by projection and cycle routes. */
+export function useCycleConfig() {
   const today = useCycleLocalDate();
-  const cfg = useQuery({ queryKey: ['cycleConfig', today], queryFn: loadCycleConfig });
+  const authority = useCycleConfigAuthority();
+  const query = useQuery({
+    queryKey: authority === null ? ['cycleConfig', 'closed'] : cycleConfigQueryKey(authority, today),
+    queryFn: () => readCycleConfigForAuthority(authority, today),
+    enabled: authority !== null,
+    retry: false,
+  });
+  const current = authority !== null && today === localDateString();
+  return {
+    ...query,
+    today,
+    authority,
+    // React Query may retain previous data after a refetch error. That is not
+    // an authoritative cycle read and must not mount an editable/default cycle.
+    data: current && !query.isError ? query.data : undefined,
+    isLoading: !current || query.isLoading,
+  };
+}
+
+export function useCycle(): RecoverableCycleHookResult {
+  const qc = useQueryClient();
+  const shelf = useShelf();
+  const cfg = useCycleConfig();
+  const today = cfg.today;
   const profile = useProfileBits();
   // Live ramp state (the same source tolerance.tsx writes), so the user's actual
   // ramped frequency reaches the scheduler instead of every active defaulting to
@@ -283,26 +333,70 @@ export function useCycle(): CycleHookResult {
 
   const isLoading = shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading;
   const isError = shelf.isError || cfg.isError || profile.isError || ramp.isError;
+  const isRefreshing = Boolean(
+    shelf.isFetching || cfg.isFetching || profile.isFetching || ramp.isRefreshing,
+  );
+  const sourceReady = Boolean(
+    !isLoading && !isError && !isRefreshing && !cfg.isPaused &&
+    shelf.data !== undefined && cfg.data !== undefined && profile.data !== undefined &&
+    profile.data.source !== 'unavailable' && ramp.sourceReady && data !== undefined,
+  );
+  function assertReadAuthority(): void {
+    assertCycleConfigAuthority(cfg.authority);
+    if (today !== localDateString()) throw new Error(CYCLE_CONFIG_DAY_CHANGED);
+  }
+  function isSourceCurrent({ afterConfigCommit = false } = {}): boolean {
+    if (!sourceReady || !cadenceReady || !canUseRoutineCadence() ||
+        recoveryReady !== canUseRoutineRecovery() ||
+        phasedIntroductionDelayDays !== routinePhasedIntroductionDelayDays() ||
+        !ramp.isSourceCurrent()) return false;
+    try {
+      assertReadAuthority();
+      if (!cfg.authority) return false;
+      // Live cache checks reject a stale handler before React Query's batched
+      // observer notification. Shelf/Profile freshness proof is owned by ramp's
+      // real usePlan; compare this hook's own snapshots as well.
+      const inputs = [
+        { key: ['shelf'], snapshot: shelf.data },
+        { key: ['skinProfileBits'], snapshot: profile.data },
+        { key: cycleConfigQueryKey(cfg.authority, today), snapshot: cfg.data },
+      ];
+      return inputs.every(({ key, snapshot }, index) => {
+        const current = qc.getQueryState(key);
+        return current?.status === 'success' && current.fetchStatus === 'idle' &&
+          !current.isInvalidated && current.data !== undefined &&
+          ((afterConfigCommit && index === 2) || current.data === snapshot);
+      });
+    } catch {
+      return false;
+    }
+  }
+  async function retry(): Promise<void> {
+    assertReadAuthority();
+    // Ramp retry also checks the exact plan authority before and after reading.
+    // Never clear cache, alter config, or seed a default to acknowledge failure.
+    await ramp.retry();
+    assertReadAuthority();
+    await cfg.refetch({ cancelRefetch: false, throwOnError: true });
+    assertReadAuthority();
+  }
   return {
+    // Retained computed data is NOT authority; Plan/Today use the contract above.
+    // Keep other CYCLE-R2 projection and closed-cadence semantics unchanged.
     data,
     isLoading,
     isError,
-    sourceReady: Boolean(
-      !isLoading &&
-      !isError &&
-      shelf.data !== undefined &&
-      cfg.data !== undefined &&
-      profile.data !== undefined &&
-      profile.data.source !== 'unavailable' &&
-      ramp.sourceReady &&
-      data !== undefined,
-    ),
+    sourceReady,
     isExample: ramp.isExample,
+    isRefreshing,
+    isSourceCurrent,
+    retry,
   };
 }
 
 export function useCycleMutations() {
   const qc = useQueryClient();
+  const authority = useCycleConfigAuthority();
   const commit = (
     operation: () => Promise<CycleConfig>,
     afterCommit?: () => void,
@@ -311,17 +405,60 @@ export function useCycleMutations() {
     // publication, analytics, or any storage call. cycleStore repeats the check
     // so direct/non-React callers are fail-closed too.
     assertRoutineCadenceMutationAdmission();
-    return runCurrentHealthDataOperation(async (lease) => {
-      lease.assertCurrent();
-      await qc.cancelQueries({ queryKey: ['cycleConfig'] });
-      lease.assertCurrent();
-      const next = await operation();
-      lease.assertCurrent();
-      qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
-      lease.assertCurrent();
-      afterCommit?.();
-      lease.assertCurrent();
-    });
+    // A handler captured before close/re-grant may not borrow the new lease.
+    assertCycleConfigAuthority(authority);
+    const capturedAuthority = authority;
+    const queryKey = cycleConfigQueryScope(capturedAuthority);
+    return runCurrentHealthDataOperation((lease) =>
+      serializeCycleConfigPublication(capturedAuthority, async () => {
+        const assertCurrent = () => {
+          lease.assertCurrent();
+          assertCycleConfigAuthority(capturedAuthority);
+        };
+        try {
+          assertCurrent();
+          await qc.cancelQueries({ queryKey });
+          assertCurrent();
+          const operationDay = localDateString();
+          const next = await operation();
+          assertCurrent();
+          // A read begun during the write must not overwrite its committed state.
+          await qc.cancelQueries({ queryKey });
+          assertCurrent();
+          const publicationDay = localDateString();
+          const published = publicationDay === operationDay
+            ? next
+            : await readCycleConfigForAuthority(capturedAuthority, publicationDay);
+          assertCurrent();
+          if (publicationDay !== localDateString()) throw new Error(CYCLE_CONFIG_DAY_CHANGED);
+          qc.setQueryData<CycleConfig>(
+            cycleConfigQueryKey(capturedAuthority, publicationDay),
+            published,
+          );
+          assertCurrent();
+          afterCommit?.();
+          assertCurrent();
+        } catch (error) {
+          // Only explicit ambiguous/conflicting outcomes discard prior cache
+          // immediately. Ordinary compensated failures retain the draft while
+          // a fresh read checks the prior state. Neither path confirms the save
+          // or changes privateKV's original error.
+          try {
+            assertCurrent();
+            const unknownOutcome = error instanceof Error && (
+              error.message === 'PRIVATE_KV_WRITE_ROLLBACK_FAILED' ||
+              error.message === 'PRIVATE_KV_WRITE_CONFLICT'
+            );
+            if (unknownOutcome) await qc.resetQueries({ queryKey });
+            else await qc.invalidateQueries({ queryKey });
+          } catch {
+            // Stale authority must do nothing to successor queries. A failed
+            // reset/read also cannot replace the original persistence failure.
+          }
+          throw error;
+        }
+      }),
+    );
   };
   return {
     setVariant(variant: CycleConfig['variant']) {

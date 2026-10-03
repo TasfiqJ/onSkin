@@ -4,7 +4,7 @@ import { Platform, Pressable, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
-import { PAYWALL_COPY, UPSELL_COPY } from '@/features/subscription/copy';
+import { PAYWALL_COPY, UPSELL_COPY, standardSubscriptionDisclosure } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
 import {
   PAYWALL_FEEDBACK,
@@ -13,7 +13,7 @@ import {
 } from '@/features/subscription/PaywallFeedback';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
+import { SubscriptionPlanSelector, SubscriptionPurchaseRecovery, useStandardSubscriptionOffering } from '@/features/subscription/SubscriptionPurchaseRecovery';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 import type { GatedFeature } from '@layerwell/types';
@@ -24,8 +24,8 @@ import type { GatedFeature } from '@layerwell/types';
 export default function UpsellSheet() {
   const { feature } = useLocalSearchParams<{ feature?: string }>();
   const { fontScale, height, width } = useWindowDimensions();
-  const { startTrial } = useEntitlementActions();
-  const offering = useSubscriptionOffering();
+  const { purchasePlan: startTrial } = useEntitlementActions();
+  const { access, offering, canPurchase, plan, setPlan } = useStandardSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
@@ -34,13 +34,12 @@ export default function UpsellSheet() {
   const compactPaywall = height < 640 || midTextPressurePaywall;
   const shortPaywall = height < 600 || midTextPressurePaywall;
   const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
-  const annual = offering.data?.annual ?? null;
-  const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const annual = offering.data?.[plan] ?? null;
   const hasEligibleIntroTrial = (annual?.trialDays ?? 0) > 0;
   const primaryCtaLabel = hasEligibleIntroTrial
     ? PAYWALL_COPY.offer.cta
     : PAYWALL_COPY.offer.subscribeCta;
-  const annualDisplay = planPriceDisplay('annual', offering.data);
+  const annualDisplay = planPriceDisplay(plan, offering.data);
   const splitShortPaywall = height < 410;
   const microShortPaywall = height < 380;
   const narrowShortPaywall = shortPaywall && width < 360;
@@ -56,7 +55,7 @@ export default function UpsellSheet() {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    startTrial.mutate(undefined, {
+    startTrial.mutate(plan, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
         else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
@@ -167,6 +166,7 @@ export default function UpsellSheet() {
           {copy.body}
         </Text>
       ) : null}
+      <SubscriptionPlanSelector plan={plan} onChange={setPlan} disabled={startTrial.isPending} />
       <View
         className={
           narrowShortPaywall
@@ -251,7 +251,8 @@ export default function UpsellSheet() {
       ) : null}
       <Pressable
         accessibilityRole="button"
-        disabled={startTrial.isPending}
+        disabled={!canPurchase || startTrial.isPending}
+        accessibilityState={{ disabled: !canPurchase || startTrial.isPending }}
         onPress={onStartTrial}
         className={
           microShortPaywall
@@ -276,6 +277,10 @@ export default function UpsellSheet() {
           {primaryCtaLabel}
         </Text>
       </Pressable>
+      <SubscriptionPurchaseRecovery access={access} offering={offering} />
+      <Text variant="bodySm" tone="muted" className="mt-2 px-2 text-center">
+        {standardSubscriptionDisclosure(plan, hasEligibleIntroTrial)}
+      </Text>
       <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
       {shortPaywall ? null : <ComplianceRow />}
       {shortPaywall ? null : (

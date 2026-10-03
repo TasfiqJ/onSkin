@@ -1,5 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query';
 import type { CustomerInfo } from 'react-native-purchases';
+import { stateFromEntitlementSnapshot } from './clientEntitlement';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { localDataOwnerBinding, readLocalDataOwnerProofBinding } from '@/lib/auth/sessionOwner';
@@ -210,7 +211,8 @@ export function isDurablyAdmissibleStoreResult(
     (result.status === 'committed' || result.status === 'unchanged') &&
     (result.disposition === 'applied' || result.disposition === 'duplicate') &&
     result.snapshot?.hasConflict === false &&
-    result.snapshot.activeStoreEntitlement?.isActive === true
+    result.snapshot.activeStoreEntitlement?.isActive === true &&
+    deriveState(result.snapshot.activeStoreEntitlement, result.snapshot.effectiveNowISO).isPro
   );
 }
 
@@ -807,7 +809,14 @@ function snapshotFromEnvelope(
   observedAtISO: string,
 ): EntitlementSnapshot {
   const effectiveNowISO = maxISO(envelope.clockAnchor, observedAtISO);
-  const projection = effectiveEntitlementProjection(envelope, effectiveNowISO);
+  // Decode and retain old lanes for safe migration, but never publish custom
+  // grants or cursorless legacy positives as Lean V1 access. A valid paid lane
+  // must also not lose to a deferred pro_plus grant or its historical conflict.
+  const projection = effectiveEntitlementProjection({
+    ...envelope,
+    appGrant: { definitive: null, conflict: null },
+    legacy: null,
+  }, effectiveNowISO);
   return {
     ownerBinding: envelope.ownerBinding,
     revision: envelope.revision,
@@ -817,7 +826,8 @@ function snapshotFromEnvelope(
     priorEntitlement: projection.priorEntitlement,
     effectiveNowISO,
     hasConflict: projection.hasConflict,
-    requiresUncachedRefresh: projection.hasConflict,
+    requiresUncachedRefresh: projection.hasConflict ||
+      (!!envelope.legacy && !envelope.store.definitive && !envelope.store.provisionalActive),
   };
 }
 
@@ -1538,7 +1548,7 @@ export async function publishCustomerInfoEvidence(
     if (current.status === 'available') {
       input.queryClient.setQueryData(
         queryKey,
-        deriveState(current.snapshot.entitlement, current.snapshot.effectiveNowISO),
+        stateFromEntitlementSnapshot(current.snapshot),
       );
     }
     return {
@@ -1559,7 +1569,7 @@ export async function publishCustomerInfoEvidence(
   if (merged.snapshot) {
     input.queryClient.setQueryData(
       queryKey,
-      deriveState(merged.snapshot.entitlement, merged.snapshot.effectiveNowISO),
+      stateFromEntitlementSnapshot(merged.snapshot),
     );
   }
   return merged;

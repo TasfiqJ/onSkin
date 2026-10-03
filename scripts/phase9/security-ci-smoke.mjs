@@ -125,12 +125,19 @@ if (exists(workflowPath)) {
   block(
     errors,
     /npm audit --audit-level=high/.test(workflow),
-    'Security workflow must fail on high or critical npm advisories.',
+    'Security workflow must run the high/critical npm audit.',
   );
   block(
     errors,
     /npm-audit-high\.json/.test(workflow),
     'Security workflow must archive high/critical npm audit JSON evidence.',
+  );
+  block(
+    errors,
+    /npm-audit-high\.exit-code/.test(workflow) &&
+      /security-advisory-exceptions\.mjs npm/.test(workflow) &&
+      /security-advisory-exceptions\.test\.mjs/.test(workflow),
+    'Security workflow must enforce the reviewed npm advisory exceptions and test them.',
   );
   block(
     errors,
@@ -168,6 +175,13 @@ if (exists(workflowPath)) {
   );
   block(
     errors,
+    /--format=json/.test(workflow) &&
+      /osv-scan\.json/.test(workflow) &&
+      /security-advisory-exceptions\.mjs osv/.test(workflow),
+    'Security workflow must archive and enforce reviewed OSV findings.',
+  );
+  block(
+    errors,
     /actions\/upload-artifact@[a-f0-9]{40}/i.test(workflow),
     'Security workflow must upload scanner evidence with immutable upload-artifact.',
   );
@@ -199,21 +213,23 @@ if (exists(workflowPath)) {
     /steps\.phase9_verify\.outcome/.test(workflow) &&
       /steps\.dependency_sbom\.outcome/.test(workflow) &&
       /steps\.npm_audit_high\.outcome/.test(workflow) &&
+      /steps\.npm_exception_gate\.outcome/.test(workflow) &&
       /steps\.gitleaks\.outcome/.test(workflow) &&
       /steps\.trufflehog\.outcome/.test(workflow) &&
       /steps\.semgrep\.outcome/.test(workflow) &&
-      /steps\.osv\.outcome/.test(workflow),
+      /steps\.osv\.outcome/.test(workflow) &&
+      /steps\.osv_exception_gate\.outcome/.test(workflow),
     'Security workflow must record every scanner/gate step outcome in evidence manifests.',
   );
   block(
     errors,
     /test "\$\{\{ steps\.phase9_verify\.outcome \}\}" = "success"/.test(workflow) &&
       /test "\$\{\{ steps\.dependency_sbom\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.npm_audit_high\.outcome \}\}" = "success"/.test(workflow) &&
+      /test "\$\{\{ steps\.npm_exception_gate\.outcome \}\}" = "success"/.test(workflow) &&
       /test "\$\{\{ steps\.gitleaks\.outcome \}\}" = "success"/.test(workflow) &&
       /test "\$\{\{ steps\.trufflehog\.outcome \}\}" = "success"/.test(workflow) &&
       /test "\$\{\{ steps\.semgrep\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.osv\.outcome \}\}" = "success"/.test(workflow),
+      /test "\$\{\{ steps\.osv_exception_gate\.outcome \}\}" = "success"/.test(workflow),
     'Security workflow must enforce gate and scanner outcomes after uploading evidence.',
   );
   block(

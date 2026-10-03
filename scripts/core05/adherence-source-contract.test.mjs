@@ -329,7 +329,33 @@ test('Today publishes success only after persistence and fails closed on unreada
   );
   assert.match(today, /persistenceConfirmed = true/u);
   assert.match(today, /if \(!persistenceConfirmed\)/u);
-  assert.match(today, /qc\.setQueryData\(\[['"]completions['"],\s*today\]/u);
+  assert.match(today, /qc\.setQueryData\(completionQueryKey/u);
+  assert.match(today, /completionQueryKey\s*=\s*\[['"]completions['"],\s*today,\s*\.\.\.scope\]/u);
+  assert.match(today, /runWithCompletionLease\(completionLease/u);
+  assert.match(today, /networkMode:\s*['"]always['"]/u);
+  assert.match(today, /completionSyncUnsyncedQuery\.isError\s*\|\|\s*completionActionFailed/u);
+  assert.match(today, /!actionState\.begin\(key\)/u);
+  assert.match(today, /completionStorageKey\s*=\s*JSON\.stringify\(scope\)/u);
+  assert.doesNotMatch(today, /JSON\.stringify\(\[today,\s*type,\s*\.\.\.scope\]\)/u);
+  assert.match(today, /if \(!completionStorageScopeCurrent\(\)\) return/u);
+  assert.match(today, /if \(result\.inserted && completionViewCurrent\(\)\)/u);
+  assert.match(today, /completionActionStateForLease\(completionLease\)/u);
+  assert.match(today, /useSyncExternalStore\(/u);
+  assert.doesNotMatch(today, /setActionState|renderCompletionState|actionState\.deactivate/u);
+  assert.match(today, /staleTime:\s*0/u);
+  const viewGuardStart = today.indexOf('function completionViewCurrent()');
+  const viewGuardEnd = today.indexOf('function assertCompletionViewCurrent()', viewGuardStart);
+  assert.ok(viewGuardStart !== -1 && viewGuardEnd > viewGuardStart);
+  const viewGuard = today.slice(viewGuardStart, viewGuardEnd);
+  assert.match(
+    viewGuard,
+    /return\s+planSource\.isSourceCurrent\(\)\s*&&\s*completionView\.isActive\(\)\s*&&\s*completionDateScopeCurrent\(\)\s*&&\s*currentRoutineType\(\)\s*===\s*type/u,
+  );
+  assert.match(today, /return completionStorageScopeCurrent\(\) && localDateString\(\) === date/u);
+  assert.match(today, /if \(completionView\.isActive\(\) && completionDateScopeCurrent\(\)\) \{/u);
+  assert.match(today, /predicate: completionQueryInStorageScope/u);
+  assert.match(today, /if \(!completionDateScopeCurrent\(readDate\)\) continue/u);
+  assert.match(today, /else if \(!completionReadsConfirmed\)/u);
   assert.match(today, /setCompletionActionFailed\(true\)/u);
   assert.match(today, /Reload to confirm your saved progress, then try again\./u);
   assert.match(todayTest, /fails closed when completion history cannot be read or written/u);

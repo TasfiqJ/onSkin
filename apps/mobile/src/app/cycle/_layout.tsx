@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 
+import { CyclePersistenceGate } from '@/features/scheduler/CyclePersistenceGate';
 import { ProGate } from '@/features/subscription/ProGate';
 import {
   shouldReduceMotion,
@@ -15,24 +16,26 @@ export default function CycleLayout() {
   const modalAnimation = shouldReduceMotion(reduceMotion) ? 'none' : 'fade';
   return (
     <ProGate feature="scheduler">
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="week" />
-        <Stack.Screen name="settings" />
-        <Stack.Screen name="procedure" />
-        <Stack.Screen name="recovery" />
-        <Stack.Screen
-          name="why-tonight"
-          options={{ presentation: 'transparentModal', animation: modalAnimation }}
-        />
-        <Stack.Screen
-          name="disruption"
-          options={{ presentation: 'transparentModal', animation: modalAnimation }}
-        />
-        <Stack.Screen
-          name="phased-intro"
-          options={{ presentation: 'transparentModal', animation: modalAnimation }}
-        />
-      </Stack>
+      <CyclePersistenceGate>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="week" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="procedure" />
+          <Stack.Screen name="recovery" />
+          <Stack.Screen
+            name="why-tonight"
+            options={{ presentation: 'transparentModal', animation: modalAnimation }}
+          />
+          <Stack.Screen
+            name="disruption"
+            options={{ presentation: 'transparentModal', animation: modalAnimation }}
+          />
+          <Stack.Screen
+            name="phased-intro"
+            options={{ presentation: 'transparentModal', animation: modalAnimation }}
+          />
+        </Stack>
+      </CyclePersistenceGate>
     </ProGate>
   );
 }

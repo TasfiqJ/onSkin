@@ -118,22 +118,48 @@ describe('routine order persistence', () => {
     });
   });
 
-  it('preserves malformed or future-version state instead of applying it', async () => {
-    const malformed = '{bad json';
-    mocks.storage.set(KEY, malformed);
-    await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_INVALID);
-    await expect(saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] })).rejects.toThrow(
-      ROUTINE_ORDER_INVALID,
-    );
-    expect(mocks.storage.get(KEY)).toBe(malformed);
+  it('loads valid schema-v1 records regardless of property order without rewriting', async () => {
+    const raw = '{"pm":["retinol"],"schemaVersion":1,"am":["cleanser"]}';
+    mocks.storage.set(KEY, raw);
 
-    const future = JSON.stringify({ schemaVersion: 2, am: ['cleanser'], pm: [] });
-    mocks.storage.set(KEY, future);
-    await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
-    await expect(saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] })).rejects.toThrow(
-      ROUTINE_ORDER_UNSUPPORTED_VERSION,
-    );
-    expect(mocks.storage.get(KEY)).toBe(future);
+    await expect(loadRoutineOrderOverrides()).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['cleanser'],
+      pm: ['retinol'],
+    });
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it.each(['{}', '{"unrelated":true}'])(
+    'rejects and preserves unknown unversioned records rather than treating them as empty: %s',
+    async (raw) => {
+      mocks.storage.set(KEY, raw);
+
+      await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(raw);
+    },
+  );
+
+  it.each([
+    ['am', '{"am":["cleanser"]}', { schemaVersion: 1, am: ['cleanser'], pm: [] }],
+    ['pm', '{"pm":["retinol"]}', { schemaVersion: 1, am: [], pm: ['retinol'] }],
+  ])('normalizes a supported partial legacy %s envelope read-only', async (_phase, raw, expected) => {
+    mocks.storage.set(KEY, raw);
+
+    await expect(loadRoutineOrderOverrides()).resolves.toEqual(expected);
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it.each([
+    ['malformed', '{bad json', ROUTINE_ORDER_INVALID],
+    ['current-schema', '{"schemaVersion":1,"am":[]}', ROUTINE_ORDER_INVALID],
+    ['future-version', '{"schemaVersion":2,"am":[],"pm":[]}', ROUTINE_ORDER_UNSUPPORTED_VERSION],
+  ])('preserves malformed or future-version state instead of applying it: %s', async (_name, raw, error) => {
+    mocks.storage.set(KEY, raw);
+
+    await expect(loadRoutineOrderOverrides()).rejects.toThrow(error);
+    await expect(saveOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] })).rejects.toThrow(error);
+    expect(mocks.storage.get(KEY)).toBe(raw);
   });
 
   it('normalizes legacy ids in memory without rewriting storage during a read', async () => {

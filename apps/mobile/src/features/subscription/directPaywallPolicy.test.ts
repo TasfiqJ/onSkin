@@ -163,7 +163,7 @@ describe('direct paywall policy', () => {
     expectInert(reconciledActive);
   });
 
-  it('allows win-back and downgrade only for lapsed store-backed paid proof', () => {
+  it('keeps win-back and reverse-trial lanes closed while preserving paid expiry downgrade', () => {
     for (const route of ['winback', 'downgrade'] as const) {
       for (const periodType of ['normal', 'trial'] as const) {
         expect(directPaywallDecision(route, { state: expired(periodType) })).toMatchObject({
@@ -193,26 +193,26 @@ describe('direct paywall policy', () => {
     expectInert(nonStoreExpiry);
     expect(directPaywallDecision('downgrade', { state: expired('reverse_trial') })).toMatchObject({
       phase: 'redirect',
-      redirect: 'reoffer',
+      redirect: 'today',
       lifecycleDisposition: 'supersede',
     });
     expect(directPaywallDecision('downgrade', { state: activeReverseTrial() })).toMatchObject({
       phase: 'redirect',
-      redirect: 'reoffer',
+      redirect: 'today',
       lifecycleDisposition: 'supersede',
     });
   });
 
-  it('limits re-offer to an active or expired reverse trial', () => {
+  it('keeps reverse-trial re-offers closed', () => {
     expect(directPaywallDecision('reoffer', { state: activeReverseTrial() })).toMatchObject({
-      phase: 'offer',
-      variant: 'active_reverse_trial',
+      phase: 'redirect',
+      redirect: 'upsell',
       lifecycleDisposition: 'supersede',
     });
     expect(directPaywallDecision('reoffer', { state: expired('reverse_trial') })).toMatchObject({
-      phase: 'offer',
-      variant: 'expired_reverse_trial',
-      lifecycleDisposition: 'present',
+      phase: 'redirect',
+      redirect: 'upsell',
+      lifecycleDisposition: 'supersede',
     });
 
     const paidExpiry = directPaywallDecision('reoffer', { state: expired('normal') });

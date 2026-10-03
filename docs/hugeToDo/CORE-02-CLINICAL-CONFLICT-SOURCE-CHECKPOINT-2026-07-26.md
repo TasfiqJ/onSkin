@@ -15,7 +15,19 @@ publication authority.
   and detached review-receipt list are empty.
 - Production admission requires three independent roles bound to the exact
   corpus and rule bytes: a board-certified dermatologist, a qualified cosmetic
-  chemist or pharmacist, and separate regulatory counsel.
+  chemist, and separate regulatory counsel. This intentionally follows the
+  current Lean V1 `conflict_engine` launch contract exactly; a pharmacist may
+  provide research input but does not substitute for the required cosmetic
+  chemist admission receipt.
+- A source record cannot become reviewed authority from a citation string or
+  URL alone. Positive admission requires a retained evidence artifact identity,
+  artifact reference, and non-zero SHA-256 for every source record. The current
+  candidate registry deliberately leaves all three values null, so no source
+  can be positively admitted by changing `reviewStatus` alone.
+- The detached signed review body binds each source ID to the SHA-256 of its
+  exact citation string plus its retained artifact identity/reference/content
+  hash. Each reviewer receipt also binds a separately retained independence and
+  conflict-of-interest disclosure reference and SHA-256.
 - Reviewer identity, credential-evidence byte hash, corpus/source/rule hashes,
   jurisdiction/market-policy hashes, decision, dates, expiry, and a detached
   Ed25519 signature are part of the signed contract. The present Hermes
@@ -87,6 +99,7 @@ publication authority.
 - `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts`
 - `apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.test.ts`
 - `scripts/core02/clinical-rule-source-contract.test.mjs`
+- `docs/phase-3/reviewed-guidance-professional-review-inputs.json`
 - `docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md`
 - `docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md`
 - `docs/02-ingredient-intelligence.md`
@@ -143,7 +156,9 @@ The CORE-02 source contract is mandatory in both `phase3:verify` and
 ## Remaining release gates
 
 1. Qualified professionals must review and sign the exact candidate corpus;
-   every held/revise item in the clinical evidence audit must be resolved.
+   every held/revise item in the clinical evidence audit must be resolved. The
+   exact source snapshots or source manifests they review must be retained and
+   byte-hashed into every source record before any positive admission.
 2. A reviewed native detached-signature verification boundary and separately
    reviewed trust-root change must exist before any receipt can admit content.
 3. Regulatory counsel must classify the exact U.S. release functions, claims,

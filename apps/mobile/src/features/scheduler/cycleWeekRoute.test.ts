@@ -183,25 +183,28 @@ describe('cycle week route scheduler notes', () => {
       "config.variant === 'auto' || config.variant === 'custom' ? null : config.variant",
     );
     expect(useCycle).toContain("cadenceReady && config.variant === 'custom' && config.customCycle");
-    expect(useCycle).toContain("await qc.cancelQueries({ queryKey: ['cycleConfig'] })");
+    expect(useCycle).toContain('const queryKey = cycleConfigQueryScope(capturedAuthority);');
+    expect(useCycle).not.toContain("await qc.cancelQueries({ queryKey: ['cycleConfig'] })");
     const admissionIndex = useCycle.indexOf('assertRoutineCadenceMutationAdmission();');
     const healthOperationIndex = useCycle.indexOf(
-      'return runCurrentHealthDataOperation(async (lease) =>',
+      'return runCurrentHealthDataOperation((lease) =>',
       admissionIndex,
     );
     expect(admissionIndex).toBeGreaterThan(-1);
     expect(healthOperationIndex).toBeGreaterThan(admissionIndex);
     expect(
-      useCycle.indexOf("await qc.cancelQueries({ queryKey: ['cycleConfig'] })"),
+      useCycle.indexOf('await qc.cancelQueries({ queryKey });'),
     ).toBeGreaterThan(healthOperationIndex);
-    expect(useCycle).toContain(
-      "qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)",
-    );
+    expect(useCycle).toContain('cycleConfigQueryKey(capturedAuthority, publicationDay)');
+    expect(useCycle).toContain('readCycleConfigForAuthority(capturedAuthority, publicationDay)');
+    expect(useCycle).toContain('assertCycleConfigAuthority(capturedAuthority);');
     expect(useCycle.indexOf('afterCommit?.();')).toBeGreaterThan(
-      useCycle.indexOf("qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)"),
+      useCycle.indexOf('qc.setQueryData<CycleConfig>('),
     );
     expect(useCycle).toContain('lease.assertCurrent();');
-    expect(useCycle).toContain("queryKey: ['cycleConfig', today]");
+    expect(useCycle).toContain('cycleConfigQueryKey(authority, today)');
+    expect(useCycle).toContain('enabled: authority !== null');
+    expect(useCycle).not.toContain("queryKey: ['cycleConfig', today]");
     expect(useCycle).toContain("AppState.addEventListener('change', handleAppState)");
     expect(useCycle).toContain('millisecondsUntilNextLocalDay()');
 

@@ -19,6 +19,13 @@ import {
 import { AuthProvider, useAuth } from './AuthProvider';
 import { runAccountGenerationOperation } from './accountGeneration';
 
+vi.mock('expo-network', () => ({
+  getNetworkStateAsync: vi.fn(async () => ({
+    isConnected: true,
+    isInternetReachable: true,
+  })),
+}));
+
 type AuthStateListener = (event: string, session: Session | null) => void;
 type TransportEvent = Readonly<{
   action: string;

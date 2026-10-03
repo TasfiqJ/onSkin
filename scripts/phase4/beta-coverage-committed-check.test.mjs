@@ -258,7 +258,7 @@ test('rejects late index and governed working-binding drift', () => {
 test('pins launch-contract semantics before a swap-use-restore race window', () => {
   const pinnedBytes = readFileSync('docs/hugeToDo/launch-contract.json');
   const transientLiveBytes = Buffer.from(
-    pinnedBytes.toString('utf8').replace('all-features', 'transient-forged-mode'),
+    pinnedBytes.toString('utf8').replace('lean-v1', 'transient-forged-mode'),
     'utf8',
   );
   assert.notDeepEqual(transientLiveBytes, pinnedBytes);
@@ -268,7 +268,7 @@ test('pins launch-contract semantics before a swap-use-restore race window', () 
     headBytes: pinnedBytes,
     workingBytes: pinnedBytes,
   });
-  assert.equal(contract.release.mode, 'all-features');
+  assert.equal(contract.release.mode, 'lean-v1');
   assert.throws(
     () =>
       parsePinnedBetaLaunchContract({

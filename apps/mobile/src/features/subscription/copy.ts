@@ -19,6 +19,13 @@ import { priceWithCadence, type BillingCadence } from './billingCadence';
  * (plans.ts). The real, localized prices come from the RevenueCat offering (B-REVENUECAT).
  */
 
+/** Ordinary store terms track the selected cadence; no custom grant or discount. */
+export function standardSubscriptionDisclosure(plan: 'annual' | 'monthly', hasTrial: boolean): string {
+  return hasTrial
+    ? `Your store free trial converts to the ${plan} plan and auto-renews unless cancelled at least 24 hours before it ends. Manage or cancel in App Store.`
+    : `Payment is charged to your App Store account at confirmation. The ${plan} plan auto-renews unless cancelled at least 24 hours before the current period ends. Manage or cancel in App Store.`;
+}
+
 export const PAYWALL_COPY = {
   // Onboarding offer (design 01, docs/08 §3.1).
   offer: {

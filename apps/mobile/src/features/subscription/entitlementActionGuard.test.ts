@@ -82,7 +82,7 @@ describe('entitlement action commit guard', () => {
     ).toThrow(ENTITLEMENT_ACTION_PRECONDITION_FAILED);
   });
 
-  it('allows reoffer purchase for an exact active app-granted reverse trial only', () => {
+  it('rejects reoffer purchase for historical app-granted reverse-trial evidence', () => {
     const reverseTrial = deriveState(
       proof({
         periodType: 'reverse_trial',
@@ -101,23 +101,10 @@ describe('entitlement action commit guard', () => {
         ['reoffer_purchase'],
         'owner-a',
       ),
-    ).not.toThrow();
-    for (const invalid of [
-      { ...reverseTrial, storeUserId: 'owner-b' },
-      { ...reverseTrial, store: 'app_store' as const, source: 'server' as const },
-    ]) {
-      expect(() =>
-        assertEntitlementActionAllowed(
-          invalid,
-          input('reoffer_purchase', invalid.evidenceIdentity),
-          ['reoffer_purchase'],
-          'owner-a',
-        ),
-      ).toThrow(ENTITLEMENT_ACTION_PRECONDITION_FAILED);
-    }
+    ).toThrow(ENTITLEMENT_ACTION_PRECONDITION_FAILED);
   });
 
-  it('requires exact lapsed paid and expired reverse-trial evidence for terminal actions', () => {
+  it('requires exact lapsed paid evidence and rejects expired reverse-trial actions', () => {
     const lapsed = deriveState(
       proof({ isActive: false, expiresAt: '2026-07-04T12:00:00.000Z' }),
       NOW,
@@ -150,7 +137,7 @@ describe('entitlement action commit guard', () => {
         ['decline_expired_reverse_trial'],
         'owner-a',
       ),
-    ).not.toThrow();
+    ).toThrow(ENTITLEMENT_ACTION_PRECONDITION_FAILED);
     expect(() =>
       assertEntitlementActionAllowed(
         { ...expiredReverse, storeUserId: 'owner-b' },

@@ -76,6 +76,9 @@ function reviewedContent(): ConflictRuleCorpusContent {
     sources: CONFLICT_RULE_CORPUS.content.sources.map((source) => ({
       ...source,
       reviewStatus: 'reviewed',
+      retainedArtifactId: `urn:test-source-artifact:${source.id}`,
+      retainedArtifactRef: `urn:test-source-snapshot:${source.id}`,
+      retainedArtifactSha256: sha256Hex(`retained-source-artifact:${source.id}`),
     })),
     rules: CONFLICT_RULE_CORPUS.content.rules.map((rule) => ({
       ...rule,
@@ -154,6 +157,8 @@ function selfAssertedReceipts(
       reviewerIdentityKey: 'urn:untrusted-reviewer:dermatology',
       credentialEvidenceRef: 'urn:untrusted-credential:dermatology',
       credentialEvidenceSha256: sha256Hex('dermatology credential evidence bytes'),
+      independenceDisclosureRef: 'urn:untrusted-independence:dermatology',
+      independenceDisclosureSha256: sha256Hex('dermatology independence disclosure bytes'),
       authorityPublicKeySha256: sha256Hex('dermatology authority public key'),
       signedAt: '2026-07-26T12:00:00.000Z',
     },
@@ -166,6 +171,8 @@ function selfAssertedReceipts(
       reviewerIdentityKey: 'urn:untrusted-reviewer:chemistry',
       credentialEvidenceRef: 'urn:untrusted-credential:chemistry',
       credentialEvidenceSha256: sha256Hex('chemistry credential evidence bytes'),
+      independenceDisclosureRef: 'urn:untrusted-independence:chemistry',
+      independenceDisclosureSha256: sha256Hex('chemistry independence disclosure bytes'),
       authorityPublicKeySha256: sha256Hex('chemistry authority public key'),
       signedAt: '2026-07-26T12:05:00.000Z',
     },
@@ -178,6 +185,8 @@ function selfAssertedReceipts(
       reviewerIdentityKey: 'urn:untrusted-reviewer:regulatory',
       credentialEvidenceRef: 'urn:untrusted-credential:regulatory',
       credentialEvidenceSha256: sha256Hex('regulatory credential evidence bytes'),
+      independenceDisclosureRef: 'urn:untrusted-independence:regulatory',
+      independenceDisclosureSha256: sha256Hex('regulatory independence disclosure bytes'),
       authorityPublicKeySha256: sha256Hex('regulatory authority public key'),
       signedAt: '2026-07-26T12:10:00.000Z',
     },
@@ -321,6 +330,33 @@ describe('fail-closed professional admission', () => {
     ).toBe(true);
     expect(admitConflictRuleCorpus(corpus, receipts, ADMISSION_NOW)).toBeNull();
     expect(STARTER_RULES.every(isReviewedRule)).toBe(false);
+  });
+
+  it('requires retained source identity, reference, and byte hash before positive admission', () => {
+    const valid = reviewedContent();
+    expect(isConflictRuleCorpusContentValidForAdmission(valid)).toBe(true);
+    expect(
+      CONFLICT_RULE_CORPUS.content.sources.every(
+        (source) =>
+          source.retainedArtifactId === null &&
+          source.retainedArtifactRef === null &&
+          source.retainedArtifactSha256 === null,
+      ),
+    ).toBe(true);
+
+    const first = valid.sources[0]!;
+    for (const invalidSource of [
+      { ...first, retainedArtifactId: null },
+      { ...first, retainedArtifactRef: null },
+      { ...first, retainedArtifactSha256: null },
+    ]) {
+      expect(
+        isConflictRuleCorpusContentValidForAdmission({
+          ...valid,
+          sources: [invalidSource, ...valid.sources.slice(1)],
+        }),
+      ).toBe(false);
+    }
   });
 
   it('rejects reproductive-scope widening in safety rules and their severity branches', () => {
@@ -468,6 +504,15 @@ describe('fail-closed professional admission', () => {
 
     expect(body.corpusSha256).toBe(corpus.contentSha256);
     expect(body.sourceRegistrySha256).toBe(canonicalSha256(corpus.content.sources));
+    expect(body.exactSourceArtifacts).toEqual(
+      corpus.content.sources.map((source) => ({
+        sourceId: source.id,
+        citationSha256: sha256Hex(source.citation),
+        retainedArtifactId: source.retainedArtifactId,
+        retainedArtifactRef: source.retainedArtifactRef,
+        retainedArtifactSha256: source.retainedArtifactSha256,
+      })),
+    );
     expect(body.exactRuleCount).toBe(corpus.content.rules.length);
     expect(body.exactRuleHashes).toEqual(
       corpus.content.rules.map((rule) => ({
@@ -498,6 +543,10 @@ describe('fail-closed professional admission', () => {
     expect(body.reviewerIdentityKey).toBe(receipt.reviewerIdentityKey);
     expect(body.credentialEvidenceRef).toBe(receipt.credentialEvidenceRef);
     expect(body.credentialEvidenceSha256).toBe(receipt.credentialEvidenceSha256);
+    expect(body.independenceDisclosureRef).toBe(receipt.independenceDisclosureRef);
+    expect(body.independenceDisclosureSha256).toBe(
+      receipt.independenceDisclosureSha256,
+    );
     expect(body.authorityPublicKeySha256).toBe(receipt.authorityPublicKeySha256);
     expect(
       canonicalSha256(

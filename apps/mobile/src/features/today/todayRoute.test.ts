@@ -122,7 +122,7 @@ describe('Today route mobile contracts', () => {
     );
     expect(source).toContain("track('routine_checkoff_completed', { moment });");
     expect(source).toContain("track('first_checkoff_completed', { moment });");
-    expect(source).toContain('if (result.inserted) {');
+    expect(source).toContain('if (result.inserted && completionViewCurrent()) {');
     expect(source).toContain('shouldTrackCycleNightCompleted({');
     expect(source).toContain('completedStepKeysAfter: result.completedStepKeysAfter');
     expect(source).toContain('completedKey: key');
@@ -132,7 +132,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completionInserted: result.inserted');
     expect(source).not.toContain('completedBefore: done');
     expect(source).toContain('if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {');
-    expect(source).toContain('reviewMomentEarned = true');
+    expect(source).toContain('reviewMomentEarned = completionViewCurrent()');
     expect(source).toContain(
       "void requestReviewAfterValue('seven_checkoff_days').catch(() => undefined)",
     );
@@ -146,7 +146,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completionSyncStepIdentity(key) === null');
     expect(source).toContain("'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED'");
     expect(source).toContain("'COMPLETION_TIMEZONE_UNAVAILABLE'");
-    expect(source).toContain("queryKey: ['completion-sync-unsynced']");
+    expect(source).toContain('queryKey: completionUnsyncedQueryKey');
     expect(source).toContain('Your local export keeps this evidence.');
     expect(source).toContain("source: 'real_plan'");
     expect(source).toContain('stepOrder: context.stepOrder');
@@ -168,12 +168,74 @@ describe('Today route mobile contracts', () => {
       'const result = await toggleCompletion(key, today, scheduled, remoteSync)',
     );
     expect(source).toContain('persistenceConfirmed = true');
-    expect(source).toContain("qc.setQueryData(['completions', today]");
+    expect(source).toContain('qc.setQueryData(completionQueryKey');
     expect(source).toContain('haptics.success()');
     expect(
       source.indexOf('const result = await toggleCompletion(key, today, scheduled, remoteSync)'),
     ).toBeLessThan(source.indexOf('haptics.success()'));
     expect(source).toContain('setCompletionActionFailed(true)');
+    expect(source).toContain('completionSyncUnsyncedQuery.isError || completionActionFailed');
+    expect(source).toContain('!actionState.begin(key)');
+    expect(source).toContain("networkMode: 'always'");
+    expect(source).toContain('runWithCompletionLease(completionLease');
+    expect(source).toContain('await cancelCompletionReads()');
+    expect(source).toContain('if (reviewMomentEarned && completionReadsConfirmed && completionViewCurrent())');
+    expect(source.indexOf('if (completionUnavailable) {')).toBeLessThan(
+      source.indexOf('total={steps.length}'),
+    );
+    const retry = source.slice(source.indexOf('async function retryCompletions()'),
+      source.indexOf('async function handleCompletionSyncUnavailable()'));
+    expect(retry.indexOf('getCompletedSteps(readDate)')).toBeLessThan(
+      retry.indexOf('setCompletionActionFailed(false)'),
+    );
+    expect(retry).not.toContain('haptics.success');
+    expect(source).toContain('completionStorageKey = JSON.stringify(scope)');
+    expect(source).toContain('actionState.storageKey !== completionStorageKey');
+    expect(source).toContain('staleTime: 0');
+    const viewGuardStart = source.indexOf('function completionViewCurrent()');
+    const viewGuardEnd = source.indexOf('function assertCompletionViewCurrent()', viewGuardStart);
+    expect(viewGuardStart).toBeGreaterThanOrEqual(0);
+    expect(viewGuardEnd).toBeGreaterThan(viewGuardStart);
+    const viewGuard = source.slice(viewGuardStart, viewGuardEnd);
+    expect(viewGuard).toContain('planSource.isSourceCurrent()');
+    expect(viewGuard).toContain('completionView.isActive()');
+    expect(viewGuard).toContain('completionDateScopeCurrent()');
+    expect(viewGuard).toContain('currentRoutineType() === type');
+    const storageGuard = source.slice(source.indexOf('function completionStorageScopeCurrent()'),
+      source.indexOf('function assertCompletionStorageScopeCurrent()'));
+    expect(storageGuard).toContain('assertHealthDataWriteLease(completionLease)');
+    expect(storageGuard).not.toContain('localDateString');
+    expect(storageGuard).not.toContain('currentRoutineType');
+    expect(source).toContain('return completionStorageScopeCurrent() && localDateString() === date');
+    const mutation = source.slice(source.indexOf('async function handleCompletion('),
+      source.indexOf('async function retryCompletions()'));
+    expect(mutation).toContain('if (!completionStorageScopeCurrent()) return');
+    const settlement = mutation.slice(mutation.indexOf('const result = await toggleCompletion'));
+    expect(settlement.indexOf('assertCompletionStorageScopeCurrent()')).toBeLessThan(
+      settlement.indexOf('persistenceConfirmed = true'),
+    );
+    expect(settlement).toContain('if (completionView.isActive() && completionDateScopeCurrent())');
+    expect(settlement).toContain('await refreshCompletionReads()');
+    expect(settlement).toContain('else if (!completionReadsConfirmed)');
+    expect(retry).toContain('if (completionStorageScopeCurrent()) setCompletionActionFailed(true)');
+    expect(retry).toContain('if (!completionDateScopeCurrent(readDate)) continue');
+    expect(source).toContain('const actionState = completionActionStateForLease(completionLease)');
+    expect(source).toContain('useSyncExternalStore(');
+    expect(source).toContain('actionState.subscribe, actionState.getSnapshot, actionState.getSnapshot');
+    expect(source).toContain('completionView.isActive() && completionDateScopeCurrent()');
+    expect(source).toContain('return () => { completionView.deactivate(); }');
+    expect(source).not.toContain('renderCompletionState');
+    expect(source).not.toContain('actionState.deactivate');
+    expect(source).not.toContain('actionState.activate');
+    expect(source).not.toContain('setActionState');
+    expect(storageGuard).not.toContain('completionView');
+    const refresh = source.slice(source.indexOf('async function refreshCompletionReads()'),
+      source.indexOf('const hasCompletionIdentityRepair'));
+    expect(refresh.indexOf('await cancelCompletionReads()')).toBeLessThan(
+      refresh.indexOf('await qc.invalidateQueries'),
+    );
+    expect(refresh).toContain('predicate: completionQueryInStorageScope');
+    expect(refresh).toContain('throwOnError: true');
     expect(source).toContain('if (!persistenceConfirmed)');
     expect(source).not.toContain('onPress={() => void toggle(k)}');
   });

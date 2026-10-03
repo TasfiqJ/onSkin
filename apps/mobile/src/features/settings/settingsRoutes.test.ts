@@ -573,12 +573,8 @@ describe('Settings route contracts', () => {
     expect(source).toContain('const supportFloorSubscription = width <= 320 && height < 520;');
     expect(source).toContain('const compactSubscription = true;');
     expect(source).toContain('const hideFreeSubscriptionBody = true;');
-    expect(source).toContain(
-      "const freePlanTitle = supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;",
-    );
-    expect(source).toContain(
-      "const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;",
-    );
+    expect(source).toContain("const freePlanTitle = recovery");
+    expect(source).toContain("const upgradeCtaLabel = recovery");
     expect(source).toContain(
       "const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;",
     );
@@ -591,7 +587,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       "supportFloorSubscription ? 'px-5 pb-4' : compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'",
     );
-    expect(source).toContain('{hideFreeSubscriptionBody ? null : (');
+    expect(source).toContain('{hideFreeSubscriptionBody && !recovery ? null : (');
     expect(source).toContain("className={compactSubscription ? 'mt-1.5' : 'mt-2'}");
     expect(source).not.toContain(
       "className={splitShortSubscription ? 'mt-1' : ultraShortSubscription ? 'mt-1.5' : 'mt-2'}",
@@ -627,7 +623,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('label="Privacy"');
     expect(source).toContain('compact={compactSubscription}');
     expect(source).toContain('supportFloor={supportFloorSubscription}');
-    expect(source).toContain('{hideFreeSubscriptionBody ? null : (');
+    expect(source).toContain('{hideFreeSubscriptionBody && !recovery ? null : (');
     expect(source).not.toContain(
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',
     );

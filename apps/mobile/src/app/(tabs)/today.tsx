@@ -1,7 +1,7 @@
 import { reportDockScroll } from '@/components/navigation/DockMotion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useLayoutEffect, useMemo, useSyncExternalStore } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text, TodayFocusHeader } from '@/components/ui';
@@ -10,6 +10,7 @@ import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
+import { PlanSourceNotice, planSourceViewState, routineCycleViewState } from '@/features/routine/PlanSourceNotice';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { requestReviewAfterValue } from '@/features/review/prompt';
@@ -29,10 +30,21 @@ import {
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { projectTodayRoutine } from '@/features/today/routineProjection';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
+import { currentRoutineType, localDateString } from '@/features/today/useToday';
+import {
+  completionQueryScope,
+  completionActionStateForLease,
+  createCompletionViewLifecycle,
+  runWithCompletionLease,
+} from '@/features/today/localCompletionAccess';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
-import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  assertHealthDataWriteLease,
+  runCurrentHealthDataOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -455,26 +467,171 @@ export default function TodayScreen() {
   const clock = useRoutineClock({ includeMinuteUpdates: true });
   const type = clock.phase;
   const dark = type === 'PM';
-  const { data: planData } = usePlan();
+  const planSource = usePlan();
+  const sourceState = planSourceViewState(planSource);
+  const completionLease = planSource.orderLease;
   const { data: progress } = useProgress();
-  const { data: cycleData } = useCycle();
+  const cycleSource = useCycle();
+  const cycleState = routineCycleViewState(planSource, cycleSource);
+  const planData = sourceState === 'ready' &&
+    (cycleState === 'ready' || cycleState === 'not-required') ? planSource.data : undefined;
+  // Never pass unconfirmed cycle data into presentation, including neutral paths.
+  const cycleData = cycleState === 'ready' ? cycleSource.data : undefined;
+  function cycleCurrent(): boolean {
+    const current = routineCycleViewState(planSource, cycleSource);
+    return current === cycleState && (current === 'not-required' || current === 'ready');
+  }
   const qc = useQueryClient();
   const today = clock.localDate;
+  // usePlan already observes exact health/account lease changes and expiry.
+  // Reuse its authority, without changing routine ordering or its persistence.
+  const scope = completionQueryScope(completionLease);
+  const completionQueryKey = ['completions', today, ...scope] as const;
+  const completionUnsyncedQueryKey = ['completion-sync-unsynced', ...scope] as const;
+  // Every date shares layerwell.completions.v1. Neither midnight nor AM/PM may
+  // replace a pending write's gate or its requirement for post-settlement reads.
+  const completionStorageKey = JSON.stringify(scope);
+  const actionState = completionActionStateForLease(completionLease);
+  const completionActionSnapshot = useSyncExternalStore(
+    actionState.subscribe, actionState.getSnapshot, actionState.getSnapshot,
+  );
+  // A mounted view is only presentation authority. It cannot retire the shared
+  // storage coordinator. Layout cleanup fences even settlement before passive
+  // effect cleanup; the replacement view has its own token.
+  const completionView = useMemo(
+    () => createCompletionViewLifecycle(actionState.storageKey), [actionState],
+  );
+  useLayoutEffect(() => {
+    completionView.activate();
+    return () => { completionView.deactivate(); };
+  }, [completionView]);
   const completionQuery = useQuery({
-    queryKey: ['completions', today],
-    queryFn: () => getCompletedSteps(today),
+    queryKey: completionQueryKey,
+    queryFn: () => runWithCompletionLease(completionLease, () => getCompletedSteps(today)),
+    enabled: completionLease !== undefined,
+    networkMode: 'always',
+    retry: false,
+    // A day/lease key change must read storage even if that key is cached.
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
   const completionSyncUnsyncedQuery = useQuery({
-    queryKey: ['completion-sync-unsynced'],
-    queryFn: getCompletionSyncUnsynced,
+    queryKey: completionUnsyncedQueryKey,
+    queryFn: () => runWithCompletionLease(completionLease, getCompletionSyncUnsynced),
+    enabled: completionLease !== undefined,
+    networkMode: 'always',
+    retry: false,
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
   const { data: doneData } = completionQuery;
-  const [completionActionFailed, setCompletionActionFailed] = useState(false);
-  const [completionPendingKey, setCompletionPendingKey] = useState<string | null>(null);
-  const completionLoading = completionQuery.isPending;
-  const completionUnavailable = completionLoading || completionQuery.isError;
+  const completionActionFailed = completionActionSnapshot.failed;
+  const completionPendingKey = completionActionSnapshot.pendingKey;
+  // Cancelling an initial new-day query can leave it pending-but-idle with no
+  // data. Once recovery is required, that is a Retry surface, not endless loading.
+  const completionLoading = completionLease !== undefined && actionState.active && (
+    completionPendingKey === 'reload' ||
+    (!completionActionFailed && (
+      completionQuery.isPending || completionQuery.isFetching ||
+      completionSyncUnsyncedQuery.isPending || completionSyncUnsyncedQuery.isFetching
+    ))
+  );
+  const completionUnavailable = completionLoading || completionQuery.isError ||
+    completionSyncUnsyncedQuery.isError || completionActionFailed ||
+    completionLease === undefined || !actionState.active || doneData === undefined ||
+    completionSyncUnsyncedQuery.data === undefined;
+  // The unavailable branch below never renders these internal empty projections
+  // as zero progress, an unchecked routine, a streak, or an empty-plan result.
   const done = doneData ?? new Set<string>();
   const completionSyncUnsynced = completionSyncUnsyncedQuery.data ?? [];
+
+  function completionStorageScopeCurrent(): boolean {
+    if (!completionLease || !actionState.active ||
+        actionState.storageKey !== completionStorageKey) {
+      return false;
+    }
+    try {
+      assertHealthDataWriteLease(completionLease);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function assertCompletionStorageScopeCurrent(): void {
+    if (!completionStorageScopeCurrent()) throw new Error('COMPLETION_SCOPE_CHANGED');
+  }
+
+  // A retry can capture a fresh date after midnight, without changing storage
+  // authority. Mutation-result publication still uses the original `today`.
+  function completionDateScopeCurrent(date: string = today): boolean {
+    return completionStorageScopeCurrent() && localDateString() === date;
+  }
+
+  function completionViewCurrent(): boolean {
+    return planSource.isSourceCurrent() && completionView.isActive() &&
+      completionDateScopeCurrent() && currentRoutineType() === type;
+  }
+
+  function assertCompletionViewCurrent(): void {
+    if (!completionViewCurrent()) throw new Error('COMPLETION_VIEW_CHANGED');
+  }
+
+  function setCompletionActionFailed(failed: boolean): void {
+    // The coordinator notifies only its still-attached subscribers. Never call
+    // a captured component setState from an old storage-settlement callback.
+    if (!completionStorageScopeCurrent()) return;
+    if (failed) actionState.requireRecovery();
+    else actionState.confirmRecovery();
+  }
+
+  function setCompletionPendingKey(key: null): void {
+    if (key === null && completionStorageScopeCurrent()) actionState.finish();
+  }
+
+  function completionQueryInStorageScope(query: { queryKey: readonly unknown[] }): boolean {
+    const key = query.queryKey;
+    return key[0] === 'completions' && key.length === scope.length + 2 &&
+      scope.every((part, index) => key[index + 2] === part);
+  }
+
+  async function cancelCompletionReads(): Promise<void> {
+    assertCompletionStorageScopeCurrent();
+    // Include a new day's already-started read, but never a successor lease's
+    // query. A getPrivateItem read is not ordered behind the private mutation.
+    await Promise.all([
+      qc.cancelQueries({ queryKey: ['completions'], predicate: completionQueryInStorageScope }),
+      qc.cancelQueries({ queryKey: completionUnsyncedQueryKey, exact: true }),
+    ]);
+    assertCompletionStorageScopeCurrent();
+  }
+
+  async function refreshCompletionProgress(): Promise<void> {
+    assertCompletionStorageScopeCurrent();
+    await qc.cancelQueries({ queryKey: ['progress'] });
+    assertCompletionStorageScopeCurrent();
+    // Retain the existing derived-progress invalidation, without making hosted
+    // adherence availability evidence of a confirmed local commit.
+    await qc.invalidateQueries({ queryKey: ['progress'] });
+    assertCompletionStorageScopeCurrent();
+  }
+
+  async function refreshCompletionReads(): Promise<void> {
+    // This is called AFTER settlement. Cancel pre-settlement reads before
+    // invalidating all dates for this lease; exact yesterday-only refreshes or
+    // joining a pending new-day read cannot reconcile the shared record.
+    await cancelCompletionReads();
+    await qc.invalidateQueries({
+      queryKey: ['completions'], predicate: completionQueryInStorageScope, refetchType: 'active',
+    }, { throwOnError: true });
+    assertCompletionStorageScopeCurrent();
+    await refreshCompletionProgress();
+    assertCompletionStorageScopeCurrent();
+    await qc.invalidateQueries({ queryKey: completionUnsyncedQueryKey, exact: true },
+      { throwOnError: true });
+    assertCompletionStorageScopeCurrent();
+  }
+
   const hasCompletionIdentityRepair = completionSyncUnsynced.some(
     ({ reason }) => reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED',
   );
@@ -508,14 +665,26 @@ export default function TodayScreen() {
       stepOrder: number;
     },
   ) {
-    if (completionUnavailable || completionPendingKey !== null) return;
-    setCompletionActionFailed(false);
-    setCompletionPendingKey(key);
+    if (completionUnavailable || !completionViewCurrent() ||
+        !cycleCurrent() || !actionState.begin(key)) return;
     let persistenceConfirmed = false;
+    let completionReadsConfirmed = false;
     let reviewMomentEarned = false;
     try {
       await runCurrentHealthDataOperation(async (lease) => {
         lease.assertCurrent();
+        // Admission can yield before this callback. An unavailable plan is not
+        // evidence that a completion write was attempted or failed.
+        if (!planSource.isSourceCurrent() || !cycleCurrent()) return;
+        assertCompletionViewCurrent();
+        await cancelCompletionReads();
+        lease.assertCurrent();
+        // A source refetch can start during cancellation. Do not dispatch a
+        // checkoff from the old plan, or mark a never-dispatched write as failed.
+        if (!planSource.isSourceCurrent() || !cycleCurrent()) return;
+        // New checkoffs require both the captured date and its presentation
+        // phase. Once dispatched, settlement belongs to storage, not that view.
+        assertCompletionViewCurrent();
         const scheduled =
           context.phase === 'PM'
             ? ({ phase: 'PM', stepKeys: context.stepKeys } as const)
@@ -538,75 +707,143 @@ export default function TodayScreen() {
         }
         const result = await toggleCompletion(key, today, scheduled, remoteSync);
         lease.assertCurrent();
+        assertCompletionStorageScopeCurrent();
+        if (!result.done) throw new Error('COMPLETION_NOT_RECORDED');
         persistenceConfirmed = true;
-        qc.setQueryData(['completions', today], new Set(result.completedStepKeysAfter));
-        haptics.success();
-        if (result.inserted) {
-          const moment = type.toLowerCase();
-          track('routine_checkoff_completed', { moment });
-          if (result.firstEver) track('first_checkoff_completed', { moment });
-          const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
-          if (
-            shouldTrackCycleNightCompleted({
-              completedStepKeysAfter: result.completedStepKeysAfter,
-              completedKey: key,
-              cycleActive: context?.cycleActive === true,
-              phase: checkoffPhase,
-              stepKeys: context?.stepKeys ?? [],
-              completionInserted: result.inserted,
-            })
-          ) {
-            track('cycle_night_completed', { moment: 'pm', source: 'today' });
+        try {
+          // Never install yesterday's snapshot in today's query. Even when
+          // this is skipped, the finally block reconciles all current reads.
+          if (completionView.isActive() && completionDateScopeCurrent()) {
+            qc.setQueryData(completionQueryKey, new Set(result.completedStepKeysAfter));
           }
+          assertCompletionStorageScopeCurrent();
+          if (result.inserted && completionViewCurrent()) {
+            haptics.success();
+            assertCompletionViewCurrent();
+            const moment = context.phase.toLowerCase();
+            track('routine_checkoff_completed', { moment });
+            assertCompletionViewCurrent();
+            if (result.firstEver) track('first_checkoff_completed', { moment });
+            assertCompletionViewCurrent();
+            if (
+              shouldTrackCycleNightCompleted({
+                completedStepKeysAfter: result.completedStepKeysAfter,
+                completedKey: key,
+                cycleActive: context.cycleActive,
+                phase: context.phase,
+                stepKeys: context.stepKeys,
+                completionInserted: result.inserted,
+              })
+            ) {
+              track('cycle_night_completed', { moment: 'pm', source: 'today' });
+            }
+          }
+          lease.assertCurrent();
+          assertCompletionStorageScopeCurrent();
+          if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {
+            reviewMomentEarned = completionViewCurrent();
+          }
+        } finally {
+          // Keep the storage gate pending until post-settlement reconciliation.
+          // Also run this when presentation feedback throws or becomes stale.
+          await refreshCompletionReads();
+          completionReadsConfirmed = true;
         }
-        lease.assertCurrent();
-        if (result.completionDayInserted && (progress?.streak ?? 0) >= 6) {
-          reviewMomentEarned = true;
-        }
-        await qc.invalidateQueries({ queryKey: ['completions', today] });
-        lease.assertCurrent();
-        await qc.invalidateQueries({ queryKey: ['progress'] });
-        lease.assertCurrent();
-        await qc.invalidateQueries({ queryKey: ['completion-sync-unsynced'] });
         lease.assertCurrent();
       });
     } catch {
+      // Midnight/AM-PM are NOT reasons to abandon an unresolved private write.
+      // Unmount only detaches a view; exact authority still owns settlement.
+      if (!completionStorageScopeCurrent()) return;
       if (!persistenceConfirmed) {
         setCompletionActionFailed(true);
-      } else {
-        // The step is already durable and visibly cached. Retry only downstream
-        // refreshes; never relabel a confirmed check-off as a storage failure.
-        void Promise.allSettled([
-          qc.invalidateQueries({ queryKey: ['completions', today] }),
-          qc.invalidateQueries({ queryKey: ['progress'] }),
-          qc.invalidateQueries({ queryKey: ['completion-sync-unsynced'] }),
-        ]);
+        await cancelCompletionReads().catch(() => undefined);
+      } else if (!completionReadsConfirmed) {
+        // Confirmed commit, but its fresh local reconciliation is unreadable.
+        // Preserve the commit and require read-back; never re-run the mutation.
+        setCompletionActionFailed(true);
+        await cancelCompletionReads().catch(() => undefined);
       }
+      // A feedback exception AFTER a successful reconciliation is not a failed
+      // private write. Do not launch an untracked fallback refresh from this catch.
     } finally {
+      // Release ONLY this captured storage gate's pending slot. Its failure
+      // latch survives midnight and remount; successor authorities are separate.
       setCompletionPendingKey(null);
-      // The native request owns a two-second settled-state delay. Do not keep
-      // the completed check-off pending or make progress depend on StoreKit.
-      if (reviewMomentEarned) {
+      if (reviewMomentEarned && completionReadsConfirmed && completionViewCurrent()) {
         void requestReviewAfterValue('seven_checkoff_days').catch(() => undefined);
       }
     }
   }
 
-  function retryCompletions() {
-    setCompletionActionFailed(false);
-    void completionQuery.refetch();
+  async function retryCompletions() {
+    if (!completionViewCurrent() || !actionState.begin('reload', true)) return;
+    try {
+      await runWithCompletionLease(completionLease, async () => {
+        // A retry cannot begin while ANY same-record mutation is pending. Its
+        // reads therefore start after settlement, never from retained cache.
+        // Allow one calendar rollover while reading; repeated clock changes
+        // fail closed and leave the explicit retry available.
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+          await cancelCompletionReads();
+          assertCompletionStorageScopeCurrent();
+          const readDate = localDateString();
+          const [steps, unsynced] = await Promise.all([
+            getCompletedSteps(readDate),
+            getCompletionSyncUnsynced(),
+          ]);
+          assertCompletionStorageScopeCurrent();
+          // A date query may have mounted during these awaits. Cancel it too,
+          // so its older snapshot cannot overwrite the explicit fresh read.
+          await cancelCompletionReads();
+          if (!completionDateScopeCurrent(readDate)) continue;
+          const readQueryKey = ['completions', readDate, ...scope] as const;
+          qc.setQueryData(readQueryKey, steps);
+          assertCompletionStorageScopeCurrent();
+          qc.setQueryData(completionUnsyncedQueryKey, unsynced);
+          if (!completionDateScopeCurrent(readDate)) continue;
+          setCompletionActionFailed(false);
+          // Read-back may reveal surviving commit-then-reject bytes. Reconcile
+          // derived progress, but never manufacture haptics/analytics/review.
+          await refreshCompletionProgress();
+          return;
+        }
+        throw new Error('COMPLETION_DATE_CHANGED_DURING_READ');
+      });
+    } catch {
+      if (completionStorageScopeCurrent()) setCompletionActionFailed(true);
+    } finally {
+      setCompletionPendingKey(null);
+    }
   }
 
-  function handleCompletionSyncUnavailable() {
+  async function handleCompletionSyncUnavailable() {
+    if (completionUnavailable || !completionViewCurrent() || actionState.pendingKey !== null) {
+      return;
+    }
     if (hasCompletionIdentityRepair) {
       router.push('/(tabs)/shelf');
       return;
     }
-    void recoverCompletionSyncUnsynced(currentCompletionSyncTimezone()).then(
-      () => completionSyncUnsyncedQuery.refetch(),
-      () => completionSyncUnsyncedQuery.refetch(),
-    );
+    if (!actionState.begin('recover')) return;
+    try {
+      await runWithCompletionLease(completionLease, async () => {
+        await cancelCompletionReads();
+        assertCompletionViewCurrent();
+        await recoverCompletionSyncUnsynced(currentCompletionSyncTimezone());
+        assertCompletionStorageScopeCurrent();
+        await refreshCompletionReads();
+      });
+    } catch {
+      if (completionStorageScopeCurrent()) {
+        setCompletionActionFailed(true);
+        await cancelCompletionReads().catch(() => undefined);
+      }
+    } finally {
+      setCompletionPendingKey(null);
+    }
   }
+
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
     done.has(key) ? 'done' : key === firstUndoneKey ? 'next' : 'pending';
@@ -627,6 +864,52 @@ export default function TodayScreen() {
     !compactPhone &&
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
+
+  // Plan admission is additional to (never a replacement for) T1 read-back.
+  // Neither absent data nor retained cached data can become a current routine.
+  if (sourceState !== 'ready') {
+    return (
+      <Screen tone={dark ? 'night' : undefined} edges={['top']}>
+        <PlanSourceNotice
+          dark={dark}
+          loading={sourceState === 'loading'}
+          onRetry={() => void planSource.retry().catch(() => undefined)}
+          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+        />
+      </Screen>
+    );
+  }
+
+  // Unknown is not zero. Keep cached counts, checkboxes, streaks and empty-plan
+  // copy off this surface until both local reads are confirmed for this lease.
+  if (completionUnavailable) {
+    return (
+      <Screen tone={dark ? 'night' : undefined} edges={['top']}>
+        <Text className="mt-4 font-sans-semibold text-[24px]"
+          style={{ color: dark ? colors.cream : colors.ink }}>
+          Today
+        </Text>
+        <Text style={{ color: dark ? colors.cream : colors.muted }}>{dateLabel}</Text>
+        <CompletionStatusNotice dark={dark} loading={completionLoading} onRetry={retryCompletions} />
+      </Screen>
+    );
+  }
+
+  // Completion read-back remains independently reachable above. A failed or
+  // pending cycle cannot erase T1's latch, and T1 recovery cannot confirm a cycle.
+  if (cycleState === 'loading' || cycleState === 'unavailable') {
+    return (
+      <Screen tone={dark ? 'night' : undefined} edges={['top']}>
+        <PlanSourceNotice
+          cycle
+          dark={dark}
+          loading={cycleState === 'loading'}
+          onRetry={() => void cycleSource.retry().catch(() => undefined)}
+          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+        />
+      </Screen>
+    );
+  }
 
   // ---- AM ----
   if (!dark) {

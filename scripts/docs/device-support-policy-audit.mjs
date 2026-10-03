@@ -7,12 +7,16 @@ import {
   loadLaunchContract,
   platformRequirementStatus,
 } from '../launch/contract.mjs';
+import { validateSupportedPhoneGates } from './device-support-policy-source-contract.mjs';
 
 const root = process.cwd();
 const launchContract = loadLaunchContract(root);
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
+const sourceIntegration = process.argv.includes('--source-integration');
+if (sourceIntegration && check)
+  throw new Error('source integration cannot check release evidence outputs');
 
 const outJson =
   process.env.DEVICE_SUPPORT_POLICY_AUDIT_JSON ?? 'docs/generated/device-support-policy-audit.json';
@@ -102,6 +106,7 @@ const docNeedles = [
 const requiredPackageScripts = [
   'docs:device-support-policy-audit',
   'docs:device-support-policy-audit:test',
+  'docs:device-support-policy-audit:source',
   'docs:device-support-policy-audit:strict',
   'docs:device-support-policy-audit:check',
   'e2e:human:manifest:contract:test',
@@ -315,29 +320,12 @@ const gateResults = manifestGates.map((gate) => ({
   title: gate.title,
 }));
 
-const launchGate = gateResults.find((gate) => gate.id === 'iphone-375-667-200-text-pressure');
-if (!launchGate) {
-  blockers.push(`${files.humanManifest} is missing the iPhone 375 x 667 launch-floor gate.`);
-} else {
-  if (!launchGate.required) blockers.push('iPhone 375 x 667 launch-floor gate must be required.');
-  if (launchGate.supportClass !== 'supported-phone') {
-    blockers.push('iPhone 375 x 667 launch-floor gate must be supported-phone evidence.');
-  }
-  if (launchGate.status !== 'pass') blockers.push('iPhone 375 x 667 launch-floor gate must pass.');
-}
-
-for (const gateId of requiredSupportedPhoneGateIds) {
-  const gate = gateResults.find((candidate) => candidate.id === gateId);
-  if (!gate) {
-    blockers.push(`${files.humanManifest} is missing supported-phone gate ${gateId}.`);
-    continue;
-  }
-  if (!gate.required) blockers.push(`${gateId} must be required supported-phone evidence.`);
-  if (gate.supportClass !== 'supported-phone') {
-    blockers.push(`${gateId} must be classified as supported-phone evidence.`);
-  }
-  if (gate.status !== 'pass') blockers.push(`${gateId} must pass.`);
-}
+const { blockers: gateBlockers, launchGate } = validateSupportedPhoneGates(
+  gateResults,
+  requiredSupportedPhoneGateIds,
+  !sourceIntegration,
+);
+blockers.push(...gateBlockers);
 
 const legacyGateProblems = gateResults
   .filter((gate) => /\b320 x 480\b/.test(String(gate.title ?? '')))
@@ -513,6 +501,15 @@ const mdContent = [
   ...(warnings.length > 0 ? warnings.map((warning) => `- ${warning}`) : ['- None.']),
   '',
 ].join('\n');
+
+if (sourceIntegration) {
+  if (blockers.length > 0) {
+    for (const blocker of blockers) console.error(`FAIL ${blocker}`);
+    process.exit(1);
+  }
+  console.log('Device support source integration passed; release evidence was not assessed.');
+  process.exit(0);
+}
 
 if (check) {
   const jsonCurrent = checkGeneratedFile(outJson, jsonContent, normalizeGeneratedJson);

@@ -8,7 +8,7 @@ import {
   readStableRootBoundWorkingFile,
   runTrustedGit,
 } from '../phase9/release-qa-integrity.mjs';
-import { launchContractSnapshot, validateLaunchContract } from './contract.mjs';
+import { REQUIRED_FEATURE_IDS, launchContractSnapshot, validateLaunchContract } from './contract.mjs';
 
 const FULL_GIT_SHA = /^[0-9a-f]{40}$/u;
 const GIT_OBJECT_ID = /^[0-9a-f]{40,64}$/u;
@@ -1326,13 +1326,16 @@ export function validateGovernedPublicationCompletion(audit, { stage = 'R' } = {
   if (
     policy?.launchContract?.exists !== true ||
     !SHA256.test(String(policy?.launchContract?.sha256 ?? '')) ||
-    launchSnapshot?.releaseMode !== 'all-features' ||
+    launchSnapshot?.releaseMode !== 'lean-v1' ||
     launchSnapshot?.androidRelease !== false ||
     !samePathSet(launchSnapshot?.platforms, ['ios']) ||
     !Array.isArray(launchSnapshot?.requiredFeatureIds) ||
-    launchSnapshot.requiredFeatureIds.length !== 20
+    !samePathSet(
+      [...launchSnapshot.requiredFeatureIds].sort((left, right) => left - right),
+      REQUIRED_FEATURE_IDS,
+    )
   ) {
-    errors.push('pinned S launch contract is not the active iOS all-features policy');
+    errors.push('pinned S launch contract is not the active iOS lean V1 policy');
   }
   const published = [
     ...new Set(

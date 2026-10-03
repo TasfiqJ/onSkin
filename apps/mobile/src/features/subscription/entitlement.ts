@@ -16,8 +16,8 @@ export function entitlementQueryKey(ownerBinding: string) {
 
 /**
  * Pure entitlement-state derivation (docs/08 §4 "gate on the cached entitlement,
- * offline-safe"). The app gates on `is_active` regardless of SOURCE. A store
- * purchase, a carded trial, or the app-granted reverse trial all produce `isPro`.
+ * offline-safe"). Lean V1 grants only finite, current, admitted store access.
+ * Historical app grants and reverse trials never produce `isPro`.
  * A lapsed entitlement falls back to the free tier with `expired` set so the
  * downgrade / win-back surfaces can frame it honestly (never data-deleting). All
  * deterministic + unit-tested; mirrors the server `entitlements` row.
@@ -113,13 +113,15 @@ function evidenceIdentity(e: StoredEntitlement | null): string | null {
 export function daysUntil(expiresAt: string | null, nowISO: string): number | null {
   if (!expiresAt) return null;
   const diff = new Date(expiresAt).getTime() - new Date(nowISO).getTime();
-  return Math.max(0, Math.ceil(diff / MS_PER_DAY));
+  return Number.isFinite(diff) ? Math.max(0, Math.ceil(diff / MS_PER_DAY)) : null;
 }
 
 function isLive(e: StoredEntitlement, nowISO: string): boolean {
-  if (!e.isActive || !e.tier) return false;
-  if (e.expiresAt && new Date(e.expiresAt).getTime() <= new Date(nowISO).getTime()) return false;
-  return true;
+  if (e.isActive !== true || (e.tier !== 'pro' && e.tier !== 'pro_plus')) return false;
+  if (e.store === 'app_granted' || e.source === 'app_granted' || e.periodType === 'reverse_trial') return false;
+  const expiry = e.expiresAt === null ? NaN : Date.parse(e.expiresAt);
+  const now = Date.parse(nowISO);
+  return Number.isFinite(expiry) && Number.isFinite(now) && expiry > now;
 }
 
 export function deriveState(
@@ -127,7 +129,15 @@ export function deriveState(
   nowISO: string,
   evidenceStatus?: EntitlementEvidenceStatus,
 ): SubscriptionState {
-  const resolvedEvidence =
+  // Lean V1 does not adopt historical custom grants, including cached ones.
+  if (e && (e.store === 'app_granted' || e.source === 'app_granted' || e.periodType === 'reverse_trial')) {
+    return deriveState(null, nowISO, evidenceStatus && isEntitlementEvidenceUncertain({ evidenceStatus }) ? evidenceStatus : undefined);
+  }
+  const invalid = !Number.isFinite(Date.parse(nowISO)) || (e !== null && (
+    (e.tier !== 'pro' && e.tier !== 'pro_plus') ||
+    (e.isActive === true && (e.expiresAt === null || !Number.isFinite(Date.parse(e.expiresAt))))
+  ));
+  const resolvedEvidence = invalid ? 'invalid' :
     evidenceStatus ?? (!e ? 'absent' : isLive(e, nowISO) ? 'fresh' : 'expired');
   const free: SubscriptionState = {
     tier: 'free',

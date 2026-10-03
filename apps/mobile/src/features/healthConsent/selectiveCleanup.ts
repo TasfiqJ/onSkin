@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import {
   scheduleTrialReminder,
   waitForHealthNotificationOperationsToSettle,
 } from '@/features/notifications/deliver';
+import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import {
   beginEncryptedPhotoAccountBoundary,
   clearEncryptedPhotoStorage,
@@ -97,7 +97,7 @@ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<
     await attempt(() =>
       Platform.OS === 'web'
         ? Promise.resolve()
-        : Notifications.cancelAllScheduledNotificationsAsync(),
+        : clearNativeNotificationsForAccountIsolation(),
     );
     await attempt(() => queryClient.clear());
 
@@ -110,7 +110,7 @@ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<
     await attempt(() =>
       Platform.OS === 'web'
         ? Promise.resolve()
-        : Notifications.cancelAllScheduledNotificationsAsync(),
+        : clearNativeNotificationsForAccountIsolation(),
     );
   } finally {
     endEncryptedPhotoAccountBoundary();

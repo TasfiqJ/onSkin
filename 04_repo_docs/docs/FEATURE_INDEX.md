@@ -1,5 +1,8 @@
 # Feature Index
 
+> Active scope (2026-09-27): the ten-feature iOS lean V1 contract in `docs/hugeToDo/launch-contract.json` governs launch. Deferred features do not block V1 merely by being deferred. All applicable privacy, clinical/legal, payment, native-device, beta and release-evidence gates remain required. Prior detailed findings below are retained; see `docs/MAIN_INTEGRATION_2026-09-27.md` for this integration.
+
+
 |   # | Feature                                 | iOS Launch | Complexity | Dependencies                    | Current readiness                 | Source Doc                                                                                                                                               |
 | --: | --------------------------------------- | ---------- | ---------- | ------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |   1 | Rebrand and identity migration          | Required   | Medium     | founder/counsel                 | launch-blocked                    | TBD                                                                                                                                                      |

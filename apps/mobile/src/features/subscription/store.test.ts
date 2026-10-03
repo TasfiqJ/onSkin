@@ -360,7 +360,7 @@ describe('owner-bound entitlement evidence store', () => {
     }
   });
 
-  it('preserves the app-grant lane when RevenueCat definitively verifies an empty store lane', async () => {
+  it('retains stored app-grant history without publishing Pro after verified store absence', async () => {
     await mergeAppGrant();
     await mergeEntitlementEvidence(
       contextA,
@@ -371,13 +371,9 @@ describe('owner-bound entitlement evidence store', () => {
     expect(read.status).toBe('available');
     if (read.status === 'available') {
       expect(read.snapshot.activeStoreEntitlement).toBeNull();
-      expect(read.snapshot.activeAppGrantEntitlement).toMatchObject({
-        periodType: 'reverse_trial',
-        isActive: true,
-      });
-      expect(deriveState(read.snapshot.entitlement, read.snapshot.effectiveNowISO).isPro).toBe(
-        true,
-      );
+      expect(read.snapshot.activeAppGrantEntitlement).toBeNull();
+      expect(deriveState(read.snapshot.entitlement, read.snapshot.effectiveNowISO).isPro).toBe(false);
+      expect(JSON.parse(mocks.storage.get(KEY)!).appGrant.definitive).not.toBeNull();
     }
   });
 
@@ -637,7 +633,7 @@ describe('owner-bound entitlement evidence store', () => {
     );
     expect(repaired.disposition).toBe('stale');
     expect(repaired.snapshot?.activeStoreEntitlement).toBeNull();
-    expect(repaired.snapshot?.activeAppGrantEntitlement?.isActive).toBe(true);
+    expect(repaired.snapshot?.activeAppGrantEntitlement).toBeNull();
     const saved = JSON.parse(mocks.storage.get(KEY)!) as typeof seeded;
     expect(saved.legacy).toBeNull();
     expect(saved.revision).toBe(expected.revision);
@@ -690,7 +686,7 @@ describe('owner-bound entitlement evidence store', () => {
     );
     expect(repaired.snapshot?.hasConflict).toBe(true);
     expect(repaired.snapshot?.activeStoreEntitlement).toBeNull();
-    expect(repaired.snapshot?.activeAppGrantEntitlement?.isActive).toBe(true);
+    expect(repaired.snapshot?.activeAppGrantEntitlement).toBeNull();
     const saved = JSON.parse(mocks.storage.get(KEY)!) as typeof seeded;
     expect(saved.legacy).toBeNull();
     expect(saved.revision).toBe(expected.revision);
@@ -833,9 +829,7 @@ describe('owner-bound entitlement evidence store', () => {
     expect(result).toMatchObject({ status: 'blocked', snapshot: null });
     expect(mocks.storage.get(KEY)).toBe(before);
     const read = await readEntitlementSnapshot(contextA, NOW);
-    expect(read.status === 'available' && read.snapshot.activeAppGrantEntitlement?.isActive).toBe(
-      true,
-    );
+    expect(read.status === 'available' && read.snapshot.activeAppGrantEntitlement).toBeNull();
   });
 
   it('publishes only the exact owner query after cancellation and committed merge', async () => {
@@ -880,7 +874,7 @@ describe('owner-bound entitlement evidence store', () => {
     expect(result).toMatchObject({ status: 'ignored', reason: 'verified_on_device_empty' });
     expect(queryClient.setQueryData).toHaveBeenCalledWith(
       ['entitlement', A],
-      expect.objectContaining({ isPro: true, source: 'app_granted' }),
+      expect.objectContaining({ isPro: false, source: null }),
     );
   });
 
@@ -978,10 +972,8 @@ describe('owner-bound entitlement evidence store', () => {
       source: 'revenuecat',
       productId: 'layerwell_pro_annual',
     });
-    expect(merged.snapshot?.activeAppGrantEntitlement).toMatchObject({
-      source: 'app_granted',
-      periodType: 'reverse_trial',
-    });
+    expect(merged.snapshot?.activeAppGrantEntitlement).toBeNull();
+    expect(JSON.parse(mocks.storage.get(KEY)!).appGrant.definitive).not.toBeNull();
     expect(mocks.writes).toBe(1);
   });
 

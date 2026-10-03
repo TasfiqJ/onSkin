@@ -33,8 +33,10 @@ const paths = Object.freeze({
   analyticsRegistry: 'apps/mobile/src/lib/analytics/eventRegistry.ts',
   quizContract: 'apps/mobile/src/features/onboarding/quizContract.ts',
   wave1Policy: 'docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md',
+  launchContract: 'docs/hugeToDo/launch-contract.json',
   clinicalAudit: 'docs/phase-3/clinical-conflict-rule-evidence-audit-2026-07-26.md',
   appStoreAudit: 'docs/phase-3/app-store-medical-legal-gap-audit-2026-07-26.md',
+  guidanceReviewInputs: 'docs/phase-3/reviewed-guidance-professional-review-inputs.json',
   packetBuilder: 'scripts/phase3/build-review-packet.mjs',
   migration0066: 'supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql',
   migration0067: 'supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql',
@@ -236,6 +238,88 @@ test('the bundled corpus remains a zero-publication draft with empty detached au
   );
 });
 
+test('positive admission is source-artifact bound and aligned with the Lean conflict-engine review contract', () => {
+  const corpus = read(paths.corpus);
+  const validator = findFunction(paths.corpus, 'isConflictRuleCorpusContentValidForAdmission');
+  const admission = findFunction(paths.corpus, 'admitConflictRuleCorpus');
+  const launchContract = JSON.parse(read(paths.launchContract));
+  const reviewInputs = JSON.parse(read(paths.guidanceReviewInputs));
+  const expectedReviewers = [
+    {
+      reviewerRole: 'board_certified_dermatologist',
+      taskId: 'H-03',
+      scope: 'exact_conflict_clinical_meaning_eligibility_and_user_copy',
+    },
+    {
+      reviewerRole: 'cosmetic_chemist',
+      taskId: 'H-03',
+      scope: 'exact_ingredient_compatibility_and_application_copy',
+    },
+    {
+      reviewerRole: 'regulatory_counsel',
+      taskId: 'H-03',
+      scope: 'claims_jurisdiction_and_market_clearance',
+    },
+  ];
+
+  assert.deepEqual(
+    launchContract.featureProfessionalReviewRequirements.conflict_engine,
+    expectedReviewers,
+  );
+  assert.deepEqual(
+    reviewInputs.requiredReviewers.map(({ reviewerRole, taskId, launchScope }) => ({
+      reviewerRole,
+      taskId,
+      scope: launchScope,
+    })),
+    expectedReviewers,
+  );
+  assert.equal(reviewInputs.professionalReviewComplete, false);
+  assert.equal(reviewInputs.launchContract.sha256, sha256(bytes(paths.launchContract)));
+
+  assertContainsAll(
+    validator.text,
+    [
+      "source.reviewStatus !== 'reviewed'",
+      '!source.retainedArtifactId',
+      '!hasEvidenceReference(source.retainedArtifactId)',
+      '!source.retainedArtifactRef',
+      '!hasEvidenceReference(source.retainedArtifactRef)',
+      '!source.retainedArtifactSha256',
+      '!hasSha256(source.retainedArtifactSha256)',
+    ],
+    'source artifact admission validator',
+  );
+  assertContainsAll(
+    corpus,
+    [
+      'exactSourceArtifacts',
+      'citationSha256: sha256Hex(source.citation)',
+      'independenceDisclosureRef',
+      'independenceDisclosureSha256',
+    ],
+    'signed professional-review provenance',
+  );
+  assert.match(admission.text, /receipt\.reviewerRole === ['"]cosmetic_chemist['"]/u);
+  assert.doesNotMatch(admission.text, /receipt\.reviewerRole === ['"]pharmacist['"]/u);
+
+  const packetBuilder = read(paths.packetBuilder);
+  assertContainsAll(
+    packetBuilder,
+    [
+      'const core02GuidanceAuthorityReviewSources',
+      'docs/hugeToDo/CORE-02-CLINICAL-CONFLICT-SOURCE-CHECKPOINT-2026-07-26.md',
+      'docs/phase-3/reviewed-guidance-professional-review-inputs.json',
+      'apps/mobile/src/features/onboarding/quizContract.ts',
+      'apps/mobile/src/features/intelligence/conflictRuleCorpus.v1.ts',
+      'apps/mobile/src/features/intelligence/engine.ts',
+      'apps/mobile/src/features/intelligence/pregnancySafety.ts',
+    ],
+    'CORE-02 professional-review packet inputs',
+  );
+  assert.equal(countOccurrences(packetBuilder, '...core02GuidanceAuthorityReviewSources'), 3);
+});
+
 test('admission requires three independent roles and cryptographic, module-private provenance', () => {
   const corpus = read(paths.corpus);
   const admission = findFunction(paths.corpus, 'admitConflictRuleCorpus');
@@ -246,7 +330,6 @@ test('admission requires three independent roles and cryptographic, module-priva
     [
       'board_certified_dermatologist',
       'cosmetic_chemist',
-      'pharmacist',
       'regulatory_counsel',
       'verifyDetachedReceiptSignature',
       'immutableConflictRuleCorpusSnapshot',
@@ -254,6 +337,8 @@ test('admission requires three independent roles and cryptographic, module-priva
       'reviewerIdentityKey',
       'credentialEvidenceRef',
       'credentialEvidenceSha256',
+      'independenceDisclosureRef',
+      'independenceDisclosureSha256',
       'authorityPublicKeySha256',
       'publicKeySha256',
       'isValidatedConflictReviewAuthority',
@@ -283,6 +368,17 @@ test('admission requires three independent roles and cryptographic, module-priva
       'new Set(orderedReceipts.map((receipt) => receipt.authorityPublicKeySha256)).size !== 3',
     ),
     'review receipts must bind three independent public-key fingerprints',
+  );
+  assert.ok(
+    normalizedAdmission.includes(
+      'new Set(orderedReceipts.map((receipt) => receipt.independenceDisclosureRef)).size !== 3',
+    ),
+  );
+  assert.ok(
+    normalizedAdmission.includes(
+      'new Set(orderedReceipts.map((receipt) => receipt.independenceDisclosureSha256)).size !== 3',
+    ),
+    'each reviewer must bind a distinct independence/conflict disclosure artifact',
   );
   assert.match(
     corpus,
@@ -935,7 +1031,7 @@ test('all 13 candidate IDs and both gap audits are in the Phase 3 packet contrac
 
   assert.match(appStoreAudit, /Release verdict:\*\*\s+no-go/u);
   assert.ok(
-    countOccurrences(packetBuilder, paths.clinicalAudit) >= 3,
+    countOccurrences(packetBuilder, '...core02GuidanceAuthorityReviewSources') >= 3,
     'the clinical evidence audit must be in legal, clinical, and chemistry packets',
   );
   assert.ok(

@@ -140,7 +140,7 @@ export type ConflictRuleAdmission = {
   receiptIds: readonly [string, string, string];
   reviewerRoles: readonly [
     'board_certified_dermatologist',
-    'cosmetic_chemist' | 'pharmacist',
+    'cosmetic_chemist',
     'regulatory_counsel',
   ];
 };
@@ -377,6 +377,9 @@ const CANDIDATE_RULE_ROWS: CandidateConflictRuleRow[] = [
 export type ConflictSourceRecord = {
   id: string;
   citation: string;
+  retainedArtifactId: string | null;
+  retainedArtifactRef: string | null;
+  retainedArtifactSha256: string | null;
   reviewStatus: 'candidate_unreviewed' | 'held_unreviewed' | 'reviewed';
 };
 
@@ -384,46 +387,73 @@ const SOURCE_REGISTRY: ConflictSourceRecord[] = [
   {
     id: 'src-retinoid-acids-candidate',
     citation: "Paula's Choice; Westlake/London Derm; Glow Recipe (Dr. H. King)",
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-bp-retinoid-martin-1998-candidate',
     citation: 'Martin et al., Br. J. Dermatol. 1998',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-niacinamide-vitamin-c-1963-candidate',
     citation: '1963 nicotinamide and ascorbic-acid laboratory study; review pending',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-vitamin-c-aha-candidate',
     citation: 'Schweiger Derm (Dr. Sue Ann Wee); commercial C+AHA products',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-copper-peptide-candidate-held',
     citation: 'cosmetic-chemistry evidence packet pending',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'held_unreviewed',
   },
   {
     id: 'src-dermatology-consensus-candidate',
     citation: 'dermatology consensus',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-pregnancy-retinoid-candidate',
     citation: 'AAD-aligned expert consensus; dermatology pregnancy/lactation reviews',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-pregnancy-bha-candidate',
     citation: 'pregnancy-safe-skincare consensus',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
   {
     id: 'src-pregnancy-hydroquinone-candidate',
     citation: 'dermatology lactation reviews',
+    retainedArtifactId: null,
+    retainedArtifactRef: null,
+    retainedArtifactSha256: null,
     reviewStatus: 'candidate_unreviewed',
   },
 ];
@@ -820,6 +850,8 @@ export type ConflictRuleReviewReceipt = {
   reviewerIdentityKey: string;
   credentialEvidenceRef: string;
   credentialEvidenceSha256: string;
+  independenceDisclosureRef: string;
+  independenceDisclosureSha256: string;
   authorityPublicKeySha256: string;
   signedBodySha256: string;
   detachedSignatureBase64: string;
@@ -1030,7 +1062,16 @@ export function isConflictRuleCorpusContentValidForAdmission(
   const sourceIds = new Set(content.sources.map((source) => source.id));
   if (
     sourceIds.size !== content.sources.length ||
-    content.sources.some((source) => source.reviewStatus !== 'reviewed')
+    content.sources.some(
+      (source) =>
+        source.reviewStatus !== 'reviewed' ||
+        !source.retainedArtifactId ||
+        !hasEvidenceReference(source.retainedArtifactId) ||
+        !source.retainedArtifactRef ||
+        !hasEvidenceReference(source.retainedArtifactRef) ||
+        !source.retainedArtifactSha256 ||
+        !hasSha256(source.retainedArtifactSha256),
+    )
   ) {
     return false;
   }
@@ -1105,9 +1146,18 @@ export type ConflictReviewSignedBody = {
   reviewerIdentityKey: string;
   credentialEvidenceRef: string;
   credentialEvidenceSha256: string;
+  independenceDisclosureRef: string;
+  independenceDisclosureSha256: string;
   authorityPublicKeySha256: string;
   corpusSha256: string;
   sourceRegistrySha256: string;
+  exactSourceArtifacts: readonly {
+    sourceId: string;
+    citationSha256: string;
+    retainedArtifactId: string | null;
+    retainedArtifactRef: string | null;
+    retainedArtifactSha256: string | null;
+  }[];
   exactRuleCount: number;
   exactRuleHashes: readonly {
     ruleId: string;
@@ -1140,9 +1190,18 @@ export function conflictReviewSignedBody(
     reviewerIdentityKey: receipt.reviewerIdentityKey,
     credentialEvidenceRef: receipt.credentialEvidenceRef,
     credentialEvidenceSha256: receipt.credentialEvidenceSha256,
+    independenceDisclosureRef: receipt.independenceDisclosureRef,
+    independenceDisclosureSha256: receipt.independenceDisclosureSha256,
     authorityPublicKeySha256: receipt.authorityPublicKeySha256,
     corpusSha256: corpus.contentSha256,
     sourceRegistrySha256: canonicalSha256(corpus.content.sources),
+    exactSourceArtifacts: corpus.content.sources.map((source) => ({
+      sourceId: source.id,
+      citationSha256: sha256Hex(source.citation),
+      retainedArtifactId: source.retainedArtifactId,
+      retainedArtifactRef: source.retainedArtifactRef,
+      retainedArtifactSha256: source.retainedArtifactSha256,
+    })),
     exactRuleCount: corpus.content.rules.length,
     exactRuleHashes: corpus.content.rules.map((rule) => ({
       ruleId: rule.id,
@@ -1205,6 +1264,8 @@ function validReceiptMetadata(
     hasEvidenceReference(receipt.reviewerIdentityKey) &&
     hasEvidenceReference(receipt.credentialEvidenceRef) &&
     hasSha256(receipt.credentialEvidenceSha256) &&
+    hasEvidenceReference(receipt.independenceDisclosureRef) &&
+    hasSha256(receipt.independenceDisclosureSha256) &&
     hasSha256(receipt.authorityPublicKeySha256) &&
     receipt.signedBodySha256 === canonicalSha256(signedBody) &&
     hasSha256(receipt.signedBodySha256) &&
@@ -1246,7 +1307,7 @@ function hasSelfConsistentAdmission(rule: Partial<ConflictRule>): rule is Confli
     rule.admission.corpusSha256 !== rule.corpusSha256 ||
     rule.admission.receiptIds.length !== 3 ||
     rule.admission.reviewerRoles[0] !== 'board_certified_dermatologist' ||
-    !['cosmetic_chemist', 'pharmacist'].includes(rule.admission.reviewerRoles[1]) ||
+    rule.admission.reviewerRoles[1] !== 'cosmetic_chemist' ||
     rule.admission.reviewerRoles[2] !== 'regulatory_counsel'
   ) {
     return false;
@@ -1297,15 +1358,16 @@ export function admitConflictRuleCorpus(
   const dermatologist = receipts.find(
     (receipt) => receipt.reviewerRole === 'board_certified_dermatologist',
   );
-  const second = receipts.find(
-    (receipt) =>
-      receipt.reviewerRole === 'cosmetic_chemist' || receipt.reviewerRole === 'pharmacist',
+  const cosmeticChemist = receipts.find(
+    (receipt) => receipt.reviewerRole === 'cosmetic_chemist',
   );
   const regulatoryCounsel = receipts.find(
     (receipt) => receipt.reviewerRole === 'regulatory_counsel',
   );
   const orderedReceipts =
-    dermatologist && second && regulatoryCounsel ? [dermatologist, second, regulatoryCounsel] : [];
+    dermatologist && cosmeticChemist && regulatoryCounsel
+      ? [dermatologist, cosmeticChemist, regulatoryCounsel]
+      : [];
   const authorities = orderedReceipts.map((receipt) =>
     CONFLICT_TRUSTED_REVIEW_AUTHORITIES.find(
       (authority) =>
@@ -1321,13 +1383,15 @@ export function admitConflictRuleCorpus(
   );
   if (
     !dermatologist ||
-    !second ||
+    !cosmeticChemist ||
     !regulatoryCounsel ||
     new Set(orderedReceipts.map((receipt) => receipt.receiptId)).size !== 3 ||
     new Set(orderedReceipts.map((receipt) => receipt.authorityId)).size !== 3 ||
     new Set(orderedReceipts.map((receipt) => receipt.reviewerIdentityKey)).size !== 3 ||
     new Set(orderedReceipts.map((receipt) => receipt.credentialEvidenceRef)).size !== 3 ||
     new Set(orderedReceipts.map((receipt) => receipt.credentialEvidenceSha256)).size !== 3 ||
+    new Set(orderedReceipts.map((receipt) => receipt.independenceDisclosureRef)).size !== 3 ||
+    new Set(orderedReceipts.map((receipt) => receipt.independenceDisclosureSha256)).size !== 3 ||
     new Set(orderedReceipts.map((receipt) => receipt.authorityPublicKeySha256)).size !== 3 ||
     new Set(orderedReceipts.map((receipt) => receipt.signedBodySha256)).size !== 3 ||
     authorities.some((authority) => !authority) ||
@@ -1348,14 +1412,14 @@ export function admitConflictRuleCorpus(
 
   const receiptIds = [
     dermatologist.receiptId,
-    second.receiptId,
+    cosmeticChemist.receiptId,
     regulatoryCounsel.receiptId,
   ] as const;
-  const reviewerRoles = [
+  const reviewerRoles: ConflictRuleAdmission['reviewerRoles'] = [
     'board_certified_dermatologist',
-    second.reviewerRole,
+    'cosmetic_chemist',
     'regulatory_counsel',
-  ] as ConflictRuleAdmission['reviewerRoles'];
+  ];
   const admission: ConflictRuleAdmission = {
     status: 'approved',
     corpusSha256: corpus.contentSha256,

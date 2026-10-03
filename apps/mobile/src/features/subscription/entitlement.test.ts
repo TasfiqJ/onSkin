@@ -18,7 +18,7 @@ function ent(over: Partial<StoredEntitlement>): StoredEntitlement {
     periodType: 'normal',
     store: 'app_store',
     productId: 'layerwell_pro_annual_dev',
-    expiresAt: null,
+    expiresAt: '2027-06-13T12:00:00.000Z',
     willRenew: true,
     grantedAt: NOW,
     ...over,
@@ -31,7 +31,7 @@ describe('entitlement state (docs/08 §4. Gate on is_active regardless of source
     expect(s).toMatchObject({ tier: 'free', isPro: false, expired: false });
   });
 
-  it('active reverse trial → Pro, inReverseTrial, days left', () => {
+  it('historical active reverse trial stays deferred and grants no Pro', () => {
     const s = deriveState(
       ent({
         periodType: 'reverse_trial',
@@ -40,11 +40,11 @@ describe('entitlement state (docs/08 §4. Gate on is_active regardless of source
       }),
       NOW,
     );
-    expect(s.isPro).toBe(true);
-    expect(s.tier).toBe('pro');
-    expect(s.inReverseTrial).toBe(true);
+    expect(s.isPro).toBe(false);
+    expect(s.tier).toBe('free');
+    expect(s.inReverseTrial).toBe(false);
     expect(s.inTrial).toBe(false);
-    expect(s.daysLeft).toBe(5);
+    expect(s.daysLeft).toBeNull();
   });
 
   it('active carded trial → Pro, inTrial', () => {

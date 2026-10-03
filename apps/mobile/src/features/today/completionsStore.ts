@@ -280,12 +280,17 @@ function decodeCompletionLog(raw: string | null): CompletionState {
 }
 
 function encodeCompletionLog(state: CompletionState): string {
-  return JSON.stringify({
+  const encoded = JSON.stringify({
     version: SCHEMA_VERSION,
     days: state.days,
     completedDays: [...state.completedDays].sort(),
     sync: state.sync,
   } satisfies CompletionLogEnvelope);
+  // The atomic updater must never commit bytes that a fresh v3 read rejects.
+  // In particular, legacy product keys admitted to the unsynced lane have
+  // stricter bounds than the historical visible step log.
+  decodeCompletionLog(encoded);
+  return encoded;
 }
 
 /** Stable per-step key. Phase-scoped so an AM and a PM step for the same product
@@ -489,7 +494,6 @@ function appendCompletionSyncUnsynced(input: {
     (reason === 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
       (identity === null || input.remote.timezone !== null)) ||
     (reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' && identity !== null) ||
-    (reason === 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED' && timezoneEvidence === null) ||
     (reason !== 'COMPLETION_TIMEZONE_UNAVAILABLE' &&
       reason !== 'COMPLETION_PRODUCT_IDENTITY_REPAIR_REQUIRED')
   ) {
@@ -544,9 +548,10 @@ async function getCompletedStepsForLease(
   lease: HealthDataWriteOperationLease,
 ): Promise<Set<string>> {
   const normalizedDate = normalizeLocalDateISO(date);
-  if (!normalizedDate) return new Set();
+  // Even an invalid request must not turn an unreadable record into empty data.
   const log = await load(lease);
   lease.assertCurrent();
+  if (!normalizedDate) return new Set();
   return new Set(log.days[normalizedDate] ?? []);
 }
 
@@ -657,6 +662,7 @@ export async function toggleCompletion(
       state.days[normalizedDate] = [...day];
       const alreadyCompletedDay = state.completedDays.has(normalizedDate);
       const completedScheduledRoutine =
+        !alreadyCompleted &&
         scheduledStepKeys !== null && scheduledStepKeys.every((step) => day.has(step));
       if (completedScheduledRoutine) state.completedDays.add(normalizedDate);
 

@@ -14,6 +14,7 @@ import {
   dependencyAuditEvidenceWarnings,
   resolveDependencyAuditProvenance,
 } from './dependency-sbom-contract.mjs';
+import { validateNpmAudit } from './security-advisory-exceptions.mjs';
 
 const errors = [];
 const warnings = [];
@@ -38,6 +39,7 @@ const packages = Object.entries(lock.packages ?? {})
   .sort((a, b) => a.path.localeCompare(b.path));
 
 let audit = null;
+let auditExitCode = null;
 if (npmAuditRequested) {
   try {
     const npmExecPath = process.env.npm_execpath;
@@ -47,10 +49,12 @@ if (npmAuditRequested) {
         })
       : command('npm', ['audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] });
     audit = JSON.parse(auditJson);
+    auditExitCode = 0;
   } catch (error) {
     const stdout = error?.stdout?.toString?.() ?? '';
     try {
       audit = JSON.parse(stdout);
+      auditExitCode = error?.status;
     } catch {
       block(
         errors,
@@ -68,15 +72,14 @@ const auditProvenance = resolveDependencyAuditProvenance({
   completed: vulnerabilities !== null,
 });
 if (vulnerabilities) {
-  block(
-    errors,
-    (vulnerabilities.high ?? 0) === 0,
-    `npm audit found ${vulnerabilities.high} high vulnerabilities.`,
-  );
-  block(
-    errors,
-    (vulnerabilities.critical ?? 0) === 0,
-    `npm audit found ${vulnerabilities.critical} critical vulnerabilities.`,
+  errors.push(
+    ...validateNpmAudit({
+      report: audit,
+      lock,
+      policy: JSON.parse(read('docs/phase-9/security-advisory-exceptions.json')),
+      scannerExitCode: auditExitCode,
+      today: new Date().toISOString().slice(0, 10),
+    }),
   );
 }
 
