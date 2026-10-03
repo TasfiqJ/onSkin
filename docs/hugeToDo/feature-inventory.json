@@ -261,7 +261,7 @@
     "data-store": 152,
     "edge-function": 18,
     "feature-flag": 17,
-    "generated-packet": 32,
+    "generated-packet": 33,
     "native-module": 46,
     "route": 93,
     "vendor-call": 16
@@ -1664,6 +1664,13 @@
       "id": "generated-packet:scripts/docs/device-support-policy-audit.mjs",
       "category": "generated-packet",
       "source": "scripts/docs/device-support-policy-audit.mjs",
+      "featureIds": ["F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "generated-packet:scripts/docs/device-support-policy-source-contract.mjs",
+      "category": "generated-packet",
+      "source": "scripts/docs/device-support-policy-source-contract.mjs",
       "featureIds": ["F-20"],
       "readiness": "implemented"
     },
