@@ -49,6 +49,10 @@ function PhotoDetailScreenContent() {
   const scrollRef = useRef<ScrollView>(null);
   const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
+  // Missing-photo UI is only valid after a current authoritative store read.
+  // PhotoStorageGate owns loading/unavailable/retry presentation.
+  if (!data) return null;
+
   if (!photo) {
     return (
       <View

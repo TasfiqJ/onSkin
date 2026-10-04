@@ -608,9 +608,7 @@ function TimelineView({
           </>
         }
       />
-      {timelapseVisible ? (
-        <PhotoTimelapse frames={frames} onClose={closeTimelapse} />
-      ) : null}
+      {timelapseVisible ? <PhotoTimelapse frames={frames} onClose={closeTimelapse} /> : null}
     </>
   );
 }
@@ -626,7 +624,11 @@ function PhotoProgressTab() {
     else track('timeline_viewed');
   }, [mode]);
 
-  const count = data?.count ?? 0;
+  // PhotoStorageGate owns the recovery UI. This inner guard prevents an
+  // unavailable/retained observer snapshot from ever becoming first-run UI.
+  if (!data) return null;
+
+  const count = data.count;
 
   const header = (
     <>
@@ -652,7 +654,7 @@ function PhotoProgressTab() {
       {count > 0 ? (
         <>
           <Text variant="bodySm" tone="muted" className="mt-1">
-            {data?.metadata.text}
+            {data.metadata.text}
           </Text>
           <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
             {PHOTO_COPY.tagline}
@@ -689,20 +691,22 @@ function PhotoProgressTab() {
   if (count > 0 && mode === 'timeline') {
     return (
       <Screen edges={['top']}>
-        <TimelineView compact={compactFirstRun} data={data!} header={header} />
+        <TimelineView compact={compactFirstRun} data={data} header={header} />
       </Screen>
     );
   }
 
   return (
     <Screen edges={['top']}>
-      <ScrollView onScroll={reportDockScroll} scrollEventThrottle={32}
+      <ScrollView
+        onScroll={reportDockScroll}
+        scrollEventThrottle={32}
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}
       >
         {header}
 
-        {count === 0 ? <FirstRun compact={compactFirstRun} /> : <CompareView data={data!} />}
+        {count === 0 ? <FirstRun compact={compactFirstRun} /> : <CompareView data={data} />}
       </ScrollView>
     </Screen>
   );
