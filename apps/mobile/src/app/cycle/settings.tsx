@@ -32,6 +32,10 @@ import {
   type CycleEditorActive,
 } from '@/features/scheduler/customCycle';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
+import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
 import { slotLabel } from '@/features/scheduler/projection';
 import { useCycle, useCycleMutations, type CycleData } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
@@ -56,8 +60,10 @@ export default function CycleSettingsScreen() {
 }
 
 function AdmittedCycleSettingsScreen() {
-  const { data, isLoading } = useCycle();
-  if (isLoading || !data) return <CycleSettingsLoading />;
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
+  const { data } = readiness;
+  if (!data) return <CycleSettingsLoading readiness={readiness} />;
 
   const configKey = `${data.config.variant}:${JSON.stringify(data.config.customCycle)}`;
   return <CycleSettingsEditor key={configKey} data={data} />;
@@ -408,13 +414,22 @@ function CadenceReviewGate() {
   );
 }
 
-function CycleSettingsLoading() {
+function CycleSettingsLoading({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
   return (
     <Screen edges={['top', 'bottom']}>
       <SettingsHeader />
-      <Text variant="bodySm" tone="muted" className="mt-6">
-        Loading cycle settings...
-      </Text>
+      <CycleRouteReadinessNotice
+        className="mt-6"
+        state={readiness.state}
+        retrying={readiness.retrying}
+        onRetry={() => void readiness.retry()}
+      />
     </Screen>
   );
 }
