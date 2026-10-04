@@ -6,6 +6,10 @@ import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { shippableRoutineGuidanceCopy } from '@/features/routine/sequencing';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
+import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 
@@ -33,19 +37,25 @@ function RecoveryScreenContent({
   procedureExplanation: string;
 }) {
   const { height } = useWindowDimensions();
-  const { data } = useCycle();
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
+  const { data } = readiness;
   const m = useCycleMutations();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
-  const rec = data?.recovery;
   const compactScreen = height < 640;
 
+  if (!data) return <RecoverySourceState readiness={readiness} />;
+
+  const rec = data.recovery;
+
   async function finishRecovery() {
-    if (saving) return;
+    if (saving || !readiness.isCurrent()) return;
     setSaving(true);
     setSaveFailed(false);
     try {
       await m.finishRecovery();
+      if (!cycleSource.isSourceCurrent({ afterConfigCommit: true })) return;
       backOrReplace(router);
     } catch {
       setSaveFailed(true);
@@ -75,8 +85,8 @@ function RecoveryScreenContent({
 
   const pct = Math.round((rec.day / rec.days) * 100);
   const paused = [
-    ...(data?.cycle?.nights.filter((n) => n.productName).map((n) => n.productName!) ?? []),
-    ...(data?.cycle?.amDaily.filter((a) => a.className === 'vitamin_c').map((a) => a.name) ?? []),
+    ...(data.cycle?.nights.filter((n) => n.productName).map((n) => n.productName!) ?? []),
+    ...(data.cycle?.amDaily.filter((a) => a.className === 'vitamin_c').map((a) => a.name) ?? []),
   ];
   const uniquePaused = [...new Set(paused)];
   const fromIrritation = rec.reason === 'irritation';
@@ -202,6 +212,28 @@ function RecoveryScreenContent({
           onPress={() => void finishRecovery()}
         />
       </ScrollView>
+    </Screen>
+  );
+}
+
+function RecoverySourceState({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
+  return (
+    <Screen edges={['top', 'bottom']}>
+      <View className="mt-2">
+        <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+      </View>
+      <CycleRouteReadinessNotice
+        className="mt-6"
+        state={readiness.state}
+        retrying={readiness.retrying}
+        onRetry={() => void readiness.retry()}
+      />
     </Screen>
   );
 }

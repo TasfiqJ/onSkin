@@ -9,7 +9,11 @@ import {
   shippableRoutineGuidanceCopy,
 } from '@/features/routine/sequencing';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
-import { useCycleMutations } from '@/features/scheduler/useCycle';
+import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
+import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -42,17 +46,22 @@ function ProcedureScreenContent({
   explanation: string;
   restChoices: readonly number[];
 }) {
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
   const m = useCycleMutations();
   const [days, setDays] = useState(defaultDays);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
 
+  if (!readiness.data) return <ProcedureSourceState readiness={readiness} />;
+
   async function beginRecovery() {
-    if (saving) return;
+    if (saving || !readiness.isCurrent()) return;
     setSaving(true);
     setSaveFailed(false);
     try {
       await m.beginRecovery(days, 'procedure');
+      if (!cycleSource.isSourceCurrent({ afterConfigCommit: true })) return;
       router.replace('/cycle/recovery');
     } catch {
       setSaveFailed(true);
@@ -99,6 +108,7 @@ function ProcedureScreenContent({
                 accessibilityState={{ disabled: saving, selected: sel }}
                 disabled={saving}
                 onPress={() => {
+                  if (!readiness.isCurrent()) return;
                   haptics.select();
                   setDays(d);
                   setSaveFailed(false);
@@ -130,6 +140,28 @@ function ProcedureScreenContent({
           onPress={() => void beginRecovery()}
         />
       </View>
+    </Screen>
+  );
+}
+
+function ProcedureSourceState({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
+  return (
+    <Screen edges={['top', 'bottom']}>
+      <View className="mt-2">
+        <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+      </View>
+      <CycleRouteReadinessNotice
+        className="mt-6"
+        state={readiness.state}
+        retrying={readiness.retrying}
+        onRetry={() => void readiness.retry()}
+      />
     </Screen>
   );
 }

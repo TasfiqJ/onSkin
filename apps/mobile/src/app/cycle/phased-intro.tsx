@@ -8,6 +8,10 @@ import {
   canUseRoutineExplainabilityCopy,
 } from '@/features/routine/reviewGate';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
+import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -94,18 +98,23 @@ export default function PhasedIntroScreen() {
 
 function PhasedIntroScreenContent() {
   const { height } = useWindowDimensions();
-  const { data } = useCycle();
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
+  const { data } = readiness;
   const { overrideStaging } = useCycleMutations();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const compactSheet = height < 640;
   const shortSheet = height < 520;
-  const note = data?.notes.find((n) => /add your/i.test(n));
+
+  if (!data) return <PhasedIntroSourceState readiness={readiness} />;
+
+  const note = data.notes.find((n) => /add your/i.test(n));
   const newName = note?.match(/add your (.+?) next week/i)?.[1] ?? 'new active';
-  const stagedIds = data?.stagedActiveIds ?? [];
+  const stagedIds = data.stagedActiveIds;
 
   async function addNow() {
-    if (saving) return;
+    if (saving || !readiness.isCurrent()) return;
     if (stagedIds.length === 0) {
       backOrReplace(router);
       return;
@@ -114,6 +123,7 @@ function PhasedIntroScreenContent() {
     setSaveFailed(false);
     try {
       await overrideStaging(stagedIds);
+      if (!cycleSource.isSourceCurrent({ afterConfigCommit: true })) return;
       backOrReplace(router);
     } catch {
       setSaveFailed(true);
@@ -189,7 +199,10 @@ function PhasedIntroScreenContent() {
         className={shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined}
         label="Sounds good"
         disabled={saving}
-        onPress={() => backOrReplace(router)}
+        onPress={() => {
+          if (!readiness.isCurrent()) return;
+          backOrReplace(router);
+        }}
         style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}
       />
       <Pressable
@@ -212,6 +225,24 @@ function PhasedIntroScreenContent() {
               : 'Add it now anyway'}
         </Text>
       </Pressable>
+    </Sheet>
+  );
+}
+
+function PhasedIntroSourceState({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
+  return (
+    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
+      <CycleRouteReadinessNotice
+        state={readiness.state}
+        retrying={readiness.retrying}
+        onRetry={() => void readiness.retry()}
+      />
     </Sheet>
   );
 }
