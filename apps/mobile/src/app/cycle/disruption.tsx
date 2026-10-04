@@ -6,6 +6,10 @@ import { Pressable, View, useWindowDimensions } from 'react-native';
 import { Sheet, Text } from '@/components/ui';
 import { canUseRoutineCadence, canUseRoutineRecovery } from '@/features/routine/reviewGate';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
+import {
+  CycleRouteReadinessNotice,
+  useCycleRouteReadiness,
+} from '@/features/scheduler/CycleRouteReadiness';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -22,6 +26,7 @@ function Option({
   compact,
   short,
   disabled,
+  isCurrent,
   onPress,
 }: {
   glyph: string;
@@ -31,6 +36,7 @@ function Option({
   compact?: boolean;
   short?: boolean;
   disabled?: boolean;
+  isCurrent: () => boolean;
   onPress: () => void;
 }) {
   return (
@@ -39,6 +45,7 @@ function Option({
       accessibilityState={{ disabled: !!disabled }}
       disabled={disabled}
       onPress={() => {
+        if (!isCurrent()) return;
         haptics.select();
         onPress();
       }}
@@ -95,7 +102,9 @@ export default function DisruptionScreen() {
 
 function DisruptionScreenContent() {
   const { height } = useWindowDimensions();
-  const { data } = useCycle();
+  const cycleSource = useCycle();
+  const readiness = useCycleRouteReadiness(cycleSource);
+  const { data } = readiness;
   const m = useCycleMutations();
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -104,12 +113,15 @@ function DisruptionScreenContent() {
   const controlsDisabled = pendingAction != null;
   const recoveryReady = canUseRoutineRecovery();
 
+  if (!data) return <DisruptionSourceState readiness={readiness} />;
+
   const act = async (action: string, fn: () => Promise<void>) => {
-    if (pendingAction) return;
+    if (pendingAction || !readiness.isCurrent()) return;
     setPendingAction(action);
     setSaveFailed(false);
     try {
       await fn();
+      if (!cycleSource.isSourceCurrent({ afterConfigCommit: true })) return;
       backOrReplace(router);
     } catch {
       setSaveFailed(true);
@@ -159,6 +171,7 @@ function DisruptionScreenContent() {
             compact={compactSheet}
             short={shortSheet}
             disabled={controlsDisabled}
+            isCurrent={readiness.isCurrent}
             title={pendingAction === 'resume' ? 'Resuming routine...' : 'Resume my routine'}
             sub="Continue from the night where you paused"
             onPress={() => void act('resume', m.resume)}
@@ -170,6 +183,7 @@ function DisruptionScreenContent() {
               compact={compactSheet}
               short={shortSheet}
               disabled={controlsDisabled}
+              isCurrent={readiness.isCurrent}
               title="Skip tonight"
               sub="Just this once. The cycle continues"
               onPress={() => void act('skip', m.skip)}
@@ -179,6 +193,7 @@ function DisruptionScreenContent() {
               compact={compactSheet}
               short={shortSheet}
               disabled={controlsDisabled}
+              isCurrent={readiness.isCurrent}
               title="Pause my routine"
               sub="Vacation, illness, a break"
               onPress={() => pause('break')}
@@ -188,6 +203,7 @@ function DisruptionScreenContent() {
               compact={compactSheet}
               short={shortSheet}
               disabled={controlsDisabled}
+              isCurrent={readiness.isCurrent}
               title="Travel mode"
               sub="Trim to essentials while away"
               onPress={() => pause('travel')}
@@ -200,6 +216,7 @@ function DisruptionScreenContent() {
             compact={compactSheet}
             short={shortSheet}
             disabled={controlsDisabled}
+            isCurrent={readiness.isCurrent}
             title="I had a facial or peel"
             sub="Pause actives, let skin recover"
             firm
@@ -211,6 +228,24 @@ function DisruptionScreenContent() {
         ) : null}
       </View>
       {saveFailed ? <CycleMutationError /> : null}
+    </Sheet>
+  );
+}
+
+function DisruptionSourceState({
+  readiness,
+}: {
+  readiness: ReturnType<typeof useCycleRouteReadiness>;
+}) {
+  if (readiness.state === 'ready') return null;
+
+  return (
+    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
+      <CycleRouteReadinessNotice
+        state={readiness.state}
+        retrying={readiness.retrying}
+        onRetry={() => void readiness.retry()}
+      />
     </Sheet>
   );
 }
