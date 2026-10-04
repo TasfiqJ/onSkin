@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { StateNotice, Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
+import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { colors } from '@/theme/tokens';
@@ -32,6 +33,11 @@ export function PhotoTimelineLockGate({ children }: { children: ReactNode }) {
       setUnlocking(false);
     }
   }, [unlockPhotoTimeline]);
+
+  useEffect(() => {
+    if (appUnlocked && !locked) return;
+    void purgeSensitiveImageMemory();
+  }, [appUnlocked, locked]);
 
   useEffect(() => {
     if (locked && appUnlocked) void requestUnlock();
