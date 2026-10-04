@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,16 +17,20 @@ type PhotoStorageGateProps = {
 
 export function PhotoStorageGate({ children, tone = 'night', onExit }: PhotoStorageGateProps) {
   const insets = useSafeAreaInsets();
-  const { isError, isFetching, isPending, refetch } = usePhotos('front');
+  const source = usePhotos('front');
   const [retryFailed, setRetryFailed] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+  const retryInFlight = useRef(false);
   const night = tone === 'night';
   const backgroundColor = night ? NIGHT_BG : colors.paper;
   const foregroundColor = night ? colors.cream : colors.ink;
   const mutedColor = night ? 'rgba(244,239,231,0.68)' : colors.muted;
 
-  if (!isPending && !isError) return children;
+  if (source.sourceReady && source.data !== undefined && source.isSourceCurrent()) {
+    return children;
+  }
 
-  if (isPending) {
+  if (source.isLoading || source.isRefreshing || retrying) {
     return (
       <View
         accessibilityLabel={PHOTO_COPY.storage.loading}
@@ -42,10 +46,18 @@ export function PhotoStorageGate({ children, tone = 'night', onExit }: PhotoStor
   }
 
   async function retry() {
-    if (isFetching) return;
+    if (retryInFlight.current) return;
+    retryInFlight.current = true;
     setRetryFailed(false);
-    const result = await refetch();
-    if (result.isError) setRetryFailed(true);
+    setRetrying(true);
+    try {
+      await source.retry();
+    } catch {
+      setRetryFailed(true);
+    } finally {
+      retryInFlight.current = false;
+      setRetrying(false);
+    }
   }
 
   return (
@@ -95,20 +107,20 @@ export function PhotoStorageGate({ children, tone = 'night', onExit }: PhotoStor
       <View className="mt-7 gap-2.5">
         <Pressable
           accessibilityRole="button"
-          accessibilityState={{ disabled: isFetching }}
-          disabled={isFetching}
+          accessibilityState={{ disabled: retrying }}
+          disabled={retrying}
           onPress={() => void retry()}
           className="min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
           style={{
             backgroundColor: night ? colors.cream : colors.ink,
-            opacity: isFetching ? 0.68 : 1,
+            opacity: retrying ? 0.68 : 1,
           }}
         >
           <Text
             className="font-sans-semibold"
             style={{ color: night ? NIGHT_BG : colors.paper, fontSize: 16 }}
           >
-            {isFetching ? PHOTO_COPY.storage.retrying : PHOTO_COPY.storage.retry}
+            {retrying ? PHOTO_COPY.storage.retrying : PHOTO_COPY.storage.retry}
           </Text>
         </Pressable>
         {onExit ? (

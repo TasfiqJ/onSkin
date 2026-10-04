@@ -134,14 +134,14 @@ describe('Progress route mobile contracts', () => {
     }
     expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
 
+    expect(storageGate).toContain("const source = usePhotos('front');");
     expect(storageGate).toContain(
-      "const { isError, isFetching, isPending, refetch } = usePhotos('front');",
+      'source.sourceReady && source.data !== undefined && source.isSourceCurrent()',
     );
-    expect(storageGate).toContain('if (!isPending && !isError) return children;');
-    expect(storageGate).toContain('const result = await refetch();');
-    expect(storageGate).toContain('if (result.isError) setRetryFailed(true);');
+    expect(storageGate).toContain('source.isLoading || source.isRefreshing || retrying');
+    expect(storageGate).toContain('await source.retry();');
     expect(storageGate).toContain('accessibilityRole="alert"');
-    expect(storageGate).toContain('accessibilityState={{ disabled: isFetching }}');
+    expect(storageGate).toContain('accessibilityState={{ disabled: retrying }}');
     expect(storageGate).toContain('className="min-h-[56px]');
     expect(storageGate).toContain('className="min-h-[48px]');
     expect(copy).toContain("title: 'Your timeline could not open.'");
@@ -150,10 +150,26 @@ describe('Progress route mobile contracts', () => {
     expect(photosHook).toContain('EXPO_PUBLIC_E2E_PROGRESS_STORAGE_FAILURE');
     expect(photosHook).toContain("fixture === 'unavailable'");
     expect(photosHook).toContain("fixture !== 'unavailable_once'");
+    expect(photosHook).toContain('subscribeActiveHealthProcessingLeaseChanges');
+    expect(photosHook).toContain("'authority'");
+    expect(photosHook).toContain("current?.status === 'success'");
+    expect(photosHook).toContain("current.fetchStatus === 'idle'");
+    expect(photosHook).toContain('!current.isInvalidated');
+    expect(photosHook).toContain('current.data === data');
     expect(photosHook).toContain('if (storageFailure) throw storageFailure;');
     expect(photosHook.indexOf('if (storageFailure) throw storageFailure;')).toBeLessThan(
       photosHook.indexOf('await loadPhotos()'),
     );
+
+    expect(routeSources[0]).toContain("const { data } = usePhotos('front');");
+    expect(routeSources[0]).toContain('if (!data) return null;');
+    expect(routeSources[0]).toContain('const count = data.count;');
+    expect(routeSources[0]).not.toContain('data?.count ?? 0');
+    expect(routeSources[3]).toContain("const { data } = usePhotos('front');");
+    const detailUnavailableGuard = routeSources[3].indexOf('if (!data) return null;');
+    const detailMissingGuard = routeSources[3].indexOf('if (!photo) {');
+    expect(detailUnavailableGuard).toBeGreaterThan(-1);
+    expect(detailUnavailableGuard).toBeLessThan(detailMissingGuard);
   });
 
   it('keeps direct-entry progress exits touchable on phones', () => {
@@ -505,9 +521,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('e2e-front-2026-06-24');
     expect(source).toContain('const fixture = e2eProgressPhotoFixture();');
     expect(source).toContain('const photos = fixture ?? (await loadPhotos());');
-    expect(source.indexOf('lease.assertCurrent();')).toBeLessThan(
-      source.indexOf('const photos = fixture ?? (await loadPhotos());'),
-    );
+    expect(
+      source.indexOf('assertPhotoReadOperationAuthority(lease, capturedAuthority);'),
+    ).toBeLessThan(source.indexOf('const photos = fixture ?? (await loadPhotos());'));
     expect(entitlement).toContain("from './entitlementE2EFixture'");
     expect(webEntitlementFixture).toContain("fixture !== 'expired_store'");
     expect(webEntitlementFixture).toContain("fixture !== 'expired_reverse_trial'");
