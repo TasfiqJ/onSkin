@@ -225,6 +225,108 @@ afterEach(async () => {
 });
 
 describe.sequential('C-08A1 Progress photo read authority', () => {
+  it('shared currentness does not update the storage gate while its second consumer renders after refetch', async () => {
+    const consoleError = vi.spyOn(console, 'error');
+    try {
+      mocks.loadPhotos.mockResolvedValueOnce([photo('owner-a')]);
+      await flush(() => {
+        renderer = create(
+          React.createElement(
+            QueryClientProvider,
+            { client },
+            React.createElement(PhotoStorageGate, null, React.createElement(SourceProbe)),
+          ),
+        );
+      });
+      const retained = latestSource!.data;
+      expect(retained?.all[0]?.id).toBe('owner-a');
+
+      const refresh = deferred<PhotoRecord[]>();
+      mocks.loadPhotos.mockReturnValueOnce(refresh.promise);
+      await act(async () => {
+        void client.refetchQueries({ queryKey: ['photos'] });
+      });
+      await flush();
+      expect(nodes((node) => node.type === SourceProbe)).toHaveLength(0);
+      expect(renderedText()).toContain('Opening your private timeline...');
+
+      // Structural sharing retains the same data while fetch state becomes current.
+      refresh.resolve([photo('owner-a')]);
+      await flush();
+      expect(nodes((node) => node.type === SourceProbe)).toHaveLength(1);
+      expect(latestSource!.data).toBe(retained);
+      expect(
+        consoleError.mock.calls.filter((args) =>
+          String(args[0]).includes('Cannot update a component'),
+        ),
+      ).toEqual([]);
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
+
+  it('shared currentness closes both consumers synchronously on invalidation and stays closed on refetch error', async () => {
+    const sources = new Map<string, PhotoSource>();
+    function Consumer({ name }: { name: string }) {
+      const source = usePhotos('front');
+      React.useEffect(() => {
+        sources.set(name, source);
+      }, [name, source]);
+      return React.createElement('Consumer', {
+        sourceReady: source.sourceReady,
+        count: source.data?.count,
+      });
+    }
+    mocks.loadPhotos.mockResolvedValueOnce([photo('owner-a')]);
+    await flush(() => {
+      renderer = create(
+        React.createElement(
+          QueryClientProvider,
+          { client },
+          React.createElement(Consumer, { name: 'gate' }),
+          React.createElement(Consumer, { name: 'progress' }),
+        ),
+      );
+    });
+    expect([...sources.values()].map((source) => source.sourceReady)).toEqual([true, true]);
+    const currentness = [...sources.values()].map((source) => source.isSourceCurrent);
+    act(() => {
+      void client.invalidateQueries({ queryKey: ['photos'], refetchType: 'none' });
+      expect(currentness.map((isCurrent) => isCurrent())).toEqual([false, false]);
+    });
+    await flush();
+    expect([...sources.values()].map((source) => source.data)).toEqual([undefined, undefined]);
+    expect([...sources.values()].map((source) => source.sourceReady)).toEqual([false, false]);
+
+    mocks.loadPhotos.mockRejectedValueOnce(new Error('PHOTO_REFRESH_FAILED'));
+    await act(async () => {
+      await client.refetchQueries({ queryKey: ['photos'] });
+    });
+    await flush();
+    expect([...sources.values()].map((source) => source.isError)).toEqual([true, true]);
+    expect([...sources.values()].map((source) => source.data)).toEqual([undefined, undefined]);
+    expect(currentness.map((isCurrent) => isCurrent())).toEqual([false, false]);
+  });
+
+  it('shared currentness closes on cache removal before retained observers publish again', async () => {
+    mocks.loadPhotos.mockResolvedValueOnce([photo('owner-a')]);
+    await mount();
+    const isCurrent = latestSource!.isSourceCurrent;
+    expect(isCurrent()).toBe(true);
+    const replacementRead = deferred<PhotoRecord[]>();
+    mocks.loadPhotos.mockReturnValueOnce(replacementRead.promise);
+    act(() => {
+      client.removeQueries({ queryKey: ['photos'] });
+      expect(isCurrent()).toBe(false);
+    });
+    await flush();
+    expect(latestSource!.sourceReady).toBe(false);
+    expect(latestSource!.data).toBeUndefined();
+    expect(renderedText()).not.toContain('CURRENT_CONTENT');
+    replacementRead.resolve([]);
+    await flush();
+  });
+
   it('fails closed during initial loading and admits a current empty store as first-run data', async () => {
     const pending = deferred<PhotoRecord[]>();
     mocks.loadPhotos.mockReturnValueOnce(pending.promise);
