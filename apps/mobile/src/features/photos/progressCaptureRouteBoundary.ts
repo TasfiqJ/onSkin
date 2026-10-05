@@ -62,6 +62,8 @@ const INITIAL_SNAPSHOT: ProgressCaptureRouteBoundarySnapshot = Object.freeze({
  */
 export function createProgressCaptureRouteBoundary<Action>(dependencies: {
   createRawCaptureLifecycle: (uri: string) => ProgressCaptureRawLifecycle;
+  onReviewHandoffAborted?: (captureSessionId: string) => void;
+  retainFailedCleanup?: (lifecycle: ProgressCaptureRawLifecycle) => void;
 }): ProgressCaptureRouteBoundary<Action> {
   let snapshot = INITIAL_SNAPSHOT;
   let shutterInFlight = false;
@@ -69,8 +71,15 @@ export function createProgressCaptureRouteBoundary<Action>(dependencies: {
   let rawCaptureCleanupInFlight: Promise<boolean> | null = null;
   let navigationInFlight = false;
   let pendingNavigation: ProtectedProgressCaptureNavigation<Action> | null = null;
+  let pendingReviewSessionId: string | null = null;
   let invalidateCapture: (() => void) | null = null;
   const listeners = new Set<() => void>();
+
+  const abandonPendingReview = () => {
+    if (pendingReviewSessionId === null) return;
+    dependencies.onReviewHandoffAborted?.(pendingReviewSessionId);
+    pendingReviewSessionId = null;
+  };
 
   const updateSnapshot = (patch: Partial<ProgressCaptureRouteBoundarySnapshot>) => {
     const next = Object.freeze({ ...snapshot, ...patch });
@@ -131,6 +140,9 @@ export function createProgressCaptureRouteBoundary<Action>(dependencies: {
     if (snapshot.routeRemovalReady) return;
     if (navigationInFlight) {
       // Preserve the latest user intent while the same exact cleanup retries.
+      if (pendingNavigation?.kind === 'review' && pending.kind !== 'review') {
+        abandonPendingReview();
+      }
       pendingNavigation = pending;
       if (pendingRawCaptureLifecycle?.hasPendingCleanup()) void retryCleanup();
       return;
@@ -182,6 +194,7 @@ export function createProgressCaptureRouteBoundary<Action>(dependencies: {
       throw new Error('PROGRESS_CAPTURE_SOURCE_MISSING');
     }
     navigationInFlight = true;
+    pendingReviewSessionId = params.captureSessionId;
     pendingNavigation = { kind: 'review', params };
     markRouteRemovalReady();
   };
@@ -199,7 +212,9 @@ export function createProgressCaptureRouteBoundary<Action>(dependencies: {
       updateSnapshot({ cleanupPending: false });
       try {
         handlers.replaceReview(pending.params);
+        pendingReviewSessionId = null;
       } catch {
+        abandonPendingReview();
         pendingRawCaptureLifecycle = transferredLifecycle;
         navigationInFlight = false;
         updateSnapshot({
@@ -229,7 +244,14 @@ export function createProgressCaptureRouteBoundary<Action>(dependencies: {
     invalidateCapture?.();
     invalidateCapture = null;
     const lifecycle = pendingRawCaptureLifecycle;
-    if (lifecycle !== null) await lifecycle.dispose();
+    try {
+      if (lifecycle !== null) await lifecycle.dispose();
+    } catch (error) {
+      if (lifecycle !== null) dependencies.retainFailedCleanup?.(lifecycle);
+      throw error;
+    } finally {
+      abandonPendingReview();
+    }
   };
 
   return Object.freeze({

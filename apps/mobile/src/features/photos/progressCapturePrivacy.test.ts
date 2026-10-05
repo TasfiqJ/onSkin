@@ -152,15 +152,29 @@ describe('Progress raw capture trust boundary', () => {
     const uriValidation = source.indexOf(
       'rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);',
     );
+    const rawAdoption = source.indexOf(
+      'captureBoundary.adoptRawCapture(rawCaptureUri);',
+      uriValidation,
+    );
+    const postAdoptionAuthorityCheck = source.indexOf(
+      'assertProgressCaptureAuthoritySnapshotCurrent(captureAuthority);',
+      rawAdoption,
+    );
     const sessionValidation = source.indexOf(
       'const captureSessionId = trustedProgressCaptureSessionId(randomUUID());',
     );
+    const authorityReservation = source.indexOf(
+      'reserveProgressCaptureAuthority(captureSessionId, captureAuthority);',
+    );
 
-    expect(sessionValidation).toBeGreaterThan(uriValidation);
+    expect(rawAdoption).toBeGreaterThan(uriValidation);
+    expect(postAdoptionAuthorityCheck).toBeGreaterThan(rawAdoption);
+    expect(sessionValidation).toBeGreaterThan(postAdoptionAuthorityCheck);
     expect(source).toContain(
       "if (captureSessionId === null) throw new Error('INVALID_PROGRESS_CAPTURE_SESSION');",
     );
-    expect(sessionValidation).toBeLessThan(source.indexOf("track('photo_capture_still_taken'"));
+    expect(authorityReservation).toBeGreaterThan(sessionValidation);
+    expect(authorityReservation).toBeLessThan(source.indexOf("track('photo_capture_still_taken'"));
     expect(sessionValidation).toBeLessThan(
       source.indexOf(
         'captureBoundary.handoffToReview({\n        captureSessionId,\n        capturedUri',
@@ -178,11 +192,28 @@ describe('Progress raw capture trust boundary', () => {
     );
     expect(source).toContain('cachePolicy="none"');
     expect(source).toContain('localUri: trustedUri');
-    expect(source).toContain('await lifecycle.save(persist');
+    expect(source).toContain('await lifecycle.save(');
     expect(source).toContain('await lifecycle.discard();');
-    expect(source).toContain('void retainProgressReviewCleanup(lifecycle).catch(() => undefined);');
+
+    const persistCallback = source.indexOf('async (uri) => {');
+    const saveAuthorityCheck = source.indexOf(
+      'assertRouteCaptureAuthorityCurrent();',
+      persistCallback,
+    );
+    const persistCall = source.indexOf('await persist(uri);', persistCallback);
+    expect(saveAuthorityCheck).toBeGreaterThan(persistCallback);
+    expect(saveAuthorityCheck).toBeLessThan(persistCall);
+
+    const createdAssignment = source.indexOf('createdNow = outcome.createdNow;');
+    const analyticsGuard = source.indexOf('if (!createdNow) return;', createdAssignment);
+    const captureAnalytics = source.indexOf("track('photo_captured'", analyticsGuard);
+    expect(analyticsGuard).toBeGreaterThan(createdAssignment);
+    expect(captureAnalytics).toBeGreaterThan(analyticsGuard);
     expect(source).toContain(
-      'source !== null && captureMetadata.nativeMetadataValid ? source.uri : null',
+      'void retainProgressReviewCleanup(cleanupOwnerLifecycle).catch(() => undefined);',
+    );
+    expect(source).toContain(
+      'source !== null && captureMetadata.nativeMetadataValid && !captureAuthorityLost',
     );
     expect(source).toContain(
       '(captureSessionId !== null && timeOfDay !== null && trustedTakenLocalDate !== null)',
@@ -197,6 +228,34 @@ describe('Progress raw capture trust boundary', () => {
 });
 
 describe('Progress capture review lifecycle', () => {
+  it('deduplicates double Save into one persistence, one callback, and one raw cleanup', async () => {
+    const persistence = deferred<void>();
+    const fileSystem = { deleteAsync: vi.fn(async () => undefined) };
+    const persist = vi.fn(async () => {
+      await persistence.promise;
+    });
+    const onPersisted = vi.fn();
+    const lifecycle = createProgressCaptureReviewLifecycle(fileSystem, {
+      uri: CAMERA_URI,
+      disposable: true,
+    });
+
+    const first = lifecycle.save(persist, onPersisted);
+    const second = lifecycle.save(persist, onPersisted);
+
+    expect(second).toBe(first);
+    expect(persist).toHaveBeenCalledOnce();
+    persistence.resolve();
+    await expect(Promise.all([first, second])).resolves.toEqual([
+      { persistedNow: true },
+      { persistedNow: true },
+    ]);
+    expect(onPersisted).toHaveBeenCalledOnce();
+    expect(fileSystem.deleteAsync).toHaveBeenCalledOnce();
+    expect(lifecycle.hasPersisted()).toBe(true);
+    expect(lifecycle.hasPendingCleanup()).toBe(false);
+  });
+
   it('drains analyzer work before deleting the raw capture', async () => {
     const analysisDrain = deferred<void>();
     const events: string[] = [];

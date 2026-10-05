@@ -13,6 +13,7 @@ import {
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
+import { assertProgressCaptureAuthorityCurrent } from './progressCaptureAuthority';
 import { trustedProgressCaptureSessionId } from './progressCapturePrivacy';
 
 import {
@@ -154,6 +155,7 @@ export type NewPhoto = {
 export type AddPhotoOutcome = Readonly<{
   photo: PhotoRecord;
   createdNow: boolean;
+  sourceCleanupPending: boolean;
 }>;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -416,8 +418,6 @@ function captureReplayMatches(existing: PhotoRecord, input: NewPhoto): boolean {
 
 export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutcome> {
   return runPhotoStoreMutation(async (lease) => {
-    const items = await loadPhotosUnlocked(lease);
-    lease.assertCurrent();
     const requestedCaptureSessionId = input.captureSessionId;
     const captureSessionId =
       requestedCaptureSessionId == null
@@ -426,7 +426,16 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
     if (requestedCaptureSessionId != null && captureSessionId === null) {
       throw new Error(PHOTO_CAPTURE_SESSION_INVALID);
     }
+    if (captureSessionId !== null) assertProgressCaptureAuthorityCurrent(captureSessionId);
+
+    const items = await loadPhotosUnlocked(lease);
+    lease.assertCurrent();
+    if (captureSessionId !== null) assertProgressCaptureAuthorityCurrent(captureSessionId);
     const sourceNeedsCleanup = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
+    const assertCaptureCurrent = () => {
+      lease.assertCurrent();
+      if (captureSessionId !== null) assertProgressCaptureAuthorityCurrent(captureSessionId);
+    };
 
     if (captureSessionId !== null) {
       const replays = items.filter((photo) => photo.captureSessionId === captureSessionId);
@@ -436,25 +445,33 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
         if (!captureReplayMatches(replay, input)) {
           throw new Error(PHOTO_CAPTURE_SESSION_CONFLICT);
         }
+        let sourceCleanupPending = false;
         if (sourceNeedsCleanup) {
-          lease.assertCurrent();
-          await deleteCapturedPhotoSource(input.localUri);
-          lease.assertCurrent();
+          try {
+            assertCaptureCurrent();
+            await deleteCapturedPhotoSource(input.localUri);
+            assertCaptureCurrent();
+          } catch {
+            // A filesystem failure is recoverable under the same capture
+            // authority. A changed owner/grant must still reject the replay.
+            assertCaptureCurrent();
+            sourceCleanupPending = true;
+          }
         }
-        return { photo: replay, createdNow: false };
+        return { photo: replay, createdNow: false, sourceCleanupPending };
       }
     }
 
     const series = input.series ?? 'front';
     const hasReference = items.some((p) => p.series === series);
     const id = randomUUID();
-    lease.assertCurrent();
+    assertCaptureCurrent();
     let thumbnail: Awaited<ReturnType<typeof createEncryptedPhotoThumbnail>> | null = null;
     let encrypted: Awaited<ReturnType<typeof encryptPhotoRendition>> | null = null;
     const publicationIdentity = { photoId: id, captureSessionId };
     if (sourceNeedsCleanup) {
       await beginPhotoRenditionPublication(publicationIdentity, input.localUri!);
-      lease.assertCurrent();
+      assertCaptureCurrent();
     }
     try {
       encrypted =
@@ -483,10 +500,28 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
         await markPhotoRenditionPublication(publicationIdentity, 'pair_adopted');
       }
     } catch (error) {
+      try {
+        assertCaptureCurrent();
+      } catch (authorityError) {
+        // The encrypted publication belongs to the ended authority window.
+        // Its journal/account cleanup owns encrypted bytes; remove only the
+        // disposable raw camera source without reading it.
+        if (sourceNeedsCleanup) {
+          await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+        }
+        throw authorityError;
+      }
       if (sourceNeedsCleanup) await recoverPhotoRenditionPublication(new Set());
       throw error;
     }
-    lease.assertCurrent();
+    try {
+      assertCaptureCurrent();
+    } catch (authorityError) {
+      if (sourceNeedsCleanup) {
+        await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+      }
+      throw authorityError;
+    }
 
     const rec: PhotoRecord = {
       id,
@@ -532,13 +567,21 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
       }
       throw error;
     }
+    let sourceCleanupPending = false;
     if (sourceNeedsCleanup) {
-      await deleteCapturedPhotoSource(input.localUri);
-      await markPhotoRenditionPublication(publicationIdentity, 'raw_cleaned');
-      await settlePhotoRenditionPublication(publicationIdentity);
+      try {
+        await deleteCapturedPhotoSource(input.localUri);
+        await markPhotoRenditionPublication(publicationIdentity, 'raw_cleaned');
+        await settlePhotoRenditionPublication(publicationIdentity);
+      } catch {
+        // Metadata is already committed. Do not turn a post-commit raw/journal
+        // cleanup problem into a false "photo not saved" result.
+        assertCaptureCurrent();
+        sourceCleanupPending = true;
+      }
     }
-    lease.assertCurrent();
-    return { photo: rec, createdNow: true };
+    assertCaptureCurrent();
+    return { photo: rec, createdNow: true, sourceCleanupPending };
   });
 }
 

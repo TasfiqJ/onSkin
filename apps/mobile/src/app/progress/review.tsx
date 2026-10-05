@@ -14,6 +14,12 @@ import {
   type CaptureAnalysisCoordinator,
 } from '@/features/photos/captureAnalysisCoordinator';
 import { localDay } from '@/features/photos/date';
+import {
+  assertProgressCaptureAuthorityCurrent,
+  isProgressCaptureAuthorityCurrent,
+  releaseProgressCaptureAuthority,
+  subscribeProgressCaptureAuthorityChanges,
+} from '@/features/photos/progressCaptureAuthority';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import type { FramingAssessment, LightingAssessment } from '@/features/photos/captureAnalysis';
@@ -604,23 +610,107 @@ export default function ReviewScreen() {
     createProgressCaptureReviewLifecycle(FileSystem, source, analysisCoordinator),
   );
   const navigation = useNavigation();
+  const disposableSource = source?.disposable === true;
   const mountedRef = useRef(false);
   const navigationInFlightRef = useRef(false);
   const pendingNavigationRef = useRef<ProtectedReviewNavigation | null>(null);
+  const lifecycleSettledRef = useRef(false);
+  const cleanupTransferredRef = useRef(false);
+  const captureAuthorityReleasedRef = useRef(false);
+  const [captureAuthorityLost, setCaptureAuthorityLost] = useState(
+    () =>
+      disposableSource &&
+      (captureMetadata.captureSessionId === null ||
+        !isProgressCaptureAuthorityCurrent(captureMetadata.captureSessionId)),
+  );
+  const captureAuthorityLostRef = useRef(captureAuthorityLost);
   const [actionBusy, setActionBusy] = useState(false);
   const [capturePersisted, setCapturePersisted] = useState(false);
   const [cleanupFailed, setCleanupFailed] = useState(false);
   const [routeRemovalReady, setRouteRemovalReady] = useState(false);
+  const [cleanupOwnerLifecycle] = useState(() => ({
+    dispose: async () => {
+      await lifecycle.dispose();
+      lifecycleSettledRef.current = !lifecycle.hasPendingCleanup();
+      const captureSessionId = captureMetadata.captureSessionId;
+      if (captureSessionId !== null && !captureAuthorityReleasedRef.current) {
+        releaseProgressCaptureAuthority(captureSessionId);
+        captureAuthorityReleasedRef.current = true;
+      }
+    },
+  }));
+
+  const releaseCaptureAuthority = () => {
+    const captureSessionId = captureMetadata.captureSessionId;
+    if (captureSessionId === null || captureAuthorityReleasedRef.current) return;
+    releaseProgressCaptureAuthority(captureSessionId);
+    captureAuthorityReleasedRef.current = true;
+  };
+
+  const transferCleanupToProcessOwner = () => {
+    if (lifecycleSettledRef.current || cleanupTransferredRef.current) return;
+    cleanupTransferredRef.current = true;
+    void retainProgressReviewCleanup(cleanupOwnerLifecycle).catch(() => undefined);
+  };
+
+  const markCaptureAuthorityLost = () => {
+    if (!captureAuthorityLostRef.current) {
+      captureAuthorityLostRef.current = true;
+      if (mountedRef.current) setCaptureAuthorityLost(true);
+    }
+    transferCleanupToProcessOwner();
+  };
+
+  const assertRouteCaptureAuthorityCurrent = () => {
+    if (!disposableSource) return;
+    const captureSessionId = captureMetadata.captureSessionId;
+    if (captureSessionId === null) {
+      markCaptureAuthorityLost();
+      throw new Error('PROGRESS_CAPTURE_AUTHORITY_MISSING');
+    }
+    try {
+      assertProgressCaptureAuthorityCurrent(captureSessionId);
+    } catch (error) {
+      markCaptureAuthorityLost();
+      throw error;
+    }
+  };
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      // A gate/account forced unmount has no route UI left to own retry. Move
-      // the exact lifecycle into the process owner before attempting cleanup.
-      void retainProgressReviewCleanup(lifecycle).catch(() => undefined);
+      // A forced route unmount has no UI left to own retry. Move this exact
+      // lifecycle into the process owner unless route cleanup already settled.
+      if (!lifecycleSettledRef.current && !cleanupTransferredRef.current) {
+        cleanupTransferredRef.current = true;
+        void retainProgressReviewCleanup(cleanupOwnerLifecycle).catch(() => undefined);
+      }
     };
-  }, [lifecycle]);
+  }, [cleanupOwnerLifecycle]);
+
+  useEffect(() => {
+    if (!disposableSource) return;
+    const captureSessionId = captureMetadata.captureSessionId;
+    const checkAuthority = () => {
+      if (
+        captureSessionId !== null &&
+        isProgressCaptureAuthorityCurrent(captureSessionId)
+      ) {
+        return;
+      }
+      captureAuthorityLostRef.current = true;
+      setCaptureAuthorityLost(true);
+      if (!lifecycleSettledRef.current && !cleanupTransferredRef.current) {
+        cleanupTransferredRef.current = true;
+        void retainProgressReviewCleanup(cleanupOwnerLifecycle).catch(() => undefined);
+      }
+    };
+
+    checkAuthority();
+    if (captureAuthorityLostRef.current) return;
+    return subscribeProgressCaptureAuthorityChanges(checkAuthority);
+  }, [captureMetadata.captureSessionId, cleanupOwnerLifecycle, disposableSource]);
 
   const discardAndAuthorize = async (pending: ProtectedReviewNavigation): Promise<void> => {
     if (routeRemovalReady || navigationInFlightRef.current) return;
@@ -629,6 +719,8 @@ export default function ReviewScreen() {
     setCleanupFailed(false);
     try {
       await lifecycle.discard();
+      lifecycleSettledRef.current = !lifecycle.hasPendingCleanup();
+      releaseCaptureAuthority();
       if (!mountedRef.current) return;
       pendingNavigationRef.current = pending;
       setRouteRemovalReady(true);
@@ -667,25 +759,56 @@ export default function ReviewScreen() {
     analysisCoordinator,
     captureSessionId: captureMetadata.captureSessionId,
     capturePersisted,
-    capturedUri: source !== null && captureMetadata.nativeMetadataValid ? source.uri : null,
+    capturedUri:
+      source !== null && captureMetadata.nativeMetadataValid && !captureAuthorityLost
+        ? source.uri
+        : null,
     cleanupFailed,
     discardAndNavigate: (target) => discardAndAuthorize({ kind: target }),
     saveCapture: async (persist, onPersisted) => {
       if (navigationInFlightRef.current) return 'busy';
+      try {
+        assertRouteCaptureAuthorityCurrent();
+      } catch {
+        const persisted = lifecycle.hasPersisted();
+        const cleanupPending = lifecycle.hasPendingCleanup();
+        if (mountedRef.current) {
+          setCapturePersisted(persisted);
+          setCleanupFailed(cleanupPending);
+          setActionBusy(false);
+        }
+        return cleanupPending ? 'cleanup_failed' : 'save_failed';
+      }
+
       navigationInFlightRef.current = true;
       setActionBusy(true);
       setCleanupFailed(false);
       try {
-        await lifecycle.save(persist, () => {
-          if (mountedRef.current) setCapturePersisted(true);
-          onPersisted();
-        });
+        await lifecycle.save(
+          async (uri) => {
+            assertRouteCaptureAuthorityCurrent();
+            await persist(uri);
+          },
+          () => {
+            if (mountedRef.current) setCapturePersisted(true);
+            onPersisted();
+          },
+        );
+        lifecycleSettledRef.current = !lifecycle.hasPendingCleanup();
+        releaseCaptureAuthority();
         if (mountedRef.current) {
           pendingNavigationRef.current = { kind: 'progress' };
           setRouteRemovalReady(true);
         }
         return 'navigating';
       } catch {
+        if (
+          disposableSource &&
+          (captureMetadata.captureSessionId === null ||
+            !isProgressCaptureAuthorityCurrent(captureMetadata.captureSessionId))
+        ) {
+          markCaptureAuthorityLost();
+        }
         const persisted = lifecycle.hasPersisted();
         const cleanupPending = lifecycle.hasPendingCleanup();
         navigationInFlightRef.current = false;

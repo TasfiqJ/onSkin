@@ -22,6 +22,12 @@ import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent'
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
+import {
+  assertProgressCaptureAuthoritySnapshotCurrent,
+  captureProgressCaptureAuthority,
+  releaseProgressCaptureAuthority,
+  reserveProgressCaptureAuthority,
+} from '@/features/photos/progressCaptureAuthority';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
@@ -30,7 +36,10 @@ import {
   trustedExpoCameraCaptureUri,
   trustedProgressCaptureSessionId,
 } from '@/features/photos/progressCapturePrivacy';
-import { retryPendingProgressReviewCleanup } from '@/features/photos/progressCaptureReviewCleanup';
+import {
+  retainProgressReviewCleanup,
+  retryPendingProgressReviewCleanup,
+} from '@/features/photos/progressCaptureReviewCleanup';
 import {
   createProgressCaptureRouteBoundary,
   type ProgressCaptureReviewParams,
@@ -683,6 +692,10 @@ function useProgressCaptureBoundary(): ProgressCaptureBoundary {
     createProgressCaptureRouteBoundary<NavigationAction>({
       createRawCaptureLifecycle: (uri) =>
         createProgressCaptureReviewLifecycle(FileSystem, { uri, disposable: true }),
+      onReviewHandoffAborted: releaseProgressCaptureAuthority,
+      retainFailedCleanup: (lifecycle) => {
+        void retainProgressReviewCleanup(lifecycle).catch(() => undefined);
+      },
     }),
   );
   const boundaryState = useSyncExternalStore(
@@ -836,9 +849,11 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
     const captureLease = ++captureLeaseGenerationRef.current;
     captureInFlightRef.current = captureLease;
     let rawCaptureUri: string | null = null;
+    let reservedCaptureSessionId: string | null = null;
     setCapturing(true);
     setPhotoCaptureFailed(false);
     try {
+      const captureAuthority = captureProgressCaptureAuthority();
       if (simulateProgressCaptureFailureOnce) {
         setSimulateProgressCaptureFailureOnce(false);
         throw new Error('E2E_PROGRESS_CAPTURE_FAILURE');
@@ -849,6 +864,7 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
       // A prior review can be forcibly unmounted by an account/gate boundary.
       // Drain its retained analyzer/raw cleanup before creating another still.
       await retryPendingProgressReviewCleanup();
+      assertProgressCaptureAuthoritySnapshotCurrent(captureAuthority);
       if (
         !mountedRef.current ||
         captureLeaseGenerationRef.current !== captureLease ||
@@ -865,6 +881,7 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
       rawCaptureUri = trustedExpoCameraCaptureUri(shot.uri, FileSystem.cacheDirectory);
       if (rawCaptureUri === null) throw new Error('UNTRUSTED_PROGRESS_CAPTURE_URI');
       captureBoundary.adoptRawCapture(rawCaptureUri);
+      assertProgressCaptureAuthoritySnapshotCurrent(captureAuthority);
       if (
         !mountedRef.current ||
         captureLeaseGenerationRef.current !== captureLease ||
@@ -877,6 +894,9 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
       haptics.success();
       const captureSessionId = trustedProgressCaptureSessionId(randomUUID());
       if (captureSessionId === null) throw new Error('INVALID_PROGRESS_CAPTURE_SESSION');
+      reserveProgressCaptureAuthority(captureSessionId, captureAuthority);
+      reservedCaptureSessionId = captureSessionId;
+      assertProgressCaptureAuthoritySnapshotCurrent(captureAuthority);
       track('photo_capture_still_taken', { signal_source: 'post_capture_measurement' });
       captureBoundary.handoffToReview({
         captureSessionId,
@@ -886,8 +906,13 @@ function CaptureScreenContent({ captureBoundary }: { captureBoundary: ProgressCa
         timeOfDay: timeOfDayNow(),
         takenLocalDate: localDay(),
       });
+      reservedCaptureSessionId = null;
       rawCaptureUri = null;
     } catch {
+      if (reservedCaptureSessionId !== null) {
+        releaseProgressCaptureAuthority(reservedCaptureSessionId);
+        reservedCaptureSessionId = null;
+      }
       let cleanupSucceeded = true;
       if (rawCaptureUri !== null) {
         cleanupSucceeded = await captureBoundary.retryCleanup();

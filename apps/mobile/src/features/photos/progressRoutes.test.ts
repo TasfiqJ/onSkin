@@ -330,7 +330,8 @@ describe('Progress route mobile contracts', () => {
     expect(review).toContain('qualitySource,');
     expect(review).not.toContain('refLighting');
     expect(review).toContain('await add.mutateAsync({');
-    expect(review).toContain('await lifecycle.save(persist');
+    expect(review).toContain('await lifecycle.save(');
+    expect(review).toContain('await persist(uri);');
     expect(review).toContain('navigationInFlightRef.current = true;');
     expect(review).toContain('navigationInFlightRef.current = false;');
     expect(review).toContain('if (navigationInFlightRef.current) return');

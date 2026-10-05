@@ -12,6 +12,11 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 import {
+  captureProgressCaptureAuthority,
+  releaseProgressCaptureAuthority,
+  reserveProgressCaptureAuthority,
+} from './progressCaptureAuthority';
+import {
   addPhoto,
   addPhotoWithOutcome,
   clearPhotos,
@@ -210,6 +215,11 @@ describe('photo local store recovery', () => {
       ownerUserId: 'user-a',
       accountGeneration: testAccountGeneration,
     });
+    releaseProgressCaptureAuthority(CAPTURE_SESSION_ID);
+    reserveProgressCaptureAuthority(
+      CAPTURE_SESSION_ID,
+      captureProgressCaptureAuthority(),
+    );
   });
 
   it('propagates encrypted private-store failures without replacing photo metadata', async () => {
@@ -311,6 +321,23 @@ describe('photo local store recovery', () => {
 
     expect(mocks.from).not.toHaveBeenCalled();
     expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledWith('file:///captured.jpg');
+  });
+
+  it('fails closed on original encryption failure without publishing metadata or deleting raw', async () => {
+    mocks.encryptCapturedPhoto.mockRejectedValueOnce(new Error('original encryption failed'));
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///captured.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
+      }),
+    ).rejects.toThrow('original encryption failed');
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.createEncryptedPhotoThumbnail).not.toHaveBeenCalled();
+    expect(mocks.recoverPhotoRenditionPublication).toHaveBeenCalledWith(new Set());
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
   });
 
   it('keeps durable publication state and the capture source when metadata fails ambiguously', async () => {
@@ -416,6 +443,33 @@ describe('photo local store recovery', () => {
     expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
   });
 
+  it('returns durable success when metadata committed but raw cleanup still needs retry', async () => {
+    mocks.randomIds = ['photo-cleanup-pending'];
+    mocks.deleteCapturedPhotoSource.mockRejectedValueOnce(new Error('raw cleanup failed'));
+
+    const result = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+
+    expect(result).toMatchObject({
+      createdNow: true,
+      sourceCleanupPending: true,
+      photo: { id: 'photo-cleanup-pending' },
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.markPhotoRenditionPublication).toHaveBeenCalledWith(
+      expect.objectContaining({ photoId: 'photo-cleanup-pending' }),
+      'metadata_committed',
+    );
+    expect(mocks.markPhotoRenditionPublication).not.toHaveBeenCalledWith(
+      expect.anything(),
+      'raw_cleaned',
+    );
+    expect(mocks.settlePhotoRenditionPublication).not.toHaveBeenCalled();
+  });
+
   it('serializes simultaneous retries for one capture session into one encrypted photo', async () => {
     mocks.randomIds = ['photo-concurrent', 'unused-photo-id'];
     let releaseFirstWrite!: () => void;
@@ -456,6 +510,65 @@ describe('photo local store recovery', () => {
       ['file:///retry.jpg'],
     ]);
     expect(mocks.randomIds).toEqual(['unused-photo-id']);
+  });
+
+  it('rejects a stale captured Save after the active owner changes', async () => {
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(2, {
+      ownerUserId: 'user-b',
+      accountGeneration: testAccountGeneration,
+    });
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///stale-owner.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
+      }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+  });
+
+  it('stops before metadata commit if capture authority changes after encrypted renditions exist', async () => {
+    mocks.randomIds = ['photo-authority-loss'];
+    mocks.createEncryptedPhotoThumbnail.mockImplementationOnce(
+      async ({ sourceUri, photoId }: { sourceUri: string; photoId: string }) => {
+        const encryptedLocalUri = `${sourceUri}.${photoId}-thumbnail.layerwellphoto`;
+        mocks.encryptedFiles.add(encryptedLocalUri);
+        clearActiveHealthProcessingEpoch();
+        setActiveHealthProcessingEpoch(2, {
+          ownerUserId: 'user-a',
+          accountGeneration: testAccountGeneration,
+        });
+        return {
+          encryptedLocalUri,
+          keyId: 'photo-key',
+          encryptionVersion: 'photo-v1',
+        };
+      },
+    );
+
+    await expect(
+      addPhotoWithOutcome({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///authority-loss.jpg',
+        captureSessionId: CAPTURE_SESSION_ID,
+      }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(mocks.createEncryptedPhotoThumbnail).toHaveBeenCalledOnce();
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledWith(
+      'file:///authority-loss.jpg',
+    );
+    expect(mocks.markPhotoRenditionPublication).not.toHaveBeenCalledWith(
+      expect.anything(),
+      'metadata_committed',
+    );
   });
 
   it('does not return a queued replay or delete its source after health-lease replacement', async () => {
@@ -529,7 +642,7 @@ describe('photo local store recovery', () => {
     expect(mocks.randomIds).toEqual(['unused-photo-id']);
   });
 
-  it('keeps a committed replay fail-closed until its raw source deletion succeeds', async () => {
+  it('reports a committed replay honestly when only raw source cleanup is pending', async () => {
     await addPhotoWithOutcome({
       takenLocalDate: '2026-07-03',
       localUri: 'file:///first.jpg',
@@ -538,14 +651,16 @@ describe('photo local store recovery', () => {
     mocks.deleteCapturedPhotoSource.mockClear();
     mocks.deleteCapturedPhotoSource.mockRejectedValueOnce(new Error('source busy'));
 
-    await expect(
-      addPhotoWithOutcome({
-        takenLocalDate: '2026-07-03',
-        localUri: 'file:///retry.jpg',
-        captureSessionId: CAPTURE_SESSION_ID,
-      }),
-    ).rejects.toThrow('source busy');
+    const replay = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///retry.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
 
+    expect(replay).toMatchObject({
+      createdNow: false,
+      sourceCleanupPending: true,
+    });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
     expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
     expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledWith('file:///retry.jpg');

@@ -48,6 +48,19 @@ function lifecycleWithDeleteAttempts(failures: number) {
 }
 
 describe('Progress capture route boundary', () => {
+  it('admits only one shutter until the first shutter finishes', () => {
+    const coordinator = createProgressCaptureRouteBoundary<TestAction>({
+      createRawCaptureLifecycle: () => lifecycleWithDeleteAttempts(0),
+    });
+
+    expect(coordinator.beginShutter()).toBe(true);
+    expect(coordinator.beginShutter()).toBe(false);
+    expect(coordinator.getSnapshot().shutterInFlight).toBe(true);
+
+    coordinator.finishShutter();
+    expect(coordinator.beginShutter()).toBe(true);
+  });
+
   it('blocks a back removal while the shutter is pending, invalidates capture, then dispatches once', () => {
     const coordinator = createProgressCaptureRouteBoundary<TestAction>({
       createRawCaptureLifecycle: () => lifecycleWithDeleteAttempts(0),
@@ -145,6 +158,52 @@ describe('Progress capture route boundary', () => {
     expect(handlers.replaceReview).toHaveBeenCalledOnce();
     expect(lifecycle.discard).not.toHaveBeenCalled();
     expect(lifecycle.dispose).not.toHaveBeenCalled();
+  });
+
+  it('releases a reserved review session when review navigation throws', () => {
+    const lifecycle = lifecycleWithDeleteAttempts(0);
+    const onReviewHandoffAborted = vi.fn();
+    const coordinator = createProgressCaptureRouteBoundary<TestAction>({
+      createRawCaptureLifecycle: () => lifecycle,
+      onReviewHandoffAborted,
+    });
+    const handlers = navigationHandlers();
+    handlers.replaceReview.mockImplementationOnce(() => {
+      throw new Error('REVIEW_NAVIGATION_FAILED');
+    });
+
+    coordinator.adoptRawCapture(REVIEW_PARAMS.capturedUri);
+    coordinator.handoffToReview(REVIEW_PARAMS);
+
+    expect(coordinator.dispatchAuthorizedNavigation(handlers)).toBe(false);
+    expect(onReviewHandoffAborted).toHaveBeenCalledOnce();
+    expect(onReviewHandoffAborted).toHaveBeenCalledWith(REVIEW_PARAMS.captureSessionId);
+    expect(coordinator.getSnapshot()).toMatchObject({
+      cleanupFailed: true,
+      cleanupPending: true,
+      routeRemovalReady: false,
+    });
+  });
+
+  it('hands failed forced-unmount raw cleanup to the process owner', async () => {
+    const lifecycle: ProgressCaptureRawLifecycle = {
+      discard: vi.fn(async () => undefined),
+      dispose: vi.fn(async () => {
+        throw new Error('RAW_CLEANUP_FAILED');
+      }),
+      hasPendingCleanup: () => true,
+    };
+    const retainFailedCleanup = vi.fn();
+    const coordinator = createProgressCaptureRouteBoundary<TestAction>({
+      createRawCaptureLifecycle: () => lifecycle,
+      retainFailedCleanup,
+    });
+
+    coordinator.adoptRawCapture(REVIEW_PARAMS.capturedUri);
+
+    await expect(coordinator.dispose()).rejects.toThrow('RAW_CLEANUP_FAILED');
+    expect(retainFailedCleanup).toHaveBeenCalledOnce();
+    expect(retainFailedCleanup).toHaveBeenCalledWith(lifecycle);
   });
 
   it('returns route ownership after a non-review navigation handler throws', () => {
