@@ -272,7 +272,13 @@ export function usePhotos(series: PhotoSeries = 'front') {
   const subscribeCurrentness = useCallback(
     (notify: () => void) => {
       const unsubscribeQuery = queryClient.getQueryCache().subscribe((event) => {
-        if (event.query.queryHash === queryHash) notify();
+        // Observer bookkeeping can fire during render without changing query state.
+        if (
+          event.query.queryHash === queryHash &&
+          (event.type === 'added' || event.type === 'removed' || event.type === 'updated')
+        ) {
+          notify();
+        }
       });
       const unsubscribeAuthority = subscribeActiveHealthProcessingLeaseChanges(() => notify());
       return () => {
