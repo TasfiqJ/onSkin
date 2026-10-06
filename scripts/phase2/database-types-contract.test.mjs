@@ -170,11 +170,6 @@ test('mobile direct table mutations and RPC typing stay on the reviewed capabili
         path: 'apps/mobile/src/features/onboarding/OnboardingContext.tsx',
       },
       {
-        operation: 'delete',
-        table: 'photos',
-        path: 'apps/mobile/src/features/photos/store.ts',
-      },
-      {
         operation: 'insert',
         table: 'consents',
         path: 'apps/mobile/src/lib/consent/consent.ts',
