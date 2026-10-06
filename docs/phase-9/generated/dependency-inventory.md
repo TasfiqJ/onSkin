@@ -1,18 +1,46 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-09-26T23:04:09.988Z
+Generated: 2026-10-06T22:47:48.994Z
 Audit mode: registry
 Audit completed: yes
-Package count: 1146
+Package count: 1116
 Lockfile version: 3
 
 ## Vulnerabilities
 
-`{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0}`
+`{"info":0,"low":0,"moderate":0,"high":27,"critical":0,"total":27}`
 
 ## Audit Findings
 
-- No npm audit findings recorded.
+| Package | Severity | Direct | Via | Fix available | Nodes |
+| --- | --- | --- | --- | --- | --- |
+| `@expo/cli` | high | no | @expo/code-signing-certificates, @expo/metro, @expo/metro-config, node-forge | expo@44.0.6 (breaking) | node_modules/@expo/cli |
+| `@expo/code-signing-certificates` | high | no | node-forge | available | node_modules/@expo/code-signing-certificates |
+| `@expo/metro` | high | no | metro, metro-config, metro-file-map, metro-transform-worker | expo@44.0.6 (breaking) | node_modules/@expo/metro |
+| `@expo/metro-config` | high | no | @expo/metro | expo@44.0.6 (breaking) | node_modules/@expo/metro-config |
+| `@react-native-google-signin/google-signin` | high | yes | expo | @react-native-google-signin/google-signin@8.2.2 (breaking) | node_modules/@react-native-google-signin/google-signin |
+| `@react-native/community-cli-plugin` | high | no | @react-native/metro-config, metro, metro-config | react-native@0.72.17 (breaking) | node_modules/@react-native/community-cli-plugin |
+| `@react-native/metro-config` | high | no | metro-config | react-native@0.72.17 (breaking) | node_modules/@react-native/metro-config |
+| `@react-native/virtualized-lists` | high | no | react-native | react-native@0.72.17 (breaking) | node_modules/@react-native/virtualized-lists |
+| `@sentry/react-native` | high | yes | expo | @sentry/react-native@5.15.2 (breaking) | node_modules/@sentry/react-native |
+| `braces` | high | no | braces vulnerable to stack-exhaustion denial of service through deeply nested patterns (<=3.0.3) | tailwindcss@4.3.3 (breaking) | node_modules/braces |
+| `chokidar` | high | no | braces | tailwindcss@4.3.3 (breaking) | node_modules/chokidar |
+| `expo` | high | yes | @expo/cli, @expo/metro, @expo/metro-config | expo@44.0.6 (breaking) | node_modules/expo |
+| `fast-glob` | high | no | micromatch | available | node_modules/fast-glob |
+| `metro` | high | no | metro-config, metro-file-map, metro-transform-worker | react-native@0.72.17 (breaking) | node_modules/metro |
+| `metro-config` | high | no | metro | react-native@0.72.17 (breaking) | node_modules/metro-config |
+| `metro-file-map` | high | no | micromatch | expo@44.0.6 (breaking) | node_modules/metro-file-map |
+| `metro-transform-worker` | high | no | metro | available | node_modules/metro-transform-worker |
+| `micromatch` | high | no | braces | tailwindcss@4.3.3 (breaking) | node_modules/micromatch |
+| `nativewind` | high | yes | react-native-css-interop | nativewind@2.0.11 (breaking) | node_modules/nativewind |
+| `node-forge` | high | yes | node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements (<=1.4.0) | expo@44.0.6 (breaking) | node_modules/node-forge |
+| `react-native` | high | yes | @react-native/community-cli-plugin, @react-native/virtualized-lists | react-native@0.72.17 (breaking) | node_modules/react-native |
+| `react-native-css-interop` | high | no | tailwindcss | nativewind@2.0.11 (breaking) | node_modules/react-native-css-interop |
+| `react-native-purchases` | high | yes | react-native | react-native-purchases@8.12.0 (breaking) | node_modules/react-native-purchases |
+| `react-native-reanimated` | high | yes | react-native, react-native-worklets | react-native-reanimated@4.2.2 (breaking) | node_modules/react-native-reanimated |
+| `react-native-view-shot` | high | yes | react-native | react-native-view-shot@4.0.3 (breaking) | node_modules/react-native-view-shot |
+| `react-native-worklets` | high | yes | @react-native/metro-config, react-native | react-native-worklets@0.7.4 (breaking) | node_modules/react-native-worklets |
+| `tailwindcss` | high | yes | chokidar, fast-glob, micromatch | tailwindcss@4.3.3 (breaking) | node_modules/tailwindcss |
 
 ## Install Scripts
 
@@ -34,10 +62,7 @@ Lockfile version: 3
 
 - `apps/catalog-operator-console` 0.1.0
 - `apps/mobile` 0.1.0
-- `@expo/plist` 0.8.1
-- `babel-preset-expo` 57.0.6
-- `expo-widgets` 57.0.9
-- `@adobe/css-tools` 4.5.0
+- `@noble/ciphers` 2.3.0
 - `@alloc/quick-lru` 5.2.0
 - `@babel/code-frame` 7.29.7
 - `@babel/compat-data` 7.29.7
@@ -111,6 +136,7 @@ Lockfile version: 3
 - `@babel/template` 7.29.7
 - `@babel/traverse` 7.29.7
 - `@babel/types` 7.29.7
+- `@ecies/ciphers` 0.2.6
 - `@egjs/hammerjs` 2.0.17
 - `@emnapi/core` 1.10.0
 - `@emnapi/runtime` 1.10.0
@@ -128,61 +154,68 @@ Lockfile version: 3
 - `@expo-google-fonts/hanken-grotesk` 0.4.3
 - `@expo-google-fonts/ibm-plex-mono` 0.4.1
 - `@expo-google-fonts/instrument-serif` 0.4.1
-- `@expo-google-fonts/material-symbols` 0.4.43
+- `@expo-google-fonts/material-symbols` 0.4.48
+- `@expo/cli` 57.0.28
+- `@expo/cli/node_modules/@expo/plist` 0.8.1
+- `@expo/cli/node_modules/@expo/ws-tunnel` 2.0.1
+- `@expo/cli/node_modules/accepts` 1.3.8
+- `@expo/cli/node_modules/ci-info` 3.9.0
+- `@expo/cli/node_modules/mime-db` 1.52.0
+- `@expo/cli/node_modules/mime-types` 2.1.35
+- `@expo/cli/node_modules/negotiator` 0.6.3
+- `@expo/cli/node_modules/picomatch` 4.0.5
+- `@expo/cli/node_modules/semver` 7.8.5
+- `@expo/cli/node_modules/ws` 8.22.0
 - `@expo/code-signing-certificates` 0.0.6
-- `@expo/config` 57.0.7
-- `@expo/config-plugins` 57.0.7
+- `@expo/config` 57.0.10
+- `@expo/config-plugins` 57.0.10
 - `@expo/config-plugins/node_modules/@expo/plist` 0.8.1
 - `@expo/config-plugins/node_modules/semver` 7.8.5
 - `@expo/config-types` 57.0.2
 - `@expo/config/node_modules/semver` 7.8.5
-- `@expo/devcert` 1.2.1
+- `@expo/devcert` 1.2.2
 - `@expo/devcert/node_modules/debug` 3.2.7
 - `@expo/devtools` 57.0.1
 - `@expo/dom-webview` 57.0.1
-- `@expo/env` 2.4.2
+- `@expo/env` 2.4.3
 - `@expo/expo-modules-macros-plugin` 0.6.1
-- `@expo/fingerprint` 0.20.7
+- `@expo/fingerprint` 0.20.13
 - `@expo/fingerprint/node_modules/balanced-match` 4.0.4
-- `@expo/fingerprint/node_modules/brace-expansion` 5.0.9
-- `@expo/fingerprint/node_modules/minimatch` 10.2.6
+- `@expo/fingerprint/node_modules/brace-expansion` 5.0.12
+- `@expo/fingerprint/node_modules/minimatch` 10.2.5
 - `@expo/fingerprint/node_modules/semver` 7.8.5
-- `@expo/image-utils` 0.11.4
+- `@expo/image-utils` 0.11.6
 - `@expo/image-utils/node_modules/semver` 7.8.5
-- `@expo/inline-modules` 0.1.5
+- `@expo/inline-modules` 0.1.7
 - `@expo/json-file` 11.0.1
-- `@expo/local-build-cache-provider` 57.0.6
-- `@expo/log-box` 57.0.2
+- `@expo/local-build-cache-provider` 57.0.8
+- `@expo/log-box` 57.0.4
 - `@expo/metro` 56.0.2
-- `@expo/metro-config` 57.0.8
-- `@expo/metro-config/node_modules/hermes-estree` 0.36.1
-- `@expo/metro-config/node_modules/hermes-parser` 0.36.1
-- `@expo/metro-file-map` 57.0.1
-- `@expo/metro-runtime` 57.0.9
+- `@expo/metro-config` 57.0.13
+- `@expo/metro-config/node_modules/picomatch` 4.0.5
+- `@expo/metro-file-map` 57.0.4
+- `@expo/metro-runtime` 57.0.16
 - `@expo/metro/node_modules/metro-runtime` 0.84.5
-- `@expo/metro/node_modules/metro-source-map` 0.84.5
-- `@expo/metro/node_modules/metro-symbolicate` 0.84.5
-- `@expo/metro/node_modules/ob1` 0.84.5
 - `@expo/osascript` 2.7.1
 - `@expo/package-manager` 1.13.1
 - `@expo/plist` 0.7.0
-- `@expo/prebuild-config` 57.0.11
+- `@expo/prebuild-config` 57.0.17
 - `@expo/prebuild-config/node_modules/semver` 7.8.5
-- `@expo/require-utils` 57.0.4
+- `@expo/require-utils` 57.0.6
+- `@expo/router-server` 57.0.12
 - `@expo/schema-utils` 57.0.2
 - `@expo/sdk-runtime-versions` 1.0.0
 - `@expo/spawn-async` 1.8.0
 - `@expo/sudo-prompt` 9.3.2
-- `@expo/ui` 57.0.10
-- `@expo/ws-tunnel` 2.0.0
-- `@expo/xcpretty` 4.4.4
+- `@expo/ui` 57.0.22
+- `@expo/xcpretty` 4.4.6
 - `@humanfs/core` 0.19.2
 - `@humanfs/node` 0.16.8
 - `@humanfs/types` 0.15.0
 - `@humanwhocodes/module-importer` 1.0.1
 - `@humanwhocodes/retry` 0.4.3
+- `@infinitered/react-native-mlkit-core` 5.0.0
 - `@infinitered/react-native-mlkit-face-detection` 5.0.0
-- `@infinitered/react-native-mlkit-face-detection/node_modules/@infinitered/react-native-mlkit-core` 5.0.0
 - `@isaacs/ttlcache` 1.4.1
 - `@jest/schemas` 29.6.3
 - `@jest/types` 29.6.3
@@ -196,7 +229,7 @@ Lockfile version: 3
 - `@layerwell/mobile` unknown
 - `@layerwell/types` unknown
 - `@napi-rs/wasm-runtime` 1.1.6
-- `@noble/ciphers` 2.3.0
+- `@noble/ciphers` 1.3.0
 - `@noble/curves` 1.9.7
 - `@noble/hashes` 1.8.0
 - `@nodelib/fs.scandir` 2.1.5
@@ -207,72 +240,69 @@ Lockfile version: 3
 - `@posthog/core` 1.39.6
 - `@posthog/types` 1.392.1
 - `@radix-ui/primitive` 1.1.7
-- `@radix-ui/react-collection` 1.1.15
-- `@radix-ui/react-collection/node_modules/@radix-ui/react-compose-refs` 1.1.5
-- `@radix-ui/react-compose-refs` 1.1.3
+- `@radix-ui/react-collection` 1.1.16
+- `@radix-ui/react-compose-refs` 1.1.5
 - `@radix-ui/react-context` 1.2.2
 - `@radix-ui/react-dialog` 1.1.19
 - `@radix-ui/react-dialog/node_modules/@radix-ui/primitive` 1.1.5
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-compose-refs` 1.1.3
 - `@radix-ui/react-dialog/node_modules/@radix-ui/react-context` 1.2.0
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-id` 1.1.2
 - `@radix-ui/react-dialog/node_modules/@radix-ui/react-presence` 1.1.7
 - `@radix-ui/react-dialog/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-dialog/node_modules/@radix-ui/react-slot` 1.3.0
-- `@radix-ui/react-direction` 1.1.4
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-use-controllable-state` 1.2.3
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-use-effect-event` 0.0.3
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-use-layout-effect` 1.1.2
+- `@radix-ui/react-direction` 1.1.5
 - `@radix-ui/react-dismissable-layer` 1.1.15
 - `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/primitive` 1.1.5
+- `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-compose-refs` 1.1.3
 - `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-slot` 1.3.0
+- `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-use-callback-ref` 1.1.2
+- `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-use-effect-event` 0.0.3
+- `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-use-layout-effect` 1.1.2
 - `@radix-ui/react-focus-guards` 1.1.4
 - `@radix-ui/react-focus-scope` 1.1.12
+- `@radix-ui/react-focus-scope/node_modules/@radix-ui/react-compose-refs` 1.1.3
 - `@radix-ui/react-focus-scope/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-focus-scope/node_modules/@radix-ui/react-slot` 1.3.0
-- `@radix-ui/react-id` 1.1.2
+- `@radix-ui/react-focus-scope/node_modules/@radix-ui/react-use-callback-ref` 1.1.2
+- `@radix-ui/react-id` 1.1.4
 - `@radix-ui/react-portal` 1.1.13
+- `@radix-ui/react-portal/node_modules/@radix-ui/react-compose-refs` 1.1.3
 - `@radix-ui/react-portal/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-portal/node_modules/@radix-ui/react-slot` 1.3.0
-- `@radix-ui/react-presence` 1.1.10
-- `@radix-ui/react-presence/node_modules/@radix-ui/react-use-layout-effect` 1.1.4
-- `@radix-ui/react-primitive` 2.1.10
-- `@radix-ui/react-roving-focus` 1.1.19
-- `@radix-ui/react-roving-focus/node_modules/@radix-ui/react-compose-refs` 1.1.5
-- `@radix-ui/react-roving-focus/node_modules/@radix-ui/react-id` 1.1.4
-- `@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-callback-ref` 1.1.4
-- `@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-controllable-state` 1.2.6
-- `@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-effect-event` 0.0.5
-- `@radix-ui/react-roving-focus/node_modules/@radix-ui/react-use-layout-effect` 1.1.4
-- `@radix-ui/react-slot` 1.3.3
-- `@radix-ui/react-slot/node_modules/@radix-ui/react-compose-refs` 1.1.5
-- `@radix-ui/react-tabs` 1.1.21
-- `@radix-ui/react-tabs/node_modules/@radix-ui/react-id` 1.1.4
-- `@radix-ui/react-tabs/node_modules/@radix-ui/react-use-controllable-state` 1.2.6
-- `@radix-ui/react-tabs/node_modules/@radix-ui/react-use-effect-event` 0.0.5
-- `@radix-ui/react-tabs/node_modules/@radix-ui/react-use-layout-effect` 1.1.4
-- `@radix-ui/react-use-callback-ref` 1.1.2
-- `@radix-ui/react-use-controllable-state` 1.2.3
-- `@radix-ui/react-use-effect-event` 0.0.3
+- `@radix-ui/react-portal/node_modules/@radix-ui/react-use-layout-effect` 1.1.2
+- `@radix-ui/react-presence` 1.1.11
+- `@radix-ui/react-primitive` 2.1.11
+- `@radix-ui/react-roving-focus` 1.1.20
+- `@radix-ui/react-slot` 1.4.0
+- `@radix-ui/react-tabs` 1.1.22
+- `@radix-ui/react-use-callback-ref` 1.1.4
+- `@radix-ui/react-use-controllable-state` 1.2.6
+- `@radix-ui/react-use-effect-event` 0.0.5
 - `@radix-ui/react-use-is-hydrated` 0.1.3
-- `@radix-ui/react-use-layout-effect` 1.1.2
+- `@radix-ui/react-use-layout-effect` 1.1.4
 - `@react-native-async-storage/async-storage` 2.2.0
 - `@react-native-google-signin/google-signin` 16.1.2
 - `@react-native-masked-view/masked-view` 0.3.2
-- `@react-native/assets-registry` 0.86.2
-- `@react-native/babel-plugin-codegen` 0.86.2
-- `@react-native/babel-plugin-codegen/node_modules/@react-native/codegen` 0.86.2
-- `@react-native/babel-preset` 0.86.2
+- `@react-native/assets-registry` 0.86.3
+- `@react-native/babel-plugin-codegen` 0.86.3
+- `@react-native/babel-preset` 0.86.3
 - `@react-native/codegen` 0.86.3
-- `@react-native/community-cli-plugin` 0.86.2
+- `@react-native/community-cli-plugin` 0.86.3
 - `@react-native/community-cli-plugin/node_modules/semver` 7.8.5
-- `@react-native/debugger-frontend` 0.86.2
-- `@react-native/debugger-shell` 0.86.2
-- `@react-native/dev-middleware` 0.86.2
-- `@react-native/dev-middleware/node_modules/ws` 7.5.13
-- `@react-native/gradle-plugin` 0.86.2
-- `@react-native/js-polyfills` 0.86.2
-- `@react-native/metro-babel-transformer` 0.86.2
-- `@react-native/metro-config` 0.86.2
-- `@react-native/metro-config/node_modules/metro-runtime` 0.84.5
-- `@react-native/normalize-colors` 0.86.2
-- `@react-native/virtualized-lists` 0.86.2
+- `@react-native/debugger-frontend` 0.86.3
+- `@react-native/debugger-shell` 0.86.3
+- `@react-native/dev-middleware` 0.86.3
+- `@react-native/gradle-plugin` 0.86.3
+- `@react-native/js-polyfills` 0.86.3
+- `@react-native/metro-babel-transformer` 0.86.3
+- `@react-native/metro-config` 0.86.3
+- `@react-native/normalize-colors` 0.86.3
+- `@react-native/virtualized-lists` 0.86.3
 - `@revenuecat/purchases-js` 1.46.0
 - `@revenuecat/purchases-js-hybrid-mappings` 18.18.0
 - `@revenuecat/purchases-typescript-internal` 18.18.0
@@ -336,13 +366,6 @@ Lockfile version: 3
 - `@supabase/supabase-js` 2.108.1
 - `@tanstack/query-core` 5.101.0
 - `@tanstack/react-query` 5.101.0
-- `@testing-library/dom` 10.4.1
-- `@testing-library/dom/node_modules/ansi-styles` 5.2.0
-- `@testing-library/dom/node_modules/pretty-format` 27.5.1
-- `@testing-library/dom/node_modules/react-is` 17.0.2
-- `@testing-library/jest-dom` 6.9.1
-- `@testing-library/jest-dom/node_modules/dom-accessibility-api` 0.6.3
-- `@testing-library/user-event` 14.6.3
 - `@turbo/darwin-64` 2.9.18
 - `@turbo/darwin-arm64` 2.9.18
 - `@turbo/linux-64` 2.9.18
@@ -351,7 +374,6 @@ Lockfile version: 3
 - `@turbo/windows-arm64` 2.9.18
 - `@tybys/wasm-util` 0.10.3
 - `@types/aes-js` 3.1.4
-- `@types/aria-query` 5.0.4
 - `@types/chai` 5.2.3
 - `@types/deep-eql` 4.0.2
 - `@types/emscripten` 1.41.5
@@ -377,8 +399,8 @@ Lockfile version: 3
 - `@typescript-eslint/types` 8.61.0
 - `@typescript-eslint/typescript-estree` 8.61.0
 - `@typescript-eslint/typescript-estree/node_modules/balanced-match` 4.0.4
-- `@typescript-eslint/typescript-estree/node_modules/brace-expansion` 5.0.9
-- `@typescript-eslint/typescript-estree/node_modules/minimatch` 10.2.6
+- `@typescript-eslint/typescript-estree/node_modules/brace-expansion` 5.0.12
+- `@typescript-eslint/typescript-estree/node_modules/minimatch` 10.2.5
 - `@typescript-eslint/typescript-estree/node_modules/semver` 7.8.5
 - `@typescript-eslint/utils` 8.61.0
 - `@typescript-eslint/visitor-keys` 8.61.0
@@ -415,12 +437,12 @@ Lockfile version: 3
 - `@vitest/utils` 4.1.11
 - `@xmldom/xmldom` 0.8.15
 - `abort-controller` 3.0.0
-- `accepts` 1.3.8
+- `accepts` 2.0.0
 - `acorn` 8.17.0
 - `acorn-jsx` 5.3.2
 - `aes-js` 3.1.2
 - `agent-base` 7.1.4
-- `agent-cli-detector` 0.1.5
+- `agent-cli-detector` 0.1.7
 - `ajv` 6.15.0
 - `anser` 1.4.10
 - `ansi-escapes` 4.3.2
@@ -429,11 +451,9 @@ Lockfile version: 3
 - `ansi-styles` 4.3.0
 - `any-promise` 1.3.0
 - `anymatch` 3.1.3
-- `anymatch/node_modules/picomatch` 2.3.2
 - `arg` 5.0.2
 - `argparse` 2.0.1
 - `aria-hidden` 1.2.6
-- `aria-query` 5.3.0
 - `array-buffer-byte-length` 1.0.2
 - `array-includes` 3.1.9
 - `array-timsort` 1.0.3
@@ -454,8 +474,9 @@ Lockfile version: 3
 - `babel-plugin-react-native-web` 0.21.2
 - `babel-plugin-syntax-hermes-parser` 0.36.0
 - `babel-plugin-transform-flow-enums` 0.0.2
-- `babel-preset-expo` 57.0.12
-- `babel-preset-expo/node_modules/@react-native/babel-plugin-codegen` 0.86.3
+- `babel-preset-expo` 57.0.6
+- `babel-preset-expo/node_modules/@react-native/babel-plugin-codegen` 0.86.2
+- `babel-preset-expo/node_modules/@react-native/codegen` 0.86.2
 - `badgin` 1.2.3
 - `balanced-match` 1.0.2
 - `barcode-detector` 3.2.0
@@ -466,7 +487,7 @@ Lockfile version: 3
 - `binary-extensions` 2.3.0
 - `bplist-creator` 0.1.0
 - `bplist-parser` 0.3.2
-- `brace-expansion` 1.1.18
+- `brace-expansion` 1.1.21
 - `braces` 3.0.3
 - `browserslist` 4.28.8
 - `bser` 2.1.1
@@ -486,7 +507,7 @@ Lockfile version: 3
 - `chokidar/node_modules/glob-parent` 5.1.2
 - `chrome-launcher` 0.15.2
 - `chromium-edge-launcher` 0.3.0
-- `ci-info` 3.9.0
+- `ci-info` 2.0.0
 - `cli-cursor` 2.1.0
 - `cli-spinners` 2.9.2
 - `client-only` 0.0.1
@@ -497,10 +518,10 @@ Lockfile version: 3
 - `color-convert` 2.0.1
 - `color-name` 1.1.4
 - `color-string` 1.9.1
-- `commander` 7.2.0
+- `commander` 12.1.0
 - `comment-json` 4.6.2
 - `compressible` 2.0.18
-- `compression` 1.8.1
+- `compression` 1.8.2
 - `compression/node_modules/debug` 2.6.9
 - `compression/node_modules/ms` 2.0.0
 - `compression/node_modules/negotiator` 0.6.4
@@ -515,7 +536,6 @@ Lockfile version: 3
 - `cross-spawn` 7.0.6
 - `css-in-js-utils` 3.1.0
 - `css-line-break` 2.1.0
-- `css.escape` 1.5.1
 - `cssesc` 3.0.0
 - `csstype` 3.2.3
 - `data-view-buffer` 1.0.2
@@ -529,7 +549,6 @@ Lockfile version: 3
 - `define-data-property` 1.1.4
 - `define-properties` 1.2.1
 - `depd` 2.0.0
-- `dequal` 2.0.3
 - `destroy` 1.2.0
 - `detect-libc` 2.1.2
 - `detect-node-es` 1.1.0
@@ -537,11 +556,8 @@ Lockfile version: 3
 - `dlv` 1.1.3
 - `dnssd-advertise` 1.1.6
 - `doctrine` 2.1.0
-- `dom-accessibility-api` 0.5.16
 - `dunder-proto` 1.0.1
 - `eciesjs` 0.5.0
-- `eciesjs/node_modules/@ecies/ciphers` 0.2.6
-- `eciesjs/node_modules/@noble/ciphers` 1.3.0
 - `ee-first` 1.1.1
 - `electron-to-chromium` 1.5.402
 - `emoji-regex` 8.0.0
@@ -560,7 +576,7 @@ Lockfile version: 3
 - `escape-html` 1.0.3
 - `escape-string-regexp` 4.0.0
 - `eslint` 9.39.4
-- `eslint-config-expo` 57.0.1
+- `eslint-config-expo` 57.0.2
 - `eslint-config-expo/node_modules/globals` 16.5.0
 - `eslint-config-prettier` 10.1.8
 - `eslint-import-resolver-node` 0.3.10
@@ -589,54 +605,55 @@ Lockfile version: 3
 - `etag` 1.8.1
 - `event-target-shim` 5.0.1
 - `expect-type` 1.3.0
-- `expo` 57.0.12
-- `expo-apple-authentication` 57.0.1
-- `expo-application` 57.0.2
-- `expo-asset` 57.0.10
-- `expo-build-properties` 57.0.10
+- `expo` 57.0.27
+- `expo-apple-authentication` 57.0.2
+- `expo-application` 57.0.3
+- `expo-asset` 57.0.19
+- `expo-build-properties` 57.0.22
 - `expo-build-properties/node_modules/semver` 7.8.5
-- `expo-camera` 57.0.3
-- `expo-constants` 57.0.10
-- `expo-crypto` 57.0.1
-- `expo-dev-client` 57.0.11
-- `expo-dev-launcher` 57.0.11
-- `expo-dev-menu` 57.0.11
+- `expo-camera` 57.0.6
+- `expo-constants` 57.0.21
+- `expo-crypto` 57.0.3
+- `expo-dev-client` 57.0.19
+- `expo-dev-launcher` 57.0.20
+- `expo-dev-menu` 57.0.18
 - `expo-dev-menu-interface` 57.0.0
-- `expo-device` 57.0.1
-- `expo-file-system` 57.0.2
-- `expo-font` 57.0.1
-- `expo-glass-effect` 57.0.1
-- `expo-haptics` 57.0.1
-- `expo-image` 57.0.2
+- `expo-device` 57.0.2
+- `expo-file-system` 57.0.7
+- `expo-font` 57.0.4
+- `expo-glass-effect` 57.0.4
+- `expo-haptics` 57.0.3
+- `expo-image` 57.0.5
 - `expo-image-loader` 57.0.1
-- `expo-image-manipulator` 57.0.9
-- `expo-json-utils` 57.0.1
-- `expo-keep-awake` 57.0.1
-- `expo-linking` 57.0.5
-- `expo-local-authentication` 57.0.2
-- `expo-localization` 57.0.1
-- `expo-manifests` 57.0.1
-- `expo-modules-autolinking` 57.0.9
-- `expo-modules-core` 57.0.10
-- `expo-modules-jsi` 57.0.4
-- `expo-network` 57.0.1
-- `expo-notifications` 57.0.10
-- `expo-router` 57.0.12
-- `expo-secure-store` 57.0.1
-- `expo-server` 57.0.2
-- `expo-sharing` 57.0.11
+- `expo-image-manipulator` 57.0.21
+- `expo-json-utils` 57.0.2
+- `expo-keep-awake` 57.0.2
+- `expo-linking` 57.0.12
+- `expo-local-authentication` 57.0.3
+- `expo-localization` 57.0.2
+- `expo-manifests` 57.0.2
+- `expo-modules-autolinking` 57.0.14
+- `expo-modules-autolinking/node_modules/commander` 7.2.0
+- `expo-modules-core` 57.0.21
+- `expo-modules-jsi` 57.1.1
+- `expo-network` 57.0.2
+- `expo-notifications` 57.0.22
+- `expo-router` 57.0.25
+- `expo-router/node_modules/react-is` 19.2.8
+- `expo-secure-store` 57.0.4
+- `expo-server` 57.0.3
+- `expo-sharing` 57.0.22
 - `expo-sharing/node_modules/@expo/plist` 0.8.1
-- `expo-splash-screen` 57.0.6
+- `expo-splash-screen` 57.0.9
 - `expo-status-bar` 57.0.1
-- `expo-store-review` 57.0.1
-- `expo-symbols` 57.0.2
-- `expo-system-ui` 57.0.2
-- `expo-updates-interface` 57.0.1
-- `expo-web-browser` 57.0.2
-- `expo/node_modules/@expo/cli` 57.0.14
-- `expo/node_modules/@expo/cli/node_modules/@expo/router-server` 57.0.5
-- `expo/node_modules/@expo/plist` 0.8.1
-- `expo/node_modules/semver` 7.8.5
+- `expo-store-review` 57.0.3
+- `expo-symbols` 57.0.3
+- `expo-system-ui` 57.0.4
+- `expo-updates-interface` 57.0.2
+- `expo-web-browser` 57.0.3
+- `expo-widgets` 57.0.9
+- `expo-widgets/node_modules/@expo/plist` 0.8.1
+- `expo/node_modules/babel-preset-expo` 57.0.14
 - `exponential-backoff` 3.1.3
 - `fast-base64-decode` 1.0.0
 - `fast-deep-equal` 3.1.3
@@ -651,7 +668,6 @@ Lockfile version: 3
 - `fbjs-css-vars` 1.0.2
 - `fbjs/node_modules/promise` 7.3.1
 - `fbjs/node_modules/ua-parser-js` 1.0.41
-- `fdir` 6.5.0
 - `fetch-nodeshim` 0.4.10
 - `file-entry-cache` 8.0.0
 - `fill-range` 7.1.1
@@ -682,8 +698,8 @@ Lockfile version: 3
 - `glob` 13.0.6
 - `glob-parent` 6.0.2
 - `glob/node_modules/balanced-match` 4.0.4
-- `glob/node_modules/brace-expansion` 5.0.9
-- `glob/node_modules/minimatch` 10.2.6
+- `glob/node_modules/brace-expansion` 5.0.12
+- `glob/node_modules/minimatch` 10.2.5
 - `globals` 14.0.0
 - `globalthis` 1.0.4
 - `gopd` 1.2.0
@@ -695,7 +711,7 @@ Lockfile version: 3
 - `has-symbols` 1.1.0
 - `has-tostringtag` 1.0.2
 - `hasown` 2.0.4
-- `hermes-compiler` 250829098.0.16
+- `hermes-compiler` 250829098.0.17
 - `hermes-estree` 0.36.0
 - `hermes-parser` 0.36.0
 - `hoist-non-react-statics` 3.3.2
@@ -713,7 +729,6 @@ Lockfile version: 3
 - `import-fresh` 3.3.1
 - `import-fresh/node_modules/resolve-from` 4.0.0
 - `imurmurhash` 0.1.4
-- `indent-string` 4.0.0
 - `inherits` 2.0.4
 - `inline-style-prefixer` 7.0.1
 - `internal-slot` 1.1.0
@@ -757,7 +772,7 @@ Lockfile version: 3
 - `iterator.prototype` 1.1.5
 - `jest-get-type` 29.6.3
 - `jest-util` 29.7.0
-- `jest-util/node_modules/picomatch` 2.3.2
+- `jest-util/node_modules/ci-info` 3.9.0
 - `jest-validate` 29.7.0
 - `jest-worker` 29.7.0
 - `jest-worker/node_modules/supports-color` 8.1.1
@@ -810,7 +825,6 @@ Lockfile version: 3
 - `log-symbols/node_modules/supports-color` 5.5.0
 - `loose-envify` 1.4.0
 - `lru-cache` 5.1.1
-- `lz-string` 1.5.0
 - `magic-string` 0.30.21
 - `makeerror` 1.0.12
 - `marky` 1.3.0
@@ -832,32 +846,18 @@ Lockfile version: 3
 - `metro-minify-terser` 0.84.5
 - `metro-resolver` 0.84.5
 - `metro-runtime` 0.84.4
-- `metro-source-map` 0.84.4
-- `metro-symbolicate` 0.84.4
+- `metro-source-map` 0.84.5
+- `metro-symbolicate` 0.84.5
 - `metro-transform-plugins` 0.84.5
 - `metro-transform-worker` 0.84.5
-- `metro-transform-worker/node_modules/metro-source-map` 0.84.5
-- `metro-transform-worker/node_modules/metro-symbolicate` 0.84.5
-- `metro-transform-worker/node_modules/ob1` 0.84.5
-- `metro/node_modules/accepts` 2.0.0
-- `metro/node_modules/ci-info` 2.0.0
 - `metro/node_modules/hermes-estree` 0.35.0
 - `metro/node_modules/hermes-parser` 0.35.0
 - `metro/node_modules/metro-runtime` 0.84.5
-- `metro/node_modules/metro-source-map` 0.84.5
-- `metro/node_modules/metro-symbolicate` 0.84.5
-- `metro/node_modules/mime-types` 3.0.2
-- `metro/node_modules/negotiator` 1.1.0
-- `metro/node_modules/ob1` 0.84.5
-- `metro/node_modules/ws` 7.5.13
 - `micromatch` 4.0.8
-- `micromatch/node_modules/picomatch` 2.3.2
 - `mime` 1.6.0
 - `mime-db` 1.54.0
-- `mime-types` 2.1.35
-- `mime-types/node_modules/mime-db` 1.52.0
+- `mime-types` 3.0.2
 - `mimic-fn` 1.2.0
-- `min-indent` 1.0.1
 - `minimatch` 3.1.5
 - `minimist` 1.2.8
 - `minipass` 7.1.3
@@ -869,7 +869,7 @@ Lockfile version: 3
 - `napi-postinstall` 0.3.4
 - `nativewind` 4.2.6
 - `natural-compare` 1.4.0
-- `negotiator` 0.6.3
+- `negotiator` 1.1.0
 - `node-exports-info` 1.6.0
 - `node-fetch` 2.7.0
 - `node-forge` 1.4.0
@@ -879,7 +879,7 @@ Lockfile version: 3
 - `npm-package-arg` 11.0.3
 - `npm-package-arg/node_modules/semver` 7.8.5
 - `nullthrows` 1.1.1
-- `ob1` 0.84.4
+- `ob1` 0.84.5
 - `object-assign` 4.1.1
 - `object-hash` 3.0.0
 - `object-inspect` 1.13.4
@@ -916,7 +916,7 @@ Lockfile version: 3
 - `path-scurry/node_modules/lru-cache` 11.5.2
 - `pathe` 2.0.3
 - `picocolors` 1.1.1
-- `picomatch` 4.0.5
+- `picomatch` 2.3.2
 - `pify` 2.3.0
 - `pirates` 4.0.7
 - `plist` 3.1.1
@@ -928,14 +928,13 @@ Lockfile version: 3
 - `postcss-js` 4.1.0
 - `postcss-load-config` 6.0.1
 - `postcss-nested` 6.2.0
-- `postcss-selector-parser` 6.1.4
+- `postcss-selector-parser` 7.1.6
 - `postcss-value-parser` 4.2.0
 - `posthog-react-native` 4.54.4
 - `prelude-ls` 1.2.1
 - `prettier` 3.8.4
 - `pretty-format` 29.7.0
 - `pretty-format/node_modules/ansi-styles` 5.2.0
-- `pretty-format/node_modules/react-is` 18.3.1
 - `proc-log` 4.2.0
 - `progress` 2.0.3
 - `promise` 8.3.0
@@ -949,12 +948,11 @@ Lockfile version: 3
 - `range-parser` 1.2.1
 - `react` 19.2.3
 - `react-devtools-core` 6.1.5
-- `react-devtools-core/node_modules/ws` 7.5.13
 - `react-dom` 19.2.3
 - `react-fast-compare` 3.2.2
 - `react-freeze` 1.0.4
-- `react-is` 19.2.8
-- `react-native` 0.86.2
+- `react-is` 18.3.1
+- `react-native` 0.86.3
 - `react-native-css-interop` 0.2.6
 - `react-native-css-interop/node_modules/detect-libc` 1.0.3
 - `react-native-css-interop/node_modules/lightningcss` 1.27.0
@@ -969,7 +967,7 @@ Lockfile version: 3
 - `react-native-css-interop/node_modules/lightningcss-win32-arm64-msvc` 1.27.0
 - `react-native-css-interop/node_modules/lightningcss-win32-x64-msvc` 1.27.0
 - `react-native-css-interop/node_modules/semver` 7.8.5
-- `react-native-drawer-layout` 4.2.10
+- `react-native-drawer-layout` 4.2.11
 - `react-native-gesture-handler` 2.32.0
 - `react-native-get-random-values` 1.11.0
 - `react-native-is-edge-to-edge` 1.3.1
@@ -985,19 +983,15 @@ Lockfile version: 3
 - `react-native-web/node_modules/memoize-one` 6.0.0
 - `react-native-worklets` 0.10.1
 - `react-native-worklets/node_modules/semver` 7.8.5
-- `react-native/node_modules/@react-native/codegen` 0.86.2
-- `react-native/node_modules/commander` 12.1.0
 - `react-native/node_modules/semver` 7.8.5
-- `react-native/node_modules/ws` 7.5.13
 - `react-refresh` 0.14.2
 - `react-remove-scroll` 2.7.2
 - `react-remove-scroll-bar` 2.3.8
 - `react-style-singleton` 2.2.3
 - `react-test-renderer` 19.2.3
+- `react-test-renderer/node_modules/react-is` 19.2.8
 - `read-cache` 1.0.0
 - `readdirp` 3.6.0
-- `readdirp/node_modules/picomatch` 2.3.2
-- `redent` 3.0.0
 - `reflect.getprototypeof` 1.0.10
 - `regenerate` 1.4.2
 - `regenerate-unicode-properties` 10.2.2
@@ -1020,6 +1014,7 @@ Lockfile version: 3
 - `safe-buffer` 5.2.1
 - `safe-push-apply` 1.0.0
 - `safe-regex-test` 1.1.0
+- `sandbox-cli-detector` 0.2.0
 - `sax` 1.6.1
 - `scheduler` 0.27.0
 - `semver` 6.3.1
@@ -1042,7 +1037,7 @@ Lockfile version: 3
 - `shallowequal` 1.1.0
 - `shebang-command` 2.0.0
 - `shebang-regex` 3.0.0
-- `shell-quote` 1.10.0
+- `shell-quote` 1.11.0
 - `side-channel` 1.1.1
 - `side-channel-list` 1.0.1
 - `side-channel-map` 1.0.1
@@ -1055,7 +1050,7 @@ Lockfile version: 3
 - `sisteransi` 1.0.5
 - `slugify` 1.6.9
 - `source-map` 0.5.7
-- `source-map-js` 1.2.1
+- `source-map-js` 1.2.2
 - `source-map-support` 0.5.21
 - `source-map-support/node_modules/source-map` 0.6.1
 - `split-on-first` 1.1.0
@@ -1079,7 +1074,6 @@ Lockfile version: 3
 - `strip-ansi` 5.2.0
 - `strip-ansi/node_modules/ansi-regex` 4.1.1
 - `strip-bom` 3.0.0
-- `strip-indent` 3.0.0
 - `strip-json-comments` 3.1.1
 - `structured-headers` 0.4.1
 - `styleq` 0.1.3
@@ -1101,6 +1095,8 @@ Lockfile version: 3
 - `tinybench` 2.9.0
 - `tinyexec` 1.2.4
 - `tinyglobby` 0.2.17
+- `tinyglobby/node_modules/fdir` 6.5.0
+- `tinyglobby/node_modules/picomatch` 4.0.5
 - `tinyrainbow` 3.1.1
 - `tmpl` 1.0.5
 - `to-regex-range` 5.0.1
@@ -1142,7 +1138,9 @@ Lockfile version: 3
 - `vary` 1.1.2
 - `vaul` 1.1.2
 - `vite` 8.1.3
+- `vite/node_modules/picomatch` 4.0.5
 - `vitest` 4.1.11
+- `vitest/node_modules/picomatch` 4.0.5
 - `vlq` 1.0.1
 - `walker` 1.0.8
 - `warn-once` 0.1.1
@@ -1162,7 +1160,7 @@ Lockfile version: 3
 - `word-wrap` 1.2.5
 - `wrap-ansi` 7.0.0
 - `wrap-ansi/node_modules/strip-ansi` 6.0.1
-- `ws` 8.21.3
+- `ws` 7.5.13
 - `xcode` 3.0.1
 - `xml2js` 0.6.0
 - `xml2js/node_modules/xmlbuilder` 11.0.1

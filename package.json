@@ -336,7 +336,8 @@
     "react-native": "0.86.3",
     "react-native-reanimated": "4.5.1",
     "react-native-worklets": "0.10.1",
-    "shell-quote": "1.10.0",
+    "shell-quote": "1.11.0",
+    "postcss-selector-parser": "7.1.6",
     "xcode": {
       "uuid": "11.1.1"
     }
