@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-03T17:51:54.648Z",
+  "generatedAt": "2026-10-06T22:54:04.053Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "c0b7fecf8e5e9aa9287f977ff42eb5e05acec1e8",
+  "gitSha": "bee6f172f923a1c0b8ac9b30d6bbaa18522ba924",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1186,8 +1186,8 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 46440,
-          "sha256": "4a5eb69abab809a5dad39d4ad6d72a0d15e13a32c9cb18ab318dd7bb1bad5dbd"
+          "bytes": 46480,
+          "sha256": "48d34159a44ddcd39877b85150938c80c276fe9ac1ccfc2564337cb07bc97dc5"
         },
         {
           "path": ".github/workflows/quality.yml",
@@ -2368,14 +2368,14 @@
         {
           "path": "apps/mobile/src/lib/offline/OfflineSync.tsx",
           "exists": true,
-          "bytes": 12107,
-          "sha256": "26dd7af6d4083ed8bf06a88bbc08887ea0a5d6b197600ed108cc81de4ce74af8"
+          "bytes": 12198,
+          "sha256": "195b824f021d91e8b27c36f796576744c1c7a6574d86a6b7995bcaf55412964c"
         },
         {
           "path": "apps/mobile/src/lib/offline/OfflineSync.test.ts",
           "exists": true,
-          "bytes": 22933,
-          "sha256": "37a321d29dff0aec1140d3060a417e0d928a8306774da039d0d3dc3b551664ad"
+          "bytes": 23183,
+          "sha256": "775fb0697009d27c4082d7b0970717d6266eedf252a13d3dce3e1cc4711aa5b4"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",

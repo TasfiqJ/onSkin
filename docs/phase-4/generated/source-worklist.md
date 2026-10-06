@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-03T17:51:54.648Z
+Generated: 2026-10-06T22:54:04.053Z
 Status: pass
-Git SHA: c0b7fecf8e5e9aa9287f977ff42eb5e05acec1e8
+Git SHA: bee6f172f923a1c0b8ac9b30d6bbaa18522ba924
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -326,7 +326,7 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 46440 bytes - sha256 `4a5eb69abab809a5dad39d4ad6d72a0d15e13a32c9cb18ab318dd7bb1bad5dbd`
+- `package.json` - 46480 bytes - sha256 `48d34159a44ddcd39877b85150938c80c276fe9ac1ccfc2564337cb07bc97dc5`
 - `.github/workflows/quality.yml` - 12553 bytes - sha256 `4e298803f8c77caef5489dd53cf017ebdea62f18a03548af5a0db92722827136`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45531 bytes - sha256 `92a0b946a5e431e787f95d0513289ef1938a8964b23272d329f5cb15395d2be9`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9406 bytes - sha256 `bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a`
@@ -552,8 +552,8 @@ Sources:
 - `apps/mobile/src/features/shelf/store.test.ts` - 57316 bytes - sha256 `b36dde3201cc2abedb699a9a9b16e572ad19f04142ea894ab757c548898bb650`
 - `apps/mobile/src/lib/offline/shelfMirrorQueue.ts` - 8443 bytes - sha256 `e03000a6c457814ce75e7ccd62375bc6fe4bd0681185a86885d8292e7a274f61`
 - `apps/mobile/src/lib/offline/shelfMirrorQueue.test.ts` - 11914 bytes - sha256 `994b92f546d3b3cdfafbab14a52a1ddbb82d4a4bd5d793fa9b14ce7ac6a52b38`
-- `apps/mobile/src/lib/offline/OfflineSync.tsx` - 12107 bytes - sha256 `26dd7af6d4083ed8bf06a88bbc08887ea0a5d6b197600ed108cc81de4ce74af8`
-- `apps/mobile/src/lib/offline/OfflineSync.test.ts` - 22933 bytes - sha256 `37a321d29dff0aec1140d3060a417e0d928a8306774da039d0d3dc3b551664ad`
+- `apps/mobile/src/lib/offline/OfflineSync.tsx` - 12198 bytes - sha256 `195b824f021d91e8b27c36f796576744c1c7a6574d86a6b7995bcaf55412964c`
+- `apps/mobile/src/lib/offline/OfflineSync.test.ts` - 23183 bytes - sha256 `775fb0697009d27c4082d7b0970717d6266eedf252a13d3dce3e1cc4711aa5b4`
 - `supabase/functions/catalog-lookup/index.ts` - 11843 bytes - sha256 `23e76d1ba0fd1e199be94986fb0e066e7e4cc6b64d04c642bdd1fb849c97b220`
 - `supabase/functions/catalog-lookup/catalogContract.ts` - 80 bytes - sha256 `9707c48c48465b279c2112d84a8a1459867c395490d3c184aaa4e6c2fbc7f81a`
 - `supabase/functions/catalog-lookup/catalogContract.test.ts` - 14681 bytes - sha256 `96ab5dd088984ce67115b993e84436205ebb1bfabee25ea2d60558e7eea85f46`
