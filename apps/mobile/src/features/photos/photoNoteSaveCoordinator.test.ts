@@ -128,4 +128,38 @@ describe('photo note save coordinator', () => {
     expect(listener).not.toHaveBeenCalled();
     expect(coordinator.getSnapshot()).toMatchObject({ persisted: 'owner A note', status: 'saved' });
   });
+
+  it('cancels an obsolete queued edit when the latest explicit intent returns to the in-flight text', async () => {
+    const pending = deferred<void>();
+    const commit = vi.fn<(note: string) => Promise<void>>().mockReturnValueOnce(pending.promise);
+    const coordinator = createPhotoNoteSaveCoordinator({ commit, initialNotes: '' });
+    coordinator.updateDraft('A');
+    const saving = coordinator.requestSave();
+    coordinator.updateDraft('B');
+    coordinator.requestSave();
+    coordinator.updateDraft('A');
+    coordinator.requestSave();
+    pending.resolve();
+    await saving;
+    expect(commit.mock.calls).toEqual([['A']]);
+    expect(coordinator.getSnapshot()).toEqual({ draft: 'A', persisted: 'A', status: 'saved' });
+  });
+
+  it('does not launch a queued write after failure and retries the newest draft instead', async () => {
+    const pending = deferred<void>();
+    const commit = vi.fn<(note: string) => Promise<void>>()
+      .mockReturnValueOnce(pending.promise).mockResolvedValueOnce(undefined);
+    const coordinator = createPhotoNoteSaveCoordinator({ commit, initialNotes: 'old' });
+    coordinator.updateDraft('A');
+    const saving = coordinator.requestSave();
+    coordinator.updateDraft('B'); coordinator.requestSave();
+    coordinator.updateDraft('C');
+    pending.reject(new Error('WRITE_FAILED'));
+    await saving;
+    expect(commit).toHaveBeenCalledTimes(1);
+    expect(coordinator.getSnapshot()).toEqual({ draft: 'C', persisted: 'old', status: 'error' });
+    await coordinator.requestSave();
+    expect(commit.mock.calls).toEqual([['A'], ['C']]);
+  });
+
 });

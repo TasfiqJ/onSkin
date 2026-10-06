@@ -858,12 +858,38 @@ export async function deleteCapturedPhotoSource(uri?: string | null): Promise<vo
 export async function quarantineEncryptedPhoto(
   uri: string | null | undefined,
   operationId: string,
+  guard?: Readonly<{ assertCurrent: () => void }>,
 ): Promise<QuarantinedPhotoFile | null> {
   if (!uri || !isEncryptedPhotoUri(uri)) return null;
+  if (ownedEncryptedPhotoUri(uri) !== uri) throw new Error('PHOTO_DELETE_PATH_INVALID');
   const quarantinedUri = `${uri}.pending-delete-${safePhotoShareId(operationId)}`;
-  return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
-    assertCurrent();
-    await FileSystem.moveAsync({ from: uri, to: quarantinedUri });
+  return runDestructiveAccountScopedPhotoOperation(async (assertAccountCurrent) => {
+    const assertCurrent = () => { assertAccountCurrent(); guard?.assertCurrent(); };
+    const inspect = async (path: string) => {
+      assertCurrent();
+      const info = await FileSystem.getInfoAsync(path);
+      assertCurrent();
+      if (info.exists !== true && info.exists !== false) throw new Error('PHOTO_DELETE_FILE_STATE_UNKNOWN');
+      return info.exists;
+    };
+    // An absent rendition is already clean for this requested deletion. A read
+    // error is NOT absence; preserve the journal/metadata for explicit recovery.
+    if (!(await inspect(uri))) {
+      return (await inspect(quarantinedUri)) ? { originalUri: uri, quarantinedUri } : null;
+    }
+    try {
+      assertCurrent();
+      await FileSystem.moveAsync({ from: uri, to: quarantinedUri });
+      assertCurrent();
+    } catch (error) {
+      assertCurrent();
+      // A move may commit before rejecting, or the file may disappear after
+      // inspection. Resolve only from successful source + destination reads.
+      const originalExists = await inspect(uri);
+      const quarantineExists = await inspect(quarantinedUri);
+      if (!originalExists) return quarantineExists ? { originalUri: uri, quarantinedUri } : null;
+      throw error;
+    }
     return { originalUri: uri, quarantinedUri };
   });
 }
@@ -901,6 +927,49 @@ export async function deleteQuarantinedPhoto(file: QuarantinedPhotoFile): Promis
   await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
     assertCurrent();
     await FileSystem.deleteAsync(file.quarantinedUri, { idempotent: true });
+  });
+}
+
+/** Finish or roll back the exact encrypted pair recorded before a delete.
+ * All paths stay inside photo storage. The caller's original authority is
+ * checked around every await, rather than borrowed from a later health lease. */
+export async function settlePhotoDeleteFiles(
+  uris: readonly string[],
+  operationId: string,
+  restore: boolean,
+  guard: Readonly<{ assertCurrent: () => void }>,
+): Promise<void> {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(operationId)) {
+    throw new Error('PHOTO_DELETE_ID_INVALID');
+  }
+  await runDestructiveAccountScopedPhotoOperation(async (assertAccountCurrent) => {
+    const assertCurrent = () => { assertAccountCurrent(); guard.assertCurrent(); };
+    for (const uri of new Set(uris)) {
+      assertCurrent();
+      if (ownedEncryptedPhotoUri(uri) !== uri) throw new Error('PHOTO_DELETE_PATH_INVALID');
+      const file = { originalUri: uri, quarantinedUri: `${uri}.pending-delete-${operationId}` };
+      if (restore) {
+        const original = await FileSystem.getInfoAsync(uri);
+        assertCurrent();
+        const quarantined = await FileSystem.getInfoAsync(file.quarantinedUri);
+        assertCurrent();
+        if (original.exists !== true && original.exists !== false) throw new Error('PHOTO_DELETE_FILE_STATE_UNKNOWN');
+        if (quarantined.exists !== true && quarantined.exists !== false) throw new Error('PHOTO_DELETE_FILE_STATE_UNKNOWN');
+        // A failed/interrupted delete cannot recreate bytes that were already
+        // absent. Successful reads proving both absent permit journal rollback;
+        // failed or uncertain reads above remain retryable, never reclassified.
+        if (!original.exists && !quarantined.exists) continue;
+        if (!original.exists) {
+          await restoreQuarantinedPhoto(file);
+          assertCurrent();
+        }
+      } else {
+        await FileSystem.deleteAsync(uri, { idempotent: true });
+        assertCurrent();
+      }
+      await FileSystem.deleteAsync(file.quarantinedUri, { idempotent: true });
+      assertCurrent();
+    }
   });
 }
 
@@ -1002,6 +1071,8 @@ export async function clearEncryptedPhotoStorage(): Promise<void> {
     clearPhotoDirectory(),
     AsyncStorage.removeItem(KEY_CREATION_MARKER),
     AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY),
+    // Both account erasure and health-purpose withdrawal call this boundary.
+    AsyncStorage.removeItem('layerwell.photos.deleteJournal.v1'),
   ];
   if (Platform.OS !== 'web') operations.push(SecureStore.deleteItemAsync(KEY_STORE_NAME));
   const results = await Promise.allSettled(operations);

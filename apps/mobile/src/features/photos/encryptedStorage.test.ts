@@ -12,6 +12,7 @@ import {
   HEALTH_PROCESSING_STATUS_LEASE_MS,
   setActiveHealthProcessingEpoch,
 } from '@/lib/consent/healthProcessingEpoch';
+import { captureHealthDataWriteLease, assertHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
 
 import {
@@ -38,6 +39,7 @@ import {
   recoverPhotoRenditionPublication,
   reconcileEncryptedPhotoStorage,
   restoreQuarantinedPhoto,
+  settlePhotoDeleteFiles,
   waitForEncryptedPhotoWritesToSettle,
 } from './encryptedStorage';
 
@@ -993,4 +995,83 @@ describe('encrypted photo storage', () => {
     expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
+
+  it('C-08B2 settles both original and thumbnail quarantine idempotently after committed deletion', async () => {
+    const operationId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const original = 'file://document/photos/v1/deleted.layerwellphoto';
+    const thumbnail = 'file://document/photos/v1/deleted-thumbnail.layerwellphoto';
+    for (const uri of [original, thumbnail]) mocks.files.set(`${uri}.pending-delete-${operationId}`, 'encrypted');
+    const lease = captureHealthDataWriteLease();
+    const guard = { assertCurrent: () => assertHealthDataWriteLease(lease) };
+    await settlePhotoDeleteFiles([original, thumbnail], operationId, false, guard);
+    await settlePhotoDeleteFiles([original, thumbnail], operationId, false, guard);
+    expect(mocks.files.size).toBe(0);
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('C-08B2 restores an interrupted pair without creating duplicate originals', async () => {
+    const operationId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const original = 'file://document/photos/v1/rollback.layerwellphoto';
+    const thumbnail = 'file://document/photos/v1/rollback-thumbnail.layerwellphoto';
+    mocks.files.set(`${original}.pending-delete-${operationId}`, 'encrypted original');
+    mocks.files.set(thumbnail, 'encrypted thumbnail');
+    mocks.getInfoAsync.mockImplementation(async (uri: string) => ({ exists: mocks.files.has(uri) }));
+    const lease = captureHealthDataWriteLease();
+    const guard = { assertCurrent: () => assertHealthDataWriteLease(lease) };
+    await settlePhotoDeleteFiles([original, thumbnail], operationId, true, guard);
+    await settlePhotoDeleteFiles([original, thumbnail], operationId, true, guard);
+    expect([...mocks.files.keys()].sort()).toEqual([original, thumbnail].sort());
+    expect(mocks.moveAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('C-08B2 propagates encrypted cleanup failure and finishes it on retry', async () => {
+    const operationId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const original = 'file://document/photos/v1/retry.layerwellphoto';
+    const quarantined = `${original}.pending-delete-${operationId}`;
+    mocks.files.set(quarantined, 'encrypted');
+    mocks.deleteAsync.mockRejectedValueOnce(new Error('FILESYSTEM_UNAVAILABLE'));
+    const lease = captureHealthDataWriteLease();
+    const guard = { assertCurrent: () => assertHealthDataWriteLease(lease) };
+    await expect(settlePhotoDeleteFiles([original], operationId, false, guard)).rejects.toThrow('FILESYSTEM_UNAVAILABLE');
+    expect(mocks.files.has(quarantined)).toBe(true);
+    await settlePhotoDeleteFiles([original], operationId, false, guard);
+    expect(mocks.files.has(quarantined)).toBe(false);
+  });
+
+  it('C-08B2 rejects a foreign-path or noncanonical delete identity before destructive I/O', async () => {
+    const operationId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const lease = captureHealthDataWriteLease();
+    const guard = { assertCurrent: () => assertHealthDataWriteLease(lease) };
+    await expect(settlePhotoDeleteFiles(['file://document/not-photos/private.layerwellphoto'], operationId, false, guard))
+      .rejects.toThrow('PHOTO_DELETE_PATH_INVALID');
+    await expect(settlePhotoDeleteFiles(['file://document/photos/v1/a.layerwellphoto'], '../escape', false, guard))
+      .rejects.toThrow('PHOTO_DELETE_ID_INVALID');
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('C-08B2 stops between pair files when the accepted health lease closes and is regranted', async () => {
+    const operationId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const original = 'file://document/photos/v1/authority.layerwellphoto';
+    const thumbnail = 'file://document/photos/v1/authority-thumbnail.layerwellphoto';
+    mocks.files.set(original, 'encrypted original'); mocks.files.set(thumbnail, 'encrypted thumbnail');
+    const lease = captureHealthDataWriteLease();
+    const guard = { assertCurrent: () => assertHealthDataWriteLease(lease) };
+    mocks.deleteAsync.mockImplementationOnce(async (uri: string) => {
+      mocks.files.delete(uri);
+      clearActiveHealthProcessingEpoch();
+      setActiveHealthProcessingEpoch(1, { ownerUserId: lease.ownerUserId, accountGeneration: lease.accountGeneration });
+    });
+    await expect(settlePhotoDeleteFiles([original, thumbnail], operationId, false, guard))
+      .rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.files.has(thumbnail)).toBe(true);
+    expect(mocks.deleteAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('C-08B2 erases the encrypted delete journal through the shared account/health photo cleanup boundary', async () => {
+    mocks.asyncStorage.set('layerwell.photos.deleteJournal.v1', 'encrypted delete journal');
+    await clearEncryptedPhotoStorage();
+    expect(mocks.asyncStorage.has('layerwell.photos.deleteJournal.v1')).toBe(false);
+  });
+
 });

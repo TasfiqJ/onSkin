@@ -19,6 +19,7 @@ type LocalExportSpec = {
   key: Exclude<
     LocalPrivateDataKey,
     | 'layerwell.photos.v1'
+    | 'layerwell.photos.deleteJournal.v1'
     | 'layerwell.widgetActionMap.v1'
     | 'layerwell.widgetActionMap.v2'
     | 'layerwell.widgetOwnerAuthority.v1'
@@ -31,6 +32,8 @@ const PHOTO_RECORDS_KEY = 'layerwell.photos.v1' as const;
 
 /** Ephemeral security capabilities are accounted for but never read into an export. */
 export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
+  // Internal delete recovery paths and authenticated tombstone identity are not an export payload.
+  'layerwell.photos.deleteJournal.v1',
   'layerwell.widgetActionMap.v1',
   'layerwell.widgetActionMap.v2',
   'layerwell.widgetOwnerAuthority.v1',

@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   clearCache: vi.fn(async () => {}),
   clearNativeWidgets: vi.fn(async () => {}),
   clearPhotos: vi.fn(async () => {}),
+  clearPhotoDeleteCleanup: vi.fn(async (_owner: string) => {}),
   clearQueries: vi.fn(),
   endAccount: vi.fn(),
   endPhoto: vi.fn(),
@@ -28,6 +29,7 @@ const mocks = vi.hoisted(() => ({
   runAccountGenerationOperation: vi.fn(),
 }));
 
+vi.mock('@/features/photos/photoDeleteRemoteCleanup', () => ({ erasePhotoDeleteRemoteCleanupForOwner: mocks.clearPhotoDeleteCleanup }));
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: { multiRemove: mocks.multiRemove },
 }));
@@ -106,6 +108,7 @@ describe('health-purpose local cleanup', () => {
       expect.arrayContaining(['layerwell.widgetActionMap.v1', 'layerwell.widgetActionMap.v2']),
     );
     expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    expect(mocks.clearPhotoDeleteCleanup).toHaveBeenCalledWith('owner-a');
     expect(mocks.clearNativeWidgets).toHaveBeenCalledOnce();
     expect(mocks.purgeImages).toHaveBeenCalledOnce();
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
@@ -212,4 +215,13 @@ describe('health-purpose local cleanup', () => {
     expect(mocks.beginAccount).not.toHaveBeenCalled();
     expect(mocks.multiRemove).not.toHaveBeenCalled();
   });
+  it('keeps withdrawal incomplete when its owner-scoped remote obligation cannot be erased', async () => {
+    mocks.clearPhotoDeleteCleanup.mockRejectedValueOnce(new Error('CLEANUP_VAULT_UNAVAILABLE'));
+    await expect(clearHealthPurposeLocalData('owner-a')).rejects.toThrow('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');
+    expect(mocks.clearPhotoDeleteCleanup).toHaveBeenCalledWith('owner-a');
+    expect(mocks.multiRemove).toHaveBeenCalledOnce();
+    expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    await expect(clearHealthPurposeLocalData('owner-a')).resolves.toBeUndefined();
+  });
+
 });

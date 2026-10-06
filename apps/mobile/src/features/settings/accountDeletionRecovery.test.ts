@@ -53,6 +53,7 @@ const mocks = vi.hoisted(() => ({
   cancelQueries: vi.fn(),
   cancelScheduledNotifications: vi.fn(),
   clearCompletedAccountDeletionState: vi.fn(),
+  clearPhotoDeleteCleanup: vi.fn(async (_binding: string) => undefined),
   clearDependentConsentWithdrawalTombstonesByOwnerBinding: vi.fn(),
   clearPendingHealthWithdrawalIntentByOwnerBinding: vi.fn(),
   clearAccountIsolatedState: vi.fn(),
@@ -75,6 +76,7 @@ const mocks = vi.hoisted(() => ({
   signOut: vi.fn(),
 }));
 
+vi.mock('@/features/photos/photoDeleteRemoteCleanup', () => ({ erasePhotoDeleteRemoteCleanupForBinding: mocks.clearPhotoDeleteCleanup }));
 vi.mock('expo-notifications', () => ({
   cancelAllScheduledNotificationsAsync: mocks.cancelScheduledNotifications,
   cancelScheduledNotificationAsync: vi.fn(async () => undefined),
@@ -1087,6 +1089,16 @@ describe('account-deletion local terminal commit', () => {
       ),
     ).resolves.toBe('cleared');
     expect(order).toEqual(['derived', 'store-safety', 'session', 'local', 'capability']);
+  });
+
+  it('retires the minimal photo cleanup only for the terminal owner and retains completion proof on erase failure', async () => {
+    mocks.clearPhotoDeleteCleanup.mockRejectedValueOnce(new Error('PHOTO_CLEANUP_ERASE_FAILED'));
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).rejects.toThrow('PHOTO_CLEANUP_ERASE_FAILED');
+    expect(mocks.clearPhotoDeleteCleanup).toHaveBeenCalledWith(completed.ownerBinding);
+    expect(mocks.clearCompletedAccountDeletionState).not.toHaveBeenCalled();
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).resolves.toBe('cleared');
+    expect(mocks.clearPhotoDeleteCleanup).toHaveBeenCalledTimes(2);
+    expect(mocks.clearCompletedAccountDeletionState).toHaveBeenCalledOnce();
   });
 
   it('clears only the terminally deleted owner withdrawal journal', async () => {

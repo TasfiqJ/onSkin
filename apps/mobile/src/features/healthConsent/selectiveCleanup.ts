@@ -92,6 +92,12 @@ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<
     await attempt(resetAnalyticsIdentity);
     await attempt(scavengePlaintextStaging);
     await attempt(clearGeneratedPrivateCacheFiles);
+    // Withdrawal's server operation independently erases the owner's photos.
+    // Retire only that owner's minimal sign-out-surviving cleanup obligations.
+    await attempt(async () => {
+      const { erasePhotoDeleteRemoteCleanupForOwner } = await import('@/features/photos/photoDeleteRemoteCleanup');
+      await erasePhotoDeleteRemoteCleanupForOwner(ownerUserId);
+    });
     await attempt(() => AsyncStorage.multiRemove([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]));
     await attempt(clearEncryptedPhotoStorage);
     await attempt(() =>

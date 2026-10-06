@@ -29,6 +29,7 @@ export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
   'layerwell.photos.captureConsent',
   'layerwell.photos.captureConsent.v1',
   'layerwell.photos.cloudBackup',
+  'layerwell.photos.deleteJournal.v1',
   'layerwell.photos.v1',
   'layerwell.ramp.v1',
   'layerwell.recDismissed.v1',

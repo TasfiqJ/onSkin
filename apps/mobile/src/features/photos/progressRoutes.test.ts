@@ -46,7 +46,10 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('const { height } = useWindowDimensions();');
     expect(source).toContain('const compactFirstRun = height < 520;');
     expect(source).toContain("contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}");
-    expect(source).toContain('<FirstRun compact={compactFirstRun} />');
+    expect(source).toContain('const compactEmptyFirstRun = height < 700;');
+    expect(source).toContain('<FirstRun compact={compactEmptyFirstRun} />');
+    expect(source).toContain('<TimelineView compact={compactFirstRun} data={data} header={header} />');
+    expect(source).not.toContain('<FirstRun compact={compactFirstRun} />');
     expect(source).toContain("compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'");
     expect(source).toContain("compact ? 'mb-2 p-3' : 'mb-5'");
     expect(source).toContain('fontSize: compact ? 22 : 26');
@@ -119,19 +122,21 @@ describe('Progress route mobile contracts', () => {
       );
       expect(source).toContain('<PhotoStorageGate');
       expect(source).toContain('</PhotoStorageGate>');
-      expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
-        source.indexOf('<PhotoStorageGate'),
-      );
+      if (source.includes('function PhotoDetailSession')) {
+        // The mutation session survives storage-gate refresh but remains below
+        // the existing lock. Rendered C-08B2 tests exercise this composition.
+        expect(source).toMatch(/<PhotoTimelineLockGate>\s*<PhotoDetailAuthorityBoundary \/>\s*<\/PhotoTimelineLockGate>/);
+        expect(source).toMatch(/<PhotoStorageGate[^\n]*>\s*<PhotoDetailScreenContent session=\{session\} \/>\s*<\/PhotoStorageGate>/);
+      } else {
+        expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(source.indexOf('<PhotoStorageGate'));
+      }
     }
     expect(routeSources[0]).toContain('<PhotoStorageGate tone="paper">');
     expect(routeSources[1]).toContain(
       '<PhotoStorageGate onExit={captureBoundary.requestProgressExit}>',
     );
-    for (const source of routeSources.slice(2)) {
-      expect(source).toContain(
-        '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
-      );
-    }
+    expect(routeSources[2]).toContain('<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>');
+    expect(routeSources[3]).toContain("<PhotoStorageGate onExit={() => requestExit({ kind: 'back' })}>");
     expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
 
     expect(storageGate).toContain("const source = usePhotos('front');");
@@ -165,7 +170,7 @@ describe('Progress route mobile contracts', () => {
     expect(routeSources[0]).toContain('if (!data) return null;');
     expect(routeSources[0]).toContain('const count = data.count;');
     expect(routeSources[0]).not.toContain('data?.count ?? 0');
-    expect(routeSources[3]).toContain("const { data } = usePhotos('front');");
+    expect(routeSources[3]).toContain("const { data, isSourceCurrent } = usePhotos('front');");
     const detailUnavailableGuard = routeSources[3].indexOf('if (!data) return null;');
     const detailMissingGuard = routeSources[3].indexOf('if (!photo) {');
     expect(detailUnavailableGuard).toBeGreaterThan(-1);
@@ -188,7 +193,7 @@ describe('Progress route mobile contracts', () => {
     const copy = readSource('features/photos/copy.ts');
 
     expect(copy).toContain("missingEyebrow: 'Photo unavailable'");
-    expect(copy).toContain("missingTitle: 'This photo is no longer on this phone.'");
+    expect(copy).toContain("missingTitle: 'This photo is no longer in your timeline.'");
     expect(copy).toContain("missingCapture: 'Take a new photo'");
     expect(copy).toContain("missingBack: 'Back to Progress'");
     expect(source).toContain('useWindowDimensions');
@@ -419,7 +424,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(
       'const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;',
     );
-    expect(source).toContain('const actionFeedback = deleteFeedback ?? shareFeedback;');
+    expect(source).toContain('const actionFeedback = deleteFeedback ?? session.referenceFeedback ?? shareFeedback;');
     expect(source).toContain('function nudgeActionFeedbackIntoView()');
     expect(source).toContain(
       'scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) })',
@@ -442,15 +447,18 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE === '1'");
     expect(source).toContain('setDeleteConfirmVisible(true);');
     expect(source).toContain('async function deleteCurrentPhoto()');
-    expect(source).toContain('await remove.mutateAsync(id);');
+    expect(source).toContain('await actions.remove.mutateAsync(id);');
+    expect(source).toContain('usePreventRemove(removalBlocked,');
+    expect(source).toContain('setDeleteFeedback(PHOTO_COPY.detail.deleteCleanupPending);');
     expect(source).toContain('setDeleteFeedback(PHOTO_COPY.detail.deleteUnavailable);');
+    expect(source).toContain('if (!localAttemptSettled.current)');
     expect(source).toContain('nudgeActionFeedbackIntoView();');
     expect(source).toContain('{PHOTO_COPY.detail.shareTitle}');
     expect(source).toContain('{PHOTO_COPY.detail.shareBody}');
     expect(source).toContain('{PHOTO_COPY.detail.deleteTitle}');
     expect(source).toContain('{PHOTO_COPY.detail.deleteBody}');
-    expect(source).toContain("remove.isPending ? 'Deleting...' : PHOTO_COPY.detail.deleteConfirm");
-    expect(source).toContain('accessibilityState={{ disabled: remove.isPending }}');
+    expect(source).toContain("session.deleting ? 'Deleting...' : PHOTO_COPY.detail.deleteConfirm");
+    expect(source).toContain('accessibilityState={{ disabled: session.deleting }}');
     expect(source).toContain('onPress={() => void shareCurrentPhoto()}');
     expect(source).toContain('onPress={() => void deleteCurrentPhoto()}');
     expect(source).toContain('{!shareConfirmVisible && !deleteConfirmVisible ? (');
@@ -461,7 +469,7 @@ describe('Progress route mobile contracts', () => {
     expect(copy).toContain('deleteBody: "It\'s removed from your phone. This can\'t be undone."');
     expect(copy).toContain("deleteConfirm: 'Delete photo'");
     expect(copy).toContain(
-      'deleteUnavailable:\n      "We couldn\'t delete this photo right now. It stays on this phone unless you try again.",',
+      'deleteUnavailable:\n      "We couldn\'t confirm deletion finished. Try again to check and finish it safely.",',
     );
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('Alert.alert(PHOTO_COPY.detail.shareTitle');

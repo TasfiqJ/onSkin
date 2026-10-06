@@ -207,6 +207,10 @@ function isPrivateKVOwnedKey(key: string): boolean {
 }
 
 function isKnownForeignStorageKey(key: string): boolean {
+  // Photo privacy-cleanup obligations use their own LargeSecureStore key and
+  // authenticated envelope. They are not ordinary health/private-KV data and
+  // must neither decrypt under this key nor poison startup after sign-out.
+  if (/^layerwell\.photoDeleteCleanup\.v1\.[a-f0-9]{64}$/.test(key)) return true;
   return /^sb-[a-z0-9][a-z0-9-]*-auth-token(?:-code-verifier)?$/i.test(key);
 }
 

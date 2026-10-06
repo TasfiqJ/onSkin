@@ -4,13 +4,36 @@ import type { PhotoSeries, TimeOfDay } from '@layerwell/types';
 import { PHOTO_SERIES } from '@layerwell/types';
 
 import { supabase } from '@/lib/supabase/client';
+import {
+  captureHealthDataWriteLease,
+  assertHealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import {
+  isRemotePhotoDeleteId,
+  readPhotoDeleteJournal,
+  writePhotoDeleteJournal,
+  photoDeleteReplayPayload,
+  MAX_PHOTO_DELETE_COMMANDS,
+  PHOTO_DELETE_JOURNAL_FULL,
+  type PhotoDeleteCommand,
+} from './photoDeleteJournal';
+import { runPhotoDeleteRetrySingleFlight, type PhotoDeleteRetryPromiseRef } from './photoDeleteRetrySingleFlight';
+import {
+  capturePhotoDeleteReplayAuthority,
+  PhotoDeleteReplayRetiredError,
+  readPhotoDeleteRemoteObligations,
+  reservePhotoDeleteRemoteObligation,
+  settlePhotoDeleteRemoteObligation,
+  erasePhotoDeleteRemoteCleanupForBinding,
+} from './photoDeleteRemoteCleanup';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { readLocalDataOwnerProofBinding } from '@/lib/auth/sessionOwner';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
   runHealthDataWriteOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
-import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
+import { activeHealthProcessingOwnerUserId, subscribeActiveHealthProcessingLeaseChanges } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { assertProgressCaptureAuthorityCurrent } from './progressCaptureAuthority';
@@ -22,7 +45,6 @@ import {
   canonicalPhotoRenditionUri,
   clearEncryptedPhotoStorage,
   deleteCapturedPhotoSource,
-  deleteQuarantinedPhoto,
   encryptPhotoRendition,
   encryptPhotoNote,
   isEncryptedPhotoUri,
@@ -31,9 +53,8 @@ import {
   quarantineEncryptedPhoto,
   reconcileEncryptedPhotoStorage,
   recoverPhotoRenditionPublication,
-  restoreQuarantinedPhoto,
   settlePhotoRenditionPublication,
-  type QuarantinedPhotoFile,
+  settlePhotoDeleteFiles,
 } from './encryptedStorage';
 import { createEncryptedPhotoThumbnail } from './photoThumbnail';
 import type { PhotoMeta, PhotoQualitySource } from './timeline';
@@ -48,6 +69,7 @@ const KEY = 'layerwell.photos.v1';
 const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
 const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 export const PHOTO_METADATA_INVALID = 'PHOTO_METADATA_INVALID';
+export const PHOTO_NOT_FOUND = 'PHOTO_NOT_FOUND';
 export const PHOTO_CAPTURE_SESSION_INVALID = 'PHOTO_CAPTURE_SESSION_INVALID';
 export const PHOTO_CAPTURE_SESSION_CONFLICT = 'PHOTO_CAPTURE_SESSION_CONFLICT';
 export const PHOTO_CAPTURE_SESSION_DUPLICATE = 'PHOTO_CAPTURE_SESSION_DUPLICATE';
@@ -301,11 +323,13 @@ async function normalizeStoredRecords(
   return items;
 }
 
-async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoRecord[]> {
+async function loadPhotosUnlocked(guard: HealthDataWriteOperationLease): Promise<PhotoRecord[]> {
   guard.assertCurrent();
   const raw = await getPrivateItem(KEY);
   guard.assertCurrent();
   if (raw === null) {
+    await recoverPhotoDeletesUnlocked([], guard);
+    guard.assertCurrent();
     await recoverPhotoRenditionPublication(new Set());
     guard.assertCurrent();
     guard.assertCurrent();
@@ -323,6 +347,8 @@ async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoReco
   const normalized = await normalizeStoredRecords(parsed, guard);
   guard.assertCurrent();
   if (!normalized) throw new Error(PHOTO_METADATA_INVALID);
+  await recoverPhotoDeletesUnlocked(normalized, guard);
+  guard.assertCurrent();
   await reconcileEncryptedPhotoStorage(
     normalized.flatMap((photo) =>
       [photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri].filter(
@@ -340,6 +366,201 @@ export async function loadPhotos(): Promise<PhotoRecord[]> {
   return runPhotoStoreMutation(loadPhotosUnlocked);
 }
 
+export type PhotoDeleteStatus = Readonly<{
+  localPending: number;
+  remotePending: number;
+  needsAttention: boolean;
+}>;
+
+export type RemovePhotoOutcome = Readonly<{
+  localDeleted: true;
+  cleanupPending: boolean;
+  remotePending: boolean;
+}>;
+
+/** Only called while holding the existing photo mutation queue. A prepared
+ * command plus a still-present metadata row rolls back. An absent row is the
+ * durable commit point, even if the original write acknowledgement was lost. */
+async function recoverPhotoDeletesUnlocked(
+  items: PhotoRecord[],
+  lease: HealthDataWriteOperationLease,
+): Promise<void> {
+  let commands = await readPhotoDeleteJournal(lease);
+  for (const original of [...commands]) {
+    lease.assertCurrent();
+    const present = items.some((photo) => photo.id === original.photoId);
+    if (present && original.phase === 'metadata_committed') {
+      throw new Error('PHOTO_DELETE_JOURNAL_INCONSISTENT');
+    }
+    if (present) {
+      await settlePhotoDeleteFiles(original.files, original.operationId, true, lease);
+      lease.assertCurrent();
+      if (original.remotePending) await settlePhotoDeleteRemoteObligation(original.operationId, 'remove', lease);
+      commands = commands.filter((command) => command.operationId !== original.operationId);
+      await writePhotoDeleteJournal(commands, lease);
+      continue;
+    }
+    if (original.remotePending) {
+      // Also admits pre-R3 pending journals without discarding their remote intent.
+      await reservePhotoDeleteRemoteObligation(original, lease, true);
+    }
+    let command: PhotoDeleteCommand = { ...original, phase: 'metadata_committed' };
+    if (original.phase !== command.phase) {
+      commands = commands.map((entry) => entry.operationId === command.operationId ? command : entry);
+      await writePhotoDeleteJournal(commands, lease);
+    }
+    try {
+      await settlePhotoDeleteFiles(command.files, command.operationId, false, lease);
+      lease.assertCurrent();
+      command = { ...command, files: [] };
+    } catch {
+      // The metadata deletion already committed. Keep exact encrypted paths
+      // for explicit/foreground retry, without restoring or hiding the failure.
+      lease.assertCurrent();
+    }
+    const remaining = command.remotePending || command.files.length > 0;
+    const next = commands.flatMap((entry) => entry.operationId === command.operationId
+      ? remaining ? [command] : [] : [entry]);
+    if (JSON.stringify(next) !== JSON.stringify(commands)) {
+      await writePhotoDeleteJournal(next, lease);
+      commands = next;
+    }
+  }
+}
+
+export function getPhotoDeleteStatus(): Promise<PhotoDeleteStatus> {
+  return runPhotoStoreMutation(async (lease) => {
+    const commands = await readPhotoDeleteJournal(lease);
+    const obligations = await readPhotoDeleteRemoteObligations(lease);
+    const remoteIds = new Set([
+      ...commands.filter(command => command.remotePending).map(command => command.operationId),
+      ...obligations.map(operation => operation.operationId),
+    ]);
+    return {
+      localPending: commands.filter((command) => command.phase === 'prepared' || command.files.length > 0).length +
+        obligations.filter(operation => operation.phase === 'reserved' && !commands.some(command => command.operationId === operation.operationId)).length,
+      remotePending: remoteIds.size,
+      needsAttention: commands.some((command) => command.needsAttention) || obligations.some(operation => operation.needsAttention),
+    };
+  });
+}
+
+let replayFlight: { key: string; ref: PhotoDeleteRetryPromiseRef; isCurrent?: () => boolean } | null = null;
+
+/** Replays only metadata tombstones accepted under the authenticated owner.
+ * The network await never holds the local photo queue. Retry preserves the same
+ * operation UUID through offline failures, response loss, and process restart. */
+export function retryPhotoDeletes(authenticatedOwnerUserId: string | null, manual = true): Promise<void> {
+  let captured;
+  try { captured = captureHealthDataWriteLease(); } catch (error) { return Promise.reject(error); }
+  const key = JSON.stringify([captured.ownerUserId, captured.generation, captured.epoch, captured.accountGeneration]);
+  if (replayFlight?.key !== key || replayFlight.isCurrent?.() === false) {
+    replayFlight = { key, ref: { current: null } };
+  }
+  const flight = replayFlight;
+  return runPhotoDeleteRetrySingleFlight(flight.ref, () => runCurrentHealthDataOperation(async (healthLease) => {
+    assertHealthDataWriteLease(captured);
+    const batch = await capturePhotoDeleteReplayAuthority(healthLease);
+    flight.isCurrent = batch.isCurrent;
+    // Preserve the exact account/health lease and add this batch's retirement
+    // check to every existing queue/read/write guard, including late settlement.
+    const lease: HealthDataWriteOperationLease = { ...healthLease, assertCurrent: batch.assertCurrent };
+    lease.assertCurrent();
+    const commands = await queuePhotoStoreMutation(lease, async () => {
+      const journal = await readPhotoDeleteJournal(lease);
+      const saved = authenticatedOwnerUserId === lease.ownerUserId
+        ? await readPhotoDeleteRemoteObligations(lease) : [];
+      if (journal.length === 0 && saved.length === 0) return [];
+      const items = await loadPhotosUnlocked(lease);
+      const obligations = await readPhotoDeleteRemoteObligations(lease);
+      const ready = [];
+      for (const obligation of obligations) {
+        if (items.some(photo => photo.id === obligation.photoId)) {
+          // Reservation/crash before local commit: an authoritative remaining
+          // row means this deletion never committed. Cancel, do not dispatch.
+          await settlePhotoDeleteRemoteObligation(obligation.operationId, 'remove', lease);
+        } else {
+          await reservePhotoDeleteRemoteObligation(obligation, lease, true);
+          ready.push(obligation);
+        }
+      }
+      return ready;
+    });
+    lease.assertCurrent();
+    if (authenticatedOwnerUserId === null) return;
+    if (authenticatedOwnerUserId !== lease.ownerUserId) throw new Error('PHOTO_DELETE_OWNER_MISMATCH');
+    for (const command of commands) {
+      lease.assertCurrent();
+      // A copied batch is not durable dispatch authority. Verify exact current
+      // membership/phase, then fence the await-to-invocation gap synchronously.
+      const live = (await readPhotoDeleteRemoteObligations(lease)).find(operation =>
+        operation.operationId === command.operationId && operation.photoId === command.photoId &&
+        operation.phase === 'committed');
+      lease.assertCurrent();
+      if (!live || (live.needsAttention && !manual)) continue;
+      // Deletion is a privacy-reducing RPC, not a new global health admission
+      // lane. Link dispatch cancellation to this exact existing health lease.
+      const controller = new AbortController();
+      const abort = () => controller.abort();
+      const unsubscribeRetirement = batch.subscribeRetirement(abort);
+      const unsubscribe = subscribeActiveHealthProcessingLeaseChanges(() => {
+        try { lease.assertCurrent(); } catch { abort(); }
+      });
+      lease.signal.addEventListener('abort', abort, { once: true });
+      const timeout = setTimeout(abort, 15_000);
+      let response;
+      try {
+        lease.assertCurrent();
+        response = await supabase.rpc('apply_photo_delete_outbox_batch', {
+          p_operations: [photoDeleteReplayPayload({
+            ...command, ownerUserId: lease.ownerUserId, epoch: lease.epoch,
+            phase: 'metadata_committed', remotePending: true, files: [],
+          })],
+        }).abortSignal(controller.signal);
+      } catch (error) {
+        // A late network failure belongs to the retired batch too, not to a
+        // fresh same-owner grant that happens to retain the base-health lease.
+        lease.assertCurrent();
+        throw error;
+      } finally {
+        clearTimeout(timeout);
+        unsubscribe();
+        unsubscribeRetirement();
+        lease.signal.removeEventListener('abort', abort);
+      }
+      const { data, error } = response;
+      lease.assertCurrent();
+      if (error) throw new Error('PHOTO_DELETE_REMOTE_UNAVAILABLE');
+      const result: unknown = data;
+      if (!Array.isArray(result) || result.length !== 1 || !isRecord(result[0]) ||
+          Object.keys(result[0]).sort().join(',') !== 'error_class,operation_id,status' ||
+          result[0].operation_id !== command.operationId ||
+          !['applied', 'duplicate', 'permanent'].includes(String(result[0].status)) ||
+          (result[0].status !== 'permanent' && result[0].error_class !== null)) {
+        throw new Error('PHOTO_DELETE_REMOTE_RESULT_INVALID');
+      }
+      const terminal = result[0].status === 'applied' || result[0].status === 'duplicate';
+      await queuePhotoStoreMutation(lease, async () => {
+        const current = await readPhotoDeleteJournal(lease);
+        lease.assertCurrent();
+        const next = current.flatMap((entry) => {
+          if (entry.operationId !== command.operationId) return [entry];
+          if (terminal && entry.files.length === 0) return [];
+          return [{ ...entry, remotePending: !terminal, needsAttention: !terminal }];
+        });
+        if (JSON.stringify(next) !== JSON.stringify(current)) await writePhotoDeleteJournal(next, lease);
+        // A durable local acknowledgement precedes vault removal. Response loss
+        // or a failed write retains the same operation for idempotent replay.
+        await settlePhotoDeleteRemoteObligation(command.operationId, terminal ? 'remove' : 'attention', lease);
+      });
+    }
+  }).catch(error => {
+    // Purpose cleanup superseded this work. It is not a successful remote
+    // acknowledgement, and it must not publish an error into a successor era.
+    if (!(error instanceof PhotoDeleteReplayRetiredError)) throw error;
+  }));
+}
+
 async function persist(items: PhotoRecord[], guard: PhotoOperationGuard): Promise<void> {
   guard.assertCurrent();
   const stored: StoredPhotoRecord[] = await Promise.all(
@@ -355,57 +576,17 @@ async function persist(items: PhotoRecord[], guard: PhotoOperationGuard): Promis
 }
 
 async function quarantinePhotoFiles(
-  uris: (string | null | undefined)[],
+  uris: readonly string[],
   operationId: string,
   guard: PhotoOperationGuard,
-): Promise<QuarantinedPhotoFile[]> {
-  const quarantined: QuarantinedPhotoFile[] = [];
-  try {
-    for (const uri of new Set(uris.filter((value): value is string => Boolean(value)))) {
-      guard.assertCurrent();
-      const file = await quarantineEncryptedPhoto(uri, operationId);
-      guard.assertCurrent();
-      if (file) quarantined.push(file);
-    }
-    return quarantined;
-  } catch (error) {
-    try {
-      guard.assertCurrent();
-    } catch (authorityError) {
-      // Withdrawal/account cleanup owns the bytes now. Finish deleting any
-      // already-quarantined envelopes; never restore health data into a new lease.
-      await finishQuarantinedFiles(quarantined);
-      throw authorityError;
-    }
-    const restored = await Promise.allSettled(
-      [...quarantined].reverse().map((file) => restoreQuarantinedPhoto(file)),
-    );
-    try {
-      guard.assertCurrent();
-    } catch (authorityError) {
-      await finishQuarantinedFiles(quarantined);
-      throw authorityError;
-    }
-    if (restored.some((result) => result.status === 'rejected')) {
-      throw new Error('PHOTO_DELETE_ROLLBACK_FAILED');
-    }
-    throw error;
+): Promise<void> {
+  for (const uri of new Set(uris)) {
+    guard.assertCurrent();
+    await quarantineEncryptedPhoto(uri, operationId, guard);
+    guard.assertCurrent();
   }
-}
-
-async function restoreQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<void> {
-  const restored = await Promise.allSettled(
-    [...files].reverse().map((file) => restoreQuarantinedPhoto(file)),
-  );
-  if (restored.some((result) => result.status === 'rejected')) {
-    throw new Error('PHOTO_DELETE_ROLLBACK_FAILED');
-  }
-}
-
-async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<void> {
-  const results = await Promise.allSettled(files.map((file) => deleteQuarantinedPhoto(file)));
-  const failures = results.filter((result) => result.status === 'rejected');
-  if (failures.length > 0) throw new Error(`PHOTO_DELETE_SETTLEMENT_REQUIRED:${failures.length}`);
+  // The durable delete journal, not a newly captured lease, owns rollback.
+  // In particular, no cleanup or restoration runs after authority is lost.
 }
 
 function captureReplayMatches(existing: PhotoRecord, input: NewPhoto): boolean {
@@ -596,6 +777,7 @@ export async function updatePhoto(
   await runPhotoStoreMutation(async (lease) => {
     const items = await loadPhotosUnlocked(lease);
     lease.assertCurrent();
+    if (!items.some((photo) => photo.id === id)) throw new Error(PHOTO_NOT_FOUND);
     await persist(
       items.map((p) => (p.id === id ? { ...p, ...patch } : p)),
       lease,
@@ -603,53 +785,56 @@ export async function updatePhoto(
   });
 }
 
-export async function removePhoto(id: string): Promise<void> {
-  await runPhotoStoreMutation(async (lease) => {
+export async function removePhoto(
+  id: string,
+  authenticatedOwnerUserId: string | null = null,
+): Promise<RemovePhotoOutcome> {
+  return runPhotoStoreMutation(async (lease) => {
+    if (authenticatedOwnerUserId !== null && authenticatedOwnerUserId !== lease.ownerUserId) {
+      throw new Error('PHOTO_DELETE_OWNER_MISMATCH');
+    }
     const items = await loadPhotosUnlocked(lease);
-    const target = items.find((p) => p.id === id);
-    if (!target) return;
-    lease.assertCurrent();
-    const quarantined = await quarantinePhotoFiles(
-      [target.encryptedLocalUri ?? target.localUri, target.thumbnailLocalUri],
-      `delete-${id}-${randomUUID()}`,
-      lease,
-    );
-    try {
-      await persist(
-        items.filter((p) => p.id !== id),
-        lease,
-      );
-    } catch (error) {
+    const target = items.find((photo) => photo.id === id);
+    if (target) {
+      const commands = await readPhotoDeleteJournal(lease);
+      if (commands.length >= MAX_PHOTO_DELETE_COMMANDS) throw new Error(PHOTO_DELETE_JOURNAL_FULL);
+      const command: PhotoDeleteCommand = {
+        operationId: randomUUID(),
+        photoId: id,
+        ownerUserId: lease.ownerUserId,
+        epoch: lease.epoch,
+        phase: 'prepared',
+        remotePending: authenticatedOwnerUserId !== null && isRemotePhotoDeleteId(id),
+        needsAttention: false,
+        files: [...new Set([target.encryptedLocalUri ?? target.localUri, target.thumbnailLocalUri]
+          .filter((uri): uri is string => Boolean(uri && isEncryptedPhotoUri(uri))))],
+      };
+      // Reserve the minimal independent obligation first: sign-out may erase
+      // the health journal but must never orphan a committed remote deletion.
+      if (command.remotePending) await reservePhotoDeleteRemoteObligation(command, lease);
+      // Atomic durable recovery + remote intent precedes every file move.
+      await writePhotoDeleteJournal([...commands, command], lease);
       try {
+        await quarantinePhotoFiles([...command.files], command.operationId, lease);
+        await persist(items.filter((photo) => photo.id !== id), lease);
+      } catch (error) {
         lease.assertCurrent();
-      } catch (authorityError) {
-        await finishQuarantinedFiles(quarantined);
-        throw authorityError;
-      }
-      try {
-        await restoreQuarantinedFiles(quarantined);
+        // Never restore based on an exception alone: storage may have committed
+        // before rejecting. Read the protected metadata commit point first.
+        const raw = await getPrivateItem(KEY);
         lease.assertCurrent();
-      } catch (restoreError) {
-        try {
-          lease.assertCurrent();
-        } catch (authorityError) {
-          await finishQuarantinedFiles(quarantined);
-          throw authorityError;
-        }
-        throw restoreError;
+        let parsed: unknown;
+        try { parsed = raw === null ? [] : JSON.parse(raw) as unknown; }
+        catch { throw new Error(PHOTO_METADATA_INVALID); }
+        const persisted = await normalizeStoredRecords(parsed, lease);
+        if (persisted === null) throw new Error(PHOTO_METADATA_INVALID);
+        await recoverPhotoDeletesUnlocked(persisted, lease);
+        if (persisted.some((photo) => photo.id === id)) throw error;
       }
-      throw error;
+      await recoverPhotoDeletesUnlocked(items.filter((photo) => photo.id !== id), lease);
     }
-    lease.assertCurrent();
-    await finishQuarantinedFiles(quarantined);
-    lease.assertCurrent();
-    try {
-      await supabase.from('photos').delete().eq('id', id).abortSignal(lease.signal);
-      lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* best-effort while the exact owner/epoch remains current */
-    }
+    const pending = (await readPhotoDeleteJournal(lease)).find((command) => command.photoId === id);
+    return { localDeleted: true, cleanupPending: Boolean(pending?.files.length), remotePending: pending?.remotePending ?? false };
   });
 }
 
@@ -658,7 +843,7 @@ export async function setReference(id: string): Promise<void> {
   await runPhotoStoreMutation(async (lease) => {
     const items = await loadPhotosUnlocked(lease);
     const target = items.find((p) => p.id === id);
-    if (!target) return;
+    if (!target) throw new Error(PHOTO_NOT_FOUND);
     lease.assertCurrent();
     await persist(
       items.map((p) => (p.series === target.series ? { ...p, isReference: p.id === id } : p)),
@@ -674,9 +859,15 @@ export async function setReference(id: string): Promise<void> {
 export async function clearPhotos(): Promise<void> {
   await runPhotoStoreCleanup(async (guard) => {
     guard.assertCurrent();
+    // Photo-purpose closure supersedes per-photo server cleanup. Resolve the
+    // canonical owner under the existing account/serialized-photo boundary;
+    // no active health grant or later owner's lease is needed for erasure.
+    const ownerBinding = await readLocalDataOwnerProofBinding();
+    guard.assertCurrent();
     const results = await Promise.allSettled([
       removePrivateItem(KEY),
       clearEncryptedPhotoStorage(),
+      ownerBinding === null ? Promise.resolve() : erasePhotoDeleteRemoteCleanupForBinding(ownerBinding),
     ]);
     guard.assertCurrent();
     const failures = results.filter((result) => result.status === 'rejected');

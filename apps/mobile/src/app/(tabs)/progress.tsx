@@ -18,6 +18,7 @@ import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
+import { PhotoDeleteSyncStatus } from '@/features/photos/PhotoDeleteSyncStatus';
 import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
 import { focusTimelapseElementAfterLayout } from '@/features/photos/timelapseFocus';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
@@ -618,6 +619,8 @@ function PhotoProgressTab() {
   const { data } = usePhotos('front');
   const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
   const compactFirstRun = height < 520;
+  // Deletion recovery adds a header above the empty-state capture action.
+  const compactEmptyFirstRun = height < 700;
 
   useEffect(() => {
     if (mode === 'compare') track('comparison_viewed');
@@ -632,6 +635,7 @@ function PhotoProgressTab() {
 
   const header = (
     <>
+      <PhotoDeleteSyncStatus />
       <View className="flex-row items-start justify-between">
         <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
           {PHOTO_COPY.tabTitle}
@@ -706,7 +710,7 @@ function PhotoProgressTab() {
       >
         {header}
 
-        {count === 0 ? <FirstRun compact={compactFirstRun} /> : <CompareView data={data} />}
+        {count === 0 ? <FirstRun compact={compactEmptyFirstRun} /> : <CompareView data={data} />}
       </ScrollView>
     </Screen>
   );

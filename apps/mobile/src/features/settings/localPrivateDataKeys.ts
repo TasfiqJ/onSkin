@@ -39,6 +39,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'layerwell.photos.captureConsent',
   'layerwell.photos.captureConsent.v1',
   'layerwell.photos.cloudBackup',
+  'layerwell.photos.deleteJournal.v1',
   'layerwell.photos.v1',
   'layerwell.ramp.v1',
   'layerwell.recDismissed.v1',
@@ -72,6 +73,9 @@ export const LOCAL_PRIVATE_SECURE_CONTROL_KEYS = [
 ] as const;
 
 export const LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES = [
+  // One independently encrypted namespace per hashed owner; only tombstones.
+  // Sign-out preserves it, exact-owner health/terminal deletion erases it.
+  'layerwell.photoDeleteCleanup.v1.',
   HEALTH_DEPENDENT_CONSENT_RECOVERY_KEY_PREFIX,
 ] as const;
 

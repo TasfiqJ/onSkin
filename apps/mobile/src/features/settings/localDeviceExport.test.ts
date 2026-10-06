@@ -74,6 +74,8 @@ describe('local device data export', () => {
     ];
     expect(accountedKeys.sort()).toEqual([...LOCAL_PRIVATE_DATA_KEYS].sort());
     expect(new Set(accountedKeys).size).toBe(accountedKeys.length);
+    expect(LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS).toContain('layerwell.photos.deleteJournal.v1');
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.photos.deleteJournal.v1');
     expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.widgetActionMap.v1');
     expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.widgetActionMap.v2');
     expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('layerwell.widgetOwnerAuthority.v1');

@@ -89,6 +89,7 @@ export type AccountDeletionFinalizationDependencies = AccountDeletionSessionDepe
   convertStoreSafetyNotice: (ownerBinding: string) => Promise<void>;
   clearHealthWithdrawalIntent?: (ownerBinding: string) => Promise<void>;
   clearDependentWithdrawalRecovery?: (ownerBinding: string) => Promise<void>;
+  clearPhotoDeleteCleanup?: (ownerBinding: string) => Promise<void>;
   queueAppleNotice: () => unknown;
   clearCompletedState: () => Promise<void>;
 };
@@ -194,6 +195,10 @@ const defaultQuarantineDependencies: AccountDeletionQuarantineDependencies = {
 };
 
 const defaultFinalizationDependencies: AccountDeletionFinalizationDependencies = {
+  clearPhotoDeleteCleanup: async (ownerBinding) => {
+    const { erasePhotoDeleteRemoteCleanupForBinding } = await import('@/features/photos/photoDeleteRemoteCleanup');
+    await erasePhotoDeleteRemoteCleanupForBinding(ownerBinding);
+  },
   ...defaultSessionDependencies,
   convertStoreSafetyNotice: convertStoreTransactionNoticeForTerminalDeletion,
   clearHealthWithdrawalIntent: clearPendingHealthWithdrawalIntentByOwnerBinding,
@@ -676,6 +681,9 @@ export async function finalizeCompletedAccountDeletion(
     options,
     authDerivedCleanup,
   );
+  // Observe local sign-out/drains before retiring this last remote obligation.
+  // No earlier A writer may recreate it after terminal proof is discarded.
+  await dependencies.clearPhotoDeleteCleanup?.(record.ownerBinding);
   if (record.notice === 'remove_apple_authorization') {
     dependencies.queueAppleNotice();
     // The completed record remains the durable notice authority until the

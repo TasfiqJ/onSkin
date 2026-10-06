@@ -1,4 +1,4 @@
-import type { Database as GeneratedDatabase } from './database.types';
+import type { Database as GeneratedDatabase, Json } from './database.types';
 import type { ClientDatabase } from './client-database.types';
 
 type Assert<Condition extends true> = Condition;
@@ -45,6 +45,7 @@ type _GeneratedFunctionsRetained = Assert<
 type _OnlyReviewedFunctionsExposed = Assert<
   Extends<
     keyof ClientDatabase['public']['Functions'],
+    | 'apply_photo_delete_outbox_batch'
     | 'get_health_dependent_consent_status'
     | 'read_entitlement_projections'
     | 'record_health_dependent_consent'
@@ -118,3 +119,36 @@ type _CompletionAmMarkerRejected = Assert<
   >
 >;
 type _NoViewsExposed = Assert<IsNever<keyof ClientDatabase['public']['Views']>>;
+
+type PhotoDeleteArgs =
+  ClientDatabase['public']['Functions']['apply_photo_delete_outbox_batch']['Args'];
+type _PhotoDeletePayloadIsContentFree = Assert<
+  Equal<PhotoDeleteArgs['p_operations'][number]['payload'], null>
+>;
+type _PhotoDeleteKindIsDeleteOnly = Assert<
+  Equal<PhotoDeleteArgs['p_operations'][number]['operation_kind'], 'delete'>
+>;
+
+// Missing generated RPCs must fail compilation instead of being synthesized by
+// an independent client declaration. The only deliberate narrowing is Args.
+type GeneratedPhotoDelete =
+  GeneratedDatabase['public']['Functions']['apply_photo_delete_outbox_batch'];
+type _PhotoDeleteGeneratedRpcPresent = Assert<
+  Extends<'apply_photo_delete_outbox_batch', keyof GeneratedDatabase['public']['Functions']>
+>;
+type _PhotoDeleteGeneratedArgumentIsJson = Assert<
+  Equal<GeneratedPhotoDelete['Args'], { p_operations: Json }>
+>;
+type _PhotoDeleteGeneratedReturnIsJson = Assert<Equal<GeneratedPhotoDelete['Returns'], Json>>;
+type _PhotoDeleteMobileArgumentNarrowsGenerated = Assert<
+  Extends<PhotoDeleteArgs, GeneratedPhotoDelete['Args']>
+>;
+type _PhotoDeleteBroadJsonNotAdmitted = Assert<
+  DoesNotExtend<GeneratedPhotoDelete['Args'], PhotoDeleteArgs>
+>;
+type _PhotoDeleteOtherGeneratedPropertiesPreserved = Assert<
+  Equal<
+    Omit<ClientDatabase['public']['Functions']['apply_photo_delete_outbox_batch'], 'Args'>,
+    Omit<GeneratedPhotoDelete, 'Args'>
+  >
+>;

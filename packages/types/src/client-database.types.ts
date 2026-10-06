@@ -12,6 +12,18 @@ type MobileFunctionName =
   | 'set_recommendation_preferences'
   | 'set_routine_adherence_timezone'
   | 'sync_shelf_product';
+// The canonical generated snapshot already contains apply_photo_delete_outbox_batch
+// with p_operations: Json. The client overlay narrows that broad JSON argument
+// to the reviewed exact mobile payload; it does not invent a missing RPC.
+export type PhotoDeleteRpcOperation = {
+  operation_id: string;
+  entity_type: 'photo_delete';
+  entity_id: string;
+  operation_kind: 'delete';
+  payload: null;
+  client_revision: number;
+  idempotency_key: string;
+};
 type DirectMobileInsertTable = 'consents' | 'skin_profiles';
 type GeneratedFunction<FunctionName extends MobileFunctionName> =
   PublicSchema['Functions'][FunctionName];
@@ -68,7 +80,8 @@ type ClientTable<TableName extends MobileTableName> = Omit<
  * Generated schema types describe database shape, not runtime grants. This
  * overlay therefore defaults direct table inserts and updates to `never` and
  * admits only the two reviewed append-only/bootstrap insert lanes. Reads,
- * owner photo deletion, and reviewed RPCs retain their generated types. The
+ * and reviewed RPCs retain their generated types, except the documented
+ * photo-delete RPC overlay above. Photo deletion is RPC-only. The
  * DB-08 source contract separately rejects unreviewed direct delete calls.
  * PostgreSQL grants and RLS remain the security boundary.
  */
@@ -80,6 +93,13 @@ export type ClientDatabase = Omit<GeneratedDatabaseShape, 'public'> & {
     Views: Pick<PublicSchema['Views'], never>;
     Functions: {
       [FunctionName in MobileFunctionName]: ClientFunction<FunctionName>;
+    } & {
+      apply_photo_delete_outbox_batch: Omit<
+        PublicSchema['Functions']['apply_photo_delete_outbox_batch'],
+        'Args'
+      > & {
+        Args: { p_operations: PhotoDeleteRpcOperation[] };
+      };
     };
   };
 };

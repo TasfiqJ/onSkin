@@ -57,4 +57,27 @@ describe('photo deletion retry single-flight coordinator', () => {
     expect(operation).toHaveBeenCalledTimes(2);
     expect(promiseRef.current).toBeNull();
   });
+
+  it('clears a synchronous throw so explicit retry is not stuck', async () => {
+    const promiseRef: PhotoDeleteRetryPromiseRef = { current: null };
+    await expect(runPhotoDeleteRetrySingleFlight(promiseRef, () => {
+      throw new Error('SYNC_FAILURE');
+    })).rejects.toThrow('SYNC_FAILURE');
+    expect(promiseRef.current).toBeNull();
+    await expect(runPhotoDeleteRetrySingleFlight(promiseRef, async () => undefined)).resolves.toBeUndefined();
+  });
+
+  it('reserves the promise before an operation can activate retry re-entrantly', async () => {
+    const promiseRef: PhotoDeleteRetryPromiseRef = { current: null };
+    const duplicateOperation = vi.fn(async () => undefined);
+    let nested: Promise<void> | null = null;
+    const first = runPhotoDeleteRetrySingleFlight(promiseRef, async () => {
+      nested = runPhotoDeleteRetrySingleFlight(promiseRef, duplicateOperation);
+    });
+    expect(nested).toBe(first);
+    await first;
+    expect(duplicateOperation).not.toHaveBeenCalled();
+    expect(promiseRef.current).toBeNull();
+  });
+
 });

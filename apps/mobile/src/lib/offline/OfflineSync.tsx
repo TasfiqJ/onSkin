@@ -15,6 +15,8 @@ import {
   subscribeCatalogLookupQueueChanges,
   type CatalogLookupQueueSchedule,
 } from './catalogLookupQueue';
+import { PhotoDeleteReplay } from '@/features/photos/PhotoDeleteReplay';
+
 import { flushCompletions } from './completionQueue';
 import { flushShelfMirrorQueue } from './shelfMirrorQueue';
 
@@ -347,5 +349,5 @@ export function OfflineSync() {
       unsubscribeShelf();
     };
   }, [qc]);
-  return null;
+  return <PhotoDeleteReplay />;
 }

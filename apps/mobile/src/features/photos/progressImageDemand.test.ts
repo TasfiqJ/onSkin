@@ -35,12 +35,16 @@ describe('Progress sensitive image demand integration', () => {
   });
 
   it('purges decrypted image memory before leaving a deleted photo', () => {
-    const deletePhoto = detail.indexOf('await remove.mutateAsync(id)');
+    const deletePhoto = detail.indexOf('await actions.remove.mutateAsync(id)');
     const purgeMemory = detail.indexOf('await purgeSensitiveImageMemory()');
-    const leaveDetail = detail.indexOf('closeToProgress()', purgeMemory);
-
+    const release = detail.indexOf('blocked.current = false;', purgeMemory);
     expect(deletePhoto).toBeGreaterThan(-1);
     expect(purgeMemory).toBeGreaterThan(deletePhoto);
-    expect(leaveDetail).toBeGreaterThan(purgeMemory);
+    expect(release).toBeGreaterThan(purgeMemory);
+    expect(detail.slice(purgeMemory, release)).toContain('if (!cleared)');
+    expect(detail.slice(purgeMemory, release)).toContain('if (!isCurrent()) return;');
+    expect(detail).toContain('usePreventRemove(removalBlocked,');
+    expect(detail).toContain('if (!blocked.current && exit && isCurrent() && !exitDispatched.current)');
+    expect(detail).toContain('if (blocked.current) void purgeSensitiveImageMemory();');
   });
 });

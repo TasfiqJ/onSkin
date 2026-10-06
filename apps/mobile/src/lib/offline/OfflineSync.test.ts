@@ -6,6 +6,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OfflineSync } from './OfflineSync';
 
+// The independently owned photo lane has real lifecycle/rendered coverage in
+// photoDeleteLifecycle.c08b2.test.ts; these tests isolate the existing queues.
+vi.mock('@/features/photos/PhotoDeleteReplay', () => ({ PhotoDeleteReplay: () => null }));
+
 const OFFLINE_SYNC = fileURLToPath(new URL('./OfflineSync.tsx', import.meta.url));
 
 const h = vi.hoisted(() => ({

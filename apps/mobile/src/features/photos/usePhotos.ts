@@ -317,8 +317,14 @@ export function usePhotos(series: PhotoSeries = 'front') {
   };
 }
 
-export function usePhotoActions() {
+export function usePhotoActions(options: { authenticatedOwnerUserId?: string | null } = {}) {
   const qc = useQueryClient();
+  const authority = usePhotoReadAuthority();
+  const authenticatedOwnerUserId = options.authenticatedOwnerUserId ?? null;
+  const authorityKey = authority === null ? 'closed' : JSON.stringify([
+    authority.ownerUserId, authority.generation, authority.epoch, authority.accountGeneration,
+  ]);
+  const isCurrent = () => authority !== null && samePhotoReadAuthority(authority, currentPhotoReadAuthority());
   const mutateAndInvalidate = <T>(operation: () => Promise<T>): Promise<T> =>
     runCurrentHealthDataOperation(async (lease) => {
       try {
@@ -336,18 +342,75 @@ export function usePhotoActions() {
   const add = useMutation({
     mutationFn: (input: NewPhoto) => mutateAndInvalidate(() => addPhotoWithOutcome(input)),
   });
-  const reference = useMutation({
-    mutationFn: (id: string) => mutateAndInvalidate(() => setReference(id)),
+  type Accepted<T> = { value: T; authority: PhotoReadAuthority | null };
+  const detailMutation = <T>(accepted: PhotoReadAuthority | null, operation: () => Promise<T>, deleting = false) => {
+    if (accepted === null) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
+    assertPhotoReadAuthority(accepted);
+    return runHealthDataOperation(accepted.ownerUserId, async (lease) => {
+      assertPhotoReadOperationAuthority(lease, accepted);
+      try {
+        if (deleting) {
+          await qc.cancelQueries({ queryKey: KEY });
+          assertPhotoReadOperationAuthority(lease, accepted);
+          await qc.invalidateQueries({ queryKey: KEY, refetchType: 'none' });
+          assertPhotoReadOperationAuthority(lease, accepted);
+        }
+        const result = await operation();
+        assertPhotoReadOperationAuthority(lease, accepted);
+        if (deleting) {
+          // Preserve observers while cancelling stale reads and clearing their
+          // data. Removing an observed query recreates it during gate render.
+          await qc.resetQueries({ queryKey: KEY });
+          assertPhotoReadOperationAuthority(lease, accepted);
+        }
+        return result;
+      } finally {
+        assertPhotoReadOperationAuthority(lease, accepted);
+        await qc.invalidateQueries({ queryKey: KEY });
+        assertPhotoReadOperationAuthority(lease, accepted);
+      }
+    });
+  };
+  // React Query may replace observer options after a render. The accepted
+  // authority travels in the variables, never just in mutationFn's closure.
+  const referenceMutation = useMutation({
+    // Local persistence must execute offline; retry belongs to the visible UI.
+    networkMode: 'always',
+    retry: false,
+    mutationFn: ({ value, authority: accepted }: Accepted<string>) =>
+      detailMutation(accepted, () => setReference(value)),
   });
-  const remove = useMutation({
-    mutationFn: (id: string) => mutateAndInvalidate(() => removePhoto(id)),
+  const removeMutation = useMutation({
+    // Local persistence must execute offline; retry belongs to the visible UI.
+    networkMode: 'always',
+    retry: false,
+    mutationFn: ({ value, authority: accepted }: Accepted<{ id: string; owner: string | null }>) =>
+      detailMutation(accepted, () => removePhoto(value.id, value.owner), true),
   });
-  const note = useMutation({
-    mutationFn: ({ id, notes }: { id: string; notes: string }) =>
-      mutateAndInvalidate(() => updatePhoto(id, { notes })),
+  const noteMutation = useMutation({
+    // Local persistence must execute offline; retry belongs to the visible UI.
+    networkMode: 'always',
+    retry: false,
+    mutationFn: ({ value, authority: accepted }: Accepted<{ id: string; notes: string }>) =>
+      detailMutation(accepted, () => updatePhoto(value.id, { notes: value.notes })),
   });
+  const reference = {
+    ...referenceMutation,
+    mutateAsync: (id: string) => referenceMutation.mutateAsync({ value: id, authority }),
+    mutate: (id: string) => { referenceMutation.mutate({ value: id, authority }); },
+  };
+  const remove = {
+    ...removeMutation,
+    mutateAsync: (id: string) => removeMutation.mutateAsync({ value: { id, owner: authenticatedOwnerUserId }, authority }),
+    mutate: (id: string) => { removeMutation.mutate({ value: { id, owner: authenticatedOwnerUserId }, authority }); },
+  };
+  const note = {
+    ...noteMutation,
+    mutateAsync: (value: { id: string; notes: string }) => noteMutation.mutateAsync({ value, authority }),
+    mutate: (value: { id: string; notes: string }) => { noteMutation.mutate({ value, authority }); },
+  };
 
-  return { add, reference, remove, note };
+  return { add, reference, remove, note, authorityKey, isCurrent };
 }
 
 export type { PhotoRecord };

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanupRequired';
 import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
 
 import {
   LOCAL_PRIVATE_CONTROL_KEYS,
@@ -27,6 +28,42 @@ function walk(dir: string): string[] {
 }
 
 describe('local private data registry', () => {
+  it('classifies every private data key for withdrawal, with only reviewed independent-purpose retention', () => {
+    // Exhaustive exceptions, not a generated complement: a newly registered
+    // health-purpose key MUST enter the withdrawal list or this test fails.
+    // Changes to an exception need a separate purpose/retention review.
+    const retainedForIndependentPurpose = {
+      [AGE_POLICY_RECEIPT_KEY]: 'Minimized age eligibility, not health-purpose content.',
+      'layerwell.appLock.enabled': 'App Lock preference remains an independent privacy control.',
+      'layerwell.communityAge16.v1': 'Separate age eligibility proof; not a community consent.',
+      'layerwell.entitlement.v1': 'Legacy billing/subscription entitlement evidence.',
+      'layerwell.entitlement.v2': 'Current billing/subscription entitlement evidence.',
+      'layerwell.healthDataCollectionConsent.v1':
+        'Consent decision evidence; never old health content.',
+      'layerwell.healthDataLifecycle.v1':
+        'Withdrawal/reconsent control authority must survive teardown.',
+      'layerwell.subscription.promptedExpiry': 'Subscription/billing prompt state.',
+    };
+    const retained = new Set(Object.keys(retainedForIndependentPurpose));
+    const privateKeys = new Set<string>(LOCAL_PRIVATE_DATA_KEYS);
+    const healthKeys = new Set<string>(HEALTH_PURPOSE_PRIVATE_DATA_KEYS);
+    expect([...retained].filter((key) => !privateKeys.has(key))).toEqual([]);
+    expect([...retained].filter((key) => healthKeys.has(key))).toEqual([]);
+    expect([...healthKeys].sort()).toEqual(
+      [...privateKeys].filter((key) => !retained.has(key)).sort(),
+    );
+    expect(healthKeys.size).toBe(HEALTH_PURPOSE_PRIVATE_DATA_KEYS.length);
+  });
+
+  it('includes every registered Progress record and deletion journal in health withdrawal', () => {
+    const healthKeys = new Set<string>(HEALTH_PURPOSE_PRIVATE_DATA_KEYS);
+    const photoDataKeys = LOCAL_PRIVATE_DATA_KEYS.filter((key) =>
+      key.startsWith('layerwell.photos.'),
+    );
+    expect(photoDataKeys).toContain('layerwell.photos.deleteJournal.v1');
+    expect(photoDataKeys.filter((key) => !healthKeys.has(key))).toEqual([]);
+  });
+
   it('covers every on-device private storage key', () => {
     const registered = new Set([
       ...LOCAL_PRIVATE_CONTROL_KEYS,

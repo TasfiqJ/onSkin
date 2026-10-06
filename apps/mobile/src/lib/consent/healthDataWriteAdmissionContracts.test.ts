@@ -73,7 +73,21 @@ describe('health-purpose local write coverage', () => {
           const normalized = path.replaceAll('\\', '/');
           const centralPrivateKV = normalized.endsWith('/lib/storage/privateKV.ts');
           if (!centralPrivateKV && !permittedDirectCleanupFiles.has(normalized)) {
-            bypasses.push(`${normalized}:${key}`);
+            const deletionOnlyCall = "AsyncStorage.removeItem('layerwell.photos.deleteJournal.v1')";
+            const clearStart = source.indexOf('export async function clearEncryptedPhotoStorage(');
+            const clearEnd = source.indexOf('export async function encryptPhotoNote(', clearStart);
+            const callStart = source.indexOf(deletionOnlyCall);
+            const exactMediaErasureFallback =
+              normalized.endsWith('/features/photos/encryptedStorage.ts') &&
+              key === 'layerwell.photos.deleteJournal.v1' &&
+              clearStart >= 0 &&
+              callStart > clearStart &&
+              callStart < clearEnd &&
+              source.split(deletionOnlyCall).length === 2 &&
+              source.split(key).length === 2;
+            // This single idempotent erase is not permission for the native
+            // photo module to perform arbitrary raw health writes/removals.
+            if (!exactMediaErasureFallback) bypasses.push(`${normalized}:${key}`);
           }
         }
       }
@@ -99,7 +113,6 @@ describe('health-purpose local write coverage', () => {
     const admittedPostgrest = [
       'app/index.tsx:skin_profiles',
       'features/onboarding/OnboardingContext.tsx:skin_profiles',
-      'features/photos/store.ts:photos',
       'features/routine/useProgress.ts:routine_completions',
       'features/scheduler/profile.ts:skin_profiles',
     ].sort();
@@ -126,6 +139,15 @@ describe('health-purpose local write coverage', () => {
       expect(source, file).toMatch(/runHealthData(?:Write)?Operation/u);
       expect(source, file).toContain('lease.assertCurrent()');
     }
+
+    // Photo deletion is now the retained reviewed privacy-reducing tombstone
+    // RPC, not a direct table-delete exception. The global health set is unchanged.
+    const photoStore = readFileSync(`${SRC}/features/photos/store.ts`, 'utf8');
+    expect(photoStore).not.toContain(".from('photos')");
+    expect(photoStore).toContain("supabase.rpc('apply_photo_delete_outbox_batch'");
+    expect(photoStore).toContain('assertHealthDataWriteLease(captured)');
+    expect(photoStore).toContain('subscribeActiveHealthProcessingLeaseChanges');
+    expect(photoStore).toContain('.abortSignal(controller.signal)');
 
     const commerceStore = readFileSync(`${SRC}/features/commerce/store.ts`, 'utf8');
     expect(commerceStore).not.toContain("from('commerce_click_events')");

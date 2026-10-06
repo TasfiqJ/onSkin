@@ -79,7 +79,8 @@ export function createPhotoNoteSaveCoordinator({
       const requestedDraft = snapshot.draft;
       if (requestedDraft === snapshot.persisted && !savePromise) return Promise.resolve();
       if (savePromise) {
-        if (requestedDraft !== inFlightDraft) queuedDraft = requestedDraft;
+        // The latest explicit request wins, including a reversion to the in-flight text.
+        queuedDraft = requestedDraft === inFlightDraft ? null : requestedDraft;
         return savePromise;
       }
       savePromise = runSaveLoop(requestedDraft).finally(() => {

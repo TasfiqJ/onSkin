@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -28,6 +29,27 @@ import {
   removePhoto,
 } from './store';
 
+
+const remoteCleanupPorts = vi.hoisted(() => ({ storage: new Map<string, string>(), secure: new Map<string, string>() }));
+vi.mock('react-native-get-random-values', () => ({}));
+vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
+vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
+  getItem: async (key: string) => remoteCleanupPorts.storage.get(key) ?? null,
+  setItem: async (key: string, value: string) => { remoteCleanupPorts.storage.set(key, value); },
+  removeItem: async (key: string) => { remoteCleanupPorts.storage.delete(key); },
+} }));
+vi.mock('expo-secure-store', () => ({
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'when-unlocked-this-device-only',
+  getItemAsync: async (key: string) => remoteCleanupPorts.secure.get(key) ?? null,
+  setItemAsync: async (key: string, value: string) => { remoteCleanupPorts.secure.set(key, value); },
+  deleteItemAsync: async (key: string) => { remoteCleanupPorts.secure.delete(key); },
+}));
+vi.mock('@/lib/auth/sessionOwner', () => ({
+  readLocalDataOwnerProofBinding: async () => createHash('sha256').update('layerwell:local-data-owner:v1:test-owner').digest('hex'),
+  localDataOwnerBinding: async (owner: string) => createHash('sha256').update('layerwell:local-data-owner:v1:' + owner).digest('hex'),
+}));
+beforeEach(() => { remoteCleanupPorts.storage.clear(); remoteCleanupPorts.secure.clear(); });
+
 const mocks = vi.hoisted(() => ({
   decryptPhotoNoteError: null as Error | null,
   clearEncryptedPhotoStorage: vi.fn(),
@@ -50,10 +72,12 @@ const mocks = vi.hoisted(() => ({
   markPhotoRenditionPublication: vi.fn(),
   recoverPhotoRenditionPublication: vi.fn(),
   settlePhotoRenditionPublication: vi.fn(),
+  settlePhotoDeleteFiles: vi.fn(),
   removePrivateItem: vi.fn(),
   restoreQuarantinedPhoto: vi.fn(),
   setPrivateItemCommitThenError: null as Error | null,
   setPrivateItemError: null as Error | null,
+  setPrivateItemErrorKey: null as string | null,
   setPrivateItemGate: null as Promise<void> | null,
   setPrivateItemStarted: null as (() => void) | null,
 }));
@@ -70,7 +94,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
     return mocks.storage.get(key) ?? null;
   }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
-    if (mocks.setPrivateItemError) throw mocks.setPrivateItemError;
+    if (mocks.setPrivateItemError && (mocks.setPrivateItemErrorKey === null || key === mocks.setPrivateItemErrorKey)) throw mocks.setPrivateItemError;
     mocks.setPrivateItemStarted?.();
     if (mocks.setPrivateItemGate) await mocks.setPrivateItemGate;
     mocks.storage.set(key, value);
@@ -114,6 +138,7 @@ vi.mock('./encryptedStorage', () => ({
   recoverPhotoRenditionPublication: mocks.recoverPhotoRenditionPublication,
   markPhotoRenditionPublication: mocks.markPhotoRenditionPublication,
   settlePhotoRenditionPublication: mocks.settlePhotoRenditionPublication,
+  settlePhotoDeleteFiles: mocks.settlePhotoDeleteFiles,
   restoreQuarantinedPhoto: mocks.restoreQuarantinedPhoto,
   photoEncryptionInfo: {
     keyId: 'photo-key',
@@ -152,10 +177,24 @@ describe('photo local store recovery', () => {
     mocks.markPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
     mocks.recoverPhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
     mocks.settlePhotoRenditionPublication.mockReset().mockResolvedValue(undefined);
+    mocks.settlePhotoDeleteFiles.mockReset().mockImplementation(async (
+      uris: string[], operationId: string, restore: boolean, guard: { assertCurrent: () => void },
+    ) => {
+      guard.assertCurrent();
+      for (const originalUri of uris) {
+        const quarantinedUri = `${originalUri}.pending-delete-${operationId}`;
+        if (restore && mocks.encryptedFiles.has(quarantinedUri)) {
+          await mocks.restoreQuarantinedPhoto({ originalUri, quarantinedUri });
+          mocks.encryptedFiles.add(originalUri);
+        } else if (!restore) mocks.encryptedFiles.delete(originalUri);
+        mocks.encryptedFiles.delete(quarantinedUri);
+      }
+    });
     mocks.removePrivateItem.mockReset();
     mocks.restoreQuarantinedPhoto.mockReset();
     mocks.setPrivateItemCommitThenError = null;
     mocks.setPrivateItemError = null;
+    mocks.setPrivateItemErrorKey = null;
     mocks.setPrivateItemGate = null;
     mocks.setPrivateItemStarted = null;
 
@@ -908,6 +947,7 @@ describe('photo local store recovery', () => {
   });
 
   it('keeps metadata intact when a photo cannot be quarantined for deletion', async () => {
+    mocks.randomIds = ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'];
     const stored = JSON.stringify([
       {
         id: 'photo-1',
@@ -927,6 +967,8 @@ describe('photo local store recovery', () => {
   });
 
   it('restores quarantined files when delete metadata persistence fails', async () => {
+    mocks.randomIds = ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'];
+    mocks.setPrivateItemErrorKey = KEY;
     const stored = JSON.stringify([
       {
         id: 'photo-1',
@@ -943,7 +985,7 @@ describe('photo local store recovery', () => {
     expect(mocks.restoreQuarantinedPhoto).toHaveBeenCalledWith({
       originalUri: 'file:///photo-1.layerwellphoto',
       quarantinedUri: expect.stringContaining(
-        'file:///photo-1.layerwellphoto.pending-delete-delete-photo-1-',
+        'file:///photo-1.layerwellphoto.pending-delete-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
       ),
     });
     expect(mocks.storage.get(KEY)).toBe(stored);

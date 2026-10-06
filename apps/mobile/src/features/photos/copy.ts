@@ -90,7 +90,7 @@ export const PHOTO_COPY = {
     noteLabel: 'Your note',
     setReference: 'Set as reference',
     missingEyebrow: 'Photo unavailable',
-    missingTitle: 'This photo is no longer on this phone.',
+    missingTitle: 'This photo is no longer in your timeline.',
     missingBody:
       'It may have been deleted or belong to another local timeline. Your Progress tab is still safe.',
     missingCapture: 'Take a new photo',
@@ -106,7 +106,11 @@ export const PHOTO_COPY = {
     deleteBody: "It's removed from your phone. This can't be undone.",
     deleteConfirm: 'Delete photo',
     deleteUnavailable:
-      "We couldn't delete this photo right now. It stays on this phone unless you try again.",
+      "We couldn't confirm deletion finished. Try again to check and finish it safely.",
+    deleteCleanupPending:
+      'Image-memory cleanup still needs another attempt. Try again before leaving this photo.',
+    referenceUnavailable:
+      "We couldn't confirm the reference was saved. Try setting it again.",
     notePlaceholder: 'Add a note. “started retinol”, “travel breakout”',
     noteSaving: 'Saving on this device…',
     noteSaved: 'Saved on this device',
@@ -117,7 +121,7 @@ export const PHOTO_COPY = {
   deleteSync: {
     savedTitle: 'Deletion saved',
     savedBody:
-      "Any deleted photos are already gone from this phone. We'll finish removing matching account records when a connection is ready. Progress photo images are not uploaded in this build.",
+      "Deleted photos are gone from this phone. Matching account records will be removed when you’re online and signed in to the same account. Progress photo images are not uploaded in this build.",
     syncingTitle: 'Finishing deletion',
     syncingBody:
       "Any deleted photos are already gone from this phone. We're removing matching account records now. Progress photo images are not uploaded in this build.",
