@@ -7,7 +7,7 @@ import {
   effectiveEntitlementProjection,
   emptyEntitlementEnvelope,
   mergeEntitlementEnvelope,
-  type EntitlementCacheEnvelopeV2,
+  type EntitlementCacheEnvelopeV3,
   type EntitlementEvidence,
 } from './entitlementEvidence';
 
@@ -62,9 +62,9 @@ function snapshot(requestDate: string, entitlement: StoredEntitlement | null): E
 }
 
 function merge(
-  envelope: EntitlementCacheEnvelopeV2,
+  envelope: EntitlementCacheEnvelopeV3,
   evidence: EntitlementEvidence,
-): EntitlementCacheEnvelopeV2 {
+): EntitlementCacheEnvelopeV3 {
   return mergeEntitlementEnvelope(envelope, evidence).envelope;
 }
 

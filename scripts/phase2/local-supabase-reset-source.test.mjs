@@ -28,13 +28,13 @@ const migrationNames = (await readdir(migrationsDir))
   .sort((a, b) => a.localeCompare(b));
 
 test('DB05 reset source count and latest version bind the current chain', () => {
-  assert.equal(migrationNames.length, 94);
-  assert.equal(migrationNames.at(-1)?.slice(0, 14), '20260926000078');
-  assert.match(source, /const EXPECTED_MIGRATION_COUNT = 94;/u);
-  assert.match(source, /const EXPECTED_LATEST_MIGRATION = '20260926000078';/u);
+  assert.equal(migrationNames.length, 95);
+  assert.equal(migrationNames.at(-1)?.slice(0, 14), '20261007000079');
+  assert.match(source, /const EXPECTED_MIGRATION_COUNT = 95;/u);
+  assert.match(source, /const EXPECTED_LATEST_MIGRATION = '20261007000079';/u);
 });
 
-test('0072 commerce rehearsal uses its exact migration, then restores 0078 for head resets', () => {
+test('0072 commerce rehearsal uses its exact migration, then restores 0079 for head resets', () => {
   assert.match(source, /const COMMERCE_UPGRADE_MIGRATION = '20260729000072';/u);
   assert.match(source, /await rename\(sandboxCommerceMigration, withheldCommerceMigration\);/u);
   assert.match(source, /await rename\(withheldCommerceMigration, sandboxCommerceMigration\);/u);
@@ -48,7 +48,7 @@ test('0072 commerce rehearsal uses its exact migration, then restores 0078 for h
 test('the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist', () => {
   assert.match(
     source,
-    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077'/u,
+    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078'/u,
   );
   assert.match(source, /laterRehearsalMigrationNames\.map\(\(name\) => name\.slice\(0, 14\)\)/u);
   const withholdLater = source.indexOf('await rename(migration.installed, migration.withheld);');

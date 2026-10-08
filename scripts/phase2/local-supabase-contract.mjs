@@ -138,10 +138,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.117.0',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 94, `Expected 94 migration files; found ${migrations.length}.`);
+check(migrations.length === 95, `Expected 95 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260926000078_'),
-  'The latest migration must remain 20260926000078.',
+  migrations.at(-1)?.startsWith('20261007000079_'),
+  'The latest migration must remain 20261007000079.',
 );
 check(
   /create or replace function public\.has_current_consent\(p_consent_type text\)/u.test(
@@ -300,7 +300,7 @@ check(
     /rename\(withheldRecommendationMigration, sandboxRecommendationMigration\)/u.test(runner) &&
     /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner) &&
     /reset through 0071 for the 0072 commerce forward-upgrade rehearsal/u.test(runner) &&
-    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077'/u.test(
+    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078'/u.test(
       runner,
     ) &&
     /rename\(migration\.installed, migration\.withheld\)/u.test(runner) &&
@@ -586,9 +586,9 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /94::bigint/u.test(clinicalContentLegacySealTests) &&
-    /['"]20260926000078['"]::text/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 94-migration source history/u.test(
+    /95::bigint/u.test(clinicalContentLegacySealTests) &&
+    /['"]20261007000079['"]::text/u.test(clinicalContentLegacySealTests) &&
+    /the clinical legacy seal runs against the exact 95-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /the migration history includes the legacy seal and reaches the current quiz-contract successor/u.test(
@@ -617,9 +617,9 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /94::bigint/u.test(catalogReleaseLintContractTests) &&
-    /['"]20260926000078['"]::text/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 94-migration source history/u.test(
+    /95::bigint/u.test(catalogReleaseLintContractTests) &&
+    /['"]20261007000079['"]::text/u.test(catalogReleaseLintContractTests) &&
+    /the catalog release lint contract runs against the exact 95-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /the migration history retains the temporary-table lint contract through the current quiz-contract successor/u.test(
@@ -675,15 +675,15 @@ check(
 );
 check(
   /select plan\(78\)/u.test(routineAdherenceTests) &&
-    /94::bigint/u.test(routineAdherenceTests) &&
-    /['"]20260926000078['"]::text/u.test(routineAdherenceTests) &&
+    /95::bigint/u.test(routineAdherenceTests) &&
+    /['"]20261007000079['"]::text/u.test(routineAdherenceTests) &&
     /CORE05_PARITY_CORPUS_SHA256: cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00/u.test(
       routineAdherenceTests,
     ) &&
     /the hashed parity corpus matches the authoritative SQL projection/u.test(
       routineAdherenceTests,
     ) &&
-    /exact 94-migration source history/u.test(routineAdherenceTests) &&
+    /exact 95-migration source history/u.test(routineAdherenceTests) &&
     /retains adherence authority through the current head/u.test(routineAdherenceTests) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
     /a partial step completion cannot affect adherence/u.test(routineAdherenceTests) &&
@@ -731,9 +731,9 @@ check(
 );
 check(
   /select plan\(82\)/u.test(routineCompletionSyncTests) &&
-    /94::bigint/u.test(routineCompletionSyncTests) &&
-    /['"]20260926000078['"]::text/u.test(routineCompletionSyncTests) &&
-    /exact 94-migration source history/u.test(routineCompletionSyncTests) &&
+    /95::bigint/u.test(routineCompletionSyncTests) &&
+    /['"]20261007000079['"]::text/u.test(routineCompletionSyncTests) &&
+    /exact 95-migration source history/u.test(routineCompletionSyncTests) &&
     /Shelf sync rejects an exact draft-blocked health grant before retention/u.test(
       routineCompletionSyncTests,
     ) &&

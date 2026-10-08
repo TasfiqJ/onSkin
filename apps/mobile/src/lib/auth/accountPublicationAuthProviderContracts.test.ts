@@ -115,10 +115,25 @@ describe('account publication AuthProvider integration', () => {
     expect(provider).not.toContain('saveVerifiedEntitlement');
     expect(provider).not.toContain('clearStoreEntitlementIfRevenueCatVerifiedEmpty');
     expect(provider).not.toContain('resolveStoreTransactionNoticeFromVerifiedActiveEntitlement');
-    expect(entitlement).toContain('return runRevenueCatResultWrite(input, async () => {');
+    expect(entitlement).toContain('const persisted = await runRevenueCatResultWrite(input, async () => {');
     expect(entitlement).toContain('await scheduleTrialReminder();');
     expect(entitlement).toContain('await cancelTrialReminder();');
     expect(entitlement).toContain('const published = await publishCustomerInfoEvidence({');
+    const persistence = entitlement.slice(
+      entitlement.indexOf('async function persistRevenueCatResult('),
+      entitlement.indexOf('\ntype OwnerContextResolution'),
+    );
+    expect(persistence).toMatch(
+      /const assertCurrent = \(\) => \{\s*assertRevenueCatResultCurrent\(input\);\s*if \(published\.snapshot\) assertEntitlementSnapshotCurrent\(published\.snapshot\);\s*\}/,
+    );
+    const scheduled = persistence.indexOf('await scheduleTrialReminder();');
+    const cancelled = persistence.indexOf('await cancelTrialReminder();');
+    const afterReminders = persistence.indexOf('assertCurrent();', cancelled);
+    expect(scheduled).toBeGreaterThan(-1);
+    expect(cancelled).toBeGreaterThan(scheduled);
+    expect(afterReminders).toBeGreaterThan(cancelled);
+    expect(persistence.indexOf('const providerResultPersisted =')).toBeGreaterThan(afterReminders);
+    expect(persistence).toMatch(/\n  \}\);\s*persisted\.assertCurrent\(\);\s*return persisted;/);
     expect(entitlement).toContain('isDurablyAdmissibleStoreResult(');
     expect(entitlement).not.toContain('saveVerifiedEntitlement');
     expect(entitlement).not.toContain('clearStoreEntitlementIfRevenueCatVerifiedEmpty');

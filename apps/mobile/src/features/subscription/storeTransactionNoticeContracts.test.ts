@@ -25,7 +25,40 @@ describe('root Store transaction notice contracts', () => {
 
   it('funnels every purchase, win-back, and restore mutation through one owner-aware coordinator', () => {
     const entitlement = source('features/subscription/useEntitlement.ts');
-    expect(entitlement.match(/runOwnedStoreTransaction\(\{/g)).toHaveLength(5);
+    expect(entitlement.match(/return runCurrentStoreTransaction\(\{/g)).toHaveLength(5);
+    expect(entitlement.match(/await runOwnedStoreTransaction\(input\)/g)).toHaveLength(1);
+    expect(entitlement.match(/, persisted\??\.assertCurrent\)/g)).toHaveLength(5);
+    const coordinator = entitlement.slice(
+      entitlement.indexOf('async function runCurrentStoreTransaction('),
+      entitlement.indexOf('\nfunction wait('),
+    );
+    const journalSettled = coordinator.indexOf('const result = await runOwnedStoreTransaction(input);');
+    const reassert = coordinator.indexOf('assertActionResultCurrent(result);');
+    expect(journalSettled).toBeGreaterThan(-1);
+    expect(reassert).toBeGreaterThan(journalSettled);
+    expect(coordinator.indexOf('return result;')).toBeGreaterThan(reassert);
+    const publicationGuard = entitlement.slice(
+      entitlement.indexOf('function assertActionResultCurrent('),
+      entitlement.indexOf('\nfunction activeResult('),
+    );
+    const publication = publicationGuard.indexOf('const assertCurrent = actionResultPublications.get(result);');
+    const rejectUnboundActive = publicationGuard.indexOf(
+      'if (result.active && !assertCurrent) throw new Error(ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);',
+    );
+    expect(publication).toBeGreaterThan(-1);
+    expect(rejectUnboundActive).toBeGreaterThan(publication);
+    expect(publicationGuard.indexOf('assertCurrent?.();')).toBeGreaterThan(rejectUnboundActive);
+    const settlement = entitlement.slice(
+      entitlement.indexOf('const settleResult = async ('),
+      entitlement.indexOf('const publishCurrentSnapshot = async ('),
+    );
+    const invalidated = settlement.indexOf('await invalidate();');
+    expect(invalidated).toBeGreaterThan(-1);
+    expect(settlement.indexOf('assertActionResultCurrent(result);')).toBeGreaterThan(invalidated);
+    expect(settlement).toContain('settledPublicationErrors.add(blocked);');
+    expect(settlement).toContain('throw blocked;');
+    expect(entitlement.match(/onSettled: settleResult/g)).toHaveLength(7);
+    expect(entitlement).toContain('actionResultPublications.set(result, assertCurrent);');
     expect(entitlement.match(/action: 'purchase'/g)).toHaveLength(4);
     expect(entitlement.match(/action: 'restore'/g)).toHaveLength(1);
     expect(entitlement.match(/const ownerUserId = user\?\.id;/g)).toHaveLength(5);

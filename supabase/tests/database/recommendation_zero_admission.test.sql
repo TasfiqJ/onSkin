@@ -7,7 +7,7 @@ select plan(35);
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260926000078'::text,
+  '20261007000079'::text,
   'CORE-06A recommendation zero admission remains intact through the current head'
 );
 

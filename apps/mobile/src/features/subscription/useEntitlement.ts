@@ -1,5 +1,7 @@
 import type { PlanId } from '@layerwell/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation, useQuery, useQueryClient, type MutateOptions, type UseMutationResult,
+} from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { env } from '@/lib/env';
@@ -28,6 +30,7 @@ import {
 } from './entitlement';
 import {
   ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED,
+  assertEntitlementSnapshotCurrent,
   downgradeToFree,
   entitlementOwnerContextForUser,
   fetchServerEvidence,
@@ -36,25 +39,121 @@ import {
   publishCustomerInfoEvidence,
   readEntitlementSnapshot,
   startReverseTrialOnServer,
+  type EntitlementSnapshot,
 } from './store';
 import { e2eEntitlementDelayMs, e2eEntitlementState } from './entitlementE2EFixture';
 import { prepareRevenueCatActionProof } from './entitlementPurchaseAttribution';
 
 const UNRESOLVED_OWNER_BINDING = '0'.repeat(64);
 
-export type EntitlementActionResult = {
+export type EntitlementActionResult = Readonly<{
   active: boolean;
+  /** Current access may become unavailable without undoing provider facts. */
+  accessStatus: 'current' | 'unavailable';
   cancelled?: boolean;
   offerUnavailable?: boolean;
   entitlement: StoredEntitlement | null;
-};
+}>;
+
+// Keep provider facts while carrying local access authority through the native
+// journal, Query Core's awaited callbacks, and the actual data consumer.
+const actionResultPublications = new WeakMap<EntitlementActionResult, () => void>();
+const settledPublicationErrors = new WeakSet<Error>();
+
+function assertActionResultCurrent(result: EntitlementActionResult): void {
+  const assertCurrent = actionResultPublications.get(result);
+  if (result.active && !assertCurrent) throw new Error(ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
+  assertCurrent?.();
+  if (result.accessStatus === 'unavailable') throw new Error(ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
+}
 
 function activeResult(
   entitlement: StoredEntitlement | null,
-  extras?: Omit<EntitlementActionResult, 'active' | 'entitlement'>,
+  extras?: Omit<EntitlementActionResult, 'active' | 'entitlement' | 'accessStatus'>,
+  assertCurrent?: () => void,
 ): EntitlementActionResult {
+  assertCurrent?.();
   const active = entitlement ? deriveState(entitlement, new Date().toISOString()).isPro : false;
-  return { active, entitlement, ...extras };
+  const current = () => {
+    try {
+      if (active && !assertCurrent) return false;
+      assertCurrent?.();
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  // Core retains the exact data object. These nonthrowing accessors therefore
+  // also cover rejection between async onSettled and synchronous success
+  // publication; an earlier plain `true` cannot survive that queued boundary.
+  const result: EntitlementActionResult = {
+    get active() { return active && current(); },
+    get accessStatus() { return current() ? 'current' : 'unavailable'; },
+    entitlement,
+    ...extras,
+  };
+  if (assertCurrent) actionResultPublications.set(result, assertCurrent);
+  return Object.freeze(result);
+}
+
+function currentMutationPublication<TVariables>(
+  mutation: UseMutationResult<EntitlementActionResult, Error, TVariables>,
+): UseMutationResult<EntitlementActionResult, Error, TVariables> {
+  type Callbacks = MutateOptions<EntitlementActionResult, Error, TVariables>;
+  const callbacks = (options?: Callbacks): Callbacks | undefined => {
+    if (!options) return undefined;
+    let publicationError: Error | undefined;
+    let publicationChecked = false;
+    const check = (result: EntitlementActionResult) => {
+      if (publicationChecked) return publicationError;
+      publicationChecked = true;
+      try {
+        assertActionResultCurrent(result);
+      } catch (cause) {
+        publicationError = cause instanceof Error ? cause : new Error(ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED,
+          { cause });
+      }
+      return publicationError;
+    };
+    return {
+      ...options,
+      onSuccess: (result, variables, onMutateResult, context) => {
+        const error = check(result);
+        if (error) options.onError?.(error, variables, onMutateResult, context);
+        else options.onSuccess?.(result, variables, onMutateResult, context);
+      },
+      onSettled: (result, error, variables, onMutateResult, context) => {
+        if (!error && result && !publicationChecked) {
+          const blocked = check(result);
+          if (blocked) options.onError?.(blocked, variables, onMutateResult, context);
+        }
+        options.onSettled?.(publicationError ? undefined : result, publicationError ?? error,
+          variables, onMutateResult, context);
+      },
+    };
+  };
+  return {
+    ...mutation,
+    // Existing callers use per-mutate callbacks for Restore and navigation.
+    // An unavailable live result must reach their existing recovery/error path,
+    // never their verified-empty subscription or purchase-success feedback.
+    mutate: (variables, options) => mutation.mutate(variables, callbacks(options)),
+    mutateAsync: async (variables, options) => {
+      const result = await mutation.mutateAsync(variables, callbacks(options));
+      assertActionResultCurrent(result);
+      return result;
+    },
+  };
+}
+
+async function runCurrentStoreTransaction(
+  input: Parameters<typeof runOwnedStoreTransaction<EntitlementActionResult>>[0],
+): Promise<EntitlementActionResult> {
+  const result = await runOwnedStoreTransaction(input);
+  // Journal settlement records provider facts. A newer local rejection must
+  // block the retained access result without undoing that completed journal.
+  assertActionResultCurrent(result);
+  return result;
 }
 
 function wait(ms: number): Promise<void> {
@@ -66,6 +165,7 @@ type PersistedRevenueCatResult = Readonly<{
   storeActive: boolean;
   providerResultPersisted: boolean;
   verifiedEmptyRestore: boolean;
+  assertCurrent: () => void;
 }>;
 
 async function persistRevenueCatResult(
@@ -81,7 +181,7 @@ async function persistRevenueCatResult(
 ): Promise<PersistedRevenueCatResult | null> {
   assertRevenueCatResultCurrent(input);
   if (!input.customerInfo) return null;
-  return runRevenueCatResultWrite(input, async () => {
+  const persisted = await runRevenueCatResultWrite(input, async () => {
     assertRevenueCatResultCurrent(input);
     const entitlement = customerInfoToStoredEntitlement(input.customerInfo!);
     const proof = entitlement ? prepareRevenueCatActionProof(entitlement, input) : null;
@@ -102,16 +202,20 @@ async function persistRevenueCatResult(
     if (published.status === 'conflict') {
       throw new Error('ENTITLEMENT_EVIDENCE_CONFLICT');
     }
+    const assertCurrent = () => {
+      assertRevenueCatResultCurrent(input);
+      if (published.snapshot) assertEntitlementSnapshotCurrent(published.snapshot);
+    };
+    assertCurrent();
 
     const committed = published.snapshot?.activeStoreEntitlement ?? null;
 
     if (committed?.isActive && committed.periodType === 'trial') {
       await scheduleTrialReminder();
-      assertRevenueCatResultCurrent(input);
     } else if (committed?.isActive) {
       await cancelTrialReminder();
-      assertRevenueCatResultCurrent(input);
     }
+    assertCurrent();
 
     const providerResultPersisted = proof?.actionProductMatched === true && isDurablyAdmissibleStoreResult(
       input.customerInfo!.entitlements.verification,
@@ -126,8 +230,11 @@ async function persistRevenueCatResult(
         entitlement?.isActive === true,
         published,
       ),
+      assertCurrent,
     };
   });
+  persisted.assertCurrent();
+  return persisted;
 }
 
 type OwnerContextResolution =
@@ -202,12 +309,15 @@ export function useEntitlement(options?: { refetchOnMount?: 'always' }) {
         if (owner.status === 'error') throw owner.error;
         if (!ownerContext) return deriveState(null, new Date().toISOString());
 
-        const localRead = await readEntitlementSnapshot(ownerContext);
-        lease.assertCurrent();
-        const local = localRead.status === 'available' ? localRead.snapshot : null;
         const server = await fetchServerEvidence(ownerContext, lease.signal);
         lease.assertCurrent();
         if (server.status !== 'evidence') {
+          // A newer SDK/server merge may have committed during the request.
+          // Read the current atomic cache only after that request completes.
+          const localRead = await readEntitlementSnapshot(ownerContext);
+          lease.assertCurrent();
+          const local = localRead.status === 'available' ? localRead.snapshot : null;
+          if (local) assertEntitlementSnapshotCurrent(local);
           return stateWithoutServerEvidence({
             local, localStatus: localRead.status, serverStatus: server.status,
             nowISO: new Date().toISOString(), development: env.appEnvironment === 'development',
@@ -217,10 +327,12 @@ export function useEntitlement(options?: { refetchOnMount?: 'always' }) {
         const merged = await mergeEntitlementEvidenceBatch(ownerContext, server.evidence);
         lease.assertCurrent();
         if (merged.snapshot) {
+          assertEntitlementSnapshotCurrent(merged.snapshot);
           return stateFromEntitlementSnapshot(merged.snapshot);
         }
-        if (local) return stateFromEntitlementSnapshot(local);
-        throw new Error(merged.reason ?? ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
+        // Authenticated newer evidence was observed but could not be committed.
+        // The pre-read cache may now hide a revocation; keep recovery closed.
+        return deriveState(null, new Date().toISOString(), 'unavailable');
       }),
   });
   const [observedNow, setObservedNow] = useState(Date.now);
@@ -265,15 +377,34 @@ export function useEntitlementActions() {
     }
   };
 
-  const publishCurrentSnapshot = async (ownerUserId: string): Promise<StoredEntitlement | null> => {
+  const settleResult = async (result: EntitlementActionResult | undefined, error: Error | null) => {
+    // Query Core repeats onSettled on its error path if this success callback
+    // throws. That exact failure already completed invalidation; ordinary
+    // mutation failures still run the existing awaited invalidation normally.
+    if (error && settledPublicationErrors.has(error)) return;
+    await invalidate();
+    if (!result) return;
+    try {
+      assertActionResultCurrent(result);
+    } catch (cause) {
+      const blocked = new Error(cause instanceof Error ? cause.message : ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED,
+        { cause });
+      settledPublicationErrors.add(blocked);
+      throw blocked;
+    }
+  };
+
+  const publishCurrentSnapshot = async (ownerUserId: string): Promise<EntitlementSnapshot | null> => {
     const context = await entitlementOwnerContextForUser(ownerUserId);
     const read = await readEntitlementSnapshot(context);
-    if (read.status !== 'available') return null;
+    if (read.status === 'absent') return null;
+    if (read.status !== 'available') throw new Error(ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
+    assertEntitlementSnapshotCurrent(read.snapshot);
     qc.setQueryData(
       entitlementQueryKey(context.ownerBinding),
       stateFromEntitlementSnapshot(read.snapshot),
     );
-    return read.snapshot.entitlement;
+    return read.snapshot;
   };
 
   const startReverseTrial = useMutation({
@@ -281,15 +412,17 @@ export function useEntitlementActions() {
       if (!user?.id) throw new Error('ENTITLEMENT_OWNER_USER_ID_REQUIRED');
       const entitlement = await startReverseTrialOnServer();
       track('reverse_trial_started', { source: entitlement.source ?? 'server' });
-      return activeResult((await publishCurrentSnapshot(user.id)) ?? entitlement);
+      const snapshot = await publishCurrentSnapshot(user.id);
+      return activeResult(snapshot?.entitlement ?? entitlement, undefined,
+        snapshot ? () => assertEntitlementSnapshotCurrent(snapshot) : undefined);
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
   const startTrial = useMutation({
     mutationFn: async () => {
       const ownerUserId = user?.id;
-      return runOwnedStoreTransaction({
+      return runCurrentStoreTransaction({
         action: 'purchase',
         ownerUserId,
         operation: async (nativeCall) => {
@@ -314,17 +447,17 @@ export function useEntitlementActions() {
             });
           }
           nativeCall.markProviderResultPersisted(persisted.providerResultPersisted);
-          return activeResult(entitlement, { cancelled: result.cancelled });
+          return activeResult(entitlement, { cancelled: result.cancelled }, persisted.assertCurrent);
         },
       });
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
   const purchasePlan = useMutation({
     mutationFn: async (plan: PlanId) => {
       const ownerUserId = user?.id;
-      return runOwnedStoreTransaction({
+      return runCurrentStoreTransaction({
         action: 'purchase',
         ownerUserId,
         operation: async (nativeCall) => {
@@ -347,17 +480,17 @@ export function useEntitlementActions() {
             });
           }
           nativeCall.markProviderResultPersisted(persisted.providerResultPersisted);
-          return activeResult(persisted.entitlement, { cancelled: result.cancelled });
+          return activeResult(persisted.entitlement, { cancelled: result.cancelled }, persisted.assertCurrent);
         },
       });
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
   const purchase = useMutation({
     mutationFn: async () => {
       const ownerUserId = user?.id;
-      return runOwnedStoreTransaction({
+      return runCurrentStoreTransaction({
         action: 'purchase',
         ownerUserId,
         operation: async (nativeCall) => {
@@ -375,17 +508,17 @@ export function useEntitlementActions() {
           else if (persisted) {
             nativeCall.markProviderResultPersisted(persisted.providerResultPersisted);
           }
-          return activeResult(entitlement, { cancelled: result.cancelled });
+          return activeResult(entitlement, { cancelled: result.cancelled }, persisted?.assertCurrent);
         },
       });
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
   const restore = useMutation({
     mutationFn: async () => {
       const ownerUserId = user?.id;
-      return runOwnedStoreTransaction({
+      return runCurrentStoreTransaction({
         action: 'restore',
         ownerUserId,
         operation: async (nativeCall) => {
@@ -399,11 +532,11 @@ export function useEntitlementActions() {
             nativeCall.markProviderResultPersisted(false);
           }
           // Unconfirmed outcomes intentionally leave resolution to the journal.
-          return activeResult(persisted?.entitlement ?? null);
+          return activeResult(persisted?.entitlement ?? null, undefined, persisted?.assertCurrent);
         },
       });
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
   const downgrade = useMutation({
@@ -411,15 +544,17 @@ export function useEntitlementActions() {
       await downgradeToFree();
       track('reverse_trial_expired');
       if (!user?.id) return activeResult(null);
-      return activeResult(await publishCurrentSnapshot(user.id));
+      const snapshot = await publishCurrentSnapshot(user.id);
+      return activeResult(snapshot?.entitlement ?? null, undefined,
+        snapshot ? () => assertEntitlementSnapshotCurrent(snapshot) : undefined);
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
   const winback = useMutation({
     mutationFn: async () => {
       const ownerUserId = user?.id;
-      return runOwnedStoreTransaction({
+      return runCurrentStoreTransaction({
         action: 'purchase',
         ownerUserId,
         operation: async (nativeCall) => {
@@ -440,12 +575,20 @@ export function useEntitlementActions() {
           return activeResult(entitlement, {
             cancelled: result.cancelled,
             offerUnavailable: result.offerUnavailable,
-          });
+          }, persisted?.assertCurrent);
         },
       });
     },
-    onSettled: invalidate,
+    onSettled: settleResult,
   });
 
-  return { startReverseTrial, startTrial, purchase, purchasePlan, restore, downgrade, winback };
+  return {
+    startReverseTrial: currentMutationPublication(startReverseTrial),
+    startTrial: currentMutationPublication(startTrial),
+    purchase: currentMutationPublication(purchase),
+    purchasePlan: currentMutationPublication(purchasePlan),
+    restore: currentMutationPublication(restore),
+    downgrade: currentMutationPublication(downgrade),
+    winback: currentMutationPublication(winback),
+  };
 }

@@ -14,6 +14,7 @@ import {
   attachRevenueCatIdentityTombstoneLookup,
   buildRevenueCatAtomicArgs,
   persistRevenueCatEvent,
+  revenueCatProductIds,
   type RevenueCatAtomicArgs,
   type RevenueCatEvent,
 } from './webhookCore.ts';
@@ -22,6 +23,10 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = readSupabaseSecretKey();
 const webhookAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH') ?? '';
 const signingSecret = Deno.env.get('REVENUECAT_WEBHOOK_SIGNING_SECRET') ?? '';
+const products = revenueCatProductIds(
+  Deno.env.get('EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID'),
+  Deno.env.get('EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID'),
+);
 const revenueCatProjectId = Deno.env.get('REVENUECAT_PROJECT_ID') ?? '';
 const identityTombstoneKeys = Deno.env.get('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS') ?? '';
 const identityTombstoneCurrentVersion =
@@ -49,15 +54,15 @@ function json(body: unknown, status = 200): Response {
   });
 }
 
-async function readLimitedText(
+async function readLimitedBody(
   req: Request,
   maxBytes: number,
-): Promise<{ ok: true; body: string } | { ok: false }> {
+): Promise<{ ok: true; body: Uint8Array<ArrayBuffer> } | { ok: false }> {
   const contentLength = Number(req.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > maxBytes) {
     return { ok: false };
   }
-  if (!req.body) return { ok: true, body: '' };
+  if (!req.body) return { ok: true, body: new Uint8Array() };
 
   const reader = req.body.getReader();
   const chunks: Uint8Array[] = [];
@@ -83,7 +88,7 @@ async function readLimitedText(
     bytes.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return { ok: true, body: new TextDecoder().decode(bytes) };
+  return { ok: true, body: bytes };
 }
 
 function parseSignature(header: string | null): { timestamp: string; signature: string } | null {
@@ -122,7 +127,7 @@ function constantTimeEqualString(a: string, b: string): boolean {
   return diff === 0;
 }
 
-async function hmacHex(secret: string, payload: string): Promise<string> {
+async function hmacHex(secret: string, payload: Uint8Array<ArrayBuffer>): Promise<string> {
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(secret),
@@ -130,12 +135,12 @@ async function hmacHex(secret: string, payload: string): Promise<string> {
     false,
     ['sign'],
   );
-  return bytesToHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload)));
+  return bytesToHex(await crypto.subtle.sign('HMAC', key, payload));
 }
 
 async function verifySignature(
   req: Request,
-  rawBody: string,
+  rawBody: Uint8Array<ArrayBuffer>,
 ): Promise<{ ok: boolean; reason: string }> {
   if (!signingSecret) return { ok: false, reason: 'not_configured' };
   const parsed = parseSignature(req.headers.get('X-RevenueCat-Webhook-Signature'));
@@ -150,7 +155,11 @@ async function verifySignature(
     return { ok: false, reason: 'stale_signature' };
   }
 
-  const expected = await hmacHex(signingSecret, `${parsed.timestamp}.${rawBody}`);
+  const prefix = new TextEncoder().encode(`${parsed.timestamp}.`);
+  const signedBytes = new Uint8Array(prefix.length + rawBody.length);
+  signedBytes.set(prefix);
+  signedBytes.set(rawBody, prefix.length);
+  const expected = await hmacHex(signingSecret, signedBytes);
   return constantTimeEqualHex(expected, parsed.signature)
     ? { ok: true, reason: 'verified' }
     : { ok: false, reason: 'mismatch' };
@@ -169,7 +178,7 @@ Deno.serve(async (req) => {
   const authVerified = webhookAuth ? constantTimeEqualString(authHeader, webhookAuth) : false;
   if (webhookAuth && !authVerified) return json('unauthorized', 401);
 
-  const limitedBody = await readLimitedText(req, maxBodyBytes);
+  const limitedBody = await readLimitedBody(req, maxBodyBytes);
   if (!limitedBody.ok) return json('payload too large', 413);
   const rawBody = limitedBody.body;
 
@@ -181,7 +190,7 @@ Deno.serve(async (req) => {
 
   let body: { event?: RevenueCatEvent };
   try {
-    body = JSON.parse(rawBody || '{}');
+    body = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(rawBody) || '{}');
   } catch {
     return json('bad request', 400);
   }
@@ -189,6 +198,7 @@ Deno.serve(async (req) => {
   if (!event) {
     return json('bad request', 400);
   }
+  if (!products) return json('subscription products not configured', 503);
 
   let atomicArgs: RevenueCatAtomicArgs;
   let identityTombstoneKeyring;
@@ -207,10 +217,15 @@ Deno.serve(async (req) => {
   }
   try {
     atomicArgs = await attachRevenueCatIdentityTombstoneLookup(
-      buildRevenueCatAtomicArgs(event, {
-        signatureVerified: signature.ok,
-        authVerified,
-      }),
+      buildRevenueCatAtomicArgs(
+        event,
+        {
+          signatureVerified: signature.ok,
+          authVerified,
+        },
+        new Date(),
+        products,
+      ),
       event,
       revenueCatProjectId,
       identityTombstoneKeyring,

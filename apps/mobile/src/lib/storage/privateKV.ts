@@ -743,6 +743,7 @@ async function updatePrivateItemWithGuard(
 export async function updatePrivateItem(
   key: string,
   updater: (current: string | null) => string | null,
+  assertAdditionalMutationCurrent?: () => void,
 ): Promise<void> {
   // Generic read/transform/update may expose plaintext to its callback, so a
   // classified key requires exact health authority up front even if the
@@ -751,6 +752,10 @@ export async function updatePrivateItem(
   const healthWriteLease = captureHealthPurposePrivateDataWriteLease(key);
   const assertHealthMutationCurrent = () => {
     if (healthWriteLease !== null) assertHealthDataWriteLease(healthWriteLease);
+    // Compose an operation's local authority with the existing health guard.
+    // The shared writer checks both around native I/O and restores exact prior
+    // ciphertext if either authority is lost during the write.
+    assertAdditionalMutationCurrent?.();
   };
   return updatePrivateItemWithGuard(key, updater, assertHealthMutationCurrent);
 }

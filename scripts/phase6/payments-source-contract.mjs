@@ -6,7 +6,7 @@ const SOURCE_KEYS = Object.freeze(['entrypoint', 'runtime', 'executor', 'provide
 const REVIEWED_SOURCE_SHA256 = Object.freeze({
   entrypoint: 'd4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2',
   runtime: '5d3f7b1c565016dbfd3bd6288c14f8c1a6b58a60a94815eb3bc85926cae8976f',
-  executor: 'ccbaf7e0d38c415e013522ba82ecdd5964ca8fc58b77899e7b20974431375fcc',
+  executor: 'debb93ae427ed972db81d33112e4a38e589be6d09e43f4cd8fed3877297a13ca',
   providerDeletion: '57cbc94e8d6807c45c9f92a66f321cce853679a0504cf48906d4160c8e3875ea',
 });
 const SOURCE_HASH_ERRORS = Object.freeze({

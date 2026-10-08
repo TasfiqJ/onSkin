@@ -116,6 +116,14 @@ describe('P1: entitlement fail-closed, expiry and recovery', () => {
     assert.equal(state.isPro, true); assert.equal(state.evidenceStatus, 'reconciliation_due');
     assert.equal(advanceSubscriptionState(state, Date.parse(END)).isPro, false);
   });
+  for (const serverStatus of ['rejected', 'blocked']) {
+    it(`does not reuse cached Pro after authenticated publication is ${serverStatus}`, () => {
+      const data = stateWithoutServerEvidence({ local: snapshot(), localStatus: 'available', serverStatus, nowISO: NOW, development: false });
+      assert.equal(data.isPro, false);
+      assert.equal(data.evidenceStatus, 'unavailable');
+      assert.equal(confirmedFreePlan({ data }), false);
+    });
+  }
   it('a verified absent server projection plus absent local cache is free', () => {
     const data = stateWithoutServerEvidence({ local: null, localStatus: 'absent', serverStatus: 'absent', nowISO: NOW, development: false });
     assert.equal(confirmedFreePlan({ data }), true);

@@ -25,6 +25,9 @@ export type RevenueCatEvent = {
   period_type?: string;
   is_sandbox?: boolean;
   presented_offering_id?: string;
+  cancel_reason?: string;
+  grace_period_expiration_at_ms?: number | null;
+  new_product_id?: string;
 };
 
 export type RevenueCatStructuredIdentityFields = {
@@ -94,18 +97,17 @@ export type ProjectionOrder = {
 const ACTIVATE_TYPES = new Set([
   'INITIAL_PURCHASE',
   'RENEWAL',
-  'PRODUCT_CHANGE',
   'UNCANCELLATION',
-  'NON_RENEWING_PURCHASE',
   'SUBSCRIPTION_EXTENDED',
   'REFUND_REVERSED',
 ]);
-const DEACTIVATE_TYPES = new Set(['EXPIRATION', 'REFUND']);
-const KEEP_ACTIVE_TYPES = new Set(['CANCELLATION', 'BILLING_ISSUE', 'SUBSCRIPTION_PAUSED']);
+// PRODUCT_CHANGE is informative; Apple reports the effective change as RENEWAL.
+// Non-renewing purchases and Android pauses are outside the reviewed iOS lane.
+const DEACTIVATE_TYPES = new Set(['EXPIRATION']);
+const KEEP_ACTIVE_TYPES = new Set(['CANCELLATION', 'BILLING_ISSUE']);
 const RENEWING_TYPES = new Set([
   'INITIAL_PURCHASE',
   'RENEWAL',
-  'PRODUCT_CHANGE',
   'UNCANCELLATION',
   'BILLING_ISSUE',
   'SUBSCRIPTION_EXTENDED',
@@ -122,6 +124,18 @@ const PRIORITY = {
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const UUID_SUBSTRING_PATTERN = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
 const ASCII_BOUNDARY_WHITESPACE = /^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g;
+
+export type RevenueCatProductIds = { monthly: string; annual: string };
+
+/** The same exact product bindings used by the reviewed mobile checkout. */
+export function revenueCatProductIds(
+  monthly: unknown,
+  annual: unknown,
+): RevenueCatProductIds | null {
+  const valid = (value: unknown): value is string =>
+    typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{2,119}$/.test(value);
+  return valid(monthly) && valid(annual) && monthly !== annual ? { monthly, annual } : null;
+}
 
 export class RevenueCatAtomicProcessingError extends Error {
   constructor() {
@@ -432,22 +446,56 @@ function isoFromMs(value: unknown, required: boolean): string | null {
   return date.toISOString();
 }
 
+function validateRevenueCatEvent(event: unknown): asserts event is RevenueCatEvent {
+  if (!event || typeof event !== 'object' || Array.isArray(event)) {
+    throw new Error('INVALID_REVENUECAT_EVENT');
+  }
+  const record = event as Record<string, unknown>;
+  for (const field of [
+    'product_id',
+    'store',
+    'environment',
+    'original_transaction_id',
+    'transaction_id',
+    'period_type',
+    'presented_offering_id',
+    'cancel_reason',
+    'new_product_id',
+  ]) {
+    if (record[field] != null && typeof record[field] !== 'string') {
+      throw new Error('INVALID_REVENUECAT_EVENT');
+    }
+  }
+  if (
+    record.entitlement_ids != null &&
+    (!Array.isArray(record.entitlement_ids) ||
+      record.entitlement_ids.some((value) => typeof value !== 'string' || !value.length))
+  )
+    throw new Error('INVALID_REVENUECAT_EVENT');
+  if (record.is_sandbox != null && typeof record.is_sandbox !== 'boolean') {
+    throw new Error('INVALID_REVENUECAT_EVENT');
+  }
+  for (const field of [
+    'purchased_at_ms',
+    'expiration_at_ms',
+    'original_purchase_date_ms',
+    'grace_period_expiration_at_ms',
+  ]) {
+    if (record[field] != null) isoFromMs(record[field], true);
+  }
+}
+
 function mapStore(store: string | undefined): string | null {
   if (!store) return null;
   const normalized = store.toUpperCase();
-  if (normalized.includes('APP_STORE') || normalized.includes('MAC_APP_STORE')) return 'app_store';
-  if (normalized.includes('PLAY')) return 'play_store';
-  if (normalized.includes('TEST_STORE')) return 'test_store';
+  if (normalized === 'APP_STORE') return 'app_store';
+  if (normalized === 'PLAY_STORE') return 'play_store';
+  if (normalized === 'TEST_STORE') return 'test_store';
   // RevenueCat promotional entitlements are still provider authority. The
   // `app_granted` value is reserved for the app's independent reverse-trial
   // lane and must never be emitted by a provider webhook.
-  if (normalized.includes('PROMOTIONAL')) return 'promotional';
-  if (
-    normalized.includes('STRIPE') ||
-    normalized.includes('PADDLE') ||
-    normalized.includes('WEB') ||
-    normalized.includes('RC_BILLING')
-  ) {
+  if (normalized === 'PROMOTIONAL') return 'promotional';
+  if (['STRIPE', 'PADDLE', 'WEB', 'RC_BILLING'].includes(normalized)) {
     return 'web';
   }
   return null;
@@ -455,8 +503,9 @@ function mapStore(store: string | undefined): string | null {
 
 function mapEnvironment(event: RevenueCatEvent): string {
   if (event.store?.toUpperCase() === 'TEST_STORE') return 'test_store';
-  if (event.is_sandbox) return 'sandbox';
   const environment = event.environment?.toLowerCase();
+  if (typeof event.is_sandbox === 'boolean' && event.is_sandbox !== (environment === 'sandbox'))
+    return 'unknown';
   if (environment === 'production' || environment === 'sandbox') {
     return environment;
   }
@@ -480,6 +529,9 @@ export function sanitizeRevenueCatEvent(event: RevenueCatEvent): Record<string, 
     period_type: optionalString(event.period_type),
     is_sandbox: optionalBoolean(event.is_sandbox),
     presented_offering_id: optionalString(event.presented_offering_id),
+    cancel_reason: optionalString(event.cancel_reason),
+    grace_period_expiration_at_ms: optionalNumber(event.grace_period_expiration_at_ms),
+    new_product_id: optionalString(event.new_product_id),
   });
 }
 
@@ -552,7 +604,9 @@ export function buildRevenueCatAtomicArgs(
   event: RevenueCatEvent,
   verification: RevenueCatVerification,
   receivedAt = new Date(),
+  products?: RevenueCatProductIds | null,
 ): RevenueCatAtomicArgs {
+  validateRevenueCatEvent(event);
   const eventId = optionalString(event.id);
   const eventType = normalizeRevenueCatEventType(event.type);
   if (!eventId || eventId.length > 255 || !eventType || eventType.length > 100) {
@@ -563,15 +617,50 @@ export function buildRevenueCatAtomicArgs(
   }
 
   const providerEventAt = isoFromMs(event.event_timestamp_ms, true);
-  if (!providerEventAt) throw new Error('INVALID_REVENUECAT_EVENT_TIMESTAMP');
+  if (
+    !providerEventAt ||
+    event.event_timestamp_ms! <= 0 ||
+    event.event_timestamp_ms! > receivedAt.getTime() + 300_000
+  ) {
+    throw new Error('INVALID_REVENUECAT_EVENT_TIMESTAMP');
+  }
   const identities = normalizeRevenueCatIdentities(event);
   const aliases = stableSortedIdentityValues(identities.aliases) ?? [];
   const transferredFrom = stableSortedIdentityValues(identities.transferredFrom) ?? [];
   const transferredTo = stableSortedIdentityValues(identities.transferredTo) ?? [];
-  const projection = projectionFor(eventType);
+  const refund = eventType === 'CANCELLATION' && event.cancel_reason === 'CUSTOMER_SUPPORT';
+  const projection = projectionFor(refund ? 'EXPIRATION' : eventType);
   const sanitizedEvent = sanitizeRevenueCatEvent(event);
   const entitlementIds = optionalStringArray(event.entitlement_ids) ?? [];
-  const entitlement = entitlementIds.includes('pro_plus') ? 'pro_plus' : 'pro';
+  const productBinding = revenueCatProductIds(products?.monthly, products?.annual);
+  const environment = mapEnvironment(event);
+  const purchasedAt =
+    isoFromMs(event.purchased_at_ms, false) ?? isoFromMs(event.original_purchase_date_ms, false);
+  const expiresAt = isoFromMs(event.expiration_at_ms, false);
+  const graceAt =
+    eventType === 'BILLING_ISSUE' ? isoFromMs(event.grace_period_expiration_at_ms, false) : null;
+  const period = optionalString(event.period_type)?.toLowerCase() ?? null;
+  const transactionId = optionalString(event.transaction_id);
+  const supported = Boolean(
+    productBinding &&
+    transactionId?.trim() &&
+    entitlementIds.includes('pro') &&
+    (event.product_id === productBinding.monthly || event.product_id === productBinding.annual) &&
+    event.store?.toUpperCase() === 'APP_STORE' &&
+    (environment === 'production' || environment === 'sandbox') &&
+    period &&
+    ['normal', 'trial', 'intro'].includes(period) &&
+    purchasedAt &&
+    expiresAt &&
+    Date.parse(purchasedAt) > 0 &&
+    // Early Apple renewal and its lifecycle events share the same period.
+    // SQL requires corresponding authority before a lifecycle event can grant
+    // access. A new initial purchase retains the five-minute clock tolerance.
+    Date.parse(purchasedAt) <=
+      event.event_timestamp_ms! + (eventType === 'INITIAL_PURCHASE' ? 300_000 : 86_400_000) &&
+    Date.parse(expiresAt) > Date.parse(purchasedAt) &&
+    (!graceAt || Date.parse(graceAt) >= Date.parse(expiresAt)),
+  );
 
   return {
     p_rc_event_id: eventId,
@@ -582,22 +671,24 @@ export function buildRevenueCatAtomicArgs(
     p_aliases: aliases.length > 0 ? aliases : null,
     p_transferred_from: transferredFrom.length > 0 ? transferredFrom : null,
     p_transferred_to: transferredTo.length > 0 ? transferredTo : null,
-    p_environment: mapEnvironment(event),
+    p_environment: environment,
     p_store: mapStore(event.store),
     p_product_id: optionalString(event.product_id) ?? null,
-    p_entitlement: entitlement,
-    p_expiration_at: isoFromMs(event.expiration_at_ms, false),
-    p_original_purchase_at:
-      isoFromMs(event.purchased_at_ms, false) ?? isoFromMs(event.original_purchase_date_ms, false),
+    // Unknown evidence remains auditable but cannot enter either paid tier.
+    p_entitlement: entitlementIds.includes('pro') ? 'pro' : null,
+    p_expiration_at: graceAt ?? expiresAt,
+    p_original_purchase_at: purchasedAt,
     p_provider_event_at: providerEventAt,
     p_received_at: receivedAt.toISOString(),
     p_original_transaction_id: optionalString(event.original_transaction_id) ?? null,
-    p_transaction_id: optionalString(event.transaction_id) ?? null,
-    p_period_type: optionalString(event.period_type)?.toLowerCase() ?? null,
+    p_transaction_id: transactionId ?? null,
+    p_period_type: period,
     p_will_renew: projection.willRenew,
     p_is_active: projection.isActive,
-    p_should_project: projection.shouldProject,
-    p_projection_priority: projection.priority,
+    p_should_project: supported && projection.shouldProject,
+    // The paired BILLING_ERROR cancellation has no grace field. At equal
+    // provider times, retain the richer finite grace evidence in either order.
+    p_projection_priority: eventType === 'BILLING_ISSUE' ? PRIORITY.activate : projection.priority,
     p_offering_id: optionalString(event.presented_offering_id) ?? null,
     p_payload: { event: sanitizedEvent },
     p_signature_verified: verification.signatureVerified,
@@ -636,7 +727,7 @@ export async function persistRevenueCatEvent(
 ): Promise<RevenueCatAtomicResult> {
   const { data, error } = await client.rpc('process_revenuecat_webhook_event_guarded', args);
   if (error) throw new RevenueCatAtomicProcessingError();
-  const row = Array.isArray(data) ? data[0] : data;
+  const row = Array.isArray(data) ? (data.length === 1 ? data[0] : null) : data;
   if (
     !isAtomicResult(row) ||
     row.outcome === 'error' ||
@@ -646,6 +737,27 @@ export async function persistRevenueCatEvent(
   ) {
     throw new RevenueCatAtomicProcessingError();
   }
+  const terminal =
+    row.outcome === 'processed'
+      ? row.projection_applied && row.processing_status === 'processed'
+      : row.outcome === 'duplicate'
+        ? row.processing_status === 'processed' ||
+          (!row.projection_applied &&
+            ['stale', 'ignored_event_type', 'account_deletion_suppressed'].includes(
+              row.processing_status,
+            ))
+        : !row.projection_applied &&
+          row.processing_status ===
+            (
+              {
+                stale: 'stale',
+                ignored: 'ignored_event_type',
+                unresolved: 'unresolved_user',
+                suppressed_deleted_account: 'suppressed_deleted_account',
+                error: 'error',
+              } as const
+            )[row.outcome];
+  if (!terminal) throw new RevenueCatAtomicProcessingError();
   return row;
 }
 

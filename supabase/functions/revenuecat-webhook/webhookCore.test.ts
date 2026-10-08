@@ -1,6 +1,6 @@
 import {
   attachRevenueCatIdentityTombstoneLookup,
-  buildRevenueCatAtomicArgs,
+  buildRevenueCatAtomicArgs as buildAtomicArgs,
   compareProjectionOrder,
   extractRevenueCatAccountUuidCandidates,
   filterRevenueCatIdentitiesForActiveAccounts,
@@ -53,6 +53,17 @@ function assertIdentityInputFailure(
 
 const USER_ID = '00000000-0000-4000-8000-000000000001';
 const verification = { signatureVerified: true, authVerified: true };
+
+function buildRevenueCatAtomicArgs(
+  input: RevenueCatEvent,
+  verified: Parameters<typeof buildAtomicArgs>[1],
+  receivedAt = new Date(),
+) {
+  return buildAtomicArgs(input, verified, receivedAt, {
+    monthly: 'layerwell_pro_monthly',
+    annual: 'layerwell_pro_annual',
+  });
+}
 
 function event(
   id: string,
@@ -695,7 +706,7 @@ Deno.test(
   },
 );
 
-Deno.test('RevenueCat cancellation and pause preserve access until expiration', () => {
+Deno.test('RevenueCat cancellation preserves finite access; Android pause is audit only', () => {
   const cancellation = buildRevenueCatAtomicArgs(
     event('cancel-event', 'CANCELLATION', 1_700_000_000_000),
     verification,
@@ -714,8 +725,8 @@ Deno.test('RevenueCat cancellation and pause preserve access until expiration', 
     'cancellation should stop renewal without revoking access.',
   );
   assert(
-    pause.p_is_active === true && pause.p_will_renew === false,
-    'scheduled pause should keep access until its later expiration.',
+    pause.p_should_project === false,
+    'Android-only scheduled pause entered the reviewed iOS projection.',
   );
   assert(
     billingIssue.p_is_active === true && billingIssue.p_will_renew === true,

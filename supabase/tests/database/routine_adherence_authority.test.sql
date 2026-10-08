@@ -7,12 +7,12 @@ select plan(78);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  94::bigint,
-  'CORE-05 adherence runs against the exact 94-migration source history'
+  95::bigint,
+  'CORE-05 adherence runs against the exact 95-migration source history'
 );
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260926000078'::text,
+  '20261007000079'::text,
   'the migration history retains adherence authority through the current head'
 );
 select results_eq(

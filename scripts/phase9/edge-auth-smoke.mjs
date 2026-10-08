@@ -841,7 +841,7 @@ block(
 );
 block(
   errors,
-  /readLimitedText/.test(revenueCat),
+  /readLimitedBody/.test(revenueCat),
   'RevenueCat webhook must use a bounded raw-body reader.',
 );
 block(
@@ -877,24 +877,24 @@ block(
 block(
   errors,
   /req\.method !== ["']POST["']/.test(revenueCatHandler) &&
-    revenueCatHandler.indexOf('readLimitedText') !== -1 &&
+    revenueCatHandler.indexOf('readLimitedBody') !== -1 &&
     revenueCatHandler.search(/req\.method !== ["']POST["']/) <
-      revenueCatHandler.indexOf('readLimitedText'),
+      revenueCatHandler.indexOf('readLimitedBody'),
   'RevenueCat webhook method check must run before reading the raw body.',
 );
 block(
   errors,
   revenueCatHandler.indexOf('webhook verification not configured') !== -1 &&
-    revenueCatHandler.indexOf('readLimitedText') !== -1 &&
+    revenueCatHandler.indexOf('readLimitedBody') !== -1 &&
     revenueCatHandler.indexOf('webhook verification not configured') <
-      revenueCatHandler.indexOf('readLimitedText'),
+      revenueCatHandler.indexOf('readLimitedBody'),
   'RevenueCat webhook must fail closed for missing verification before reading the raw body.',
 );
 block(
   errors,
   revenueCatHandler.indexOf('!authVerified') !== -1 &&
-    revenueCatHandler.indexOf('readLimitedText') !== -1 &&
-    revenueCatHandler.indexOf('!authVerified') < revenueCatHandler.indexOf('readLimitedText'),
+    revenueCatHandler.indexOf('readLimitedBody') !== -1 &&
+    revenueCatHandler.indexOf('!authVerified') < revenueCatHandler.indexOf('readLimitedBody'),
   'RevenueCat webhook must reject bad shared auth before reading the raw body.',
 );
 block(

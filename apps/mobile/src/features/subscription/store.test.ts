@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { deriveState, type EntitlementOwnerContext, type StoredEntitlement } from './entitlement';
+import { serverProjectionFingerprint, type EntitlementEvidence } from './entitlementEvidence';
+import { stateWithoutServerEvidence } from './clientEntitlement';
+import { localDataOwnerBinding } from '@/lib/auth/sessionOwner';
 import {
   ENTITLEMENT_CACHE_FOREIGN_OWNER,
   ENTITLEMENT_EVIDENCE_CURSOR_REQUIRED,
@@ -9,6 +12,7 @@ import {
   customerInfoToEvidence,
   entitlementOwnerContextForUser,
   fetchServerEvidence,
+  fetchServerEntitlement,
   isDurablyAdmissibleStoreResult,
   mergeEntitlementEvidence,
   mergeEntitlementEvidenceBatch,
@@ -24,6 +28,7 @@ const B = 'b'.repeat(64);
 const KEY = 'layerwell.entitlement.v2';
 const LEGACY_KEY = 'layerwell.entitlement.v1';
 const NOW = '2026-07-14T12:00:00.000Z';
+const SERVER_STREAM_A = '11111111-1111-4111-8111-111111111111';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -41,7 +46,8 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@/lib/auth/sessionOwner', () => ({
-  localDataOwnerBinding: vi.fn(async (userId: string) => (userId === 'account-a' ? A : B)),
+  localDataOwnerBinding: vi.fn(async (userId: string) =>
+    (userId === 'account-a' || userId === SERVER_STREAM_A ? A : B)),
   readLocalDataOwnerProofBinding: vi.fn(async () => mocks.currentOwnerBinding),
 }));
 
@@ -278,6 +284,25 @@ function projectionResponse(
     store_projection: storeProjection,
     app_grant_projection: appGrantProjection,
   };
+}
+
+function publicationResponse(revision = '1', rowOverrides: Record<string, unknown> = {}) {
+  const row = storeProjectionRow({
+    cursor: {
+      kind: 'server_projection', version: 1, stream_id: SERVER_STREAM_A, revision,
+      provider: storeProjectionRow().cursor,
+    },
+    ...rowOverrides,
+  });
+  return { ...projectionResponse({ state: row.is_active ? 'active' : 'inactive', row }), schema_version: 2 };
+}
+
+async function fetchPublication(data = publicationResponse()) {
+  mocks.isSupabaseConfigured = true;
+  projectionRpcBuilder({ data, error: null });
+  const fetched = await fetchServerEvidence(contextA, new AbortController().signal);
+  if (fetched.status !== 'evidence') throw new Error(`Expected publication evidence: ${JSON.stringify(fetched)}`);
+  return fetched.evidence;
 }
 
 function projectionRpcBuilder(...results: readonly Readonly<{ data: unknown; error: unknown }>[]) {
@@ -977,6 +1002,336 @@ describe('owner-bound entitlement evidence store', () => {
     expect(mocks.writes).toBe(1);
   });
 
+  it('decodes and durably retains the owner-bound bigint publication separately from the local revision', async () => {
+    const evidence = await fetchPublication(publicationResponse('9007199254740993'));
+    expect(evidence[0]).toMatchObject({
+      kind: 'server_projection',
+      cursor: { kind: 'server_projection', version: 1, streamId: SERVER_STREAM_A,
+        revision: '9007199254740993', provider: { kind: 'revenuecat_webhook', eventId: 'event-1' } },
+    });
+    const merged = await mergeEntitlementEvidenceBatch(contextA, evidence, NOW);
+    expect(merged.snapshot?.activeStoreEntitlement?.isActive).toBe(true);
+    const raw = mocks.storage.get(KEY)!;
+    expect(JSON.parse(raw)).toMatchObject({ version: 3, revision: 2,
+      store: { serverProjection: { cursor: { revision: '9007199254740993' } } } });
+    expect(merged.snapshot?.activeStoreEntitlement?.verifiedAt).toBe('2026-07-14T11:00:00.000Z');
+    expect(merged.snapshot?.activeStoreEntitlement?.expiresAt).toBe('2027-07-14T12:00:00.000Z');
+    vi.resetModules();
+    const coldStore = await import('./store');
+    const cold = await coldStore.readEntitlementSnapshot(contextA, NOW);
+    expect(cold.status === 'available' && cold.snapshot.activeStoreEntitlement).toEqual(merged.snapshot?.activeStoreEntitlement);
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it.each([
+    { version: 2 }, { version: null }, { version: undefined },
+    { kind: 'server_projection_v2' }, { revision: 1 }, { revision: undefined },
+    { revision: null }, { revision: '0' }, { revision: '01' }, { revision: '-1' },
+    { revision: '1.0' }, { revision: ' 1' }, { revision: '9223372036854775808' },
+    { stream_id: 'not-owner-uuid' }, { provider: null },
+    { provider: { kind: 'rc_snapshot', at: 'invalid', fingerprint: 'x' } },
+    { provider: { kind: 'server_projection', version: 1, revision: '1' } },
+  ])('rejects malformed server version/cursor instead of falling back: %j', async (override) => {
+    const valid = publicationResponse();
+    const row = valid.store_projection.row as ReturnType<typeof storeProjectionRow>;
+    const invalid = publicationResponse('1', { cursor: { ...(row.cursor as object), ...override } });
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({ data: invalid, error: null });
+    await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toEqual({
+      status: 'rejected', reason: 'server_projection_invalid',
+    });
+    expect(mocks.from).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({
+      store: { serverProtocolRejected: true, serverProjection: null },
+    });
+  });
+
+  it.each([0, 3, 999, null, undefined, '2'])(
+    'rejects unknown or missing DTO schema %s without a positive fallback', async (schema_version) => {
+      mocks.isSupabaseConfigured = true;
+      projectionRpcBuilder({ data: { ...publicationResponse(), schema_version }, error: null });
+      await expect(fetchServerEvidence(contextA, new AbortController().signal)).resolves.toMatchObject({ status: 'rejected' });
+      expect(JSON.parse(mocks.storage.get(KEY)!).store.serverProtocolRejected).toBe(true);
+    },
+  );
+
+  it('requires schema2 and its server cursor together, while schema1 compatibility cannot undo a known revocation', async () => {
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({ data: { ...publicationResponse(), schema_version: 1 }, error: null });
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('rejected');
+    projectionRpcBuilder({ data: { ...projectionResponse({ state: 'active', row: storeProjectionRow() }), schema_version: 2 }, error: null });
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('rejected');
+    const revoked = await fetchPublication(publicationResponse('2', { is_active: false, will_renew: false }));
+    await mergeEntitlementEvidenceBatch(contextA, revoked, NOW);
+    projectionRpcBuilder({ data: projectionResponse({ state: 'active', row: storeProjectionRow() }), error: null });
+    const old = await fetchServerEvidence(contextA, new AbortController().signal);
+    if (old.status !== 'evidence') throw new Error('Expected supported V1 DTO');
+    const ignored = await mergeEntitlementEvidenceBatch(contextA, old.evidence, NOW);
+    expect(ignored.disposition).toBe('stale');
+    expect(ignored.snapshot?.activeStoreEntitlement).toBeNull();
+  });
+
+  it('fails the actual read-to-state boundary closed for malformed publication even with prior paid cache', async () => {
+    const old = rowToEvidence(webhookRow());
+    if (old.status !== 'evidence') throw new Error('Expected R1 cache evidence');
+    const prior = await mergeEntitlementEvidence(contextA, old.evidence, NOW);
+    const raw = mocks.storage.get(KEY)!;
+    mocks.isSupabaseConfigured = true;
+    const invalid = publicationResponse('9223372036854775808', { is_active: false });
+    projectionRpcBuilder({ data: invalid, error: null }, { data: invalid, error: null });
+    const server = await fetchServerEvidence(contextA, new AbortController().signal);
+    const data = stateWithoutServerEvidence({ local: prior.snapshot, localStatus: 'available',
+      serverStatus: server.status, nowISO: NOW, development: false });
+    expect(data).toMatchObject({ isPro: false, evidenceStatus: 'unavailable' });
+    expect(await fetchServerEntitlement()).toBeNull();
+    const quarantined = JSON.parse(mocks.storage.get(KEY)!);
+    expect(quarantined.store.definitive).toEqual(JSON.parse(raw).store.definitive);
+    expect(quarantined.store.serverProtocolRejected).toBe(true);
+  });
+
+  it('uses the current cache after a delayed transport failure instead of reviving a superseded paid cache', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    const revoked = await fetchPublication(publicationResponse('2', { is_active: false, will_renew: false }));
+    let release!: () => void;
+    let started!: () => void;
+    const began = new Promise<void>((resolve) => { started = resolve; });
+    mocks.rpc.mockReturnValue({ abortSignal: async () => {
+      started();
+      await new Promise<void>((resolve) => { release = resolve; });
+      return { data: null, error: new Error('offline') };
+    } });
+    const slow = fetchServerEntitlement();
+    await began;
+    await mergeEntitlementEvidenceBatch(contextA, revoked, NOW);
+    release();
+    expect((await slow)?.isActive).toBe(false);
+  });
+
+  it('does not hide an invalid second reader response behind independent app-grant evidence', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValue({ data: { outcome: 'reconciled' }, error: null });
+    projectionRpcBuilder(
+      { data: projectionResponse(
+        { state: 'legacy_unknown', row: storeProjectionRow({ is_active: false, cursor: null }) },
+        { state: 'active', row: appGrantProjectionRow() },
+      ), error: null },
+      { data: publicationResponse('0'), error: null },
+    );
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('rejected');
+  });
+
+  it('checks the server stream against the current owner at both authenticated read and merge boundaries', async () => {
+    const valid = publicationResponse();
+    const row = valid.store_projection.row as ReturnType<typeof storeProjectionRow>;
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({ data: publicationResponse('1', {
+      cursor: { ...(row.cursor as object), stream_id: '22222222-2222-4222-8222-222222222222' },
+    }), error: null });
+    expect(await fetchServerEvidence(contextA, new AbortController().signal)).toMatchObject({
+      status: 'rejected', reason: 'server_projection_owner_mismatch',
+    });
+    const evidence = await fetchPublication();
+    if (evidence[0].kind !== 'server_projection') throw new Error('Expected publication cursor');
+    const foreign: EntitlementEvidence = { ...evidence[0],
+      cursor: { ...evidence[0].cursor, streamId: '22222222-2222-4222-8222-222222222222' } };
+    const blocked = await mergeEntitlementEvidence(contextA, foreign, NOW);
+    expect(blocked).toMatchObject({ status: 'blocked', snapshot: null, reason: ENTITLEMENT_CACHE_FOREIGN_OWNER });
+    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({
+      store: { serverProjection: null, serverProtocolRejected: true },
+    });
+  });
+
+  it('migrates a recognized V2 cache in place without dropping useful proof, clock or local revision', async () => {
+    const converted = rowToEvidence(webhookRow());
+    if (converted.status !== 'evidence') throw new Error('Expected legacy webhook');
+    await mergeEntitlementEvidence(contextA, converted.evidence, NOW);
+    const old = JSON.parse(mocks.storage.get(KEY)!);
+    old.version = 2;
+    delete old.store.serverProjection;
+    delete old.store.serverConflict;
+    delete old.store.serverProtocolRejected;
+    mocks.storage.set(KEY, JSON.stringify(old));
+    const migrated = await readEntitlementSnapshot(contextA, NOW);
+    expect(migrated.status === 'available' && migrated.snapshot.activeStoreEntitlement?.isActive).toBe(true);
+    const current = JSON.parse(mocks.storage.get(KEY)!);
+    expect(current).toMatchObject({ version: 3, revision: old.revision, clockAnchor: old.clockAnchor,
+      store: { definitive: old.store.definitive, serverProjection: null, serverConflict: null } });
+    const revoked = await fetchPublication(publicationResponse('1', { is_active: false, will_renew: false }));
+    const merged = await mergeEntitlementEvidenceBatch(contextA, revoked, NOW);
+    expect(merged.snapshot?.activeStoreEntitlement).toBeNull();
+    expect(JSON.parse(mocks.storage.get(KEY)!).revision).toBe(old.revision + 1);
+    const raw = mocks.storage.get(KEY);
+    expect((await readEntitlementSnapshot(contextA, NOW)).status).toBe('available');
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it.each([0, -1, 2.5, '3', null, 4, 999])('leaves unknown cache schema %s intact and fail closed', async (version) => {
+    const evidence = await fetchPublication();
+    const raw = JSON.stringify({ version });
+    mocks.storage.set(KEY, raw);
+    expect((await readEntitlementSnapshot(contextA, NOW)).status).toBe('unsupported_version');
+    expect((await mergeEntitlementEvidenceBatch(contextA, evidence, NOW)).status).toBe('blocked');
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it('never downgrades a V3 revision proof to a V2 cache by merely changing its schema marker', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    const forged = JSON.parse(mocks.storage.get(KEY)!);
+    forged.version = 2;
+    mocks.storage.set(KEY, JSON.stringify(forged));
+    expect((await readEntitlementSnapshot(contextA, NOW)).status).toBe('corrupt');
+  });
+
+  it('persists rejected publication recovery across V2 migration, cold restart and offline reads without discarding its proof', async () => {
+    const old = rowToEvidence(webhookRow());
+    if (old.status !== 'evidence') throw new Error('Expected R1 evidence');
+    await mergeEntitlementEvidence(contextA, old.evidence, NOW);
+    const r1 = JSON.parse(mocks.storage.get(KEY)!);
+    r1.version = 2;
+    delete r1.store.serverProjection;
+    delete r1.store.serverConflict;
+    delete r1.store.serverProtocolRejected;
+    mocks.storage.set(KEY, JSON.stringify(r1));
+    mocks.isSupabaseConfigured = true;
+    projectionRpcBuilder({ data: publicationResponse('9223372036854775808', { is_active: false }), error: null });
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('rejected');
+    const raw = mocks.storage.get(KEY)!;
+    const saved = JSON.parse(raw);
+    expect(saved).toMatchObject({ version: 3, clockAnchor: r1.clockAnchor, revision: r1.revision + 1,
+      store: { definitive: r1.store.definitive, serverProtocolRejected: true } });
+    vi.resetModules();
+    const coldStore = await import('./store');
+    const local = await coldStore.readEntitlementSnapshot(contextA, NOW);
+    if (local.status !== 'available') throw new Error('Expected preserved quarantined cache');
+    expect(local.snapshot).toMatchObject({ hasConflict: true, activeStoreEntitlement: null });
+    const state = stateWithoutServerEvidence({ local: local.snapshot, localStatus: local.status,
+      serverStatus: 'transport_error', nowISO: NOW, development: false });
+    expect(state.isPro).toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(raw);
+    projectionRpcBuilder({ data: publicationResponse(), error: null });
+    const valid = await coldStore.fetchServerEvidence(contextA, new AbortController().signal);
+    if (valid.status !== 'evidence') throw new Error('Expected a fresh authenticated read after restart');
+    const recovered = await coldStore.mergeEntitlementEvidenceBatch(contextA, valid.evidence, NOW);
+    expect(recovered.snapshot).toMatchObject({ hasConflict: false, activeStoreEntitlement: { isActive: true } });
+    expect(JSON.parse(mocks.storage.get(KEY)!).store.serverProtocolRejected).toBe(false);
+    expect(recovered.snapshot?.activeStoreEntitlement?.verifiedAt).toBe('2026-07-14T11:00:00.000Z');
+  });
+
+  it('stale evidence cannot clear quarantine, while a fresh identical current read can', async () => {
+    const proof = await fetchPublication(publicationResponse('2', { is_active: false, will_renew: false }));
+    await mergeEntitlementEvidenceBatch(contextA, proof, NOW);
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    await fetchServerEvidence(contextA, new AbortController().signal);
+    const stale = await fetchPublication(publicationResponse('1'));
+    const rejected = await mergeEntitlementEvidenceBatch(contextA, stale, NOW);
+    expect(rejected.disposition).toBe('stale');
+    expect(rejected.snapshot?.hasConflict).toBe(true);
+    expect(JSON.parse(mocks.storage.get(KEY)!).store.serverProtocolRejected).toBe(true);
+    const replayed = await mergeEntitlementEvidenceBatch(contextA, proof, NOW);
+    expect(replayed).toMatchObject({ status: 'blocked', snapshot: null });
+    expect(JSON.parse(mocks.storage.get(KEY)!).store.serverProtocolRejected).toBe(true);
+    const fresh = await fetchPublication(publicationResponse('2', { is_active: false, will_renew: false }));
+    const recovered = await mergeEntitlementEvidenceBatch(contextA, fresh, NOW);
+    expect(recovered.disposition).toBe('duplicate');
+    expect(recovered.snapshot).toMatchObject({ hasConflict: false, activeStoreEntitlement: null });
+    expect(JSON.parse(mocks.storage.get(KEY)!).store.serverProjection.cursor.revision).toBe('2');
+  });
+
+  it('copying decoded evidence does not manufacture authenticated recovery authority', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('rejected');
+    const fresh = await fetchPublication();
+    const copy = structuredClone(fresh);
+    const copied = await mergeEntitlementEvidenceBatch(contextA, copy, NOW);
+    expect(copied.snapshot).toMatchObject({ hasConflict: true, activeStoreEntitlement: null });
+    expect(JSON.parse(mocks.storage.get(KEY)!).store.serverProtocolRejected).toBe(true);
+    const actual = await mergeEntitlementEvidenceBatch(contextA, fresh, NOW);
+    expect(actual.snapshot).toMatchObject({ hasConflict: false, activeStoreEntitlement: { isActive: true } });
+  });
+
+  it('changing a captured publication cannot transfer its recovery authority to different data', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    await fetchServerEvidence(contextA, new AbortController().signal);
+    const fresh = await fetchPublication();
+    if (fresh[0]?.kind !== 'server_projection') throw new Error('Expected publication evidence');
+    Object.assign(fresh[0].cursor, { revision: '2' });
+    const raw = mocks.storage.get(KEY);
+    const altered = await mergeEntitlementEvidenceBatch(contextA, fresh, NOW);
+    expect(altered).toMatchObject({ status: 'blocked', snapshot: null, reason: 'ENTITLEMENT_SERVER_READ_INVALIDATED' });
+    expect(mocks.storage.get(KEY)).toBe(raw);
+    expect(JSON.parse(raw!).store.serverProtocolRejected).toBe(true);
+  });
+
+  it('revalidates captured recovery after async owner hashing at the actual atomic update', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    await fetchServerEvidence(contextA, new AbortController().signal);
+    const fresh = await fetchPublication();
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    let captured!: () => void;
+    const hashing = new Promise<void>((resolve) => { captured = resolve; });
+    vi.mocked(localDataOwnerBinding).mockImplementationOnce(async () => {
+      captured();
+      await held;
+      return A;
+    });
+    const pending = mergeEntitlementEvidenceBatch(contextA, fresh, NOW);
+    await hashing;
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('rejected');
+    const raw = mocks.storage.get(KEY);
+    release();
+    expect(await pending).toMatchObject({ status: 'blocked', snapshot: null });
+    expect(mocks.storage.get(KEY)).toBe(raw);
+    expect(JSON.parse(raw!).store.serverProtocolRejected).toBe(true);
+  });
+
+  it('failed quarantine persistence is unavailable for the current request and cannot fall back to paid cache', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    const raw = mocks.storage.get(KEY)!;
+    mocks.nextMutationWriteError = new Error('PRIVATE_KV_WRITE_FAILED');
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    const server = await fetchServerEvidence(contextA, new AbortController().signal);
+    expect(server).toMatchObject({ status: 'blocked', reason: 'PRIVATE_KV_WRITE_FAILED' });
+    expect(mocks.storage.get(KEY)).toBe(raw);
+    const local = await readEntitlementSnapshot(contextA, NOW);
+    if (local.status !== 'available') throw new Error('Expected preserved cache');
+    expect(stateWithoutServerEvidence({ local: local.snapshot, localStatus: local.status,
+      serverStatus: server.status, nowISO: NOW, development: false }).isPro).toBe(false);
+  });
+
+  it('never reads, merges over or quarantines a structurally valid cached server stream belonging to another owner', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    const cache = JSON.parse(mocks.storage.get(KEY)!);
+    const proof = cache.store.serverProjection;
+    proof.cursor.streamId = '22222222-2222-4222-8222-222222222222';
+    proof.fingerprint = serverProjectionFingerprint(proof.cursor, proof.state, proof.entitlement);
+    const forged = JSON.stringify(cache);
+    mocks.storage.set(KEY, forged);
+    expect(await readEntitlementSnapshot(contextA, NOW)).toEqual({ status: 'foreign_owner', snapshot: null });
+    const blocked = await mergeEntitlementEvidence(contextA,
+      snapshotEvidence('2026-07-14T13:00:00.000Z', storeEntitlement()), NOW);
+    expect(blocked).toMatchObject({ status: 'blocked', reason: ENTITLEMENT_CACHE_FOREIGN_OWNER });
+    projectionRpcBuilder({ data: publicationResponse('0'), error: null });
+    expect((await fetchServerEvidence(contextA, new AbortController().signal)).status).toBe('blocked');
+    expect(mocks.storage.get(KEY)).toBe(forged);
+  });
+
+  it('rechecks owner authority after asynchronously hashing a cached server stream and before any transform', async () => {
+    await mergeEntitlementEvidenceBatch(contextA, await fetchPublication(), NOW);
+    const raw = mocks.storage.get(KEY)!;
+    vi.mocked(localDataOwnerBinding).mockImplementationOnce(async () => {
+      mocks.currentOwnerBinding = B;
+      return A;
+    });
+    expect(await readEntitlementSnapshot(contextA, NOW)).toEqual({ status: 'foreign_owner', snapshot: null });
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
   it('reconciles a legacy-unknown store row once and re-reads one authoritative tombstone', async () => {
     mocks.isSupabaseConfigured = true;
     const legacy = projectionResponse({
@@ -1084,7 +1439,7 @@ describe('owner-bound entitlement evidence store', () => {
     });
   });
 
-  it('rejects incoherent projection shapes without mutating trusted bytes', async () => {
+  it('rejects incoherent projection shapes while retaining trusted proof and persisting a negative protocol marker', async () => {
     await mergeAppGrant();
     const before = mocks.storage.get(KEY);
     mocks.isSupabaseConfigured = true;
@@ -1100,7 +1455,9 @@ describe('owner-bound entitlement evidence store', () => {
       status: 'rejected',
       reason: 'server_projection_invalid',
     });
-    expect(mocks.storage.get(KEY)).toBe(before);
+    const saved = JSON.parse(mocks.storage.get(KEY)!);
+    expect(saved.appGrant).toEqual(JSON.parse(before!).appGrant);
+    expect(saved.store.serverProtocolRejected).toBe(true);
   });
 
   it('keeps the compatibility save wrapper app-grant-only', async () => {
@@ -1190,7 +1547,7 @@ describe('owner-bound entitlement evidence store', () => {
       isActive: true,
       grantedAt,
     });
-    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({ version: 2, ownerBinding: A });
+    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({ version: 3, ownerBinding: A });
   });
 
   it('explicit reset removes both entitlement cache keys', async () => {

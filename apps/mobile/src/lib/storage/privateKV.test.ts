@@ -202,6 +202,78 @@ describe('private KV encrypted storage', () => {
     await expect(getPrivateItem('routine-key')).resolves.toBe('routine-value');
   });
 
+  it('preserves prior quarantine when an additional recovery guard expires after the transform but before native write', async () => {
+    const key = 'layerwell.entitlement.v2';
+    const prior = JSON.stringify({ store: { serverProtocolRejected: true } });
+    await setPrivateItem(key, prior);
+    const priorRaw = mocks.asyncStorage.get(key);
+    let current = true;
+    let release!: () => void;
+    let readStarted!: () => void;
+    const nextRead = new Promise<void>((resolve) => { readStarted = resolve; });
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    const write = updatePrivateItem(key, () => {
+      // The real writer awaits a final native read after its sync transform.
+      mocks.getItemGate = held;
+      mocks.getItemStarted = readStarted;
+      return JSON.stringify({ store: { serverProtocolRejected: false } });
+    }, () => {
+      if (!current) throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED');
+    });
+    const denied = expect(write).rejects.toThrow('ENTITLEMENT_SERVER_READ_INVALIDATED');
+    await nextRead;
+    current = false;
+    mocks.getItemGate = null;
+    mocks.getItemStarted = null;
+    release();
+    await denied;
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    await expect(getPrivateItem(key)).resolves.toBe(prior);
+  });
+
+  it('rolls a stale recovery write back to exact quarantined ciphertext even if the queued negative operation fails', async () => {
+    const key = 'layerwell.entitlement.v2';
+    const prior = JSON.stringify({ store: { serverProtocolRejected: true } });
+    await setPrivateItem(key, prior);
+    const priorRaw = mocks.asyncStorage.get(key);
+    let current = true;
+    let release!: () => void;
+    let writeStarted!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => { release = resolve; });
+    const writing = new Promise<void>((resolve) => { writeStarted = resolve; });
+    mocks.setItemStarted = writeStarted;
+    const commits: string[] = [];
+    mocks.setItemCommitted = (storedKey, raw) => { if (storedKey === key) commits.push(raw); };
+    const recovery = updatePrivateItem(key,
+      () => JSON.stringify({ store: { serverProtocolRejected: false } }),
+      () => { if (!current) throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED'); });
+    const recoveryDenied = expect(recovery).rejects.toThrow('ENTITLEMENT_SERVER_READ_INVALIDATED');
+    await writing;
+    current = false;
+    // Its plaintext/key have already been read. This later native key failure
+    // applies to the queued negative operation, after the first writer rolls back.
+    mocks.secureGetThrows = true;
+    const negative = updatePrivateItem(key, () => prior);
+    const negativeFailed = expect(negative).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
+    release();
+    await Promise.all([recoveryDenied, negativeFailed]);
+    expect(commits).toHaveLength(2);
+    expect(commits[0]).not.toBe(priorRaw);
+    expect(commits[1]).toBe(priorRaw);
+    expect(mocks.asyncStorage.get(key)).toBe(priorRaw);
+    mocks.secureGetThrows = false;
+    await expect(getPrivateItem(key)).resolves.toBe(prior);
+  });
+
+  it('does not let an additional permissive guard bypass the existing health authority', async () => {
+    await setPrivateItem('layerwell.skinprofile.v1', 'prior-profile');
+    const priorRaw = mocks.asyncStorage.get('layerwell.skinprofile.v1');
+    clearActiveHealthProcessingEpoch();
+    await expect(updatePrivateItem('layerwell.skinprofile.v1', () => 'changed', () => undefined))
+      .rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.asyncStorage.get('layerwell.skinprofile.v1')).toBe(priorRaw);
+  });
+
   it('blocks a classified health record when local processing is closed', async () => {
     clearActiveHealthProcessingEpoch();
 

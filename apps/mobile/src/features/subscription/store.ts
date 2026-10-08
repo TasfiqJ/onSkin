@@ -1,6 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query';
 import type { CustomerInfo } from 'react-native-purchases';
-import { stateFromEntitlementSnapshot } from './clientEntitlement';
+import { bindEntitlementSnapshotState, stateFromEntitlementSnapshot } from './clientEntitlement';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { localDataOwnerBinding, readLocalDataOwnerProofBinding } from '@/lib/auth/sessionOwner';
@@ -29,13 +29,19 @@ import {
   effectiveEntitlementProjection,
   emptyEntitlementEnvelope,
   entitlementEvidenceFingerprint,
+  isServerProjectionRevision,
   mergeEntitlementEnvelope,
+  quarantineServerProjection,
+  serverProjectionFingerprint,
   storeCursorProviderAt,
   type AppGrantConflict,
   type AppGrantProof,
-  type EntitlementCacheEnvelopeV2,
+  type EntitlementCacheEnvelopeV3,
   type EntitlementEvidence,
   type LegacyPositiveProof,
+  type ServerProjectionConflict,
+  type ServerProjectionCursor,
+  type ServerProjectionProof,
   type StoreConflict,
   type StoreDefinitiveProof,
   type StoreEvidenceCursor,
@@ -47,8 +53,108 @@ import {
  * in separate lanes so a lagging webhook, a verified-empty RevenueCat snapshot,
  * or a transport failure cannot erase an unrelated reverse trial.
  */
+// Keep one atomic encrypted slot across V2 -> V3. A second key would let a
+// delayed write or an old client revive the superseded projection watermark.
 const KEY = 'layerwell.entitlement.v2';
 const LEGACY_KEY = 'layerwell.entitlement.v1';
+
+type ServerProjectionRead = Readonly<{ ownerBinding: string; epoch: object }>;
+// This is local request authority, separate from SQL/provider revisions and the
+// cache counter. Every rejection rotates it, even if its negative write fails.
+// A restart loses all in-flight capabilities; the existing persisted negative
+// marker remains and only a new authenticated read can recover it.
+const serverReadEpochs = new Map<string, object>();
+const serverEvidenceReads = new WeakMap<EntitlementEvidence, Readonly<{
+  read: ServerProjectionRead;
+  fingerprint: string;
+}>>();
+// Publication validity belongs to the exact returned snapshot, including SDK
+// and cached snapshots. It never grants authenticated recovery authority and
+// never adds SDK evidence to serverEvidenceReads.
+const snapshotPublications = new WeakMap<EntitlementSnapshot, () => void>();
+type SnapshotPublicationState = {
+  readonly epoch: object;
+  readonly snapshot: EntitlementSnapshot;
+  previous?: SnapshotPublicationState;
+};
+const snapshotPublicationStates = new Map<string, SnapshotPublicationState>();
+
+function bindSnapshotPublication(
+  snapshot: EntitlementSnapshot,
+  assertAuthorityCurrent: () => void,
+  evidenceChanged = false,
+): () => void {
+  const previous = snapshotPublicationStates.get(snapshot.ownerBinding);
+  const paid = stateFromEntitlementSnapshot(snapshot).isPro;
+  // The reducer decides which evidence wins. Only its accepted denial rotates
+  // this publication epoch; it cannot confer authenticated recovery authority.
+  const invalidatesPrior = !paid && (evidenceChanged ||
+    (previous !== undefined && stateFromEntitlementSnapshot({ ...previous.snapshot }).isPro));
+  const epoch = invalidatesPrior ? {} : previous?.epoch ?? {};
+  // A positive transform cannot relax the preceding accepted projection while
+  // native persistence or the final owner check is outstanding. Keep that
+  // restriction if the write fails or rolls back. Denials retire immediately.
+  const publication = { epoch, snapshot, previous: paid ? previous : undefined };
+  snapshotPublicationStates.set(snapshot.ownerBinding, publication);
+  let effectiveNowISO = snapshot.effectiveNowISO;
+  const assertCurrent = () => {
+    assertAuthorityCurrent();
+    const current = snapshotPublicationStates.get(snapshot.ownerBinding);
+    if (!current || current.epoch !== epoch) {
+      throw new Error('ENTITLEMENT_SNAPSHOT_PUBLICATION_INVALIDATED');
+    }
+    // Retained access obeys the same finite admission rules at use time. Keep
+    // both persisted and observed clock high watermarks, including after a
+    // failed check, so a later wall-clock rollback cannot revive this result.
+    const currentSnapshots: EntitlementSnapshot[] = [];
+    for (let state: SnapshotPublicationState | undefined = current; state; state = state.previous) {
+      currentSnapshots.push(state.snapshot);
+      effectiveNowISO = maxISO(effectiveNowISO, state.snapshot.effectiveNowISO);
+    }
+    effectiveNowISO = maxISO(effectiveNowISO, nowISO());
+    if (paid && (!stateFromEntitlementSnapshot({ ...snapshot, effectiveNowISO }).isPro ||
+      currentSnapshots.some((accepted) => !stateFromEntitlementSnapshot({ ...accepted, effectiveNowISO }).isPro))) {
+      throw new Error('ENTITLEMENT_SNAPSHOT_PUBLICATION_INVALIDATED');
+    }
+  };
+  snapshotPublications.set(snapshot, assertCurrent);
+  bindEntitlementSnapshotState(snapshot, () => assertEntitlementSnapshotPublishable(snapshot));
+  // Confirm only this transform. An earlier completion must never replace a
+  // later publication's state or epoch. A successful later read also releases
+  // restrictions retained from failed writes without rewriting their facts.
+  return () => { publication.previous = undefined; };
+}
+
+function captureServerProjectionRead(context: EntitlementOwnerContext): ServerProjectionRead {
+  const epoch = serverReadEpochs.get(context.ownerBinding) ?? {};
+  serverReadEpochs.set(context.ownerBinding, epoch);
+  return { ownerBinding: context.ownerBinding, epoch };
+}
+
+function assertServerProjectionReadCurrent(read: ServerProjectionRead, ownerBinding: string): void {
+  if (read.ownerBinding !== ownerBinding || serverReadEpochs.get(ownerBinding) !== read.epoch) {
+    throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED');
+  }
+}
+
+export function assertEntitlementSnapshotCurrent(snapshot: EntitlementSnapshot): void {
+  const assertCurrent = snapshotPublications.get(snapshot);
+  if (!assertCurrent) throw new Error('ENTITLEMENT_SNAPSHOT_PUBLICATION_INVALIDATED');
+  assertCurrent();
+}
+
+function assertEntitlementSnapshotPublishable(snapshot: EntitlementSnapshot): void {
+  assertEntitlementSnapshotCurrent(snapshot);
+  if (!stateFromEntitlementSnapshot({ ...snapshot }).isPro) return;
+  // A retained paid capability can remain current while both subscriptions are
+  // live. Its old longer expiry still cannot replace a newer admission limit
+  // in query data. Pending positives retain every predecessor restriction.
+  for (let state = snapshotPublicationStates.get(snapshot.ownerBinding); state; state = state.previous) {
+    if (Date.parse(snapshot.entitlement!.expiresAt!) > Date.parse(state.snapshot.entitlement!.expiresAt!)) {
+      throw new Error('ENTITLEMENT_SNAPSHOT_PUBLICATION_INVALIDATED');
+    }
+  }
+}
 
 export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
 export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION = 'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
@@ -79,9 +185,19 @@ type EntitlementRow = {
   rc_event_id?: string | null;
 };
 
-type ProjectionCursor =
+type ProviderProjectionCursor =
   | Readonly<{ kind: 'rc_webhook'; at: string; priority: number; event_id: string }>
-  | Readonly<{ kind: 'rc_snapshot'; at: string; fingerprint: string }>
+  | Readonly<{ kind: 'rc_snapshot'; at: string; fingerprint: string }>;
+
+type ProjectionCursor =
+  | ProviderProjectionCursor
+  | Readonly<{
+      kind: 'server_projection';
+      version: 1;
+      stream_id: string;
+      revision: string;
+      provider: ProviderProjectionCursor;
+    }>
   | null;
 
 type ProjectionRow = Readonly<{
@@ -103,7 +219,7 @@ type ProjectionRow = Readonly<{
 }>;
 
 type EntitlementProjectionResponse = Readonly<{
-  schema_version: 1;
+  schema_version: 1 | 2;
   store_projection: Readonly<{
     state: 'active' | 'inactive' | 'legacy_unknown' | 'absent';
     row: ProjectionRow | null;
@@ -243,7 +359,8 @@ const ENVELOPE_KEYS = [
   'appGrant',
   'legacy',
 ] as const;
-const STORE_LANE_KEYS = ['definitive', 'provisionalActive', 'conflict'] as const;
+const STORE_LANE_V2_KEYS = ['definitive', 'provisionalActive', 'conflict'] as const;
+const STORE_LANE_KEYS = [...STORE_LANE_V2_KEYS, 'serverProjection', 'serverConflict', 'serverProtocolRejected'] as const;
 const APP_GRANT_LANE_KEYS = ['definitive', 'conflict'] as const;
 const STORE_DEFINITIVE_KEYS = [
   'cursor',
@@ -254,6 +371,8 @@ const STORE_DEFINITIVE_KEYS = [
   'fingerprint',
 ] as const;
 const STORE_PROVISIONAL_KEYS = ['cursor', 'entitlement', 'provenance', 'fingerprint'] as const;
+const SERVER_PROJECTION_KEYS = ['cursor', 'state', 'entitlement', 'priorEntitlement', 'fingerprint'] as const;
+const SERVER_CONFLICT_KEYS = ['streamId', 'revision', 'leftFingerprint', 'rightFingerprint'] as const;
 const STORE_CONFLICT_KEYS = [
   'providerAt',
   'leftFingerprint',
@@ -447,6 +566,11 @@ function printableAscii(value: unknown, maxLength = 255): value is string {
   );
 }
 
+function canonicalStreamId(value: unknown): value is string {
+  return typeof value === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value);
+}
+
 function decodeStoreCursor(value: unknown): StoreEvidenceCursor | null {
   if (!isRecord(value) || typeof value.kind !== 'string') return null;
   if (value.kind === 'revenuecat_snapshot') {
@@ -484,6 +608,45 @@ function decodeStoreCursor(value: unknown): StoreEvidenceCursor | null {
     };
   }
   return null;
+}
+
+function decodeServerProjectionCursor(value: unknown): ServerProjectionCursor | null {
+  if (!isRecord(value) || !hasExactKeys(value, ['kind', 'version', 'streamId', 'revision', 'provider']) ||
+      value.kind !== 'server_projection' || value.version !== 1 ||
+      !canonicalStreamId(value.streamId) || !isServerProjectionRevision(value.revision)) return null;
+  const provider = decodeStoreCursor(value.provider);
+  return provider ? {
+    kind: 'server_projection', version: 1, streamId: value.streamId,
+    revision: value.revision, provider,
+  } : null;
+}
+
+function decodeServerProjection(value: unknown): ServerProjectionProof | null {
+  if (!isRecord(value) || !hasExactKeys(value, SERVER_PROJECTION_KEYS)) return null;
+  const cursor = decodeServerProjectionCursor(value.cursor);
+  const entitlement = value.entitlement === null ? null : strictStoredEntitlement(value.entitlement);
+  const priorEntitlement = value.priorEntitlement === null ? null : strictStoredEntitlement(value.priorEntitlement);
+  const state = value.state;
+  if (!cursor || (state !== 'active' && state !== 'inactive' && state !== 'empty') ||
+      (value.entitlement !== null && !entitlement) ||
+      (value.priorEntitlement !== null && !priorEntitlement) ||
+      (state === 'empty' && entitlement !== null) ||
+      (state === 'active' && !entitlement?.isActive) ||
+      (state === 'inactive' && (!entitlement || entitlement.isActive)) ||
+      (entitlement !== null && entitlement.source !== 'revenuecat') ||
+      value.fingerprint !== serverProjectionFingerprint(cursor, state, entitlement)) return null;
+  return { cursor, state, entitlement, priorEntitlement, fingerprint: value.fingerprint as string };
+}
+
+function decodeServerConflict(value: unknown): ServerProjectionConflict | null {
+  if (!isRecord(value) || !hasExactKeys(value, SERVER_CONFLICT_KEYS) ||
+      !canonicalStreamId(value.streamId) || !isServerProjectionRevision(value.revision) ||
+      typeof value.leftFingerprint !== 'string' || typeof value.rightFingerprint !== 'string' ||
+      value.leftFingerprint.length > 16_384 || value.rightFingerprint.length > 16_384) return null;
+  return {
+    streamId: value.streamId, revision: value.revision,
+    leftFingerprint: value.leftFingerprint, rightFingerprint: value.rightFingerprint,
+  };
 }
 
 function decodeStoreDefinitive(value: unknown): StoreDefinitiveProof | null {
@@ -635,7 +798,7 @@ function decodeLegacyProof(value: unknown): LegacyPositiveProof | null {
  * shape so merge can atomically discard it after the current owner has
  * received definitive evidence.
  */
-function decodeDeprecatedNotRequestedEnvelope(raw: string): EntitlementCacheEnvelopeV2 | null {
+function decodeDeprecatedNotRequestedEnvelope(raw: string): EntitlementCacheEnvelopeV3 | null {
   let value: unknown;
   try {
     value = JSON.parse(raw) as unknown;
@@ -644,7 +807,7 @@ function decodeDeprecatedNotRequestedEnvelope(raw: string): EntitlementCacheEnve
   }
   if (
     !isRecord(value) ||
-    value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION ||
+    (value.version !== 2 && value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION) ||
     !hasExactKeys(value, ENVELOPE_KEYS) ||
     !isRecord(value.legacy) ||
     !hasExactKeys(value.legacy, LEGACY_PROOF_KEYS) ||
@@ -670,10 +833,11 @@ function decodeDeprecatedNotRequestedEnvelope(raw: string): EntitlementCacheEnve
 function hasDefinitiveReplacementEvidence(
   evidence: readonly (EntitlementEvidence | null)[],
 ): boolean {
-  return evidence.some((item) => item?.kind === 'store_definitive' || item?.kind === 'app_grant');
+  return evidence.some((item) => item?.kind === 'server_projection' ||
+    item?.kind === 'store_definitive' || item?.kind === 'app_grant');
 }
 
-function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
+function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV3 {
   let value: unknown;
   try {
     value = JSON.parse(raw) as unknown;
@@ -681,16 +845,13 @@ function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
     throw new Error(ENTITLEMENT_CACHE_INVALID);
   }
   if (!isRecord(value)) throw new Error(ENTITLEMENT_CACHE_INVALID);
-  if (value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION) {
-    if (
-      typeof value.version === 'number' &&
-      Number.isSafeInteger(value.version) &&
-      value.version > ENTITLEMENT_CACHE_SCHEMA_VERSION
-    ) {
-      throw new Error(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
-    }
+  if (value.version === 1 || !hasOwn(value, 'version')) {
     throw new Error(ENTITLEMENT_CACHE_LEGACY_UNBOUND);
   }
+  if (value.version !== 2 && value.version !== ENTITLEMENT_CACHE_SCHEMA_VERSION) {
+    throw new Error(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
+  }
+  const migratingV2 = value.version === 2;
   if (
     !hasExactKeys(value, ENVELOPE_KEYS) ||
     typeof value.ownerBinding !== 'string' ||
@@ -699,7 +860,8 @@ function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
     (value.revision as number) < 0 ||
     (value.clockAnchor !== null && !canonicalISO(value.clockAnchor)) ||
     !isRecord(value.store) ||
-    !hasExactKeys(value.store, STORE_LANE_KEYS) ||
+    !hasExactKeys(value.store, migratingV2 ? STORE_LANE_V2_KEYS : STORE_LANE_KEYS) ||
+    (!migratingV2 && typeof value.store.serverProtocolRejected !== 'boolean') ||
     !isRecord(value.appGrant) ||
     !hasExactKeys(value.appGrant, APP_GRANT_LANE_KEYS)
   ) {
@@ -714,6 +876,10 @@ function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
       : decodeStoreProvisional(value.store.provisionalActive);
   const storeConflict =
     value.store.conflict === null ? null : decodeStoreConflict(value.store.conflict);
+  const serverProjection = migratingV2 || value.store.serverProjection === null
+    ? null : decodeServerProjection(value.store.serverProjection);
+  const serverConflict = migratingV2 || value.store.serverConflict === null
+    ? null : decodeServerConflict(value.store.serverConflict);
   const appGrantDefinitive =
     value.appGrant.definitive === null ? null : decodeAppGrantProof(value.appGrant.definitive);
   const appGrantConflict =
@@ -723,6 +889,12 @@ function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
     (value.store.definitive !== null && !definitive) ||
     (value.store.provisionalActive !== null && !provisionalActive) ||
     (value.store.conflict !== null && !storeConflict) ||
+    (!migratingV2 && value.store.serverProjection !== null && !serverProjection) ||
+    (!migratingV2 && value.store.serverConflict !== null && !serverConflict) ||
+    (serverConflict !== null && (!serverProjection ||
+      serverConflict.streamId !== serverProjection.cursor.streamId ||
+      serverConflict.revision !== serverProjection.cursor.revision ||
+      serverConflict.leftFingerprint !== serverProjection.fingerprint)) ||
     (value.appGrant.definitive !== null && !appGrantDefinitive) ||
     (value.appGrant.conflict !== null && !appGrantConflict) ||
     (value.legacy !== null && !legacy)
@@ -735,13 +907,16 @@ function decodeEntitlementEnvelope(raw: string): EntitlementCacheEnvelopeV2 {
     ownerBinding: value.ownerBinding,
     revision: value.revision as number,
     clockAnchor: value.clockAnchor,
-    store: { definitive, provisionalActive, conflict: storeConflict },
+    store: {
+      definitive, provisionalActive, conflict: storeConflict, serverProjection, serverConflict,
+      serverProtocolRejected: migratingV2 ? false : value.store.serverProtocolRejected as boolean,
+    },
     appGrant: { definitive: appGrantDefinitive, conflict: appGrantConflict },
     legacy,
   };
 }
 
-function encodeEntitlementEnvelope(envelope: EntitlementCacheEnvelopeV2): string {
+function encodeEntitlementEnvelope(envelope: EntitlementCacheEnvelopeV3): string {
   return JSON.stringify(envelope);
 }
 
@@ -783,6 +958,62 @@ async function assertCurrentOwnerContext(context: EntitlementOwnerContext): Prom
   if (currentBinding !== context.ownerBinding) throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
 }
 
+function cachedServerStreamId(raw: string | null): string | null {
+  if (raw === null) return null;
+  try {
+    const value: unknown = JSON.parse(raw);
+    if (!isRecord(value) || !isRecord(value.store) ||
+        !isRecord(value.store.serverProjection) || !isRecord(value.store.serverProjection.cursor)) return null;
+    const streamId = value.store.serverProjection.cursor.streamId;
+    return canonicalStreamId(streamId) ? streamId : null;
+  } catch {
+    // The strict codec reports corrupt/unknown cache formats inside the updater.
+    return null;
+  }
+}
+
+/** The canonical owner hash is async; privateKV's serialized updater is sync.
+ * Check the cached stream before entering it and fence that identity inside it.
+ * Ordinary same-stream revision races stay in the original atomic transform. */
+async function updateEntitlementCache(
+  context: EntitlementOwnerContext,
+  updater: (raw: string | null) => string | null,
+  assertMutationCurrent?: () => void,
+): Promise<void> {
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    await assertCurrentOwnerContext(context);
+    const streamId = cachedServerStreamId(await getPrivateItem(KEY));
+    if (streamId !== null && await localDataOwnerBinding(streamId) !== context.ownerBinding) {
+      throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
+    }
+    await assertCurrentOwnerContext(context);
+    let streamChanged = false;
+    await updatePrivateItem(KEY, (raw) => {
+      if (cachedServerStreamId(raw) !== streamId) {
+        streamChanged = true;
+        return raw;
+      }
+      return updater(raw);
+    }, assertMutationCurrent);
+    if (!streamChanged) {
+      await assertCurrentOwnerContext(context);
+      return;
+    }
+  }
+  throw new Error('ENTITLEMENT_CACHE_PUBLICATION_STREAM_CHANGED');
+}
+
+async function persistServerProtocolRejection(context: EntitlementOwnerContext): Promise<void> {
+  await updateEntitlementCache(context, (raw) => {
+    const current = raw === null ? emptyEntitlementEnvelope(context.ownerBinding) : decodeEntitlementEnvelope(raw);
+    if (current.ownerBinding !== context.ownerBinding) throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
+    // Invalidate reads captured while this negative update was waiting to enter.
+    serverReadEpochs.set(context.ownerBinding, {});
+    const blocked = quarantineServerProjection(current);
+    return blocked === current ? raw : encodeEntitlementEnvelope(blocked);
+  });
+}
+
 export async function entitlementOwnerContextForUser(
   userId: string,
 ): Promise<EntitlementOwnerContext> {
@@ -805,7 +1036,7 @@ function maxISO(left: string | null, right: string): string {
 }
 
 function snapshotFromEnvelope(
-  envelope: EntitlementCacheEnvelopeV2,
+  envelope: EntitlementCacheEnvelopeV3,
   observedAtISO: string,
 ): EntitlementSnapshot {
   const effectiveNowISO = maxISO(envelope.clockAnchor, observedAtISO);
@@ -827,7 +1058,8 @@ function snapshotFromEnvelope(
     effectiveNowISO,
     hasConflict: projection.hasConflict,
     requiresUncachedRefresh: projection.hasConflict ||
-      (!!envelope.legacy && !envelope.store.definitive && !envelope.store.provisionalActive),
+      (!!envelope.legacy && !envelope.store.definitive && !envelope.store.provisionalActive &&
+        !envelope.store.serverProjection),
   };
 }
 
@@ -843,9 +1075,15 @@ export async function readEntitlementSnapshot(
   if (!canonicalObservedAt) return { status: 'unavailable', snapshot: null };
   try {
     await assertCurrentOwnerContext(context);
+    // Local cache reads can also finish after a newer rejection. This lease
+    // guards their publication only; no authenticated recovery capability is
+    // attached to a cached snapshot.
+    const read = captureServerProjectionRead(context);
+    const assertReadCurrent = () => assertServerProjectionReadCurrent(read, context.ownerBinding);
     let absent = false;
     let snapshot: EntitlementSnapshot | null = null;
-    await updatePrivateItem(KEY, (raw) => {
+    let confirmPublication: (() => void) | undefined;
+    await updateEntitlementCache(context, (raw) => {
       if (raw === null) {
         absent = true;
         return null;
@@ -856,15 +1094,24 @@ export async function readEntitlementSnapshot(
       }
       const advanced = advanceEntitlementClock(current, canonicalObservedAt);
       snapshot = snapshotFromEnvelope(advanced, canonicalObservedAt);
-      return advanced === current ? raw : encodeEntitlementEnvelope(advanced);
-    });
-    if (snapshot) return { status: 'available', snapshot };
+      confirmPublication = bindSnapshotPublication(snapshot, assertReadCurrent);
+      // Persist a recognized V2 migration even if its expiry clock was already current.
+      const encoded = encodeEntitlementEnvelope(advanced);
+      return encoded === raw ? raw : encoded;
+    }, assertReadCurrent);
+    assertReadCurrent();
+    if (snapshot) {
+      confirmPublication?.();
+      assertEntitlementSnapshotCurrent(snapshot);
+      return { status: 'available', snapshot };
+    }
     if (!absent) return { status: 'unavailable', snapshot: null };
 
     // Unbound bytes are never adopted or granted to whichever account happens
     // to sign in next. They remain intact until verified owner-bound evidence
     // replaces them or explicit account cleanup removes them.
     const legacy = await getPrivateItem(LEGACY_KEY);
+    assertReadCurrent();
     return legacy === null
       ? { status: 'absent', snapshot: null }
       : { status: 'legacy_unbound', snapshot: null };
@@ -881,6 +1128,7 @@ export async function readEntitlementCache(): Promise<EntitlementCacheRead> {
     return { status: readFailureStatus(error), entitlement: null, snapshot: null };
   }
   const read = await readEntitlementSnapshot(context);
+  if (read.snapshot) assertEntitlementSnapshotCurrent(read.snapshot);
   return read.status === 'available'
     ? { status: 'available', entitlement: read.snapshot.entitlement, snapshot: read.snapshot }
     : { status: read.status, entitlement: null, snapshot: null };
@@ -888,11 +1136,23 @@ export async function readEntitlementCache(): Promise<EntitlementCacheRead> {
 
 export async function loadEntitlement(): Promise<StoredEntitlement | null> {
   const result = await readEntitlementCache();
+  if (result.snapshot) assertEntitlementSnapshotCurrent(result.snapshot);
   return result.status === 'available' ? result.entitlement : null;
 }
 
 function normalizedEvidence(evidence: EntitlementEvidence): EntitlementEvidence | null {
   if (!isRecord(evidence)) return null;
+  if (evidence.kind === 'server_projection') {
+    const cursor = decodeServerProjectionCursor(evidence.cursor);
+    const entitlement = evidence.entitlement === null ? null : normalizeStoredEntitlement(evidence.entitlement);
+    if (!cursor || (evidence.state !== 'active' && evidence.state !== 'inactive' && evidence.state !== 'empty') ||
+        (evidence.entitlement !== null && !entitlement) ||
+        (evidence.state === 'empty' && entitlement !== null) ||
+        (evidence.state === 'active' && !entitlement?.isActive) ||
+        (evidence.state === 'inactive' && (!entitlement || entitlement.isActive)) ||
+        (entitlement !== null && entitlement.source !== 'revenuecat')) return null;
+    return { kind: 'server_projection', cursor, state: evidence.state, entitlement };
+  }
   if (evidence.kind === 'store_definitive') {
     const cursor = decodeStoreCursor(evidence.cursor);
     const entitlement =
@@ -957,6 +1217,9 @@ export async function mergeEntitlementEvidenceBatch(
   candidates: readonly EntitlementEvidence[],
   observedAtISO = nowISO(),
 ): Promise<MergeEntitlementEvidenceResult> {
+  // Preserve the original object's capability before normalizing its data.
+  // A copied or fabricated object cannot acquire recovery authority.
+  const reads = candidates.map((item) => serverEvidenceReads.get(item));
   const evidence = candidates.map(normalizedEvidence);
   const canonicalObservedAt = isoOrNull(observedAtISO);
   if (evidence.length === 0 || evidence.some((item) => item === null) || !canonicalObservedAt) {
@@ -969,16 +1232,42 @@ export async function mergeEntitlementEvidenceBatch(
     };
   }
   try {
+    // Every merge needs local publication validity. Authenticated server reads
+    // additionally retain their earlier request-bound recovery capability.
+    const publication = captureServerProjectionRead(context);
+    const assertServerReadsCurrent = () => {
+      assertServerProjectionReadCurrent(publication, context.ownerBinding);
+      for (let index = 0; index < evidence.length; index += 1) {
+        const captured = reads[index];
+        if (!captured) continue;
+        assertServerProjectionReadCurrent(captured.read, context.ownerBinding);
+        const item = evidence[index];
+        if (item?.kind !== 'server_projection' ||
+            serverProjectionFingerprint(item.cursor, item.state, item.entitlement) !== captured.fingerprint) {
+          throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED');
+        }
+      }
+    };
     await assertCurrentOwnerContext(context);
+    for (const item of evidence) {
+      if (item?.kind === 'server_projection' &&
+          await localDataOwnerBinding(item.cursor.streamId) !== context.ownerBinding) {
+        throw new Error(ENTITLEMENT_CACHE_FOREIGN_OWNER);
+      }
+    }
     const mutation: {
       changed?: boolean;
       disposition?: MergeEntitlementEvidenceResult['disposition'];
       snapshot?: EntitlementSnapshot;
+      confirmPublication?: () => void;
       storageChanged?: boolean;
       requiresUncachedRefresh?: boolean;
     } = {};
-    await updatePrivateItem(KEY, (raw) => {
-      let current: EntitlementCacheEnvelopeV2;
+    await updateEntitlementCache(context, (raw) => {
+      // Owner hashing and the private-KV lock can both await. Check the read's
+      // rejection-relative authority at the actual serialized transform.
+      assertServerReadsCurrent();
+      let current: EntitlementCacheEnvelopeV3;
       let sanitizedRetiredCache = false;
       if (raw === null) {
         current = emptyEntitlementEnvelope(context.ownerBinding);
@@ -1012,8 +1301,8 @@ export async function mergeEntitlementEvidenceBatch(
       let merged = current;
       const dispositions: MergeEntitlementEvidenceResult['disposition'][] = [];
       let evidenceChanged = false;
-      for (const item of evidence) {
-        const result = mergeEntitlementEnvelope(merged, item!);
+      for (let index = 0; index < evidence.length; index += 1) {
+        const result = mergeEntitlementEnvelope(merged, evidence[index]!, reads[index] !== undefined);
         merged = result.envelope;
         dispositions.push(result.disposition);
         evidenceChanged ||= result.changed;
@@ -1032,11 +1321,16 @@ export async function mergeEntitlementEvidenceBatch(
                 ? 'stale'
                 : 'ignored';
       mutation.requiresUncachedRefresh = projection.hasConflict;
-      mutation.storageChanged = sanitizedRetiredCache || merged !== current;
+      mutation.storageChanged = sanitizedRetiredCache || merged !== current ||
+        encodeEntitlementEnvelope(merged) !== raw;
       mutation.snapshot = snapshotFromEnvelope(merged, canonicalObservedAt);
+      mutation.confirmPublication = bindSnapshotPublication(mutation.snapshot, assertServerReadsCurrent, evidenceChanged);
       if (!mutation.storageChanged) return raw;
       return encodeEntitlementEnvelope(merged);
-    });
+    }, assertServerReadsCurrent);
+    // Do not publish the transform's captured snapshot if a rejection was
+    // observed while the private storage operation was completing.
+    assertServerReadsCurrent();
     const snapshot = mutation.snapshot;
     if (
       mutation.changed === undefined ||
@@ -1052,6 +1346,8 @@ export async function mergeEntitlementEvidenceBatch(
         reason: 'merge_not_executed',
       };
     }
+    mutation.confirmPublication?.();
+    assertEntitlementSnapshotCurrent(snapshot);
     return {
       status:
         mutation.disposition === 'conflict'
@@ -1249,6 +1545,22 @@ function decodeNullableISO(value: unknown): StrictDecode<string | null> {
 function decodeProjectionCursor(value: unknown): StrictDecode<ProjectionCursor> {
   if (value === null) return { ok: true, value: null };
   if (!isRecord(value) || typeof value.kind !== 'string') return { ok: false };
+  if (value.kind === 'server_projection') {
+    if (!hasExactKeys(value, ['kind', 'version', 'stream_id', 'revision', 'provider']) ||
+        value.version !== 1 || !canonicalStreamId(value.stream_id) ||
+        !isServerProjectionRevision(value.revision) || !isRecord(value.provider) ||
+        (value.provider.kind !== 'rc_webhook' && value.provider.kind !== 'rc_snapshot')) {
+      return { ok: false };
+    }
+    const provider = decodeProjectionCursor(value.provider);
+    if (!provider.ok || provider.value === null || provider.value.kind === 'server_projection') {
+      return { ok: false };
+    }
+    return { ok: true, value: {
+      kind: 'server_projection', version: 1, stream_id: value.stream_id,
+      revision: value.revision, provider: provider.value,
+    } };
+  }
   if (value.kind === 'rc_webhook') {
     const at =
       typeof value.at === 'string' && WIRE_ISO_INSTANT_PATTERN.test(value.at)
@@ -1369,7 +1681,7 @@ function decodeProjectionResponse(value: unknown): StrictDecode<EntitlementProje
   if (
     !isRecord(value) ||
     !hasExactKeys(value, PROJECTION_RESPONSE_KEYS) ||
-    value.schema_version !== 1 ||
+    (value.schema_version !== 1 && value.schema_version !== 2) ||
     !isRecord(value.store_projection) ||
     !hasExactKeys(value.store_projection, PROJECTION_KEYS) ||
     !isRecord(value.app_grant_projection) ||
@@ -1411,6 +1723,9 @@ function decodeProjectionResponse(value: unknown): StrictDecode<EntitlementProje
     ((storeState === 'active' || storeState === 'inactive') &&
       storeRow.value !== null &&
       storeRow.value.cursor !== null &&
+      (value.schema_version === 2
+        ? storeRow.value.cursor.kind === 'server_projection'
+        : storeRow.value.cursor.kind !== 'server_projection') &&
       storeRow.value.source === 'revenuecat' &&
       storeRow.value.is_active === (storeState === 'active'));
   const coherentAppGrant =
@@ -1435,7 +1750,7 @@ function decodeProjectionResponse(value: unknown): StrictDecode<EntitlementProje
   return {
     ok: true,
     value: {
-      schema_version: 1,
+      schema_version: value.schema_version,
       store_projection: { state: storeState, row: storeRow.value },
       app_grant_projection: { state: appGrantState, row: appGrantRow.value },
     },
@@ -1464,7 +1779,7 @@ function projectionRowToEntitlement(row: ProjectionRow): StoredEntitlement | nul
 }
 
 function projectionCursorToStoreCursor(
-  cursor: Exclude<ProjectionCursor, null>,
+  cursor: ProviderProjectionCursor,
 ): StoreEvidenceCursor {
   return cursor.kind === 'rc_webhook'
     ? {
@@ -1498,13 +1813,25 @@ function projectionEvidence(
     ) {
       return { ok: false };
     }
-    evidence.push({
-      kind: 'store_definitive',
-      cursor: projectionCursorToStoreCursor(row.cursor),
-      state,
-      entitlement,
-      provenance: row.cursor.kind === 'rc_webhook' ? 'server_webhook' : 'server_snapshot',
-    });
+    if (row.cursor.kind === 'server_projection') {
+      evidence.push({
+        kind: 'server_projection',
+        cursor: {
+          kind: 'server_projection', version: 1, streamId: row.cursor.stream_id,
+          revision: row.cursor.revision, provider: projectionCursorToStoreCursor(row.cursor.provider),
+        },
+        state,
+        entitlement,
+      });
+    } else {
+      evidence.push({
+        kind: 'store_definitive',
+        cursor: projectionCursorToStoreCursor(row.cursor),
+        state,
+        entitlement,
+        provenance: row.cursor.kind === 'rc_webhook' ? 'server_webhook' : 'server_snapshot',
+      });
+    }
   }
 
   const appGrant = response.app_grant_projection;
@@ -1530,8 +1857,46 @@ export async function publishCustomerInfoEvidence(
   }>,
 ): Promise<PublishCustomerInfoEvidenceResult> {
   const queryKey = entitlementQueryKey(input.context.ownerBinding);
+  const publication = captureServerProjectionRead(input.context);
   try {
     await input.queryClient.cancelQueries({ queryKey, exact: true });
+    assertServerProjectionReadCurrent(publication, input.context.ownerBinding);
+
+    const conversion = customerInfoToEvidence(input.customerInfo, input.entitlement);
+    if (conversion.status !== 'evidence') {
+      const current = await readEntitlementSnapshot(input.context, input.observedAtISO ?? nowISO());
+      assertServerProjectionReadCurrent(publication, input.context.ownerBinding);
+      if (current.status === 'available') {
+        assertEntitlementSnapshotPublishable(current.snapshot);
+        input.queryClient.setQueryData(
+          queryKey,
+          stateFromEntitlementSnapshot(current.snapshot),
+        );
+      }
+      return {
+        status: conversion.status,
+        disposition: 'ignored',
+        snapshot: current.status === 'available' ? current.snapshot : null,
+        requiresUncachedRefresh:
+          current.status === 'available' ? current.snapshot.requiresUncachedRefresh : false,
+        reason: conversion.reason,
+      };
+    }
+
+    const merged = await mergeEntitlementEvidence(
+      input.context,
+      conversion.evidence,
+      input.observedAtISO ?? nowISO(),
+    );
+    assertServerProjectionReadCurrent(publication, input.context.ownerBinding);
+    if (merged.snapshot) {
+      assertEntitlementSnapshotPublishable(merged.snapshot);
+      input.queryClient.setQueryData(
+        queryKey,
+        stateFromEntitlementSnapshot(merged.snapshot),
+      );
+    }
+    return merged;
   } catch (error) {
     return {
       status: 'blocked',
@@ -1541,38 +1906,6 @@ export async function publishCustomerInfoEvidence(
       reason: errorMessage(error),
     };
   }
-
-  const conversion = customerInfoToEvidence(input.customerInfo, input.entitlement);
-  if (conversion.status !== 'evidence') {
-    const current = await readEntitlementSnapshot(input.context, input.observedAtISO ?? nowISO());
-    if (current.status === 'available') {
-      input.queryClient.setQueryData(
-        queryKey,
-        stateFromEntitlementSnapshot(current.snapshot),
-      );
-    }
-    return {
-      status: conversion.status,
-      disposition: 'ignored',
-      snapshot: current.status === 'available' ? current.snapshot : null,
-      requiresUncachedRefresh:
-        current.status === 'available' ? current.snapshot.requiresUncachedRefresh : false,
-      reason: conversion.reason,
-    };
-  }
-
-  const merged = await mergeEntitlementEvidence(
-    input.context,
-    conversion.evidence,
-    input.observedAtISO ?? nowISO(),
-  );
-  if (merged.snapshot) {
-    input.queryClient.setQueryData(
-      queryKey,
-      stateFromEntitlementSnapshot(merged.snapshot),
-    );
-  }
-  return merged;
 }
 
 export async function fetchServerEvidence(
@@ -1580,27 +1913,61 @@ export async function fetchServerEvidence(
   signal: AbortSignal,
 ): Promise<ServerEvidenceResult> {
   if (!isSupabaseConfigured) return { status: 'unconfigured' };
+  const request: { read?: ServerProjectionRead } = {};
   try {
     await assertCurrentOwnerContext(context);
+    const rejectPublication = async (reason: string): Promise<
+      Readonly<{ status: 'rejected' | 'blocked'; reason: string }>
+    > => {
+      serverReadEpochs.set(context.ownerBinding, {});
+      try {
+        await persistServerProtocolRejection(context);
+        return { status: 'rejected', reason };
+      } catch (error) {
+        // A failed negative-only write must never become a transport fallback.
+        return { status: 'blocked', reason: errorMessage(error) };
+      }
+    };
     const readProjection = async (): Promise<
-      | Readonly<{ status: 'available'; response: EntitlementProjectionResponse }>
-      | Readonly<{ status: 'transport_error' | 'rejected'; reason: string }>
+      | Readonly<{ status: 'available'; response: EntitlementProjectionResponse; read: ServerProjectionRead }>
+      | Readonly<{ status: 'transport_error' | 'rejected' | 'blocked'; reason: string }>
     > => {
       await assertCurrentOwnerContext(context);
+      const read = captureServerProjectionRead(context);
+      request.read = read;
       const { data, error } = await supabase
         .rpc('read_entitlement_projections')
         .abortSignal(signal);
       await assertCurrentOwnerContext(context);
-      if (error) return { status: 'transport_error', reason: 'server_projection_query_failed' };
+      if (error) {
+        assertServerProjectionReadCurrent(read, context.ownerBinding);
+        return { status: 'transport_error', reason: 'server_projection_query_failed' };
+      }
       const decoded = decodeProjectionResponse(data);
+      const cursor = decoded.ok ? decoded.value.store_projection.row?.cursor : null;
+      if (cursor?.kind === 'server_projection' &&
+          await localDataOwnerBinding(cursor.stream_id) !== context.ownerBinding) {
+        return rejectPublication('server_projection_owner_mismatch');
+      }
+      await assertCurrentOwnerContext(context);
+      if (decoded.ok) assertServerProjectionReadCurrent(read, context.ownerBinding);
       return decoded.ok
-        ? { status: 'available', response: decoded.value }
-        : { status: 'rejected', reason: 'server_projection_invalid' };
+        ? { status: 'available', response: decoded.value, read }
+        : rejectPublication('server_projection_invalid');
     };
 
-    const resultForProjection = (response: EntitlementProjectionResponse): ServerEvidenceResult => {
+    const resultForProjection = async (
+      response: EntitlementProjectionResponse,
+      read: ServerProjectionRead,
+    ): Promise<ServerEvidenceResult> => {
+      assertServerProjectionReadCurrent(read, context.ownerBinding);
       const converted = projectionEvidence(response);
-      if (!converted.ok) return { status: 'rejected', reason: 'server_projection_invalid' };
+      if (!converted.ok) return rejectPublication('server_projection_invalid');
+      for (const item of converted.value) {
+        if (item.kind === 'server_projection') serverEvidenceReads.set(item, {
+          read, fingerprint: serverProjectionFingerprint(item.cursor, item.state, item.entitlement),
+        });
+      }
       if (converted.value.length > 0) return { status: 'evidence', evidence: converted.value };
       return response.store_projection.state === 'legacy_unknown'
         ? { status: 'ignored', reason: 'legacy_store_projection_unresolved' }
@@ -1609,8 +1976,8 @@ export async function fetchServerEvidence(
 
     const first = await readProjection();
     if (first.status !== 'available') return first;
-    const firstResult = resultForProjection(first.response);
-    if (firstResult.status === 'rejected') return firstResult;
+    const firstResult = await resultForProjection(first.response, first.read);
+    if (firstResult.status === 'rejected' || firstResult.status === 'blocked') return firstResult;
     if (first.response.store_projection.state !== 'legacy_unknown') return firstResult;
 
     // The owner-scoped reconciliation function receives no subject or row
@@ -1628,6 +1995,7 @@ export async function fetchServerEvidence(
       hasExactKeys(reconciliation, ['outcome']) &&
       (reconciliation.outcome === 'reconciled' || reconciliation.outcome === 'already_current');
     if (!reconciliationAccepted) {
+      assertServerProjectionReadCurrent(first.read, context.ownerBinding);
       return firstResult.status === 'evidence'
         ? firstResult
         : { status: 'transport_error', reason: 'subscription_reconciliation_failed' };
@@ -1635,14 +2003,23 @@ export async function fetchServerEvidence(
 
     const second = await readProjection();
     if (second.status !== 'available') {
+      if (second.status === 'rejected' || second.status === 'blocked') return second;
+      assertServerProjectionReadCurrent(first.read, context.ownerBinding);
       return firstResult.status === 'evidence' ? firstResult : second;
     }
-    return resultForProjection(second.response);
+    return await resultForProjection(second.response, second.read);
   } catch (error) {
+    // Rejected promises and synchronous transport throws must obey the same
+    // read lease as a resolved { error }; an invalidated request cannot fall
+    // back to paid cache after a later negative write failed.
+    const invalidated = request.read !== undefined &&
+      (request.read.ownerBinding !== context.ownerBinding ||
+        serverReadEpochs.get(context.ownerBinding) !== request.read.epoch);
     return {
       status:
-        errorMessage(error) === ENTITLEMENT_CACHE_FOREIGN_OWNER ? 'blocked' : 'transport_error',
-      reason: errorMessage(error),
+        invalidated || errorMessage(error) === ENTITLEMENT_CACHE_FOREIGN_OWNER ||
+        errorMessage(error) === 'ENTITLEMENT_SERVER_READ_INVALIDATED' ? 'blocked' : 'transport_error',
+      reason: invalidated ? 'ENTITLEMENT_SERVER_READ_INVALIDATED' : errorMessage(error),
     };
   }
 }
@@ -1659,10 +2036,13 @@ export async function fetchServerEntitlement(): Promise<StoredEntitlement | null
       if (fetched.status === 'evidence') {
         const merged = await mergeEntitlementEvidenceBatch(context, fetched.evidence);
         lease.assertCurrent();
+        if (merged.snapshot) assertEntitlementSnapshotCurrent(merged.snapshot);
         return merged.snapshot?.entitlement ?? null;
       }
+      if (fetched.status === 'blocked' || fetched.status === 'rejected') return null;
       const local = await readEntitlementSnapshot(context);
       lease.assertCurrent();
+      if (local.snapshot) assertEntitlementSnapshotCurrent(local.snapshot);
       return local.status === 'available' ? local.snapshot.entitlement : null;
     });
   } catch {
@@ -1695,6 +2075,7 @@ export async function saveVerifiedEntitlement(
   if (!result.snapshot || result.status === 'blocked' || result.status === 'conflict') {
     throw new Error(result.reason ?? ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
   }
+  assertEntitlementSnapshotCurrent(result.snapshot);
   return normalized;
 }
 
@@ -1715,6 +2096,7 @@ export async function clearStoreEntitlementIfRevenueCatVerifiedEmpty(
   try {
     const context = await currentEntitlementOwnerContext();
     const result = await mergeEntitlementEvidence(context, conversion.evidence);
+    if (result.snapshot) assertEntitlementSnapshotCurrent(result.snapshot);
     return result.status === 'blocked' ? 'blocked' : 'committed';
   } catch {
     return 'blocked';
@@ -1745,6 +2127,7 @@ async function commitAppGrant(
   if (!result.snapshot || result.status === 'blocked' || result.status === 'conflict') {
     throw new Error(result.reason ?? ENTITLEMENT_EVIDENCE_COMMIT_BLOCKED);
   }
+  assertEntitlementSnapshotCurrent(result.snapshot);
   return normalized;
 }
 
