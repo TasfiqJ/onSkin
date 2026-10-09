@@ -36,8 +36,8 @@ import {
 } from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.117.0';
-const EXPECTED_MIGRATION_COUNT = 95;
-const EXPECTED_LATEST_MIGRATION = '20261007000079';
+const EXPECTED_MIGRATION_COUNT = 96;
+const EXPECTED_LATEST_MIGRATION = '20261008000080';
 const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
@@ -170,7 +170,7 @@ const laterRehearsalMigrationNames = migrationFiles.filter((name) => {
 });
 if (
   laterRehearsalMigrationNames.map((name) => name.slice(0, 14)).join(',') !==
-  '20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078'
+  '20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078,20261007000079'
 ) {
   throw new Error('The post-0072 rehearsal migration inventory changed without review.');
 }

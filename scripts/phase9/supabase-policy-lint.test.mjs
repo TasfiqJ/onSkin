@@ -260,3 +260,72 @@ test('policy lint requires the photo rewrite exception to retain owner UPDATE RL
     /photos_no_outbox_delete_rewrite requires the owner-scoped photos_update_own policy/,
   );
 });
+
+// CI-R3: exact 27/raw, 27/guarded and HMAC-aware 30/guarded boundary.
+const REVENUECAT_ACL_MIGRATION = '20261008000080_revenuecat_webhook_execution_acl.sql';
+const RAW27 = 'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
+const GUARDED27 = 'process_revenuecat_webhook_event_guarded(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
+const GUARDED30 = 'process_revenuecat_webhook_event_guarded(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean, smallint[], text[], text[])';
+
+test('Phase-9 accepts the exact guarded30-only RevenueCat authority matrix', () => {
+  const output = runFixture((sql) => sql, REVENUECAT_ACL_MIGRATION);
+  assert.match(output, /Phase 9 Supabase policy lint passed code gates/);
+  assert.doesNotMatch(output, /FAIL /);
+});
+
+for (const [name, signature] of [['raw27', RAW27], ['guarded27', GUARDED27]]) {
+  test(`Phase-9 rejects service_role EXECUTE on owner-private ${name}`, () => {
+    const output = runFixture((sql) => replaceRequired(sql, 'commit;',
+      `grant execute on function public.${signature} to service_role;\ncommit;`,
+    ), REVENUECAT_ACL_MIGRATION);
+    assert.match(output, /private delegate must not grant EXECUTE/);
+    assert.match(output, /private delegate must not be API-role executable/);
+  });
+  test(`Phase-9 rejects PUBLIC EXECUTE on owner-private ${name}`, () => {
+    const output = runFixture((sql) => replaceRequired(sql, 'commit;',
+      `grant execute on function public.${signature} to public;\ncommit;`,
+    ), REVENUECAT_ACL_MIGRATION);
+    assert.match(output, /private delegate must not be API-role executable/);
+  });
+  test(`Phase-9 rejects a missing explicit role revoke on ${name}`, () => {
+    const output = runFixture((sql) => {
+      const prefix = `revoke all on function public.${signature.split('(')[0]}(`;
+      const first = sql.indexOf(prefix);
+      assert.ok(first >= 0);
+      const end = sql.indexOf(';', first) + 1;
+      const statement = sql.slice(first, end);
+      return replaceRequired(sql, statement, statement.replace(
+        'from public, anon, authenticated, service_role;',
+        'from public, anon, service_role;',
+      ));
+    }, REVENUECAT_ACL_MIGRATION);
+    assert.match(output, /must explicitly revoke public, anon, authenticated, and service_role/);
+  });
+}
+
+test('Phase-9 rejects missing guarded30 service_role EXECUTE', () => {
+  const output = runFixture((sql) => sql.replace(
+    /grant execute on function public\.process_revenuecat_webhook_event_guarded\([\s\S]*?smallint\[\],\s*text\[\],\s*text\[\]\s*\)\s+to service_role;/i,
+    '',
+  ), REVENUECAT_ACL_MIGRATION);
+  assert.match(output, /must grant execute only to service_role after its full revoke/);
+});
+
+test('Phase-9 rejects authenticated EXECUTE on the guarded30 entrypoint', () => {
+  const output = runFixture((sql) => replaceRequired(sql, 'commit;',
+    `grant execute on function public.${GUARDED30} to authenticated;\ncommit;`,
+  ), REVENUECAT_ACL_MIGRATION);
+  assert.match(output, /must remain executable only by service_role/);
+});
+
+test('Phase-9 rejects missing explicit full revoke on guarded30', () => {
+  const output = runFixture((sql) => {
+    const sig = 'smallint[], text[], text[]';
+    const start = sql.indexOf('revoke all on function public.process_revenuecat_webhook_event_guarded(');
+    const match = [...sql.matchAll(/revoke all on function public\.process_revenuecat_webhook_event_guarded\([\s\S]*?\) from public, anon, authenticated, service_role;/gi)]
+      .find((m) => m[0].includes(sig));
+    assert.ok(start >= 0 && match);
+    return replaceRequired(sql, match[0], match[0].replace('authenticated, service_role', 'authenticated'));
+  }, REVENUECAT_ACL_MIGRATION);
+  assert.match(output, /must explicitly revoke public, anon, authenticated, and service_role/);
+});

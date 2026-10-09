@@ -544,39 +544,55 @@ block(
   'expire_app_granted_reverse_trials() must be executable only by service_role.',
 );
 
-const revenueCatAtomicKey =
-  'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
-const revenueCatAtomicFunction = latestFunctions.get(revenueCatAtomicKey);
-block(
-  errors,
-  Boolean(revenueCatAtomicFunction),
-  `${revenueCatAtomicKey} must exist with the reviewed signature.`,
-);
-if (revenueCatAtomicFunction) {
-  const matchingRevokes = revenueCatAtomicFunction.privilegeEventsAfterDefinition.filter(
-    (event) => event.kind === 'revoke',
-  );
-  block(
-    errors,
-    matchingRevokes.some(
-      (event) =>
-        event.roles.includes('public') &&
-        event.roles.includes('anon') &&
-        event.roles.includes('authenticated'),
+// RevenueCat's HMAC-aware v0051 guarded30 RPC is the sole direct service entry.
+// Both 27-argument routines are owner-private. 0079 CREATE OR REPLACE retains
+// historic ACLs; append-only 0080 must explicitly close all three overloads.
+const revenueCatRaw27Key = 'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
+const revenueCatGuarded27Key = 'process_revenuecat_webhook_event_guarded(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
+const revenueCatGuarded30Key = 'process_revenuecat_webhook_event_guarded(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean, smallint[], text[], text[])';
+for (const [key, serviceEntrypoint] of [
+  [revenueCatRaw27Key, false],
+  [revenueCatGuarded27Key, false],
+  [revenueCatGuarded30Key, true],
+]) {
+  const routine = latestFunctions.get(key);
+  block(errors, Boolean(routine), `${key} must exist with the reviewed signature.`);
+  if (!routine) continue;
+  const events = routine.privilegeEventsAfterDefinition;
+  const lastFullRevoke = events.findLastIndex((event) =>
+    event.kind === 'revoke' &&
+    ['public', 'anon', 'authenticated', 'service_role'].every((role) =>
+      event.roles.includes(role),
     ),
-    `${revenueCatAtomicKey} must revoke execute from public, anon, and authenticated.`,
   );
-
-  const matchingGrants = revenueCatAtomicFunction.privilegeEventsAfterDefinition.filter(
+  block(errors, lastFullRevoke >= 0,
+    `${key} must explicitly revoke public, anon, authenticated, and service_role.`);
+  const grantsSinceRevoke = events.slice(lastFullRevoke + 1).filter(
     (event) => event.kind === 'grant',
   );
-  block(
-    errors,
-    matchingGrants.length === 1 &&
-      matchingGrants[0].roles.length === 1 &&
-      matchingGrants[0].roles[0] === 'service_role',
-    `${revenueCatAtomicKey} must grant execute to service_role only.`,
-  );
+  const effective = routine.effectiveGrantRoles;
+  if (serviceEntrypoint) {
+    block(errors,
+      lastFullRevoke >= 0 && grantsSinceRevoke.length === 1 &&
+        grantsSinceRevoke[0].roles.length === 1 &&
+        grantsSinceRevoke[0].roles[0] === 'service_role',
+      `${key} must grant execute only to service_role after its full revoke.`,
+    );
+    block(errors,
+      effective.has('service_role') &&
+        !['public', 'anon', 'authenticated'].some((role) => effective.has(role)),
+      `${key} must remain executable only by service_role.`,
+    );
+  } else {
+    block(errors, lastFullRevoke >= 0 && grantsSinceRevoke.length === 0,
+      `${key} private delegate must not grant EXECUTE after final full revoke.`);
+    block(errors,
+      !['public', 'anon', 'authenticated', 'service_role'].some((role) =>
+        effective.has(role),
+      ),
+      `${key} private delegate must not be API-role executable.`,
+    );
+  }
 }
 
 printResult('Phase 9 Supabase policy lint', errors, warnings);

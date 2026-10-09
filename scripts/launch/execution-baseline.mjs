@@ -266,6 +266,7 @@ function dataFeatures(name) {
     account_deletion_receipts: ['F-02', 'F-20'],
     account_deletion_operator_recovery_audit: ['F-02', 'F-20'],
     revenuecat_identity_tombstones: ['F-02', 'F-11', 'F-12'],
+    revenuecat_publication: ['F-11', 'F-12'],
     account_publication_leases: ['F-02', 'F-11', 'F-12'],
     apple_auth_lifecycles: ['F-02', 'F-20'],
     apple_auth_capture_operations: ['F-02', 'F-20'],

@@ -7,13 +7,13 @@ select plan(48);
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  95::bigint,
-  'CORE-01 runs against the exact 95-migration source history'
+  96::bigint,
+  'CORE-01 runs against the exact 96-migration source history'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20261007000079'::text,
+  '20261008000080'::text,
   'the migration history includes the exact quiz-provenance successor'
 );
 

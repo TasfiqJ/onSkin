@@ -258,7 +258,7 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 152,
+    "data-store": 153,
     "edge-function": 18,
     "feature-flag": 17,
     "generated-packet": 33,
@@ -1217,6 +1217,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
       "featureIds": ["F-02", "F-11", "F-12"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:revenuecat_publication",
+      "category": "data-store",
+      "source": "supabase/migrations/20261007000079_revenuecat_webhook_authority.sql",
+      "featureIds": ["F-11", "F-12"],
       "readiness": "implemented"
     },
     {
