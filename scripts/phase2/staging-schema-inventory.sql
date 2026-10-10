@@ -81,8 +81,8 @@ select
     ) +
     (
       select count(*)
-      from pg_catalog.pg_collation as collation
-      join pg_catalog.pg_namespace as namespace on namespace.oid = collation.collnamespace
+      from pg_catalog.pg_collation as inventory_collation
+      join pg_catalog.pg_namespace as namespace on namespace.oid = inventory_collation.collnamespace
       where namespace.nspname = 'public'
     ) +
     (
