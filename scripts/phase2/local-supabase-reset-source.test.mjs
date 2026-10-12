@@ -621,3 +621,152 @@ test('C01 SIGTERM retains exit 143 on actual cleanup rejection', async () => {
     assert.doesNotMatch(fixture.output.join(''), /: PASS/u);
   } finally { signal.dispose(); await fixture.dispose(); }
 });
+
+test('H01 identity diagnostics are allowlisted and every owner field remains mandatory', async (t) => {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('function assertHistoryDatabaseTarget(');
+  const end = source.indexOf('\nconst COMPLETE_HISTORY_SQL', start);
+  const context = { historyDatabase: { major: 15, port: 54122 },
+    sandboxProjectId: 'owned_project', sandboxRoot: '/owned/sandbox' };
+  const check = runInNewContext(`${source.slice(start, end)}\nassertHistoryDatabaseTarget;`, context);
+  const target = { Id: 'a'.repeat(64), Name: '/supabase_db_owned_project', Image: `sha256:${'b'.repeat(64)}`,
+    State: { Running: true }, Config: { Image: 'public.ecr.aws/supabase/postgres:15.8.1.085', Labels: {
+      'com.supabase.cli.project': 'owned_project', 'com.docker.compose.project': 'owned_project',
+      'com.supabase.cli.workdir': '/owned/sandbox' } },
+    HostConfig: { PortBindings: { '5432/tcp': [{ HostIp: '', HostPort: '54122' }] } } };
+  assert.doesNotThrow(() => check(JSON.stringify([target])));
+  const controls = [
+    ['containerId', (v) => { v.Id = 'a'.repeat(63); }],
+    ['containerName', (v) => { v.Name = '/supabase_db_foreign'; }],
+    ['running', (v) => { v.State.Running = false; }],
+    ['cliProject', (v) => { delete v.Config.Labels['com.supabase.cli.project']; }],
+    ['composeProject', (v) => { v.Config.Labels['com.docker.compose.project'] = 'foreign'; }],
+    ['cliWorkdir', (v) => { delete v.Config.Labels['com.supabase.cli.workdir']; }],
+    ['cliWorkdir', (v) => { v.Config.Labels['com.supabase.cli.workdir'] = '/owned/sandbox/../foreign'; }],
+    ['imageMajor', (v) => { v.Config.Image = 'public.ecr.aws/supabase/postgres:17.8'; }],
+    ['imageMajor', (v) => { v.Config.Image = 'publicXecrXaws/supabase/postgres:15X8'; }],
+    ['imageDigest', (v) => { v.Image = 'sha256:invalid'; }],
+    ['portBinding', (v) => { v.HostConfig.PortBindings['5432/tcp'][0].HostPort = '54123'; }],
+    ['portBinding', (v) => { v.HostConfig.PortBindings['5432/tcp'].push({HostIp:'',HostPort:'54122'}); }],
+    ['portBinding', (v) => { v.HostConfig.PortBindings['5432/tcp'][0].HostIp = '192.0.2.1'; }],
+    ['portBinding', (v) => { delete v.HostConfig; }],
+  ];
+  for (const [field, alter] of controls) await t.test(`reject ${field}`, () => {
+    const v=structuredClone(target); alter(v);
+    assert.throws(() => check(JSON.stringify([v])), (error) => {
+      assert.match(error.message, /H01_DATABASE_TARGET/u);
+      const diagnostic=JSON.parse(error.message.slice(error.message.indexOf('{')));
+      assert.equal(diagnostic.checks[field], false);
+      assert.equal(diagnostic.observed.workdirLabelPresent, Object.hasOwn(v.Config.Labels, 'com.supabase.cli.workdir'));
+      assert.ok(Object.values(diagnostic.checks).every(value => typeof value === 'boolean'));
+      assert.equal(JSON.stringify(diagnostic).includes('/owned/sandbox'), false);
+      return true;
+    });
+  });
+  for (const raw of ['', 'null', '{}', '[]', JSON.stringify([target,target]), JSON.stringify([target]).slice(0,-2)]) {
+    assert.throws(() => check(raw), /H01_DATABASE_TARGET/u);
+  }
+  const secret='SENSITIVE_SENTINEL_DO_NOT_LOG';
+  const contaminated=structuredClone(target);
+  contaminated.Name=secret; contaminated.Config.Image=secret;
+  contaminated.Config.Labels['com.supabase.cli.workdir']=secret;
+  contaminated.Config.Env=[secret]; contaminated.Mounts=[{Source:secret}];
+  assert.throws(() => check(JSON.stringify([contaminated])), error => {
+    assert.doesNotMatch(error.message, /SENSITIVE_SENTINEL_DO_NOT_LOG/u);
+    assert.match(error.message, /"cliWorkdir":false/u);
+    return true;
+  });
+  context.historyDatabase=undefined;
+  assert.throws(() => check(JSON.stringify([target])), /H01_DATABASE_TARGET/u);
+});
+
+test('H01 SQL observation rejects swapped immutable IDs and image digests before CLI acceptance', async (t) => {
+  const { runInNewContext } = await import('node:vm');
+  const start=source.indexOf('async function assertCompleteMigrationHistory(');
+  const end=source.indexOf('\nlet verificationFailure;',start);
+  for (const field of ['id','image','workdir','port','project','major']) await t.test(field, async () => {
+    const before={id:'a'.repeat(64),image:`sha256:${'b'.repeat(64)}`,workdir:'/owned',port:54122,project:'owned'};
+    const after={...before,[field]:'foreign'};
+    const observations=[before,after]; const calls=[];
+    const context={sandboxProjectId:'owned',COMPLETE_HISTORY_SQL:'read-only fixture',
+      runHistoryDocker:async args=>{calls.push(args);return {stdout:'{}'};},
+      assertHistoryDatabaseTarget:()=>observations.shift(), assertCompleteSqlHistory:()=>{},
+      assertExactMigrationHistory:()=>{throw new Error('CLI_MUST_NOT_ACCEPT');},
+      console:{log:()=>{}},process:{stdout:{write:()=>{}}}};
+    const check=runInNewContext(`${source.slice(start,end)}\nassertCompleteMigrationHistory;`,context);
+    await assert.rejects(check('{}',[]), /H01_DATABASE_TARGET: database container changed/u);
+    assert.equal(calls[1][0],'exec'); assert.equal(calls[1][3],before.id);
+  });
+});
+
+test('H01 diagnostic has a fixed bounded schema even for long sensitive inspect and expected values', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('function assertHistoryDatabaseTarget(');
+  const end = source.indexOf('\nconst COMPLETE_HISTORY_SQL', start);
+  const sentinel = 'SENSITIVE_SENTINEL_DO_NOT_LOG';
+  const long = sentinel.repeat(40_000);
+  const context = { historyDatabase: { major: 15, port: 54122 },
+    sandboxProjectId: long, sandboxRoot: long,
+    process: { version: long, platform: long } };
+  const check = runInNewContext(`${source.slice(start, end)}\nassertHistoryDatabaseTarget;`, context);
+  const target = { Id: long, Name: long, Image: long, State: { Running: false },
+    Config: { Image: long, Labels: { 'com.supabase.cli.project': long,
+      'com.docker.compose.project': long, 'com.supabase.cli.workdir': long, arbitrary: long }, Env: [long] },
+    HostConfig: { PortBindings: { '5432/tcp': [{ HostIp: long, HostPort: long }] } },
+    Mounts: [{ Source: long }] };
+  assert.throws(() => check(JSON.stringify([target])), error => {
+    assert.match(error.message, /^H01_DATABASE_TARGET:/u);
+    assert.doesNotMatch(error.message, /SENSITIVE_SENTINEL_DO_NOT_LOG/u);
+    assert.ok(error.message.length < 1500);
+    const data = JSON.parse(error.message.slice(error.message.indexOf('{')));
+    assert.deepEqual(Object.keys(data).sort(), ['checks', 'observed', 'runtime', 'schema']);
+    assert.ok(Object.values(data.checks).every(v => typeof v === 'boolean'));
+    assert.ok(Object.values(data.observed).every(v => typeof v === 'boolean'));
+    assert.equal(data.runtime.node, null);
+    assert.equal(data.runtime.platform, null);
+    assert.equal(data.runtime.cli, '2.117.0');
+    return true;
+  });
+  for (const raw of [sentinel, `[${long}`, JSON.stringify([null]), JSON.stringify([{}])]) {
+    assert.throws(() => check(raw), error => {
+      assert.match(error.message, /H01_DATABASE_TARGET/u);
+      assert.doesNotMatch(error.message, /SENSITIVE_SENTINEL_DO_NOT_LOG/u);
+      return true;
+    });
+  }
+});
+
+test('successful pgTAP commands never echo summary suffixes or arbitrary output', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('async function runLocalCli(');
+  const end = source.indexOf('\nasync function runLocalReset(', start);
+  const sentinel = 'SENSITIVE_SENTINEL_DO_NOT_LOG';
+  for (const stdout of [`Files=20, Tests=2015 ${sentinel}\n`, `Files=20, Tests=2015, ${sentinel.repeat(40_000)}\n`,
+    'Files=999999999999999999999999, Tests=999999999999999999999999\n']) {
+    const logs = [];
+    const context = { LOCAL_CLI_TIMEOUT_MS: 900000, LOCAL_CLI_MAX_OUTPUT_BYTES: 8388608,
+      CLI_COMMAND: '/owned/node', CLI_ARGUMENT_PREFIX: [], sandboxRoot: '/owned/sandbox',
+      childEnv: {}, INHERIT_PARENT_PROCESS_GROUP: false, AbortController,
+      assertLocalOnlyInvocation: () => {}, activeCliProcess: undefined,
+      runContainedCommand: async () => ({ stdout, stderr: sentinel }),
+      process: { stdout: { write: text => logs.push(text) } } };
+    const run = runInNewContext(`${source.slice(start, end)}\nrunLocalCli;`, context);
+    const result = await run('fixed-test-label', ['test', 'db', '--local'], { quiet: true });
+    assert.equal(result.output, stdout);
+    assert.doesNotMatch(logs.join(''), /SENSITIVE_SENTINEL_DO_NOT_LOG|Files=|Tests=/u);
+    assert.equal(context.activeCliProcess, undefined);
+  }
+});
+
+test('H01 changed Docker executable bytes reject before any command can run', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('async function runHistoryDocker(');
+  const end = source.indexOf('\nfunction assertHistoryDatabaseTarget(', start);
+  let spawned = false;
+  const context = { historyDockerIdentity: { path: '/owned/docker', sha256: 'original' },
+    readFile: async () => Buffer.from('swapped'), sha256: () => 'swapped',
+    runContainedCommand: async () => { spawned = true; } };
+  const run = runInNewContext(`${source.slice(start, end)}\nrunHistoryDocker;`, context);
+  await assert.rejects(run(['inspect', 'owned']), /H01_DOCKER_EXECUTABLE: Docker bytes changed/u);
+  assert.equal(spawned, false);
+});

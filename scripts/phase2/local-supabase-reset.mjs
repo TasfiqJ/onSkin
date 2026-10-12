@@ -541,7 +541,41 @@ function assertHistoryDatabaseTarget(rawOutput) {
       !/^sha256:[a-f0-9]{64}$/u.test(target.Image ?? '') ||
       !Array.isArray(port) || port.length !== 1 || port[0].HostPort !== String(historyDatabase.port) ||
       !['', '127.0.0.1', '0.0.0.0'].includes(port[0].HostIp)) {
-    throw new Error('H01_DATABASE_TARGET: inspected database is not the exact run-owned target.');
+    // Fixed keys and booleans only: never echo inspect values or sandbox paths.
+    const checks = {
+      singleContainer: Boolean(target), runOwnership: Boolean(historyDatabase),
+      containerId: /^[a-f0-9]{64}$/u.test(target?.Id ?? ''),
+      containerName: target?.Name === `/supabase_db_${sandboxProjectId}`,
+      running: target?.State?.Running === true,
+      cliProject: labels?.['com.supabase.cli.project'] === sandboxProjectId,
+      composeProject: labels?.['com.docker.compose.project'] === sandboxProjectId,
+      cliWorkdir: labels?.['com.supabase.cli.workdir'] === sandboxRoot,
+      imageMajor: new RegExp(`^public\\.ecr\\.aws/supabase/postgres:${historyDatabase?.major}\\.`, 'u').test(target?.Config?.Image ?? ''),
+      imageDigest: /^sha256:[a-f0-9]{64}$/u.test(target?.Image ?? ''),
+      portCount: Array.isArray(port) && port.length === 1,
+      portNumber: port?.[0]?.HostPort === String(historyDatabase?.port),
+      portHost: ['', '127.0.0.1', '0.0.0.0'].includes(port?.[0]?.HostIp),
+      portBinding: Array.isArray(port) && port.length === 1 &&
+        port[0]?.HostPort === String(historyDatabase?.port) &&
+        ['', '127.0.0.1', '0.0.0.0'].includes(port[0]?.HostIp),
+    };
+    const diagnostic = {
+      schema: 1, checks,
+      runtime: {
+        cli: '2.117.0',
+        node: typeof process === 'object' && /^v\d{1,3}\.\d{1,3}\.\d{1,3}$/u.test(process.version ?? '')
+          ? process.version : null,
+        platform: typeof process === 'object' && ['linux', 'win32', 'darwin'].includes(process.platform)
+          ? process.platform : null,
+      },
+      observed: {
+        cliProjectLabelPresent: Object.hasOwn(labels ?? {}, 'com.supabase.cli.project'),
+        composeProjectLabelPresent: Object.hasOwn(labels ?? {}, 'com.docker.compose.project'),
+        workdirLabelPresent: Object.hasOwn(labels ?? {}, 'com.supabase.cli.workdir'),
+        portBindingPresent: Object.hasOwn(target?.HostConfig?.PortBindings ?? {}, '5432/tcp'),
+      },
+    };
+    throw new Error(`H01_DATABASE_TARGET: inspected database is not the exact run-owned target. ${JSON.stringify(diagnostic)}`);
   }
   return { id: target.Id, image: target.Image, project: sandboxProjectId,
     workdir: sandboxRoot, port: historyDatabase.port, major: historyDatabase.major };
