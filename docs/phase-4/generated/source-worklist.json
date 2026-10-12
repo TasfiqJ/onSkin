@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-06T22:54:04.053Z",
+  "generatedAt": "2026-10-12T16:22:07.124Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "bee6f172f923a1c0b8ac9b30d6bbaa18522ba924",
+  "gitSha": "e2ec482dac554392a19a5c085898bae0f9704713",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1014,26 +1014,26 @@
         {
           "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
           "exists": true,
-          "bytes": 10085,
-          "sha256": "a3877d095cde49ddc805c9b93f1f475ab2d27edab1525ad199149341b77557eb"
+          "bytes": 10097,
+          "sha256": "eb04d56036ccd53d9505960e45bd5baff3417981bbbdadf8de9a36b3380924ae"
         },
         {
           "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
           "exists": true,
-          "bytes": 3333,
-          "sha256": "65eb2f10de6014755d1cf979942fd856f84b8191b2d236d485e1c3fb93bf6be7"
+          "bytes": 3349,
+          "sha256": "343f905d9931f1f85f13e87eeea6b10b73209dd6c36d9e5ad3aa1d8c9fb8158e"
         },
         {
           "path": "supabase/tests/database/routine_adherence_authority.test.sql",
           "exists": true,
           "bytes": 38276,
-          "sha256": "96294b223ec6c28b8bc4f6acce4dcab75910da615268e36229b13ac686ebefc5"
+          "sha256": "3d922cced564bd808f2fc6d4a06704c06d07d33fdc98175495b1cd0377e96770"
         },
         {
           "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
           "exists": true,
           "bytes": 50474,
-          "sha256": "daff23782debf38dc58fa38943c4a52a6a305c3a3259a7c106799b992c911052"
+          "sha256": "b976083dbc00cf5041b3aafe1e537198c60edc3d6c18e629823eaaa0a5b4cd7a"
         },
         {
           "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
@@ -1045,7 +1045,7 @@
           "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
           "exists": true,
           "bytes": 17945,
-          "sha256": "2a480e7d828568720c580ab78c0cddc671e5c058ae7fbaa9dcd84d550b6d6fac"
+          "sha256": "7c602249dad829c168a1d3ffdbf3f31feb743296fe9d2c85da0241f3769e3039"
         },
         {
           "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
@@ -1099,7 +1099,7 @@
           "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
           "exists": true,
           "bytes": 10268,
-          "sha256": "1762aae74a0efea601be2a053f51d4550fa8525f988152f18e8669690f2ee808"
+          "sha256": "21434d64eb966306e822682a8586a246f04fe3e301de918ca1cf746e2f1a6e3b"
         },
         {
           "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
@@ -1116,8 +1116,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36173,
-          "sha256": "e0f8ce291fa6470b0aa5b36c814ba13e0231f3c00bde4a1a291f10eb6d2f3bb6"
+          "bytes": 36184,
+          "sha256": "64e24da5b791b6ffffbcf838dcb6b898e6d7c3f6d697147a81712b56d16b3955"
         },
         {
           "path": "docs/phase-4/catalog-import-promotion-runbook.md",
@@ -1336,8 +1336,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36173,
-          "sha256": "e0f8ce291fa6470b0aa5b36c814ba13e0231f3c00bde4a1a291f10eb6d2f3bb6"
+          "bytes": 36184,
+          "sha256": "64e24da5b791b6ffffbcf838dcb6b898e6d7c3f6d697147a81712b56d16b3955"
         }
       ]
     },
@@ -2126,7 +2126,7 @@
           "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
           "exists": true,
           "bytes": 17945,
-          "sha256": "2a480e7d828568720c580ab78c0cddc671e5c058ae7fbaa9dcd84d550b6d6fac"
+          "sha256": "7c602249dad829c168a1d3ffdbf3f31feb743296fe9d2c85da0241f3769e3039"
         },
         {
           "path": "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
@@ -2138,7 +2138,7 @@
           "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
           "exists": true,
           "bytes": 10268,
-          "sha256": "1762aae74a0efea601be2a053f51d4550fa8525f988152f18e8669690f2ee808"
+          "sha256": "21434d64eb966306e822682a8586a246f04fe3e301de918ca1cf746e2f1a6e3b"
         }
       ]
     },
@@ -2464,14 +2464,14 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36173,
-          "sha256": "e0f8ce291fa6470b0aa5b36c814ba13e0231f3c00bde4a1a291f10eb6d2f3bb6"
+          "bytes": 36184,
+          "sha256": "64e24da5b791b6ffffbcf838dcb6b898e6d7c3f6d697147a81712b56d16b3955"
         },
         {
           "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
           "exists": true,
           "bytes": 50474,
-          "sha256": "daff23782debf38dc58fa38943c4a52a6a305c3a3259a7c106799b992c911052"
+          "sha256": "b976083dbc00cf5041b3aafe1e537198c60edc3d6c18e629823eaaa0a5b4cd7a"
         },
         {
           "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
@@ -2713,8 +2713,8 @@
         {
           "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
           "exists": true,
-          "bytes": 36173,
-          "sha256": "e0f8ce291fa6470b0aa5b36c814ba13e0231f3c00bde4a1a291f10eb6d2f3bb6"
+          "bytes": 36184,
+          "sha256": "64e24da5b791b6ffffbcf838dcb6b898e6d7c3f6d697147a81712b56d16b3955"
         },
         {
           "path": "supabase/tests/database/catalog_operator_authority.test.sql",
@@ -2726,31 +2726,31 @@
           "path": "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
           "exists": true,
           "bytes": 21314,
-          "sha256": "acf2b9dad205acf338c2167a98a4c3ccb885058a5eac8efc4bc05845286978cb"
+          "sha256": "25bf44e93bcdcb3305ae7af9c4f9d7e704a3e5e959ea2bc85bfc8f4489cd891c"
         },
         {
           "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
           "exists": true,
-          "bytes": 10085,
-          "sha256": "a3877d095cde49ddc805c9b93f1f475ab2d27edab1525ad199149341b77557eb"
+          "bytes": 10097,
+          "sha256": "eb04d56036ccd53d9505960e45bd5baff3417981bbbdadf8de9a36b3380924ae"
         },
         {
           "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
           "exists": true,
-          "bytes": 3333,
-          "sha256": "65eb2f10de6014755d1cf979942fd856f84b8191b2d236d485e1c3fb93bf6be7"
+          "bytes": 3349,
+          "sha256": "343f905d9931f1f85f13e87eeea6b10b73209dd6c36d9e5ad3aa1d8c9fb8158e"
         },
         {
           "path": "supabase/tests/database/routine_adherence_authority.test.sql",
           "exists": true,
           "bytes": 38276,
-          "sha256": "96294b223ec6c28b8bc4f6acce4dcab75910da615268e36229b13ac686ebefc5"
+          "sha256": "3d922cced564bd808f2fc6d4a06704c06d07d33fdc98175495b1cd0377e96770"
         },
         {
           "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
           "exists": true,
           "bytes": 50474,
-          "sha256": "daff23782debf38dc58fa38943c4a52a6a305c3a3259a7c106799b992c911052"
+          "sha256": "b976083dbc00cf5041b3aafe1e537198c60edc3d6c18e629823eaaa0a5b4cd7a"
         },
         {
           "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
@@ -2762,13 +2762,13 @@
           "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
           "exists": true,
           "bytes": 17945,
-          "sha256": "2a480e7d828568720c580ab78c0cddc671e5c058ae7fbaa9dcd84d550b6d6fac"
+          "sha256": "7c602249dad829c168a1d3ffdbf3f31feb743296fe9d2c85da0241f3769e3039"
         },
         {
           "path": "supabase/tests/database/commerce_zero_admission.test.sql",
           "exists": true,
           "bytes": 13436,
-          "sha256": "d71ab013e0f031540b52e1878b7a623351286414bd3f873f179b90bb5ac4f8db"
+          "sha256": "789db37aea937e7abd68ba36034dffa0f51f4652d2101f89a85952162af26e9d"
         },
         {
           "path": "supabase/tests/database/ask_consent_rebrand_hash_alignment.test.sql",
@@ -2809,8 +2809,8 @@
         {
           "path": "supabase/tests/database/schema_contract.test.sql",
           "exists": true,
-          "bytes": 36218,
-          "sha256": "7c03676c2a9c5c02031f4eddbb8d07bac72651cc8eb067c1662ae1caaf96c995"
+          "bytes": 36239,
+          "sha256": "037c7e5896412872019381461b28e7cf5528e80ede97ae2832d76c41014b132d"
         },
         {
           "path": "scripts/phase9/catalog-operator-0065-upgrade-postgres-rehearsal.sql",
@@ -2840,7 +2840,7 @@
           "path": "scripts/phase9/recommendation-zero-admission-smoke.mjs",
           "exists": true,
           "bytes": 10268,
-          "sha256": "1762aae74a0efea601be2a053f51d4550fa8525f988152f18e8669690f2ee808"
+          "sha256": "21434d64eb966306e822682a8586a246f04fe3e301de918ca1cf746e2f1a6e3b"
         },
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
