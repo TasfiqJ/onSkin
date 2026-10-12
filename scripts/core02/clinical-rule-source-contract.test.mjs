@@ -982,12 +982,12 @@ test('migration 0066 seals legacy clinical tables and 0067 preserves the exact l
   );
 });
 
-test('the database contract is exactly 94 migrations through head 0078', () => {
+test('the database contract is exactly 97 migrations through head 0081', () => {
   const migrations = readdirSync(resolve(root, 'supabase/migrations'))
     .filter((name) => name.endsWith('.sql'))
     .sort();
-  assert.equal(migrations.length, 94);
-  assert.equal(migrations.at(-1), '20260926000078_catalog_operator_public_execute_fence.sql');
+  assert.equal(migrations.length, 97);
+  assert.equal(migrations.at(-1), '20261010000081_db06_acl_r2a_client_nonrow_privileges.sql');
   assert.match(read(paths.migration0068), /step_id IS NULL/u);
   assert.match(read(paths.migration0069), /public\.record_routine_completion/u);
   assert.match(read(paths.migration0070), /public\.stage_health_consent_copy_draft_successor/u);
@@ -996,10 +996,10 @@ test('the database contract is exactly 94 migrations through head 0078', () => {
 
   for (const path of [paths.schemaContract, paths.clinicalSealContract, paths.lintContract]) {
     const source = read(path);
-    assert.match(source, /\b94::bigint\b/u, `${path} must bind the exact migration count.`);
+    assert.match(source, /\b97::bigint\b/u, `${path} must bind the exact migration count.`);
     assert.match(
       source,
-      /['"]20260926000078['"]::text/u,
+      /['"]20261010000081['"]::text/u,
       `${path} must bind the exact migration head.`,
     );
   }

@@ -7,7 +7,7 @@ select plan(23);
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20261008000080'::text,
+  '20261010000081'::text,
   'migration history retains COM-01A zero admission through the current head'
 );
 

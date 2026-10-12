@@ -16,7 +16,7 @@ import {
 } from 'node:fs/promises';
 import net from 'node:net';
 import { tmpdir } from 'node:os';
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -36,8 +36,8 @@ import {
 } from './database-types-contract-lib.mjs';
 
 const PINNED_CLI_VERSION = '2.117.0';
-const EXPECTED_MIGRATION_COUNT = 96;
-const EXPECTED_LATEST_MIGRATION = '20261008000080';
+const EXPECTED_MIGRATION_COUNT = 97;
+const EXPECTED_LATEST_MIGRATION = '20261010000081';
 const COMMERCE_UPGRADE_MIGRATION = '20260729000072';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 // CAT-03 proves the exact 2,001-reviewed / 2,000-eligible launch corpus and
@@ -145,19 +145,40 @@ if (installedPackage.version !== PINNED_CLI_VERSION) {
   );
 }
 
-const migrationFiles = (await readdir(join(SOURCE_SUPABASE_DIR, 'migrations')))
-  .filter((name) => /^\d{14}_[a-z0-9_]+\.sql$/u.test(name))
-  .sort((a, b) => a.localeCompare(b));
-const expectedVersions = migrationFiles.map((name) => name.slice(0, 14));
-if (
-  migrationFiles.length !== EXPECTED_MIGRATION_COUNT ||
-  expectedVersions.at(-1) !== EXPECTED_LATEST_MIGRATION ||
-  new Set(expectedVersions).size !== expectedVersions.length
-) {
-  throw new Error(
-    `Expected ${EXPECTED_MIGRATION_COUNT} unique migrations through ${EXPECTED_LATEST_MIGRATION}; found ${migrationFiles.length} through ${expectedVersions.at(-1) ?? 'none'}.`,
+const EXPECTED_MIGRATION_SET_SHA256 =
+  '5ee03b2032781512fe2ab893e46a3f28daf68ea55ba7b800393265256898c3d6';
+const { canonicalJson, sha256 } = await import('./staging-deployment-evidence-lib.mjs');
+
+async function assertReviewedMigrationSource(supabaseDir, expectedInventory) {
+  const directory = join(supabaseDir, 'migrations');
+  const entries = await readdir(directory, { withFileTypes: true });
+  if (entries.some((entry) => !entry.isFile() || !/^\d{14}_[a-z0-9_]+\.sql$/u.test(entry.name))) {
+    throw new Error('DB06_ACL_R2A_SOURCE_INTEGRITY: unexpected migration input.');
+  }
+  const inventory = await Promise.all(
+    entries.sort((a, b) => a.name.localeCompare(b.name)).map(async ({ name }) => ({
+      id: name.slice(0, 14),
+      file: name,
+      sha256: sha256(await readFile(join(directory, name))),
+    })),
   );
+  const versions = inventory.map(({ id }) => id);
+  if (
+    new Set(versions).size !== versions.length ||
+    (expectedInventory
+      ? canonicalJson(inventory) !== canonicalJson(expectedInventory)
+      : inventory.length !== EXPECTED_MIGRATION_COUNT ||
+        versions.at(-1) !== EXPECTED_LATEST_MIGRATION ||
+        sha256(canonicalJson(inventory)) !== EXPECTED_MIGRATION_SET_SHA256)
+  ) {
+    throw new Error('DB06_ACL_R2A_SOURCE_INTEGRITY: migration inventory or bytes differ from the reviewed identity.');
+  }
+  return inventory;
 }
+
+const reviewedMigrationInventory = await assertReviewedMigrationSource(SOURCE_SUPABASE_DIR);
+const migrationFiles = reviewedMigrationInventory.map(({ file }) => file);
+const expectedVersions = reviewedMigrationInventory.map(({ id }) => id);
 const commerceMigrationName = migrationFiles.find((name) =>
   name.startsWith(`${COMMERCE_UPGRADE_MIGRATION}_`),
 );
@@ -170,7 +191,7 @@ const laterRehearsalMigrationNames = migrationFiles.filter((name) => {
 });
 if (
   laterRehearsalMigrationNames.map((name) => name.slice(0, 14)).join(',') !==
-  '20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078,20261007000079'
+  '20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078,20261007000079,20261008000080'
 ) {
   throw new Error('The post-0072 rehearsal migration inventory changed without review.');
 }
@@ -181,9 +202,13 @@ if (
 // chain. Only a clean PostgreSQL replay and exact type/schema checks can
 // promote DB05. Never rewrite the checked-in migrations in this sandbox.
 
+bindLocalHistoryEngine(childEnv, process.platform);
+
 const sandboxRoot = await mkdtemp(join(tmpdir(), 'layerwell-db05-local-'));
 const sandboxSupabaseDir = join(sandboxRoot, 'supabase');
 const sandboxProjectId = `layerwell_db05_${randomBytes(8).toString('hex')}`;
+let historyDatabase;
+let historyDockerIdentity;
 let stackMayExist = false;
 let activeCliProcess;
 let cleanupPromise;
@@ -331,61 +356,269 @@ async function runLocalReset(label) {
 async function terminateActiveCliProcess() {
   const active = activeCliProcess;
   if (!active) return;
-  active.abort();
-  await Promise.race([active.done.catch(() => {}), delay(35_000)]);
+  const timeout = new AbortController();
+  const confirmed = new Set([
+    'posix-process-group-empty', 'windows-job-object-empty', 'windows-process-tree-terminated',
+  ]);
+  try {
+    active.abort();
+    await Promise.race([
+      active.done.then(
+        (result) => {
+          if (!confirmed.has(result?.containment)) {
+            throw new Error('C01_CHILD_CONTAINMENT_UNPROVED');
+          }
+        },
+        (error) => {
+          if (!confirmed.has(error?.containment)) throw error;
+        },
+      ),
+      delay(35_000, undefined, { signal: timeout.signal }).then(() => {
+        throw new Error('C01_CHILD_CLEANUP_BOUND_EXCEEDED');
+      }),
+    ]);
+  } finally {
+    timeout.abort();
+  }
 }
 
 function cleanupSandbox() {
   cleanupPromise ??= (async () => {
-    await terminateActiveCliProcess();
-    if (stackMayExist) {
-      await runLocalCli('remove isolated stack and volumes', ['stop', '--no-backup'], {
-        quiet: true,
-      }).catch((error) =>
-        process.stderr.write(`${sanitizedTail(error instanceof Error ? error.message : error)}\n`),
-      );
+    const failures = [];
+    let processContained = false;
+    try {
+      await terminateActiveCliProcess();
+      processContained = true;
+    } catch (error) {
+      failures.push(error);
     }
-    await rm(sandboxRoot, { recursive: true, force: true });
+    if (processContained && stackMayExist) {
+      try {
+        await runLocalCli('remove isolated stack and volumes', ['stop', '--no-backup'], {
+          quiet: true,
+        });
+        for (const args of [
+          ['ps', '--all', '--filter', `label=com.supabase.cli.project=${sandboxProjectId}`, '--format', '{{.ID}}'],
+          ['volume', 'ls', '--filter', `label=com.supabase.cli.project=${sandboxProjectId}`, '--format', '{{.Name}}'],
+        ]) {
+          const result = await runHistoryDocker(args);
+          if (typeof result.stdout !== 'string' || result.stdout.trim()) {
+            throw new Error('C01_OWNED_RESOURCE_REMOVAL_UNPROVED');
+          }
+        }
+      } catch (error) {
+        failures.push(error);
+      }
+    }
+    // Retain the run-owned workdir when containment/stop is unproved: its config
+    // and forensic artifacts are required for an independent cleanup decision.
+    if (failures.length === 0) {
+      try {
+        await rm(sandboxRoot, { recursive: true, force: true });
+      } catch (error) {
+        failures.push(error);
+      }
+    }
+    if (failures.length) {
+      for (const error of failures) {
+        process.stderr.write(`${sanitizedTail(error instanceof Error ? error.message : error)}\n`);
+      }
+      throw new AggregateError(failures, 'C01_CLEANUP_FAILED: run-owned evidence retained.', {
+        cause: failures[0],
+      });
+    }
   })();
   return cleanupPromise;
 }
 
 const signalCleanup = installSignalCleanup({ cleanup: cleanupSandbox });
 
-function collectMigrationVersions(value, target = []) {
-  if (typeof value === 'string') {
-    if (/^\d{14}$/u.test(value)) target.push(value);
-  } else if (Array.isArray(value)) {
-    for (const entry of value) collectMigrationVersions(entry, target);
-  } else if (value && typeof value === 'object') {
-    for (const entry of Object.values(value)) collectMigrationVersions(entry, target);
-  }
-  return target;
-}
-
-function assertExactMigrationHistory(rawOutput) {
+function assertExactMigrationHistory(rawOutput, versions = expectedVersions) {
   let parsed;
   try {
     parsed = JSON.parse(rawOutput);
   } catch {
-    throw new Error(`Supabase migration history did not return JSON.\n${sanitizedTail(rawOutput)}`);
+    throw new Error(`Local migration history did not return JSON: ${sanitizedTail(rawOutput)}`);
   }
-  const actual = [...new Set(collectMigrationVersions(parsed))].sort((a, b) => a.localeCompare(b));
-  if (
-    actual.length !== expectedVersions.length ||
-    actual.some((value, index) => value !== expectedVersions[index])
-  ) {
-    throw new Error(
-      `Local migration history mismatch: expected ${expectedVersions.length} through ${EXPECTED_LATEST_MIGRATION}; found ${actual.length} through ${actual.at(-1) ?? 'none'}.`,
-    );
+  // CLI 2.117.0: remote is the connected database, even with --local.
+  // local and time are filename/display metadata, never installation evidence.
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) ||
+      Object.keys(parsed).length !== 2 || parsed.message !== 'Migrations listed' ||
+      !Array.isArray(parsed.migrations)) {
+    throw new Error('Local migration history has malformed payload fields.');
+  }
+  const actualVersions = [];
+  for (const row of parsed.migrations) {
+    if (!row || typeof row !== 'object' || Array.isArray(row) ||
+        Object.keys(row).length !== 3 ||
+        typeof row.local !== 'string' || typeof row.remote !== 'string' ||
+        typeof row.time !== 'string' || !/^\d{14}$/u.test(row.remote) ||
+        (row.local !== '' && row.local !== row.remote)) {
+      throw new Error('Local migration history has malformed installed-version fields.');
+    }
+    const timestamp = row.remote.replace(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/u,
+      '$1-$2-$3 $4:$5:$6');
+    const date = new Date(`${timestamp.replace(' ', 'T')}Z`);
+    const displayTime = !Number.isNaN(date.getTime()) &&
+      date.toISOString().slice(0, 19).replace('T', ' ') === timestamp ? timestamp : row.remote;
+    if (row.time !== displayTime) {
+      throw new Error('Local migration history has incorrect display-time metadata.');
+    }
+    actualVersions.push(row.remote);
+  }
+  // Compare the original database order; never filter, sort, or deduplicate it.
+  if (actualVersions.length !== versions.length ||
+      actualVersions.some((version, index) => version !== versions[index])) {
+    throw new Error(`Local migration history does not match the exact ${versions.length}-migration source prefix through ${versions.at(-1)}.`);
+  }
+  console.log('[db05-local] verified installed-history JSON begin');
+  process.stdout.write(rawOutput);
+  console.log('[db05-local] verified installed-history JSON end');
+}
+
+
+function bindLocalHistoryEngine(environment, platform) {
+  const host = platform === 'win32' ? 'npipe:////./pipe/docker_engine' : 'unix:///var/run/docker.sock';
+  if ((environment.DOCKER_HOST && environment.DOCKER_HOST !== host) ||
+      (environment.DOCKER_CONTEXT && environment.DOCKER_CONTEXT !== 'default') ||
+      environment.DOCKER_TLS_VERIFY || environment.DOCKER_CERT_PATH) {
+    throw new Error('H01_UNSAFE_DOCKER_TARGET: a local default engine is required.');
+  }
+  delete environment.DOCKER_CONTEXT;
+  environment.DOCKER_HOST = host;
+}
+
+async function runHistoryDocker(args) {
+  if (!historyDockerIdentity) {
+    const executable = process.platform === 'win32' ? 'docker.exe' : 'docker';
+    for (const directory of (childEnv.PATH ?? childEnv.Path ?? '').split(delimiter)) {
+      if (!isAbsolute(directory)) continue;
+      const path = await realpath(join(directory, executable)).catch(() => null);
+      if (!path || !(await stat(path)).isFile()) continue;
+      historyDockerIdentity = { path, sha256: sha256(await readFile(path)) };
+      break;
+    }
+    if (!historyDockerIdentity) throw new Error('H01_DOCKER_EXECUTABLE: Docker is unavailable.');
+    console.log(`[db05-local] history Docker identity: ${JSON.stringify(historyDockerIdentity)}`);
+  }
+  if (sha256(await readFile(historyDockerIdentity.path)) !== historyDockerIdentity.sha256) {
+    throw new Error('H01_DOCKER_EXECUTABLE: Docker bytes changed during this run.');
+  }
+  const controller = new AbortController();
+  const done = runContainedCommand({
+    command: historyDockerIdentity.path, args, cwd: sandboxRoot, environment: childEnv,
+    timeoutMs: LOCAL_CLI_TIMEOUT_MS, maxOutputBytes: LOCAL_CLI_MAX_OUTPUT_BYTES,
+    signal: controller.signal, inheritParentProcessGroup: INHERIT_PARENT_PROCESS_GROUP,
+    retainSanitizedFailureDiagnostic: true,
+  });
+  activeCliProcess = { abort: () => controller.abort(), done };
+  try {
+    return await done;
+  } catch (error) {
+    if (error instanceof ContainedCommandError) {
+      throw new Error(`H01_SQL_PROBE_FAILED: ${error.originReason}. ${error.diagnostic ?? ''}`);
+    }
+    throw error;
+  } finally {
+    if (activeCliProcess?.done === done) activeCliProcess = undefined;
   }
 }
 
+function assertHistoryDatabaseTarget(rawOutput) {
+  let entries;
+  try { entries = JSON.parse(rawOutput); } catch {
+    throw new Error('H01_DATABASE_TARGET: malformed container inspection.');
+  }
+  const target = Array.isArray(entries) && entries.length === 1 ? entries[0] : null;
+  const labels = target?.Config?.Labels;
+  const port = target?.HostConfig?.PortBindings?.['5432/tcp'];
+  if (!target || !historyDatabase || !/^[a-f0-9]{64}$/u.test(target.Id ?? '') ||
+      target.Name !== `/supabase_db_${sandboxProjectId}` || target.State?.Running !== true ||
+      labels?.['com.supabase.cli.project'] !== sandboxProjectId ||
+      labels?.['com.docker.compose.project'] !== sandboxProjectId ||
+      labels?.['com.supabase.cli.workdir'] !== sandboxRoot ||
+      !new RegExp(`^public\\.ecr\\.aws/supabase/postgres:${historyDatabase.major}\\.`, 'u').test(target.Config?.Image ?? '') ||
+      !/^sha256:[a-f0-9]{64}$/u.test(target.Image ?? '') ||
+      !Array.isArray(port) || port.length !== 1 || port[0].HostPort !== String(historyDatabase.port) ||
+      !['', '127.0.0.1', '0.0.0.0'].includes(port[0].HostIp)) {
+    throw new Error('H01_DATABASE_TARGET: inspected database is not the exact run-owned target.');
+  }
+  return { id: target.Id, image: target.Image, project: sandboxProjectId,
+    workdir: sandboxRoot, port: historyDatabase.port, major: historyDatabase.major };
+}
+
+const COMPLETE_HISTORY_SQL = `
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
+SET LOCAL statement_timeout = '15s';
+SET LOCAL lock_timeout = '5s';
+SET LOCAL idle_in_transaction_session_timeout = '15s';
+SELECT pg_catalog.json_build_object(
+  'database', pg_catalog.current_database(), 'current_user', current_user,
+  'session_user', session_user, 'server_version_num', pg_catalog.current_setting('server_version_num'),
+  'port', pg_catalog.current_setting('port'), 'read_only', pg_catalog.current_setting('transaction_read_only'),
+  'count', pg_catalog.count(*),
+  'versions', COALESCE(pg_catalog.json_agg(version ORDER BY version COLLATE "C"), '[]'::json)
+) FROM supabase_migrations.schema_migrations;
+COMMIT;
+`;
+
+function assertCompleteSqlHistory(rawOutput, versions = expectedVersions) {
+  let observed;
+  try { observed = JSON.parse(rawOutput); } catch {
+    throw new Error('H01_SQL_OUTPUT: history probe did not return one complete JSON document.');
+  }
+  if (!observed || typeof observed !== 'object' || Array.isArray(observed) ||
+      observed.database !== 'postgres' ||
+      observed.current_user !== 'postgres' || observed.session_user !== 'postgres' ||
+      typeof observed.server_version_num !== 'string' || !/^\d{6}$/u.test(observed.server_version_num) ||
+      Number(observed.server_version_num.slice(0, 2)) !== historyDatabase?.major ||
+      observed.port !== '5432' || observed.read_only !== 'on') {
+    throw new Error('H01_SQL_IDENTITY: SQL database/session/server/read-only provenance is invalid.');
+  }
+  if (Object.keys(observed).length !== 8 || !Number.isSafeInteger(observed.count) || !Array.isArray(observed.versions) ||
+      observed.count !== observed.versions.length || observed.count !== versions.length ||
+      observed.versions.some((version, index) => typeof version !== 'string' ||
+        !/^\d{14}$/u.test(version) || version !== versions[index])) {
+    throw new Error(`H01_SQL_HISTORY: unfiltered installed history does not match the exact ${versions.length}-migration prefix through ${versions.at(-1)}.`);
+  }
+}
+
+async function assertCompleteMigrationHistory(rawCliOutput, versions = expectedVersions) {
+  const before = assertHistoryDatabaseTarget((await runHistoryDocker([
+    'inspect', '--type', 'container', `supabase_db_${sandboxProjectId}`,
+  ])).stdout);
+  // No shell, ambient PG settings, password prompt or psqlrc. Explicit local
+  // socket in the bound immutable container, database postgres and role postgres.
+  const sql = await runHistoryDocker([
+    'exec', '--user', 'postgres', before.id, '/usr/bin/env', '-i',
+    'PATH=/usr/bin:/bin', '/usr/bin/psql', '-X', '-qAt', '--no-password',
+    '--host=/var/run/postgresql', '--port=5432', '--username=postgres', '--dbname=postgres',
+    '--set=ON_ERROR_STOP=1', '--command', COMPLETE_HISTORY_SQL,
+  ]);
+  console.log('[db05-local] observed unfiltered SQL history begin');
+  process.stdout.write(sql.stdout);
+  console.log('[db05-local] observed unfiltered SQL history end');
+  assertCompleteSqlHistory(sql.stdout, versions);
+  const after = assertHistoryDatabaseTarget((await runHistoryDocker([
+    'inspect', '--type', 'container', `supabase_db_${sandboxProjectId}`,
+  ])).stdout);
+  if (JSON.stringify(before) !== JSON.stringify(after)) {
+    throw new Error('H01_DATABASE_TARGET: database container changed during observation.');
+  }
+  // Both observations must equal the same ordered reviewed prefix. CLI JSON is
+  // corroboration only; it cannot hide rows omitted by its legacy formatter.
+  assertExactMigrationHistory(rawCliOutput, versions);
+  console.log(`[db05-local] verified SQL/CLI database binding: ${JSON.stringify(after)}`);
+}
+
+let verificationFailure;
 try {
   await cp(SOURCE_SUPABASE_DIR, sandboxSupabaseDir, {
     recursive: true,
     filter: (sourcePath) => !isExcludedSourcePath(sourcePath),
   });
+
+  await assertReviewedMigrationSource(sandboxSupabaseDir, reviewedMigrationInventory);
 
   const ports = await allocatePortBlock();
   const configPath = join(sandboxSupabaseDir, 'config.toml');
@@ -409,6 +642,9 @@ try {
   config = setTomlValue(config, 'auth.external.apple', 'enabled', 'false');
   config = setTomlValue(config, 'auth.external.google', 'enabled', 'false');
   config = setTomlValue(config, 'auth.captcha', 'enabled', 'false');
+  const configuredMajor = config.match(/^major_version\s*=\s*(\d+)\s*$/mu)?.[1];
+  if (!configuredMajor) throw new Error('H01_DATABASE_TARGET: database major version is missing.');
+  historyDatabase = { port: ports[2], major: Number(configuredMajor) };
   await writeFile(configPath, config, 'utf8');
 
   await stat(join(sandboxSupabaseDir, 'seed.sql'));
@@ -500,10 +736,29 @@ try {
     await rename(sandboxAdherenceMigration, withheldAdherenceMigration);
   }
 
+  if (FULL_VERIFY) {
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20260726000067'),
+    );
+  }
+
   stackMayExist = true;
   await runLocalCli('start isolated credential-free stack', ['start']);
   if (FULL_VERIFY) {
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20260726000067'),
+    );
     await runLocalReset('reset through 0067 for the 0068 forward-upgrade rehearsal');
+    const history20260726000067 = await runLocalCli(
+      'verify installed history through 20260726000067',
+      ['migration', 'list', '--local', '--output-format', 'json'],
+    );
+    await assertCompleteMigrationHistory(
+      history20260726000067.output,
+      expectedVersions.filter((id) => id <= '20260726000067'),
+    );
     await rename(withheldAdherenceMigration, sandboxAdherenceMigration);
     const adherenceUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -544,7 +799,19 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20260726000068'),
+    );
     await runLocalReset('reset through 0068 for the 0069 forward-upgrade rehearsal');
+    const history20260726000068 = await runLocalCli(
+      'verify installed history through 20260726000068',
+      ['migration', 'list', '--local', '--output-format', 'json'],
+    );
+    await assertCompleteMigrationHistory(
+      history20260726000068.output,
+      expectedVersions.filter((id) => id <= '20260726000068'),
+    );
     await rename(withheldSyncMigration, sandboxSyncMigration);
     const syncUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -583,7 +850,19 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20260726000069'),
+    );
     await runLocalReset('reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal');
+    const history20260726000069 = await runLocalCli(
+      'verify installed history through 20260726000069',
+      ['migration', 'list', '--local', '--output-format', 'json'],
+    );
+    await assertCompleteMigrationHistory(
+      history20260726000069.output,
+      expectedVersions.filter((id) => id <= '20260726000069'),
+    );
     await rename(withheldConsentDraftMigration, sandboxConsentDraftMigration);
     const consentDraftUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -625,7 +904,19 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20260726000070'),
+    );
     await runLocalReset('reset through 0070 for the 0071 recommendation forward-upgrade rehearsal');
+    const history20260726000070 = await runLocalCli(
+      'verify installed history through 20260726000070',
+      ['migration', 'list', '--local', '--output-format', 'json'],
+    );
+    await assertCompleteMigrationHistory(
+      history20260726000070.output,
+      expectedVersions.filter((id) => id <= '20260726000070'),
+    );
     await rename(withheldRecommendationMigration, sandboxRecommendationMigration);
     const recommendationUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -667,7 +958,19 @@ try {
         failureDiagnosticMaxLines: STRUCTURAL_TEST_DIAGNOSTIC_MAX_LINES,
       },
     );
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20260726000071'),
+    );
     await runLocalReset('reset through 0071 for the 0072 commerce forward-upgrade rehearsal');
+    const history20260726000071 = await runLocalCli(
+      'verify installed history through 20260726000071',
+      ['migration', 'list', '--local', '--output-format', 'json'],
+    );
+    await assertCompleteMigrationHistory(
+      history20260726000071.output,
+      expectedVersions.filter((id) => id <= '20260726000071'),
+    );
     await rename(withheldCommerceMigration, sandboxCommerceMigration);
     const commerceUpgradeTemplatePath = join(
       sandboxSupabaseDir,
@@ -715,10 +1018,34 @@ try {
     }
     await rename(withheldHeadMigration, sandboxHeadMigration);
   }
+  await assertReviewedMigrationSource(
+  sandboxSupabaseDir,
+  reviewedMigrationInventory.filter((entry) => entry.id <= '20261010000081'),
+  );
   await runLocalReset('reset 1 of 2 (migrations plus seed)');
+  const history20261010000081 = await runLocalCli(
+    'verify installed history through 20261010000081',
+    ['migration', 'list', '--local', '--output-format', 'json'],
+  );
+  await assertCompleteMigrationHistory(
+    history20261010000081.output,
+    expectedVersions.filter((id) => id <= '20261010000081'),
+  );
 
   if (FULL_VERIFY) {
+    await assertReviewedMigrationSource(
+      sandboxSupabaseDir,
+      reviewedMigrationInventory.filter((entry) => entry.id <= '20261010000081'),
+    );
     await runLocalReset('reset 2 of 2 (repeatability)');
+    const historyRepeat20261010000081 = await runLocalCli(
+      'verify installed history through 20261010000081',
+      ['migration', 'list', '--local', '--output-format', 'json'],
+    );
+    await assertCompleteMigrationHistory(
+      historyRepeat20261010000081.output,
+      expectedVersions.filter((id) => id <= '20261010000081'),
+    );
   }
 
   if (FULL_VERIFY || TYPES_MODE) {
@@ -727,7 +1054,7 @@ try {
       ['migration', 'list', '--local', '--output-format', 'json'],
       { quiet: true },
     );
-    assertExactMigrationHistory(history.output);
+    await assertCompleteMigrationHistory(history.output);
     process.stdout.write(
       `[db05-local] migration history: PASS (${EXPECTED_MIGRATION_COUNT}, latest ${EXPECTED_LATEST_MIGRATION})\n`,
     );
@@ -886,9 +1213,21 @@ select pg_catalog.set_config(
       })\n`,
     );
   }
+} catch (error) {
+  verificationFailure = error;
+  throw error;
 } finally {
-  await cleanupSandbox();
-  signalCleanup.dispose();
+  try {
+    await cleanupSandbox();
+  } catch (cleanupFailure) {
+    if (verificationFailure) {
+      throw new AggregateError([verificationFailure, cleanupFailure],
+        'C01_VERIFICATION_AND_CLEANUP_FAILED', { cause: verificationFailure });
+    }
+    throw cleanupFailure;
+  } finally {
+    signalCleanup.dispose();
+  }
 }
 
 if (!signalCleanup.signal) {

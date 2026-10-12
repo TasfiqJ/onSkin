@@ -138,10 +138,22 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.117.0',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 96, `Expected 96 migration files; found ${migrations.length}.`);
+const { canonicalJson, sha256 } = await import('./staging-deployment-evidence-lib.mjs');
+const migrationInputs = await readdir(join(root, 'supabase', 'migrations'), { withFileTypes: true });
+const migrationInventory = await Promise.all(migrations.map(async (file) => ({
+  id: file.slice(0, 14), file, sha256: sha256(await readFile(join(root, 'supabase', 'migrations', file))),
+})));
 check(
-  migrations.at(-1)?.startsWith('20261008000080_'),
-  'The latest migration must remain 20261008000080.',
+  migrationInputs.every((entry) => entry.isFile() && /^\d{14}_[a-z0-9_]+\.sql$/u.test(entry.name)) &&
+    new Set(migrationInventory.map(({ id }) => id)).size === migrationInventory.length &&
+    sha256(canonicalJson(migrationInventory)) ===
+      '5ee03b2032781512fe2ab893e46a3f28daf68ea55ba7b800393265256898c3d6',
+  'Local candidate migrations must match the exact reviewed 97-file byte identity.',
+);
+check(migrations.length === 97, `Expected 97 migration files; found ${migrations.length}.`);
+check(
+  migrations.at(-1)?.startsWith('20261010000081_'),
+  'The latest migration must remain 20261010000081.',
 );
 check(
   /create or replace function public\.has_current_consent\(p_consent_type text\)/u.test(
@@ -300,7 +312,7 @@ check(
     /rename\(withheldRecommendationMigration, sandboxRecommendationMigration\)/u.test(runner) &&
     /recommendation_zero_admission_0071_upgrade\.generated\.test\.sql/u.test(runner) &&
     /reset through 0071 for the 0072 commerce forward-upgrade rehearsal/u.test(runner) &&
-    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078,20261007000079'/u.test(
+    /'20260921000073,20260921000074,20260921000075,20260921000076,20260926000077,20260926000078,20261007000079,20261008000080'/u.test(
       runner,
     ) &&
     /rename\(migration\.installed, migration\.withheld\)/u.test(runner) &&
@@ -586,18 +598,18 @@ check(
 );
 check(
   /select plan\(26\)/u.test(clinicalContentLegacySealTests) &&
-    /96::bigint/u.test(clinicalContentLegacySealTests) &&
-    /['"]20261008000080['"]::text/u.test(clinicalContentLegacySealTests) &&
-    /the clinical legacy seal runs against the exact 96-migration source history/u.test(
+    /97::bigint/u.test(clinicalContentLegacySealTests) &&
+    /['"]20261010000081['"]::text/u.test(clinicalContentLegacySealTests) &&
+    /the clinical legacy seal runs against the exact 97-migration source history/u.test(
       clinicalContentLegacySealTests,
     ) &&
-    /the migration history includes the legacy seal and reaches the current quiz-contract successor/u.test(
+    /the migration history includes the legacy seal through inactive DB06-ACL-R2A candidate head 20261010000081/u.test(
       clinicalContentLegacySealTests,
     ) &&
     /all historical rule rows survive every denied owner and API mutation probe/u.test(
       clinicalContentLegacySealTests,
     ),
-  '0066 pgTAP must bind the 94-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
+  '0066 pgTAP must bind the 97-migration current head and prove the legacy clinical fixtures survive denied owner and API-role mutations.',
 );
 check(
   /\\ir \.\.\/\.\.\/supabase\/migrations\/20260726000067_catalog_release_temp_table_lint_contract\.sql/u.test(
@@ -617,18 +629,18 @@ check(
 );
 check(
   /select plan\(7\)/u.test(catalogReleaseLintContractTests) &&
-    /96::bigint/u.test(catalogReleaseLintContractTests) &&
-    /['"]20261008000080['"]::text/u.test(catalogReleaseLintContractTests) &&
-    /the catalog release lint contract runs against the exact 96-migration source history/u.test(
+    /97::bigint/u.test(catalogReleaseLintContractTests) &&
+    /['"]20261010000081['"]::text/u.test(catalogReleaseLintContractTests) &&
+    /the catalog release lint contract runs against the exact 97-migration source history/u.test(
       catalogReleaseLintContractTests,
     ) &&
-    /the migration history retains the temporary-table lint contract through the current quiz-contract successor/u.test(
+    /the migration history retains the temporary-table lint contract through inactive DB06-ACL-R2A candidate head 20261010000081/u.test(
       catalogReleaseLintContractTests,
     ) &&
     /only the exact temporary-table wrapper carries the checker shape/u.test(
       catalogReleaseLintContractTests,
     ),
-  '0067 pgTAP must bind the 96-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
+  '0067 pgTAP must bind the 97-migration head and prove that exactly one known runtime-temp-table wrapper carries the checker-only ephemeral shape.',
 );
 check(
   /begin;/u.test(routineAdherenceMigration) &&
@@ -675,15 +687,15 @@ check(
 );
 check(
   /select plan\(78\)/u.test(routineAdherenceTests) &&
-    /96::bigint/u.test(routineAdherenceTests) &&
-    /['"]20261008000080['"]::text/u.test(routineAdherenceTests) &&
+    /97::bigint/u.test(routineAdherenceTests) &&
+    /['"]20261010000081['"]::text/u.test(routineAdherenceTests) &&
     /CORE05_PARITY_CORPUS_SHA256: cbcfe0a13f1ef878f8769c875e9fb5b49fdcf667e723b4d918bc46889144fa00/u.test(
       routineAdherenceTests,
     ) &&
     /the hashed parity corpus matches the authoritative SQL projection/u.test(
       routineAdherenceTests,
     ) &&
-    /exact 96-migration source history/u.test(routineAdherenceTests) &&
+    /exact 97-migration source history/u.test(routineAdherenceTests) &&
     /retains adherence authority through the current head/u.test(routineAdherenceTests) &&
     /two separated misses consume the total two-freeze budget/u.test(routineAdherenceTests) &&
     /a partial step completion cannot affect adherence/u.test(routineAdherenceTests) &&
@@ -731,9 +743,9 @@ check(
 );
 check(
   /select plan\(82\)/u.test(routineCompletionSyncTests) &&
-    /96::bigint/u.test(routineCompletionSyncTests) &&
-    /['"]20261008000080['"]::text/u.test(routineCompletionSyncTests) &&
-    /exact 96-migration source history/u.test(routineCompletionSyncTests) &&
+    /97::bigint/u.test(routineCompletionSyncTests) &&
+    /['"]20261010000081['"]::text/u.test(routineCompletionSyncTests) &&
+    /exact 97-migration source history/u.test(routineCompletionSyncTests) &&
     /Shelf sync rejects an exact draft-blocked health grant before retention/u.test(
       routineCompletionSyncTests,
     ) &&

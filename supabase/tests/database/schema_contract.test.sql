@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  96::bigint,
-  'all 96 repository migrations are recorded'
+  97::bigint,
+  'all 97 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20261008000080'::text,
-  'migration history reaches the P2A publication correction'
+  '20261010000081'::text,
+  'migration history reaches inactive DB06-ACL-R2A candidate head 20261010000081'
 );
 
 select is(
