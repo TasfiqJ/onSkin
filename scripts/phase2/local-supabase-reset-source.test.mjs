@@ -770,3 +770,33 @@ test('H01 changed Docker executable bytes reject before any command can run', as
   await assert.rejects(run(['inspect', 'owned']), /H01_DOCKER_EXECUTABLE: Docker bytes changed/u);
   assert.equal(spawned, false);
 });
+
+test('H01 producer fixes the image registry after scrubbing inherited overrides and secrets', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('const childEnv = { ...process.env };');
+  const end = source.indexOf('\nconst sourcePackage =', start);
+  assert.ok(start >= 0 && end > start);
+  for (const inherited of [
+    { PATH: '/owned/bin' },
+    { PATH: '/owned/bin', SUPABASE_INTERNAL_IMAGE_REGISTRY: 'ghcr.io',
+      SUPABASE_USE_SLIM_IMAGES: 'true', SUPABASE_ACCESS_TOKEN: 'SENSITIVE_SENTINEL_DO_NOT_LOG',
+      DATABASE_URL: 'SENSITIVE_SENTINEL_DO_NOT_LOG', PGPASSWORD: 'SENSITIVE_SENTINEL_DO_NOT_LOG',
+      SB_PROJECT_REF: 'SENSITIVE_SENTINEL_DO_NOT_LOG' },
+    { PATH: '/owned/bin', SUPABASE_INTERNAL_IMAGE_REGISTRY: 'https://foreign.invalid',
+      supabase_internal_image_registry: 'docker.io', SUPABASE_USE_SLIM_IMAGES: '1' },
+  ]) {
+    const original = { ...inherited };
+    const env = runInNewContext(`${source.slice(start, end)}\nchildEnv;`, {
+      process: { env: inherited },
+    });
+    assert.equal(env.SUPABASE_INTERNAL_IMAGE_REGISTRY, 'public.ecr.aws');
+    assert.equal(env.PATH, '/owned/bin');
+    assert.equal(env.DO_NOT_TRACK, '1');
+    assert.equal(env.SUPABASE_TELEMETRY_DISABLED, '1');
+    assert.deepEqual(Object.keys(env).sort(), [
+      'DO_NOT_TRACK', 'PATH', 'SUPABASE_INTERNAL_IMAGE_REGISTRY', 'SUPABASE_TELEMETRY_DISABLED',
+    ]);
+    assert.deepEqual(inherited, original);
+    assert.doesNotMatch(JSON.stringify(env), /SENSITIVE_SENTINEL_DO_NOT_LOG|ghcr|foreign|docker\.io/u);
+  }
+});

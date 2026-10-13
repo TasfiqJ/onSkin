@@ -110,6 +110,8 @@ for (const name of Object.keys(childEnv)) {
 }
 childEnv.DO_NOT_TRACK = '1';
 childEnv.SUPABASE_TELEMETRY_DISABLED = '1';
+// Keep the CLI producer on the ECR reference required by H01 admission.
+childEnv.SUPABASE_INTERNAL_IMAGE_REGISTRY = 'public.ecr.aws';
 
 const sourcePackage = JSON.parse(await readFile(join(REPO_ROOT, 'package.json'), 'utf8'));
 if (sourcePackage.devDependencies?.supabase !== PINNED_CLI_VERSION) {
