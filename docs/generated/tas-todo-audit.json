@@ -1,21 +1,78 @@
 {
-  "generatedAt": "2026-07-29T19:50:26.384Z",
+  "schemaVersion": 2,
   "status": "pass",
   "strict": true,
-  "purpose": "Verify that the founder handoff contains only the 12 human/reviewer/staff touchpoints and two Apple/vendor outcomes from the iOS all-features ownership model.",
+  "purpose": "Validate the lean V1 founder/external boundary and preserve every historical obligation; this is not external approval or release evidence.",
   "sourceFiles": {
     "registerPath": "docs/FOR_TAS_TO_DO.md",
-    "executionPlanPath": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md"
+    "executionPlanPath": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
+    "historicalPlanPath": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md",
+    "contractPath": "docs/hugeToDo/launch-contract.json",
+    "masterPlanPath": "docs/MASTER_PLAN.md",
+    "scopeUpdatePath": "docs/hugeToDo/LEAN_V1_SCOPE_UPDATE_2026-09-27.md"
+  },
+  "sourceIdentities": {
+    "docs/FOR_TAS_TO_DO.md": {
+      "bytes": 14952,
+      "sha256": "9dfc161f15c9f5ad9e50b03ca0291f4f970e0830ab7b4d3ecc7c5b3d05ae276a"
+    },
+    "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md": {
+      "bytes": 9636,
+      "sha256": "ec196b0548e17b953575821a404667a9d3a6e83f642e2338ae453af5cf0440b8"
+    },
+    "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md": {
+      "bytes": 93636,
+      "sha256": "609fe8dd5ff7a2d0cf988ce56aba08fcb7419105fa0ac8033b0a41670ba701e6"
+    },
+    "docs/hugeToDo/launch-contract.json": {
+      "bytes": 7437,
+      "sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f"
+    },
+    "docs/MASTER_PLAN.md": {
+      "bytes": 70537,
+      "sha256": "7584eac3911f7e4fda7edb36878b191ddccffc6a15c630a53f185d538135260f"
+    },
+    "docs/hugeToDo/LEAN_V1_SCOPE_UPDATE_2026-09-27.md": {
+      "bytes": 7797,
+      "sha256": "bde6e45ee8fadf3ade3c1737cc2c9d131f55552a01f2887bc96df80fc78e805f"
+    },
+    "scripts/docs/tas-todo-audit.mjs": {
+      "bytes": 18293,
+      "sha256": "bf97ab15dea57243737d4818a95beafd7c46b842bab5d90b1144e0d465b9b2fb"
+    }
   },
   "launchContract": {
-    "programId": "ios-all-features-2026",
-    "effectiveDate": "2026-07-12",
+    "programId": "ios-lean-v1-2026",
+    "effectiveDate": "2026-09-27",
     "platforms": [
       "ios"
     ],
-    "androidRelease": false
+    "androidRelease": false,
+    "requiredFeatureIds": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "deferredFeatureIds": [
+      4,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
   },
-  "registerDate": "2026-07-12",
   "requiredHumanIds": [
     "H-01",
     "H-02",
@@ -24,21 +81,198 @@
     "H-05",
     "H-06",
     "H-07",
-    "H-08",
-    "H-09",
-    "H-10",
-    "H-11",
-    "H-12"
+    "H-08"
   ],
   "requiredVendorIds": [
     "V-01",
     "V-02"
   ],
-  "dumpedEvidenceKeys": [],
-  "commandDump": [],
+  "externalEvidenceStatus": "pending",
+  "releaseAuthorized": false,
+  "legacyObligations": [
+    {
+      "id": "legacy:2026-07-12:H-01",
+      "owner": "Founder",
+      "action": "Create/control the Apple Account, complete identity verification and MFA, enroll, and pay Apple membership",
+      "codexOwnedPreparation": "Prepare exact enrollment choices, guide the session, verify the resulting team/account, and configure everything afterward",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-01",
+        "lean:2026-09-27:V-01"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Apple membership, Team ID, role and redacted receipt remain outstanding."
+    },
+    {
+      "id": "legacy:2026-07-12:H-02",
+      "owner": "Founder",
+      "action": "Choose individual versus organization seller and provide truthful legal-entity information",
+      "codexOwnedPreparation": "Research and recommend the best structure, prepare the information checklist, and validate consistency",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-01",
+        "lean:2026-09-27:H-06"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Truthful individual/organization seller decision and consistent legal details remain outstanding."
+    },
+    {
+      "id": "legacy:2026-07-12:H-03",
+      "owner": "Founder",
+      "action": "Provide banking/tax information and accept Apple or vendor legal agreements",
+      "codexOwnedPreparation": "Prepare field-by-field guidance, check for inconsistencies, and complete all non-attestation fields",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-01",
+        "lean:2026-09-27:H-04",
+        "lean:2026-09-27:H-06"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Accepted Apple/minimum-vendor agreements and banking/tax status remain outstanding; private values are never retained."
+    },
+    {
+      "id": "legacy:2026-07-12:H-04",
+      "owner": "Founder",
+      "action": "Pay for domains, memberships, professionals, vendors, moderation, or approved usage budgets",
+      "codexOwnedPreparation": "Research vendors and prices, recommend selections, prepare purchases, and track renewals",
+      "disposition": "carried-forward; deferred",
+      "currentTargets": [
+        "lean:2026-09-27:H-02",
+        "lean:2026-09-27:H-04",
+        "lean:2026-09-27:H-06"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Minimum domain/membership/reviewer/vendor budgets, redacted purchases and renewal owners remain outstanding. Optional AI/catalog/commerce/community spend is deferred."
+    },
+    {
+      "id": "legacy:2026-07-12:H-05",
+      "owner": "Founder",
+      "action": "Complete MFA, CAPTCHA, identity, phone, email, or payment challenges in external consoles",
+      "codexOwnedPreparation": "Operate the authorized session before and after the challenge and complete configuration",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-01",
+        "lean:2026-09-27:H-04"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Private MFA/CAPTCHA/identity/phone/email/payment challenges remain external as encountered; only redacted provider status is retained."
+    },
+    {
+      "id": "legacy:2026-07-12:H-06",
+      "owner": "Founder",
+      "action": "Approve the final recommended name after formal clearance and authorize paid reservation/filing",
+      "codexOwnedPreparation": "Perform naming research, select the recommended winner, prepare clearance material, and execute the entire migration",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-02"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Written name selection, counsel conditions and authenticated reservation/filing records remain outstanding."
+    },
+    {
+      "id": "legacy:2026-07-12:H-07",
+      "owner": "Reviewer",
+      "action": "Provide genuine trademark/IP, privacy/legal, clinical, cosmetic-chemistry, and security decisions with real identity/authority",
+      "codexOwnedPreparation": "Identify candidates, prepare packets, draft copy, organize questions, incorporate changes, generate signoff records, and verify hashes",
+      "disposition": "carried-forward; deferred; outstanding",
+      "currentTargets": [
+        "lean:2026-09-27:H-02",
+        "lean:2026-09-27:H-03"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Trademark clearance and applicable V1 legal/privacy/clinical/chemistry/IP/export decisions require verified reviewer authority, exact hashes and retained signed references. Independent Security review remains OPEN. Deferred-feature reviews cannot admit those features."
+    },
+    {
+      "id": "legacy:2026-07-12:H-08",
+      "owner": "Founder/tester",
+      "action": "Provide or connect supported physical iPhones and perform actions that cannot be simulated, including Face ID, real-world camera conditions, and sandbox purchase confirmation when required",
+      "codexOwnedPreparation": "Build binaries, write scripts, direct the session, collect logs/screenshots, diagnose defects, fix them, and rerun the matrix",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-05"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Real device/model/iOS/build/scenario evidence and named testers remain outstanding, including Face ID and purchase confirmations where used."
+    },
+    {
+      "id": "legacy:2026-07-12:H-09",
+      "owner": "Founder/community",
+      "action": "Supply genuine beta users and any legally required tester consent",
+      "codexOwnedPreparation": "Prepare recruiting materials, forms, invitations, feedback flows, dashboards, triage, fixes, and reports",
+      "disposition": "carried-forward; historical; deferred",
+      "currentTargets": [
+        "lean:2026-09-27:H-08"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Genuine users and any required tester consent remain outstanding. Historical all-features cohort/retention evidence, including D1/D7/D14/D30 and sampling limits, is preserved as history; the 50–100-user mandatory beta and D14/D30 launch delay are deferred. Lean cohort guidance does not invent user feedback."
+    },
+    {
+      "id": "legacy:2026-07-12:H-10",
+      "owner": "Human staff/vendor",
+      "action": "Staff real community moderation and customer-support escalation",
+      "codexOwnedPreparation": "Build the moderation/support tooling, rules, queues, macros, SLAs, training, monitoring, and audits",
+      "disposition": "carried-forward; deferred; outstanding",
+      "currentTargets": [
+        "lean:2026-09-27:H-06"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Minimum support owner, privacy response, incident escalation and applicable launch on-call coverage remain independent OPEN obligations, with named coverage, acknowledgements and test incidents. Community moderation and AI-safety staffing are deferred with their closed features; Codex prepares tools, SLAs, training and escalation evidence."
+    },
+    {
+      "id": "legacy:2026-07-12:H-11",
+      "owner": "Founder",
+      "action": "Approve pricing, launch countries, budget ceilings, binding contracts, and material business risk",
+      "codexOwnedPreparation": "Research, model, recommend, document, and implement the approved decision",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-04",
+        "lean:2026-09-27:H-06"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Dated owner/scope/conditions for prices, launch countries, ceilings, contracts and material business risks remain outstanding."
+    },
+    {
+      "id": "legacy:2026-07-12:H-12",
+      "owner": "Founder",
+      "action": "Give explicit authorization to submit to App Review and to make the approved app public",
+      "codexOwnedPreparation": "Prepare and validate the complete submission, submit when authorized, handle review, and operate launch",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:H-07"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Separate App Review submission and later public-availability authorizations remain outstanding."
+    },
+    {
+      "id": "legacy:2026-07-12:V-01",
+      "owner": "Apple",
+      "action": "Approve membership, app, subscriptions, TestFlight external beta, and App Store release",
+      "codexOwnedPreparation": "Prepare compliant artifacts, submit, monitor, respond, fix, and resubmit",
+      "disposition": "carried-forward",
+      "currentTargets": [
+        "lean:2026-09-27:V-01"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Apple-issued membership/TestFlight/subscription/App Review/release state and exact approved build/product IDs remain outstanding."
+    },
+    {
+      "id": "legacy:2026-07-12:V-02",
+      "owner": "Vendors",
+      "action": "Approve affiliate, AI, domain, email, or other provider applications",
+      "codexOwnedPreparation": "Select the provider, prepare applications, configure approved accounts, and implement fallbacks",
+      "disposition": "carried-forward; deferred",
+      "currentTargets": [
+        "lean:2026-09-27:H-04",
+        "lean:2026-09-27:V-02"
+      ],
+      "evidenceStatus": "outstanding",
+      "preservation": "Minimum production account/contract/limit approvals, applicable DPA/licence references and privacy/security/deletion configuration remain outstanding. Optional AI/catalog/affiliate/analytics/community/moderation providers are deferred."
+    }
+  ],
   "summary": {
-    "humanTouchpointCount": 12,
+    "humanTouchpointCount": 8,
     "vendorOutcomeCount": 2,
+    "historicalObligationCount": 14,
     "blockerCount": 0,
     "warningCount": 0
   },
