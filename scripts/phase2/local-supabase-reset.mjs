@@ -110,8 +110,8 @@ for (const name of Object.keys(childEnv)) {
 }
 childEnv.DO_NOT_TRACK = '1';
 childEnv.SUPABASE_TELEMETRY_DISABLED = '1';
-// Keep the CLI producer on the ECR reference required by H01 admission.
-childEnv.SUPABASE_INTERNAL_IMAGE_REGISTRY = 'public.ecr.aws';
+// Preserve the pinned CLI's non-database registry fallback after the scrub.
+// PostgreSQL alone is prepared and bound to canonical ECR below.
 
 const sourcePackage = JSON.parse(await readFile(join(REPO_ROOT, 'package.json'), 'utf8'));
 if (sourcePackage.devDependencies?.supabase !== PINNED_CLI_VERSION) {
@@ -211,6 +211,8 @@ const sandboxSupabaseDir = join(sandboxRoot, 'supabase');
 const sandboxProjectId = `layerwell_db05_${randomBytes(8).toString('hex')}`;
 let historyDatabase;
 let historyDockerIdentity;
+let canonicalPostgresIdentity;
+const CANONICAL_POSTGRES_IMAGE = 'public.ecr.aws/supabase/postgres:15.8.1.085';
 let stackMayExist = false;
 let activeCliProcess;
 let cleanupPromise;
@@ -526,6 +528,47 @@ async function runHistoryDocker(args) {
   }
 }
 
+async function prepareCanonicalPostgresImage() {
+  // CLI 2.117.0 checks ALL candidate caches before pulling. Seed its first
+  // candidate explicitly, even when only GHCR PostgreSQL was already cached.
+  // Never retag a fallback image or globally disable non-DB registry fallback.
+  const architecture = { x64: 'amd64', arm64: 'arm64' }[process.arch];
+  if (historyDatabase?.major !== 15 || !architecture) {
+    throw new Error('H01_CANONICAL_POSTGRES: unsupported pinned image platform or major.');
+  }
+  const pulled = await runHistoryDocker([
+    'pull', '--platform', `linux/${architecture}`, CANONICAL_POSTGRES_IMAGE,
+  ]);
+  const digests = [...`${pulled.stdout}\n${pulled.stderr}`.matchAll(
+    /^Digest: (sha256:[a-f0-9]{64})\s*$/gmu,
+  )];
+  if (digests.length !== 1) {
+    throw new Error('H01_CANONICAL_POSTGRES: missing or ambiguous pull digest.');
+  }
+  const digest = digests[0][1];
+  let entries;
+  try {
+    entries = JSON.parse((await runHistoryDocker([
+      'image', 'inspect', CANONICAL_POSTGRES_IMAGE,
+    ])).stdout);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error('H01_CANONICAL_POSTGRES: malformed image inspection.');
+    }
+    throw error;
+  }
+  const image = Array.isArray(entries) && entries.length === 1 ? entries[0] : null;
+  if (!image || !/^sha256:[a-f0-9]{64}$/u.test(image.Id ?? '') ||
+      image.Os !== 'linux' || image.Architecture !== architecture ||
+      !Array.isArray(image.RepoTags) || !image.RepoTags.includes(CANONICAL_POSTGRES_IMAGE) ||
+      !Array.isArray(image.RepoDigests) ||
+      !image.RepoDigests.includes(`public.ecr.aws/supabase/postgres@${digest}`)) {
+    throw new Error('H01_CANONICAL_POSTGRES: pull, registry, immutable image or platform mismatch.');
+  }
+  canonicalPostgresIdentity = { id: image.Id, digest, architecture };
+  console.log(`[db05-local] canonical PostgreSQL identity: ${JSON.stringify(canonicalPostgresIdentity)}`);
+}
+
 function assertHistoryDatabaseTarget(rawOutput) {
   let entries;
   try { entries = JSON.parse(rawOutput); } catch {
@@ -578,6 +621,10 @@ function assertHistoryDatabaseTarget(rawOutput) {
       },
     };
     throw new Error(`H01_DATABASE_TARGET: inspected database is not the exact run-owned target. ${JSON.stringify(diagnostic)}`);
+  }
+  if (!canonicalPostgresIdentity || target.Config.Image !== CANONICAL_POSTGRES_IMAGE ||
+      target.Image !== canonicalPostgresIdentity.id) {
+    throw new Error('H01_DATABASE_TARGET: database differs from the canonical pulled image.');
   }
   return { id: target.Id, image: target.Image, project: sandboxProjectId,
     workdir: sandboxRoot, port: historyDatabase.port, major: historyDatabase.major };
@@ -779,6 +826,7 @@ try {
     );
   }
 
+  await prepareCanonicalPostgresImage();
   stackMayExist = true;
   await runLocalCli('start isolated credential-free stack', ['start']);
   if (FULL_VERIFY) {

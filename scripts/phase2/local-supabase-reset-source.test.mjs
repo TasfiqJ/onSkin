@@ -337,6 +337,8 @@ test('H01 complete SQL history is authoritative and cannot accept lossy CLI evid
   const versions = migrationNames.map((name) => name.slice(0, 14));
   const context = { expectedVersions: versions, historyDatabase: { major: 15, port: 54122 },
     sandboxProjectId: 'owned_project', sandboxRoot: '/owned/sandbox',
+    CANONICAL_POSTGRES_IMAGE: 'public.ecr.aws/supabase/postgres:15.8.1.085',
+    canonicalPostgresIdentity: { id: `sha256:${'b'.repeat(64)}` },
     console: { log: () => {} }, process: { stdout: { write: () => {} } },
     sanitizedTail: (value) => value };
   const helpers = runInNewContext(`${source.slice(start, end)}\n({assertCompleteSqlHistory, assertHistoryDatabaseTarget, bindLocalHistoryEngine, COMPLETE_HISTORY_SQL});`, context);
@@ -627,7 +629,9 @@ test('H01 identity diagnostics are allowlisted and every owner field remains man
   const start = source.indexOf('function assertHistoryDatabaseTarget(');
   const end = source.indexOf('\nconst COMPLETE_HISTORY_SQL', start);
   const context = { historyDatabase: { major: 15, port: 54122 },
-    sandboxProjectId: 'owned_project', sandboxRoot: '/owned/sandbox' };
+    sandboxProjectId: 'owned_project', sandboxRoot: '/owned/sandbox',
+    CANONICAL_POSTGRES_IMAGE: 'public.ecr.aws/supabase/postgres:15.8.1.085',
+    canonicalPostgresIdentity: { id: `sha256:${'b'.repeat(64)}` } };
   const check = runInNewContext(`${source.slice(start, end)}\nassertHistoryDatabaseTarget;`, context);
   const target = { Id: 'a'.repeat(64), Name: '/supabase_db_owned_project', Image: `sha256:${'b'.repeat(64)}`,
     State: { Running: true }, Config: { Image: 'public.ecr.aws/supabase/postgres:15.8.1.085', Labels: {
@@ -771,7 +775,7 @@ test('H01 changed Docker executable bytes reject before any command can run', as
   assert.equal(spawned, false);
 });
 
-test('H01 producer fixes the image registry after scrubbing inherited overrides and secrets', async () => {
+test('H01 producer scrubs inherited registry overrides and secrets while preserving non-DB fallback', async () => {
   const { runInNewContext } = await import('node:vm');
   const start = source.indexOf('const childEnv = { ...process.env };');
   const end = source.indexOf('\nconst sourcePackage =', start);
@@ -789,14 +793,133 @@ test('H01 producer fixes the image registry after scrubbing inherited overrides 
     const env = runInNewContext(`${source.slice(start, end)}\nchildEnv;`, {
       process: { env: inherited },
     });
-    assert.equal(env.SUPABASE_INTERNAL_IMAGE_REGISTRY, 'public.ecr.aws');
+    assert.equal(env.SUPABASE_INTERNAL_IMAGE_REGISTRY, undefined);
     assert.equal(env.PATH, '/owned/bin');
     assert.equal(env.DO_NOT_TRACK, '1');
     assert.equal(env.SUPABASE_TELEMETRY_DISABLED, '1');
     assert.deepEqual(Object.keys(env).sort(), [
-      'DO_NOT_TRACK', 'PATH', 'SUPABASE_INTERNAL_IMAGE_REGISTRY', 'SUPABASE_TELEMETRY_DISABLED',
+      'DO_NOT_TRACK', 'PATH', 'SUPABASE_TELEMETRY_DISABLED',
     ]);
     assert.deepEqual(inherited, original);
     assert.doesNotMatch(JSON.stringify(env), /SENSITIVE_SENTINEL_DO_NOT_LOG|ghcr|foreign|docker\.io/u);
+  }
+});
+
+test('H01 canonical PostgreSQL preparation precedes startup without constraining non-DB registries', () => {
+  const prepare = source.indexOf('await prepareCanonicalPostgresImage();');
+  const start = source.indexOf("await runLocalCli('start isolated credential-free stack'");
+  assert.ok(prepare > 0 && prepare < start);
+  assert.doesNotMatch(source, /childEnv\.SUPABASE_INTERNAL_IMAGE_REGISTRY\s*=/u);
+  assert.match(source, /const CANONICAL_POSTGRES_IMAGE = 'public\.ecr\.aws\/supabase\/postgres:15\.8\.1\.085';/u);
+});
+
+async function canonicalImageFixture(overrides = {}) {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('async function prepareCanonicalPostgresImage(');
+  const end = source.indexOf('\nfunction assertHistoryDatabaseTarget(', start);
+  assert.ok(start > 0 && end > start);
+  const image = 'public.ecr.aws/supabase/postgres:15.8.1.085';
+  const digest = `sha256:${'d'.repeat(64)}`;
+  const inspected = { Id: `sha256:${'b'.repeat(64)}`, Os: 'linux', Architecture: 'amd64',
+    RepoTags: [image], RepoDigests: [`public.ecr.aws/supabase/postgres@${digest}`] };
+  const calls = [];
+  const logs = [];
+  const context = { process: { arch: 'x64' }, historyDatabase: { major: 15 },
+    CANONICAL_POSTGRES_IMAGE: image, canonicalPostgresIdentity: undefined,
+    runHistoryDocker: async args => {
+      calls.push(Array.from(args));
+      return args[0] === 'pull' ? { stdout: `Digest: ${digest}\n`, stderr: '' }
+        : { stdout: JSON.stringify([inspected]) };
+    }, console: { log: text => logs.push(text) }, ...overrides };
+  const prepare = runInNewContext(`${source.slice(start, end)}\nprepareCanonicalPostgresImage;`, context);
+  return { prepare, context, calls, logs, image, digest, inspected };
+}
+
+test('H01 canonical preparation uses a bounded Docker pull of only the ECR PG image and binds its immutable identity', async () => {
+  const fixture = await canonicalImageFixture();
+  await fixture.prepare();
+  assert.deepEqual(fixture.calls, [
+    ['pull', '--platform', 'linux/amd64', fixture.image],
+    ['image', 'inspect', fixture.image],
+  ]);
+  assert.equal(fixture.context.canonicalPostgresIdentity.id, fixture.inspected.Id);
+  assert.equal(fixture.context.canonicalPostgresIdentity.digest, fixture.digest);
+  assert.doesNotMatch(fixture.logs.join(''), /SENSITIVE_SENTINEL/u);
+});
+
+test('H01 canonical preparation rejects unsupported major or architecture before a pull', async () => {
+  for (const overrides of [{ historyDatabase: { major: 17 } }, { process: { arch: 'unknown' } }]) {
+    const fixture = await canonicalImageFixture(overrides);
+    await assert.rejects(fixture.prepare(), /H01_CANONICAL_POSTGRES/u);
+    assert.equal(fixture.calls.length, 0);
+  }
+});
+
+test('H01 canonical preparation explicitly pulls the native arm64 platform', async () => {
+  const fixture = await canonicalImageFixture({ process: { arch: 'arm64' } });
+  fixture.inspected.Architecture = 'arm64';
+  await fixture.prepare();
+  assert.equal(fixture.calls[0][2], 'linux/arm64');
+});
+
+test('H01 unavailable canonical ECR PostgreSQL never falls back or continues', async () => {
+  for (const reason of ['429', 'auth', 'network', 'cancelled', 'timeout', 'output-limit']) {
+    let calls = 0;
+    const failure = new Error(reason);
+    const fixture = await canonicalImageFixture({ runHistoryDocker: async () => { calls++; throw failure; } });
+    await assert.rejects(fixture.prepare(), error => error === failure);
+    assert.equal(calls, 1);
+    assert.equal(fixture.context.canonicalPostgresIdentity, undefined);
+  }
+});
+
+test('H01 canonical image admission rejects malformed, foreign, mismatched-digest and wrong-platform responses without disclosure', async () => {
+  const controls = [
+    () => 'SENSITIVE_SENTINEL', () => '{}', () => '[]',
+    row => JSON.stringify([row, row]),
+    row => JSON.stringify([{ ...row, Id: 'SENSITIVE_SENTINEL' }]),
+    row => JSON.stringify([{ ...row, Os: 'windows' }]),
+    row => JSON.stringify([{ ...row, Architecture: 'arm64' }]),
+    row => JSON.stringify([{ ...row, RepoTags: ['ghcr.io/supabase/postgres:15.8.1.085'] }]),
+    row => JSON.stringify([{ ...row, RepoDigests: [`ghcr.io/supabase/postgres@sha256:${'d'.repeat(64)}`] }]),
+    row => JSON.stringify([{ ...row, RepoDigests: [`public.ecr.aws/supabase/postgres@sha256:${'e'.repeat(64)}`] }]),
+    row => JSON.stringify([{ ...row, RepoDigests: null }]),
+  ];
+  for (const mutate of controls) {
+    const fixture = await canonicalImageFixture();
+    fixture.context.runHistoryDocker = async args => args[0] === 'pull'
+      ? { stdout: `Digest: ${fixture.digest}\n`, stderr: '' }
+      : { stdout: mutate(fixture.inspected) };
+    await assert.rejects(fixture.prepare(), error =>
+      /H01_CANONICAL_POSTGRES/u.test(error.message) && !/SENSITIVE_SENTINEL|ghcr/u.test(error.message));
+    assert.equal(fixture.context.canonicalPostgresIdentity, undefined);
+  }
+  for (const stdout of ['', 'Digest: SENSITIVE_SENTINEL\n', `Digest: sha256:${'d'.repeat(64)}\nDigest: sha256:${'e'.repeat(64)}\n`]) {
+    const fixture = await canonicalImageFixture({ runHistoryDocker: async () => ({ stdout, stderr: '' }) });
+    await assert.rejects(fixture.prepare(), /H01_CANONICAL_POSTGRES/u);
+    assert.equal(fixture.context.canonicalPostgresIdentity, undefined);
+  }
+});
+
+test('H01 rejects an ECR-named foreign or stale image and missing preparation before SQL', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const start = source.indexOf('function assertHistoryDatabaseTarget(');
+  const end = source.indexOf('\nconst COMPLETE_HISTORY_SQL', start);
+  const image = 'public.ecr.aws/supabase/postgres:15.8.1.085';
+  const context = { historyDatabase: { major: 15, port: 54122 },
+    sandboxProjectId: 'owned_project', sandboxRoot: '/owned/sandbox',
+    CANONICAL_POSTGRES_IMAGE: image, canonicalPostgresIdentity: { id: `sha256:${'b'.repeat(64)}` } };
+  const check = runInNewContext(`${source.slice(start, end)}\nassertHistoryDatabaseTarget;`, context);
+  const target = { Id: 'a'.repeat(64), Name: '/supabase_db_owned_project', Image: `sha256:${'b'.repeat(64)}`,
+    State: { Running: true }, Config: { Image: image, Labels: {
+      'com.supabase.cli.project': 'owned_project', 'com.docker.compose.project': 'owned_project',
+      'com.supabase.cli.workdir': '/owned/sandbox' } },
+    HostConfig: { PortBindings: { '5432/tcp': [{ HostIp: '', HostPort: '54122' }] } } };
+  assert.doesNotThrow(() => check(JSON.stringify([target])));
+  for (const change of [v => { v.Image = `sha256:${'c'.repeat(64)}`; },
+    v => { v.Config.Image = 'public.ecr.aws/supabase/postgres:15.8.1.084'; },
+    () => { context.canonicalPostgresIdentity = undefined; }]) {
+    const changed = structuredClone(target); change(changed);
+    assert.throws(() => check(JSON.stringify([changed])), /H01_DATABASE_TARGET: database differs from the canonical pulled image/u);
   }
 });
