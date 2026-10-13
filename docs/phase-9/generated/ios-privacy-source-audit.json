@@ -29,12 +29,12 @@
     "mapping": {
       "path": "docs/phase-9/ios-sdk-package-mapping.json",
       "bytes": 8350,
-      "sha256": "33a2e944d9f7e1b32e20f4e982599ac9b2da02d3b4d940c69c4574182f9feb44"
+      "sha256": "24af786ee36cade7e08089c9334b2701e9539860ad382ba8d59f570e5cdebcf9"
     },
     "packageLock": {
       "path": "package-lock.json",
-      "bytes": 574155,
-      "sha256": "a4a89bb99349378db0926a3c257d9e8e0bb6760e7d1a41985d22d5756d8322ad"
+      "bytes": 574162,
+      "sha256": "89c56be59f2f910f3ca16fb9cf720297d5452e7de6a6e1d5bd095b9e2387e2d5"
     }
   },
   "summary": {
@@ -52,9 +52,9 @@
     "warningCount": 16
   },
   "ledgerHashes": {
-    "nativePackagesSha256": "d49b79182ff521693d7b4672fcb42c10a6280c7ffe16ac95d074cfb4fcf9f475",
+    "nativePackagesSha256": "6da741dbf7497e2e3a22cb5327d2c168948caa8cf5c5106560b4c81d11de525e",
     "privacyManifestsSha256": "079a9873a342d30b93469e88304bff5063a6f77129df3f1bf758236c6729a01c",
-    "podspecsSha256": "8963927138faef12f243a3ed2d00361019c6e0b05a3a7df92bcf41e08a6fff8f",
+    "podspecsSha256": "aafb92d9b95fc9385dd035217e9b86f7daf89594899ae18007836b98e0ddda01",
     "xcframeworksSha256": "665d974c5d5fd27c4fffba4d09db5ac4c65bcc642314bac62fa664bd5eedd024",
     "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
@@ -126,15 +126,15 @@
     {
       "packageName": "@expo/ui",
       "packagePath": "node_modules/@expo/ui",
-      "version": "57.0.22",
-      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.22.tgz",
-      "integrity": "sha512-v0p397fI7XhYBt+O5Q4MCWKB1lwR8cA2xjoQbc/V6W+EmP9qU1sHh0eQ7QHdeE/lyNjWW4wIut0/H/8OjcHo3w==",
-      "packageJsonSha256": "4327045860561a82c709a1d9d17c15de85be6a70645d6a0e2a77ddf18928de24",
+      "version": "57.0.23",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.23.tgz",
+      "integrity": "sha512-5QW1uzs8cGBlBKQvzNLDmmAeTCiJn4HVCYC2tddyOtXnXsUKGY7Rvgw6otr9Q2rPcOY5mC34wJIspViamvptww==",
+      "packageJsonSha256": "9d559e8cf07c0c264d05c95cedd6408ae2b1f2692d06a76bb4ae59326d3eab13",
       "rootSignals": [
         "ios",
         "spm.config.json"
       ],
-      "scannedEntryCount": 1599,
+      "scannedEntryCount": 1607,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -359,10 +359,10 @@
     {
       "packageName": "expo",
       "packagePath": "node_modules/expo",
-      "version": "57.0.27",
-      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.27.tgz",
-      "integrity": "sha512-Jc3nByHsmzjakvIrqV3/3viVj+jFw1OCfMc+WpClemwL3/hSrS7ktkVCACSTI7/j+1uH+eHmBJwe1kujDLMnbQ==",
-      "packageJsonSha256": "d8d0e673ae534311d4be73ba51e92cc6e8a4aeefea7e08f9d4ef0329554f712f",
+      "version": "57.0.28",
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.28.tgz",
+      "integrity": "sha512-Bh9PgT1wLdcSOi8uXvUtHYh12zz9kx3zjD8Pm7O8EAsZW0W42dVog3/UhY2qJnlOkSDpTQJTnX8jsi2J5xn2OA==",
+      "packageJsonSha256": "13c2b2895346e4652b4b8a660914841a1605ed21551d514321e90bc4531caf9c",
       "rootSignals": [
         "ios",
         "podspec"
@@ -499,10 +499,10 @@
     {
       "packageName": "expo-crypto",
       "packagePath": "node_modules/expo-crypto",
-      "version": "57.0.3",
-      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-57.0.3.tgz",
-      "integrity": "sha512-SAWqEfF37nc8ot7bXsVmu9AFYwQdC2kGvH/eNAHiR3bmlcf1Vv8wu9AnGKT+a90r3T8YfwMpZP4QAYlo4vCn9w==",
-      "packageJsonSha256": "22468c899166220c9d2974cace8d31d55b3fd3ea8d042df8bd9dd2aaea07c101",
+      "version": "57.0.4",
+      "resolved": "https://registry.npmjs.org/expo-crypto/-/expo-crypto-57.0.4.tgz",
+      "integrity": "sha512-LqMMs/N6wvwZyw4deVmcl3AgXgqMwCVQ9WyWf2eaWyrk99TXSKk5da3QspiLOOjnn5Qv9f8C50cDNuoyLThpdw==",
+      "packageJsonSha256": "c85d574f13742a3e47d84b7551108461814cfcec0ac82257cd852c205cc502c5",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -521,10 +521,10 @@
     {
       "packageName": "expo-dev-client",
       "packagePath": "node_modules/expo-dev-client",
-      "version": "57.0.19",
-      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-57.0.19.tgz",
-      "integrity": "sha512-7giMK6BLL685GECHem2UAQvS473ImZLi5l+Q5tq+XSyv6I9UNVPs0p07mKwgBzq8z7DR3d4nTl702ziFxTjO3Q==",
-      "packageJsonSha256": "f6debddd96fb17648b100540955ea06116af68bd00373d8786c901ee30264037",
+      "version": "57.0.20",
+      "resolved": "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-57.0.20.tgz",
+      "integrity": "sha512-ko5FzWsUPuG4aiQfmqxQA5yAdmal6SSICB70KJLChQYzWo+XDoTpXRgEpzQSr1Ku8KyKW0lkEa48xbnKSgd1xQ==",
+      "packageJsonSha256": "c66c15f9136f6516ae8108484f46aad5e42a5ca58dffa6c9253542cacf647909",
       "rootSignals": [
         "ios"
       ],
@@ -542,10 +542,10 @@
     {
       "packageName": "expo-dev-launcher",
       "packagePath": "node_modules/expo-dev-launcher",
-      "version": "57.0.20",
-      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-57.0.20.tgz",
-      "integrity": "sha512-F6oAHaDn9j3L/gyMGE+OalriX6PHZWnZLxpN5jc6crTrp8f6hSwGhmsHpAvdOzijfMjyi3R2UkcISFsCIIQYFA==",
-      "packageJsonSha256": "60832cef15b3bc9eb122f20c9ca8566109459dbdecddda9bd8a55b06feb7cf0f",
+      "version": "57.0.21",
+      "resolved": "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-57.0.21.tgz",
+      "integrity": "sha512-dXa1bhCEtSXn4y34rydBvArmoZtcLK7zY0FN3x1JFPTGh81OXUGZWhyzLCAI9nhI23L/MTy7cGCeNyeJmC1ITw==",
+      "packageJsonSha256": "18831575896a8dff693c3f0d50f5dc80272d3465a884174d70108288416ed405",
       "rootSignals": [
         "ios",
         "podspec"
@@ -564,10 +564,10 @@
     {
       "packageName": "expo-dev-menu",
       "packagePath": "node_modules/expo-dev-menu",
-      "version": "57.0.18",
-      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-57.0.18.tgz",
-      "integrity": "sha512-H7m9ENtVYz4FpJktQj+z/njIN1t7kOEaKCv8Qgv2SdAlyFTW8s2EnufxPoSlg2zUTanaauJ6wrR6XESHwW7kpw==",
-      "packageJsonSha256": "3003a2a3d2da0401da740ea647a2bcdc7142256a96a898158e307d93c6b98253",
+      "version": "57.0.20",
+      "resolved": "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-57.0.20.tgz",
+      "integrity": "sha512-xpf7Rkj++sBA285GqWVJTtl5j/TychD980GKqWA5lVFKM41+xUNmyPMOfO18heAKvX9i620ZHVoHiBGD+6pCdA==",
+      "packageJsonSha256": "ca02e622223ecdd6814f41ecc5d18b0d04df08b755b482dc39f1e5716e864239",
       "rootSignals": [
         "ios",
         "podspec"
@@ -919,10 +919,10 @@
     {
       "packageName": "expo-modules-core",
       "packagePath": "node_modules/expo-modules-core",
-      "version": "57.0.21",
-      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.21.tgz",
-      "integrity": "sha512-g0pf9/tQ6IdJWCzr6PDrEiYT8mTaOhMRnXm3T2XtSzJJaNYgnyyDonkkPN1wd2+PqojIBPhytqqzeLxjM5y/Wg==",
-      "packageJsonSha256": "425ec042ebe4c364e3c6dc571f2b1dca27a2165e130cc4930e789a667d934cb1",
+      "version": "57.0.22",
+      "resolved": "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-57.0.22.tgz",
+      "integrity": "sha512-IQTSHU690fleLZ6b36OCqt04KFStxA/k7El2vweOWhlFZ58hpNSQMK2Fosc1nIvlOnqqVRDcTAq+prJEOHLmBg==",
+      "packageJsonSha256": "1985738ddf57c6e9b7d36cd23a256ce34ed47e0481589c0f653a32a329942b39",
       "rootSignals": [
         "ios",
         "podspec",
@@ -945,15 +945,15 @@
     {
       "packageName": "expo-modules-jsi",
       "packagePath": "node_modules/expo-modules-jsi",
-      "version": "57.1.1",
-      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.1.1.tgz",
-      "integrity": "sha512-ssnwz3ZuIgCbZj5A3J6NlhQrXZojg+BjkeWrOWqVJhyMHlV/A/cRT7s986chKku97BFt6ucmDu6/BCzrV45Wcw==",
-      "packageJsonSha256": "8f3ec5ac6a948250d2f80e6056a2d3d85072430fb9a276f228d73989d935bf25",
+      "version": "57.1.2",
+      "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-57.1.2.tgz",
+      "integrity": "sha512-DYhBwO0fqcKIUma4jF16zRDP/m6ZbawEZbo4eX3gdekREIFqrrz8HKWXydgNUqOyOQcUkdrkZatxi2I9+V6E8g==",
+      "packageJsonSha256": "d572b906b4d064c5a376090978eab23d4c541e6542ebe3abedc8b277a8ad85b9",
       "rootSignals": [
         "apple",
         "spm.config.json"
       ],
-      "scannedEntryCount": 121,
+      "scannedEntryCount": 122,
       "privacyManifestPaths": [],
       "boundPrivacyManifestPaths": [],
       "podspecPaths": [
@@ -1013,10 +1013,10 @@
     {
       "packageName": "expo-router",
       "packagePath": "node_modules/expo-router",
-      "version": "57.0.25",
-      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.25.tgz",
-      "integrity": "sha512-S/xWUGeVqMozG8gFJT0CHOVErZEbQnsAEAqlBIvHJSUZPH0hBcxy2kduUrV7ZDLNI4xCPIlOJ4SI29X/1z/hxw==",
-      "packageJsonSha256": "46d77055dc92541b1e569f9edbe3837ab8bffa79d29867cc2cf160144ff16c5b",
+      "version": "57.0.26",
+      "resolved": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.26.tgz",
+      "integrity": "sha512-iSF+LEbbvGkYGA2j8qWvF1woxrA7EWHZF+SNdTPR7dmi6myPOJsDGdwfWlXA74Gns8T7AuyfuDsxIsqEJ45BhQ==",
+      "packageJsonSha256": "057c11d03a81172a46c8c52772a7bf562ef656fa8edb6e2473da2d20324f6b1f",
       "rootSignals": [
         "ios"
       ],
@@ -1056,10 +1056,10 @@
     {
       "packageName": "expo-sharing",
       "packagePath": "node_modules/expo-sharing",
-      "version": "57.0.22",
-      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.22.tgz",
-      "integrity": "sha512-IWmiz0Dnjd7ifsZ2Gg5XODxb6DQoJ4/H6FofW9bTL9gDjfX2+va8SV1BYVkFvJ8vKQoKR4HgkMCKDCZlrrbKkg==",
-      "packageJsonSha256": "64f84d0b7208c437e9e1052c1af9b91fc3b604124770cf4825c299ae248bcc3d",
+      "version": "57.0.23",
+      "resolved": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.23.tgz",
+      "integrity": "sha512-fN+jrqoWwOpIo+X4utiu/ayCWym23DMgvrTJUHoopkBeO6rEa79ZY4f6ApOlRxvEx2NgQgJEQX+cbPJrjOSRog==",
+      "packageJsonSha256": "191c532ce4688bea3a1af325c9664283bbd6d1708606981fdde419c808a409ac",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -1078,10 +1078,10 @@
     {
       "packageName": "expo-splash-screen",
       "packagePath": "node_modules/expo-splash-screen",
-      "version": "57.0.9",
-      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-57.0.9.tgz",
-      "integrity": "sha512-7cKDn7uBwg0RkcmY015/5j9st4msWJ4zQiPmQdVZoppW3cFSbv05n7xhM6CjUU466Tx4VRTqDF21HuIHkmnEtA==",
-      "packageJsonSha256": "4a01662f6dea29f6d987bd071184d60630251c440d5465ad64689a0d4a7a3f42",
+      "version": "57.0.10",
+      "resolved": "https://registry.npmjs.org/expo-splash-screen/-/expo-splash-screen-57.0.10.tgz",
+      "integrity": "sha512-W7++tMiyVMviWPTvaTXKpcOwwu5SbriwA2n0ewEhC+ic1LFaUNTUXiIXr95MVMSHaLRgtIG9dGyCTCb+NkekkA==",
+      "packageJsonSha256": "2f0516b84310a173ef03dedf631905f522af1fcc88987c4af7c85e4a3713ff40",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -2119,7 +2119,7 @@
     {
       "path": "node_modules/@expo/ui/ios/ExpoUI.podspec",
       "packageName": "@expo/ui",
-      "packageVersion": "57.0.22",
+      "packageVersion": "57.0.23",
       "packagePath": "node_modules/@expo/ui",
       "bytes": 833,
       "sha256": "40ccef94d3947a4b8c181459637f205c556f36ef028fa1cd6629b387f89aca6d",
@@ -2531,7 +2531,7 @@
     {
       "path": "node_modules/expo-crypto/ios/ExpoCrypto.podspec",
       "packageName": "expo-crypto",
-      "packageVersion": "57.0.3",
+      "packageVersion": "57.0.4",
       "packagePath": "node_modules/expo-crypto",
       "bytes": 787,
       "sha256": "4bad7960cae20fbb95ac78251ba991975975374c25827531f628bd4a17da1266",
@@ -2550,7 +2550,7 @@
     {
       "path": "node_modules/expo-dev-client/ios/expo-dev-client.podspec",
       "packageName": "expo-dev-client",
-      "packageVersion": "57.0.19",
+      "packageVersion": "57.0.20",
       "packagePath": "node_modules/expo-dev-client",
       "bytes": 869,
       "sha256": "237f95c423f2884af7bc6303b5f3c8d3580765ac7d26deefccaeb300bc9f33f8",
@@ -2589,7 +2589,7 @@
     {
       "path": "node_modules/expo-dev-launcher/expo-dev-launcher.podspec",
       "packageName": "expo-dev-launcher",
-      "packageVersion": "57.0.20",
+      "packageVersion": "57.0.21",
       "packagePath": "node_modules/expo-dev-launcher",
       "bytes": 6046,
       "sha256": "3df59ccd3d9c21dfd0f31d8b308ec9b17790e973e6d034f5811da90e18bf52ba",
@@ -2686,7 +2686,7 @@
     {
       "path": "node_modules/expo-dev-menu/expo-dev-menu.podspec",
       "packageName": "expo-dev-menu",
-      "packageVersion": "57.0.18",
+      "packageVersion": "57.0.20",
       "packagePath": "node_modules/expo-dev-menu",
       "bytes": 5648,
       "sha256": "0dc72c0b3e4e498b61eac18c649a04584a9827b16a6a8477a6516f3bcace3b35",
@@ -3074,7 +3074,7 @@
     {
       "path": "node_modules/expo-modules-core/ExpoModulesCore.podspec",
       "packageName": "expo-modules-core",
-      "packageVersion": "57.0.21",
+      "packageVersion": "57.0.22",
       "packagePath": "node_modules/expo-modules-core",
       "bytes": 6445,
       "sha256": "b8259e2770ded8730eec301be7ac22f1a8624c85dcd4bfeaeaf01a0bcd0c4887",
@@ -3128,7 +3128,7 @@
     {
       "path": "node_modules/expo-modules-core/ExpoModulesWorklets.podspec",
       "packageName": "expo-modules-core",
-      "packageVersion": "57.0.21",
+      "packageVersion": "57.0.22",
       "packagePath": "node_modules/expo-modules-core",
       "bytes": 1253,
       "sha256": "9e25c99d9193663d944fba43798c3b3c93823d67ebb5f6af7251a007067cc95a",
@@ -3157,7 +3157,7 @@
     {
       "path": "node_modules/expo-modules-core/ExpoModulesWorkletsAdapter.podspec",
       "packageName": "expo-modules-core",
-      "packageVersion": "57.0.21",
+      "packageVersion": "57.0.22",
       "packagePath": "node_modules/expo-modules-core",
       "bytes": 4611,
       "sha256": "b065cedc578cea814c2d0e8726431f4c4aeb1939a4e4b773f46fae2e6824d741",
@@ -3191,7 +3191,7 @@
     {
       "path": "node_modules/expo-modules-jsi/apple/ExpoModulesJSI.podspec",
       "packageName": "expo-modules-jsi",
-      "packageVersion": "57.1.1",
+      "packageVersion": "57.1.2",
       "packagePath": "node_modules/expo-modules-jsi",
       "bytes": 3871,
       "sha256": "ff84b90c5b7c9e5945deb3a9f140bf675e60eb7f4d7bdfb6ab8f3c320d0cc10b",
@@ -3268,7 +3268,7 @@
     {
       "path": "node_modules/expo-router/ios/ExpoRouter.podspec",
       "packageName": "expo-router",
-      "packageVersion": "57.0.25",
+      "packageVersion": "57.0.26",
       "packagePath": "node_modules/expo-router",
       "bytes": 1674,
       "sha256": "fff64d64e4f52538977dc0571c4df05d5d217424bf01d4d7d4571671610ca955",
@@ -3311,7 +3311,7 @@
     {
       "path": "node_modules/expo-sharing/ios/ExpoSharing.podspec",
       "packageName": "expo-sharing",
-      "packageVersion": "57.0.22",
+      "packageVersion": "57.0.23",
       "packagePath": "node_modules/expo-sharing",
       "bytes": 747,
       "sha256": "921d42ca9fa09e129074d0e379349b8492295e6fb207d55479d66ec9f43f4e7c",
@@ -3330,7 +3330,7 @@
     {
       "path": "node_modules/expo-splash-screen/ios/ExpoSplashScreen.podspec",
       "packageName": "expo-splash-screen",
-      "packageVersion": "57.0.9",
+      "packageVersion": "57.0.10",
       "packagePath": "node_modules/expo-splash-screen",
       "bytes": 730,
       "sha256": "08092955a1d0b2b4df2a02382e02b78159105eb25f10b77bcd58e06f8aaeea51",
@@ -3478,7 +3478,7 @@
     {
       "path": "node_modules/expo/Expo.podspec",
       "packageName": "expo",
-      "packageVersion": "57.0.27",
+      "packageVersion": "57.0.28",
       "packagePath": "node_modules/expo",
       "bytes": 5107,
       "sha256": "2798d70b69e8b3462421f5d96ea839b4ab2f0d49e7eb422cc6a6881066bd2f29",
