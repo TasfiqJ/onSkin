@@ -1547,7 +1547,7 @@ test('N23: stale correct aggregate scalars cannot conceal row/hash/size/path/cou
     (s) => { s.stableDeploymentInputs[0].byteCount += 1; },
     (s) => { s.sourceInputs[0].path = '../outside'; },
     (s) => { s.functionSources[s.functions[0].slug][0].sha256 = '0'.repeat(64); },
-    (s) => { s.deploymentInputs[0].sha256 = '0'.repeat(64); s.deploymentInputSetSha256 = sha256(canonicalJson(s.deploymentInputs)); },
+    (inventory) => { inventory.deploymentInputs[0].sha256 = '0'.repeat(64); inventory.deploymentInputSetSha256 = sha256(canonicalJson(inventory.deploymentInputs)); },
     (s) => { s.expandedDeploymentInputs[0].byteCount += 1; },
   ]) forgedInventory('N23', mutate.toString(), mutate);
 });

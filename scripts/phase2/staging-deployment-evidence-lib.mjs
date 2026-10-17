@@ -224,7 +224,7 @@ const REVIEWED_SOURCE = Object.freeze({
   "stableDeploymentInputs": "873c8542e472f3427c6ff70adde964299baadcf24dea77d11876f0f648fb93e5",
   "sourceInputs": "4cd778934c7c0c0b00910ef6c96e60cbba7e708a9e4330add1810cdabf95abe9",
   "functionPaths": "06e15290b71c41c8d0d39ba5bfd3f580fd6320069e662ee99ee39ebaafe93b2c",
-  "hostedSecretGroups": "f0968ed3b6a14caed8eebfff7b26235fb8bfd0b298c0e24f221127be4221303e",
+  "hostedGroupsSha256": "f0968ed3b6a14caed8eebfff7b26235fb8bfd0b298c0e24f221127be4221303e",
   "functionManifestSha256": "a9caa4b14860750febfb46efbf63f7e7d2ce03ad7beb83e3bda11acbfef5d816",
   "denoLockSha256": "b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7"
 });
@@ -758,7 +758,7 @@ export function assertCurrentSourceContract(sourceInventory) {
       source.functionManifestSha256 !== REVIEWED_SOURCE.functionManifestSha256 ||
       source.denoLockSha256 !== REVIEWED_SOURCE.denoLockSha256 ||
       !exactArray(source.featureIds, DB06_FEATURE_IDS) || !exactArray(source.gatedSurfaceIds, []) ||
-      sha256(canonicalJson(source.hostedSecretGroups)) !== REVIEWED_SOURCE.hostedSecretGroups ||
+      sha256(canonicalJson(source.hostedSecretGroups)) !== REVIEWED_SOURCE.hostedGroupsSha256 ||
       sha256(canonicalJson(source.functionPaths)) !== REVIEWED_SOURCE.functionPaths) {
     fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
   }
