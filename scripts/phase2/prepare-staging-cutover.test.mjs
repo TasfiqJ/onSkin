@@ -10,7 +10,7 @@ import { buildCutoverPreparation } from './prepare-staging-cutover.mjs';
 const repoRoot = resolve(import.meta.dirname, '..', '..');
 const projectRef = 'abcdefghijklmnopqrst';
 
-test('cutover preparation emits exact safe hashes without the raw project ref', () => {
+test('N34: pure cutover planning emits safe hashes; supplied commit data conveys no approval', () => {
   const root = mkdtempSync(join(tmpdir(), 'db06-preparation-'));
   try {
     for (const file of [
@@ -29,8 +29,8 @@ test('cutover preparation emits exact safe hashes without the raw project ref', 
       sourceGitCommit: 'a'.repeat(40),
       evidenceDirectory: root,
     });
-    assert.equal(summary.migrationCount, 94);
-    assert.equal(summary.migrationIds.at(-1), '20260926000078');
+    assert.equal(summary.migrationCount, 97);
+    assert.equal(summary.migrationIds.at(-1), '20261010000081');
     assert.equal(summary.projectRefLast4, 'qrst');
     assert.equal(
       summary.projectRefFingerprint,
@@ -48,6 +48,18 @@ test('cutover preparation emits exact safe hashes without the raw project ref', 
       true,
     );
     assert.equal(JSON.stringify(summary).includes(projectRef), false);
+    const otherCommit = buildCutoverPreparation({
+      repoRoot,
+      projectRef,
+      sourceGitCommit: 'b'.repeat(40),
+      evidenceDirectory: root,
+    });
+    assert.equal(summary.sourceGitCommit, 'a'.repeat(40));
+    assert.equal(otherCommit.sourceGitCommit, 'b'.repeat(40));
+    assert.deepEqual({ ...otherCommit, sourceGitCommit: summary.sourceGitCommit }, summary);
+    for (const key of ['approved', 'integrationAuthorized', 'replayAuthorized', 'independentApproval']) {
+      assert.equal(Object.hasOwn(summary, key), false);
+    }
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

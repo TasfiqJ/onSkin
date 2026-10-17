@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmdirSync, rmSync,
+  symlinkSync, unlinkSync, writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
+import { inflateSync } from 'node:zlib';
 
 import {
   DB06_INITIAL_MUTATION_COMPLETION_BUDGET_MS,
@@ -260,12 +264,12 @@ function cutoverFixture(overrides = {}, trafficFreezeOverrides = {}) {
 test('current reviewed source inventory is deterministic and exact', () => {
   assertCurrentSourceContract(source);
   const second = buildSourceInventory(repoRoot);
-  assert.equal(source.migrationCount, 94);
-  assert.equal(source.latestMigrationId, '20260926000078');
+  assert.equal(source.migrationCount, 97);
+  assert.equal(source.latestMigrationId, '20261010000081');
   assert.equal(source.functionCount, 18);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
-  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 94);
+  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 97);
 });
 
 test('candidate CLI cannot reach staging before current-chain replay and type parity', () => {
@@ -1007,7 +1011,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 94,
+      migrationCount: 97,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,
@@ -1243,4 +1247,398 @@ test('pass evidence rejects every omitted freeze and final-validity proof', () =
     mutate(input);
     errorCode(() => buildEvidenceManifest(input), 'DB06_PASS_EVIDENCE_INCOMPLETE');
   }
+});
+
+// Authority R1 N01-N25/N29-N33: only disposable source bytes and pure APIs.
+// N26-N28/N35 require external frozen-postimage/tree review; N36 is packaging.
+// Those external receipts belong to the evidence ZIP, never to an in-code approval.
+let mutationRoot;
+function sourceFixture() {
+  if (mutationRoot) return mutationRoot;
+  mutationRoot = mkdtempSync(join(tmpdir(), 'db06-source-mutations-'));
+  const paths = new Set([
+    ...source.migrations.map(({ file }) => `supabase/migrations/${file}`),
+    ...source.functionPaths.filter((path) => !path.endsWith('/')).map((path) => `supabase/functions/${path}`),
+    ...source.sourceInputs.map(({ path }) => path),
+    ...source.expandedDeploymentInputs.map(({ path }) => path),
+  ]);
+  for (const path of paths) {
+    const target = join(mutationRoot, path);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, readFileSync(join(repoRoot, path)));
+  }
+  return mutationRoot;
+}
+
+function refused(id, detail, callback, codes = ['DB06_SOURCE_CONTRACT_REVIEW_REQUIRED']) {
+  let observed;
+  assert.throws(callback, (error) => {
+    observed = error.code;
+    assert.ok(error instanceof Db06EvidenceError, `${id}: ${detail}`);
+    assert.ok(codes.includes(observed), `${id}: ${detail}: ${observed}`);
+    return true;
+  });
+  console.log(JSON.stringify({ case: id, detail, observed, outcome: 'refused' }));
+}
+
+function editedSource(id, path, replacement, codes) {
+  const target = join(sourceFixture(), path);
+  const original = readFileSync(target);
+  const changed = replacement ? replacement(original) : Buffer.concat([original, Buffer.from(' ') ]);
+  assert.notDeepEqual(changed, original);
+  try {
+    writeFileSync(target, changed);
+    refused(id, path, () => assertCurrentSourceContract(buildSourceInventory(sourceFixture())), codes);
+  } finally {
+    writeFileSync(target, original);
+  }
+}
+
+function forgedInventory(id, detail, mutate) {
+  const forged = structuredClone(source);
+  mutate(forged);
+  refused(id, detail, () => assertCurrentSourceContract(forged));
+}
+
+test('N01: reviewed immutable G leaves accept; no replay or candidate approval follows', () => {
+  assert.equal(assertCurrentSourceContract(buildSourceInventory(sourceFixture())), true);
+  assert.equal(source.migrationSetSha256, '5ee03b2032781512fe2ab893e46a3f28daf68ea55ba7b800393265256898c3d6');
+  assert.equal(source.functionSetSha256, 'e4ef03705c00ef1f9a40874805fc5072d17fd5b6b8a37b6fbd2859dbecfb9e4e');
+  assert.equal(new Set(Object.values(source.functionSources).flat().map(({ path }) => path)).size, 93);
+  assert.equal(Object.values(source.functionSources).flat().length, 233);
+  assert.equal(source.deploymentInputs.length, 30);
+  assert.equal(source.stableDeploymentInputs.length, 33);
+  assert.equal(source.expandedDeploymentInputs.length, 34);
+});
+
+test('N02: byte changes in every migration retain names/count/head and are refused', () => {
+  for (const { file } of source.migrations) editedSource('N02', `supabase/migrations/${file}`);
+});
+
+const rejectedHistoricalHashes = Object.freeze({
+    '20260718000046': 'bb315db3596edc232467255236398c493ca3967544a0d09836f608faf87de163',
+    '20260718000047': '936beb5ca375a8e1e68e9bfbd940cbd47751fef17c7b020b55f82d35b67aa433',
+    '20260718000048': '2696c78644ad3d58fcfbbd00ed3899b448fc2282d10868743fca8ec2dea67b81',
+    '20260718000049': '5d1263227e6280abcad76680581f171b14068eba6a27d06cda6f4bc981d679ef',
+    '20260718000050': 'fbe44e513c63840bdc67d6effa3ed0ad1439c3bf07be650ebf2d8821fe71b0e7',
+    '20260718000051': 'e850deaa5db5ada2f12694c9983411650b9a2cd2d047a3c53adfa81287abcbf8',
+    '20260718000052': '9cb42e283a831286dd694df53bcd1ac8b6c097e84e3e753b8b857b8ab7eecc3f',
+    '20260718000053': 'c3c36f2a9de5c9cdd0e57baea4fcb5d021f9ac11d96ea6e1b5c9fa1ac6ea1fab',
+    '20260718000059': '6caf62faca2d8c04147b8faceb7c170d9ee32c1416880afee6fdd7f66676b03f',
+    '20260718000060': '6180173654b4aac8a15cf5d827acfcc74a1a07ba8ced797f6446b57a35dd2c47',
+    '20260722000061': '56bcd9c296a93b4cb51638673a856a70d3caa52e8976f1e344028c6e97e05da1',
+    '20260722000062': '15f39ce3da672d7d6bc92d680f0610d5954fbf2081f89b1db3c4ad426d352b5c',
+});
+
+test('N03: all twelve historical wrong row hashes fail despite the correct aggregate', () => {
+  // These are rejected historical values from HISTORICAL_12_DISCREPANCIES.json.
+
+  for (const [id, hash] of Object.entries(rejectedHistoricalHashes)) {
+    forgedInventory('N03', id, (s) => { s.migrations.find((row) => row.id === id).sha256 = hash; });
+  }
+});
+
+test('N04: historical 96-row pinsets and scalar digests have no fallback', () => {
+  for (const digest of ['05983dc1f54cb02346a2512464139ff34e4e70cf0e173bf9ca1a60ceb4f3aec8', '9dfd88a77f973fe6b87b8360c1ddb11f2eeacf954b98e2734a42a2a31e5e41c2']) {
+    forgedInventory('N04', digest, (s) => {
+      s.migrations.pop(); s.migrationCount = 96; s.latestMigrationId = s.migrations.at(-1).id;
+      if (digest.startsWith('05983dc1')) {
+        for (const row of s.migrations) if (rejectedHistoricalHashes[row.id]) row.sha256 = rejectedHistoricalHashes[row.id];
+      }
+      assert.equal(sha256(canonicalJson(s.migrations)), digest);
+      s.migrationSetSha256 = digest;
+    });
+  }
+});
+
+test('N05: the correct first96 prefix and a physically absent 0081 are refused', () => {
+  forgedInventory('N05', 'correct prefix rows only', (s) => { s.migrations.pop(); });
+  const path = join(sourceFixture(), 'supabase/migrations', source.migrations.at(-1).file);
+  const original = readFileSync(path);
+  try {
+    unlinkSync(path);
+    refused('N05', 'missing 0081', () => assertCurrentSourceContract(buildSourceInventory(sourceFixture())));
+  } finally { writeFileSync(path, original); }
+});
+
+test('N06: an unchanged migration ID and bytes under a renamed file are refused', () => {
+  const original = join(sourceFixture(), 'supabase/migrations', source.migrations[0].file);
+  const renamed = join(dirname(original), `${source.migrations[0].id}_renamed.sql`);
+  try {
+    renameSync(original, renamed);
+    refused('N06', 'same bytes and ID, different filename', () => assertCurrentSourceContract(buildSourceInventory(sourceFixture())));
+  } finally { renameSync(renamed, original); }
+});
+
+test('N07: duplicate physical migration IDs and duplicate witness rows fail', () => {
+  const duplicate = join(sourceFixture(), 'supabase/migrations', `${source.migrations[0].id}_duplicate.sql`);
+  try {
+    writeFileSync(duplicate, readFileSync(join(repoRoot, 'supabase/migrations', source.migrations[0].file)));
+    refused('N07', 'duplicate physical ID', () => buildSourceInventory(sourceFixture()), ['DB06_SOURCE_MIGRATIONS_INVALID']);
+  } finally { unlinkSync(duplicate); }
+  forgedInventory('N07', 'duplicate inventory row', (s) => { s.migrations[1] = s.migrations[0]; });
+});
+
+test('N08: reordered migration witnesses cannot preserve approval with scalar count/head', () => {
+  forgedInventory('N08', 'swap first two rows', (s) => { [s.migrations[0], s.migrations[1]] = [s.migrations[1], s.migrations[0]]; });
+});
+
+test('N09: invalid SQL names, hidden migration inputs and directories fail closed', () => {
+  for (const name of ['unknown.sql', '.hidden.sql', 'hidden-input']) {
+    const path = join(sourceFixture(), 'supabase/migrations', name);
+    try {
+      writeFileSync(path, '-- unapproved input\n');
+      refused('N09', name, () => buildSourceInventory(sourceFixture()), ['DB06_SOURCE_MIGRATIONS_INVALID']);
+    } finally { unlinkSync(path); }
+  }
+  const directory = join(sourceFixture(), 'supabase/migrations', 'extra-directory');
+  try {
+    mkdirSync(directory);
+    refused('N09', 'directory input', () => buildSourceInventory(sourceFixture()), ['DB06_SOURCE_MIGRATIONS_INVALID']);
+  } finally { rmdirSync(directory); }
+});
+
+test('N10: each successor 0079, 0080 and 0081 is individually pinned', () => {
+  for (const { file } of source.migrations.slice(-3)) editedSource('N10', `supabase/migrations/${file}`);
+});
+
+test('N11: each of eighteen same-slug entrypoint byte edits is refused', () => {
+  for (const { entrypoint } of source.functions) editedSource('N11', entrypoint);
+});
+
+test('N12: all transitive local sources are pinned, including every affected shared closure', () => {
+  const paths = [...new Set(Object.values(source.functionSources).flat().map(({ path }) => path))];
+  for (const path of paths.filter((path) => !path.endsWith('/index.ts'))) {
+    const full = `supabase/functions/${path}`;
+    const target = join(sourceFixture(), full), original = readFileSync(target);
+    try {
+      writeFileSync(target, Buffer.concat([original, Buffer.from(' ')]));
+      const observed = buildSourceInventory(sourceFixture());
+      const affected = source.functions.filter(({ slug }) => source.functionSources[slug].some((row) => row.path === path));
+      assert.ok(affected.length > 0);
+      for (const { slug, sourceSetSha256 } of affected) {
+        assert.notEqual(observed.functions.find((f) => f.slug === slug).sourceSetSha256, sourceSetSha256);
+      }
+      refused('N12', `${path}: ${affected.map(({ slug }) => slug).join(',')}`, () => assertCurrentSourceContract(observed));
+    } finally { writeFileSync(target, original); }
+  }
+});
+
+test('N13: missing helpers, unresolved/escaping imports and junctions are refused', () => {
+  const path = join(sourceFixture(), 'supabase/functions/_shared/env.ts'), original = readFileSync(path);
+  try {
+    unlinkSync(path);
+    refused('N13', 'deleted helper', () => buildSourceInventory(sourceFixture()));
+  } finally { writeFileSync(path, original); }
+  editedSource('N13', source.functions[0].entrypoint,
+    (bytes) => Buffer.concat([bytes, Buffer.from("\nimport './missing-helper.ts';\n")]),
+    ['DB06_FUNCTION_IMPORT_UNRESOLVED']);
+  const outside = join(sourceFixture(), 'outside.ts');
+  try {
+    writeFileSync(outside, '// source outside functions root\n');
+    editedSource('N13', source.functions[0].entrypoint,
+      (bytes) => Buffer.concat([bytes, Buffer.from("\nimport '../../../outside.ts';\n")]),
+      ['DB06_FUNCTION_IMPORT_ESCAPES_ROOT']);
+  } finally { unlinkSync(outside); }
+  const directory = join(sourceFixture(), 'supabase/functions/_shared');
+  const retained = `${directory}-retained`;
+  renameSync(directory, retained);
+  try {
+    symlinkSync(retained, directory, process.platform === 'win32' ? 'junction' : 'dir');
+    refused('N13', 'shared directory symlink/junction', () => buildSourceInventory(sourceFixture()), ['DB06_SOURCE_PATH_UNSAFE']);
+  } finally {
+    if (existsSync(directory)) unlinkSync(directory);
+    renameSync(retained, directory);
+  }
+});
+
+test('N14: undeclared directories, entrypoints and unreferenced local inputs fail', () => {
+  for (const name of ['extra-function/index.ts', '_shared/extra/index.ts', '.hidden.ts']) {
+    const path = join(sourceFixture(), 'supabase/functions', name);
+    mkdirSync(dirname(path), { recursive: true });
+    try {
+      writeFileSync(path, '// unreviewed input\n');
+      refused('N14', name, () => buildSourceInventory(sourceFixture()));
+    } finally {
+      unlinkSync(path);
+      if (name.includes('/')) rmdirSync(dirname(path));
+    }
+  }
+});
+
+test('N15: deployByDefault changes, added defaults and duplicate manifest keys fail', () => {
+  for (const mutate of [
+    (m) => { m.functions['account-deletion'].deployByDefault = false; },
+    (m) => { m.functions.extra = m.functions['account-deletion']; },
+  ]) editedSource('N15', 'supabase/functions/manifest.json', (bytes) => {
+    const m = JSON.parse(bytes); mutate(m); return Buffer.from(JSON.stringify(m));
+  });
+  editedSource('N15', 'supabase/functions/manifest.json', (bytes) =>
+    Buffer.from(bytes.toString().replace('"schemaVersion": 1', '"schemaVersion": 1, "schemaVersion": 1')));
+});
+
+test('N16: each manifest JWT flag and each config JWT/entrypoint is immutable', () => {
+  for (const { slug, verifyJwt } of source.functions) {
+    editedSource('N16', 'supabase/functions/manifest.json', (bytes) => {
+      const m = JSON.parse(bytes); m.functions[slug].verifyJwt = !verifyJwt; return Buffer.from(JSON.stringify(m));
+    });
+    for (const field of ['verify_jwt', 'entrypoint']) {
+      editedSource('N16', 'supabase/config.toml', (bytes) => {
+        const text = bytes.toString();
+        const section = `[functions.${slug}]`, start = text.indexOf(section), next = text.indexOf('\n[', start + section.length);
+        assert.ok(start >= 0);
+        const end = next < 0 ? text.length : next;
+        const part = text.slice(start, end).replace(new RegExp(`${field} = [^\\n]+`, 'u'), `${field} = ${field === 'verify_jwt' ? String(!verifyJwt) : '"./functions/wrong/index.ts"'}`);
+        assert.notEqual(part, text.slice(start, end));
+        return Buffer.from(text.slice(0, start) + part + text.slice(end));
+      });
+    }
+  }
+});
+
+test('N17: full manifest metadata beyond selected scalar rows is immutable', () => {
+  for (const key of ['optionalEnvironment', 'conditionalEnvironment', 'conditionalSecrets', 'requiredSecrets', 'auth', 'resourceLimits', 'resourceLimitSemantics']) {
+    editedSource('N17', 'supabase/functions/manifest.json', (bytes) => {
+      const m = JSON.parse(bytes);
+      if (key === 'resourceLimitSemantics') m[key] += ' changed';
+      else if (key === 'auth') m.functions['account-deletion'][key] += '-changed';
+      else if (key === 'resourceLimits') m.functions['account-deletion'][key].memoryMb += 1;
+      else m.functions['account-deletion'][key] = ['UNREVIEWED_METADATA'];
+      return Buffer.from(JSON.stringify(m));
+    });
+  }
+});
+
+test('N18: deno.lock bytes cannot change alone', () => editedSource('N18', 'supabase/functions/deno.lock'));
+
+test('N19: every generated type/client overlay is bound as raw bytes, independent of table counts', () => {
+  for (const { path } of source.sourceInputs.filter(({ path }) => path.startsWith('packages/types/'))) editedSource('N19', path);
+});
+
+test('N20: each of thirty-three stable deployment inputs is independently bound', () => {
+  for (const { path } of source.stableDeploymentInputs) editedSource('N20', path);
+});
+
+test('N21: actual archived C2 package-lock bytes cannot substitute for G', () => {
+  // Compressed byte-offset delta from the independently archived C2 lock (not executed).
+  const delta = JSON.parse(inflateSync(Buffer.from('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', 'base64')));
+  editedSource('N21', 'package-lock.json', (bytes) => {
+    assert.equal(sha256(bytes), '89c56be59f2f910f3ca16fb9cf720297d5452e7de6a6e1d5bd095b9e2387e2d5');
+    const parts = []; let offset = 0;
+    for (const [start, end, replacement] of delta) {
+      parts.push(bytes.subarray(offset, start), Buffer.from(replacement, 'base64')); offset = end;
+    }
+    parts.push(bytes.subarray(offset));
+    const substituted = Buffer.concat(parts);
+    assert.equal(substituted.length, 574165);
+    assert.equal(sha256(substituted), '83d8239b56fcc56a89b155a4ecd3e99949350ab35755aa4260192b9cc97601c1');
+    return substituted;
+  });
+});
+
+test('N22: seed and email template bytes cannot change alone', () => {
+  for (const path of ['supabase/seed.sql', 'supabase/templates/email_change.html']) editedSource('N22', path);
+});
+
+test('N23: stale correct aggregate scalars cannot conceal row/hash/size/path/count edits', () => {
+  for (const mutate of [
+    (s) => { s.migrations[0].sha256 = '0'.repeat(64); },
+    (s) => { s.migrations.pop(); },
+    (s) => { s.stableDeploymentInputs[0].byteCount += 1; },
+    (s) => { s.sourceInputs[0].path = '../outside'; },
+    (s) => { s.functionSources[s.functions[0].slug][0].sha256 = '0'.repeat(64); },
+    (s) => { s.deploymentInputs[0].sha256 = '0'.repeat(64); s.deploymentInputSetSha256 = sha256(canonicalJson(s.deploymentInputs)); },
+    (s) => { s.expandedDeploymentInputs[0].byteCount += 1; },
+  ]) forgedInventory('N23', mutate.toString(), mutate);
+});
+
+test('N24: missing/extra/malformed witness fields and caller expected-hash options fail closed', () => {
+  for (const key of Object.keys(source)) {
+    forgedInventory('N24', `missing ${key}`, (s) => { delete s[key]; });
+  }
+  for (const mutate of [
+    (s) => { s.expectedHashes = {}; },
+    (s) => { s.migrations = {}; },
+    (s) => { s.functions = null; },
+    (s) => { s.sourceInputs[0].extra = true; },
+    (s) => { s.functionSources = []; },
+    (s) => { s.sourceInputs[0].byteCount = '1'; },
+  ]) forgedInventory('N24', mutate.toString(), mutate);
+  const forged = structuredClone(source); forged.migrations[0].sha256 = '0'.repeat(64);
+  refused('N24', 'caller expected-hash override ignored', () => assertCurrentSourceContract(forged, { expectedHashes: forged, approved: true }));
+});
+
+test('N25: environment and caller approval claims cannot bypass source or replay', () => {
+  const keys = ['DB06_SOURCE_APPROVED', 'DB06_SKIP_SOURCE_CHECK', 'DB06_EXPECTED_MIGRATION_SHA256', 'DB06_REPLAY_APPROVED'];
+  const prior = keys.map((key) => process.env[key]);
+  try {
+    for (const key of keys) process.env[key] = 'true';
+    forgedInventory('N25', 'extra caller receipt', (s) => { s.approved = true; });
+    const forged = structuredClone(source); forged.migrations[0].sha256 = '0'.repeat(64);
+    refused('N25', 'environment does not choose expected pins', () => assertCurrentSourceContract(forged));
+    refused('N25', 'environment does not approve replay', () => assertPinnedMigrationRunnerCompatibility(repoRoot, '2.117.0'), ['DB06_CURRENT_CHAIN_REPLAY_REQUIRED']);
+  } finally {
+    keys.forEach((key, i) => { if (prior[i] === undefined) delete process.env[key]; else process.env[key] = prior[i]; });
+  }
+});
+
+test('N29: exact candidate source and pinned CLI still stop unconditionally', () => {
+  assert.equal(assertCurrentSourceContract(source), true);
+  refused('N29', 'correct source plus CLI2.117.0', () => assertPinnedMigrationRunnerCompatibility(repoRoot, '2.117.0'), ['DB06_CURRENT_CHAIN_REPLAY_REQUIRED']);
+});
+
+test('N30: wrong, absent and decorated CLI versions never select another runner', () => {
+  for (const version of [undefined, null, '', '2.109.1', '2.117.1', 'v2.117.0', '2.117.0 extra', '2.117.0\n']) {
+    refused('N30', String(version), () => assertPinnedMigrationRunnerCompatibility(repoRoot, version), ['DB06_CLI_PIN_INVALID']);
+  }
+});
+
+test('N31: mocked pre-link order stops source/replay failures before any remote command', () => {
+  // Inspect the untouched deployment source without importing or invoking the runner.
+  const runner = readFileSync(join(repoRoot, 'scripts/phase2/deploy-supabase-staging.mjs'), 'utf8');
+  const order = [runner.indexOf('assertCurrentSourceContract(sourceInventory)'), runner.indexOf('assertPinnedMigrationRunnerCompatibility(deploymentRoot, PINNED_CLI_VERSION)'), runner.indexOf("'local-database-verification'"), runner.indexOf("'link-staging-project'")];
+  assert.ok(order.every((n) => n >= 0));
+  assert.deepEqual(order, [...order].sort((a, b) => a - b));
+  for (const valid of [false, true]) {
+    const calls = [];
+    const s = structuredClone(source); if (!valid) s.migrations[0].sha256 = '0'.repeat(64);
+    refused('N31', valid ? 'replay stop' : 'source stop', () => {
+      assertCurrentSourceContract(s);
+      assertPinnedMigrationRunnerCompatibility(repoRoot, '2.117.0');
+      calls.push('link', 'sql', 'reset', 'deploy', 'hosted');
+    }, [valid ? 'DB06_CURRENT_CHAIN_REPLAY_REQUIRED' : 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED']);
+    assert.deepEqual(calls, []);
+  }
+});
+
+test('N32: ninety-one generated names cannot replace the historical eighty-two-table check', () => {
+  const input = passManifestInput([{ commandId: 'mock', result: 'pass', completedAt: fixedNow.toISOString() }]);
+  input.after.schema.publicTableCount = 91;
+  input.after.schema.publicRlsTableCount = 91;
+  refused('N32', 'generated names are not runtime schema evidence', () => buildEvidenceManifest(input), ['DB06_PASS_EVIDENCE_INCOMPLETE']);
+});
+
+test('N33: retained freshness/cohort/Auth/freeze/boundary/secret/version/rollback/containment negatives stay active', () => {
+  const functions = parseFunctionInventory(JSON.stringify(functionRows()), source, { requireComplete: true });
+  const input = passManifestInput([{ commandId: 'mock', result: 'pass', completedAt: fixedNow.toISOString() }]);
+  const common = {
+    sourceInventory: source, beforeMigrationIds: [], preMigrationFunctions: functions,
+    afterMigrationIds: source.migrations.map(({ id }) => id), afterFunctions: functions,
+    afterSchema: input.after.schema, afterSecrets: input.after.secretConfiguration,
+    localTypes: input.types.localGenerated, linkedTypes: input.types.linkedGenerated, repositoryTypes: input.types.repositoryGenerated,
+  };
+  for (const field of ['authUserCount', 'authIdentityCount', 'appleIdentityCount', 'authSessionCount', 'storageObjectCount', 'relevantCronJobCount', 'allCronJobCount']) {
+    refused('N33', field, () => validateCompletedDeployment({ ...common, afterSchema: { ...common.afterSchema, [field]: 1 } }), ['DB06_AFTER_SCHEMA_COUNTS_INVALID']);
+  }
+  const higher = structuredClone(functions); higher[0].version = 2;
+  refused('N33', 'function version regression', () => validateCompletedDeployment({ ...common, preMigrationFunctions: higher }), ['DB06_AFTER_FUNCTION_VERSION_REGRESSED']);
+  for (const field of ['missingGroupIds', 'appEnvironmentNamesPresent', 'trafficFreezeNamePresent']) {
+    const afterSecrets = { ...common.afterSecrets, [field]: field === 'missingGroupIds' ? ['missing'] : false };
+    refused('N33', field, () => validateCompletedDeployment({ ...common, afterSecrets }), ['DB06_REQUIRED_HOSTED_CONFIGURATION_MISSING']);
+  }
+  const rollback = passManifestInput([{ commandId: 'mock', result: 'pass', completedAt: fixedNow.toISOString() }]);
+  rollback.rollbackRef = '../';
+  refused('N33', 'rollback reference', () => buildEvidenceManifest(rollback), ['DB06_ROLLBACK_REF_INVALID']);
+  // The unchanged original tests above additionally exercise stale timestamps, five boundaries,
+  // provider/Auth freezes, final validity, secrets/redaction and pending process containment.
 });

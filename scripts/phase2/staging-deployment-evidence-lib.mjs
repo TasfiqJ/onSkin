@@ -17,8 +17,8 @@ import { summarizeDatabaseTypes } from './database-types-contract-lib.mjs';
 export const DB06_EVIDENCE_SCHEMA_VERSION = 1;
 export const DB06_RETENTION_CLASS = 'release-qa';
 export const DB06_CURRENT_SOURCE_CONTRACT = Object.freeze({
-  migrationCount: 94,
-  latestMigrationId: '20260926000078',
+  migrationCount: 97,
+  latestMigrationId: '20261010000081',
   functionCount: 18,
   // Historical 0072 replay only; do not treat this as a verified 0078 count.
   publicTableCount: 82,
@@ -211,6 +211,37 @@ const DEPLOYMENT_INPUT_PATHS = Object.freeze([
   'docs/phase-2/staging-traffic-provider-freeze-attestation.template.json',
   'docs/hugeToDo/evidence-governance.json',
   'docs/hugeToDo/feature-inventory.json',
+]);
+
+// Independently reviewed G=473bad3a7d7d434383b44fc102cd2666a79c06a0,
+// tree=39ca1dbab5b3136c66844af1b9a05643a082867b. Authority R1 ZIP SHA-256:
+// 4f17dfe17db76672f4405008ab6f1dc4f2e84ecf4eafe4958bcb14c2e0b3a8e4.
+// These immutable source witnesses are not approval of this library or its tests.
+// External BRAIN review must bind all three postimages and the complete candidate tree.
+const REVIEWED_SOURCE = Object.freeze({
+  "migrations": "5ee03b2032781512fe2ab893e46a3f28daf68ea55ba7b800393265256898c3d6",
+  "functions": "e4ef03705c00ef1f9a40874805fc5072d17fd5b6b8a37b6fbd2859dbecfb9e4e",
+  "stableDeploymentInputs": "873c8542e472f3427c6ff70adde964299baadcf24dea77d11876f0f648fb93e5",
+  "sourceInputs": "4cd778934c7c0c0b00910ef6c96e60cbba7e708a9e4330add1810cdabf95abe9",
+  "functionPaths": "06e15290b71c41c8d0d39ba5bfd3f580fd6320069e662ee99ee39ebaafe93b2c",
+  "hostedSecretGroups": "f0968ed3b6a14caed8eebfff7b26235fb8bfd0b298c0e24f221127be4221303e",
+  "functionManifestSha256": "a9caa4b14860750febfb46efbf63f7e7d2ce03ad7beb83e3bda11acbfef5d816",
+  "denoLockSha256": "b5f517baf0e4dc911925ec80d45b534367a3ed1e8c982cd89998da7e614d93b7"
+});
+const SELF_INPUT_PATH = 'scripts/phase2/staging-deployment-evidence-lib.mjs';
+const SUPPLEMENTAL_INPUT_PATHS = Object.freeze([
+  'scripts/phase2/database-types-contract-lib.mjs',
+  'scripts/phase2/local-supabase-reset-retry.mjs',
+  'supabase/seed.sql',
+  'supabase/templates/email_change.html',
+]);
+const SOURCE_INPUT_PATHS = Object.freeze([
+  "packages/types/src/client-database.types.contract.ts",
+  "packages/types/src/client-database.types.ts",
+  "packages/types/src/database.types.ts",
+  "supabase/config.toml",
+  "supabase/functions/deno.lock",
+  "supabase/functions/manifest.json"
 ]);
 
 const PLATFORM_INJECTED_NAMES = new Set([
@@ -423,6 +454,49 @@ export function validateEvidenceId(value) {
   return text;
 }
 
+// Reject links in every path component, including junctions and the supplied root.
+function sourceBytes(root, path) {
+  const parts = path.split('/');
+  if (!path || isAbsolute(path) || path.includes('\\') ||
+      parts.some((part) => !part || part === '.' || part === '..') ||
+      !lstatSync(root).isDirectory() || lstatSync(root).isSymbolicLink()) {
+    fail('DB06_SOURCE_PATH_UNSAFE');
+  }
+  let current = root;
+  for (const [index, part] of parts.entries()) {
+    current = join(current, part);
+    const metadata = lstatSync(current, { throwIfNoEntry: false });
+    if (!metadata || metadata.isSymbolicLink() ||
+        (index < parts.length - 1 ? !metadata.isDirectory() : !metadata.isFile())) {
+      fail('DB06_SOURCE_PATH_UNSAFE');
+    }
+  }
+  if (statSync(current).size > 16 * 1024 * 1024) fail('DB06_SOURCE_PATH_UNSAFE');
+  return readFileSync(current);
+}
+
+function inputRows(root, paths) {
+  return paths.map((path) => {
+    const bytes = sourceBytes(root, path);
+    return { path, byteCount: bytes.length, sha256: sha256(bytes) };
+  });
+}
+
+function functionPathInventory(root, current = root) {
+  const paths = [];
+  for (const name of readdirSync(current)) {
+    const target = join(current, name);
+    const path = relative(root, target).split(sep).join('/');
+    const metadata = lstatSync(target);
+    if (metadata.isSymbolicLink()) fail('DB06_SOURCE_PATH_UNSAFE');
+    if (metadata.isDirectory()) {
+      paths.push(`${path}/`, ...functionPathInventory(root, target));
+    } else if (metadata.isFile()) paths.push(path);
+    else fail('DB06_SOURCE_PATH_UNSAFE');
+  }
+  return paths.sort();
+}
+
 function resolveImport(sourcePath, specifier, functionsRoot) {
   const cleanSpecifier = specifier.split(/[?#]/u, 1)[0];
   const base = resolve(dirname(sourcePath), cleanSpecifier);
@@ -463,7 +537,7 @@ function transitiveFunctionSources(entrypoint, functionsRoot) {
     const current = pending.pop();
     if (visited.has(current)) continue;
     visited.add(current);
-    const source = readFileSync(current, 'utf8');
+    const source = sourceBytes(functionsRoot, relative(functionsRoot, current).split(sep).join('/')).toString('utf8');
     for (const specifier of sourceImports(source)) {
       pending.push(resolveImport(current, specifier, functionsRoot));
     }
@@ -471,22 +545,21 @@ function transitiveFunctionSources(entrypoint, functionsRoot) {
   return [...visited]
     .map((file) => ({
       path: relative(functionsRoot, file).split(sep).join('/'),
-      sha256: sha256(readFileSync(file)),
+      sha256: sha256(sourceBytes(functionsRoot, relative(functionsRoot, file).split(sep).join('/'))),
     }))
     .sort((left, right) => left.path.localeCompare(right.path));
 }
 
 function migrationInventory(repoRoot) {
   const migrationRoot = join(repoRoot, 'supabase', 'migrations');
-  const files = readdirSync(migrationRoot)
-    .filter((name) => MIGRATION_FILE.test(name))
-    .sort((left, right) => left.localeCompare(right));
+  const files = readdirSync(migrationRoot).sort((left, right) => left.localeCompare(right));
+  if (files.some((name) => !MIGRATION_FILE.test(name))) fail('DB06_SOURCE_MIGRATIONS_INVALID');
   const migrations = files.map((file) => {
     const match = file.match(MIGRATION_FILE);
     return {
       id: match[1],
       file,
-      sha256: sha256(readFileSync(join(migrationRoot, file))),
+      sha256: sha256(sourceBytes(repoRoot, `supabase/migrations/${file}`)),
     };
   });
   if (
@@ -500,17 +573,7 @@ function migrationInventory(repoRoot) {
 }
 
 function deploymentInputInventory(repoRoot) {
-  return DEPLOYMENT_INPUT_PATHS.map((path) => {
-    const absolutePath = join(repoRoot, ...path.split('/'));
-    if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) {
-      fail('DB06_DEPLOYMENT_INPUT_MISSING');
-    }
-    return {
-      path,
-      byteCount: statSync(absolutePath).size,
-      sha256: sha256(readFileSync(absolutePath)),
-    };
-  });
+  return inputRows(repoRoot, DEPLOYMENT_INPUT_PATHS);
 }
 
 function hostedSecretGroups(functions) {
@@ -544,11 +607,19 @@ function hostedSecretGroups(functions) {
 export function buildSourceInventory(repoRoot) {
   const root = resolve(repoRoot);
   const functionsRoot = join(root, 'supabase', 'functions');
-  const manifestPath = join(functionsRoot, 'manifest.json');
-  const lockPath = join(functionsRoot, 'deno.lock');
+  const sourceInputs = inputRows(root, SOURCE_INPUT_PATHS);
+  // Check raw full manifest/config/lock/types before interpreting metadata or imports.
+  if (sha256(canonicalJson(sourceInputs)) !== REVIEWED_SOURCE.sourceInputs) {
+    fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+  const functionPaths = functionPathInventory(functionsRoot);
+  if (sha256(canonicalJson(functionPaths)) !== REVIEWED_SOURCE.functionPaths) {
+    fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+  const functionSources = {};
   let manifest;
   try {
-    manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    manifest = JSON.parse(sourceBytes(root, 'supabase/functions/manifest.json').toString('utf8'));
   } catch {
     fail('DB06_FUNCTION_MANIFEST_INVALID');
   }
@@ -562,7 +633,7 @@ export function buildSourceInventory(repoRoot) {
   let featureInventory;
   try {
     featureInventory = JSON.parse(
-      readFileSync(join(root, 'docs', 'hugeToDo', 'feature-inventory.json'), 'utf8'),
+      sourceBytes(root, 'docs/hugeToDo/feature-inventory.json').toString('utf8'),
     );
   } catch {
     fail('DB06_FEATURE_SCOPE_INVALID');
@@ -589,7 +660,9 @@ export function buildSourceInventory(repoRoot) {
         fail('DB06_FUNCTION_ENTRYPOINT_INVALID');
       }
       const sourceFiles = transitiveFunctionSources(entrypoint, functionsRoot);
-      const entrypointSource = readFileSync(entrypoint, 'utf8');
+      functionSources[slug] = sourceFiles;
+      const entrypointBytes = sourceBytes(root, definition.entrypoint);
+      const entrypointSource = entrypointBytes.toString('utf8');
       const fenceCallIndex = entrypointSource.indexOf('stagingTrafficFreezeResponse()');
       const serveIndex = entrypointSource.indexOf('Deno.serve');
       if (
@@ -605,7 +678,7 @@ export function buildSourceInventory(repoRoot) {
         entrypoint: relative(root, entrypoint).split(sep).join('/'),
         verifyJwt: definition.verifyJwt,
         sourceFileCount: sourceFiles.length,
-        entrypointSha256: sha256(readFileSync(entrypoint)),
+        entrypointSha256: sha256(entrypointBytes),
         sourceSetSha256: sha256(canonicalJson(sourceFiles)),
         requiredEnvironment: definition.requiredEnvironment,
         requiredSecrets: definition.requiredSecrets,
@@ -620,6 +693,13 @@ export function buildSourceInventory(repoRoot) {
 
   const migrations = migrationInventory(root);
   const deploymentInputs = deploymentInputInventory(root);
+  const stableDeploymentInputs = inputRows(root, [
+    ...DEPLOYMENT_INPUT_PATHS.filter((path) => path !== SELF_INPUT_PATH),
+    ...SUPPLEMENTAL_INPUT_PATHS,
+  ].sort((left, right) => left.localeCompare(right)));
+  const expandedDeploymentInputs = [...stableDeploymentInputs,
+    deploymentInputs.find(({ path }) => path === SELF_INPUT_PATH),
+  ].sort((left, right) => left.path.localeCompare(right.path));
   const safeFunctions = functions.map(
     ({ requiredEnvironment: _requiredEnvironment, requiredSecrets: _requiredSecrets, ...value }) =>
       value,
@@ -633,8 +713,14 @@ export function buildSourceInventory(repoRoot) {
     functionCount: safeFunctions.length,
     functions: safeFunctions,
     functionSetSha256: sha256(canonicalJson(safeFunctions)),
-    functionManifestSha256: sha256(readFileSync(manifestPath)),
-    denoLockSha256: sha256(readFileSync(lockPath)),
+    functionManifestSha256: sha256(sourceBytes(root, 'supabase/functions/manifest.json')),
+    denoLockSha256: sha256(sourceBytes(root, 'supabase/functions/deno.lock')),
+    functionSources,
+    functionPaths,
+    sourceInputs,
+    stableDeploymentInputs,
+    expandedDeploymentInputs,
+    expandedDeploymentInputSetSha256: sha256(canonicalJson(expandedDeploymentInputs)),
     deploymentInputs,
     deploymentInputSetSha256: sha256(canonicalJson(deploymentInputs)),
     featureIds: [...DB06_FEATURE_IDS],
@@ -643,12 +729,73 @@ export function buildSourceInventory(repoRoot) {
   };
 }
 
+function reviewedRows(rows, keys, hash, pathKey = 'path') {
+  if (!Array.isArray(rows) || rows.length === 0 ||
+      rows.some((row) => !exactKeys(row, keys) ||
+        typeof row[pathKey] !== 'string' || !row[pathKey] ||
+        (keys.includes('sha256') && !SHA256.test(row.sha256)) ||
+        (keys.includes('byteCount') && (!Number.isSafeInteger(row.byteCount) || row.byteCount < 0))) ||
+      new Set(rows.map((row) => row[pathKey])).size !== rows.length ||
+      sha256(canonicalJson(rows)) !== hash) {
+    fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+}
+
 export function assertCurrentSourceContract(sourceInventory) {
-  if (
-    sourceInventory.migrationCount !== DB06_CURRENT_SOURCE_CONTRACT.migrationCount ||
-    sourceInventory.latestMigrationId !== DB06_CURRENT_SOURCE_CONTRACT.latestMigrationId ||
-    sourceInventory.functionCount !== DB06_CURRENT_SOURCE_CONTRACT.functionCount
-  ) {
+  const source = sourceInventory;
+  if (!exactKeys(source, [
+    'schemaVersion', 'migrationCount', 'latestMigrationId', 'migrations', 'migrationSetSha256',
+    'functionCount', 'functions', 'functionSetSha256', 'functionManifestSha256', 'denoLockSha256',
+    'functionSources', 'functionPaths', 'sourceInputs', 'stableDeploymentInputs',
+    'expandedDeploymentInputs', 'expandedDeploymentInputSetSha256',
+    'deploymentInputs', 'deploymentInputSetSha256', 'featureIds', 'gatedSurfaceIds', 'hostedSecretGroups',
+  ]) || source.schemaVersion !== DB06_EVIDENCE_SCHEMA_VERSION ||
+      !Array.isArray(source.migrations) || !Array.isArray(source.functions) ||
+      !Array.isArray(source.functionPaths) || !Array.isArray(source.hostedSecretGroups) ||
+      source.migrationCount !== source.migrations?.length ||
+      source.latestMigrationId !== source.migrations?.at(-1)?.id ||
+      source.functionCount !== source.functions?.length ||
+      source.functionManifestSha256 !== REVIEWED_SOURCE.functionManifestSha256 ||
+      source.denoLockSha256 !== REVIEWED_SOURCE.denoLockSha256 ||
+      !exactArray(source.featureIds, DB06_FEATURE_IDS) || !exactArray(source.gatedSurfaceIds, []) ||
+      sha256(canonicalJson(source.hostedSecretGroups)) !== REVIEWED_SOURCE.hostedSecretGroups ||
+      sha256(canonicalJson(source.functionPaths)) !== REVIEWED_SOURCE.functionPaths) {
+    fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+  reviewedRows(source.migrations, ['id', 'file', 'sha256'], REVIEWED_SOURCE.migrations, 'id');
+  reviewedRows(source.functions, ['slug', 'entrypoint', 'verifyJwt', 'sourceFileCount',
+    'entrypointSha256', 'sourceSetSha256'], REVIEWED_SOURCE.functions, 'slug');
+  if (!exactKeys(source.functionSources, source.functions.map(({ slug }) => slug))) {
+    fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+  for (const definition of source.functions) {
+    const rows = source.functionSources[definition.slug];
+    reviewedRows(rows, ['path', 'sha256'], definition.sourceSetSha256);
+    if (rows.length !== definition.sourceFileCount ||
+        rows.find(({ path }) => `supabase/functions/${path}` === definition.entrypoint)?.sha256 !==
+          definition.entrypointSha256) fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+  const leafKeys = ['path', 'byteCount', 'sha256'];
+  reviewedRows(source.sourceInputs, leafKeys, REVIEWED_SOURCE.sourceInputs);
+  reviewedRows(source.stableDeploymentInputs, leafKeys, REVIEWED_SOURCE.stableDeploymentInputs);
+  // The original 30-input observation includes this mutable library. It is not a frozen pin.
+  // Bind its other 29 leaves to G; final self bytes and full 34-input digest need external review.
+  reviewedRows(source.deploymentInputs, leafKeys, source.deploymentInputSetSha256);
+  if (!exactArray(source.deploymentInputs.map(({ path }) => path), DEPLOYMENT_INPUT_PATHS)) {
+    fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+  }
+  for (const row of source.deploymentInputs.filter(({ path }) => path !== SELF_INPUT_PATH)) {
+    if (canonicalJson(row) !== canonicalJson(source.stableDeploymentInputs.find(({ path }) => path === row.path))) {
+      fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
+    }
+  }
+  const expanded = [...source.stableDeploymentInputs,
+    source.deploymentInputs.find(({ path }) => path === SELF_INPUT_PATH),
+  ].sort((left, right) => left.path.localeCompare(right.path));
+  reviewedRows(source.expandedDeploymentInputs, leafKeys, sha256(canonicalJson(expanded)));
+  if (source.migrationSetSha256 !== REVIEWED_SOURCE.migrations ||
+      source.functionSetSha256 !== REVIEWED_SOURCE.functions ||
+      source.expandedDeploymentInputSetSha256 !== sha256(canonicalJson(expanded))) {
     fail('DB06_SOURCE_CONTRACT_REVIEW_REQUIRED');
   }
   return true;
