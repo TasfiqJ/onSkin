@@ -9,6 +9,7 @@ import {
   rmSync,
   rmdirSync,
   symlinkSync,
+  unlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -1735,11 +1736,9 @@ function runWithCameraEvidenceJunctionEscape() {
     };
   } finally {
     if (created) {
-      try {
-        rmdirSync(link);
-      } catch {
-        // The case assertion covers a supported indirection that was not rejected.
-      }
+      // Remove only this fixture's indirection, never its outside target.
+      if (process.platform === 'win32') rmdirSync(link);
+      else unlinkSync(link);
     }
     rmSync(outside, { recursive: true, force: true });
   }
