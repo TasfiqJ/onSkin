@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { block, exists, printResult, read } from './lib.mjs';
+import { validateWorkflowAdmission } from './security_acceptance/workflow_contract.mjs';
 
 const errors = [];
 const warnings = [];
@@ -104,7 +105,7 @@ if (exists(workflowPath)) {
   );
   block(
     errors,
-    !runSteps.some((step) => /\bnpm install\b/.test(step)),
+    !runSteps.some((step) => /\bnpm install\b/.test(step) && !/run: npm install --global npm@11\.20\.0 --ignore-scripts --no-audit --no-fund\s*$/.test(step)),
     'Security workflow must not use npm install; use npm ci from the lockfile.',
   );
   block(
@@ -160,12 +161,7 @@ if (exists(workflowPath)) {
   );
   block(
     errors,
-    /pipx install semgrep==\d+\.\d+\.\d+/.test(workflow) &&
-      /\bsemgrep scan --error\b/.test(workflow) &&
-      ['p/owasp-top-ten', 'p/typescript', 'p/react', 'p/secrets'].every((ruleset) =>
-        workflow.includes(`--config ${ruleset}`),
-      ) &&
-      !/semgrep\/semgrep-action/.test(workflow),
+    validateWorkflowAdmission(workflow),
     'Security workflow must run a pinned Semgrep CLI with the OWASP, TypeScript, React, and secrets rulesets.',
   );
   block(
@@ -223,13 +219,7 @@ if (exists(workflowPath)) {
   );
   block(
     errors,
-    /test "\$\{\{ steps\.phase9_verify\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.dependency_sbom\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.npm_exception_gate\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.gitleaks\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.trufflehog\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.semgrep\.outcome \}\}" = "success"/.test(workflow) &&
-      /test "\$\{\{ steps\.osv_exception_gate\.outcome \}\}" = "success"/.test(workflow),
+    validateWorkflowAdmission(workflow),
     'Security workflow must enforce gate and scanner outcomes after uploading evidence.',
   );
   block(

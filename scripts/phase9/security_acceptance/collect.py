@@ -3,7 +3,7 @@
 Caller provides verified installed CLI locations. No network credentials or live
 database harness is used. This creates evidence; it never approves the proposal.
 """
-import argparse,datetime,gzip,json,os,pathlib,re,subprocess,sys,tempfile,urllib.request
+import argparse,datetime,gzip,json,os,pathlib,platform,re,subprocess,sys,tempfile,urllib.request
 sys.dont_write_bytecode=True
 from contract import HERE,ROOT,SHA,CANON,load,safe,require,source,tool_tree,SEMGREP_ENTRY,scanner_scope,coupled_source,scan_coverage
 
@@ -13,6 +13,7 @@ def write(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(CANON(v)
 def verify_semgrep(site,policy):
  require(tool_tree(site,python_site=True)==policy['semgrepPackageTree'],'SEMGREP_IMPLEMENTATION_DRIFT')
 def verify_tool_sources(tools,policy):
+ require(policy.get('toolPlatform')=='linux-x86_64-py312' and sys.platform=='linux' and platform.machine().lower() in ('x86_64','amd64') and sys.version_info[:2]==(3,12),'REVIEWED_TOOL_PLATFORM_REQUIRED')
  verify_semgrep(pathlib.Path(tools['semgrep']),policy)
  for name in ('gitleaks','osv','trufflehog'):
   require(SHA(pathlib.Path(tools[name]).read_bytes()) in policy['toolBytes'][name],'SCANNER_BINARY_DRIFT:'+name)
@@ -34,7 +35,7 @@ def collect(root,installed,out,tools,policy,only=None):
   if rel.endswith('.gz'):b=gzip.compress(b,mtime=0)
   p.write_bytes(b);files[rel]=SHA(b)
  def fetch(rel,url):
-  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Semgrep/1.177.0'}),timeout=60) as response:b=response.read()
+  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Semgrep/'+policy['semgrepVersion']}),timeout=60) as response:b=response.read()
   p=out/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b);files[rel]=SHA(b);return b
  source(root,policy)
  coverage=scan_coverage(policy,root)
@@ -63,10 +64,10 @@ def collect(root,installed,out,tools,policy,only=None):
  # bytecode caches cannot substitute a different scanner implementation.
  entry=SEMGREP_ENTRY
  with tempfile.TemporaryDirectory(prefix='g97-sast-') as cache:
-  code,_=run('semgrep',[sys.executable,'-B','-X','pycache_prefix='+cache,'-c',entry,str(pathlib.Path(tools['semgrep']).resolve()),'scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output='+str(path),*config_args,'.',*coverage['explicitTargets']],root,1200)
+  code,_=run('semgrep',[sys.executable,'-B','-X','pycache_prefix='+cache,'-c',entry,str(pathlib.Path(tools['semgrep']).resolve()),'scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output='+str(path),*config_args,'.',*coverage['explicitTargets']],root,1200)
  save('semgrep',code,json.loads(path.read_bytes()) if path.exists() else {'scannerExecutionFailed':True})
  suites={
- 'backport-and-installer':['scripts/phase9/patch-tooling-security.test.mjs','scripts/phase9/tooling-security-vulnerabilities.test.mjs'],
+ 'backport-and-installer':['scripts/phase9/security_acceptance/workflow_contract.test.mjs','scripts/phase9/patch-tooling-security.test.mjs','scripts/phase9/tooling-security-vulnerabilities.test.mjs'],
  'native-source-and-archive':['scripts/phase9/ios-archive-privacy-evidence.test.mjs','scripts/phase9/ios-privacy-source-audit.test.mjs','scripts/phase9/patch-react-native-view-shot-privacy.test.mjs','scripts/phase9/dependency-sbom-contract.test.mjs'],
  'expired-exceptions':['scripts/phase9/security-advisory-exceptions.test.mjs']}
  for name,paths in suites.items():

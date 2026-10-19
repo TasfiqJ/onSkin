@@ -18,7 +18,8 @@ class ContractTests(unittest.TestCase):
   # real scanner's inherited warnings are tested separately and remain blocking.
   v=copy.deepcopy(self.actual);v['semgrep']['report']['errors']=[]
   v['semgrep']['report'].setdefault('time',{})['fixpoint_timeouts']=[]
-  v['semgrep']['report']['paths']['scanned']=sorted(c.scan_coverage(self.policy)['targets']);return v
+  v['semgrep']['report']['paths']['scanned']=sorted(c.scan_coverage(self.policy)['targets'])
+  v['semgrep']['report'].update(version=self.policy['semgrepVersion'],engine_requested='OSS',skipped_rules=[]);return v
  def test_exact_record_projection_positive_with_synthetic_SAST_only(self):c.records(self.clean_vector(),self.policy)
  def test_retained_Semgrep_warning_fixture_is_not_accepted(self):
   with self.assertRaisesRegex(c.Rejected,'SEMGREP_INCOMPLETE'):c.records(self.actual,self.policy)
@@ -172,7 +173,7 @@ class ContractTests(unittest.TestCase):
   gl=['gitleaks','detect','--config=C:/repo/scripts/phase9/security_acceptance/gitleaks.toml','--redact=100','--exit-code=2','--report-format=json','--report-path=C:/evidence/gitleaks-raw.json','--log-opts=--all --full-history','--log-level=info']
   osv=['osv','scan','source','--recursive','--format=json','--output=C:/evidence/osv-raw.json','.']
   truffle=['trufflehog','git','file://candidate','--bare','--fail','--no-update','--json','--only-verified','--concurrency=1']
-  sg=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
+  sg=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
   for name,args in [('gitleaks',gl),('osv',osv),('trufflehog',truffle),('semgrep',sg)]:
    c.scanner_scope(name,args)
    bad=list(args)
@@ -230,9 +231,9 @@ class ContractTests(unittest.TestCase):
     with self.assertRaisesRegex(c.Rejected,'REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT'):
      c.coverage_kind(path,b'x'*(4*1024**2+1))
  def test_scanner_strictness_and_bounded_size_cannot_be_removed(self):
-  args=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
+  args=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
   c.scanner_scope('semgrep',args)
-  for token in ('--strict','--max-target-bytes=4194304'):
+  for token in ('--strict','--oss-only','--max-target-bytes=4194304'):
    with self.subTest(token=token):
     bad=list(args);bad.remove(token)
     with self.assertRaisesRegex(c.Rejected,'SCANNER_SCOPE_DRIFT'):c.scanner_scope('semgrep',bad)
@@ -343,5 +344,67 @@ class ContractTests(unittest.TestCase):
      with self.assertRaisesRegex(c.Rejected,code):c.load_approval(p)
    target=root/'actual.json';target.write_text('{}');p.unlink();p.symlink_to(target)
    with self.assertRaisesRegex(c.Rejected,'LINKED_INPUT'):c.load_approval(p)
+
+ def test_SAST_engine_substitution_or_skipped_rules_rejects(self):
+  for field,value in [('engine_requested','PRO_INTERFILE'),('skipped_rules',[{'rule_id':'omitted-required-rule'}])]:
+   v=self.clean_vector();v['semgrep']['report'][field]=value
+   with self.subTest(field=field):
+    with self.assertRaisesRegex(c.Rejected,'SEMGREP_INCOMPLETE'):c.records(v,self.policy)
+ def test_SAST_diagnostics_reject_even_with_current_version_and_exact_paths(self):
+  for field in ('parsing','taint'):
+   v=self.clean_vector()
+   if field=='parsing':v['semgrep']['report']['errors']=copy.deepcopy(self.actual['semgrep']['report']['errors']);self.assertTrue(v['semgrep']['report']['errors'])
+   else:v['semgrep']['report']['time']['fixpoint_timeouts']=copy.deepcopy(self.actual['semgrep']['report']['time']['fixpoint_timeouts']);self.assertTrue(v['semgrep']['report']['time']['fixpoint_timeouts'])
+   with self.subTest(field=field):
+    with self.assertRaisesRegex(c.Rejected,'SEMGREP_INCOMPLETE'):c.records(v,self.policy)
+
+ def engine_archive_fixture(self,entries):
+  import gzip,io,tarfile
+  out=io.BytesIO()
+  with tarfile.open(fileobj=out,mode='w',format=tarfile.USTAR_FORMAT) as tar:
+   for name,body,kind in entries:
+    info=tarfile.TarInfo(name)
+    if kind=='file':info.size=len(body);tar.addfile(info,io.BytesIO(body))
+    else:info.type=tarfile.SYMTYPE if kind=='symlink' else tarfile.LNKTYPE;info.linkname='../outside';tar.addfile(info)
+  return gzip.compress(out.getvalue(),mtime=0)
+ def test_engine_archive_paths_links_duplicates_omissions_bytes_and_size_reject(self):
+  import bootstrap_tools as b
+  good=[('semgrep-core',b'new-core','file'),('libs/libunit.so',b'new-library','file')]
+  expected={name:{'bytes':len(body),'sha256':c.SHA(body)} for name,body,kind in good}
+  with tempfile.TemporaryDirectory(prefix='g97-engine-archive-unit-') as d:
+   root=pathlib.Path(d);target=root/'positive';target.mkdir();b.engine_members(self.engine_archive_fixture(good),expected,target)
+   self.assertEqual((target/'semgrep-core').read_bytes(),b'new-core')
+   cases={'unknown':good+[('unreviewed',b'x','file')],'missing':good[:1],'duplicate':good+[good[0]],'symlink':[('semgrep-core',b'','symlink'),good[1]],'hardlink':[('semgrep-core',b'','hardlink'),good[1]],'bytes':[('semgrep-core',b'new-CORE','file'),good[1]],'escape':good+[('../outside',b'x','file')]}
+   for name,entries in cases.items():
+    target=root/name;target.mkdir();reviewed=copy.deepcopy(expected)
+    if name=='escape':reviewed['../outside']={'bytes':1,'sha256':c.SHA(b'x')}
+    with self.subTest(case=name):
+     with self.assertRaises(c.Rejected):b.engine_members(self.engine_archive_fixture(entries),reviewed,target)
+   self.assertFalse((root/'outside').exists())
+   import gzip,tarfile
+   info=tarfile.TarInfo('semgrep-core');info.size=384*1024**2+1
+   raw=gzip.compress(info.tobuf(format=tarfile.USTAR_FORMAT)+b'\0'*1024,mtime=0);target=root/'oversize';target.mkdir()
+   with self.assertRaisesRegex(c.Rejected,'SIZE_DRIFT'):b.engine_members(raw,{'semgrep-core':{'bytes':info.size,'sha256':'0'*64}},target)
+ def test_engine_install_preserves_original_and_rejects_source_drift_before_move(self):
+  import bootstrap_tools as b
+  with tempfile.TemporaryDirectory(prefix='g97-engine-install-unit-') as d:
+   root=pathlib.Path(d);entries=[('semgrep-core',b'non-executable-new-unit-fixture','file'),('libs/libunit.so',b'unit-library','file')]
+   archive=root/'engine.tar.gz';archive.write_bytes(self.engine_archive_fixture(entries))
+   def fixture(name):
+    site=root/name;(site/'semgrep/bin/libs').mkdir(parents=True);(site/'semgrep/bin/semgrep-core').write_bytes(b'non-executable-upstream-unit-fixture');(site/'semgrep/bin/libs/original.so').write_bytes(b'original-library')
+    profile={'originalPackageTree':c.tool_tree(site,python_site=True),'originalCoreSha256':c.SHA(b'non-executable-upstream-unit-fixture'),'archiveSha256':c.SHA(archive.read_bytes()),'portableCoreSha256':c.SHA(entries[0][1]),'members':{name:{'bytes':len(body),'sha256':c.SHA(body)} for name,body,kind in entries}}
+    return site,profile
+   site,profile=fixture('positive');preserved=root/'preserved';b.install_engine(site,archive,profile,preserved)
+   self.assertEqual((site/'semgrep/bin/semgrep-core').read_bytes(),entries[0][1]);self.assertEqual((preserved/'semgrep-core.official-upstream').read_bytes(),b'non-executable-upstream-unit-fixture');self.assertEqual((preserved/'official-upstream-libs/original.so').read_bytes(),b'original-library')
+   for name in ('archive','original','member'):
+    site,profile=fixture(name);preserved=root/(name+'-preserved')
+    if name=='archive':profile['archiveSha256']='0'*64
+    elif name=='original':(site/'semgrep/bin/semgrep-core').write_bytes(b'unreviewed original')
+    else:profile['members']['semgrep-core']['sha256']='0'*64
+    with self.subTest(case=name):
+     with self.assertRaises(c.Rejected):b.install_engine(site,archive,profile,preserved)
+    if name=='member':self.assertEqual((preserved/'semgrep-core.official-upstream').read_bytes(),b'non-executable-upstream-unit-fixture')
+    else:self.assertFalse(preserved.exists())
+
 
 if __name__=='__main__':unittest.main(verbosity=2)

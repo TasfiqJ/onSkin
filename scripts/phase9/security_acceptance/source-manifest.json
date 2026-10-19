@@ -13,7 +13,7 @@
   },
   {
     "path": ".github/workflows/g97-security-acceptance.yml",
-    "sha256": "310f3cf326817c55fac2ef320515c31629c9d403a15b23936a6ab898437420b9"
+    "sha256": "bdef1d04d97280e9c1136c9dcde7da28bdb729cf6e0d51bf2bea4dcc1d88a368"
   },
   {
     "path": ".github/workflows/ios-launch-contract.yml",
@@ -29,7 +29,7 @@
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "c545df115b7346200456fc4e50808ef14a4a0fb15ba30d0b1e6b1454ba988534"
+    "sha256": "02d30571c7b3688fbb73f1028d1d39226bf00167237caece1b38baf89660b1a0"
   },
   {
     "path": ".gitignore",
@@ -9029,15 +9029,15 @@
   },
   {
     "path": "scripts/phase9/security-ci-smoke.mjs",
-    "sha256": "498aa7f3373994d2ff40e4538bad34fcbd6ae77dc9a23eb0dd3efdea5f77d5f4"
+    "sha256": "b3b76c4a38536cc6b13717a2ff198f3468b43fb931b797a13e0ffc885ab7b734"
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
-    "sha256": "cbc197f2864ea84e1367595c8a9fa652055771a94e292b5c981ed0bf4cf27b13"
+    "sha256": "fe2f44555f1e2158cf3799bd66670db1a23c807c5c036f57f4bf360a2be73030"
   },
   {
     "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
-    "sha256": "ca93240efd36954d089b35a3954521b3a5fe719332a8446c1c1ce5d7f10ee18a"
+    "sha256": "266f309c63119ccb025f76827276424870302b6eb2e4e97c3f6aa6ea45a7909a"
   },
   {
     "path": "scripts/phase9/security_acceptance/braces.patch",
@@ -9045,11 +9045,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/collect.py",
-    "sha256": "e924a49e5430ac057007ce14d62534d8e41b04ced75ef9b0d78d1dc8bbf7b770"
+    "sha256": "1cb083e6f2eb04312051e89e2dc8606a2ca2ea241b34ac3ad62499630b1dda37"
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "97bdda38566310f467433e0c7cdd65d21b369afd3681a7c0c474aa8f81016d6d"
+    "sha256": "da78a1bac45fbe372bf7302fc98fb48635f04a248b4f21f8ba18efc3c007d1ce"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9073,7 +9073,15 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
-    "sha256": "e7761da380b5d43f5cf5620968d3a8b61acf6236045f12d76035278eed19e11d"
+    "sha256": "c662e9f9f90e0c1181de32ed2c0e677ed3b48f08bb61ffe9e20dd582c27cb23b"
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/semgrep-engine-linux-x86_64.tar.gz",
+    "sha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9"
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+    "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f"
   },
   {
     "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
@@ -9081,11 +9089,19 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "0fe861c5ab5d84be0acd1527a4d49f06c56613e63bc965c5c523f50feba7228c"
+    "sha256": "8a1504e3129940e34c4746c56455bc9aaf6efff55ab701a0ab245a43f1696c5d"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
     "sha256": "bccef14adb1e2401d3ff4f4524ae562ca1834b06bde1c39e0241ee0f7b698e3f"
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+    "sha256": "4f2cec563e84c8cd7ca132042f97dc5e1ddefa5d416ee9b25ac593f165e1be49"
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+    "sha256": "fdd176845d275fc4d466f9168dd1c99d3ed733fdd32d58e5095a33eb6d0e0089"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

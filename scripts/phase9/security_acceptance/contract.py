@@ -133,12 +133,18 @@ def bind_regression(result,data,actual_exit,minimum):
  for k in ('tests','pass','fail','cancelled','skipped','todo'):
   values=re.findall(rb'^# '+k.encode()+rb' (\d+)\r?$',data,re.M)
   require(len(values)==1 and int(values[0])==result[k],'REGRESSION_SUMMARY_DRIFT')
+COMPRESSED_WITNESSES={'scripts/phase9/security_acceptance/'+name for name in ('history.json.gz','scan-targets.json.gz','test-fixtures.json.gz')}|{'scripts/phase9/tooling-security-backports/originals.json.gz'}
+ENGINE_SOURCE_ARCHIVE='scripts/phase9/security_acceptance/semgrep-engine-linux-x86_64.tar.gz'
+
 def coverage_kind(path,body):
  if body.startswith(b'\x89PNG\r\n\x1a\n') and path.endswith('.png'):return 'excluded','binary-png'
  if body.startswith(b'\xff\xd8\xff'):
   if path.endswith('.jpg'):return 'excluded','binary-jpeg'
   if path.endswith('.png'):return 'auxiliary','opaque-jpeg-selected-by-generic-rules'
- if body.startswith(b'\x1f\x8b') and path.endswith('.gz'):return 'excluded','gzip-source-witness'
+ if body.startswith(b'\x1f\x8b') and path.endswith('.gz'):
+  if path==ENGINE_SOURCE_ARCHIVE:return 'excluded','reviewed-scanner-engine-artifact'
+  require(path in COMPRESSED_WITNESSES,'UNREVIEWED_COMPRESSED_SOURCE:'+path)
+  return 'excluded','gzip-source-witness'
  require(len(body)<=4*1024**2,'REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT:'+path)
  return 'required','source-text-or-generic-input'
 
@@ -149,7 +155,7 @@ def scan_coverage(policy,root=None):
  rows=load(HERE,'source-manifest.json');identities={r['path']:r['sha256'] for r in rows};require(len(rows)==len(identities),'COVERAGE_DUPLICATE_SOURCE')
  identities.update({'scripts/phase9/security_acceptance/source-manifest.json':policy['sourceManifest'],'scripts/phase9/security_acceptance/proposal.json':SHA(safe(HERE,'proposal.json'))})
  seen=set();targets=set();required=set()
- reasons={'binary-png','binary-jpeg','gzip-source-witness'}
+ reasons={'binary-png','binary-jpeg','gzip-source-witness','reviewed-scanner-engine-artifact'}
  for group in ('targets','exclusions'):
   require(isinstance(scope[group],list),'COVERAGE_SCHEMA')
   for item in scope[group]:
@@ -160,7 +166,8 @@ def scan_coverage(policy,root=None):
     require(item['kind']=='excluded' and item['reason'] in reasons,'UNREVIEWED_COVERAGE_EXCLUSION')
     if item['reason']=='binary-png':require(name.endswith('.png'),'INVALID_BINARY_EXCLUSION')
     elif item['reason']=='binary-jpeg':require(name.endswith('.jpg'),'INVALID_BINARY_EXCLUSION')
-    elif item['reason']=='gzip-source-witness':require(name.endswith('.gz'),'INVALID_BINARY_EXCLUSION')
+    elif item['reason']=='gzip-source-witness':require(name in COMPRESSED_WITNESSES,'INVALID_BINARY_EXCLUSION')
+    else:require(name==ENGINE_SOURCE_ARCHIVE,'INVALID_ENGINE_ARTIFACT_EXCLUSION')
    else:
     require((item['kind'],item['reason']) in (('required','source-text-or-generic-input'),('auxiliary','opaque-jpeg-selected-by-generic-rules')),'COVERAGE_TARGET_KIND')
     targets.add(name)
@@ -183,10 +190,10 @@ def scanner_scope(name,args):
  elif name=='trufflehog':ok=len(args)==9 and args[1]=='git' and args[2].startswith('file://') and args[3:]==['--bare','--fail','--no-update','--json','--only-verified','--concurrency=1']
  elif name=='semgrep':
   forced=scan_coverage(load(HERE,'proposal.json'))['explicitTargets']
-  ok=len(args)==26+len(forced) and args[1:3]==['-B','-X'] and args[3].startswith('pycache_prefix=') and args[4]=='-c' and args[5]==SEMGREP_ENTRY and args[7:17]==['scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json',args[16]] and args[16].startswith('--output=') and normal(args[16]).endswith('/semgrep-raw.json')
+  ok=len(args)==27+len(forced) and args[1:3]==['-B','-X'] and args[3].startswith('pycache_prefix=') and args[4]=='-c' and args[5]==SEMGREP_ENTRY and args[7:18]==['scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json',args[17]] and args[17].startswith('--output=') and normal(args[17]).endswith('/semgrep-raw.json')
   if ok:
-   out=normal(args[16])[len('--output='):].rsplit('/',1)[0]
-   ok=[normal(v) for v in args[17:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
+   out=normal(args[17])[len('--output='):].rsplit('/',1)[0]
+   ok=[normal(v) for v in args[18:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
  else:ok=False
  require(ok,'SCANNER_SCOPE_DRIFT:'+name)
 SEMGREP_ENTRY="import site,sys;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()"
@@ -205,7 +212,7 @@ def records(raw,policy):
    obj=sorted(obj,key=lambda x:x['Fingerprint'])
   elif name=='semgrep':
    paths=obj.get('paths',{}).get('scanned',[])
-   require(obj.get('version')=='1.177.0' and obj.get('results')==[] and obj.get('errors')==[] and not obj.get('time',{}).get('fixpoint_timeouts'),'SEMGREP_INCOMPLETE_OR_FINDINGS')
+   require(obj.get('version')==policy['semgrepVersion'] and obj.get('engine_requested')=='OSS' and obj.get('skipped_rules')==[] and obj.get('results')==[] and obj.get('errors')==[] and not obj.get('time',{}).get('fixpoint_timeouts'),'SEMGREP_INCOMPLETE_OR_FINDINGS')
    require(isinstance(paths,list) and all(isinstance(p,str) for p in paths),'SEMGREP_TARGET_SCHEMA')
    normalized=[p.replace('\\','/') for p in paths]
    require(len(normalized)==len(set(normalized)) and set(normalized)==scan_coverage(policy)['targets'],'SEMGREP_TARGET_IDENTITY_DRIFT')

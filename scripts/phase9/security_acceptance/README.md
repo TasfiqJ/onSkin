@@ -5,13 +5,14 @@ authorization is included. The accepted three-file forge correction is unchanged
 
 This separate proposal is valid only from 2026-10-18T00:00:00Z until
 2026-10-21T00:00:00Z. It does not amend the expired October 17 exception policy.
-There is no automatic renewal. Both old exception validators and all existing
-Security, Quality, DB06, native, hosted and release gates retain their behavior.
+There is no automatic renewal. Both old exception validators retain their expired-policy refusals. The existing
+Security workflow proposes an exact-evidence independent approval route below.
+Quality, DB06, native, hosted and release gates retain their behavior.
 
 `contract.py source` checks the complete reviewed source manifest. `collect.py`
 runs npm 11.20 installed and lock-only audit, the complete dependency graph,
 CycloneDX SBOM, OSV 2.3.8, full-all-ref Gitleaks 8.24.3, full-history verified
-TruffleHog 3.99.2, all four captured Semgrep 1.177.0 rulesets and the coupled
+TruffleHog 3.99.2, all four captured Semgrep registry rulesets using the reviewed 1.181.0 Linux source build and the coupled
 regressions. It keeps raw streams, actual exits, exact rules and package archives.
 The original scanner finding and failure statuses are retained.
 
@@ -26,9 +27,10 @@ including ignored .semgrepignore files hidden from Git's untracked listing.
 
 The 26 SQL files under supabase/tests are passed as additional explicit targets
 to overcome Semgrep's inherited default test-directory omission. No SQL test is
-accepted as an exclusion. PNG/JPEG images, gzip witness containers and fourteen
-oversize nonexecutable bindings/generated E2E logs have individually listed
-reasons for independent BRAIN review. Opaque JPEG data historically stored with
+accepted as an exclusion. PNG/JPEG images, four exact gzip witness containers and the reviewed scanner
+engine runtime archive have individually listed exclusion reasons. All text,
+including the previously oversized bindings and logs, is required and scanned
+with the explicit four MiB target limit. Unexpected compressed source rejects. Opaque JPEG data historically stored with
 .png names appears in Semgrep's generic target list: those auxiliary identities
 are bound too, but are never claimed language-parsed code. No source, rule or
 finding is suppressed. The legacy minimumFiles policy field is retained solely
@@ -90,15 +92,52 @@ reviewReference. Its separate `signature` is base64 Ed25519 over the canonical
 payload. A signed duration cannot exceed 72 hours or the proposal's absolute
 expiry. Tests use ephemeral in-memory TEST keys and grant no actual approval.
 
-The additional workflow is manual-only. Its Windows runner uses Git for Windows
-Bash explicitly, so the runtime command language matches the pinned GitHub
-Actions rule's embedded Bash parser. Quoted runner paths and strict shell failure
-handling preserve the existing commands and owner boundary. It first collects and checks evidence,
-then requests the separately protected owner environment. The owner must provision
-an independent trusted key, required reviewers, prevent self-review and supply a
-receipt for the exact collected evidence. No environment, secret, rule, required
-status or repository setting is created by this candidate. Existing Security CI
-continues to enforce its original gates; this workflow cannot make it green.
+The proposed admission route is inside the existing Security workflow. Its three
+original jobs preserve all raw scanners and execute the unchanged expired policy.
+Phase 9, SBOM, verified TruffleHog and complete SAST checks remain hard gates.
+Only the exact reviewed npm/OSV/history dispositions proceed to the mandatory
+same-workflow technical-decision job. Any other finding, missing artifact,
+unrelated failure, skipped original job or malformed result rejects.
+
+`workflow_admission.py` binds the original three jobs and their exact seven raw
+artifact files to the full technical receipt, actual commit and run identifier.
+The owner's signature covers a combined digest of that complete receipt and all
+original raw evidence. The protected independent acceptance job rechecks the
+installation, source and evidence before checking the separately supplied trusted
+public key and receipt. Absent, forged, changed or expired approval keeps Security
+red. The manual workflow only collects technical evidence; it has no acceptance
+job and cannot replace Security. No workflow is dispatched by this candidate.
+
+Before execution, the owner must provision independent required reviewers with
+self-review prevented on `g97-source-security-acceptance`, and a genuine trusted
+Ed25519 public key in its protected `G97_TRUSTED_OWNER_PUBLIC_KEY` secret. After
+reviewing that run's technical descriptor and raw artifacts, the independent
+reviewer signs its exact combined digest and supplies `G97_OWNER_RECEIPT` before
+the protected job begins. The private key remains outside this system. There is
+no key generation, automatic approval, fallback, window extension or authorization
+to integrate in the source. Future exact-commit CI remains a reserved step.
+
+The reproducible tool profile is Linux x86_64, Python 3.12 and Ubuntu 24.04 glibc.
+`bootstrap_tools.py` installs all 66 hash-locked official wheels, verifies their
+complete original tree and original core, preserves the fresh upstream core and
+libraries, then applies the exact reviewed engine runtime archive from source.
+It checks all archive members, final tool trees, official release downloads and
+native executable identities. No hosted custom binary or signing service is
+required. Whole-tool identities and original Windows pins remain in proposal.json.
+
+The custom Semgrep engine is explicitly a G97 source build, not an official
+release binary. Its official 1.181.0 source commit is
+72d3525fe7e02f486428386078f192f8c4756804. The sole algorithm parameter change is
+raising the hardcoded taint fixpoint CPU budget from 0.2 to finite 2.0 seconds.
+The 30-second per-rule/file limit, 768 MiB scanner cap, all rules and other taint
+limits remain. Official 1.177.0, official 1.181.0 and an unmodified local source
+build reproduce the AuthProvider timeout; the finite-budget build resolves it
+without editing AuthProvider. Comparative positive and clean controls cover all
+four rule families. Native runtime packaging removes only nonallocated ELF
+symbols and relocates library lookup; allocated algorithm sections are verified
+unchanged. The exact source, patch, build pins, runtime closure, licenses and
+comparative raw results are supplied in the outer evidence package. This custom
+tool choice is an explicit residual-risk decision for independent review.
 
 The narrow residual risk for owner review is reliance on local tooling backports
 while version scanners still flag two unpatched published versions and their
@@ -107,14 +146,12 @@ noncredential material. This is not scanner cleanliness or a future-CVE waiver.
 Any new finding, advisory, source, copy, failure or expiry requires fresh review.
 No genuine live credential has been established; no provider rotation is claimed.
 
-Retained local evidence contains 16 Semgrep partial-parsing warnings and a taint
-fixpoint timeout: four warnings concern the original PowerShell blocks in this
-new workflow; twelve warnings and the timeout concern inherited source. The
-workflow has been corrected to Bash, but elimination of its four warnings must
-be established by an actual fresh Semgrep run. No retained warning was erased.
-Native file-symlink tests cannot run on this Windows host.
-The proposed contract rejects those gaps; they are not covered by owner signature
-or an exception. A clean supported runner/engine validation is required first.
+Retained attempts include parser diagnostics and a taint fixpoint timeout. They
+remain failed or incomplete attempts. Fresh final evidence must independently show
+zero parsing errors/timeouts and exact required coverage; neither signature nor
+retained success can waive this. The native Linux installation also exercises the
+four actual file-symlink cases and valid positive controls. Windows-specific case
+collision refusal is separately retained with its measured host identity.
 
 Run the adversarial unit suite with Python's unittest runner against
 `test_contract.py`. Its explicitly synthetic complete SAST vector exists only to

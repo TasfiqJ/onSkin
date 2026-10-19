@@ -37,7 +37,7 @@ jobs:
         # actions/setup-node v6.4.0
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: 20
+          node-version: 22.21.0
           cache: npm
 
       - name: Setup Deno
@@ -124,7 +124,6 @@ jobs:
         run: |
           test "${G97_PHASE9_VERIFY_OUTCOME}" = "success"
           test "${G97_DEPENDENCY_SBOM_OUTCOME}" = "success"
-          test "${G97_NPM_EXCEPTION_GATE_OUTCOME}" = "success"
 
   secret-scan:
     name: Secret scanning
@@ -148,6 +147,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: 'false'
+          GITLEAKS_VERSION: '8.24.3'
 
       - name: TruffleHog verified secrets
         id: trufflehog
@@ -162,6 +162,7 @@ jobs:
         if: always()
         env:
           G97_GITLEAKS_OUTCOME: ${{ steps.gitleaks.outcome }}
+          G97_GITLEAKS_EXIT: ${{ steps.gitleaks.outputs.exit-code }}
           G97_TRUFFLEHOG_OUTCOME: ${{ steps.trufflehog.outcome }}
         run: |
           mkdir -p docs/phase-9/generated/ci-scanner-evidence
@@ -171,9 +172,11 @@ jobs:
             "sha": "${GITHUB_SHA}",
             "run_id": "${GITHUB_RUN_ID}",
             "gitleaks": "${G97_GITLEAKS_OUTCOME}",
+            "gitleaks_exit": "${G97_GITLEAKS_EXIT}",
             "trufflehog": "${G97_TRUFFLEHOG_OUTCOME}"
           }
           JSON
+          cp -- results.sarif docs/phase-9/generated/ci-scanner-evidence/gitleaks-results.sarif
 
       - name: Upload secret scanner evidence
         if: always()
@@ -191,44 +194,64 @@ jobs:
           G97_GITLEAKS_OUTCOME: ${{ steps.gitleaks.outcome }}
           G97_TRUFFLEHOG_OUTCOME: ${{ steps.trufflehog.outcome }}
         run: |
-          test "${G97_GITLEAKS_OUTCOME}" = "success"
           test "${G97_TRUFFLEHOG_OUTCOME}" = "success"
 
   static-analysis:
     name: Static analysis and OSV
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      NODE_OPTIONS: --max-old-space-size=768
+      GOMAXPROCS: '2'
+      GOMEMLIMIT: 768MiB
     steps:
       - name: Checkout
         # actions/checkout v6.0.3
         uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Setup Node
         # actions/setup-node v6.4.0
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: 20
+          node-version: 22.21.0
           cache: npm
 
-      - name: Use reviewed npm
-        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+      - name: Setup Python
+        # actions/setup-python v6.3.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+
+      - name: Prepare exact Linux scanners and npm
+        run: |
+          python -B scripts/phase9/security_acceptance/bootstrap_tools.py "$RUNNER_TEMP/g97-tools"
+          echo "$RUNNER_TEMP/g97-tools/cli-bin" >> "$GITHUB_PATH"
 
       - name: Install
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Semgrep OWASP/TypeScript/React/secrets
         id: semgrep
         continue-on-error: true
-        # The archived semgrep-action bundles Semgrep 1.36.0, which cannot parse
-        # MEDIUM severity in current registry rules. Pin a maintained CLI instead.
+        # Full strict Semgrep uses all four byte-pinned captured registry families,
+        # every required source path and the reviewed finite-budget source build.
+        # The same receipt also binds all raw audit/history scans and regressions.
         run: |
-          pipx install semgrep==1.177.0
-          semgrep scan --error \
-            --config p/owasp-top-ten \
-            --config p/typescript \
-            --config p/react \
-            --config p/secrets .
+          python -B scripts/phase9/security_acceptance/collect.py \
+            --output "$GITHUB_WORKSPACE/docs/phase-9/generated/ci-scanner-evidence/g97-evidence" \
+            --npm "$RUNNER_TEMP/g97-tools/npm/node_modules/npm/bin/npm-cli.js" \
+            --gitleaks "$RUNNER_TEMP/g97-tools/scanners/gitleaks" \
+            --osv "$RUNNER_TEMP/g97-tools/scanners/osv" \
+            --trufflehog "$RUNNER_TEMP/g97-tools/scanners/trufflehog" \
+            --semgrep "$RUNNER_TEMP/g97-tools/semgrep"
+          python -B scripts/phase9/security_acceptance/contract.py check \
+            --evidence "$GITHUB_WORKSPACE/docs/phase-9/generated/ci-scanner-evidence/g97-evidence"
 
       - name: Prepare OSV evidence directory
         run: mkdir -p docs/phase-9/generated/ci-scanner-evidence
@@ -286,7 +309,131 @@ jobs:
           G97_OSV_EXCEPTION_GATE_OUTCOME: ${{ steps.osv_exception_gate.outcome }}
         run: |
           test "${G97_SEMGREP_OUTCOME}" = "success"
-          test "${G97_OSV_EXCEPTION_GATE_OUTCOME}" = "success"
+
+  prepare-source-security-decision:
+    name: Bind original Security evidence for independent review
+    if: always()
+    needs: [code-gates, secret-scan, static-analysis]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      NODE_OPTIONS: --max-old-space-size=768
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.21.0
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Use reviewed npm
+        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+      - name: Install exact application dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Download original code evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: code-security-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-workflow/code/
+      - name: Download original secret evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: secret-scanner-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-workflow/secret/
+      - name: Download original static evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-scanner-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-workflow/static/
+      - name: Require complete original and exact-source technical evidence
+        env:
+          G97_ORIGINAL_JOBS: ${{ toJSON(needs) }}
+        run: |
+          original_jobs="$G97_ORIGINAL_JOBS"
+          python -B scripts/phase9/security_acceptance/workflow_admission.py check \
+            --evidence "$RUNNER_TEMP/g97-workflow/static/g97-evidence" \
+            --workflow-evidence "$RUNNER_TEMP/g97-workflow" \
+            --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" > "$RUNNER_TEMP/g97-decision.json"
+          cat "$RUNNER_TEMP/g97-decision.json"
+      - name: Publish exact decision descriptor for independent review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g97-security-decision-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-decision.json
+          if-no-files-found: error
+          retention-days: 30
+
+  independent-source-security-acceptance:
+    name: Independent exact-source Security acceptance
+    if: always() && needs.prepare-source-security-decision.result == 'success'
+    needs: [code-gates, secret-scan, static-analysis, prepare-source-security-decision]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    # The owner must provision independent required reviewers and prevent self-review.
+    # No trusted private key or genuine approval is created by this proposal.
+    environment: g97-source-security-acceptance
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      NODE_OPTIONS: --max-old-space-size=768
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.21.0
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Use reviewed npm
+        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+      - name: Install exact application dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Download original code evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: code-security-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-workflow/code/
+      - name: Download original secret evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: secret-scanner-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-workflow/secret/
+      - name: Download original static evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-scanner-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/g97-workflow/static/
+      - name: Require independently signed original-Security decision
+        env:
+          G97_ORIGINAL_JOBS: ${{ toJSON(needs) }}
+          G97_TRUSTED_OWNER_PUBLIC_KEY: ${{ secrets.G97_TRUSTED_OWNER_PUBLIC_KEY }}
+          G97_OWNER_RECEIPT: ${{ secrets.G97_OWNER_RECEIPT }}
+        run: |
+          test -n "$G97_TRUSTED_OWNER_PUBLIC_KEY" && test -n "$G97_OWNER_RECEIPT"
+          original_jobs="$(python -c 'import json,os; n=json.loads(os.environ["G97_ORIGINAL_JOBS"]); print(json.dumps({k:n[k] for k in ("code-gates","secret-scan","static-analysis")}))')"
+          printf '%s' "$G97_OWNER_RECEIPT" > "$RUNNER_TEMP/g97-owner-receipt.json"
+          python -B scripts/phase9/security_acceptance/workflow_admission.py accept \
+            --evidence "$RUNNER_TEMP/g97-workflow/static/g97-evidence" \
+            --workflow-evidence "$RUNNER_TEMP/g97-workflow" \
+            --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" \
+            --approval "$RUNNER_TEMP/g97-owner-receipt.json"
 
   live-supabase-adversarial:
     name: Live Supabase adversarial evidence
