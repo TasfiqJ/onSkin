@@ -214,3 +214,17 @@ collision refusal is separately retained with its measured host identity.
 Run the adversarial unit suite with Python's unittest runner against
 `test_contract.py`. Its explicitly synthetic complete SAST vector exists only to
 exercise subsequent boundaries; the real partial result is separately rejected.
+
+
+## GitHub presentation metadata and exact findings
+
+Gitleaks adds a source `Link` when the checkout has a GitHub origin. The history
+projection accepts an absent link or validates the exact OnSkin GitHub commit,
+file and line/range URL (including Markdown plain view), then compares every
+other original field against the unchanged reviewed finding projection. Raw
+links/reports are preserved. Wrong hosts, repositories, paths, commits, lines,
+queries or types reject; unknown fields and altered findings still change the
+exact projection and reject. Full Git-object proofs remain mandatory afterward.
+This is presentation portability, not a new finding disposition or approval.
+The existing source-only scope, original expired exceptions, expiry, all19
+artifacts and every protected release/DB gate remain unchanged.

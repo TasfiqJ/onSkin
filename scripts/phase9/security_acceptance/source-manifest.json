@@ -125,7 +125,7 @@
   },
   {
     "path": "PROGRESS.md",
-    "sha256": "c8846c9aeb3696a983f78d10242e9f84060dbc013353106ec9f396aad437aca1"
+    "sha256": "c76711501d743cf9500e6130424e91ad559f11d91d6e0b8f26d22a49ddb3bbee"
   },
   {
     "path": "SECURITY_AUDIT_REPORT.md",
@@ -9033,7 +9033,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
-    "sha256": "637d741a167f86a53296ab1f5e9d6d919db1fbe3235719c53cbc6d97eb6ca93c"
+    "sha256": "3c75eebfe3261cfe672c3771f58756c8961c85a6e5754d1a986d905b0bc5cd98"
   },
   {
     "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
@@ -9049,7 +9049,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "eecce78121082cf6084ebcfb64772aee9252827c01fba4cce64a7cb1d232d82b"
+    "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9093,7 +9093,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "f52eddb716ab87fac626f8c39345ad7892e8b5e22380445869b14995ff003cd7"
+    "sha256": "b4539e7ec87ea7e81be5c47e1076f56f4e4e520c39295ff1b5165bdf72af4a08"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",

@@ -7886,3 +7886,15 @@ Highest priority:
    and support decisions needed to make commerce, community, widgets, Trend,
    and Ask production-real; the current directive does not allow deferring them.
 6. Recruit the 50-100 user closed beta cohort for the frozen V1 loop.
+
+
+## 2026-10-19 — G97 exact-commit CI follow-up (local correction pending review)
+
+Actual integration left the reviewed source on main with a passing iOS contract
+and rejected Quality/Security checks. The bounded local correction validates
+scanner-added GitHub presentation links against exact finding coordinates while
+preserving every raw finding and source proof. It refreshes the stale Quality
+workflow digest in the generated catalog worklist and adds adversarial link
+regressions. No worklist disposition, expired exception, proposal window,
+SDK/native/backport, Component A, DB06 or release gate is relaxed. Fresh local
+verification and exact-source review remain required before any further push.

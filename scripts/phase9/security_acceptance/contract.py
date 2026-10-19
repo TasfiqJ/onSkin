@@ -276,7 +276,7 @@ def records(raw,policy):
   elif name=='gitleaks':
    require(isinstance(obj,list) and len(obj)==policy['historyRecordCount'] and len({x['Fingerprint'] for x in obj})==policy['historyRecordCount'],'HISTORY_CARDINALITY')
    require(all(x['Secret']=='REDACTED' for x in obj),'UNREDACTED_FINDING')
-   obj=sorted(obj,key=lambda x:x['Fingerprint'])
+   obj=history_projection(obj)
   elif name=='semgrep':
    paths=obj.get('paths',{}).get('scanned',[])
    require(obj.get('version')==policy['semgrepVersion'] and obj.get('engine_requested')=='OSS' and obj.get('skipped_rules')==[] and obj.get('results')==[] and obj.get('errors')==[] and not obj.get('time',{}).get('fixpoint_timeouts'),'SEMGREP_INCOMPLETE_OR_FINDINGS')
@@ -439,4 +439,23 @@ def main():
   print(json.dumps(result,sort_keys=True));return 0
  except (ValueError,KeyError,OSError,TypeError,subprocess.SubprocessError) as e:
   print(json.dumps({'status':'REJECTED','code':str(e) if isinstance(e,Rejected) else type(e).__name__,'rawScannerPass':False,'acceptanceGranted':False}));return 1
+
+def history_projection(rows):
+ # Optional presentation links grant no finding authority. Every remaining field
+ # still participates in the exact reviewed projection and Git-source proof.
+ projected=[]
+ for row in rows:
+  if 'Link' in row:
+   require(isinstance(row['Link'],str) and isinstance(row.get('Commit'),str)
+           and isinstance(row.get('File'),str) and type(row.get('StartLine')) is int
+           and type(row.get('EndLine')) is int and 0<row['StartLine']<=row['EndLine'],
+           'HISTORY_LINK_SOURCE_DRIFT')
+   source='https://github.com/TasfiqJ/onSkin/blob/'+row['Commit']+'/'+row['File']
+   lines='#L'+str(row['StartLine'])+('-L'+str(row['EndLine']) if row['EndLine']!=row['StartLine'] else '')
+   allowed={source+lines}
+   if row['File'].endswith('.md'):allowed.add(source+'?plain=1'+lines)
+   require(row['Link'] in allowed,'HISTORY_LINK_DRIFT')
+  projected.append({key:value for key,value in row.items() if key!='Link'})
+ return sorted(projected,key=lambda row:row['Fingerprint'])
+
 if __name__=='__main__':sys.exit(main())

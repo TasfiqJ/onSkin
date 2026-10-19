@@ -558,4 +558,39 @@ class ContractTests(unittest.TestCase):
   prior=c.git(c.ROOT,'rev-parse','HEAD^').decode().strip()
   with self.assertRaisesRegex(c.Rejected,'COMMIT_DRIFT'):w.reviewed_source_pins(changed,prior,commit,digest)
 
+
+ def history_link(self,row,plain=False):
+  base='https://github.com/TasfiqJ/onSkin/blob/'+row['Commit']+'/'+row['File']
+  return base+('?plain=1' if plain else '')+'#L'+str(row['StartLine'])+('-L'+str(row['EndLine']) if row['EndLine']!=row['StartLine'] else '')
+ def test_history_GitHub_links_are_source_bound_and_raw_records_stay_unchanged(self):
+  v=self.clean_vector()
+  for row in v['gitleaks']['report']:row['Link']=self.history_link(row,row['File'].endswith('.md'))
+  original=copy.deepcopy(v);c.records(v,self.policy);self.assertEqual(v,original)
+  self.assertTrue(any(row['StartLine']!=row['EndLine'] for row in v['gitleaks']['report']))
+  self.assertTrue(any('?plain=1#' in row['Link'] for row in v['gitleaks']['report']))
+ def test_history_GitHub_links_reject_forged_targets_coordinates_queries_and_types(self):
+  original=self.clean_vector();row=original['gitleaks']['report'][0];valid=self.history_link(row)
+  attacks=[None,False,1,{},'',valid.replace('https:','http:',1),valid.replace('github.com','github.com.invalid',1),valid.replace('/TasfiqJ/onSkin/','/other/repository/',1),valid.replace(row['Commit'],'0'*40,1),valid.replace('/blob/','/tree/',1),valid.replace('/'+row['File'],'/different-file',1),valid+'-L999999',valid+'?unreviewed=1',valid+'\n',valid.replace('#L','#L0',1),'https://user@github.com/TasfiqJ/onSkin/blob/'+row['Commit']+'/'+row['File']+'#L'+str(row['StartLine'])]
+  for link in attacks:
+   with self.subTest(link=repr(link)):
+    v=copy.deepcopy(original);v['gitleaks']['report'][0]['Link']=link
+    with self.assertRaisesRegex(c.Rejected,'HISTORY_LINK'):c.records(v,self.policy)
+  multi=next(x for x in original['gitleaks']['report'] if x['StartLine']!=x['EndLine'])
+  v=copy.deepcopy(original);found=next(x for x in v['gitleaks']['report'] if x['Fingerprint']==multi['Fingerprint']);found['Link']=self.history_link(found).replace('-L'+str(found['EndLine']),'')
+  with self.assertRaisesRegex(c.Rejected,'HISTORY_LINK'):c.records(v,self.policy)
+ def test_valid_history_link_cannot_authorize_changed_finding_payload(self):
+  for field,value in [('Commit','0'*40),('File','different-source'),('StartLine',999),('EndLine',999),('Author','changed'),('Message','changed'),('Entropy',0),('EndColumn',999)]:
+   with self.subTest(field=field):
+    v=self.clean_vector();row=v['gitleaks']['report'][0];row[field]=value
+    if field=='StartLine':row['EndLine']=999
+    row['Link']=self.history_link(row)
+    with self.assertRaisesRegex(c.Rejected,'SCANNER_RECORD_DRIFT:gitleaks'):c.records(v,self.policy)
+ def test_history_link_projection_preserves_unknown_fields_and_schema_refusals(self):
+  for field in ('unreviewedMetadata','link'):
+   v=self.clean_vector();row=v['gitleaks']['report'][0];row['Link']=self.history_link(row);row[field]='unreviewed'
+   with self.assertRaisesRegex(c.Rejected,'SCANNER_RECORD_DRIFT:gitleaks'):c.records(v,self.policy)
+  for field,value in [('StartLine',True),('EndLine',False),('File',None),('Commit',None)]:
+   v=self.clean_vector();row=v['gitleaks']['report'][0];row['Link']=self.history_link(row);row[field]=value
+   with self.assertRaisesRegex(c.Rejected,'HISTORY_LINK_SOURCE_DRIFT'):c.records(v,self.policy)
+
 if __name__=='__main__':unittest.main(verbosity=2)
