@@ -30,7 +30,7 @@ export function validateWorkflowAdmission(text) {
     const leak = jobs['secret-scan'].steps.find((step) => step.id === 'gitleaks');
     if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif')) return false;
     const staticJob = jobs['static-analysis'];
-    if (staticJob['runs-on'] !== 'ubuntu-24.04' || !command(staticJob, 'bootstrap_tools.py') || !command(staticJob, 'collect.py') || !command(staticJob, 'contract.py check')) return false;
+    if (staticJob['runs-on'] !== 'ubuntu-24.04' || !command(staticJob, 'bootstrap_tools.py') || !command(staticJob, 'collect.py') || !command(staticJob, 'contract.py check') || !command(staticJob, 'python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v')) return false;
     for (const name of [prepare, owner]) {
       if (jobs[name]?.['runs-on'] !== 'ubuntu-24.04' || jobs[name]['continue-on-error'] || !jobs[name].steps?.length || jobs[name].steps.some((step) => step['continue-on-error'])) return false;
       for (const category of ['code', 'secret', 'static']) {
@@ -39,7 +39,7 @@ export function validateWorkflowAdmission(text) {
     }
     const decision = jobs[prepare], acceptance = jobs[owner];
     if (decision.if !== 'always()' || !sameSet(decision.needs, originals) || decision.environment || !command(decision, 'workflow_admission.py check')) return false;
-    if (acceptance.if !== "always() && needs.prepare-source-security-decision.result == 'success'" || !sameSet(acceptance.needs, [...originals, prepare]) || acceptance.environment !== 'g97-source-security-acceptance') return false;
+    if (acceptance.if !== "always() && needs.prepare-source-security-decision.result == 'success'" || !sameSet(acceptance.needs, [...originals, prepare]) || !acceptance.environment || typeof acceptance.environment !== 'object' || !sameSet(Object.keys(acceptance.environment), ['name', 'deployment']) || acceptance.environment.name !== 'g97-source-security-acceptance' || acceptance.environment.deployment !== false) return false;
     const step = acceptance.steps.find((item) => item.run?.includes('workflow_admission.py accept'));
     if (!step || step.env?.G97_TRUSTED_OWNER_PUBLIC_KEY !== '${{ secrets.G97_TRUSTED_OWNER_PUBLIC_KEY }}' || step.env?.G97_OWNER_RECEIPT !== '${{ secrets.G97_OWNER_RECEIPT }}') return false;
     if (!['--approval', '--original-jobs', '--workflow-evidence', '--evidence', '--commit', '--run-id'].every((arg) => step.run.includes(arg))) return false;

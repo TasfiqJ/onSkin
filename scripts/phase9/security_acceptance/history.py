@@ -1,7 +1,7 @@
 """Reproduce dispositions from exact Git objects and pinned detection regexes.
 No matched credential-shaped value is printed or persisted.
 """
-import base64, collections, hashlib, json, re, subprocess
+import base64, collections, hashlib, json, pathlib, re, subprocess
 SHA = lambda b: hashlib.sha256(b).hexdigest()
 
 def verify_history(root, fresh, witnesses, config_text, rule_hashes=None):
@@ -176,3 +176,89 @@ def verify_history(root, fresh, witnesses, config_text, rule_hashes=None):
         if r['technical_disposition'] != prior[r['commit'], r['path'], r['rule'], r['start_line'], r['end_line']]['technical_disposition']:
             raise ValueError('DISPOSITION_DRIFT')
     return {'records': len(results), 'groups': len({(r['rule'], r['opaque_value_sha256']) for r in results}), 'all_Git_sources_rehashed': True, 'unverified': 0, 'independent_owner_acceptance': False}
+
+
+# Current-source classification reuses exact Git objects and typed proofs.
+# Retained QA digest references and the byte-identical synthetic literal payload
+# remain historical material; neither refreshes QA nor claims hosted execution.
+def verify_current(root, fresh, prefix, commit, prior, config_text, rule_hashes):
+    prefix = pathlib.Path(prefix)
+    if not prefix.is_absolute() or prefix.name != 'current-source' or (not re.fullmatch('[0-9a-f]{40}', commit)):
+        raise ValueError('CURRENT_SOURCE_SCOPE_INVALID')
+    for item in fresh:
+        if not isinstance(item, dict) or item.get('Secret') != 'REDACTED' or item.get('Commit') != '' or (not isinstance(item.get('File'), str)) or (type(item.get('StartLine')) is not int) or (type(item.get('EndLine')) is not int) or (not 0 < item['StartLine'] <= item['EndLine']) or (item.get('Fingerprint') != f'{item['File']}:{item['RuleID']}:{item['StartLine']}'):
+            raise ValueError('CURRENT_SOURCE_RECORD_INVALID')
+        path = pathlib.Path(item['File']).relative_to(prefix).as_posix()
+        if any((part in ('', '.', '..') for part in path.split('/'))) or any((char in path for char in ('\\', ':', '\x00'))):
+            raise ValueError('CURRENT_SOURCE_PATH_INVALID')
+    patterns = {}
+    needed = {x['RuleID'] for x in fresh}
+    for section in config_text.split('[[rules]]')[1:]:
+        name = re.search('^id = "([^"]+)"', section, re.M)
+        pattern = re.search("^regex = '''(.*?)'''", section, re.M | re.S)
+        if name and pattern and (name[1] in needed):
+            patterns[name[1]] = re.compile(pattern[1].replace('\\z', '\\Z'))
+
+    def blob(revision, path):
+        return subprocess.check_output(['git', 'cat-file', 'blob', revision + ':' + path], cwd=root)
+    cache = {}
+    normalized = []
+    witnesses = []
+    retained = []
+    seen = set()
+    for finding in fresh:
+        path = pathlib.Path(finding['File']).relative_to(prefix).as_posix()
+        if not finding['Fingerprint'] not in seen:
+            raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+        seen.add(finding['Fingerprint'])
+        if path not in cache:
+            data = blob(commit, path)
+            cache[path] = (data, data.decode().splitlines(keepends=True), SHA(data), subprocess.check_output(['git', 'hash-object', '--stdin'], input=data, cwd=root).decode().strip())
+        data, lines, digest, source_blob = cache[path]
+        span = ''.join(lines[finding['StartLine'] - 1:finding['EndLine']])
+        context = ''.join(lines[max(0, finding['StartLine'] - 2):finding['EndLine'] + 1])
+        captures = [m.group(1) if m.lastindex else m[0] for m in patterns[finding['RuleID']].finditer(context)]
+        captures = [value for value in captures if value in span]
+        hashes = {SHA(value.encode()) for value in captures}
+        options = [w for w in prior if w['path'] == path and w['rule'] == finding['RuleID'] and (w['opaque_value_sha256'] in hashes)]
+        unique = {(w['opaque_value_sha256'], w['technical_disposition']) for w in options}
+        if not len(unique) == 1:
+            raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+        value_hash, kind = next(iter(unique))
+        values = {value for value in captures if SHA(value.encode()) == value_hash}
+        if not len(values) == 1:
+            raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+        value = next(iter(values))
+        old = options[0]
+        if kind == 'PROVEN_SYNTHETIC_REHEARSAL_SEED':
+            pattern = "const preferences = await upsertOne\\(userA\\.client, 'notification_preferences', (\\{[\\s\\S]*?\\n\\s*\\})\\);"
+            current = re.search(pattern, data.decode())
+            historical = re.search(pattern, blob(old['commit'], path).decode())
+            if not (current and historical and (current[1] == historical[1]) and (not re.search('[()]', current[1]))):
+                raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+            retained.append({'currentFingerprint': finding['Fingerprint'], 'currentSourceSha256': digest, 'currentSourceBlob': source_blob, 'exactLiteralPayloadSha256': SHA(current[1].encode()), 'referenceCommit': old['commit'], 'referenceFinding': old['id'], 'payloadBytesExactlyEqual': True, 'liveCleanupReceiptClaimed': False, 'kind': 'EXACT_RETAINED_SYNTHETIC_PAYLOAD'})
+            item = {**finding, 'File': path, 'Commit': old['commit'], 'StartLine': old['start_line'], 'EndLine': old['end_line'], 'Fingerprint': old['id']}
+            normalized.append(item)
+            witnesses.append(old)
+            continue
+        if kind == 'RECOMPUTED_SOURCE_FILE_DIGEST':
+            line = lines[finding['StartLine'] - 1]
+            field = re.match('\\s*["\\\']([^"\\\']+)["\\\']\\s*:', line)
+            if not (field and re.fullmatch('[0-9a-f]{64}', value)):
+                raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+            references = [w for w in options if w['proof']['referenced_source_path'] == field[1]]
+            if not references:
+                raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+            reference = references[0]
+            if not SHA(blob(reference['commit'], field[1])) == value:
+                raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+            retained.append({'currentFingerprint': finding['Fingerprint'], 'currentSourceSha256': digest, 'currentSourceBlob': source_blob, 'field': field[1], 'referenceCommit': reference['commit'], 'referenceFinding': reference['id'], 'referencedSourceSha256Recomputed': True, 'historicalQANotRefreshedOrApproved': True})
+            continue
+        item = {**finding, 'File': path, 'Commit': commit, 'Fingerprint': f'{commit}:{path}:{finding['RuleID']}:{finding['StartLine']}'}
+        w = {**old, 'id': item['Fingerprint'], 'commit': commit, 'path': path, 'start_line': item['StartLine'], 'end_line': item['EndLine'], 'source_blob': source_blob, 'source_sha256': digest}
+        normalized.append(item)
+        witnesses.append(w)
+    result = verify_history(root, normalized, witnesses, config_text, rule_hashes)
+    if not result['records'] + sum((x.get('kind') != 'EXACT_RETAINED_SYNTHETIC_PAYLOAD' for x in retained)) == len(fresh):
+        raise ValueError('CURRENT_SOURCE_PROOF_FAILED')
+    return ({'records': len(fresh), 'typedSourceProof': result, 'retainedReferencedSourceDigests': sum((x.get('kind') != 'EXACT_RETAINED_SYNTHETIC_PAYLOAD' for x in retained)), 'exactRetainedSyntheticPayloads': sum((x.get('kind') == 'EXACT_RETAINED_SYNTHETIC_PAYLOAD' for x in retained)), 'allCurrentGitSourceObjectsRehashed': True, 'unverified': 0, 'historicalQARefreshed': False, 'independentAcceptance': False}, retained, witnesses)

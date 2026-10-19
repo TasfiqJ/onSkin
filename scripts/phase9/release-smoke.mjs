@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { hasExactPostgresMatrixBinding } from '../phase2/quality-rehearsal-bindings.mjs';
 import { spawnSync } from 'node:child_process';
 import {
   block,
@@ -814,7 +815,7 @@ block(
       'clinical_content_upgrade_0066|clinical-content-0066-upgrade-postgres-rehearsal.sql',
       'catalog_release_lint_contract_0067|catalog-release-0067-lint-contract-postgres-rehearsal.sql',
     ].every((entry) => qualityWorkflowText.includes(entry)) &&
-    has('.github/workflows/quality.yml', /\"postgres:\$\{\{ matrix\.postgres \}\}\"/) &&
+    hasExactPostgresMatrixBinding(qualityWorkflowText) &&
     has('.github/workflows/quality.yml', /while IFS='\|' read -r database script/) &&
     has('.github/workflows/quality.yml', /docker run --detach/) &&
     has(

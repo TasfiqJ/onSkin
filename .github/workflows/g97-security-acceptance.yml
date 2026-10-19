@@ -39,6 +39,8 @@ jobs:
           echo "$RUNNER_TEMP/g97-tools/cli-bin" >> "$GITHUB_PATH"
       - name: Install
         run: npm ci --no-audit --no-fund
+      - name: Verify all acceptance regressions
+        run: python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v
       - name: Collect full raw scans and regressions
         run: |
           python -B scripts/phase9/security_acceptance/collect.py \

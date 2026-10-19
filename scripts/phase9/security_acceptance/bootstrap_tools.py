@@ -72,6 +72,9 @@ def main():
  p = argparse.ArgumentParser(); p.add_argument('new_directory'); a = p.parse_args()
  require(sys.platform == 'linux' and platform.machine().lower() in ('x86_64', 'amd64')
          and sys.version_info[:2] == (3, 12), 'REVIEWED_LINUX_X86_64_PY312_REQUIRED')
+ libc = platform.libc_ver()
+ require(libc[0] == 'glibc' and tuple(map(int, libc[1].split('.')[:2])) >= (2, 39),
+         'REVIEWED_GLIBC_239_OR_LATER_REQUIRED')
  raw_root = pathlib.Path(a.new_directory).absolute(); require(not os.path.lexists(raw_root), 'NEW_TOOL_DIRECTORY_REQUIRED')
  root = raw_root.resolve(); root.mkdir(parents=True)
  policy = load(HERE, 'proposal.json'); rows = []

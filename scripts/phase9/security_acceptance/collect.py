@@ -5,7 +5,7 @@ database harness is used. This creates evidence; it never approves the proposal.
 """
 import argparse,datetime,gzip,json,os,pathlib,platform,re,subprocess,sys,tempfile,urllib.request
 sys.dont_write_bytecode=True
-from contract import HERE,ROOT,SHA,CANON,load,safe,require,source,tool_tree,SEMGREP_ENTRY,scanner_scope,coupled_source,scan_coverage
+from contract import HERE,ROOT,SHA,CANON,load,safe,require,source,tool_tree,SEMGREP_ENTRY,scanner_scope,coupled_source,scan_coverage,git
 
 RULES=('owasp-top-ten','typescript','react','secrets')
 def stamp():return datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -44,6 +44,7 @@ def collect(root,installed,out,tools,policy,only=None):
  # A scanner executable is admitted by its independently recorded release byte
  # identity, not by a version string printed by arbitrary caller-supplied code.
  verify_tool_sources(tools,policy)
+ require(not git(root,'status','--porcelain','--untracked-files=all').strip(),'CURRENT_SCAN_CLEAN_COMMIT_REQUIRED')
  npm=tools['npm']
  code,data=run('npm-version',['node',npm,'--version'],installed,30);require(code==0 and data.strip()==b'11.20.0','NPM_VERSION_DRIFT')
  # npm's cold-cache metavulnerability projection is incomplete until its
@@ -61,6 +62,25 @@ def collect(root,installed,out,tools,policy,only=None):
  # transport. All refs are scanned by the bare protective clone, never just HEAD.
  code,data=run('trufflehog',[tools['trufflehog'],'git','file://'+root.name,'--bare','--fail','--no-update','--json','--only-verified','--concurrency=1'],root.parent,900)
  save('trufflehog',code,[json.loads(line) for line in data.splitlines() if line.strip()])
+ # Copy precisely the committed source, never node_modules or implicit ignores,
+ # into one new native tree for the required current-source secret scans.
+ snapshot=pathlib.Path(tempfile.mkdtemp(prefix='g97-current-snapshot-'))/'current-source';snapshot.mkdir()
+ names={row['path'] for row in load(HERE,'source-manifest.json')}|{'scripts/phase9/security_acceptance/proposal.json','scripts/phase9/security_acceptance/source-manifest.json'}
+ snapshot_rows=[]
+ for name in sorted(names):
+  data=safe(root,name,allow_empty=True);target=snapshot/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+  snapshot_rows.append({'path':name,'sha256':SHA(data)})
+ commit=git(root,'rev-parse','HEAD').decode().strip()
+ write(out/'current-source-manifest.json',{'schema':1,'sourceCommit':commit,'snapshotRoot':str(snapshot),'files':snapshot_rows})
+ path=out/'gitleaks-current-raw.json'
+ code,_=run('gitleaks-current',[tools['gitleaks'],'detect','--no-git','--source='+str(snapshot),'--config='+str(HERE/'gitleaks.toml'),'--redact=100','--exit-code=2','--report-format=json','--report-path='+str(path),'--log-level=info'])
+ current=json.loads(path.read_bytes());save('gitleaks-current',code,current)
+ code,data=run('trufflehog-current',[tools['trufflehog'],'filesystem',str(snapshot),'--fail','--no-update','--json','--only-verified','--concurrency=1'],root,900)
+ save('trufflehog-current',code,[json.loads(line) for line in data.splitlines() if line.strip()])
+ require(all(SHA(safe(snapshot,row['path'],allow_empty=True))==row['sha256'] for row in snapshot_rows),'CURRENT_SOURCE_SNAPSHOT_CHANGED')
+ from history import verify_current
+ result,refs,witnesses=verify_current(root,current,str(snapshot),commit,load(HERE,'history.json.gz'),safe(HERE,'gitleaks.toml').decode(),policy['rules'])
+ (out/'current-source-proof.json.gz').write_bytes(gzip.compress(CANON({'summary':result,'references':refs,'witnesses':witnesses}),mtime=0))
  config_args=[]
  for name in RULES:
   rel='rules/'+name+'.yaml';b=fetch(rel,'https://semgrep.dev/c/p/'+name)
@@ -70,7 +90,7 @@ def collect(root,installed,out,tools,policy,only=None):
  # bytecode caches cannot substitute a different scanner implementation.
  entry=SEMGREP_ENTRY
  with tempfile.TemporaryDirectory(prefix='g97-sast-') as cache:
-  code,_=run('semgrep',[sys.executable,'-B','-X','pycache_prefix='+cache,'-c',entry,str(pathlib.Path(tools['semgrep']).resolve()),'scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output='+str(path),*config_args,'.',*coverage['explicitTargets']],root,1200)
+  code,_=run('semgrep',[sys.executable,'-I','-S','-B','-X','pycache_prefix='+cache,'-c',entry,str(pathlib.Path(tools['semgrep']).resolve()),'scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output='+str(path),*config_args,'.',*coverage['explicitTargets']],root,1200)
  save('semgrep',code,json.loads(path.read_bytes()) if path.exists() else {'scannerExecutionFailed':True})
  suites={
  'backport-and-installer':['scripts/phase9/security_acceptance/workflow_contract.test.mjs','scripts/phase9/patch-tooling-security.test.mjs','scripts/phase9/tooling-security-vulnerabilities.test.mjs'],

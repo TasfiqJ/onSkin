@@ -25,6 +25,7 @@ test('expired original policy execution is retained', () => {
 });
 test('owner trust cannot move to an unprotected or permissive job', () => {
   reject((w) => delete w.jobs['independent-source-security-acceptance'].environment);
+  reject((w) => w.jobs['independent-source-security-acceptance'].environment.deployment = true);
   reject((w) => w.jobs['independent-source-security-acceptance'].steps.at(-1)['continue-on-error'] = true);
   reject((w) => delete w.jobs['independent-source-security-acceptance'].steps.at(-1).env.G97_TRUSTED_OWNER_PUBLIC_KEY);
 });
@@ -33,6 +34,7 @@ test('all three raw original artifacts are mandatory', () => {
 });
 test('full reviewed collector cannot be replaced by a version-only scanner', () => {
   reject((w) => w.jobs['static-analysis'].steps.find((s) => s.id === 'semgrep').run = 'semgrep --version');
+  reject((w) => { const step = w.jobs['static-analysis'].steps.find((s) => s.id === 'semgrep'); step.run = step.run.replace('python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v\n', ''); });
 });
 test('manual technical workflow supplies no owner acceptance route', () => {
   const manual = YAML.parse(readFileSync(new URL('../../../.github/workflows/g97-security-acceptance.yml', import.meta.url), 'utf8'));

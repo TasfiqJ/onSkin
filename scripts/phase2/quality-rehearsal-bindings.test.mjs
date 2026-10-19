@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { hasExactPostgresRehearsalBinding } from './quality-rehearsal-bindings.mjs';
+import { hasExactPostgresRehearsalBinding, hasExactPostgresMatrixBinding } from './quality-rehearsal-bindings.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const workflow = await readFile(join(root, '.github/workflows/quality.yml'), 'utf8');
@@ -76,4 +76,27 @@ test('a detached or malformed here-document cannot satisfy the binding', () => {
     ),
     false,
   );
+});
+
+test('actual PostgreSQL matrix retains both versions and the exact step environment binding', () => {
+  assert.equal(hasExactPostgresMatrixBinding(workflow), true);
+});
+
+test('a changed image, matrix, misplaced environment or optional rehearsal cannot satisfy the matrix binding', () => {
+  for (const changed of [
+    workflow.replace('G97_MATRIX_POSTGRES: ${{ matrix.postgres }}', 'G97_MATRIX_POSTGRES: latest'),
+    workflow.replace('"postgres:${G97_MATRIX_POSTGRES}"', '"postgres:latest"'),
+    workflow.replace('          - 17-alpine', '          - 16-alpine'),
+    workflow.replace('      max-parallel: 2', '      max-parallel: 3'),
+    workflow.replace('      fail-fast: false', '      fail-fast: true'),
+    workflow.replace('      - name: Execute all isolated PostgreSQL rehearsals', '      - name: Execute all isolated PostgreSQL rehearsals\n        continue-on-error: true'),
+    workflow.replace('    name: Account deletion rehearsals', '    if: false\n    name: Account deletion rehearsals'),
+    workflow.replace('        env:\n          G97_MATRIX_POSTGRES:', '        wrong-env:\n          G97_MATRIX_POSTGRES:'),
+  ]) assert.equal(hasExactPostgresMatrixBinding(changed), false);
+});
+
+test('ambiguous and malformed YAML cannot grant PostgreSQL matrix coverage', () => {
+  for (const changed of ['', 'jobs: []', workflow.replace('      max-parallel: 2', '      max-parallel: 2\n      max-parallel: 2')]) {
+    assert.equal(hasExactPostgresMatrixBinding(changed), false);
+  }
 });

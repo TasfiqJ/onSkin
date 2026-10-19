@@ -45,7 +45,9 @@ UNVERIFIED_AUDIT_REFERENCE and SCANNER_RECORD_DRIFT rejection expectations.
 The collector verifies the whole npm CLI source tree, the private Semgrep
 installation including its dependencies and executable .pth inputs,
 and each native scanner binary before execution. It invokes the verified Semgrep
-package directly, with a fresh bytecode-cache location. Generated top-level CLI
+package directly, with isolated Python startup (`-I -S`) and a fresh
+bytecode-cache location. Ambient PYTHONPATH, user-site startup code and current
+directory modules cannot substitute for the byte-verified tool closure. Generated top-level CLI
 wrappers and installation RECORD metadata are excluded from that installation
 digest; they are not executed. An arbitrary wrapper
 claiming the expected version is insufficient. Git object-format checks use
@@ -78,6 +80,17 @@ acceptance authority. Every affected package/path/severity and full primary
 advisory is bound; each reported record must reach a primary advisory. The full
 installed graph and exact lock independently bind dependency paths. An upgrade
 recommendation cannot clear a finding or authorize a dependency change.
+
+Both Git history and the exact committed current source are scanned by Gitleaks
+and verified-only TruffleHog. The collector creates a separate source snapshot
+containing every reviewed path and no dependency/cache substitutions; its complete
+path/byte manifest, command roots and unchanged post-scan bytes are checked. All
+current findings are independently re-extracted from actual Git source objects.
+A current copy of an old QA digest is rehashed against its historical referenced
+source and explicitly remains historical QA. The synthetic seed's complete literal
+payload must be byte-identical to its source-proven historical payload. No current
+cleanup or live provider execution is inferred. Changed context or references,
+new findings, duplicate records, omitted reports and external ignore files reject.
 
 The original 3,264 history witnesses remain unchanged. A fresh full-ref scan adds
 one ruleset-digest finding from the initial reconstruction commit. All 3,265
@@ -129,7 +142,14 @@ self-review prevented on `g97-source-security-acceptance`, and a genuine trusted
 Ed25519 public key in its protected `G97_TRUSTED_OWNER_PUBLIC_KEY` secret. After
 reviewing that run's technical descriptor and raw artifacts, the independent
 reviewer signs its exact combined digest and supplies `G97_OWNER_RECEIPT` before
-the protected job begins. The private key remains outside this system. There is
+the protected job begins. These must be environment secrets: GitHub reads them
+when that job starts, after its environment protection rules pass. The acceptance
+job sets `environment.deployment: false`; it uses protected configuration without
+creating a deployment object. This public repository supports environment
+reviewers without a new paid resource. See the official
+[secret timing reference](https://docs.github.com/en/actions/reference/security/secrets)
+and [non-deployment environment syntax](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/deploy-to-environment).
+The private key remains outside this system. There is
 no key generation, automatic approval, fallback, window extension or authorization
 to integrate in the source. Future exact-commit CI remains a reserved step.
 

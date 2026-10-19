@@ -1,6 +1,7 @@
 {
   "acceptedInputArchive": "f7062fdee2af693826bba60d4446829a38946643972483ee0d5fa3d56c5a364c",
   "acceptedInputTree": "6fa403e3668f99b7c076f19062e5bee18c935fb6",
+  "currentHistoryRecordCount": 1107,
   "expiredPolicy": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
   "historyRecordCount": 3265,
   "id": "G97-SOURCE-MITIGATION-R1",
@@ -37,20 +38,27 @@
   "scanCoverageManifest": "c662e9f9f90e0c1181de32ed2c0e677ed3b48f08bb61ffe9e20dd582c27cb23b",
   "scannerCommands": {
     "gitleaks": "gitleaks8.24.3 detect --config pinned-default --redact=100 --exit-code=2 --log-opts=--all --full-history",
+    "gitleaks-current": "gitleaks8.24.3 detect --no-git --source exact committed-source snapshot --config pinned-default --redact=100 --exit-code=2",
     "graph": "npm11.20.0 ls --all --json --long",
     "npm-initial": "npm11.20.0 audit --audit-level=high --json (new private cold cache; raw initial projection retained)",
     "npm-installed": "npm11.20.0 audit --audit-level=high --json (installed; same private cache after initial audit)",
     "npm-lock": "npm11.20.0 audit --package-lock-only --audit-level=high --json (same private cache after installed audit)",
     "osv": "osv2.3.8 scan source --recursive --format=json .",
     "sbom": "npm11.20.0 sbom --sbom-format=cyclonedx",
-    "semgrep": "semgrep1.181.0 G97 finite2s engine scan --error --strict --oss-only --metrics=off --jobs=1 --max-memory=768 --timeout=30 --max-target-bytes=4194304 --config exact captured p/owasp-top-ten,p/typescript,p/react,p/secrets . plus exact source-bound explicit SQL test targets",
-    "trufflehog": "trufflehog3.99.2 git file://candidate --bare --fail --no-update --json --only-verified --concurrency=1"
+    "semgrep": "semgrep1.181.0 G97 finite2s engine via isolated Python(-I -S) scan --error --strict --oss-only --metrics=off --jobs=1 --max-memory=768 --timeout=30 --max-target-bytes=4194304 --config exact captured p/owasp-top-ten,p/typescript,p/react,p/secrets . plus exact source-bound explicit SQL test targets",
+    "trufflehog": "trufflehog3.99.2 git file://candidate --bare --fail --no-update --json --only-verified --concurrency=1",
+    "trufflehog-current": "trufflehog3.99.2 filesystem exact committed-source snapshot --fail --no-update --json --only-verified --concurrency=1"
   },
   "scannerReports": {
     "gitleaks": {
       "exit": 2,
       "file": "scans/gitleaks.json.gz",
       "projection": "0b447514f0be125b37cb8fe7294650a3cd693f97377aa78ea9ac88c1b546bc0a"
+    },
+    "gitleaks-current": {
+      "exit": 2,
+      "file": "scans/gitleaks-current.json.gz",
+      "projection": "342cd635608008a4f9a3d66e0eeaef3264ce72351e92878e0dab3075227e503c"
     },
     "graph": {
       "exit": 0,
@@ -90,6 +98,10 @@
     "trufflehog": {
       "exit": 0,
       "file": "scans/trufflehog.json"
+    },
+    "trufflehog-current": {
+      "exit": 0,
+      "file": "scans/trufflehog-current.json.gz"
     }
   },
   "schema": 1,
@@ -296,7 +308,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "c95b01ed8d547b616e2e64c386b212830ccedc4b061f682e93a8b940d74d568f",
+  "sourceManifest": "0ae3910c04409950930a49ba3e5d84a8f1cecd833564965ddc1842a90f9e8268",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

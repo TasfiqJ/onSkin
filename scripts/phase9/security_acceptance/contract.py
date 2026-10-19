@@ -72,6 +72,7 @@ def source(root,policy):
   parts=name.split('/')[:-1]
   directories.update('/'.join(parts[:i]) for i in range(1,len(parts)+1))
  for directory in directories:
+  require(not os.path.lexists(physical(root)/directory/'.gitleaksignore'),'UNREVIEWED_SCAN_IGNORE:'+((directory+'/') if directory else '')+'.gitleaksignore')
   for leaf in ('.gitignore','.semgrepignore'):
    name=(directory+'/' if directory else '')+leaf
    require(name in expected or not os.path.lexists(physical(root)/name),'UNREVIEWED_SCAN_IGNORE:'+name)
@@ -136,7 +137,7 @@ def initial_audit_subset(obj,final):
  require(all(counts[level]==sum(record['severity']==level for record in initial['records'].values()) for level in levels) and counts['total']==len(initial['records']),'INITIAL_AUDIT_COUNT_DRIFT')
  return initial
 def bind_raw_report(name,report,data):
- if name=='trufflehog':require(not data.strip() and report==[],'RAW_REPORT_DRIFT:'+name)
+ if name in ('trufflehog','trufflehog-current'):require(not data.strip() and report==[],'RAW_REPORT_DRIFT:'+name)
  else:require(parse_json(data)==report,'RAW_REPORT_DRIFT:'+name)
 def bind_regression(result,data,actual_exit,minimum):
  require(set(result)=={'exit','tests','pass','fail','cancelled','skipped','todo','transcript','file'},'REGRESSION_SCHEMA')
@@ -201,12 +202,14 @@ def scanner_scope(name,args):
  elif name=='gitleaks':ok=len(args)==9 and args[1]=='detect' and normal(args[2]).endswith('/scripts/phase9/security_acceptance/gitleaks.toml') and args[2].startswith('--config=') and args[3:6]==['--redact=100','--exit-code=2','--report-format=json'] and args[6].startswith('--report-path=') and normal(args[6]).endswith('/gitleaks-raw.json') and args[7:]==['--log-opts=--all --full-history','--log-level=info']
  elif name=='osv':ok=len(args)==7 and args[1:5]==['scan','source','--recursive','--format=json'] and args[5].startswith('--output=') and normal(args[5]).endswith('/osv-raw.json') and args[6:]==['.']
  elif name=='trufflehog':ok=len(args)==9 and args[1]=='git' and args[2].startswith('file://') and args[3:]==['--bare','--fail','--no-update','--json','--only-verified','--concurrency=1']
+ elif name=='gitleaks-current':ok=len(args)==10 and args[1:3]==['detect','--no-git'] and args[3].startswith('--source=') and normal(args[3]).endswith('/current-source') and normal(args[4]).endswith('/scripts/phase9/security_acceptance/gitleaks.toml') and args[4].startswith('--config=') and args[5:8]==['--redact=100','--exit-code=2','--report-format=json'] and args[8].startswith('--report-path=') and normal(args[8]).endswith('/gitleaks-current-raw.json') and args[9]=='--log-level=info'
+ elif name=='trufflehog-current':ok=len(args)==8 and args[1]=='filesystem' and normal(args[2]).endswith('/current-source') and args[3:]==['--fail','--no-update','--json','--only-verified','--concurrency=1']
  elif name=='semgrep':
   forced=scan_coverage(load(HERE,'proposal.json'))['explicitTargets']
-  ok=len(args)==27+len(forced) and args[1:3]==['-B','-X'] and args[3].startswith('pycache_prefix=') and args[4]=='-c' and args[5]==SEMGREP_ENTRY and args[7:18]==['scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json',args[17]] and args[17].startswith('--output=') and normal(args[17]).endswith('/semgrep-raw.json')
+  ok=len(args)==29+len(forced) and args[1:5]==['-I','-S','-B','-X'] and args[5].startswith('pycache_prefix=') and args[6]=='-c' and args[7]==SEMGREP_ENTRY and args[9:20]==['scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json',args[19]] and args[19].startswith('--output=') and normal(args[19]).endswith('/semgrep-raw.json')
   if ok:
-   out=normal(args[17])[len('--output='):].rsplit('/',1)[0]
-   ok=[normal(v) for v in args[18:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
+   out=normal(args[19])[len('--output='):].rsplit('/',1)[0]
+   ok=[normal(v) for v in args[20:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
  else:ok=False
  require(ok,'SCANNER_SCOPE_DRIFT:'+name)
 SCANNER_BIND_GUARD="""import sys,socket
@@ -218,6 +221,41 @@ def g97_scanner_audit(event,args):
 sys.addaudithook(g97_scanner_audit)
 """
 SEMGREP_ENTRY=SCANNER_BIND_GUARD+"import site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()"
+def current_leak_projection(obj,prefix=None):
+ require(isinstance(obj,list) and obj and isinstance(obj[0],dict),'CURRENT_SOURCE_REPORT_EMPTY_OR_INVALID')
+ if prefix is None:
+  file=obj[0].get('File','');require(isinstance(file,str) and '/current-source/' in file,'CURRENT_SOURCE_PREFIX_INVALID')
+  prefix=file.split('/current-source/',1)[0]+'/current-source'
+ require(isinstance(prefix,str) and pathlib.Path(prefix).is_absolute() and pathlib.Path(prefix).name=='current-source','CURRENT_SOURCE_PREFIX_INVALID')
+ rows=[];seen=set()
+ for item in obj:
+  require(isinstance(item,dict) and item.get('Secret')=='REDACTED' and item.get('Commit')=='','CURRENT_SOURCE_RECORD_INVALID')
+  file=item.get('File');require(isinstance(file,str) and file.startswith(prefix+'/'),'CURRENT_SOURCE_FILE_SUBSTITUTION')
+  path=file[len(prefix)+1:]
+  require(path and all(part not in ('','.','..') for part in path.split('/')) and not any(char in path for char in ('\\',':','\0')),'CURRENT_SOURCE_PATH_INVALID')
+  require(type(item.get('StartLine')) is int and type(item.get('EndLine')) is int and 0<item['StartLine']<=item['EndLine'] and isinstance(item.get('RuleID'),str),'CURRENT_SOURCE_RANGE_INVALID')
+  fingerprint=f"{file}:{item['RuleID']}:{item['StartLine']}"
+  require(item.get('Fingerprint')==fingerprint and fingerprint not in seen,'CURRENT_SOURCE_DUPLICATE_OR_FINGERPRINT_DRIFT');seen.add(fingerprint)
+  rows.append({**item,'File':path,'Fingerprint':f"{path}:{item['RuleID']}:{item['StartLine']}"})
+ return sorted(rows,key=lambda item:item['Fingerprint'])
+
+def current_evidence(root,directory,policy,intents,raw):
+ from history import verify_current
+ snapshot=load(directory,'current-source-manifest.json')
+ require(isinstance(snapshot,dict) and set(snapshot)=={'schema','sourceCommit','snapshotRoot','files'} and type(snapshot['schema']) is int and snapshot['schema']==1,'CURRENT_SOURCE_MANIFEST_SCHEMA')
+ commit=git(root,'rev-parse','HEAD').decode().strip();prefix=snapshot['snapshotRoot']
+ require(snapshot['sourceCommit']==commit,'CURRENT_SOURCE_COMMIT_DRIFT')
+ names={row['path'] for row in load(HERE,'source-manifest.json')}|{'scripts/phase9/security_acceptance/proposal.json','scripts/phase9/security_acceptance/source-manifest.json'}
+ expected=[{'path':name,'sha256':SHA(safe(root,name,allow_empty=True))} for name in sorted(names)]
+ require(snapshot['files']==expected,'CURRENT_SOURCE_SNAPSHOT_DRIFT')
+ require(intents['gitleaks-current']['args'][3]=='--source='+prefix and intents['trufflehog-current']['args'][2]==prefix,'CURRENT_SOURCE_INTENT_SUBSTITUTION')
+ require(intents['gitleaks-current']['args'][4]==intents['gitleaks']['args'][2],'CURRENT_SOURCE_RULE_CONFIG_SUBSTITUTION')
+ current_leak_projection(raw['gitleaks-current']['report'],prefix)
+ result,refs,witnesses=verify_current(root,raw['gitleaks-current']['report'],prefix,commit,load(HERE,'history.json.gz'),safe(HERE,'gitleaks.toml').decode(),{name:SHA(safe(directory,'rules/'+name+'.yaml')) for name in policy['rules']})
+ proof={'summary':result,'references':refs,'witnesses':witnesses}
+ require(load(directory,'current-source-proof.json.gz')==proof,'CURRENT_SOURCE_PROOF_DRIFT')
+ return result
+
 def records(raw,policy):
  require(set(raw)==set(policy['scannerReports']),'SCANNER_OMISSION_OR_EXTRA')
  for name,profile in policy['scannerReports'].items():
@@ -230,6 +268,9 @@ def records(raw,policy):
   elif name=='osv':obj=osv_projection(obj)
   elif name=='sbom':obj=sbom_projection(obj)
   elif name=='graph':obj=graph_projection(obj)
+  elif name=='gitleaks-current':
+   require(isinstance(obj,list) and len(obj)==policy['currentHistoryRecordCount'],'CURRENT_SOURCE_CARDINALITY')
+   obj=current_leak_projection(obj)
   elif name=='gitleaks':
    require(isinstance(obj,list) and len(obj)==policy['historyRecordCount'] and len({x['Fingerprint'] for x in obj})==policy['historyRecordCount'],'HISTORY_CARDINALITY')
    require(all(x['Secret']=='REDACTED' for x in obj),'UNREDACTED_FINDING')
@@ -243,7 +284,7 @@ def records(raw,policy):
    # Exact all-four rules/configuration coverage is checked against the collector
    # receipt as well as the pinned ruleset bytes, never inferred from zero results.
    continue
-  elif name=='trufflehog':require(obj==[],'VERIFIED_EXPOSURE');continue
+  elif name in ('trufflehog','trufflehog-current'):require(obj==[],'VERIFIED_EXPOSURE');continue
   require(SHA(CANON(obj))==profile['projection'],'SCANNER_RECORD_DRIFT:'+name)
 
 def packages(source_root,installed_root,policy,evidence):
@@ -331,7 +372,7 @@ def evidence(root,directory,policy,installed_root):
  require(type(manifest['schema']) is int and manifest['schema']==1 and manifest['sourceManifest']==policy['sourceManifest'],'RECEIPT_SOURCE_DRIFT')
  begin,end=utc(manifest['started']),utc(manifest['finished']);require(begin<=end<=now() and now()-begin<=datetime.timedelta(hours=6),'STALE_OR_FUTURE_EVIDENCE')
  require(manifest['scannerCommands']==policy['scannerCommands'],'SCANNER_SCOPE_DRIFT')
- names=set(manifest['files']);required={v['file'] for v in policy['scannerReports'].values()}|{'upstream/braces.tgz','upstream/node-forge.tgz'}|{'rules/'+r+'.yaml' for r in policy['rules']}|{'tests/'+n+'.tap' for n in policy['minimumTests']}|{'osv-raw.json','gitleaks-raw.json','semgrep-raw.json'}
+ names=set(manifest['files']);required={v['file'] for v in policy['scannerReports'].values()}|{'upstream/braces.tgz','upstream/node-forge.tgz'}|{'rules/'+r+'.yaml' for r in policy['rules']}|{'tests/'+n+'.tap' for n in policy['minimumTests']}|{'osv-raw.json','gitleaks-raw.json','gitleaks-current-raw.json','semgrep-raw.json','current-source-manifest.json','current-source-proof.json.gz'}
  for name in set(policy['scannerReports'])|set(policy['minimumTests'])|{'npm-version'}:
   required|={'commands/'+name+'/'+leaf for leaf in ('stdout','stderr','intent.json','result.json')}
  require(names==required,'EVIDENCE_INVENTORY_DRIFT')
@@ -349,7 +390,7 @@ def evidence(root,directory,policy,installed_root):
  require(isinstance(cache,str) and pathlib.Path(cache).is_absolute() and pathlib.Path(cache).name.startswith('g97-audit-cache-') and all(value['npm_config_cache']==cache for value in caches),'AUDIT_CACHE_SCOPE_DRIFT')
  norm=lambda value:value.replace('\\','/').removeprefix('//?/').rstrip('/').casefold()
  execution=intents['gitleaks']['cwd'];installation=intents['npm-installed']['cwd']
- require(all(norm(intents[n]['cwd'])==norm(execution) for n in ('osv','semgrep')),'SCANNER_SOURCE_ROOT_DRIFT')
+ require(all(norm(intents[n]['cwd'])==norm(execution) for n in ('osv','semgrep','gitleaks-current','trufflehog-current')),'SCANNER_SOURCE_ROOT_DRIFT')
  require(all(norm(intents[n]['cwd'])==norm(installation) for n in ('npm-initial','npm-lock','graph','sbom','npm-version',*policy['minimumTests'])),'INSTALLED_EXECUTION_ROOT_DRIFT')
  require(norm(intents['trufflehog']['cwd'])==norm(execution).rsplit('/',1)[0] and intents['trufflehog']['args'][2]=='file://'+execution.replace('\\','/').rstrip('/').rsplit('/',1)[1],'HISTORY_SOURCE_ROOT_DRIFT')
  require(norm(intents['gitleaks']['args'][2].removeprefix('--config='))==norm(execution+'/scripts/phase9/security_acceptance/gitleaks.toml'),'HISTORY_CONFIG_SOURCE_DRIFT')
@@ -360,18 +401,18 @@ def evidence(root,directory,policy,installed_root):
   envelope=raw[name]['report'];require(set(envelope)=={'exit','report'},'RAW_ENVELOPE');raw[name]=envelope
   actual=load(directory,'commands/'+name+'/result.json');require(type(actual.get('exit')) is int and actual['exit']==envelope['exit'],'RAW_EXIT_DRIFT')
   scanner_scope(name,load(directory,'commands/'+name+'/intent.json')['args'])
-  if name in ('osv','gitleaks','semgrep'):rawfile=name+'-raw.json'
+  if name in ('osv','gitleaks','gitleaks-current','semgrep'):rawfile=name+'-raw.json'
   else:rawfile='commands/'+name+'/stdout'
-  bind_raw_report(name,envelope['report'],safe(directory,rawfile,allow_empty=name=='trufflehog'))
+  bind_raw_report(name,envelope['report'],safe(directory,rawfile,allow_empty=name in ('trufflehog','trufflehog-current')))
  records(raw,policy)
- h=history(root,raw['gitleaks']['report'],{name:SHA(safe(directory,'rules/'+name+'.yaml')) for name in policy['rules']});coupled_source(root,installed_root);p=packages(root,installed_root,policy,directory)
+ h=history(root,raw['gitleaks']['report'],{name:SHA(safe(directory,'rules/'+name+'.yaml')) for name in policy['rules']});current=current_evidence(root,directory,policy,intents,raw);coupled_source(root,installed_root);p=packages(root,installed_root,policy,directory)
  required_tests={'backport-and-installer','native-source-and-archive','expired-exceptions'}
  require(set(manifest['regressions'])==required_tests,'REGRESSION_OMISSION')
  for name,result in manifest['regressions'].items():
   require(result.get('file')=='tests/'+name+'.tap','REGRESSION_PATH_DRIFT')
   tap=safe(directory,result['file']);require(tap==safe(directory,'commands/'+name+'/stdout'),'REGRESSION_TRANSCRIPT_DRIFT')
   bind_regression(result,tap,load(directory,'commands/'+name+'/result.json')['exit'],policy['minimumTests'][name])
- return {'status':'TECHNICAL_EVIDENCE_VALID; INACTIVE_OWNER_ACCEPTANCE_REQUIRED','history':h,'packages':p,'evidenceSha256':SHA(CANON(manifest)),'executionRoot':execution,'installedExecutionRoot':installation,'rawScannerPass':False}
+ return {'status':'TECHNICAL_EVIDENCE_VALID; INACTIVE_OWNER_ACCEPTANCE_REQUIRED','history':h,'currentSource':current,'packages':p,'evidenceSha256':SHA(CANON(manifest)),'executionRoot':execution,'installedExecutionRoot':installation,'rawScannerPass':False}
 
 def load_approval(path):
  p=pathlib.Path(path)

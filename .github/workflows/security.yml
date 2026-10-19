@@ -243,6 +243,7 @@ jobs:
         # every required source path and the reviewed finite-budget source build.
         # The same receipt also binds all raw audit/history scans and regressions.
         run: |
+          python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v
           python -B scripts/phase9/security_acceptance/collect.py \
             --output "$GITHUB_WORKSPACE/docs/phase-9/generated/ci-scanner-evidence/g97-evidence" \
             --npm "$RUNNER_TEMP/g97-tools/npm/node_modules/npm/bin/npm-cli.js" \
@@ -381,7 +382,9 @@ jobs:
     timeout-minutes: 20
     # The owner must provision independent required reviewers and prevent self-review.
     # No trusted private key or genuine approval is created by this proposal.
-    environment: g97-source-security-acceptance
+    environment:
+      name: g97-source-security-acceptance
+      deployment: false
     env:
       PYTHONDONTWRITEBYTECODE: '1'
       CI: '1'

@@ -158,7 +158,7 @@ class ContractTests(unittest.TestCase):
     out.unlink()
  def test_envelope_cannot_hide_changed_raw_scanner_output(self):
   for name,value in self.actual.items():
-   data=c.CANON(value['report']) if name!='trufflehog' else b''
+   data=c.CANON(value['report']) if name not in ('trufflehog','trufflehog-current') else b''
    c.bind_raw_report(name,value['report'],data)
    with self.subTest(scanner=name):
     with self.assertRaises(c.Rejected):c.bind_raw_report(name,value['report'],b'{"unreported_new_finding":true}')
@@ -176,7 +176,7 @@ class ContractTests(unittest.TestCase):
   gl=['gitleaks','detect','--config=C:/repo/scripts/phase9/security_acceptance/gitleaks.toml','--redact=100','--exit-code=2','--report-format=json','--report-path=C:/evidence/gitleaks-raw.json','--log-opts=--all --full-history','--log-level=info']
   osv=['osv','scan','source','--recursive','--format=json','--output=C:/evidence/osv-raw.json','.']
   truffle=['trufflehog','git','file://candidate','--bare','--fail','--no-update','--json','--only-verified','--concurrency=1']
-  sg=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
+  sg=['python','-I','-S','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
   for name,args in [('gitleaks',gl),('osv',osv),('trufflehog',truffle),('semgrep',sg)]:
    c.scanner_scope(name,args)
    bad=list(args)
@@ -197,12 +197,12 @@ class ContractTests(unittest.TestCase):
    saved=c.HERE;c.HERE=here
    try:
     c.source(root,policy)
-    (root/'.git/info/exclude').write_text('.semgrepignore\n')
-    for action in ('change','missing','extra','policy','ignored-ignore-file'):
-     p=root/('source.txt' if action in ('change','missing') else 'extra.txt' if action=='extra' else '.semgrepignore' if action=='ignored-ignore-file' else 'docs/phase-9/security-advisory-exceptions.json');before=p.read_bytes() if p.exists() else None
+    (root/'.git/info/exclude').write_text('.semgrepignore\n.gitleaksignore\n')
+    for action in ('change','missing','extra','policy','ignored-ignore-file','ignored-history-file'):
+     p=root/('source.txt' if action in ('change','missing') else 'extra.txt' if action=='extra' else '.semgrepignore' if action=='ignored-ignore-file' else '.gitleaksignore' if action=='ignored-history-file' else 'docs/phase-9/security-advisory-exceptions.json');before=p.read_bytes() if p.exists() else None
      if action=='missing':p.unlink()
      else:p.write_text('unreviewed')
-     if action=='ignored-ignore-file':
+     if action in ('ignored-ignore-file','ignored-history-file'):
       with self.assertRaisesRegex(c.Rejected,'UNREVIEWED_SCAN_IGNORE'):c.source(root,policy)
      else:
       with self.assertRaises(c.Rejected):c.source(root,policy)
@@ -234,9 +234,9 @@ class ContractTests(unittest.TestCase):
     with self.assertRaisesRegex(c.Rejected,'REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT'):
      c.coverage_kind(path,b'x'*(4*1024**2+1))
  def test_scanner_strictness_and_bounded_size_cannot_be_removed(self):
-  args=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
+  args=['python','-I','-S','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--oss-only','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
   c.scanner_scope('semgrep',args)
-  for token in ('--strict','--oss-only','--max-target-bytes=4194304'):
+  for token in ('-I','-S','--strict','--oss-only','--max-target-bytes=4194304'):
    with self.subTest(token=token):
     bad=list(args);bad.remove(token)
     with self.assertRaisesRegex(c.Rejected,'SCANNER_SCOPE_DRIFT'):c.scanner_scope('semgrep',bad)
@@ -448,5 +448,32 @@ class ContractTests(unittest.TestCase):
    else:obj['metadata']['vulnerabilities']['total']=True
    with self.subTest(action=action):
     with self.assertRaises(c.Rejected):c.records(v,self.policy)
+ def test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA(self):
+  raw=self.actual['gitleaks-current']['report'];prefix=raw[0]['File'].split('/current-source/',1)[0]+'/current-source'
+  result,refs,witnesses=h.verify_current(c.ROOT,raw,prefix,'53bdd045b18d08407d9dea209aa5fa4ed5648836',c.load(c.HERE,'history.json.gz'),c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
+  self.assertEqual(result['records'],1107);self.assertEqual(result['unverified'],0);self.assertFalse(result['historicalQARefreshed']);self.assertEqual(result['retainedReferencedSourceDigests'],13);self.assertEqual(result['exactRetainedSyntheticPayloads'],1)
+ def test_current_source_report_rejects_path_range_redaction_duplicate_and_findings_drift(self):
+  for action in ('path','range','redaction','duplicate','verified'):
+   v=self.clean_vector();rows=v['gitleaks-current']['report']
+   if action=='path':rows[0]['File']=rows[0]['File'].replace('/current-source/','/substituted-source/')
+   elif action=='range':rows[0]['StartLine']=True
+   elif action=='redaction':rows[0]['Secret']='SYNTHETIC-UNREDACTED-FIXTURE'
+   elif action=='duplicate':rows[0]=copy.deepcopy(rows[1])
+   else:v['trufflehog-current']['report']=[{'Verified':True,'Raw':'SYNTHETIC-FIXTURE'}]
+   with self.subTest(action=action):
+    with self.assertRaises(c.Rejected):c.records(v,self.policy)
+ def test_current_QA_digest_cannot_borrow_an_unrelated_historical_source_reference(self):
+  raw=self.actual['gitleaks-current']['report'];prefix=raw[0]['File'].split('/current-source/',1)[0]+'/current-source';rows=c.load(c.HERE,'history.json.gz')
+  for row in rows:
+   if row['technical_disposition']=='RECOMPUTED_SOURCE_FILE_DIGEST':row['proof']['referenced_source_path']='NONEXISTENT/substituted-reference.mjs'
+  with self.assertRaises((ValueError,KeyError,subprocess.SubprocessError)):h.verify_current(c.ROOT,raw,prefix,'53bdd045b18d08407d9dea209aa5fa4ed5648836',rows,c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
+ def test_scanner_startup_ignores_actual_ambient_module_injection(self):
+  with tempfile.TemporaryDirectory(prefix='g97-python-startup-unit-') as directory:
+   root=pathlib.Path(directory);(root/'socket.py').write_text('raise RuntimeError("UNREVIEWED_AMBIENT_MODULE_EXECUTED")')
+   environment={**os.environ,'PYTHONPATH':str(root)}
+   negative=subprocess.run([sys.executable,'-B','-S','-c','import socket'],cwd=root,env=environment,capture_output=True)
+   self.assertNotEqual(negative.returncode,0);self.assertIn(b'UNREVIEWED_AMBIENT_MODULE_EXECUTED',negative.stderr)
+   positive=subprocess.run([sys.executable,'-I','-S','-B','-c',c.SCANNER_BIND_GUARD+"\nprint(sys.flags.isolated,sys.flags.no_site)"],cwd=root,env=environment,capture_output=True)
+   self.assertEqual(positive.returncode,0);self.assertEqual(positive.stdout.strip(),b'1 1');self.assertNotIn(b'UNREVIEWED_AMBIENT_MODULE_EXECUTED',positive.stderr)
 
 if __name__=='__main__':unittest.main(verbosity=2)
