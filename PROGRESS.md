@@ -1,5 +1,21 @@
 # Build Progress
 
+
+## 2026-10-19 — G97 single-owner source-only Security correction (not integrated)
+
+The original Security workflow now proposes mandatory automated source-only
+acceptance in place of the second-person/signing prerequisite. It revalidates
+all19 original artifacts, the complete fresh scanner/test receipt, exact clean
+source, installed backports and same-run outcomes. No signature or independent
+human approval is created or claimed. New/changed findings, missing/altered
+evidence, unexpected scanner failures, source/coverage drift and expiry reject.
+The October17 exceptions stay expired; the existing proposal still ends at
+2026-10-21T00:00:00Z with no automatic renewal. Accepted SDK57/forge source,
+ComponentA and DB06/release gates retain their dispositions. The frozen sealed
+candidate plus the deterministic correction/evidence packet reconstruct the
+revised source. Exact revised BRAIN review, ordinary main integration and actual
+exact-commit Quality/iOS/original Security CI remain separate required steps.
+
 > Active scope (2026-09-27): the ten-feature iOS lean V1 contract in `docs/hugeToDo/launch-contract.json` governs launch. Deferred features do not block V1 merely by being deferred. All applicable privacy, clinical/legal, payment, native-device, beta and release-evidence gates remain required. Prior detailed findings below are retained; see `docs/MAIN_INTEGRATION_2026-09-27.md` for this integration.
 
 

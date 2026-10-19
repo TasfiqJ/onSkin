@@ -1,9 +1,9 @@
-"""G97 source-mitigation proposal. Raw scanner failures are never rewritten.
+"""G97 exact-source technical evidence. Raw scanner failures remain visible.
 
-Only `accept` can grant the narrow status below; it requires fresh complete
-evidence and an Ed25519 receipt signed by an independently provisioned owner key.
-The key is a TRUSTED CALLER input, never taken from source or scanner artifacts.
-No release, DB replay, integration or generic Security clearance is granted.
+Only the original Security workflow adapter may grant automated source-only
+acceptance after validating its complete same-run original artifact set.
+No independent human approval, signature, integration, DB replay or release
+clearance is represented by these checks.
 """
 import argparse,base64,datetime,difflib,gzip,hashlib,io,json,os,pathlib,re,stat,subprocess,sys,tarfile
 sys.dont_write_bytecode=True
@@ -414,42 +414,28 @@ def evidence(root,directory,policy,installed_root):
   require(result.get('file')=='tests/'+name+'.tap','REGRESSION_PATH_DRIFT')
   tap=safe(directory,result['file']);require(tap==safe(directory,'commands/'+name+'/stdout'),'REGRESSION_TRANSCRIPT_DRIFT')
   bind_regression(result,tap,load(directory,'commands/'+name+'/result.json')['exit'],policy['minimumTests'][name])
- return {'status':'TECHNICAL_EVIDENCE_VALID; INACTIVE_OWNER_ACCEPTANCE_REQUIRED','history':h,'currentSource':current,'packages':p,'evidenceSha256':SHA(CANON(manifest)),'executionRoot':execution,'installedExecutionRoot':installation,'rawScannerPass':False}
+ return {'status':'TECHNICAL_EVIDENCE_VALID; ORIGINAL_SECURITY_AUTOMATED_ACCEPTANCE_REQUIRED','history':h,'currentSource':current,'packages':p,'evidenceSha256':SHA(CANON(manifest)),'executionRoot':execution,'installedExecutionRoot':installation,'rawScannerPass':False}
 
-def load_approval(path):
- p=pathlib.Path(path)
- return parse_json(safe(p.parent,p.name,limit=65536))
-
-def approval(receipt,key,policy,tree,evidence_sha,clock=None):
- clock=clock or now();require(isinstance(receipt,dict) and set(receipt)=={'payload','signature'},'OWNER_APPROVAL_ABSENT')
- p=receipt['payload'];fields={'schema','proposalSha256','sourceTree','evidenceSha256','decision','notBefore','notAfter','reviewer','reviewReference'}
- require(isinstance(p,dict) and set(p)==fields and type(p['schema']) is int and p['schema']==1,'OWNER_RECEIPT_SCHEMA')
- require(p['proposalSha256']==SHA(CANON(policy)) and p['sourceTree']==tree and p['evidenceSha256']==evidence_sha,'OWNER_RECEIPT_BINDING')
- require(p['decision']=='ACCEPT_EXACT_G97_SOURCE_MITIGATIONS_ONLY' and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9-]{0,38}',p['reviewer']) and isinstance(p['reviewReference'],str) and len(p['reviewReference'])>=16,'OWNER_RECEIPT_SCOPE')
- begin,end=utc(p['notBefore']),utc(p['notAfter']);require(utc(policy['notBefore'])<=begin<=clock<end<=utc(policy['notAfter']) and end-begin<=datetime.timedelta(hours=72),'OWNER_RECEIPT_EXPIRED_OR_EXTENDED')
- try:sig=base64.b64decode(receipt['signature'],validate=True)
- except Exception:raise Rejected('OWNER_SIGNATURE_INVALID')
- require(len(sig)==64 and isinstance(key,str) and len(key)<1024,'OWNER_SIGNATURE_INVALID')
- script="const c=require('node:crypto');let s='';process.stdin.on('data',b=>s+=b);process.stdin.on('end',()=>{try{const x=JSON.parse(s),k=c.createPublicKey(x.key);if(k.asymmetricKeyType!=='ed25519'||!c.verify(null,Buffer.from(x.payload,'base64'),k,Buffer.from(x.signature,'base64')))process.exit(1)}catch{process.exit(1)}})"
- r=subprocess.run(['node','-e',script],input=CANON({'key':key,'payload':base64.b64encode(CANON(p)).decode(),'signature':receipt['signature']}),capture_output=True,timeout=10)
- require(r.returncode==0,'OWNER_SIGNATURE_INVALID');return p
+AUTOMATED_SCOPE={'schema': 1, 'mode': 'SINGLE_OWNER_AUTOMATED_SOURCE_ONLY', 'independentHumanApproval': False, 'externalSignatureRequired': False, 'releaseAuthority': False, 'databaseReplayAuthority': False, 'integrationAuthority': False}
+def validate_policy(policy,clock=None):
+ clock=clock or now()
+ require(policy.get('id')=='G97-SINGLE-OWNER-SOURCE-MITIGATION-R1'
+         and CANON(policy.get('acceptance'))==CANON(AUTOMATED_SCOPE),'AUTOMATED_ACCEPTANCE_SCOPE_DRIFT')
+ # This dated proposal does not renew itself, even if an input date is edited.
+ require(policy.get('state')=='INACTIVE_PROPOSAL'
+         and policy.get('notBefore')=='2026-10-18T00:00:00Z'
+         and policy.get('notAfter')=='2026-10-21T00:00:00Z'
+         and utc(policy['notBefore'])<=clock<utc(policy['notAfter']),
+         'PROPOSAL_EXPIRED_OR_CHANGED')
+ return dict(AUTOMATED_SCOPE)
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('mode',choices=['source','check','accept']);p.add_argument('--root',default=str(ROOT));p.add_argument('--installed-root');p.add_argument('--evidence');p.add_argument('--approval');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('mode',choices=['source','check']);p.add_argument('--root',default=str(ROOT));p.add_argument('--installed-root');p.add_argument('--evidence');a=p.parse_args()
  try:
   root=pathlib.Path(a.root).resolve();policy=load(HERE,'proposal.json');result=source(root,policy)
-  require(policy['state']=='INACTIVE_PROPOSAL' and utc(policy['notBefore'])<=now()<utc(policy['notAfter']),'PROPOSAL_EXPIRED_OR_CHANGED')
+  validate_policy(policy)
   if a.mode!='source':
    require(a.evidence,'EVIDENCE_REQUIRED');scan_coverage(policy,root);installed=pathlib.Path(a.installed_root or root).resolve();result=evidence(root,pathlib.Path(a.evidence),policy,installed)
-  if a.mode=='accept':
-   require(installed==root,'ACTIVE_EXTERNAL_INSTALL_FORBIDDEN')
-   norm=lambda value:value.replace('\\','/').removeprefix('//?/').rstrip('/').casefold()
-   require(norm(result['executionRoot'])==norm(str(root))==norm(result['installedExecutionRoot']),'ACTIVE_EXTERNAL_SCAN_FORBIDDEN')
-   require(a.approval and os.environ.get('G97_TRUSTED_OWNER_PUBLIC_KEY'),'INDEPENDENT_OWNER_ACCEPTANCE_REQUIRED')
-   receipt=load_approval(a.approval);head=git(root,'rev-parse','HEAD').decode().strip();tree=git(root,'rev-parse','HEAD^{tree}').decode().strip()
-   require(not git(root,'status','--porcelain','--untracked-files=all').strip(),'ACTIVE_SOURCE_NOT_COMMITTED_CLEAN')
-   approval(receipt,os.environ['G97_TRUSTED_OWNER_PUBLIC_KEY'],policy,tree,result['evidenceSha256'])
-   result.update(status='EXACT_SOURCE_MITIGATIONS_ACCEPTED_UNTIL_OWNER_RECEIPT_EXPIRY',sourceCommit=head,sourceTree=tree,rawScannerPass=False,releaseAuthority=False,databaseReplayAuthority=False)
   print(json.dumps(result,sort_keys=True));return 0
  except (ValueError,KeyError,OSError,TypeError,subprocess.SubprocessError) as e:
   print(json.dumps({'status':'REJECTED','code':str(e) if isinstance(e,Rejected) else type(e).__name__,'rawScannerPass':False,'acceptanceGranted':False}));return 1

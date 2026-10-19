@@ -29,7 +29,7 @@
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "5b6430e7a9ffb04190cbd530ef929c670e2d6a59dac0cb3673e537161be70302"
+    "sha256": "e80d42121b10a7c0be20e7ac654adf7de06d469cf4fa09e33e0cb447c030c939"
   },
   {
     "path": ".gitignore",
@@ -125,7 +125,7 @@
   },
   {
     "path": "PROGRESS.md",
-    "sha256": "c665ae470833722a890989ccd99358b1fa44bbf65cc1926b631a353ff9730c95"
+    "sha256": "c8846c9aeb3696a983f78d10242e9f84060dbc013353106ec9f396aad437aca1"
   },
   {
     "path": "SECURITY_AUDIT_REPORT.md",
@@ -9033,7 +9033,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
-    "sha256": "bfcb2b2fa20c8cd94cdebd46f7c789aef4a3be3ffda20ebbe623e2c8f6ec2687"
+    "sha256": "b7824456d2c5392ee3f180de5c5c9845f48268256e411693b6e4535907333a8f"
   },
   {
     "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
@@ -9049,7 +9049,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "478bbdb882f454a13a0a10fcf3e0dbbfe474bc66056e47ed1183b5114849bc0d"
+    "sha256": "2b4d6b34189d8e78c2dd98ee86221c3a8c1685951b5776316a8b7855cddedf24"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9093,19 +9093,19 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "7284b5da75629d6781a6011594666cf4dc0f239d11e4c4aa8dcd972e162cca7a"
+    "sha256": "a77abf2f80b66db383bf44b5bf47b04410f250a49635f3a0c9a34fa2215f8dea"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
-    "sha256": "f49eeffdf6c7ecac6b43866bc4ee5308a9bbc0a27d1ce65439d28e26ad734c68"
+    "sha256": "eb1ad12e000d90263a80e5e9b92f7699fd7d80eb7da6a20f5daa028eb484114a"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
-    "sha256": "80e5027c5ecf53095ac0959e91a8fa1be8f26daf48cb2e460b1c94e5b3a01d2a"
+    "sha256": "578cbef51705734aaaf7f8f65cdd2f943460622c066e670b1e02c772f58811e8"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
-    "sha256": "1b31ab27146c7c7bf95fc916b1895a8cf3414f60532adbf8a5ceb7aa100778b4"
+    "sha256": "ad9493329e48050a7b7aa8804fbefad5711a443850df60d450a6109fe0fdbeec"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

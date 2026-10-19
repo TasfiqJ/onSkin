@@ -343,8 +343,8 @@ jobs:
         run: |
           test "${G97_SEMGREP_OUTCOME}" = "success"
 
-  prepare-source-security-decision:
-    name: Bind original Security evidence for independent review
+  automated-source-security-acceptance:
+    name: Automated single-owner source-only Security acceptance
     if: always()
     needs: [code-gates, secret-scan, static-analysis]
     runs-on: ubuntu-24.04
@@ -392,12 +392,12 @@ jobs:
           G97_ORIGINAL_JOBS: ${{ toJSON(needs) }}
         run: |
           original_jobs="$G97_ORIGINAL_JOBS"
-          python -B scripts/phase9/security_acceptance/workflow_admission.py check \
+          python -B scripts/phase9/security_acceptance/workflow_admission.py accept \
             --evidence "$RUNNER_TEMP/g97-workflow/static/g97-evidence" \
             --workflow-evidence "$RUNNER_TEMP/g97-workflow" \
             --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" > "$RUNNER_TEMP/g97-decision.json"
           cat "$RUNNER_TEMP/g97-decision.json"
-      - name: Publish exact decision descriptor for independent review
+      - name: Publish automated source-only decision descriptor
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -405,70 +405,6 @@ jobs:
           path: ${{ runner.temp }}/g97-decision.json
           if-no-files-found: error
           retention-days: 30
-
-  independent-source-security-acceptance:
-    name: Independent exact-source Security acceptance
-    if: always() && needs.prepare-source-security-decision.result == 'success'
-    needs: [code-gates, secret-scan, static-analysis, prepare-source-security-decision]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    # The owner must provision independent required reviewers and prevent self-review.
-    # No trusted private key or genuine approval is created by this proposal.
-    environment:
-      name: g97-source-security-acceptance
-      deployment: false
-    env:
-      PYTHONDONTWRITEBYTECODE: '1'
-      CI: '1'
-      EXPO_NO_TELEMETRY: '1'
-      NODE_OPTIONS: --max-old-space-size=768
-    steps:
-      - name: Checkout
-        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Setup Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
-        with:
-          node-version: 22.21.0
-      - name: Setup Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
-        with:
-          python-version: '3.12'
-      - name: Use reviewed npm
-        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
-      - name: Install exact application dependencies
-        run: npm ci --no-audit --no-fund
-      - name: Download original code evidence
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: code-security-evidence-${{ github.run_id }}
-          path: ${{ runner.temp }}/g97-workflow/code/
-      - name: Download original secret evidence
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: secret-scanner-evidence-${{ github.run_id }}
-          path: ${{ runner.temp }}/g97-workflow/secret/
-      - name: Download original static evidence
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: static-scanner-evidence-${{ github.run_id }}
-          path: ${{ runner.temp }}/g97-workflow/static/
-      - name: Require independently signed original-Security decision
-        env:
-          G97_ORIGINAL_JOBS: ${{ toJSON(needs) }}
-          G97_TRUSTED_OWNER_PUBLIC_KEY: ${{ secrets.G97_TRUSTED_OWNER_PUBLIC_KEY }}
-          G97_OWNER_RECEIPT: ${{ secrets.G97_OWNER_RECEIPT }}
-        run: |
-          test -n "$G97_TRUSTED_OWNER_PUBLIC_KEY" && test -n "$G97_OWNER_RECEIPT"
-          original_jobs="$(python -c 'import json,os; n=json.loads(os.environ["G97_ORIGINAL_JOBS"]); print(json.dumps({k:n[k] for k in ("code-gates","secret-scan","static-analysis")}))')"
-          printf '%s' "$G97_OWNER_RECEIPT" > "$RUNNER_TEMP/g97-owner-receipt.json"
-          python -B scripts/phase9/security_acceptance/workflow_admission.py accept \
-            --evidence "$RUNNER_TEMP/g97-workflow/static/g97-evidence" \
-            --workflow-evidence "$RUNNER_TEMP/g97-workflow" \
-            --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" \
-            --approval "$RUNNER_TEMP/g97-owner-receipt.json"
 
   live-supabase-adversarial:
     name: Live Supabase adversarial evidence

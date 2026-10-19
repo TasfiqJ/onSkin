@@ -1,14 +1,13 @@
 import YAML from 'yaml';
 
 const originals = ['code-gates', 'secret-scan', 'static-analysis'];
-const prepare = 'prepare-source-security-decision';
-const owner = 'independent-source-security-acceptance';
+const automated = 'automated-source-security-acceptance';
 const sameSet = (a, b) => Array.isArray(a) && a.length === b.length && [...a].sort().join() === [...b].sort().join();
 const command = (job, text) => job?.steps?.some((step) => typeof step.run === 'string' && step.run.includes(text));
 const finalCommand = (job, text) => job?.steps?.some((step) => step.if === 'always()' && typeof step.run === 'string' && step.run.includes(text) && !step['continue-on-error']);
 
 // Structural smoke contract for the same-workflow route. The Python admission
-// adapter independently validates the actual reports, process exits and signature.
+// adapter independently validates the actual reports, process exits, exact source and run bindings.
 export function validateWorkflowAdmission(text) {
   try {
     const workflow = YAML.parse(text);
@@ -43,19 +42,20 @@ export function validateWorkflowAdmission(text) {
     if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif') || !finalCommand(jobs['secret-scan'], 'python3 -B scripts/phase9/security_acceptance/workflow_admission.py gitleaks-tool')) return false;
     const staticJob = jobs['static-analysis'];
     if (staticJob['runs-on'] !== 'ubuntu-24.04' || !command(staticJob, 'bootstrap_tools.py') || !command(staticJob, 'collect.py') || !command(staticJob, 'contract.py check') || !command(staticJob, 'python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v')) return false;
-    for (const name of [prepare, owner]) {
+    for (const name of [automated]) {
       if (jobs[name]?.['runs-on'] !== 'ubuntu-24.04' || jobs[name]['continue-on-error'] || !jobs[name].steps?.length || jobs[name].steps.some((step) => step['continue-on-error'])) return false;
       for (const category of ['code', 'secret', 'static']) {
         if (!jobs[name].steps.some((step) => step.uses?.startsWith('actions/download-artifact@') && step.with?.path === '${{ runner.temp }}/g97-workflow/' + category + '/')) return false;
       }
     }
-    const decision = jobs[prepare], acceptance = jobs[owner];
-    if (decision.if !== 'always()' || !sameSet(decision.needs, originals) || decision.environment || !command(decision, 'workflow_admission.py check')) return false;
-    if (acceptance.if !== "always() && needs.prepare-source-security-decision.result == 'success'" || !sameSet(acceptance.needs, [...originals, prepare]) || !acceptance.environment || typeof acceptance.environment !== 'object' || !sameSet(Object.keys(acceptance.environment), ['name', 'deployment']) || acceptance.environment.name !== 'g97-source-security-acceptance' || acceptance.environment.deployment !== false) return false;
+    const acceptance = jobs[automated];
+    if (acceptance.if !== 'always()' || !sameSet(acceptance.needs, originals) || acceptance.environment) return false;
     const step = acceptance.steps.find((item) => item.run?.includes('workflow_admission.py accept'));
-    if (!step || step.env?.G97_TRUSTED_OWNER_PUBLIC_KEY !== '${{ secrets.G97_TRUSTED_OWNER_PUBLIC_KEY }}' || step.env?.G97_OWNER_RECEIPT !== '${{ secrets.G97_OWNER_RECEIPT }}') return false;
-    if (!['--approval', '--original-jobs', '--workflow-evidence', '--evidence', '--commit', '--run-id'].every((arg) => step.run.includes(arg))) return false;
-    return !JSON.stringify(decision).includes('G97_TRUSTED_OWNER_PUBLIC_KEY');
+    if (!step || step.env?.G97_ORIGINAL_JOBS !== '${{ toJSON(needs) }}') return false;
+    if (!['--original-jobs', '--workflow-evidence', '--evidence', '--commit', '--run-id'].every((arg) => step.run.includes(arg))) return false;
+    const route = JSON.stringify(acceptance);
+    if (['--approval', 'G97_TRUSTED_OWNER_PUBLIC_KEY', 'G97_OWNER_RECEIPT'].some((value) => route.includes(value))) return false;
+    return !jobs['independent-source-security-acceptance'] && !jobs['prepare-source-security-decision'];
   } catch {
     return false;
   }

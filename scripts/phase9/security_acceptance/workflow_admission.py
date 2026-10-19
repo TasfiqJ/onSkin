@@ -1,7 +1,7 @@
-"""Proposed same-workflow admission. No actual approval is included or generated.
+"""Single-owner automated source-only admission in the original Security workflow.
 
-The independently signed digest covers both the complete technical receipt and
-all original Security job evidence. A standalone green workflow is insufficient.
+Every original job, nineteen raw artifacts, complete technical receipt, source,
+installation and run binding must pass. No human approval or signature is claimed.
 """
 import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, urllib.parse
 import contract as c
@@ -199,13 +199,10 @@ def main():
     p.add_argument('--original-jobs', required=True)
     p.add_argument('--commit', required=True)
     p.add_argument('--run-id', required=True)
-    p.add_argument('--approval')
     a = p.parse_args()
     try:
         root = c.ROOT; policy = c.load(c.HERE, 'proposal.json')
-        c.require(policy['state'] == 'INACTIVE_PROPOSAL'
-                  and c.utc(policy['notBefore']) <= c.now() < c.utc(policy['notAfter']),
-                  'PROPOSAL_EXPIRED_OR_CHANGED')
+        scope = c.validate_policy(policy)
         c.source(root, policy); c.scan_coverage(policy, root)
         head = c.git(root, 'rev-parse', 'HEAD').decode().strip()
         tree = c.git(root, 'rev-parse', 'HEAD^{tree}').decode().strip()
@@ -222,16 +219,23 @@ def main():
         workflow = original_jobs(directory, c.parse_json(a.original_jobs.encode()), a.commit, a.run_id, raw)
         decision = {'technicalEvidenceSha256': technical['evidenceSha256'], 'originalSecurityWorkflow': workflow}
         digest = c.SHA(c.CANON(decision))
-        if a.mode == 'accept':
-            c.require(a.approval and os.environ.get('G97_TRUSTED_OWNER_PUBLIC_KEY'),
-                      'INDEPENDENT_OWNER_ACCEPTANCE_REQUIRED')
-            receipt = c.load_approval(a.approval)
-            c.approval(receipt, os.environ['G97_TRUSTED_OWNER_PUBLIC_KEY'], policy, tree, digest)
-        print(json.dumps({'status': 'ORIGINAL_SECURITY_EXACT_SOURCE_MITIGATIONS_ACCEPTED'
-                          if a.mode == 'accept' else 'WORKFLOW_TECHNICAL_EVIDENCE_VALID; INACTIVE_OWNER_ACCEPTANCE_REQUIRED',
-                          'sourceCommit': head, 'sourceTree': tree, 'decisionEvidenceSha256': digest,
-                          'decision': decision, 'rawScannerPass': False, 'releaseAuthority': False,
-                          'databaseReplayAuthority': False}, sort_keys=True))
+        context = 'LOCAL_REHEARSAL_NO_GITHUB_CI_AUTHORITY'
+        if os.environ.get('GITHUB_ACTIONS') == 'true':
+            c.require(os.environ.get('GITHUB_WORKFLOW') == 'Security'
+                      and os.environ.get('GITHUB_REPOSITORY', '').casefold() == 'tasfiqj/onskin'
+                      and os.environ.get('GITHUB_SHA') == head
+                      and os.environ.get('GITHUB_RUN_ID') == a.run_id
+                      and os.environ.get('GITHUB_JOB') == 'automated-source-security-acceptance',
+                      'ORIGINAL_SECURITY_CONTEXT_DRIFT')
+            context = 'ORIGINAL_SECURITY_GITHUB_ACTIONS'
+        print(json.dumps({'status': 'ORIGINAL_SECURITY_SINGLE_OWNER_SOURCE_ONLY_ACCEPTED'
+                          if a.mode == 'accept' else 'WORKFLOW_TECHNICAL_EVIDENCE_VALID; AUTOMATED_ACCEPTANCE_REQUIRED',
+                          'sourceCommit': head, 'sourceTree': tree, 'proposalSha256': c.SHA(c.CANON(policy)),
+                          'decisionEvidenceSha256': digest, 'decision': decision,
+                          'acceptance': scope, 'executionContext': context,
+                          'validUntil': policy['notAfter'], 'rawScannerPass': False,
+                          'independentHumanApproval': False, 'releaseAuthority': False,
+                          'databaseReplayAuthority': False, 'integrationAuthority': False}, sort_keys=True))
         return 0
     except (ValueError, KeyError, OSError, TypeError, subprocess.SubprocessError) as error:
         print(json.dumps({'status': 'REJECTED', 'code': str(error) if isinstance(error, c.Rejected)

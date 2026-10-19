@@ -3,7 +3,7 @@
 The Semgrep target list is synthetic current-scope test data; retained warnings
 remain intact. Neither this fixture nor its clean vector is a scanner receipt.
 """
-import base64,copy,datetime,hashlib,json,os,pathlib,shutil,subprocess,sys,tempfile,unittest
+import copy,datetime,hashlib,json,os,pathlib,shutil,subprocess,sys,tempfile,unittest
 sys.dont_write_bytecode=True
 import contract as c
 import history as h
@@ -210,21 +210,18 @@ class ContractTests(unittest.TestCase):
      else:p.write_bytes(before)
    finally:c.HERE=saved
  def test_owner_receipt_requires_exact_binding_signature_and_time(self):
-  # Ephemeral TEST key only, held in memory; no private bytes enter reports.
-  script="const c=require('node:crypto'),k=c.generateKeyPairSync('ed25519');process.stdout.write(JSON.stringify({pub:k.publicKey.export({format:'pem',type:'spki'}),priv:k.privateKey.export({format:'pem',type:'pkcs8'})}))"
-  keys=json.loads(subprocess.check_output(['node','-e',script]));clock=c.utc('2026-10-18T20:00:00Z')
-  payload={'schema':1,'proposalSha256':c.SHA(c.CANON(self.policy)),'sourceTree':'a'*40,'evidenceSha256':'b'*64,'decision':'ACCEPT_EXACT_G97_SOURCE_MITIGATIONS_ONLY','notBefore':'2026-10-18T19:00:00Z','notAfter':'2026-10-19T19:00:00Z','reviewer':'independent-test-owner','reviewReference':'SYNTHETIC UNIT TEST ONLY; NO ACTUAL APPROVAL'}
-  def signed(p):
-   code="const c=require('node:crypto');let b='';process.stdin.on('data',s=>b+=s);process.stdin.on('end',()=>{const x=JSON.parse(b);process.stdout.write(c.sign(null,Buffer.from(x.body,'base64'),x.key).toString('base64'))})"
-   return {'payload':p,'signature':subprocess.check_output(['node','-e',code],input=c.CANON({'key':keys['priv'],'body':base64.b64encode(c.CANON(p)).decode()})).decode()}
-  receipt=signed(payload);c.approval(receipt,keys['pub'],self.policy,'a'*40,'b'*64,clock)
-  for field,value in [('schema',True),('sourceTree','c'*40),('evidenceSha256','c'*64),('proposalSha256','c'*64),('notAfter','2026-10-22T00:00:00Z'),('notAfter','2026-10-18T19:59:59Z'),('decision','ACCEPT_ALL_SECURITY')]:
-   p={**payload,field:value}
-   with self.subTest(field=field,value=value):
-    with self.assertRaises(c.Rejected):c.approval(signed(p),keys['pub'],self.policy,'a'*40,'b'*64,clock)
-  bad=copy.deepcopy(receipt);bad['signature']=base64.b64encode(bytes(64)).decode()
-  with self.assertRaisesRegex(c.Rejected,'SIGNATURE'):c.approval(bad,keys['pub'],self.policy,'a'*40,'b'*64,clock)
-  with self.assertRaises(c.Rejected):c.approval({},keys['pub'],self.policy,'a'*40,'b'*64,clock)
+  # Retained original method name; signed-owner acceptance is now retired.
+  # Its replacement is exact automated scope plus a fixed, non-renewing window.
+  clock=c.utc('2026-10-19T12:00:00Z')
+  self.assertEqual(c.validate_policy(self.policy,clock),c.AUTOMATED_SCOPE)
+  for field,value in [('mode','ACCEPT_ALL_SECURITY'),('independentHumanApproval',True),('externalSignatureRequired',True),('releaseAuthority',True),('databaseReplayAuthority',True),('integrationAuthority',True),('schema',True)]:
+   changed=copy.deepcopy(self.policy);changed['acceptance'][field]=value
+   with self.subTest(field=field),self.assertRaisesRegex(c.Rejected,'SCOPE_DRIFT'):c.validate_policy(changed,clock)
+  for key,value in [('notBefore','2026-10-17T00:00:00Z'),('notAfter','2026-10-22T00:00:00Z'),('state','ACTIVE'),('id','UNREVIEWED')]:
+   changed={**self.policy,key:value}
+   with self.subTest(key=key),self.assertRaises(c.Rejected):c.validate_policy(changed,clock)
+  for instant in ('2026-10-17T23:59:59Z','2026-10-21T00:00:00Z','2026-10-22T00:00:00Z'):
+   with self.assertRaisesRegex(c.Rejected,'PROPOSAL_EXPIRED_OR_CHANGED'):c.validate_policy(self.policy,c.utc(instant))
 
  def test_oversize_text_is_scanned_and_bounded_not_excluded(self):
   for path in ('docs/e2e/generated/human-e2e-manifest.md','test-results/fixture.json','scripts/phase9/security_acceptance/source-manifest.json','apps/mobile/src/large.ts'):
@@ -393,13 +390,13 @@ class ContractTests(unittest.TestCase):
    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_EVIDENCE'):c.verify_artifact_inventory(root,expected)
  def test_owner_receipt_loader_rejects_duplicate_nonfinite_oversize_and_links(self):
   with tempfile.TemporaryDirectory(prefix='g97-owner-json-unit-') as d:
-   root=pathlib.Path(d);p=root/'approval.json';p.write_text('{}');self.assertEqual(c.load_approval(p),{})
+   root=pathlib.Path(d);p=root/'approval.json';p.write_text('{}');self.assertEqual(c.parse_json(c.safe(p.parent,p.name,limit=65536)),{})
    for body,code in [(b'{"payload":{},"payload":{},"signature":""}','DUPLICATE_JSON_FIELD'),(b'{"payload":NaN}','NONFINITE_JSON'),(b' '*65537,'NONREGULAR_INPUT')]:
     p.write_bytes(body)
     with self.subTest(code=code):
-     with self.assertRaisesRegex(c.Rejected,code):c.load_approval(p)
+     with self.assertRaisesRegex(c.Rejected,code):c.parse_json(c.safe(p.parent,p.name,limit=65536))
    target=root/'actual.json';target.write_text('{}');p.unlink();p.symlink_to(target)
-   with self.assertRaisesRegex(c.Rejected,'LINKED_INPUT'):c.load_approval(p)
+   with self.assertRaisesRegex(c.Rejected,'LINKED_INPUT'):c.parse_json(c.safe(p.parent,p.name,limit=65536))
 
  def test_SAST_engine_substitution_or_skipped_rules_rejects(self):
   for field,value in [('engine_requested','PRO_INTERFILE'),('skipped_rules',[{'rule_id':'omitted-required-rule'}])]:
@@ -528,5 +525,16 @@ class ContractTests(unittest.TestCase):
    self.assertNotEqual(negative.returncode,0);self.assertIn(b'UNREVIEWED_AMBIENT_MODULE_EXECUTED',negative.stderr)
    positive=subprocess.run([sys.executable,'-I','-S','-B','-c',c.SCANNER_BIND_GUARD+"\nprint(sys.flags.isolated,sys.flags.no_site)"],cwd=root,env=environment,capture_output=True)
    self.assertEqual(positive.returncode,0);self.assertEqual(positive.stdout.strip(),b'1 1');self.assertNotIn(b'UNREVIEWED_AMBIENT_MODULE_EXECUTED',positive.stderr)
+
+ def test_standalone_accept_and_external_approval_options_are_retired(self):
+  for path,args in [('contract.py',['accept']),('workflow_admission.py',['accept','--approval','forged.json'])]:
+   process=subprocess.run([sys.executable,'-B',str(c.HERE/path),*args],capture_output=True)
+   self.assertNotEqual(process.returncode,0)
+   self.assertNotIn(b'SOURCE_ONLY_ACCEPTED',process.stdout)
+ def test_automated_policy_refuses_absent_extra_or_false_typed_scope(self):
+  clock=c.utc('2026-10-19T12:00:00Z')
+  for value in (None,{}, {**c.AUTOMATED_SCOPE,'unreviewed':True},{**c.AUTOMATED_SCOPE,'externalSignatureRequired':0}):
+   changed={**self.policy,'acceptance':value}
+   with self.assertRaisesRegex(c.Rejected,'SCOPE_DRIFT'):c.validate_policy(changed,clock)
 
 if __name__=='__main__':unittest.main(verbosity=2)

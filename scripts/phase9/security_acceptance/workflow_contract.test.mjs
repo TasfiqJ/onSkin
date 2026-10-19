@@ -6,14 +6,14 @@ import { validateWorkflowAdmission } from './workflow_contract.mjs';
 const text = readFileSync(new URL('../../../.github/workflows/security.yml', import.meta.url), 'utf8');
 const original = YAML.parse(text);
 const reject = (change) => { const workflow = structuredClone(original); change(workflow); assert.equal(validateWorkflowAdmission(YAML.stringify(workflow)), false); };
-test('actual Security includes mandatory exact-source owner admission', () => assert.equal(validateWorkflowAdmission(text), true));
-test('cannot omit an original job or its independent admission dependency', () => {
+test('actual Security includes mandatory automated single-owner source-only admission', () => assert.equal(validateWorkflowAdmission(text), true));
+test('cannot omit an original job or its mandatory automated admission dependency', () => {
   reject((w) => delete w.jobs['secret-scan']);
-  reject((w) => w.jobs['independent-source-security-acceptance'].needs.pop());
+  reject((w) => w.jobs['automated-source-security-acceptance'].needs.pop());
 });
 test('cannot skip decision after a scanner or ignore a failed acceptance', () => {
-  reject((w) => w.jobs['prepare-source-security-decision'].if = 'success()');
-  reject((w) => w.jobs['independent-source-security-acceptance']['continue-on-error'] = true);
+  reject((w) => w.jobs['automated-source-security-acceptance'].if = 'success()');
+  reject((w) => w.jobs['automated-source-security-acceptance']['continue-on-error'] = true);
 });
 test('unrelated checks remain hard gates', () => {
   reject((w) => w.jobs['code-gates'].steps = w.jobs['code-gates'].steps.filter((s) => s.name !== 'Enforce code-gate results'));
@@ -23,20 +23,19 @@ test('expired original policy execution is retained', () => {
   reject((w) => w.jobs['code-gates'].steps = w.jobs['code-gates'].steps.filter((s) => s.id !== 'npm_exception_gate'));
   reject((w) => w.jobs['static-analysis'].steps = w.jobs['static-analysis'].steps.filter((s) => s.id !== 'osv_exception_gate'));
 });
-test('owner trust cannot move to an unprotected or permissive job', () => {
-  reject((w) => delete w.jobs['independent-source-security-acceptance'].environment);
-  reject((w) => w.jobs['independent-source-security-acceptance'].environment.deployment = true);
-  reject((w) => w.jobs['independent-source-security-acceptance'].steps.at(-1)['continue-on-error'] = true);
-  reject((w) => delete w.jobs['independent-source-security-acceptance'].steps.at(-1).env.G97_TRUSTED_OWNER_PUBLIC_KEY);
+test('automated admission cannot regain an external approval dependency or ignore failure', () => {
+  reject((w) => w.jobs['automated-source-security-acceptance'].environment = { name: 'external-review' });
+  reject((w) => w.jobs['automated-source-security-acceptance'].steps.find(s => s.run?.includes('workflow_admission.py accept'))['continue-on-error'] = true);
+  reject((w) => w.jobs['automated-source-security-acceptance'].steps.find(s => s.run?.includes('workflow_admission.py accept')).run += '\nrequire --approval forged.json');
 });
 test('all three raw original artifacts are mandatory', () => {
-  reject((w) => w.jobs['prepare-source-security-decision'].steps = w.jobs['prepare-source-security-decision'].steps.filter((s) => s.with?.path !== '${{ runner.temp }}/g97-workflow/secret/'));
+  reject((w) => w.jobs['automated-source-security-acceptance'].steps = w.jobs['automated-source-security-acceptance'].steps.filter((s) => s.with?.path !== '${{ runner.temp }}/g97-workflow/secret/'));
 });
 test('full reviewed collector cannot be replaced by a version-only scanner', () => {
   reject((w) => w.jobs['static-analysis'].steps.find((s) => s.id === 'semgrep').run = 'semgrep --version');
   reject((w) => { const step = w.jobs['static-analysis'].steps.find((s) => s.id === 'semgrep'); step.run = step.run.replace('python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v\n', ''); });
 });
-test('manual technical workflow supplies no owner acceptance route', () => {
+test('manual technical workflow supplies no automated acceptance route', () => {
   const manual = YAML.parse(readFileSync(new URL('../../../.github/workflows/g97-security-acceptance.yml', import.meta.url), 'utf8'));
   assert.deepEqual(Object.keys(manual.on), ['workflow_dispatch']);
   assert.deepEqual(Object.keys(manual.jobs), ['collect']);
@@ -116,4 +115,22 @@ test('legacy fetch errors, newer releases, crashes, missing errors or invented s
 test('Gitleaks actual executable identity remains a mandatory original-job artifact', () => {
   reject(w => w.jobs['secret-scan'].steps = w.jobs['secret-scan'].steps.filter(s => s.name !== 'Bind actual Gitleaks executable'));
   reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Bind actual Gitleaks executable')['continue-on-error'] = true);
+});
+
+test('automated admission cannot omit exact commit/run or actual original outcomes', () => {
+  for (const argument of ['--commit', '--run-id', '--original-jobs', '--workflow-evidence', '--evidence']) {
+    reject(w => { const step = w.jobs['automated-source-security-acceptance'].steps.find(s => s.run?.includes('workflow_admission.py accept')); step.run = step.run.replaceAll(argument, '--omitted'); });
+  }
+  reject(w => delete w.jobs['automated-source-security-acceptance'].steps.find(s => s.run?.includes('workflow_admission.py accept')).env.G97_ORIGINAL_JOBS);
+});
+test('automated admission cannot be replaced by a separate green collection job', () => {
+  reject(w => delete w.jobs['automated-source-security-acceptance']);
+  reject(w => w.jobs['automated-source-security-acceptance'].steps.find(s => s.run?.includes('workflow_admission.py accept')).run = 'true');
+});
+test('single-owner route contains no protected reviewer, signer, key or receipt dependency', () => {
+  const job = original.jobs['automated-source-security-acceptance'];
+  assert.equal(job.environment, undefined);
+  assert.equal(JSON.stringify(job).includes('G97_OWNER_RECEIPT'), false);
+  assert.equal(JSON.stringify(job).includes('G97_TRUSTED_OWNER_PUBLIC_KEY'), false);
+  assert.equal(JSON.stringify(job).includes('--approval'), false);
 });

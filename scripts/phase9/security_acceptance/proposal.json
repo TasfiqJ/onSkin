@@ -1,12 +1,21 @@
 {
+  "acceptance": {
+    "databaseReplayAuthority": false,
+    "externalSignatureRequired": false,
+    "independentHumanApproval": false,
+    "integrationAuthority": false,
+    "mode": "SINGLE_OWNER_AUTOMATED_SOURCE_ONLY",
+    "releaseAuthority": false,
+    "schema": 1
+  },
   "acceptedInputArchive": "f7062fdee2af693826bba60d4446829a38946643972483ee0d5fa3d56c5a364c",
   "acceptedInputTree": "6fa403e3668f99b7c076f19062e5bee18c935fb6",
   "currentHistoryRecordCount": 1107,
   "expiredPolicy": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
   "historyRecordCount": 3265,
-  "id": "G97-SOURCE-MITIGATION-R1",
+  "id": "G97-SINGLE-OWNER-SOURCE-MITIGATION-R1",
   "minimumTests": {
-    "backport-and-installer": 41,
+    "backport-and-installer": 44,
     "expired-exceptions": 7,
     "native-source-and-archive": 349
   },
@@ -308,7 +317,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "6e57cf9c9b8df8674afe950a6bebe749ad47582c4d1bbca5f05ba39c49286d4e",
+  "sourceManifest": "58f6de07f6cadfa7a06ffe239a56dcfdf6d06f0296af7b896f7aa1fdb153ef8b",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

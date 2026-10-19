@@ -1,12 +1,13 @@
 # G97 exact-source security acceptance proposal
 
-INACTIVE. No owner key, signature, acceptance, integration, replay or release
-authorization is included. The accepted three-file forge correction is unchanged.
+INACTIVE pending exact revised-source BRAIN review. This is single-owner,
+automated source-only acceptance, not independent human approval, integration,
+DB replay or production/release clearance. No identities, keys or signatures are created. The accepted three-file forge correction is unchanged.
 
 This separate proposal is valid only from 2026-10-18T00:00:00Z until
 2026-10-21T00:00:00Z. It does not amend the expired October 17 exception policy.
 There is no automatic renewal. Both old exception validators retain their expired-policy refusals. The existing
-Security workflow proposes an exact-evidence independent approval route below.
+Security workflow proposes an exact-evidence automated source-only route below.
 Quality, DB06, native, hosted and release gates retain their behavior.
 
 `contract.py source` checks the complete reviewed source manifest. `collect.py`
@@ -20,7 +21,7 @@ Semgrep coverage is now an exact source-bound partition in scan-targets.json.gz,
 never a minimum count. Every required target name, auxiliary generic input and
 explicitly proposed exclusion resolves to its exact SHA-256 in the complete
 source-manifest; the two recursive binding documents are resolved by their
-policy/owner-bound byte identities. The collector validates actual bytes and
+reviewed policy byte identities. The collector validates actual bytes and
 classification before and after scanning. Omitted, substituted, invented or
 duplicate normalized targets fail. Added or changed source ignore files fail,
 including ignored .semgrepignore files hidden from Git's untracked listing.
@@ -38,7 +39,7 @@ for BRAIN's unchanged regression precondition; acceptance never reads it.
 
 The test-fixtures target names were deliberately updated as SYNTHETIC test data
 for the exact new inventory. Its retained warning/timeout entries remain. It is
-not raw evidence and cannot replace a fresh complete scan or signed receipt.
+not raw evidence and cannot replace a fresh complete scan and original-workflow artifacts.
 F2 deletion and severity modification are separate tests with their specific
 UNVERIFIED_AUDIT_REFERENCE and SCANNER_RECORD_DRIFT rejection expectations.
 
@@ -109,49 +110,40 @@ is compared to the original archive plus the five exact accepted payloads. The
 two reviewable patches have SHA-256 identities and an independent application
 test. Published package names, versions and integrity fields remain unchanged.
 
-`contract.py accept` additionally requires a committed clean exact source tree,
-the same-root installed graph, complete fresh evidence and a valid Ed25519 owner
-signature. The trusted public key is supplied separately through the protected
-environment `G97_TRUSTED_OWNER_PUBLIC_KEY`; a key inside the repository, evidence
-or receipt is never trusted. The owner keeps the private key outside this system.
-The receipt's payload has exactly: schema=1, proposalSha256 (canonical JSON),
-sourceTree, evidenceSha256 (canonical receipt JSON), decision
-`ACCEPT_EXACT_G97_SOURCE_MITIGATIONS_ONLY`, notBefore, notAfter, reviewer and
-reviewReference. Its separate `signature` is base64 Ed25519 over the canonical
-payload. A signed duration cannot exceed 72 hours or the proposal's absolute
-expiry. Tests use ephemeral in-memory TEST keys and grant no actual approval.
+`contract.py source` and `check` are technical checks only. Standalone `accept`
+and external `--approval` inputs are removed; no key or signature is an acceptance
+input. The fixed acceptance scope in proposal.json explicitly says
+`SINGLE_OWNER_AUTOMATED_SOURCE_ONLY`, independentHumanApproval=false,
+externalSignatureRequired=false, and no integration, DB replay or release authority.
+The validator rejects changed scope, omitted/extra scope fields and changed dates.
+The original window is unchanged and is never renewed automatically.
 
-The proposed admission route is inside the existing Security workflow. Its three
-original jobs preserve all raw scanners and execute the unchanged expired policy.
-Phase 9, SBOM, verified TruffleHog and complete SAST checks remain hard gates.
-Only the exact reviewed npm/OSV/history dispositions proceed to the mandatory
-same-workflow technical-decision job. Any other finding, missing artifact,
-unrelated failure, skipped original job or malformed result rejects.
+The original Security workflow retains its three original jobs, all raw scanners,
+the actual expired-policy commands and all19 required original artifact files.
+Phase9, audited SBOM structure, verified TruffleHog and complete SAST/test/coverage
+checks remain hard gates. One mandatory `automated-source-security-acceptance`
+job runs even after an original job fails and rejects any failed, skipped,
+cancelled or missing original job. No environment reviewer, independently held
+signing key or externally signed receipt is required.
 
-`workflow_admission.py` binds the original three jobs and their exact seven raw
-artifact files to the full technical receipt, actual commit and run identifier.
-The owner's signature covers a combined digest of that complete receipt and all
-original raw evidence. The protected independent acceptance job rechecks the
-installation, source and evidence before checking the separately supplied trusted
-public key and receipt. Absent, forged, changed or expired approval keeps Security
-red. The manual workflow only collects technical evidence; it has no acceptance
-job and cannot replace Security. No workflow is dispatched by this candidate.
+`workflow_admission.py accept` revalidates the complete fresh technical receipt,
+installed graph/backports, clean reviewed source, all19 original files, actual
+process exits, exact findings and same-run/source outcomes. Missing/extra/linked
+artifacts, forged or altered reports, new vulnerabilities, changed history,
+unexpected errors, coverage gaps, stale evidence or expiry fail closed. Its
+published `g97-security-decision` descriptor binds the exact proposal, source,
+original artifacts and technical receipt with SHA-256 digests. Raw findings and
+expired legacy refusals stay visible; acceptance is only the reviewed mitigations.
 
-Before execution, the owner must provision independent required reviewers with
-self-review prevented on `g97-source-security-acceptance`, and a genuine trusted
-Ed25519 public key in its protected `G97_TRUSTED_OWNER_PUBLIC_KEY` secret. After
-reviewing that run's technical descriptor and raw artifacts, the independent
-reviewer signs its exact combined digest and supplies `G97_OWNER_RECEIPT` before
-the protected job begins. These must be environment secrets: GitHub reads them
-when that job starts, after its environment protection rules pass. The acceptance
-job sets `environment.deployment: false`; it uses protected configuration without
-creating a deployment object. This public repository supports environment
-reviewers without a new paid resource. See the official
-[secret timing reference](https://docs.github.com/en/actions/reference/security/secrets)
-and [non-deployment environment syntax](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/deploy-to-environment).
-The private key remains outside this system. There is
-no key generation, automatic approval, fallback, window extension or authorization
-to integrate in the source. Future exact-commit CI remains a reserved step.
+A local invocation is labeled `LOCAL_REHEARSAL_NO_GITHUB_CI_AUTHORITY`; it cannot
+claim an actual GitHub run. Within Actions the adapter additionally checks the
+original Security workflow/repository/job and exact actual commit/run context.
+Repository-owned reviewed workflow source and same-run artifact downloads are the
+automation trust boundary. An owner with write access can propose code changes;
+this process does not claim an independent human security assessment. Any new
+source/policy/finding requires fresh exact review; the correction remains unpushed
+until BRAIN reviews its precise source. The manual technical collection workflow
+cannot replace original Security or grant acceptance.
 
 The reproducible tool profile is Linux x86_64, Python 3.12 and Ubuntu 24.04 glibc.
 `bootstrap_tools.py` installs all 66 hash-locked official wheels, verifies their
@@ -197,7 +189,7 @@ No genuine live credential has been established; no provider rotation is claimed
 
 Retained attempts include parser diagnostics and a taint fixpoint timeout. They
 remain failed or incomplete attempts. Fresh final evidence must independently show
-zero parsing errors/timeouts and exact required coverage; neither signature nor
+zero parsing errors/timeouts and exact required coverage; neither automation nor
 retained success can waive this. The native Linux installation also exercises the
 four actual file-symlink cases and valid positive controls. Windows-specific case
 collision refusal is separately retained with its measured host identity.
