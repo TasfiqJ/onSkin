@@ -70,7 +70,7 @@ export default function StreakScreen() {
           <View className="flex-row items-center justify-between pt-1">
             <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
             <Text variant="label" tone="muted">
-              STREAK & ADHERENCE
+              STREAK &amp; ADHERENCE
             </Text>
             <View style={{ width: 44 }} />
           </View>
@@ -106,7 +106,7 @@ export default function StreakScreen() {
         <View className="flex-row items-center justify-between pt-1">
           <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
           <Text variant="label" tone="muted">
-            STREAK & ADHERENCE
+            STREAK &amp; ADHERENCE
           </Text>
           <View style={{ width: 44 }} />
         </View>

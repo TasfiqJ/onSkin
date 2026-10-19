@@ -1139,14 +1139,27 @@ test('CLI refuses existing output paths that are distinct hardlinks to one inode
   );
 });
 
-test('CLI refuses output paths that collide by case on case-insensitive filesystems', (t) => {
-  if (process.platform !== 'win32') {
-    t.skip('This case-collision contract is specific to case-insensitive Windows paths.');
-    return;
-  }
+test('CLI follows host case rules when output paths differ only by case', (t) => {
   const root = createAuditFixture(t);
   const upper = 'docs/phase-9/generated/Privacy-Audit.json';
   const lower = 'docs/phase-9/generated/privacy-audit.json';
+  if (process.platform !== 'win32') {
+    assert.equal(
+      runIosPrivacySourceAudit(
+        ['--root', root, '--json', upper, '--markdown', lower, '--write', '--strict'],
+        captureIo().io,
+      ),
+      0,
+    );
+    const report = auditIosPrivacySource({ root });
+    assert.equal(readFileSync(outputPath(root, upper), 'utf8'), canonicalAuditJson(report));
+    assert.equal(
+      readFileSync(outputPath(root, lower), 'utf8'),
+      renderIosPrivacySourceAuditMarkdown(report),
+    );
+    assert.notEqual(statSync(outputPath(root, upper)).ino, statSync(outputPath(root, lower)).ino);
+    return;
+  }
   assert.throws(
     () =>
       runIosPrivacySourceAudit(

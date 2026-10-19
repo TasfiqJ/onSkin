@@ -367,7 +367,7 @@ export function PausedHealthDataShell({
 
         <Card className="mt-4">
           <Text variant="label" tone="muted">
-            ACCOUNT & BILLING
+            ACCOUNT &amp; BILLING
           </Text>
           <Button
             className="mt-3"
@@ -440,7 +440,7 @@ export function PausedHealthDataShell({
 
         <Card className="mt-4">
           <Text variant="label" tone="muted">
-            HELP & POLICIES
+            HELP &amp; POLICIES
           </Text>
           <Button
             className="mt-3"

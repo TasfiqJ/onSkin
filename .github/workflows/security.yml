@@ -86,17 +86,22 @@ jobs:
 
       - name: Write code-gate evidence manifest
         if: always()
+        env:
+          G97_PHASE9_VERIFY_OUTCOME: ${{ steps.phase9_verify.outcome }}
+          G97_DEPENDENCY_SBOM_OUTCOME: ${{ steps.dependency_sbom.outcome }}
+          G97_NPM_AUDIT_HIGH_OUTCOME: ${{ steps.npm_audit_high.outcome }}
+          G97_NPM_EXCEPTION_GATE_OUTCOME: ${{ steps.npm_exception_gate.outcome }}
         run: |
           mkdir -p docs/phase-9/generated/ci-scanner-evidence
           cat > docs/phase-9/generated/ci-scanner-evidence/code-gates-outcomes.json <<JSON
           {
             "job": "code-gates",
-            "sha": "${{ github.sha }}",
-            "run_id": "${{ github.run_id }}",
-            "phase9_verify": "${{ steps.phase9_verify.outcome }}",
-            "dependency_sbom": "${{ steps.dependency_sbom.outcome }}",
-            "npm_audit_high": "${{ steps.npm_audit_high.outcome }}",
-            "npm_exception_gate": "${{ steps.npm_exception_gate.outcome }}"
+            "sha": "${GITHUB_SHA}",
+            "run_id": "${GITHUB_RUN_ID}",
+            "phase9_verify": "${G97_PHASE9_VERIFY_OUTCOME}",
+            "dependency_sbom": "${G97_DEPENDENCY_SBOM_OUTCOME}",
+            "npm_audit_high": "${G97_NPM_AUDIT_HIGH_OUTCOME}",
+            "npm_exception_gate": "${G97_NPM_EXCEPTION_GATE_OUTCOME}"
           }
           JSON
 
@@ -112,10 +117,14 @@ jobs:
 
       - name: Enforce code-gate results
         if: always()
+        env:
+          G97_PHASE9_VERIFY_OUTCOME: ${{ steps.phase9_verify.outcome }}
+          G97_DEPENDENCY_SBOM_OUTCOME: ${{ steps.dependency_sbom.outcome }}
+          G97_NPM_EXCEPTION_GATE_OUTCOME: ${{ steps.npm_exception_gate.outcome }}
         run: |
-          test "${{ steps.phase9_verify.outcome }}" = "success"
-          test "${{ steps.dependency_sbom.outcome }}" = "success"
-          test "${{ steps.npm_exception_gate.outcome }}" = "success"
+          test "${G97_PHASE9_VERIFY_OUTCOME}" = "success"
+          test "${G97_DEPENDENCY_SBOM_OUTCOME}" = "success"
+          test "${G97_NPM_EXCEPTION_GATE_OUTCOME}" = "success"
 
   secret-scan:
     name: Secret scanning
@@ -151,15 +160,18 @@ jobs:
 
       - name: Write secret scanner evidence manifest
         if: always()
+        env:
+          G97_GITLEAKS_OUTCOME: ${{ steps.gitleaks.outcome }}
+          G97_TRUFFLEHOG_OUTCOME: ${{ steps.trufflehog.outcome }}
         run: |
           mkdir -p docs/phase-9/generated/ci-scanner-evidence
           cat > docs/phase-9/generated/ci-scanner-evidence/secret-scan-outcomes.json <<JSON
           {
             "job": "secret-scan",
-            "sha": "${{ github.sha }}",
-            "run_id": "${{ github.run_id }}",
-            "gitleaks": "${{ steps.gitleaks.outcome }}",
-            "trufflehog": "${{ steps.trufflehog.outcome }}"
+            "sha": "${GITHUB_SHA}",
+            "run_id": "${GITHUB_RUN_ID}",
+            "gitleaks": "${G97_GITLEAKS_OUTCOME}",
+            "trufflehog": "${G97_TRUFFLEHOG_OUTCOME}"
           }
           JSON
 
@@ -175,9 +187,12 @@ jobs:
 
       - name: Enforce secret scanner results
         if: always()
+        env:
+          G97_GITLEAKS_OUTCOME: ${{ steps.gitleaks.outcome }}
+          G97_TRUFFLEHOG_OUTCOME: ${{ steps.trufflehog.outcome }}
         run: |
-          test "${{ steps.gitleaks.outcome }}" = "success"
-          test "${{ steps.trufflehog.outcome }}" = "success"
+          test "${G97_GITLEAKS_OUTCOME}" = "success"
+          test "${G97_TRUFFLEHOG_OUTCOME}" = "success"
 
   static-analysis:
     name: Static analysis and OSV
@@ -237,16 +252,20 @@ jobs:
 
       - name: Write static scanner evidence manifest
         if: always()
+        env:
+          G97_SEMGREP_OUTCOME: ${{ steps.semgrep.outcome }}
+          G97_OSV_OUTCOME: ${{ steps.osv.outcome }}
+          G97_OSV_EXCEPTION_GATE_OUTCOME: ${{ steps.osv_exception_gate.outcome }}
         run: |
           mkdir -p docs/phase-9/generated/ci-scanner-evidence
           cat > docs/phase-9/generated/ci-scanner-evidence/static-analysis-outcomes.json <<JSON
           {
             "job": "static-analysis",
-            "sha": "${{ github.sha }}",
-            "run_id": "${{ github.run_id }}",
-            "semgrep": "${{ steps.semgrep.outcome }}",
-            "osv": "${{ steps.osv.outcome }}",
-            "osv_exception_gate": "${{ steps.osv_exception_gate.outcome }}"
+            "sha": "${GITHUB_SHA}",
+            "run_id": "${GITHUB_RUN_ID}",
+            "semgrep": "${G97_SEMGREP_OUTCOME}",
+            "osv": "${G97_OSV_OUTCOME}",
+            "osv_exception_gate": "${G97_OSV_EXCEPTION_GATE_OUTCOME}"
           }
           JSON
 
@@ -262,9 +281,12 @@ jobs:
 
       - name: Enforce static scanner results
         if: always()
+        env:
+          G97_SEMGREP_OUTCOME: ${{ steps.semgrep.outcome }}
+          G97_OSV_EXCEPTION_GATE_OUTCOME: ${{ steps.osv_exception_gate.outcome }}
         run: |
-          test "${{ steps.semgrep.outcome }}" = "success"
-          test "${{ steps.osv_exception_gate.outcome }}" = "success"
+          test "${G97_SEMGREP_OUTCOME}" = "success"
+          test "${G97_OSV_EXCEPTION_GATE_OUTCOME}" = "success"
 
   live-supabase-adversarial:
     name: Live Supabase adversarial evidence

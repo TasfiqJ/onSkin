@@ -25,11 +25,11 @@
   },
   {
     "path": ".github/workflows/quality.yml",
-    "sha256": "908e930f3c9366fdc642659f627f81feec54cd47e2d77b0108296e49eed5d285"
+    "sha256": "14f2c0efb8ec7acf675b190b4a635155d7f797a06ea72a4b539fe09c656741ed"
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "1d9e4a0d63451f0bd903b61eb4d8519b8271fe5929a82e0b17fd6fd1641d33d3"
+    "sha256": "c545df115b7346200456fc4e50808ef14a4a0fb15ba30d0b1e6b1454ba988534"
   },
   {
     "path": ".gitignore",
@@ -665,7 +665,7 @@
   },
   {
     "path": "apps/mobile/src/app/routine/streak.tsx",
-    "sha256": "6837fe5a17f792507f1a7b7181886a50e06d75271a5d70b9ffd3631923a5eedd"
+    "sha256": "8ab4b757b117819187d3eb6b23e180660cfd07e56af1c89bb5e84e177c12c589"
   },
   {
     "path": "apps/mobile/src/app/routine/tolerance.tsx",
@@ -1365,7 +1365,7 @@
   },
   {
     "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
-    "sha256": "9caaf70078a24d3aacec87691bbe56a73314726d3c2f89edad33f340079478a9"
+    "sha256": "ab59a415d2576046d0d650a0620d5fc81aace783fbb1e99b2f01758194f7c729"
   },
   {
     "path": "apps/mobile/src/features/healthConsent/activationInterlock.test.ts",
@@ -2565,7 +2565,7 @@
   },
   {
     "path": "apps/mobile/src/features/routine/reorder.g2.test.ts",
-    "sha256": "f473e2d95d190cd6329c75a12dc038f67c5cb38c26947d1a37cdfc761993431f"
+    "sha256": "70748bb44f766d18579ff1cc4269756eceaddaeefb27ff87347457b962db2e52"
   },
   {
     "path": "apps/mobile/src/features/routine/reviewGate.test.ts",
@@ -8877,7 +8877,7 @@
   },
   {
     "path": "scripts/phase9/ios-privacy-source-audit.test.mjs",
-    "sha256": "b6d70eb9bcea339b6664c5e655cd7780a72a35c3643f5f931a409ffbbcde3969"
+    "sha256": "30eb647c43658a48be16e3be4fd69a620ca56a688112af899c7f4650e57b6d23"
   },
   {
     "path": "scripts/phase9/ios-release-candidate-cross-binding.mjs",

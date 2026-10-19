@@ -37,6 +37,8 @@ jobs:
           persist-credentials: false
 
       - name: Execute all isolated PostgreSQL rehearsals
+        env:
+          G97_MATRIX_POSTGRES: ${{ matrix.postgres }}
         run: |
           set -euo pipefail
           current_container=''
@@ -50,14 +52,14 @@ jobs:
             if [ -z "$database" ]; then
               continue
             fi
-            current_container="layerwell-${database}-${{ matrix.postgres }}"
-            echo "Running $script in isolated PostgreSQL ${{ matrix.postgres }} cluster"
+            current_container="layerwell-${database}-${G97_MATRIX_POSTGRES}"
+            echo "Running $script in isolated PostgreSQL ${G97_MATRIX_POSTGRES} cluster"
             docker run --detach \
               --name "$current_container" \
               --env POSTGRES_PASSWORD=layerwell_rehearsal \
               --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" \
               --workdir /workspace/scripts/phase9 \
-              "postgres:${{ matrix.postgres }}" >/dev/null
+              "postgres:${G97_MATRIX_POSTGRES}" >/dev/null
             ready='false'
             for attempt in $(seq 1 60); do
               if docker exec "$current_container" pg_isready -U postgres >/dev/null 2>&1; then
@@ -323,25 +325,28 @@ jobs:
       - name: Export ${{ matrix.platform }} with source maps
         working-directory: apps/mobile
         env:
+          G97_MATRIX_PLATFORM: ${{ matrix.platform }}
           NODE_ENV: production
         run: >-
           npx expo export
-          --platform ${{ matrix.platform }}
-          --output-dir ../../quality-artifacts/exports/${{ matrix.platform }}
+          --platform ${G97_MATRIX_PLATFORM}
+          --output-dir ../../quality-artifacts/exports/${G97_MATRIX_PLATFORM}
           --source-maps external
           --dump-assetmap
           --clear
 
       - name: Analyze ${{ matrix.platform }} export
+        env:
+          G97_MATRIX_PLATFORM: ${{ matrix.platform }}
         run: |
           mkdir -p quality-artifacts/stats
           node scripts/optimization/export-stats.mjs \
-            --input "quality-artifacts/exports/${{ matrix.platform }}" \
-            --platform "${{ matrix.platform }}" \
+            --input "quality-artifacts/exports/${G97_MATRIX_PLATFORM}" \
+            --platform "${G97_MATRIX_PLATFORM}" \
             --generated-at "$(git show -s --format=%cI "$GITHUB_SHA")" \
             --source-sha "$GITHUB_SHA" \
-            --json "quality-artifacts/stats/${{ matrix.platform }}.json" \
-            --markdown "quality-artifacts/stats/${{ matrix.platform }}.md"
+            --json "quality-artifacts/stats/${G97_MATRIX_PLATFORM}.json" \
+            --markdown "quality-artifacts/stats/${G97_MATRIX_PLATFORM}.md"
 
       - name: Upload content-free export statistics
         # actions/upload-artifact v4

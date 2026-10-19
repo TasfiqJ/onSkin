@@ -9,6 +9,8 @@ import type { GeneratedPlan, PlanStep } from './generate';
 import { routineOrderQueryKeyForLease, type RoutineOrderSaveTransaction } from './orderStore';
 import type { PlanHookResult } from './usePlan';
 
+type OriginalOrderStoreModule = typeof import('./orderStore');
+
 // The repo already supplies the matching renderer. Keep this small interface
 // local rather than adding a dependency solely for test-renderer declarations.
 type TestNode = {
@@ -48,7 +50,7 @@ vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
   runCurrentHealthDataOperation: vi.fn(),
 }));
 vi.mock('@/features/routine/orderStore', async (importOriginal) => ({
-  ...await importOriginal<typeof import('./orderStore')>(),
+  ...await importOriginal<OriginalOrderStoreModule>(),
   saveRoutineOrderOverrides: mocks.save,
 }));
 vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
