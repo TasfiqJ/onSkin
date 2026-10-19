@@ -9089,11 +9089,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
-    "sha256": "07e4a979b9f39258ce97bc92b716d146850bfb0a50cd588941cc07f47abc84d8"
+    "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655"
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "a77abf2f80b66db383bf44b5bf47b04410f250a49635f3a0c9a34fa2215f8dea"
+    "sha256": "fa21099a23500d1e998d18c3bdaf313c6bd4e549346101612738e6503d15b3e1"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
