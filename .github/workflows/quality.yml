@@ -129,6 +129,9 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Use reviewed npm
+        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+
       - name: Install from lockfile
         run: npm ci
 
@@ -183,12 +186,16 @@ jobs:
         with:
           deno-version: v2.7.5
 
+      - name: Use reviewed npm
+        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+
       - name: Install from lockfile
         run: npm ci
 
       - name: Verify installed iOS native sources
         run: |
           npm run postinstall:check
+          npm run phase9:tooling-security:test
           npm run phase5:expo-widgets-lifecycle:test
           npm run phase9:view-shot-privacy:test
           npm run phase9:ios-privacy-source-audit:test
@@ -220,7 +227,7 @@ jobs:
 
       - name: Run Expo Doctor
         working-directory: apps/mobile
-        run: npx expo-doctor
+        run: npx --yes expo-doctor@1.21.5
 
       - name: Check export statistics analyzer
         run: node scripts/optimization/export-stats-smoke.mjs
@@ -306,6 +313,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - name: Use reviewed npm
+        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
 
       - name: Install from lockfile
         run: npm ci

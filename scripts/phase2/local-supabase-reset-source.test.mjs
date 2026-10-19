@@ -4,6 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { runWithCanonicalPostgresPullRetry } from './local-supabase-reset-retry.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, '..', '..');
@@ -169,7 +170,7 @@ test('the fixed reviewed source identity rejects altered normal and override inp
   assert.equal(installedTypeScript.name, 'typescript');
   assert.equal(installedTypeScript.version, lock.packages['node_modules/typescript'].version);
   const cli = process.env.DB05_SUPABASE_CLI_BINARY ??
-    join(repoRoot, 'node_modules', '@supabase', `cli-${process.platform}-${process.arch}`, 'bin',
+    join(repoRoot, 'node_modules', '@supabase', `cli-${process.platform === 'win32' ? 'windows' : process.platform}-${process.arch}`, 'bin',
       process.platform === 'win32' ? 'supabase.exe' : 'supabase');
   const middle = migrationNames[Math.floor(migrationNames.length / 2)];
   const head = migrationNames.at(-1);
@@ -598,7 +599,8 @@ for (const origin of ['timeout', 'output-limit', 'aborted']) {
     } });
     try {
       await assert.rejects(fixture.finish(), (error) => error.errors?.some((nested) =>
-        nested.originReason === origin && nested.containment === 'posix-process-group-empty'));
+        nested.originReason === origin && nested.containment ===
+          (process.platform === 'win32' ? 'windows-process-tree-terminated' : 'posix-process-group-empty')));
       const pid = Number(await readFile(pidPath, 'utf8'));
       assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
       assert.equal(await fixture.exists(), true);
@@ -825,7 +827,11 @@ async function canonicalImageFixture(overrides = {}) {
   const calls = [];
   const logs = [];
   const context = { process: { arch: 'x64' }, historyDatabase: { major: 15 },
+    signalCleanup: { signal: undefined },
     CANONICAL_POSTGRES_IMAGE: image, canonicalPostgresIdentity: undefined,
+    runWithCanonicalPostgresPullRetry: options => runWithCanonicalPostgresPullRetry({
+      ...options, wait: async () => {},
+    }),
     runHistoryDocker: async args => {
       calls.push(Array.from(args));
       return args[0] === 'pull' ? { stdout: `Digest: ${digest}\n`, stderr: '' }

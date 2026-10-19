@@ -21,7 +21,10 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
 import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
-import { runWithSinglePreMigrationContainerRetry } from './local-supabase-reset-retry.mjs';
+import {
+  runWithCanonicalPostgresPullRetry,
+  runWithSinglePreMigrationContainerRetry,
+} from './local-supabase-reset-retry.mjs';
 import { assertLocalOnlyInvocation } from './local-supabase-target-guard.mjs';
 import {
   ContainedCommandError,
@@ -520,7 +523,9 @@ async function runHistoryDocker(args) {
     return await done;
   } catch (error) {
     if (error instanceof ContainedCommandError) {
-      throw new Error(`H01_SQL_PROBE_FAILED: ${error.originReason}. ${error.diagnostic ?? ''}`);
+      throw new Error(`H01_SQL_PROBE_FAILED: ${error.originReason}. ${error.diagnostic ?? ''}`, {
+        cause: error,
+      });
     }
     throw error;
   } finally {
@@ -536,9 +541,15 @@ async function prepareCanonicalPostgresImage() {
   if (historyDatabase?.major !== 15 || !architecture) {
     throw new Error('H01_CANONICAL_POSTGRES: unsupported pinned image platform or major.');
   }
-  const pulled = await runHistoryDocker([
-    'pull', '--platform', `linux/${architecture}`, CANONICAL_POSTGRES_IMAGE,
-  ]);
+  const pulled = await runWithCanonicalPostgresPullRetry({
+    signal: signalCleanup.signal,
+    operation: () => runHistoryDocker([
+      'pull', '--platform', `linux/${architecture}`, CANONICAL_POSTGRES_IMAGE,
+    ]),
+    onRetry: attempt => console.log(
+      `[db05-local] canonical PostgreSQL registry throttled; retry ${attempt}/3`,
+    ),
+  });
   const digests = [...`${pulled.stdout}\n${pulled.stderr}`.matchAll(
     /^Digest: (sha256:[a-f0-9]{64})\s*$/gmu,
   )];

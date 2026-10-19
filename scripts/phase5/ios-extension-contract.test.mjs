@@ -10,25 +10,25 @@ function fixture(variant = 'development') {
   const appBundleIdentifier = `com.layerwell.app.${variant}`;
   return {
     packageJson: {
-      dependencies: { '@expo/ui': '~57.0.20', 'expo-widgets': '57.0.9' },
+      dependencies: { '@expo/ui': '~57.0.25', 'expo-widgets': '57.0.26' },
     },
     packageLock: {
       lockfileVersion: 3,
       packages: {
         'apps/mobile': {
-          dependencies: { '@expo/ui': '~57.0.20', 'expo-widgets': '57.0.9' },
+          dependencies: { '@expo/ui': '~57.0.25', 'expo-widgets': '57.0.26' },
         },
         'node_modules/@expo/ui': {
-          version: '57.0.20',
-          resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.20.tgz',
+          version: '57.0.25',
+          resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.25.tgz',
           integrity:
-            'sha512-0ChmuyWBwEy3JHMR5wDkJGyvkTR5zH3BTwjJrv3f2ymtamhpU9hD5uH4GsLoWuB6MJFOPTuchq4zByZbtgPyNw==',
+            'sha512-/BbxsKh/LSIFDnWAHRHfJdCcnqHY7WNcWXjld0soKnYXDUbImjvsFK7y5dqq2XZTbOMyf44BpgAWKUR/B8huCA==',
         },
-        'apps/mobile/node_modules/expo-widgets': {
-          version: '57.0.9',
-          resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz',
+        'node_modules/expo-widgets': {
+          version: '57.0.26',
+          resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.26.tgz',
           integrity:
-            'sha512-B0WcPQeY+hillPO0IGsX/MEVUpan5fAWgrBJV7ZVFbK9gcyZ0PsDtPE+2MOOd3XeNlnfyGvaQunW52/8A7FbZw==',
+            'sha512-gXVYxNeYR08QvohfnyyqTVxGgsF07PtK0Pg/i4vdFs2akT6mf/m4/vc3Co1F5lMDzbQSTpZyCDMxVOImv3F46g==',
         },
       },
     },
@@ -109,7 +109,7 @@ for (const [name, mutate, pattern] of [
   [
     'rejects drift in the exact reviewed widget dependency lock',
     (value) => {
-      value.packageLock.packages['apps/mobile/node_modules/expo-widgets'].version = '57.0.8';
+      value.packageLock.packages['node_modules/expo-widgets'].version = '57.0.8';
     },
     /exact registry URL and integrity/,
   ],

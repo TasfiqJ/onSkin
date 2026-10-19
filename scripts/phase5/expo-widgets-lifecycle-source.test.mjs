@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import test from 'node:test';
 
 const root = resolve(import.meta.dirname, '../..');
-const payloadRoot = resolve(root, 'scripts/phase5/expo-widgets-57.0.9');
+const payloadRoot = resolve(root, 'scripts/phase5/expo-widgets-57.0.26');
 
 function source(name) {
   return readFileSync(resolve(payloadRoot, name), 'utf8');
@@ -17,6 +17,20 @@ function section(value, start, end) {
   assert.ok(endIndex > startIndex, `missing section end: ${end}`);
   return value.slice(startIndex, endIndex);
 }
+
+test('SDK57 bridge accepts the new API while native authority owns deadlines and deep links', () => {
+  const activity = source('LiveActivity.swift');
+  const factory = source('LiveActivityFactory.swift');
+  const module = source('WidgetsModule.swift');
+  const view = source('WidgetLiveActivity.swift');
+  assert.ok(activity.includes('func update(props: String, staleDate _: Date?)'));
+  assert.ok(factory.includes('func start(props: String, url: URL?, staleDate _: Date?)'));
+  assert.ok(module.includes('Function("getId")'));
+  assert.ok(module.includes('instance.id'));
+  assert.equal(view.includes('context.attributes.url'), false);
+  assert.equal(view.match(/getLiveActivityEnvironment\(for: env, in: context\)/g)?.length, 2);
+  assert.equal(view.match(/\.widgetURL\(getLiveActivityUrl\(forName: context\.state\.name\)\)/g)?.length, 2);
+});
 
 test('native authority is cross-process serialized, durable, and ABA-resistant', () => {
   const store = source('LayerwellWidgetLifecycleStore.swift');

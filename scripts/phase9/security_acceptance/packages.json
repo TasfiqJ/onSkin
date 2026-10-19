@@ -1,0 +1,54 @@
+[
+  {
+    "files": [
+      {
+        "original": "e572166565f15fa6ad9865ae49d678218e32aabfd1b3720f6d0d43d39800d310",
+        "patched": "fe5bcc00e2aa9afa6e85b3697f10c7cb9eacc38323d3d375247475406bc07176",
+        "path": "lib/parse.js",
+        "payload": "scripts/phase9/tooling-security-backports/braces-3.0.3/lib/parse.js"
+      },
+      {
+        "original": "dc98f22eee3d511785d92a00758d5f0d48efed5f5813bdecc2de430c529b5c9f",
+        "patched": "cb2c9b0f9d18879b392bdaca7e026f7b4c1047177806551ea707e9b3f7f16d4f",
+        "path": "lib/compile.js",
+        "payload": "scripts/phase9/tooling-security-backports/braces-3.0.3/lib/compile.js"
+      },
+      {
+        "original": "41ccc196ebfa7b7781a634e721eb744e4e7bcb54cba427a7e3d6806a1b9e58f7",
+        "patched": "5b35d437861daf886cae53ba00e1e936e3145f2dad065cdf6fb6f26ce192e10b",
+        "path": "lib/expand.js",
+        "payload": "scripts/phase9/tooling-security-backports/braces-3.0.3/lib/expand.js"
+      },
+      {
+        "original": "379f22d77bfa1478341ccd49c5e4267464aabcbba03558bab332aac23fc6f23a",
+        "patched": "a81e69c3c345c0582c3f65184199543a85cbad70974b03d2dea737e66367857e",
+        "path": "lib/stringify.js",
+        "payload": "scripts/phase9/tooling-security-backports/braces-3.0.3/lib/stringify.js"
+      }
+    ],
+    "integrity": "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==",
+    "name": "braces",
+    "patchFile": "braces.patch",
+    "patchFileSha256": "fb78493d2bbc82b9e05f323401b9e6680a8e48483e71cc59b598f71a096ae303",
+    "patchSha256": "353e4f83320a6d630f2e784ab62aa7ca2e29f182c07c03cf1b26e5e9f94cfe17",
+    "resolved": "https://registry.npmjs.org/braces/-/braces-3.0.3.tgz",
+    "version": "3.0.3"
+  },
+  {
+    "files": [
+      {
+        "original": "fd4740238145ec26470eb3f06a627c72039538ce1307dbdce40521f94dfd0a50",
+        "patched": "22ad28b10041635f3d4aa7ba6198b2c4d5cca0307bbcaac8cdc44885a536db5a",
+        "path": "lib/rsa.js",
+        "payload": "scripts/phase9/tooling-security-backports/node-forge-1.4.0/lib/rsa.js"
+      }
+    ],
+    "integrity": "sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ==",
+    "name": "node-forge",
+    "patchFile": "node-forge.patch",
+    "patchFileSha256": "146f37a6b30b9876b6f092d63d9c0b8a948a5add0632c65c8b77252c7a40b4bb",
+    "patchSha256": "20dc31d7d01e82d40feaac85a686740ea6df385e59c588b07d0ed110318bd5d0",
+    "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-1.4.0.tgz",
+    "version": "1.4.0"
+  }
+]

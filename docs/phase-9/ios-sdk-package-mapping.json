@@ -11,7 +11,7 @@
       "version": "16.1.2",
       "lockIntegrity": {
         "packageLockPath": "package-lock.json",
-        "packageLockSha256": "89c56be59f2f910f3ca16fb9cf720297d5452e7de6a6e1d5bd095b9e2387e2d5",
+        "packageLockSha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
         "entries": [
           {
             "path": "node_modules/@react-native-google-signin/google-signin",
@@ -73,7 +73,7 @@
       "version": "57.0.5",
       "lockIntegrity": {
         "packageLockPath": "package-lock.json",
-        "packageLockSha256": "89c56be59f2f910f3ca16fb9cf720297d5452e7de6a6e1d5bd095b9e2387e2d5",
+        "packageLockSha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
         "entries": [
           {
             "path": "node_modules/expo-image",
@@ -134,7 +134,7 @@
       "version": "0.86.3",
       "lockIntegrity": {
         "packageLockPath": "package-lock.json",
-        "packageLockSha256": "89c56be59f2f910f3ca16fb9cf720297d5452e7de6a6e1d5bd095b9e2387e2d5",
+        "packageLockSha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
         "entries": [
           {
             "path": "node_modules/hermes-compiler",

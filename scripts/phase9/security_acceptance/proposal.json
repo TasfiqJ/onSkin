@@ -1,0 +1,93 @@
+{
+  "acceptedInputArchive": "f7062fdee2af693826bba60d4446829a38946643972483ee0d5fa3d56c5a364c",
+  "acceptedInputTree": "6fa403e3668f99b7c076f19062e5bee18c935fb6",
+  "expiredPolicy": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+  "id": "G97-SOURCE-MITIGATION-R1",
+  "minimumTests": {
+    "backport-and-installer": 20,
+    "expired-exceptions": 7,
+    "native-source-and-archive": 300
+  },
+  "notAfter": "2026-10-21T00:00:00Z",
+  "notBefore": "2026-10-18T00:00:00Z",
+  "npmToolTree": "9ea42d318311e2d97b22a5617ba06b7c0dde294f66bd4945493eab8b5487eaa9",
+  "patchInstaller": "a106ce49808a604eab2d0f667b7559277139af2d3d0c44f9ee3cfe39a1e553e0",
+  "rules": {
+    "owasp-top-ten": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+    "react": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+    "secrets": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+    "typescript": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395"
+  },
+  "scanCoverageManifest": "6e8e2f251907190b1806e03e5c259d9f3731eba9303c8082665805056bd26e31",
+  "scannerCommands": {
+    "gitleaks": "gitleaks8.24.3 detect --config pinned-default --redact=100 --exit-code=2 --log-opts=--all --full-history",
+    "graph": "npm11.20.0 ls --all --json --long",
+    "npm-installed": "npm11.20.0 audit --audit-level=high --json (installed)",
+    "npm-lock": "npm11.20.0 audit --package-lock-only --audit-level=high --json",
+    "osv": "osv2.3.8 scan source --recursive --format=json .",
+    "sbom": "npm11.20.0 sbom --sbom-format=cyclonedx",
+    "semgrep": "semgrep1.177.0 scan --error --metrics=off --jobs=1 --max-memory=768 --timeout=30 --config exact captured p/owasp-top-ten,p/typescript,p/react,p/secrets . plus exact source-bound explicit SQL test targets",
+    "trufflehog": "trufflehog3.99.2 git file://candidate --bare --fail --no-update --json --only-verified --concurrency=1"
+  },
+  "scannerReports": {
+    "gitleaks": {
+      "exit": 2,
+      "file": "scans/gitleaks.json.gz",
+      "projection": "f0f2d03cd9e8cb7cb97f1946624cb0650703fdb7f4242a0558ce4f73e4923e8a"
+    },
+    "graph": {
+      "exit": 0,
+      "file": "scans/graph.json.gz",
+      "projection": "8f6c0495b8cdf628e36eb2c556a46068e711057d97d88579c73a7d5251da6609"
+    },
+    "npm-installed": {
+      "exit": 1,
+      "file": "scans/npm-installed.json.gz",
+      "projection": "223017cc8b07a9771d5d57bb8b69539ff778600f335bea835cce10a5d0a6205c"
+    },
+    "npm-lock": {
+      "exit": 1,
+      "file": "scans/npm-lock.json.gz",
+      "projection": "223017cc8b07a9771d5d57bb8b69539ff778600f335bea835cce10a5d0a6205c"
+    },
+    "osv": {
+      "exit": 1,
+      "file": "scans/osv.json.gz",
+      "projection": "a2484afff9b456519e687800770df53cca9f311e9dd0d2304973d8e71e5bf1ac"
+    },
+    "sbom": {
+      "exit": 0,
+      "file": "scans/sbom.json.gz",
+      "projection": "0868fb92a93c892b9c3f1d33bb5cd5c321a4f6f7071b8731b058d9f54143ed9c"
+    },
+    "semgrep": {
+      "exit": 0,
+      "file": "scans/semgrep.json.gz",
+      "minimumFiles": 9150
+    },
+    "trufflehog": {
+      "exit": 0,
+      "file": "scans/trufflehog.json"
+    }
+  },
+  "schema": 1,
+  "scope": [
+    "GHSA-vfj7-8cjw-p6xm@braces3.0.3",
+    "GHSA-86w9-cpqp-85rv@node-forge1.4.0",
+    "3264 exact historical source-proven noncredential records"
+  ],
+  "semgrepPackageTree": "bbfba178d93ca43d27fd3e358c585b22a1ce3b29d652701e5db2b164975df1a8",
+  "sourceManifest": "14809eb3a8a5b43de6a6928ca736f2ce5c006711f054ee23f900df6ecce1d7c8",
+  "state": "INACTIVE_PROPOSAL",
+  "toolBytes": {
+    "gitleaks": [
+      "8f397272f513c00b573f50380c4724e4b3ac759be1de313d907bb968c5d14c09"
+    ],
+    "osv": [
+      "cb04e79dd9698a7bc821bbfdddec916a416d1409fda79c927c509d37d00c9716"
+    ],
+    "trufflehog": [
+      "5fb458d2308805158c41c0de90bd554e5e4f50cafa0efd50153a5004c68cab35"
+    ]
+  }
+}

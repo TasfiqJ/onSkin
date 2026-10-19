@@ -1,0 +1,123 @@
+--- a/lib/parse.js
++++ b/lib/parse.js
+@@ -1,4 +1,7 @@
+ 'use strict';
++
++// Local CVE-2026-93687 backport; retain the upstream package identity.
++const MAX_NESTING_DEPTH = 256;
+
+ const stringify = require('./stringify');
+
+@@ -143,6 +146,9 @@
+      */
+
+     if (value === CHAR_LEFT_PARENTHESES) {
++      if (stack.length > MAX_NESTING_DEPTH) {
++        throw new SyntaxError('BRACES_NESTING_DEPTH_LIMIT');
++      }
+       block = push({ type: 'paren', nodes: [] });
+       stack.push(block);
+       push({ type: 'text', value });
+@@ -195,6 +201,9 @@
+      */
+
+     if (value === CHAR_LEFT_CURLY_BRACE) {
++      if (stack.length > MAX_NESTING_DEPTH) {
++        throw new SyntaxError('BRACES_NESTING_DEPTH_LIMIT');
++      }
+       depth++;
+
+       const dollar = prev.value && prev.value.slice(-1) === '$' || block.dollar === true;
+--- a/lib/compile.js
++++ b/lib/compile.js
+@@ -1,10 +1,16 @@
+ 'use strict';
++
++// Local CVE-2026-93687 backport; retain the upstream package identity.
++const MAX_NESTING_DEPTH = 256;
+
+ const fill = require('fill-range');
+ const utils = require('./utils');
+
+ const compile = (ast, options = {}) => {
+-  const walk = (node, parent = {}) => {
++  const walk = (node, parent = {}, depth = 0) => {
++    if (depth > MAX_NESTING_DEPTH + 1) {
++      throw new SyntaxError('BRACES_NESTING_DEPTH_LIMIT');
++    }
+     const invalidBlock = utils.isInvalidBrace(parent);
+     const invalidNode = node.invalid === true && options.escapeInvalid === true;
+     const invalid = invalidBlock === true || invalidNode === true;
+@@ -47,7 +53,7 @@
+
+     if (node.nodes) {
+       for (const child of node.nodes) {
+-        output += walk(child, node);
++        output += walk(child, node, depth + 1);
+       }
+     }
+
+--- a/lib/expand.js
++++ b/lib/expand.js
+@@ -1,4 +1,7 @@
+ 'use strict';
++
++// Local CVE-2026-93687 backport; retain the upstream package identity.
++const MAX_NESTING_DEPTH = 256;
+
+ const fill = require('fill-range');
+ const stringify = require('./stringify');
+@@ -33,7 +36,10 @@
+ const expand = (ast, options = {}) => {
+   const rangeLimit = options.rangeLimit === undefined ? 1000 : options.rangeLimit;
+
+-  const walk = (node, parent = {}) => {
++  const walk = (node, parent = {}, depth = 0) => {
++    if (depth > MAX_NESTING_DEPTH + 1) {
++      throw new SyntaxError('BRACES_NESTING_DEPTH_LIMIT');
++    }
+     node.queue = [];
+
+     let p = parent;
+@@ -100,7 +106,7 @@
+       }
+
+       if (child.nodes) {
+-        walk(child, node);
++        walk(child, node, depth + 1);
+       }
+     }
+
+--- a/lib/stringify.js
++++ b/lib/stringify.js
+@@ -1,9 +1,15 @@
+ 'use strict';
++
++// Local CVE-2026-93687 backport; retain the upstream package identity.
++const MAX_NESTING_DEPTH = 256;
+
+ const utils = require('./utils');
+
+ module.exports = (ast, options = {}) => {
+-  const stringify = (node, parent = {}) => {
++  const stringify = (node, parent = {}, depth = 0) => {
++    if (depth > MAX_NESTING_DEPTH + 1) {
++      throw new SyntaxError('BRACES_NESTING_DEPTH_LIMIT');
++    }
+     const invalidBlock = options.escapeInvalid && utils.isInvalidBrace(parent);
+     const invalidNode = node.invalid === true && options.escapeInvalid === true;
+     let output = '';
+@@ -21,7 +27,7 @@
+
+     if (node.nodes) {
+       for (const child of node.nodes) {
+-        output += stringify(child);
++        output += stringify(child, {}, depth + 1);
+       }
+     }
+     return output;
+@@ -29,4 +35,3 @@
+
+   return stringify(ast);
+ };
+-

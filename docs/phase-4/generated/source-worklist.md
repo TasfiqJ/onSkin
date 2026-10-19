@@ -326,8 +326,8 @@ Required evidence:
 Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
-- `package.json` - 46480 bytes - sha256 `48d34159a44ddcd39877b85150938c80c276fe9ac1ccfc2564337cb07bc97dc5`
-- `.github/workflows/quality.yml` - 12553 bytes - sha256 `4e298803f8c77caef5489dd53cf017ebdea62f18a03548af5a0db92722827136`
+- `package.json` - 46730 bytes - sha256 `c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1`
+- `.github/workflows/quality.yml` - 12961 bytes - sha256 `908e930f3c9366fdc642659f627f81feec54cd47e2d77b0108296e49eed5d285`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45531 bytes - sha256 `92a0b946a5e431e787f95d0513289ef1938a8964b23272d329f5cb15395d2be9`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9406 bytes - sha256 `bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a`
 - `docs/phase-4/beta-shelf-corpus.template.json` - 24378 bytes - sha256 `eab0f3ab1ac78f53307b69976163c9edd07350a7fdc5dd52c05cb7c3b40106d5`

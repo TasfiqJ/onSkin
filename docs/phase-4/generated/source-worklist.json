@@ -1186,14 +1186,14 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 46480,
-          "sha256": "48d34159a44ddcd39877b85150938c80c276fe9ac1ccfc2564337cb07bc97dc5"
+          "bytes": 46730,
+          "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
         },
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 12553,
-          "sha256": "4e298803f8c77caef5489dd53cf017ebdea62f18a03548af5a0db92722827136"
+          "bytes": 12961,
+          "sha256": "908e930f3c9366fdc642659f627f81feec54cd47e2d77b0108296e49eed5d285"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",

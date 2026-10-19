@@ -18,14 +18,14 @@ import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const EXPO_WIDGETS_PACKAGE_NAME = 'expo-widgets';
-export const EXPO_WIDGETS_PACKAGE_VERSION = '57.0.9';
+export const EXPO_WIDGETS_PACKAGE_VERSION = '57.0.26';
 export const EXPO_WIDGETS_LOCK_RESOLVED =
-  'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz';
+  'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.26.tgz';
 export const EXPO_WIDGETS_LOCK_INTEGRITY =
-  'sha512-B0WcPQeY+hillPO0IGsX/MEVUpan5fAWgrBJV7ZVFbK9gcyZ0PsDtPE+2MOOd3XeNlnfyGvaQunW52/8A7FbZw==';
+  'sha512-gXVYxNeYR08QvohfnyyqTVxGgsF07PtK0Pg/i4vdFs2akT6mf/m4/vc3Co1F5lMDzbQSTpZyCDMxVOImv3F46g==';
 
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const PAYLOAD_DIRECTORY = 'scripts/phase5/expo-widgets-57.0.9';
+const PAYLOAD_DIRECTORY = 'scripts/phase5/expo-widgets-57.0.26';
 const EXPO_WIDGETS_TARGET_PREFIX = 'node_modules/expo-widgets/';
 const REVIEWED_INSTALL_DIRECTORIES = new Set([
   'node_modules/expo-widgets',
@@ -56,19 +56,19 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
   {
     target: 'node_modules/expo-widgets/ios/LiveActivity.swift',
     payload: 'LiveActivity.swift',
-    original: 'ad5a9c4665074b186ba00e4d6f43fe23c494401fb2e23d9e9032f0d06a803be7',
+    original: 'f90be8a3ccde24823fd0cdd35fd8562a526045ae38e33d7fd1deab31b2985b71',
     priorPatched: ['63dd154a7f0a4fba90cce7a2656badf9682b871343616e3f14324aff2a09c99e'],
-    patched: '3a3783e3a3246ecda6a2299c81af7749078360287d20e10bb80cbd3fdae4a5ab',
+    patched: '14edb955c8f0ad15f72d9770298d9bdfb9a036f8d92f88c3b51d7f2e3cbd540e',
   },
   {
     target: 'node_modules/expo-widgets/ios/LiveActivityFactory.swift',
     payload: 'LiveActivityFactory.swift',
-    original: 'b1bf7c1d8a4b1ec8932df6caa9e05a264ae99f21954284be42f3bb113b6915fb',
+    original: '7b891a22d57f28c8e729a285475129483401b2623ca1af9cac6b5be916805320',
     priorPatched: [
       'b87dfc25badeb66e8e009316b3004d1318d82ac686029562281f3dc48cfc3a5c',
       '71e1307e35bfc7a7e22256548ddd77d359e6ecacb0d65d7202e59f49ba61a48e',
     ],
-    patched: '5d3e0860a06d29e6b96b0ed1287ba735499b6c012c039d706114238e6db4a5af',
+    patched: 'f888fc22dd8b805b5ce2ade067479afcd6e894860e5cdffdf8ebce07b6658999',
   },
   {
     target: 'node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift',
@@ -90,16 +90,16 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
   {
     target: 'node_modules/expo-widgets/ios/Widgets/Utils.swift',
     payload: 'Utils.swift',
-    original: '3ff98e21d29d43d358fec29069795781e31961ad1ebd77d5cae13178e30cfd49',
+    original: 'cca8d5a8d80fa9a21d863876f62c6c134fcb9d1155c04a00728479ff34776850',
     priorPatched: ['ee604723e5a8ffe531d01892a5e5cd4776ff920c5ab37520f19ba27a10da8074'],
-    patched: 'b093d8be695b9825ad98798bc69804f074ebd3ddce3c0aa202a584215afdef4c',
+    patched: '76887d9a3f1e076785d330dfdd6f2069df439c592b74b7e89812b0383205bd56',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/WidgetLiveActivity.swift',
     payload: 'WidgetLiveActivity.swift',
-    original: '36c7448b31a6791d996015859bea1e87cf8df884837c0b895c7963d8569efe3c',
+    original: 'eb094a8dabfc256d5aaa3c85f31dc26f18264250992acd417da65aa811bd02f6',
     priorPatched: ['01b0084d8dce0bd253007d936a6a5ea597159533913250d3daeba805b91d9256'],
-    patched: 'df40ea1a2de0c319275fde4c9bc6c3ca2288b524bab4974d8429ca93a8383735',
+    patched: '5f1817d220a63b9a64faf2d7cc06803458655dcf34de160cff279e241e451f89',
   },
   {
     target: 'node_modules/expo-widgets/ios/WidgetObject.swift',
@@ -110,12 +110,12 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
   {
     target: 'node_modules/expo-widgets/ios/WidgetsModule.swift',
     payload: 'WidgetsModule.swift',
-    original: '73ea58436924bf50512db7cd5971b7650d7c266fc02d51176d7cdbffe371bdd2',
+    original: '770a50195c5427e6fbfb7b2fa2bbb367bbd8cf4426b57a8b752cb0ef0e14510d',
     priorPatched: [
       '357649a8d57b3a41b08ad0d582498dacdecca20e05d05515a17922c81b7ca06a',
       '7952c4b55e73a1f3cec15554051ee2ccfd91f1ae3ac5d7b101489b7eca5640b1',
     ],
-    patched: '79fac38010abcd9a2b2b6dee7203fc61d053fc3b953e4097d8a6c34296b8cba4',
+    patched: '3213cc92fff7922bdc60a8e1b94ecc84a0b3729a323629ca9b25fd964b92421c',
   },
 ]);
 
@@ -268,9 +268,9 @@ function validateProvenance(root) {
     fail('LOCK_WORKSPACE_DEPENDENCY', 'The lockfile workspace spec is not exact.');
   }
   const paths = Object.keys(lock.packages).filter((value) =>
-    REVIEWED_INSTALL_DIRECTORIES.has(value),
+    value === 'node_modules/expo-widgets' || value.endsWith('/node_modules/expo-widgets'),
   );
-  if (paths.length !== 1) {
+  if (paths.length !== 1 || !REVIEWED_INSTALL_DIRECTORIES.has(paths[0])) {
     fail('LOCK_ENTRY_PATH', 'The reviewed expo-widgets lock entry must be unique.');
   }
   const installDirectory = paths[0];

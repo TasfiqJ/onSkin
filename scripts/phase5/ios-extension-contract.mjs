@@ -12,20 +12,20 @@ const EXPECTED_SOURCE_SCHEMES = Object.freeze({
 });
 const REVIEWED_DEPENDENCY_LOCKS = Object.freeze({
   '@expo/ui': Object.freeze({
-    specifier: '~57.0.20',
+    specifier: '~57.0.25',
     path: 'node_modules/@expo/ui',
-    version: '57.0.20',
-    resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.20.tgz',
+    version: '57.0.25',
+    resolved: 'https://registry.npmjs.org/@expo/ui/-/ui-57.0.25.tgz',
     integrity:
-      'sha512-0ChmuyWBwEy3JHMR5wDkJGyvkTR5zH3BTwjJrv3f2ymtamhpU9hD5uH4GsLoWuB6MJFOPTuchq4zByZbtgPyNw==',
+      'sha512-/BbxsKh/LSIFDnWAHRHfJdCcnqHY7WNcWXjld0soKnYXDUbImjvsFK7y5dqq2XZTbOMyf44BpgAWKUR/B8huCA==',
   }),
   'expo-widgets': Object.freeze({
-    specifier: '57.0.9',
-    path: 'apps/mobile/node_modules/expo-widgets',
-    version: '57.0.9',
-    resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.9.tgz',
+    specifier: '57.0.26',
+    path: 'node_modules/expo-widgets',
+    version: '57.0.26',
+    resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.26.tgz',
     integrity:
-      'sha512-B0WcPQeY+hillPO0IGsX/MEVUpan5fAWgrBJV7ZVFbK9gcyZ0PsDtPE+2MOOd3XeNlnfyGvaQunW52/8A7FbZw==',
+      'sha512-gXVYxNeYR08QvohfnyyqTVxGgsF07PtK0Pg/i4vdFs2akT6mf/m4/vc3Co1F5lMDzbQSTpZyCDMxVOImv3F46g==',
   }),
 });
 

@@ -26,7 +26,7 @@ import {
 } from './patch-expo-widgets-lifecycle.mjs';
 
 const REPOSITORY_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const PAYLOAD_ROOT = join(REPOSITORY_ROOT, 'scripts/phase5/expo-widgets-57.0.9');
+const PAYLOAD_ROOT = join(REPOSITORY_ROOT, 'scripts/phase5/expo-widgets-57.0.26');
 
 function hash(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
@@ -80,7 +80,7 @@ function createFixture(
 
   for (const descriptor of EXPO_WIDGETS_PATCH_TARGETS) {
     const payloadSource = join(PAYLOAD_ROOT, descriptor.payload);
-    const fixturePayload = join(root, 'scripts/phase5/expo-widgets-57.0.9', descriptor.payload);
+    const fixturePayload = join(root, 'scripts/phase5/expo-widgets-57.0.26', descriptor.payload);
     mkdirSync(dirname(fixturePayload), { recursive: true });
     copyFileSync(payloadSource, fixturePayload);
 
@@ -123,6 +123,17 @@ test('pins every reviewed original and patched source hash', () => {
       assert.notEqual(priorPatched, descriptor.original);
     }
   }
+});
+
+test('rejects an extra copy hidden below an unreviewed transitive dependency', (t) => {
+  const root = createFixture(t);
+  const path = join(root, 'package-lock.json');
+  const lock = JSON.parse(readFileSync(path, 'utf8'));
+  lock.packages['node_modules/foreign/node_modules/expo-widgets'] = {
+    ...lock.packages['node_modules/expo-widgets'],
+  };
+  writeJson(path, lock);
+  expectFailure(root, 'LOCK_ENTRY_PATH', { check: true });
 });
 
 test('durably stages files and synchronizes each POSIX rename for crash recovery', () => {
@@ -207,7 +218,7 @@ test('rejects payload or installed target byte drift before mutation', async (t)
     const target = join(root, ...descriptor.target.split('/'));
     const before = readFileSync(target);
     writeFileSync(
-      join(root, 'scripts/phase5/expo-widgets-57.0.9', descriptor.payload),
+      join(root, 'scripts/phase5/expo-widgets-57.0.26', descriptor.payload),
       Buffer.concat([before, Buffer.from(' ')]),
     );
     expectFailure(root, 'PAYLOAD_HASH');
