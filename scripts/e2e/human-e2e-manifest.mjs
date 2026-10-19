@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { cat07RecordedDebugPort } from './cat07-committed-evidence.mjs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -30,7 +31,6 @@ import {
   CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
   CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
   cat07BrowserArguments,
-  cat07RecordedDebugPort,
   createCat07TrustedGitContext,
 } from './cat07-shelf-freshness-audit.mjs';
 import { renderHumanE2eManifestMarkdown } from './human-e2e-manifest-render.mjs';

@@ -1,3 +1,4 @@
+import { cat07RecordedDebugPort } from './cat07-committed-evidence.mjs';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -51,7 +52,6 @@ import {
   finalizeCat07ExpoLog,
   cat07BrowserMarker,
   cat07BrowserArguments,
-  cat07RecordedDebugPort,
   findCat07GitExecutable,
   findCat07TrustedBrowserExecutable,
   projectCat07CdpEvent,

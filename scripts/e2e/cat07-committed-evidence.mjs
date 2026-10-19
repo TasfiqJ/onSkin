@@ -12,7 +12,6 @@ import {
   sanitizeEvidenceDiagnosticForDisplay,
 } from './evidence-diagnostic-hygiene.mjs';
 import { renderHumanE2eManifestMarkdown } from './human-e2e-manifest-render.mjs';
-import { cat07RecordedDebugPort } from './cat07-shelf-freshness-audit.mjs';
 
 export const CAT07_COMMITTED_SUMMARY_PATH =
   'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json';
@@ -84,6 +83,16 @@ const CAT07_APP_ENVIRONMENT_KEY_SETS = [
   ].sort(),
   [...CAT07_APP_ENVIRONMENT_COMMON_KEYS, 'HOME', 'PATH', 'TEMP', 'TMP', 'TMPDIR'].sort(),
 ];
+
+export function cat07RecordedDebugPort(args) {
+  if (!Array.isArray(args) || !args.every((argument) => typeof argument === 'string')) return null;
+  const flags = args.filter((argument) => argument.startsWith('--remote-debugging-port='));
+  if (flags.length !== 1) return null;
+  const match = /^--remote-debugging-port=(0|[1-9][0-9]{0,4})$/u.exec(flags[0]);
+  if (!match) return null;
+  const port = Number(match[1]);
+  return port <= 65_535 ? port : null;
+}
 
 function cat07CommittedExpectedBrowserArguments(debugPort) {
   return [
