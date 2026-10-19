@@ -19,6 +19,7 @@ def verify_tool_sources(tools,policy):
   require(SHA(pathlib.Path(tools[name]).read_bytes()) in policy['toolBytes'][name],'SCANNER_BINARY_DRIFT:'+name)
  require(tool_tree(pathlib.Path(tools['npm']).resolve().parents[1])==policy['npmToolTree'],'NPM_IMPLEMENTATION_DRIFT')
 def collect(root,installed,out,tools,policy,only=None):
+ require(not out.resolve().is_relative_to(root.resolve()),'EVIDENCE_INSIDE_REVIEWED_SOURCE')
  require(not out.exists(),'NEW_EVIDENCE_DIRECTORY_REQUIRED');out.mkdir(parents=True)
  started=stamp();files={};regressions={};scope={}
  def run(name,args,cwd=root,timeout=600,environment=None):

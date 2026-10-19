@@ -118,6 +118,12 @@ externalSignatureRequired=false, and no integration, DB replay or release author
 The validator rejects changed scope, omitted/extra scope fields and changed dates.
 The original window is unchanged and is never renewed automatically.
 
+The collector and technical validator refuse evidence directories inside the
+reviewed source. The static job collects/checks at `$RUNNER_TEMP/g97-evidence`,
+then stages that verified receipt beside the original raw scanner files only
+after source checks finish. Upload paths and all19 original artifact names stay
+unchanged. No source ignore rule or scan exclusion is introduced.
+
 The original Security workflow retains its three original jobs, all raw scanners,
 the actual expired-policy commands and all19 required original artifact files.
 Phase9, audited SBOM structure, verified TruffleHog and complete SAST/test/coverage

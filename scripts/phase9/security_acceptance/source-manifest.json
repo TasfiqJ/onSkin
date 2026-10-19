@@ -29,7 +29,7 @@
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "e80d42121b10a7c0be20e7ac654adf7de06d469cf4fa09e33e0cb447c030c939"
+    "sha256": "360488d12114f969eb79c0c44289ef8b9c9b9e7b98435866abd9f46ba8e971bf"
   },
   {
     "path": ".gitignore",
@@ -9033,7 +9033,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
-    "sha256": "b7824456d2c5392ee3f180de5c5c9845f48268256e411693b6e4535907333a8f"
+    "sha256": "20974840923e79a3b916a2692634e494963dce6b1492684ef9fa1ecbd75d429a"
   },
   {
     "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
@@ -9045,11 +9045,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/collect.py",
-    "sha256": "eb968b374c43987610d680613bd79c8ee2a49b1550927ae44a2352113a400569"
+    "sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212"
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "2b4d6b34189d8e78c2dd98ee86221c3a8c1685951b5776316a8b7855cddedf24"
+    "sha256": "eecce78121082cf6084ebcfb64772aee9252827c01fba4cce64a7cb1d232d82b"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9093,7 +9093,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "fa21099a23500d1e998d18c3bdaf313c6bd4e549346101612738e6503d15b3e1"
+    "sha256": "02a89f1b3c84884888a56e0032e4b01cc60e84042a8bab947de473dbab282ee9"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
@@ -9101,11 +9101,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
-    "sha256": "578cbef51705734aaaf7f8f65cdd2f943460622c066e670b1e02c772f58811e8"
+    "sha256": "a61996e199101e3054841641b8d663ce6b29aa617f9b124a985f7c01994b6f65"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
-    "sha256": "ad9493329e48050a7b7aa8804fbefad5711a443850df60d450a6109fe0fdbeec"
+    "sha256": "5cddf63a9edcfeddd2ec0ace22224629a8f7e35b6f4d36f88c5377bdd4e07128"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

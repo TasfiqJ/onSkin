@@ -369,7 +369,7 @@ def verify_artifact_inventory(root,expected):
  require(observed==set(expected),'PHYSICAL_EVIDENCE_INVENTORY_DRIFT')
 
 def evidence(root,directory,policy,installed_root):
- require(pathlib.Path(directory).resolve()!=pathlib.Path(root).resolve(),'EVIDENCE_INSIDE_SOURCE')
+ require(not pathlib.Path(directory).resolve().is_relative_to(pathlib.Path(root).resolve()),'EVIDENCE_INSIDE_SOURCE')
  manifest=load(directory,'receipt.json');require(set(manifest)=={'schema','started','finished','sourceManifest','scannerCommands','files','regressions'},'RECEIPT_SCHEMA')
  require(type(manifest['schema']) is int and manifest['schema']==1 and manifest['sourceManifest']==policy['sourceManifest'],'RECEIPT_SOURCE_DRIFT')
  begin,end=utc(manifest['started']),utc(manifest['finished']);require(begin<=end<=now() and now()-begin<=datetime.timedelta(hours=6),'STALE_OR_FUTURE_EVIDENCE')

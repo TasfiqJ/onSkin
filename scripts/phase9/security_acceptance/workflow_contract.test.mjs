@@ -134,3 +134,9 @@ test('single-owner route contains no protected reviewer, signer, key or receipt 
   assert.equal(JSON.stringify(job).includes('G97_TRUSTED_OWNER_PUBLIC_KEY'), false);
   assert.equal(JSON.stringify(job).includes('--approval'), false);
 });
+
+test('collection stays outside source until verified and then stages the full original artifact', () => {
+  reject(w => { const step=w.jobs['static-analysis'].steps.find(s => s.id==='semgrep'); step.run=step.run.replaceAll('$RUNNER_TEMP/g97-evidence','$GITHUB_WORKSPACE/generated-evidence'); });
+  reject(w => w.jobs['static-analysis'].steps=w.jobs['static-analysis'].steps.filter(s => s.name!=='Stage verified technical receipt after all source checks'));
+  reject(w => w.jobs['static-analysis'].steps.find(s => s.name==='Stage verified technical receipt after all source checks').if='success()');
+});

@@ -537,4 +537,11 @@ class ContractTests(unittest.TestCase):
    changed={**self.policy,'acceptance':value}
    with self.assertRaisesRegex(c.Rejected,'SCOPE_DRIFT'):c.validate_policy(changed,clock)
 
+ def test_collector_refuses_outputs_inside_reviewed_source_before_creating_files(self):
+  path=c.ROOT/'g97-invalid-inside-source-output'
+  self.assertFalse(path.exists())
+  with self.assertRaisesRegex(c.Rejected,'EVIDENCE_INSIDE_REVIEWED_SOURCE'):
+   collect.collect(c.ROOT,c.ROOT,path,{},self.policy)
+  self.assertFalse(path.exists())
+
 if __name__=='__main__':unittest.main(verbosity=2)

@@ -268,14 +268,14 @@ jobs:
         run: |
           python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v
           python -B scripts/phase9/security_acceptance/collect.py \
-            --output "$GITHUB_WORKSPACE/docs/phase-9/generated/ci-scanner-evidence/g97-evidence" \
+            --output "$RUNNER_TEMP/g97-evidence" \
             --npm "$RUNNER_TEMP/g97-tools/npm/node_modules/npm/bin/npm-cli.js" \
             --gitleaks "$RUNNER_TEMP/g97-tools/scanners/gitleaks" \
             --osv "$RUNNER_TEMP/g97-tools/scanners/osv" \
             --trufflehog "$RUNNER_TEMP/g97-tools/scanners/trufflehog" \
             --semgrep "$RUNNER_TEMP/g97-tools/semgrep"
           python -B scripts/phase9/security_acceptance/contract.py check \
-            --evidence "$GITHUB_WORKSPACE/docs/phase-9/generated/ci-scanner-evidence/g97-evidence"
+            --evidence "$RUNNER_TEMP/g97-evidence"
 
       - name: Prepare OSV evidence directory
         run: mkdir -p docs/phase-9/generated/ci-scanner-evidence
@@ -324,6 +324,13 @@ jobs:
             "osv_exception_gate": "${G97_OSV_EXCEPTION_GATE_OUTCOME}"
           }
           JSON
+
+      - name: Stage verified technical receipt after all source checks
+        if: always()
+        run: |
+          mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          test ! -e docs/phase-9/generated/ci-scanner-evidence/g97-evidence
+          cp -R -- "$RUNNER_TEMP/g97-evidence" docs/phase-9/generated/ci-scanner-evidence/g97-evidence
 
       - name: Upload static scanner evidence
         if: always()

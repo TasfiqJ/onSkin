@@ -42,6 +42,9 @@ export function validateWorkflowAdmission(text) {
     if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif') || !finalCommand(jobs['secret-scan'], 'python3 -B scripts/phase9/security_acceptance/workflow_admission.py gitleaks-tool')) return false;
     const staticJob = jobs['static-analysis'];
     if (staticJob['runs-on'] !== 'ubuntu-24.04' || !command(staticJob, 'bootstrap_tools.py') || !command(staticJob, 'collect.py') || !command(staticJob, 'contract.py check') || !command(staticJob, 'python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v')) return false;
+    if (!command(staticJob, '--output "$RUNNER_TEMP/g97-evidence"') || !command(staticJob, '--evidence "$RUNNER_TEMP/g97-evidence"') ||
+        !finalCommand(staticJob, 'test ! -e docs/phase-9/generated/ci-scanner-evidence/g97-evidence') ||
+        !finalCommand(staticJob, 'cp -R -- "$RUNNER_TEMP/g97-evidence" docs/phase-9/generated/ci-scanner-evidence/g97-evidence')) return false;
     for (const name of [automated]) {
       if (jobs[name]?.['runs-on'] !== 'ubuntu-24.04' || jobs[name]['continue-on-error'] || !jobs[name].steps?.length || jobs[name].steps.some((step) => step['continue-on-error'])) return false;
       for (const category of ['code', 'secret', 'static']) {
