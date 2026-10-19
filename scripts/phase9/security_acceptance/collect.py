@@ -21,12 +21,12 @@ def verify_tool_sources(tools,policy):
 def collect(root,installed,out,tools,policy,only=None):
  require(not out.exists(),'NEW_EVIDENCE_DIRECTORY_REQUIRED');out.mkdir(parents=True)
  started=stamp();files={};regressions={};scope={}
- def run(name,args,cwd=root,timeout=600):
+ def run(name,args,cwd=root,timeout=600,environment=None):
   if name in policy['scannerReports']:scanner_scope(name,list(map(str,args)))
   d=out/'commands'/name;d.mkdir(parents=True)
-  write(d/'intent.json',{'args':list(map(str,args)),'cwd':str(cwd),'started':stamp(),'timeout':timeout})
+  write(d/'intent.json',{'args':list(map(str,args)),'cwd':str(cwd),'started':stamp(),'timeout':timeout,'environment':environment or {}})
   with (d/'stdout').open('wb') as o,(d/'stderr').open('wb') as e:
-   try:p=subprocess.run(list(map(str,args)),cwd=cwd,stdout=o,stderr=e,timeout=timeout);exit=p.returncode
+   try:p=subprocess.run(list(map(str,args)),cwd=cwd,stdout=o,stderr=e,timeout=timeout,env={**os.environ,**(environment or {})});exit=p.returncode
    except subprocess.TimeoutExpired:exit=124
   write(d/'result.json',{'exit':exit,'finished':stamp(),'stdout':SHA((d/'stdout').read_bytes()),'stderr':SHA((d/'stderr').read_bytes())})
   return exit,(d/'stdout').read_bytes()
@@ -46,8 +46,14 @@ def collect(root,installed,out,tools,policy,only=None):
  verify_tool_sources(tools,policy)
  npm=tools['npm']
  code,data=run('npm-version',['node',npm,'--version'],installed,30);require(code==0 and data.strip()==b'11.20.0','NPM_VERSION_DRIFT')
- for name,args in [('npm-installed',['audit','--audit-level=high','--json']),('npm-lock',['audit','--package-lock-only','--audit-level=high','--json']),('graph',['ls','--all','--json','--long']),('sbom',['sbom','--sbom-format=cyclonedx'])]:
-  code,data=run(name,['node',npm,*args],installed,300);save(name,code,json.loads(data))
+ # npm's cold-cache metavulnerability projection is incomplete until its
+ # metadata cache is populated. Preserve one initial raw audit, then perform
+ # the installed and lock-only audits against that same new private cache.
+ # All three exact report projections are mandatory; no finding is discarded.
+ audit_cache=pathlib.Path(tempfile.mkdtemp(prefix='g97-audit-cache-'))
+ for name,args in [('npm-initial',['audit','--audit-level=high','--json']),('npm-installed',['audit','--audit-level=high','--json']),('npm-lock',['audit','--package-lock-only','--audit-level=high','--json']),('graph',['ls','--all','--json','--long']),('sbom',['sbom','--sbom-format=cyclonedx'])]:
+  environment={'npm_config_cache':str(audit_cache)} if name.startswith('npm-') else None
+  code,data=run(name,['node',npm,*args],installed,300,environment);save(name,code,json.loads(data))
  for profile in load(HERE,'packages.json'):fetch('upstream/'+profile['name']+'.tgz',profile['resolved'])
  path=out/'osv-raw.json';code,_=run('osv',[tools['osv'],'scan','source','--recursive','--format=json','--output='+str(path),'.']);save('osv',code,json.loads(path.read_bytes()))
  path=out/'gitleaks-raw.json';code,_=run('gitleaks',[tools['gitleaks'],'detect','--config='+str(HERE/'gitleaks.toml'),'--redact=100','--exit-code=2','--report-format=json','--report-path='+str(path),'--log-opts=--all --full-history','--log-level=info']);save('gitleaks',code,json.loads(path.read_bytes()))

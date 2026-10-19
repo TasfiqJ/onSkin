@@ -4,10 +4,10 @@ No matched credential-shaped value is printed or persisted.
 import base64, collections, hashlib, json, re, subprocess
 SHA = lambda b: hashlib.sha256(b).hexdigest()
 
-def verify_history(root, fresh, witnesses, config_text):
+def verify_history(root, fresh, witnesses, config_text, rule_hashes=None):
     key = lambda r: (r['Commit'], r['File'], r['RuleID'], r['StartLine'], r['EndLine'])
     prior = {(r['commit'], r['path'], r['rule'], r['start_line'], r['end_line']): r for r in witnesses}
-    if len(fresh) != 3264 or len(prior) != 3264 or {key(r) for r in fresh} != set(prior):
+    if not prior or len(fresh) != len(prior) or len(witnesses) != len(prior) or {key(r) for r in fresh} != set(prior):
         raise ValueError('HISTORY_SET_DRIFT')
     patterns = {}
     for section in config_text.split('[[rules]]')[1:]:
@@ -68,6 +68,16 @@ def verify_history(root, fresh, witnesses, config_text):
                 raise ValueError('HISTORICAL_SOURCE_PROOF_FAILED')
             kind = 'RECOMPUTED_SOURCE_FILE_DIGEST'
             proof.update(referenced_source_path=field, referenced_source_digest_recomputed=True)
+        elif path == 'scripts/phase9/security_acceptance/proposal.json':
+            document = json.loads(body)
+            if not (field == 'secrets' and re.fullmatch('[0-9a-f]{64}', raw)
+                    and rule_hashes and document.get('rules') == rule_hashes
+                    and document['rules']['secrets'] == raw):
+                raise ValueError('HISTORICAL_RULESET_DIGEST_PROOF_FAILED')
+            kind = 'PINNED_SCANNER_RULESET_DIGEST'
+            proof.update(exact_field='rules.secrets', matches_source_bound_rule_config_digest=True,
+                         digest_not_authentication_material=True,
+                         actual_rule_bytes_independently_rehashed_by_evidence_contract=True)
         elif field == 'contentKeySha256':
             if not re.fullmatch('[0-9a-f]{64}', raw):
                 raise ValueError('HISTORICAL_SOURCE_PROOF_FAILED')

@@ -10,7 +10,7 @@ Security workflow proposes an exact-evidence independent approval route below.
 Quality, DB06, native, hosted and release gates retain their behavior.
 
 `contract.py source` checks the complete reviewed source manifest. `collect.py`
-runs npm 11.20 installed and lock-only audit, the complete dependency graph,
+runs npm 11.20 initial cold-cache, installed and lock-only audits, the complete dependency graph,
 CycloneDX SBOM, OSV 2.3.8, full-all-ref Gitleaks 8.24.3, full-history verified
 TruffleHog 3.99.2, all four captured Semgrep registry rulesets using the reviewed 1.181.0 Linux source build and the coupled
 regressions. It keeps raw streams, actual exits, exact rules and package archives.
@@ -60,6 +60,15 @@ hours. A technical positive result explicitly remains INACTIVE. Local verificati
 may read an unchanged isolated accepted installation using `--installed-root`;
 the activation path forbids that override.
 
+The collector creates one new private audit cache. It retains the initial cold
+report, then runs the installed and lock-only audits serially in that same cache.
+Measured identical-source controls reproduce 27 then 68 candidate records, and
+25 then 67 main-baseline records. Every exact projection and original nonzero exit
+is checked; the initial report cannot introduce an unreviewed finding or be
+omitted. This fixed protocol does not repeat until a preferred status appears.
+The retained older 27/67/68 reports remain separate historical evidence. A raw
+count alone does not establish a source, npm version or complete audit coverage.
+
 All npm fields remain in raw evidence. Registry-derived outer ranges,
 fixAvailable upgrade suggestions, effects and non-advisory via edges are not
 acceptance authority. Every affected package/path/severity and full primary
@@ -67,10 +76,14 @@ advisory is bound; each reported record must reach a primary advisory. The full
 installed graph and exact lock independently bind dependency paths. An upgrade
 recommendation cannot clear a finding or authorize a dependency change.
 
-The 3,264 history witnesses carry Git commit/path/line/blob, source SHA-256 and an
+The original 3,264 history witnesses remain unchanged. A fresh full-ref scan adds
+one ruleset-digest finding from the initial reconstruction commit. All 3,265
+witnesses carry Git commit/path/line/blob, source SHA-256 and an
 opaque matched-value SHA-256. `history.py` reopens the actual Git blobs, re-extracts
 each pinned rule capture, checks its hash and independently reruns each disposition
-proof. Every finding, including the synthetic rehearsal seed, must reproduce.
+proof. Every finding, including the synthetic rehearsal seed and the new ruleset digest,
+must reproduce. The digest record is re-extracted from its real Git blob and tied
+to the freshly rehashed captured ruleset; its fingerprint alone cannot authorize it.
 No fingerprint allowlist or scanner ignore entry is added. Raw history scanning
 continues. Witness hashes and categories alone cannot clear an unmatched record.
 
@@ -139,9 +152,22 @@ unchanged. The exact source, patch, build pins, runtime closure, licenses and
 comparative raw results are supplied in the outer evidence package. This custom
 tool choice is an explicit residual-risk decision for independent review.
 
+OSV also scans the new hash-locked Python scanner dependency file. It reports
+GHSA-84m7-p3x7-pcfv in MCP 1.29.0, which the official Semgrep CLI pins exactly.
+The upstream fix is MCP 1.30.0; that version conflicts with the official CLI's
+exact requirement. No dependency metadata or published version is relabelled.
+The vulnerable behavior is unbounded stateful Streamable HTTP server sessions.
+This route only invokes the rigidly checked `scan` command. Its source-bound
+entry additionally refuses actual IPv4/IPv6 listener binds before loading the
+CLI, while permitting Unix-domain engine communication. A real bind negative and
+real Unix-socket positive test this boundary. The complete raw advisory remains
+in the proposal; this is a constrained CLI-use disposition for independent review,
+not a claim that MCP itself is patched or safe to run as a server.
+
 The narrow residual risk for owner review is reliance on local tooling backports
 while version scanners still flag two unpatched published versions and their
-propagation records, together with acceptance of exactly source-proven historical
+propagation records, the explicitly constrained scanner-only MCP advisory, and
+acceptance of exactly source-proven historical
 noncredential material. This is not scanner cleanliness or a future-CVE waiver.
 Any new finding, advisory, source, copy, failure or expiry requires fresh review.
 No genuine live credential has been established; no provider rotation is claimed.

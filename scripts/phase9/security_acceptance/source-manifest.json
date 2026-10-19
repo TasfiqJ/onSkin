@@ -9033,7 +9033,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
-    "sha256": "fe2f44555f1e2158cf3799bd66670db1a23c807c5c036f57f4bf360a2be73030"
+    "sha256": "ea61d347963e2efcef1d3137e0b36880f987ff8cf127cb25c93a3cc68a35ae6b"
   },
   {
     "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
@@ -9045,11 +9045,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/collect.py",
-    "sha256": "1cb083e6f2eb04312051e89e2dc8606a2ca2ea241b34ac3ad62499630b1dda37"
+    "sha256": "864207dffba76c97b7fb34ddec838ee092d3a0c164242008444142b57599f5f4"
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "da78a1bac45fbe372bf7302fc98fb48635f04a248b4f21f8ba18efc3c007d1ce"
+    "sha256": "386694a837e797c45be7b24f8a2a5ed36fb4355b0b7a198e636f3a746b7807c4"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9057,11 +9057,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/history.json.gz",
-    "sha256": "13cc8e7343ca444c5eef07ffd372bed3a9e3ae65d842939c2e42b7b7ff37f0f9"
+    "sha256": "5a6e9344ec1d4d6aebd882395487b7b81dd6bdb22a78cba08c296c39c0ce7df9"
   },
   {
     "path": "scripts/phase9/security_acceptance/history.py",
-    "sha256": "7ba040020aa7801ddcc12c8d0c77dcc4faec30bb79bc863a5be54d1b4a3a2412"
+    "sha256": "f838c47599fde4c190fd61dbf0ae0f0dc43418433ce01370194b17a8f8acf069"
   },
   {
     "path": "scripts/phase9/security_acceptance/node-forge.patch",
@@ -9085,11 +9085,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
-    "sha256": "df557598b88659a7df4d36bbf77971b3f3b96edccfc9dc04e3ebc5bc1cc0323d"
+    "sha256": "312119d7faa88d4e4cd992e24becad56e24d6d9f499fc2626f45a640539b0ac1"
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "8a1504e3129940e34c4746c56455bc9aaf6efff55ab701a0ab245a43f1696c5d"
+    "sha256": "b78530c6215eb433178d7b79a3795b327d70b65abb800cd7b34799a92a56b40a"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",

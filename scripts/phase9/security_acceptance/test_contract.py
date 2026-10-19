@@ -104,7 +104,10 @@ class ContractTests(unittest.TestCase):
   v=self.clean_vector();v['trufflehog']['report']=[{'Verified':True,'Raw':'synthetic-test-value'}]
   with self.assertRaisesRegex(c.Rejected,'VERIFIED_EXPOSURE'):c.records(v,self.policy)
  def test_all_3264_dispositions_reproduced_from_Git(self):
-  result=c.history(c.ROOT,self.actual['gitleaks']['report']);self.assertEqual(result['records'],3264);self.assertEqual(result['unverified'],0)
+  import gzip
+  rows=json.loads(gzip.decompress(c.git(c.ROOT,'show','32c36cf860aee91e177d7db2286e40e6dda35182:scripts/phase9/security_acceptance/history.json.gz')))
+  ids={r['id'] for r in rows};fresh=[r for r in self.actual['gitleaks']['report'] if r['Fingerprint'] in ids]
+  result=h.verify_history(c.ROOT,fresh,rows,c.safe(c.HERE,'gitleaks.toml').decode());self.assertEqual(result['records'],3264);self.assertEqual(result['unverified'],0)
  def test_history_forged_blob_hash_or_disposition_rejected(self):
   original=c.load(c.HERE,'history.json.gz')
   for field,value in [('source_sha256','0'*64),('source_blob','0'*40),('technical_disposition','UNVERIFIED')]:
@@ -406,5 +409,29 @@ class ContractTests(unittest.TestCase):
     if name=='member':self.assertEqual((preserved/'semgrep-core.official-upstream').read_bytes(),b'non-executable-upstream-unit-fixture')
     else:self.assertFalse(preserved.exists())
 
+
+
+ def test_current_history_includes_new_source_recomputed_ruleset_digest(self):
+  result=c.history(c.ROOT,self.actual['gitleaks']['report']);self.assertEqual(result['records'],3265);self.assertEqual(result['unverified'],0)
+ def test_new_ruleset_digest_cannot_authorize_changed_rule_bytes(self):
+  rows=[r for r in c.load(c.HERE,'history.json.gz') if r['technical_disposition']=='PINNED_SCANNER_RULESET_DIGEST']
+  fresh=[r for r in self.actual['gitleaks']['report'] if r['Fingerprint'] in {w['id'] for w in rows}]
+  changed=dict(self.policy['rules']);changed['secrets']='0'*64
+  with self.assertRaisesRegex(ValueError,'HISTORICAL_RULESET_DIGEST_PROOF_FAILED'):h.verify_history(c.ROOT,fresh,rows,c.safe(c.HERE,'gitleaks.toml').decode(),changed)
+ def test_scanner_network_listener_guard_rejects_real_IP_bind_and_allows_Unix_engine_socket(self):
+  with tempfile.TemporaryDirectory() as directory:
+   code=c.SCANNER_BIND_GUARD+"\ns=socket.socket();s.bind(('127.0.0.1',0))"
+   rejected=subprocess.run([sys.executable,'-B','-c',code],capture_output=True)
+   self.assertNotEqual(rejected.returncode,0);self.assertIn(b'G97_SCANNER_INTERNET_LISTENER_FORBIDDEN',rejected.stderr)
+   code=c.SCANNER_BIND_GUARD+"\ns=socket.socket(socket.AF_UNIX);s.bind(sys.argv[1]);print('ACTUAL_UNIX_BIND_PASSED')"
+   positive=subprocess.run([sys.executable,'-B','-c',code,str(pathlib.Path(directory)/'engine.sock')],capture_output=True)
+   self.assertEqual(positive.returncode,0);self.assertIn(b'ACTUAL_UNIX_BIND_PASSED',positive.stdout)
+ def test_OSV_scanner_dependency_lock_cannot_be_omitted_or_substituted(self):
+  for action in ('omit','substitute','duplicate'):
+   v=self.clean_vector();rows=v['osv']['report']['results']
+   if action=='omit':rows.pop()
+   elif action=='substitute':rows[-1]['source']['path']='/unknown/requirements.txt'
+   else:rows.append(copy.deepcopy(rows[-1]))
+   with self.assertRaises(c.Rejected):c.records(v,self.policy)
 
 if __name__=='__main__':unittest.main(verbosity=2)

@@ -92,12 +92,14 @@ def sbom_projection(obj):
  return {'components':sorted(obj['components'],key=lambda x:x['bom-ref']),'dependencies':sorted(obj['dependencies'],key=lambda x:x['ref'])}
 def osv_projection(obj):
  require(set(obj)=={'results','experimental_config'} and obj['experimental_config']=={'licenses':{'summary':False,'allowlist':None}} and isinstance(obj['results'],list) and obj['results'],'OSV_INCOMPLETE')
- rows=[]
+ rows=[];seen=set()
+ allowed=('package-lock.json','scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt')
  for item in obj['results']:
-  p=item['source']['path'].replace('\\','/');require(p.endswith('/package-lock.json'),'OSV_SOURCE_DRIFT')
-  require(item['source']['type']=='lockfile','OSV_SOURCE_DRIFT')
-  rows.append(item['packages'])
- return rows
+  p=item['source']['path'].replace('\\','/');labels=[name for name in allowed if p.endswith('/'+name)]
+  require(len(labels)==1 and labels[0] not in seen and item['source']['type']=='lockfile','OSV_SOURCE_DRIFT')
+  seen.add(labels[0]);rows.append({'source':labels[0],'packages':item['packages']})
+ require(seen==set(allowed),'OSV_SOURCE_OMISSION')
+ return sorted(rows,key=lambda row:row['source'])
 def audit_projection(obj):
  require(obj.get('auditReportVersion')==2 and isinstance(obj.get('vulnerabilities'),dict) and obj['vulnerabilities'],'AUDIT_INCOMPLETE')
  records=obj['vulnerabilities'];normalized={};links={};roots={}
@@ -183,7 +185,7 @@ def scan_coverage(policy,root=None):
 def scanner_scope(name,args):
  require(isinstance(args,list) and all(isinstance(s,str) for s in args),'SCANNER_INTENT_SCHEMA')
  normal=lambda s:s.replace('\\','/')
- npm={'npm-installed':['audit','--audit-level=high','--json'],'npm-lock':['audit','--package-lock-only','--audit-level=high','--json'],'graph':['ls','--all','--json','--long'],'sbom':['sbom','--sbom-format=cyclonedx']}
+ npm={'npm-initial':['audit','--audit-level=high','--json'],'npm-installed':['audit','--audit-level=high','--json'],'npm-lock':['audit','--package-lock-only','--audit-level=high','--json'],'graph':['ls','--all','--json','--long'],'sbom':['sbom','--sbom-format=cyclonedx']}
  if name in npm:ok=len(args)==len(npm[name])+2 and args[0]=='node' and normal(args[1]).endswith('/npm/bin/npm-cli.js') and args[2:]==npm[name]
  elif name=='gitleaks':ok=len(args)==9 and args[1]=='detect' and normal(args[2]).endswith('/scripts/phase9/security_acceptance/gitleaks.toml') and args[2].startswith('--config=') and args[3:6]==['--redact=100','--exit-code=2','--report-format=json'] and args[6].startswith('--report-path=') and normal(args[6]).endswith('/gitleaks-raw.json') and args[7:]==['--log-opts=--all --full-history','--log-level=info']
  elif name=='osv':ok=len(args)==7 and args[1:5]==['scan','source','--recursive','--format=json'] and args[5].startswith('--output=') and normal(args[5]).endswith('/osv-raw.json') and args[6:]==['.']
@@ -196,7 +198,15 @@ def scanner_scope(name,args):
    ok=[normal(v) for v in args[18:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
  else:ok=False
  require(ok,'SCANNER_SCOPE_DRIFT:'+name)
-SEMGREP_ENTRY="import site,sys;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()"
+SCANNER_BIND_GUARD="""import sys,socket
+# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable
+# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.
+def g97_scanner_audit(event,args):
+ if event == 'socket.bind' and args[0].family in (socket.AF_INET,socket.AF_INET6):
+  raise PermissionError('G97_SCANNER_INTERNET_LISTENER_FORBIDDEN')
+sys.addaudithook(g97_scanner_audit)
+"""
+SEMGREP_ENTRY=SCANNER_BIND_GUARD+"import site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()"
 def records(raw,policy):
  require(set(raw)==set(policy['scannerReports']),'SCANNER_OMISSION_OR_EXTRA')
  for name,profile in policy['scannerReports'].items():
@@ -207,7 +217,7 @@ def records(raw,policy):
   elif name=='sbom':obj=sbom_projection(obj)
   elif name=='graph':obj=graph_projection(obj)
   elif name=='gitleaks':
-   require(isinstance(obj,list) and len(obj)==3264 and len({x['Fingerprint'] for x in obj})==3264,'HISTORY_CARDINALITY')
+   require(isinstance(obj,list) and len(obj)==policy['historyRecordCount'] and len({x['Fingerprint'] for x in obj})==policy['historyRecordCount'],'HISTORY_CARDINALITY')
    require(all(x['Secret']=='REDACTED' for x in obj),'UNREDACTED_FINDING')
    obj=sorted(obj,key=lambda x:x['Fingerprint'])
   elif name=='semgrep':
@@ -283,9 +293,11 @@ def packages(source_root,installed_root,policy,evidence):
  require(sorted(physical_copies)==sorted(x['path'] for x in observed),'UNLISTED_PATCHED_PACKAGE_COPY')
  return observed
 
-def history(root,raw):
+def history(root,raw,rule_hashes=None):
  from history import verify_history
- return verify_history(root,raw,load(HERE,'history.json.gz'),safe(HERE,'gitleaks.toml').decode())
+ policy=load(HERE,'proposal.json');witnesses=load(HERE,'history.json.gz')
+ require(len(witnesses)==policy['historyRecordCount'],'HISTORY_WITNESS_COUNT_DRIFT')
+ return verify_history(root,raw,witnesses,safe(HERE,'gitleaks.toml').decode(),rule_hashes or policy['rules'])
 
 def verify_artifact_inventory(root,expected):
  observed=set()
@@ -317,10 +329,14 @@ def evidence(root,directory,policy,installed_root):
   intent=load(directory,'commands/'+name+'/intent.json');actual=load(directory,'commands/'+name+'/result.json');intents[name]=intent
   require(begin<=utc(intent['started'])<=utc(actual['finished'])<=end,'COMMAND_FRESHNESS_DRIFT:'+name)
   for leaf in ('stdout','stderr'):require(actual[leaf]==manifest['files']['commands/'+name+'/'+leaf],'RAW_STREAM_BINDING_DRIFT')
+ caches=[intents[name].get('environment') for name in ('npm-initial','npm-installed','npm-lock')]
+ require(all(isinstance(value,dict) and set(value)=={'npm_config_cache'} for value in caches),'AUDIT_CACHE_SCOPE_DRIFT')
+ cache=caches[0]['npm_config_cache']
+ require(isinstance(cache,str) and pathlib.Path(cache).is_absolute() and pathlib.Path(cache).name.startswith('g97-audit-cache-') and all(value['npm_config_cache']==cache for value in caches),'AUDIT_CACHE_SCOPE_DRIFT')
  norm=lambda value:value.replace('\\','/').removeprefix('//?/').rstrip('/').casefold()
  execution=intents['gitleaks']['cwd'];installation=intents['npm-installed']['cwd']
  require(all(norm(intents[n]['cwd'])==norm(execution) for n in ('osv','semgrep')),'SCANNER_SOURCE_ROOT_DRIFT')
- require(all(norm(intents[n]['cwd'])==norm(installation) for n in ('npm-lock','graph','sbom','npm-version',*policy['minimumTests'])),'INSTALLED_EXECUTION_ROOT_DRIFT')
+ require(all(norm(intents[n]['cwd'])==norm(installation) for n in ('npm-initial','npm-lock','graph','sbom','npm-version',*policy['minimumTests'])),'INSTALLED_EXECUTION_ROOT_DRIFT')
  require(norm(intents['trufflehog']['cwd'])==norm(execution).rsplit('/',1)[0] and intents['trufflehog']['args'][2]=='file://'+execution.replace('\\','/').rstrip('/').rsplit('/',1)[1],'HISTORY_SOURCE_ROOT_DRIFT')
  require(norm(intents['gitleaks']['args'][2].removeprefix('--config='))==norm(execution+'/scripts/phase9/security_acceptance/gitleaks.toml'),'HISTORY_CONFIG_SOURCE_DRIFT')
  raw={name:{'report':load(directory,p['file']),'exit':p['exit']} for name,p in policy['scannerReports'].items()}
@@ -334,7 +350,7 @@ def evidence(root,directory,policy,installed_root):
   else:rawfile='commands/'+name+'/stdout'
   bind_raw_report(name,envelope['report'],safe(directory,rawfile,allow_empty=name=='trufflehog'))
  records(raw,policy)
- h=history(root,raw['gitleaks']['report']);coupled_source(root,installed_root);p=packages(root,installed_root,policy,directory)
+ h=history(root,raw['gitleaks']['report'],{name:SHA(safe(directory,'rules/'+name+'.yaml')) for name in policy['rules']});coupled_source(root,installed_root);p=packages(root,installed_root,policy,directory)
  required_tests={'backport-and-installer','native-source-and-archive','expired-exceptions'}
  require(set(manifest['regressions'])==required_tests,'REGRESSION_OMISSION')
  for name,result in manifest['regressions'].items():

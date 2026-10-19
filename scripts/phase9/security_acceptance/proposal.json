@@ -2,6 +2,7 @@
   "acceptedInputArchive": "f7062fdee2af693826bba60d4446829a38946643972483ee0d5fa3d56c5a364c",
   "acceptedInputTree": "6fa403e3668f99b7c076f19062e5bee18c935fb6",
   "expiredPolicy": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+  "historyRecordCount": 3265,
   "id": "G97-SOURCE-MITIGATION-R1",
   "minimumTests": {
     "backport-and-installer": 20,
@@ -37,8 +38,9 @@
   "scannerCommands": {
     "gitleaks": "gitleaks8.24.3 detect --config pinned-default --redact=100 --exit-code=2 --log-opts=--all --full-history",
     "graph": "npm11.20.0 ls --all --json --long",
-    "npm-installed": "npm11.20.0 audit --audit-level=high --json (installed)",
-    "npm-lock": "npm11.20.0 audit --package-lock-only --audit-level=high --json",
+    "npm-initial": "npm11.20.0 audit --audit-level=high --json (new private cold cache; raw initial projection retained)",
+    "npm-installed": "npm11.20.0 audit --audit-level=high --json (installed; same private cache after initial audit)",
+    "npm-lock": "npm11.20.0 audit --package-lock-only --audit-level=high --json (same private cache after installed audit)",
     "osv": "osv2.3.8 scan source --recursive --format=json .",
     "sbom": "npm11.20.0 sbom --sbom-format=cyclonedx",
     "semgrep": "semgrep1.181.0 G97 finite2s engine scan --error --strict --oss-only --metrics=off --jobs=1 --max-memory=768 --timeout=30 --max-target-bytes=4194304 --config exact captured p/owasp-top-ten,p/typescript,p/react,p/secrets . plus exact source-bound explicit SQL test targets",
@@ -48,12 +50,17 @@
     "gitleaks": {
       "exit": 2,
       "file": "scans/gitleaks.json.gz",
-      "projection": "f0f2d03cd9e8cb7cb97f1946624cb0650703fdb7f4242a0558ce4f73e4923e8a"
+      "projection": "0b447514f0be125b37cb8fe7294650a3cd693f97377aa78ea9ac88c1b546bc0a"
     },
     "graph": {
       "exit": 0,
       "file": "scans/graph.json.gz",
-      "projection": "8f6c0495b8cdf628e36eb2c556a46068e711057d97d88579c73a7d5251da6609"
+      "projection": "b4c75919dd1a1fd2c6dd395e8aea56b498d925f3e35fe3f0d76508817e1a0e06"
+    },
+    "npm-initial": {
+      "exit": 1,
+      "file": "scans/npm-initial.json.gz",
+      "projection": "3426bef45ed7a04e83d9b8189374d1154ec6e37345af72ee79051b45298ca093"
     },
     "npm-installed": {
       "exit": 1,
@@ -68,12 +75,12 @@
     "osv": {
       "exit": 1,
       "file": "scans/osv.json.gz",
-      "projection": "a2484afff9b456519e687800770df53cca9f311e9dd0d2304973d8e71e5bf1ac"
+      "projection": "298bef612a218e9e27cc6afd3ad0219116e9224d387e006c99562b42dc11ec6a"
     },
     "sbom": {
       "exit": 0,
       "file": "scans/sbom.json.gz",
-      "projection": "0868fb92a93c892b9c3f1d33bb5cd5c321a4f6f7071b8731b058d9f54143ed9c"
+      "projection": "adb04fbbbc65222771f12e8004efedc13b5d3c6ca24e01c3664bd1ab7ab685ed"
     },
     "semgrep": {
       "exit": 0,
@@ -89,7 +96,8 @@
   "scope": [
     "GHSA-vfj7-8cjw-p6xm@braces3.0.3",
     "GHSA-86w9-cpqp-85rv@node-forge1.4.0",
-    "3264 exact historical source-proven noncredential records"
+    "3264 original exact historical source-proven noncredential records plus 1 measured ruleset-digest record",
+    "GHSA-84m7-p3x7-pcfv@mcp1.29.0: scanner CLI only; stateful HTTP server unreachable and Internet listener binds refused"
   ],
   "semgrepBuild": {
     "archiveSha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9",
@@ -288,7 +296,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "30c35a7007371e50084d0933f47bf341ecd85dc6faa2fc7dedc9f4525bdeddb2",
+  "sourceManifest": "691f414613a2130eb470dcdd7d37f7b9209500b8c516da086d11bb775008fb9c",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [
