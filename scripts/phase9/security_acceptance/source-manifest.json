@@ -29,7 +29,7 @@
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "b86ea17ec54da75bfba85ed792bd2c0cef34a3146a3425af49694c717c4d4186"
+    "sha256": "5b6430e7a9ffb04190cbd530ef929c670e2d6a59dac0cb3673e537161be70302"
   },
   {
     "path": ".gitignore",
@@ -9093,19 +9093,19 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "0c33e1c6471555b88977acf5e557b8f6446da0f060a3def3edb60e4c2ce69054"
+    "sha256": "7284b5da75629d6781a6011594666cf4dc0f239d11e4c4aa8dcd972e162cca7a"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
-    "sha256": "ac70d6dbd153894119de23c21d2f7b26dfcab57b475254ab039c0c551a527cbb"
+    "sha256": "f49eeffdf6c7ecac6b43866bc4ee5308a9bbc0a27d1ce65439d28e26ad734c68"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
-    "sha256": "83dc930556cd4147488ddfca6a725755cc4ed509afb13cf95f05b8f096ae5932"
+    "sha256": "80e5027c5ecf53095ac0959e91a8fa1be8f26daf48cb2e460b1c94e5b3a01d2a"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
-    "sha256": "768bb939211904d687c7028fb727fa58e125b77400483236c3066cd625bff2ea"
+    "sha256": "1b31ab27146c7c7bf95fc916b1895a8cf3414f60532adbf8a5ceb7aa100778b4"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

@@ -112,3 +112,8 @@ test('legacy fetch errors, newer releases, crashes, missing errors or invented s
     reject(w => { const step=w.jobs[mode==='npm'?'code-gates':'static-analysis'].steps.find(s => s.id===mode+'_exception_gate');step.run=step.run.replaceAll(mode+'-exception-gate.stderr','omitted-refusal'); });
   }
 });
+
+test('Gitleaks actual executable identity remains a mandatory original-job artifact', () => {
+  reject(w => w.jobs['secret-scan'].steps = w.jobs['secret-scan'].steps.filter(s => s.name !== 'Bind actual Gitleaks executable'));
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Bind actual Gitleaks executable')['continue-on-error'] = true);
+});

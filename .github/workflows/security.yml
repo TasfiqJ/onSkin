@@ -168,6 +168,10 @@ jobs:
           GITLEAKS_ENABLE_COMMENTS: 'false'
           GITLEAKS_VERSION: '8.24.3'
 
+      - name: Bind actual Gitleaks executable
+        if: always()
+        run: python3 -B scripts/phase9/security_acceptance/workflow_admission.py gitleaks-tool
+
       - name: TruffleHog verified secrets
         id: trufflehog
         continue-on-error: true

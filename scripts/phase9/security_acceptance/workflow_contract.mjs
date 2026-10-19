@@ -40,7 +40,7 @@ export function validateWorkflowAdmission(text) {
       if (!['.stdout', '.stderr', '.exit-code'].every((suffix) => capture.run.includes(prefix + suffix)) || !capture.run.includes('exit "$gate_exit"')) return false;
     }
     const leak = jobs['secret-scan'].steps.find((step) => step.id === 'gitleaks');
-    if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif')) return false;
+    if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif') || !finalCommand(jobs['secret-scan'], 'python3 -B scripts/phase9/security_acceptance/workflow_admission.py gitleaks-tool')) return false;
     const staticJob = jobs['static-analysis'];
     if (staticJob['runs-on'] !== 'ubuntu-24.04' || !command(staticJob, 'bootstrap_tools.py') || !command(staticJob, 'collect.py') || !command(staticJob, 'contract.py check') || !command(staticJob, 'python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v')) return false;
     for (const name of [prepare, owner]) {

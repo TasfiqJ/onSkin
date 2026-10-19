@@ -265,8 +265,9 @@ class ContractTests(unittest.TestCase):
    for suffix,key in [('.stdout','stdout'),('.stderr','stderr'),('.exit-code','exit')]:write(folder+'/'+mode+'-exception-gate'+suffix,(str(refusal[key])+('\n' if key=='exit' else '')).encode())
   write('static/osv-scan.exit-code',str(fresh['osv']['exit']).encode()+b'\n')
   write('static/osv-scan.json',fresh['osv']['report'])
+  write('secret/gitleaks-tool.json',{'version':'8.24.3','sha256':self.policy['toolBytes']['gitleaks'][0],'exit':0})
   findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
-  write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'8.24.3'}},'results':findings}]})
+  write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'v8.0.0'}},'results':findings}]})
   return w,root,needs,commit,run_id,fresh
  def test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'code/dependency-inventory.json';original=p.read_bytes()
@@ -305,6 +306,13 @@ class ContractTests(unittest.TestCase):
     with self.subTest(mode=mode,suffix=suffix):
      with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
     p.write_bytes(original)
+ def test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'secret/gitleaks-tool.json';original=p.read_bytes()
+  for field,value in [('version','8.0.0'),('version','8.24.2'),('sha256','0'*64),('exit',127),('exit',True)]:
+   changed=c.parse_json(original);changed[field]=value;p.write_bytes(c.CANON(changed))
+   with self.subTest(field=field,value=value):
+    with self.assertRaisesRegex(c.Rejected,'GITLEAKS_TOOL_IDENTITY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+  p.write_bytes(original)
  def test_original_workflow_valid_known_artifacts_are_technical_only(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
   result=w.original_jobs(root,needs,commit,run_id,fresh)

@@ -3,7 +3,7 @@
 The independently signed digest covers both the complete technical receipt and
 all original Security job evidence. A standalone green workflow is insufficient.
 """
-import argparse, json, os, pathlib, re, stat, subprocess, sys, urllib.parse
+import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, urllib.parse
 import contract as c
 
 JOBS = {
@@ -18,14 +18,14 @@ MANIFESTS = {
 }
 LEGACY_FILES = set(MANIFESTS.values()) | {
     'code/npm-audit-high.json', 'code/npm-audit-high.exit-code',
-    'secret/gitleaks-results.sarif', 'static/osv-scan.json', 'static/osv-scan.exit-code',
+    'secret/gitleaks-results.sarif', 'secret/gitleaks-tool.json', 'static/osv-scan.json', 'static/osv-scan.exit-code',
     'code/dependency-inventory.json', 'code/dependency-sbom.exit-code',
     'code/dependency-sbom-audit.json', 'code/dependency-sbom-audit.exit-code',
     *{folder + '/' + mode + '-exception-gate' + suffix for folder, mode in [('code', 'npm'), ('static', 'osv')] for suffix in ('.stdout', '.stderr', '.exit-code')},
 }
 
 def legacy_inventory(directory):
-    """Only the complete technical receipt may sit beside these eighteen files."""
+    """Only the complete technical receipt may sit beside these nineteen files."""
     directory = pathlib.Path(directory)
     observed = set()
     for current, dirs, files in os.walk(directory, followlinks=False):
@@ -120,6 +120,11 @@ def original_jobs(directory, needs, commit, run_id, fresh):
     leak_exit = int(secret['gitleaks_exit'])
     c.require(secret['gitleaks'] == ('success' if leak_exit == 0 else 'failure'),
               'WORKFLOW_GITLEAKS_EXIT_DRIFT')
+    tool = c.load(directory, 'secret/gitleaks-tool.json')
+    c.require(isinstance(tool, dict) and set(tool) == {'version', 'sha256', 'exit'}
+              and tool['version'] == '8.24.3' and type(tool['exit']) is int and tool['exit'] == 0
+              and tool['sha256'] in c.load(c.HERE, 'proposal.json')['toolBytes']['gitleaks'],
+              'WORKFLOW_GITLEAKS_TOOL_IDENTITY_DRIFT')
     sarif = c.load(directory, 'secret/gitleaks-results.sarif')
     c.require(isinstance(sarif, dict) and sarif.get('$schema') == 'https://json.schemastore.org/sarif-2.1.0.json'
               and sarif.get('version') == '2.1.0' and isinstance(sarif.get('runs'), list)
@@ -128,7 +133,9 @@ def original_jobs(directory, needs, commit, run_id, fresh):
     c.require(isinstance(run, dict) and isinstance(run.get('tool'), dict), 'WORKFLOW_GITLEAKS_REPORT_SCHEMA')
     driver = run['tool'].get('driver', {})
     c.require(isinstance(driver, dict) and driver.get('name') == 'gitleaks'
-              and driver.get('semanticVersion') in ('8.24.3', 'v8.24.3'),
+              # Official 8.24.3 emits this legacy SARIF format constant. Actual
+              # executable identity is independently pinned above, never inferred here.
+              and driver.get('semanticVersion') == 'v8.0.0',
               'WORKFLOW_GITLEAKS_VERSION_DRIFT')
     findings = run.get('results')
     c.require(isinstance(findings, list) and bool(findings) == (leak_exit == 2),
@@ -156,7 +163,35 @@ def original_jobs(directory, needs, commit, run_id, fresh):
             'outcomes': manifests, 'eventRangeHistoricalFindings': len(seen),
             'files': legacy_inventory(directory)}
 
+def write_gitleaks_tool():
+    """Bind the executable installed by the pinned action, not SARIF's placeholder."""
+    try:
+        located = shutil.which('gitleaks')
+        c.require(located, 'WORKFLOW_GITLEAKS_TOOL_MISSING')
+        path = pathlib.Path(located)
+        body = c.safe(path.parent, path.name, limit=512 * 1024**2)
+        digest = c.SHA(body)
+        c.require(digest in c.load(c.HERE, 'proposal.json')['toolBytes']['gitleaks'],
+                  'WORKFLOW_GITLEAKS_TOOL_IDENTITY_DRIFT')
+        process = subprocess.run([str(path), 'version'], capture_output=True, timeout=10, check=False)
+        c.require(process.returncode == 0 and process.stdout == b'8.24.3\n' and not process.stderr,
+                  'WORKFLOW_GITLEAKS_TOOL_VERSION_DRIFT')
+        witness = {'version': '8.24.3', 'sha256': digest, 'exit': 0}
+        directory = c.ROOT / 'docs/phase-9/generated/ci-scanner-evidence'
+        directory.mkdir(parents=True, exist_ok=True)
+        c.require(directory.resolve() == directory, 'WORKFLOW_LINKED_DIRECTORY')
+        with (directory / 'gitleaks-tool.json').open('xb') as output:
+            output.write(c.CANON(witness))
+        print(json.dumps(witness, sort_keys=True))
+        return 0
+    except (ValueError, OSError, TypeError, subprocess.SubprocessError) as error:
+        print(json.dumps({'status': 'REJECTED', 'code': str(error), 'acceptanceGranted': False}))
+        return 1
+
+
 def main():
+    if sys.argv[1:] == ['gitleaks-tool']:
+        return write_gitleaks_tool()
     p = argparse.ArgumentParser()
     p.add_argument('mode', choices=['check', 'accept'])
     p.add_argument('--evidence', required=True)
