@@ -939,11 +939,14 @@ async function stopProcess(child) {
     CAT05_ACTIVE_CHILDREN.delete(child);
     return;
   }
-  const waitForExit = (timeoutMs) =>
-    Promise.race([
+  const waitForExit = (timeoutMs) => {
+    // An exit already consumed by an earlier wait cannot fire a second time.
+    if (!cat05ChildRunning(child)) return Promise.resolve(true);
+    return Promise.race([
       new Promise((resolve) => child.once('exit', () => resolve(true))),
       delay(timeoutMs, undefined, { ref: false }).then(() => false),
     ]);
+  };
   if (!isWindows) {
     child.kill('SIGTERM');
     await waitForExit(750);
@@ -1153,9 +1156,7 @@ async function connectToPage(debugPort, baseUrl, signal) {
     { method: 'PUT' },
   );
   const target =
-    createdTarget?.type === 'page' && createdTarget?.webSocketDebuggerUrl
-      ? createdTarget
-      : null;
+    createdTarget?.type === 'page' && createdTarget?.webSocketDebuggerUrl ? createdTarget : null;
   if (!target) throw new Error('No debuggable browser page was found.');
   assertCat05PageTarget(target.url, baseUrl);
   assertCat05DebugTarget(target.webSocketDebuggerUrl, debugPort);

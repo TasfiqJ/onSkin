@@ -87,6 +87,7 @@ const CAT07_APP_ENVIRONMENT_KEY_SETS = [
 function cat07CommittedExpectedBrowserArguments() {
   return [
     '--headless',
+    '--remote-debugging-address=127.0.0.1',
     '--remote-debugging-port=0',
     '--user-data-dir=<fresh-profile>',
     '--no-first-run',

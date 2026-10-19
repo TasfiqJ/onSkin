@@ -84,7 +84,7 @@ function runFixture(files, registry = registrySource) {
     const evaluation = `
       const { auditAnalyticsSource } = await import(${JSON.stringify(auditModuleUrl)});
       const result = auditAnalyticsSource();
-      process.stdout.write(JSON.stringify({ ...result, trackedEvents: [...result.trackedEvents] }));
+      process.stdout.write(JSON.stringify({ ...result, trackedEvents: [...result.trackedEvents], trackedCallFiles: [...result.trackedCallFiles] }));
     `;
     const child = spawnSync(process.execPath, ['--input-type=module', '--eval', evaluation], {
       cwd: root,
@@ -508,4 +508,19 @@ expectFailure(
     ),
 );
 
-console.log('Analytics source audit smoke passed 1 positive matrix and 36 negative fixtures.');
+const conflictRoute = 'apps/mobile/src/app/conflict/[ruleId].tsx';
+const trackedFiles = runFixture({
+  [conflictRoute]: `import { track as capture } from '@/lib/analytics/track'; capture('event_empty');`,
+  'apps/mobile/src/comment-only.ts': `// track('event_empty');\nconst text = \"track('event_empty')\"; void text;`,
+});
+if (
+  trackedFiles.errors.length ||
+  trackedFiles.trackedCallFiles.length !== 1 ||
+  trackedFiles.trackedCallFiles[0] !== conflictRoute
+) {
+  throw new Error(
+    `Canonical aliased call file must remain visible without comment/string decoys: ${JSON.stringify(trackedFiles)}`,
+  );
+}
+
+console.log('Analytics source audit smoke passed 2 positive matrices and 36 negative fixtures.');

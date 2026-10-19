@@ -121,7 +121,7 @@ function appendGovernedRoleErrors(result, chain, evidencePath, evidenceBytes) {
   }
 }
 
-const prettierConfig = (await resolvePrettierConfig(root)) ?? {};
+const prettierConfig = (await resolvePrettierConfig(join(root, templatePath))) ?? {};
 const expectedTemplate = await prettierFormat(
   normalizedJson(createCameraLifecycleEvidenceTemplate()),
   {

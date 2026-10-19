@@ -606,7 +606,7 @@ test('CAT05 Progress review admits trusted Camera URIs and drains before protect
   );
   matches(
     review,
-    /await lifecycle\.save\(persist,[\s\S]*pendingNavigationRef\.current = \{ kind: 'progress' \};[\s\S]*setRouteRemovalReady\(true\);/u,
+    /await lifecycle\.save\(\s*async \(uri\) => \{\s*assertRouteCaptureAuthorityCurrent\(\);\s*await persist\(uri\);\s*\},[\s\S]*pendingNavigationRef\.current = \{ kind: 'progress' \};[\s\S]*setRouteRemovalReady\(true\);/u,
     'Save must await encrypted persistence and raw cleanup before route removal.',
   );
   assert.doesNotMatch(

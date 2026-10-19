@@ -137,11 +137,10 @@ for (const route of [
   'apps/mobile/src/app/conflict/[ruleId].tsx',
   'apps/mobile/src/app/share/conflict/[ruleId].tsx',
 ]) {
-  const source = exists(route) ? stripComments(read(route)) : '';
   block(errors, exists(route), `${route} is missing.`);
   block(
     errors,
-    !/\btrack\s*\(/.test(source),
+    !analyticsSourceAudit.trackedCallFiles.has(route),
     `${route} must not emit analytics; any event from a conflict-only route reveals conflict existence.`,
   );
 }

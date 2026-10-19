@@ -80,7 +80,9 @@ seedGovernedPublicationSourceFixture({ fixtureRoot, sourceRoot });
 git(fixtureRoot, ['config', 'user.email', 'phase5-native-ocr-smoke@example.invalid']);
 git(fixtureRoot, ['config', 'user.name', 'Phase 5 Native OCR Smoke']);
 git(fixtureRoot, ['add', '-A']);
-git(fixtureRoot, ['commit', '--quiet', '-m', 'Phase 5 native OCR smoke source']);
+if (git(fixtureRoot, ['diff', '--cached', '--name-only'])) {
+  git(fixtureRoot, ['commit', '--quiet', '-m', 'Phase 5 native OCR smoke source']);
+}
 
 const checker = resolve(fixtureRoot, 'scripts/phase5/check-native-ocr-evidence.mjs');
 const gitSha = git(fixtureRoot, ['rev-parse', 'HEAD']);

@@ -7641,7 +7641,7 @@
   },
   {
     "path": "scripts/cat05/native-label-ocr-source-contract.test.mjs",
-    "sha256": "0b2d04af53adb1092ed34025e17704b4cd2411662d2a823f2e20f6ffedd15df6"
+    "sha256": "7fcc83d08d1f4b78cdc9cf5399f9e95df0ac371c3c44f9b296e2236ece1eec4c"
   },
   {
     "path": "scripts/com01/commerce-admission-source-contract.mjs",
@@ -7737,7 +7737,7 @@
   },
   {
     "path": "scripts/e2e/cat05-native-ocr-ui-audit.mjs",
-    "sha256": "07cb95ff9c61567ac0830a7a960a9aa1bf74f6eea24d7965a1cb585e8ebb834b"
+    "sha256": "462fa56df6181ef4e5428d9de63fd1eb528e515720d1c4b5121c714734487bfa"
   },
   {
     "path": "scripts/e2e/cat05-native-ocr-ui-audit.test.mjs",
@@ -7745,7 +7745,7 @@
   },
   {
     "path": "scripts/e2e/cat07-committed-evidence.mjs",
-    "sha256": "3beef279abfe936f2edd35358d69bf192d6896cdc9eae61a88a0beb49bb4e9fa"
+    "sha256": "2afa32baa0ac23d0e2bc24d66551d093924463d34966691f673f28003142b747"
   },
   {
     "path": "scripts/e2e/cat07-png-contract.mjs",
@@ -8009,7 +8009,7 @@
   },
   {
     "path": "scripts/phase10/beta-analytics-audit.mjs",
-    "sha256": "a5039421c942355fbf693317a1c89a137d1fccbccdab26f3f1afa08aba51e787"
+    "sha256": "39f463cc4df81abafedabc1f89bcd63e0e172ec4ffb5f0a02f7aaa7ff64fce15"
   },
   {
     "path": "scripts/phase10/beta-readiness.mjs",
@@ -8409,11 +8409,11 @@
   },
   {
     "path": "scripts/phase5/camera-lifecycle-evidence-smoke.mjs",
-    "sha256": "3a790cc26cd262c5e08be413d339019839825420596c0e18d7b937ebed653457"
+    "sha256": "30507ea34e421e4b9bd327f765a9ca5abf5f1be2b04a3b5d2f75ad7fc0289b04"
   },
   {
     "path": "scripts/phase5/check-camera-lifecycle-evidence.mjs",
-    "sha256": "079be633ea16d856781f982fe5cd1722b1372cc02fa59d7db0db1a57ae49c784"
+    "sha256": "7c2fc6522c9dcfd8b94a84d2e09f513a79ea358fed3b9c8b998564674c3c123e"
   },
   {
     "path": "scripts/phase5/check-native-config.mjs",
@@ -8593,7 +8593,7 @@
   },
   {
     "path": "scripts/phase5/native-ocr-evidence-smoke.mjs",
-    "sha256": "c15ae94123be105c9b5cddb55e009003065d02b27948a5baa6beceda841bfcb7"
+    "sha256": "e2dc62d274857a60afc2181da38486a8405cafd801d7ce5784e97aed89b25bfb"
   },
   {
     "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
@@ -8721,11 +8721,11 @@
   },
   {
     "path": "scripts/phase9/analytics-source-audit-smoke.mjs",
-    "sha256": "662713918a392e28bdb1d1af35c43e7785996e3d3f01743637dc9a273b653f46"
+    "sha256": "27be95d96d68e47b55c1fb476d7a16d2b6b8abd7d73711188d37f81a97f6b2cb"
   },
   {
     "path": "scripts/phase9/analytics-source-audit.mjs",
-    "sha256": "8fcf162d8c68eae44be566853232e889b778b06d8abdd3d8def90c2f91d4deef"
+    "sha256": "1f4ed199bdbfbb855b5911d9556f111600896b240ece0eebcbc11ffc9e9ece8e"
   },
   {
     "path": "scripts/phase9/apple-auth-work-lane-smoke.mjs",

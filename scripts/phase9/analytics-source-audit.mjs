@@ -1045,6 +1045,7 @@ export function auditAnalyticsSource() {
     );
   const registry = parseRegistry(errors, registrySourceFile);
   const trackedEvents = new Set();
+  const trackedCallFiles = new Set();
   let callCount = 0;
   let trackerDynamicVendorImports = 0;
   const files = listFiles('apps/mobile/src').filter(isRuntimeSource);
@@ -1160,6 +1161,7 @@ export function auditAnalyticsSource() {
           (!checker && ts.isIdentifier(callTarget) && fallbackTrackBindings.has(callTarget.text));
         if (!isTracker && canonicalCall) {
           callCount += 1;
+          trackedCallFiles.add(relativeFile);
           const event = validateTrackCall({ checker, errors, node, registry, sourceFile });
           if (event) trackedEvents.add(event);
         }
@@ -1186,6 +1188,7 @@ export function auditAnalyticsSource() {
     allowedProps: new Set(registry.props),
     callCount,
     errors: [...new Set(errors)].sort(),
+    trackedCallFiles,
     trackedEventCount: trackedEvents.size,
     trackedEvents,
   };

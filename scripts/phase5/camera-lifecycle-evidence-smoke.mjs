@@ -81,7 +81,11 @@ const appBundleIdentifier = 'com.layerwell.staging';
 const appVersion = '1.0.0';
 const iosBuildNumber = '42';
 const executableSha256 = 'c'.repeat(64);
-const fixtureNow = Date.parse('2026-07-18T20:00:00.000Z');
+// Synthetic smoke timestamps move together; no machine clock or real QA record changes.
+const fixtureNow = Date.now();
+const fixtureEpoch = Date.parse('2026-07-18T20:00:00.000Z');
+const fixtureTime = (value) =>
+  new Date(Date.parse(value) + fixtureNow - fixtureEpoch).toISOString();
 
 function binding() {
   return {
@@ -98,7 +102,7 @@ function report(reportType, claims) {
   return {
     schemaVersion: 1,
     reportType,
-    capturedAt: '2026-07-18T17:00:00.000Z',
+    capturedAt: fixtureTime('2026-07-18T17:00:00.000Z'),
     binding: binding(),
     claims,
   };
@@ -114,7 +118,7 @@ function privacy() {
     containsRawDeviceIdentifier: false,
     containsAbsoluteLocalPath: false,
     reviewedBy: 'Alex Morgan',
-    reviewedAt: '2026-07-18T17:45:00.000Z',
+    reviewedAt: fixtureTime('2026-07-18T17:45:00.000Z'),
   };
 }
 
@@ -131,8 +135,8 @@ function sourceKindsForScenario(scenarioId) {
 
 function createValidFixture() {
   const evidence = createCameraLifecycleEvidenceTemplate();
-  evidence.testStartedAt = '2026-07-18T12:00:00.000Z';
-  evidence.completedAt = '2026-07-18T18:00:00.000Z';
+  evidence.testStartedAt = fixtureTime('2026-07-18T12:00:00.000Z');
+  evidence.completedAt = fixtureTime('2026-07-18T18:00:00.000Z');
   evidence.sourceGitSha = sourceGitSha;
   evidence.sourceHashes = Object.fromEntries(
     CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES.map((path) => [
@@ -171,7 +175,7 @@ function createValidFixture() {
     },
   };
   evidence.devicePolicy = {
-    reviewedAt: '2026-07-18T11:00:00.000Z',
+    reviewedAt: fixtureTime('2026-07-18T11:00:00.000Z'),
     reviewedBy: 'Jordan Lee',
     minimumIosVersion: '17.0',
     currentPublicIosVersion: CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION,
@@ -195,7 +199,7 @@ function createValidFixture() {
       installedAppVersion: appVersion,
       installedIosBuildNumber: iosBuildNumber,
       installedArchiveSha256: archiveSha256,
-      installedAt: '2026-07-18T11:30:00.000Z',
+      installedAt: fixtureTime('2026-07-18T11:30:00.000Z'),
       installationMethod: 'eas_internal_distribution',
       installationReceiptArtifactId: 'install_receipt-ios-floor-device',
       inAppIdentityVerified: true,
@@ -215,7 +219,7 @@ function createValidFixture() {
       installedAppVersion: appVersion,
       installedIosBuildNumber: iosBuildNumber,
       installedArchiveSha256: archiveSha256,
-      installedAt: '2026-07-18T11:40:00.000Z',
+      installedAt: fixtureTime('2026-07-18T11:40:00.000Z'),
       installationMethod: 'eas_internal_distribution',
       installationReceiptArtifactId: 'install_receipt-ios-current-device',
       inAppIdentityVerified: true,
@@ -223,8 +227,12 @@ function createValidFixture() {
   ];
   evidence.runs = createCameraLifecycleEvidenceTemplate().runs.map((run, index) => ({
     ...run,
-    startedAt: `2026-07-18T${String(12 + Math.floor(index / 18)).padStart(2, '0')}:${String(index % 60).padStart(2, '0')}:00.000Z`,
-    completedAt: `2026-07-18T${String(12 + Math.floor(index / 18)).padStart(2, '0')}:${String(index % 60).padStart(2, '0')}:30.000Z`,
+    startedAt: fixtureTime(
+      `2026-07-18T${String(12 + Math.floor(index / 18)).padStart(2, '0')}:${String(index % 60).padStart(2, '0')}:00.000Z`,
+    ),
+    completedAt: fixtureTime(
+      `2026-07-18T${String(12 + Math.floor(index / 18)).padStart(2, '0')}:${String(index % 60).padStart(2, '0')}:30.000Z`,
+    ),
     result: 'pass',
     observations: Object.fromEntries(Object.keys(run.observations).map((key) => [key, true])),
     notes: null,
@@ -262,8 +270,7 @@ function createValidFixture() {
     },
     final_info_plist_report: {
       extractedFromSignedArchive: true,
-      infoPlistRelativePath:
-        'Layerwell.xcarchive/Products/Applications/Layerwell.app/Info.plist',
+      infoPlistRelativePath: 'Layerwell.xcarchive/Products/Applications/Layerwell.app/Info.plist',
       finalInfoPlist: evidence.signedArchive.finalInfoPlist,
     },
     device_inventory_report: {
@@ -273,8 +280,8 @@ function createValidFixture() {
     },
     network_privacy_report: {
       captureTool: { name: 'Proxyman', version: '5.17.0', mode: 'physical_device_proxy' },
-      captureStartedAt: '2026-07-18T12:00:00.000Z',
-      captureEndedAt: '2026-07-18T18:00:00.000Z',
+      captureStartedAt: fixtureTime('2026-07-18T12:00:00.000Z'),
+      captureEndedAt: fixtureTime('2026-07-18T18:00:00.000Z'),
       deviceIds,
       routeIds,
       offlineRunIds,
@@ -396,7 +403,7 @@ function createValidFixture() {
             sha256: sha256(`access-controlled-source-${id}-${kind}`),
             reference: `cat06/${run.deviceId}/${run.route}/${run.scenarioId}/${kind}`,
             reviewedBy: 'Taylor Rivera',
-            reviewedAt: '2026-07-18T17:30:00.000Z',
+            reviewedAt: fixtureTime('2026-07-18T17:30:00.000Z'),
           })),
         }),
         null,
@@ -418,7 +425,7 @@ function createValidFixture() {
     qaSignedOffBy: 'Morgan Patel',
     privacySecuritySignedOffBy: 'Casey Nguyen',
     accessibilitySignedOffBy: 'Riley Thompson',
-    signedAt: '2026-07-18T19:00:00.000Z',
+    signedAt: fixtureTime('2026-07-18T19:00:00.000Z'),
   };
   return evidence;
 }
@@ -641,7 +648,7 @@ const cases = [
     name: 'rejects future-dated completion beyond the clock-skew allowance',
     run() {
       const evidence = clone();
-      evidence.completedAt = '2026-07-19T18:00:00.000Z';
+      evidence.completedAt = fixtureTime('2026-07-19T18:00:00.000Z');
       return validate(evidence).errors.some((error) =>
         /completedAt cannot be in the future/.test(error),
       );
@@ -680,7 +687,7 @@ const cases = [
     run() {
       const evidence = clone();
       replaceJsonArtifact(evidence, 'network_privacy_report', 'narrow', (value) => {
-        value.claims.captureStartedAt = '2026-07-18T12:30:00.000Z';
+        value.claims.captureStartedAt = fixtureTime('2026-07-18T12:30:00.000Z');
       });
       return validate(evidence).errors.some((error) =>
         /capture must start at or before testStartedAt/.test(error),
@@ -846,8 +853,8 @@ const cases = [
       for (const [index, run] of evidence.runs
         .filter((candidate) => candidate.deviceId === deviceId)
         .entries()) {
-        run.startedAt = '2026-07-18T12:00:00.000Z';
-        run.completedAt = '2026-07-18T12:00:01.000Z';
+        run.startedAt = fixtureTime('2026-07-18T12:00:00.000Z');
+        run.completedAt = fixtureTime('2026-07-18T12:00:01.000Z');
         const proofId = run.proofArtifactIds[0];
         replaceJsonArtifact(evidence, proofId, `overlap-${index}`, (value) => {
           value.claims.run = structuredClone(run);
