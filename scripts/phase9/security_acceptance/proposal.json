@@ -308,7 +308,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "ae8a331ba4a9a217130e3aee0b24f6636584f1e13488460a2cab230bc3683474",
+  "sourceManifest": "32088ac5a29523842c5d8f6a20847cf7365ca5897db9456af958d4785fff91ef",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

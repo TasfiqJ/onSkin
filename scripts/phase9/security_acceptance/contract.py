@@ -258,7 +258,9 @@ def current_evidence(root,directory,policy,intents,raw):
 
 def records(raw,policy):
  require(set(raw)==set(policy['scannerReports']),'SCANNER_OMISSION_OR_EXTRA')
- for name,profile in policy['scannerReports'].items():
+ # The preparatory cold report depends on the exact final audit authority.
+ for name in sorted(policy['scannerReports'],key=lambda name:(name=='npm-initial',name)):
+  profile=policy['scannerReports'][name]
   value=raw[name];require(set(value)=={'report','exit'} and type(value['exit']) is int and value['exit']==profile['exit'],'SCANNER_EXIT:'+name)
   obj=value['report']
   if name=='npm-initial':

@@ -9049,7 +9049,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "2bb4ccdfc27984c29976190c89570d8f3e3733d4c2dcd1d0c957bd1dd01a5480"
+    "sha256": "d6f36fb77f665528394759c3a668c8a07df3c9a373cc347254c24148e119ea85"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
