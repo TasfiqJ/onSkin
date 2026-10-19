@@ -62,10 +62,13 @@ the activation path forbids that override.
 
 The collector creates one new private audit cache. It retains the initial cold
 report, then runs the installed and lock-only audits serially in that same cache.
-Measured identical-source controls reproduce 27 then 68 candidate records, and
-25 then 67 main-baseline records. Every exact projection and original nonzero exit
-is checked; the initial report cannot introduce an unreviewed finding or be
-omitted. This fixed protocol does not repeat until a preferred status appears.
+Measured identical-source controls reproduce 25 or 27 initial candidate records
+then 68 final records, and 25 then 67 main-baseline records. The initial report
+must retain every primary root and contain only exact record identities present
+in the mandatory complete final audit. Its severity counts are recomputed from
+its actual records. Installed and lock-only final projections stay exact; all
+raw reports and original nonzero exits are retained. The initial report cannot
+introduce an unreviewed finding or be omitted. This fixed protocol does not repeat until a preferred status appears.
 The retained older 27/67/68 reports remain separate historical evidence. A raw
 count alone does not establish a source, npm version or complete audit coverage.
 

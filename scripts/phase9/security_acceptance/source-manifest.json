@@ -9033,11 +9033,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
-    "sha256": "ea61d347963e2efcef1d3137e0b36880f987ff8cf127cb25c93a3cc68a35ae6b"
+    "sha256": "7e892e5075b7b82cf5a2940001d6585baeff0464a91d06fdaab7403700901e76"
   },
   {
     "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
-    "sha256": "266f309c63119ccb025f76827276424870302b6eb2e4e97c3f6aa6ea45a7909a"
+    "sha256": "d88d35c56fba232bbfc8ac7f15c178b743cc8258e3614319ed3f45603ac9ac9c"
   },
   {
     "path": "scripts/phase9/security_acceptance/braces.patch",
@@ -9049,7 +9049,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "386694a837e797c45be7b24f8a2a5ed36fb4355b0b7a198e636f3a746b7807c4"
+    "sha256": "0e020ee36cca709311550dca2df6867fe87fda73dfaa7986bcd01478cc9a5534"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9089,7 +9089,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "b78530c6215eb433178d7b79a3795b327d70b65abb800cd7b34799a92a56b40a"
+    "sha256": "5fbc4d9131c6ef96759f0198153ec34db9c4687957c9d6e19f4762964821f6a6"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",

@@ -77,12 +77,12 @@ def main():
  policy = load(HERE, 'proposal.json'); rows = []
  require(SHA(safe(HERE, REQUIREMENTS)) == policy['semgrepBuild']['requirementsSha256'], 'REQUIREMENTS_DRIFT')
  npm_root = root / 'npm'; site = root / 'semgrep'
- subprocess.run(['npm', 'install', '--prefix', str(npm_root), 'npm@11.20.0', '--ignore-scripts',
-                 '--bin-links=false', '--no-audit', '--no-fund', '--cache', str(root / 'cache/npm')], check=True)
+ subprocess.run(['npm', 'install', '--prefix', 'npm', 'npm@11.20.0', '--ignore-scripts',
+                 '--bin-links=false', '--no-audit', '--no-fund', '--cache', 'cache/npm'], cwd=root, check=True)
  subprocess.run([sys.executable, '-B', '-m', 'pip', '--isolated', 'install', '--index-url', 'https://pypi.org/simple',
                  '--no-input', '--require-hashes', '--only-binary=:all:', '--no-compile', '--no-deps',
-                 '--target', str(site), '--requirement', str(HERE / REQUIREMENTS),
-                 '--report', str(root / 'official-wheel-install.json'), '--cache-dir', str(root / 'cache/pip')], check=True)
+                 '--target', 'semgrep', '--requirement', str(HERE / REQUIREMENTS),
+                 '--report', 'official-wheel-install.json', '--cache-dir', 'cache/pip'], cwd=root, check=True)
  rows.append(install_engine(site, HERE / ENGINE_ARCHIVE, policy['semgrepBuild'], root / 'preserved-upstream'))
  scanners = root / 'scanners'; scanners.mkdir()
  for name, (url, member, digest) in ASSETS.items():

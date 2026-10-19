@@ -60,7 +60,7 @@
     "npm-initial": {
       "exit": 1,
       "file": "scans/npm-initial.json.gz",
-      "projection": "3426bef45ed7a04e83d9b8189374d1154ec6e37345af72ee79051b45298ca093"
+      "validation": "EXACT_SUBSET_OF_FINAL_AUDIT_WITH_ALL_PRIMARY_ROOTS"
     },
     "npm-installed": {
       "exit": 1,
@@ -296,7 +296,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "691f414613a2130eb470dcdd7d37f7b9209500b8c516da086d11bb775008fb9c",
+  "sourceManifest": "c95b01ed8d547b616e2e64c386b212830ccedc4b061f682e93a8b940d74d568f",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

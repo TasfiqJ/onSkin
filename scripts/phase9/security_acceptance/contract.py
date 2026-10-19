@@ -124,6 +124,17 @@ def audit_projection(obj):
   roots=updated
  require(all(roots.values()),'UNROOTED_AUDIT_RECORD')
  return {'records':normalized,'counts':obj['metadata']['vulnerabilities']}
+def initial_audit_subset(obj,final):
+ # Cold-cache metavulnerability expansion is not a stable report identity.
+ # Every initial record must match the final full audit and retain both roots.
+ initial=audit_projection(obj);complete=audit_projection(final)
+ require(set(initial['records']) <= set(complete['records']) and all(record==complete['records'][name] for name,record in initial['records'].items()),'INITIAL_AUDIT_RECORD_DRIFT')
+ roots=lambda rows:{name for name,record in rows.items() if record['primaryAdvisories']}
+ require(roots(initial['records'])==roots(complete['records']) and roots(initial['records']),'INITIAL_AUDIT_PRIMARY_OMISSION')
+ counts=initial['counts'];levels=('info','low','moderate','high','critical')
+ require(set(counts)==set(levels)|{'total'} and all(type(counts[name]) is int and counts[name]>=0 for name in counts),'INITIAL_AUDIT_COUNT_TYPES')
+ require(all(counts[level]==sum(record['severity']==level for record in initial['records'].values()) for level in levels) and counts['total']==len(initial['records']),'INITIAL_AUDIT_COUNT_DRIFT')
+ return initial
 def bind_raw_report(name,report,data):
  if name=='trufflehog':require(not data.strip() and report==[],'RAW_REPORT_DRIFT:'+name)
  else:require(parse_json(data)==report,'RAW_REPORT_DRIFT:'+name)
@@ -212,6 +223,9 @@ def records(raw,policy):
  for name,profile in policy['scannerReports'].items():
   value=raw[name];require(set(value)=={'report','exit'} and type(value['exit']) is int and value['exit']==profile['exit'],'SCANNER_EXIT:'+name)
   obj=value['report']
+  if name=='npm-initial':
+   require(profile.get('validation')=='EXACT_SUBSET_OF_FINAL_AUDIT_WITH_ALL_PRIMARY_ROOTS','INITIAL_AUDIT_POLICY_DRIFT')
+   initial_audit_subset(obj,raw['npm-installed']['report']);continue
   if name.startswith('npm-'):obj=audit_projection(obj)
   elif name=='osv':obj=osv_projection(obj)
   elif name=='sbom':obj=sbom_projection(obj)

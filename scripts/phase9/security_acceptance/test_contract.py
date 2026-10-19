@@ -433,5 +433,20 @@ class ContractTests(unittest.TestCase):
    elif action=='substitute':rows[-1]['source']['path']='/unknown/requirements.txt'
    else:rows.append(copy.deepcopy(rows[-1]))
    with self.assertRaises(c.Rejected):c.records(v,self.policy)
+ def test_initial_audit_may_be_a_source_bound_subset_but_keeps_all_primary_roots(self):
+  v=self.clean_vector();records=v['npm-initial']['report']['vulnerabilities'];v['npm-initial']['report']['vulnerabilities']={name:r for name,r in records.items() if r['via'] and any(isinstance(x,dict) for x in r['via'])}
+  obj=v['npm-initial']['report'];obj['metadata']['vulnerabilities']={'info':0,'low':0,'moderate':0,'high':len(obj['vulnerabilities']),'critical':0,'total':len(obj['vulnerabilities'])}
+  c.records(v,self.policy)
+ def test_initial_audit_cannot_hide_new_changed_or_missing_primary_records(self):
+  for action in ('new','path','root','count','boolean'):
+   v=self.clean_vector();obj=v['npm-initial']['report'];rows=obj['vulnerabilities']
+   if action=='new':
+    item=copy.deepcopy(rows['braces']);item.update(name='injected-package',nodes=['node_modules/injected-package']);rows['injected-package']=item
+   elif action=='path':rows['braces']['nodes']=['node_modules/substituted-braces']
+   elif action=='root':obj['vulnerabilities']={'braces':rows['braces']}
+   elif action=='count':obj['metadata']['vulnerabilities']['high']+=1
+   else:obj['metadata']['vulnerabilities']['total']=True
+   with self.subTest(action=action):
+    with self.assertRaises(c.Rejected):c.records(v,self.policy)
 
 if __name__=='__main__':unittest.main(verbosity=2)
