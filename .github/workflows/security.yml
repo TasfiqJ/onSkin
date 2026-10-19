@@ -397,12 +397,14 @@ jobs:
       - name: Require complete original and exact-source technical evidence
         env:
           G97_ORIGINAL_JOBS: ${{ toJSON(needs) }}
+          G97_REVIEWED_SOURCE_COMMIT: ${{ vars.G97_REVIEWED_SOURCE_COMMIT }}
+          G97_REVIEWED_PROPOSAL_SHA256: ${{ vars.G97_REVIEWED_PROPOSAL_SHA256 }}
         run: |
           original_jobs="$G97_ORIGINAL_JOBS"
           python -B scripts/phase9/security_acceptance/workflow_admission.py accept \
             --evidence "$RUNNER_TEMP/g97-workflow/static/g97-evidence" \
             --workflow-evidence "$RUNNER_TEMP/g97-workflow" \
-            --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" > "$RUNNER_TEMP/g97-decision.json"
+            --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"             --expected-commit "$G97_REVIEWED_SOURCE_COMMIT"             --expected-proposal-sha256 "$G97_REVIEWED_PROPOSAL_SHA256" > "$RUNNER_TEMP/g97-decision.json"
           cat "$RUNNER_TEMP/g97-decision.json"
       - name: Publish automated source-only decision descriptor
         if: always()

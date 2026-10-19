@@ -544,4 +544,18 @@ class ContractTests(unittest.TestCase):
    collect.collect(c.ROOT,c.ROOT,path,{},self.policy)
   self.assertFalse(path.exists())
 
+ def test_automated_reviewed_source_pins_are_required_exact_and_typed(self):
+  import workflow_admission as w
+  commit=c.git(c.ROOT,'rev-parse','HEAD').decode().strip();digest=c.SHA(c.CANON(self.policy))
+  self.assertEqual(w.reviewed_source_pins(self.policy,commit,commit,digest),{'sourceCommit':commit,'proposalSha256':digest})
+  for expected,proposal,code in [(None,None,'PINS_REQUIRED'),('',digest,'PINS_REQUIRED'),(commit,None,'PINS_REQUIRED'),('0'*40,digest,'COMMIT_DRIFT'),(commit,'0'*64,'PROPOSAL_DRIFT')]:
+   with self.subTest(code=code),self.assertRaisesRegex(c.Rejected,code):w.reviewed_source_pins(self.policy,commit,expected,proposal)
+ def test_recomputed_source_manifest_or_policy_cannot_rebind_owner_pins(self):
+  import workflow_admission as w
+  commit=c.git(c.ROOT,'rev-parse','HEAD').decode().strip();digest=c.SHA(c.CANON(self.policy))
+  changed=copy.deepcopy(self.policy);changed['sourceManifest']='f'*64
+  with self.assertRaisesRegex(c.Rejected,'PROPOSAL_DRIFT'):w.reviewed_source_pins(changed,commit,commit,digest)
+  prior=c.git(c.ROOT,'rev-parse','HEAD^').decode().strip()
+  with self.assertRaisesRegex(c.Rejected,'COMMIT_DRIFT'):w.reviewed_source_pins(changed,prior,commit,digest)
+
 if __name__=='__main__':unittest.main(verbosity=2)

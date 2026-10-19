@@ -189,6 +189,15 @@ def write_gitleaks_tool():
         return 1
 
 
+def reviewed_source_pins(policy, commit, expected_commit, expected_proposal):
+    """Owner-configured content pins; never inferred from source or a receipt."""
+    c.require(isinstance(expected_commit, str) and re.fullmatch('[0-9a-f]{40}', expected_commit)
+              and isinstance(expected_proposal, str) and re.fullmatch('[0-9a-f]{64}', expected_proposal),
+              'REVIEWED_SOURCE_PINS_REQUIRED_OR_INVALID')
+    c.require(commit == expected_commit, 'REVIEWED_SOURCE_COMMIT_DRIFT')
+    c.require(c.SHA(c.CANON(policy)) == expected_proposal, 'REVIEWED_PROPOSAL_DRIFT')
+    return {'sourceCommit': expected_commit, 'proposalSha256': expected_proposal}
+
 def main():
     if sys.argv[1:] == ['gitleaks-tool']:
         return write_gitleaks_tool()
@@ -199,6 +208,8 @@ def main():
     p.add_argument('--original-jobs', required=True)
     p.add_argument('--commit', required=True)
     p.add_argument('--run-id', required=True)
+    p.add_argument('--expected-commit')
+    p.add_argument('--expected-proposal-sha256')
     a = p.parse_args()
     try:
         root = c.ROOT; policy = c.load(c.HERE, 'proposal.json')
@@ -206,6 +217,9 @@ def main():
         c.source(root, policy); c.scan_coverage(policy, root)
         head = c.git(root, 'rev-parse', 'HEAD').decode().strip()
         tree = c.git(root, 'rev-parse', 'HEAD^{tree}').decode().strip()
+        pins = None
+        if a.mode == 'accept' or a.expected_commit or a.expected_proposal_sha256:
+            pins = reviewed_source_pins(policy, head, a.expected_commit, a.expected_proposal_sha256)
         c.require(head == a.commit and not c.git(root, 'status', '--porcelain', '--untracked-files=all').strip(),
                   'WORKFLOW_SOURCE_NOT_COMMITTED_CLEAN')
         directory = pathlib.Path(a.workflow_evidence).resolve()
@@ -232,7 +246,7 @@ def main():
                           if a.mode == 'accept' else 'WORKFLOW_TECHNICAL_EVIDENCE_VALID; AUTOMATED_ACCEPTANCE_REQUIRED',
                           'sourceCommit': head, 'sourceTree': tree, 'proposalSha256': c.SHA(c.CANON(policy)),
                           'decisionEvidenceSha256': digest, 'decision': decision,
-                          'acceptance': scope, 'executionContext': context,
+                          'acceptance': scope, 'reviewedSourcePins': pins, 'executionContext': context,
                           'validUntil': policy['notAfter'], 'rawScannerPass': False,
                           'independentHumanApproval': False, 'releaseAuthority': False,
                           'databaseReplayAuthority': False, 'integrationAuthority': False}, sort_keys=True))

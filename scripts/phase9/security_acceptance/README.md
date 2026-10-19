@@ -124,6 +124,17 @@ then stages that verified receipt beside the original raw scanner files only
 after source checks finish. Upload paths and all19 original artifact names stay
 unchanged. No source ignore rule or scan exclusion is introduced.
 
+Acceptance additionally requires two owner-controlled public repository variables:
+`G97_REVIEWED_SOURCE_COMMIT` and `G97_REVIEWED_PROPOSAL_SHA256` (canonical proposal
+SHA-256). After exact BRAIN source GO, this same Codex chat can configure/read back
+those precise values using the owner's existing authenticated administration.
+They are content pins, not another person's approval, signature, key or run receipt.
+No second GitHub reviewer or environment is needed. Missing/malformed/mismatched
+pins refuse; no fallback to the current commit or source-computed expected hash
+exists. Recomputing source-manifest/proposal to fit changed source cannot update
+owner configuration. The workflow's read-only token cannot provision its own pins.
+Local rehearsals use explicit local fixture pins and claim no BRAIN/GitHub authority.
+
 The original Security workflow retains its three original jobs, all raw scanners,
 the actual expired-policy commands and all19 required original artifact files.
 Phase9, audited SBOM structure, verified TruffleHog and complete SAST/test/coverage

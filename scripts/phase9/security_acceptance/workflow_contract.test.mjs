@@ -140,3 +140,11 @@ test('collection stays outside source until verified and then stages the full or
   reject(w => w.jobs['static-analysis'].steps=w.jobs['static-analysis'].steps.filter(s => s.name!=='Stage verified technical receipt after all source checks'));
   reject(w => w.jobs['static-analysis'].steps.find(s => s.name==='Stage verified technical receipt after all source checks').if='success()');
 });
+
+test('reviewed source pins must come from owner repository configuration, never the current commit itself', () => {
+  reject(w => w.jobs['automated-source-security-acceptance'].steps.find(s=>s.run?.includes('workflow_admission.py accept')).env.G97_REVIEWED_SOURCE_COMMIT='${{ github.sha }}');
+  reject(w => delete w.jobs['automated-source-security-acceptance'].steps.find(s=>s.run?.includes('workflow_admission.py accept')).env.G97_REVIEWED_PROPOSAL_SHA256);
+});
+test('missing or self-computed source pin arguments cannot replace owner-configured pins', () => {
+  for (const argument of ['--expected-commit "$G97_REVIEWED_SOURCE_COMMIT"','--expected-proposal-sha256 "$G97_REVIEWED_PROPOSAL_SHA256"']) reject(w => { const s=w.jobs['automated-source-security-acceptance'].steps.find(s=>s.run?.includes('workflow_admission.py accept'));s.run=s.run.replace(argument,'--omitted'); });
+});

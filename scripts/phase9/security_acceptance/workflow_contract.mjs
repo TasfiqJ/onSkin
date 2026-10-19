@@ -55,7 +55,9 @@ export function validateWorkflowAdmission(text) {
     if (acceptance.if !== 'always()' || !sameSet(acceptance.needs, originals) || acceptance.environment) return false;
     const step = acceptance.steps.find((item) => item.run?.includes('workflow_admission.py accept'));
     if (!step || step.env?.G97_ORIGINAL_JOBS !== '${{ toJSON(needs) }}') return false;
-    if (!['--original-jobs', '--workflow-evidence', '--evidence', '--commit', '--run-id'].every((arg) => step.run.includes(arg))) return false;
+    if (step.env.G97_REVIEWED_SOURCE_COMMIT !== '${{ vars.G97_REVIEWED_SOURCE_COMMIT }}' ||
+        step.env.G97_REVIEWED_PROPOSAL_SHA256 !== '${{ vars.G97_REVIEWED_PROPOSAL_SHA256 }}') return false;
+    if (!['--original-jobs', '--workflow-evidence', '--evidence', '--commit', '--run-id', '--expected-commit "$G97_REVIEWED_SOURCE_COMMIT"', '--expected-proposal-sha256 "$G97_REVIEWED_PROPOSAL_SHA256"'].every((arg) => step.run.includes(arg))) return false;
     const route = JSON.stringify(acceptance);
     if (['--approval', 'G97_TRUSTED_OWNER_PUBLIC_KEY', 'G97_OWNER_RECEIPT'].some((value) => route.includes(value))) return false;
     return !jobs['independent-source-security-acceptance'] && !jobs['prepare-source-security-decision'];
