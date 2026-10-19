@@ -18,7 +18,7 @@
     "secrets": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
     "typescript": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395"
   },
-  "scanCoverageManifest": "6e8e2f251907190b1806e03e5c259d9f3731eba9303c8082665805056bd26e31",
+  "scanCoverageManifest": "e7761da380b5d43f5cf5620968d3a8b61acf6236045f12d76035278eed19e11d",
   "scannerCommands": {
     "gitleaks": "gitleaks8.24.3 detect --config pinned-default --redact=100 --exit-code=2 --log-opts=--all --full-history",
     "graph": "npm11.20.0 ls --all --json --long",
@@ -26,7 +26,7 @@
     "npm-lock": "npm11.20.0 audit --package-lock-only --audit-level=high --json",
     "osv": "osv2.3.8 scan source --recursive --format=json .",
     "sbom": "npm11.20.0 sbom --sbom-format=cyclonedx",
-    "semgrep": "semgrep1.177.0 scan --error --metrics=off --jobs=1 --max-memory=768 --timeout=30 --config exact captured p/owasp-top-ten,p/typescript,p/react,p/secrets . plus exact source-bound explicit SQL test targets",
+    "semgrep": "semgrep1.177.0 scan --error --strict --metrics=off --jobs=1 --max-memory=768 --timeout=30 --max-target-bytes=4194304 --config exact captured p/owasp-top-ten,p/typescript,p/react,p/secrets . plus exact source-bound explicit SQL test targets",
     "trufflehog": "trufflehog3.99.2 git file://candidate --bare --fail --no-update --json --only-verified --concurrency=1"
   },
   "scannerReports": {
@@ -77,7 +77,7 @@
     "3264 exact historical source-proven noncredential records"
   ],
   "semgrepPackageTree": "bbfba178d93ca43d27fd3e358c585b22a1ce3b29d652701e5db2b164975df1a8",
-  "sourceManifest": "8b796f4ec8e968fe34061393bfdfb53208fbcc7275fe36eba8999bdc85d8c380",
+  "sourceManifest": "8e37b959da46d70903c7d5fac63a930eee6306f2d5f1ef9115819e9b6e84e3bc",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

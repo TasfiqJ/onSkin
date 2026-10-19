@@ -139,10 +139,7 @@ def coverage_kind(path,body):
   if path.endswith('.jpg'):return 'excluded','binary-jpeg'
   if path.endswith('.png'):return 'auxiliary','opaque-jpeg-selected-by-generic-rules'
  if body.startswith(b'\x1f\x8b') and path.endswith('.gz'):return 'excluded','gzip-source-witness'
- if len(body)>1024**2:
-  if path=='scripts/phase9/security_acceptance/source-manifest.json':return 'excluded','oversize-nonexecutable-source-binding'
-  if path=='docs/e2e/generated/human-e2e-manifest.md' or (path.startswith('test-results/') and path.endswith('.json')):return 'excluded','oversize-generated-e2e-data'
-  require(False,'REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT:'+path)
+ require(len(body)<=4*1024**2,'REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT:'+path)
  return 'required','source-text-or-generic-input'
 
 def scan_coverage(policy,root=None):
@@ -152,7 +149,7 @@ def scan_coverage(policy,root=None):
  rows=load(HERE,'source-manifest.json');identities={r['path']:r['sha256'] for r in rows};require(len(rows)==len(identities),'COVERAGE_DUPLICATE_SOURCE')
  identities.update({'scripts/phase9/security_acceptance/source-manifest.json':policy['sourceManifest'],'scripts/phase9/security_acceptance/proposal.json':SHA(safe(HERE,'proposal.json'))})
  seen=set();targets=set();required=set()
- reasons={'binary-png','binary-jpeg','gzip-source-witness','oversize-nonexecutable-source-binding','oversize-generated-e2e-data'}
+ reasons={'binary-png','binary-jpeg','gzip-source-witness'}
  for group in ('targets','exclusions'):
   require(isinstance(scope[group],list),'COVERAGE_SCHEMA')
   for item in scope[group]:
@@ -164,8 +161,6 @@ def scan_coverage(policy,root=None):
     if item['reason']=='binary-png':require(name.endswith('.png'),'INVALID_BINARY_EXCLUSION')
     elif item['reason']=='binary-jpeg':require(name.endswith('.jpg'),'INVALID_BINARY_EXCLUSION')
     elif item['reason']=='gzip-source-witness':require(name.endswith('.gz'),'INVALID_BINARY_EXCLUSION')
-    elif item['reason']=='oversize-nonexecutable-source-binding':require(name=='scripts/phase9/security_acceptance/source-manifest.json','INVALID_BINDING_EXCLUSION')
-    else:require(name=='docs/e2e/generated/human-e2e-manifest.md' or (name.startswith('test-results/') and name.endswith('.json')),'INVALID_GENERATED_EXCLUSION')
    else:
     require((item['kind'],item['reason']) in (('required','source-text-or-generic-input'),('auxiliary','opaque-jpeg-selected-by-generic-rules')),'COVERAGE_TARGET_KIND')
     targets.add(name)
@@ -188,10 +183,10 @@ def scanner_scope(name,args):
  elif name=='trufflehog':ok=len(args)==9 and args[1]=='git' and args[2].startswith('file://') and args[3:]==['--bare','--fail','--no-update','--json','--only-verified','--concurrency=1']
  elif name=='semgrep':
   forced=scan_coverage(load(HERE,'proposal.json'))['explicitTargets']
-  ok=len(args)==24+len(forced) and args[1:3]==['-B','-X'] and args[3].startswith('pycache_prefix=') and args[4]=='-c' and args[5]==SEMGREP_ENTRY and args[7:15]==['scan','--error','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--json',args[14]] and args[14].startswith('--output=') and normal(args[14]).endswith('/semgrep-raw.json')
+  ok=len(args)==26+len(forced) and args[1:3]==['-B','-X'] and args[3].startswith('pycache_prefix=') and args[4]=='-c' and args[5]==SEMGREP_ENTRY and args[7:17]==['scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json',args[16]] and args[16].startswith('--output=') and normal(args[16]).endswith('/semgrep-raw.json')
   if ok:
-   out=normal(args[14])[len('--output='):].rsplit('/',1)[0]
-   ok=[normal(v) for v in args[15:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
+   out=normal(args[16])[len('--output='):].rsplit('/',1)[0]
+   ok=[normal(v) for v in args[17:]]==[item for r in ('owasp-top-ten','typescript','react','secrets') for item in ('--config',out+'/rules/'+r+'.yaml')]+['.',*forced]
  else:ok=False
  require(ok,'SCANNER_SCOPE_DRIFT:'+name)
 SEMGREP_ENTRY="import site,sys;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()"
@@ -285,6 +280,18 @@ def history(root,raw):
  from history import verify_history
  return verify_history(root,raw,load(HERE,'history.json.gz'),safe(HERE,'gitleaks.toml').decode())
 
+def verify_artifact_inventory(root,expected):
+ observed=set()
+ for current,dirs,files in os.walk(root,followlinks=False):
+  for name in dirs:
+   p=pathlib.Path(current)/name;s=p.lstat()
+   require(not stat.S_ISLNK(s.st_mode) and not getattr(s,'st_file_attributes',0)&0x400,'LINKED_EVIDENCE_DIRECTORY')
+  for name in files:
+   p=pathlib.Path(current)/name;s=p.lstat()
+   require(stat.S_ISREG(s.st_mode) and s.st_nlink==1 and not getattr(s,'st_file_attributes',0)&0x400,'NONREGULAR_EVIDENCE_FILE')
+   observed.add(p.relative_to(root).as_posix())
+ require(observed==set(expected),'PHYSICAL_EVIDENCE_INVENTORY_DRIFT')
+
 def evidence(root,directory,policy,installed_root):
  require(pathlib.Path(directory).resolve()!=pathlib.Path(root).resolve(),'EVIDENCE_INSIDE_SOURCE')
  manifest=load(directory,'receipt.json');require(set(manifest)=={'schema','started','finished','sourceManifest','scannerCommands','files','regressions'},'RECEIPT_SCHEMA')
@@ -295,6 +302,7 @@ def evidence(root,directory,policy,installed_root):
  for name in set(policy['scannerReports'])|set(policy['minimumTests'])|{'npm-version'}:
   required|={'commands/'+name+'/'+leaf for leaf in ('stdout','stderr','intent.json','result.json')}
  require(names==required,'EVIDENCE_INVENTORY_DRIFT')
+ verify_artifact_inventory(pathlib.Path(directory),names|{'receipt.json'})
  for name,h in manifest['files'].items():require(SHA(safe(directory,name,allow_empty=name.endswith(('/stdout','/stderr'))))==h,'EVIDENCE_TAMPER')
  for name,h in policy['rules'].items():require(manifest['files']['rules/'+name+'.yaml']==h,'SEMGREP_RULESET_DRIFT')
  intents={}
@@ -328,6 +336,10 @@ def evidence(root,directory,policy,installed_root):
   bind_regression(result,tap,load(directory,'commands/'+name+'/result.json')['exit'],policy['minimumTests'][name])
  return {'status':'TECHNICAL_EVIDENCE_VALID; INACTIVE_OWNER_ACCEPTANCE_REQUIRED','history':h,'packages':p,'evidenceSha256':SHA(CANON(manifest)),'executionRoot':execution,'installedExecutionRoot':installation,'rawScannerPass':False}
 
+def load_approval(path):
+ p=pathlib.Path(path)
+ return parse_json(safe(p.parent,p.name,limit=65536))
+
 def approval(receipt,key,policy,tree,evidence_sha,clock=None):
  clock=clock or now();require(isinstance(receipt,dict) and set(receipt)=={'payload','signature'},'OWNER_APPROVAL_ABSENT')
  p=receipt['payload'];fields={'schema','proposalSha256','sourceTree','evidenceSha256','decision','notBefore','notAfter','reviewer','reviewReference'}
@@ -354,7 +366,7 @@ def main():
    norm=lambda value:value.replace('\\','/').removeprefix('//?/').rstrip('/').casefold()
    require(norm(result['executionRoot'])==norm(str(root))==norm(result['installedExecutionRoot']),'ACTIVE_EXTERNAL_SCAN_FORBIDDEN')
    require(a.approval and os.environ.get('G97_TRUSTED_OWNER_PUBLIC_KEY'),'INDEPENDENT_OWNER_ACCEPTANCE_REQUIRED')
-   receipt=json.loads(pathlib.Path(a.approval).read_bytes());head=git(root,'rev-parse','HEAD').decode().strip();tree=git(root,'rev-parse','HEAD^{tree}').decode().strip()
+   receipt=load_approval(a.approval);head=git(root,'rev-parse','HEAD').decode().strip();tree=git(root,'rev-parse','HEAD^{tree}').decode().strip()
    require(not git(root,'status','--porcelain','--untracked-files=all').strip(),'ACTIVE_SOURCE_NOT_COMMITTED_CLEAN')
    approval(receipt,os.environ['G97_TRUSTED_OWNER_PUBLIC_KEY'],policy,tree,result['evidenceSha256'])
    result.update(status='EXACT_SOURCE_MITIGATIONS_ACCEPTED_UNTIL_OWNER_RECEIPT_EXPIRY',sourceCommit=head,sourceTree=tree,rawScannerPass=False,releaseAuthority=False,databaseReplayAuthority=False)

@@ -9045,11 +9045,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/collect.py",
-    "sha256": "2899f75d2933e6ea9871192138bcd1be6361c373411cd5be02b2a606bdf21ba7"
+    "sha256": "e924a49e5430ac057007ce14d62534d8e41b04ced75ef9b0d78d1dc8bbf7b770"
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "29ecf2d8dbd8041d6263bdc82e0b6f062b1b72204a237b03e0f8b6852b306ed1"
+    "sha256": "97bdda38566310f467433e0c7cdd65d21b369afd3681a7c0c474aa8f81016d6d"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9073,7 +9073,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
-    "sha256": "6e8e2f251907190b1806e03e5c259d9f3731eba9303c8082665805056bd26e31"
+    "sha256": "e7761da380b5d43f5cf5620968d3a8b61acf6236045f12d76035278eed19e11d"
   },
   {
     "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
@@ -9081,7 +9081,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "1cdce7bf7d5211721b748b607dfbd6deb4a1e82ad66c3fad42b0e8c56e4326b6"
+    "sha256": "c4305558b2950d2fa431bd572303227f709bad79575b87bf3cf4f4591d5eb17e"
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+    "sha256": "a26f0a32c80332c72f8b7cbfe8fb429aaddb1c21c3dc6dee5b1967bb6c2de220"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

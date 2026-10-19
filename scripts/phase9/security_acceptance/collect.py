@@ -63,7 +63,7 @@ def collect(root,installed,out,tools,policy,only=None):
  # bytecode caches cannot substitute a different scanner implementation.
  entry=SEMGREP_ENTRY
  with tempfile.TemporaryDirectory(prefix='g97-sast-') as cache:
-  code,_=run('semgrep',[sys.executable,'-B','-X','pycache_prefix='+cache,'-c',entry,str(pathlib.Path(tools['semgrep']).resolve()),'scan','--error','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--json','--output='+str(path),*config_args,'.',*coverage['explicitTargets']],root,1200)
+  code,_=run('semgrep',[sys.executable,'-B','-X','pycache_prefix='+cache,'-c',entry,str(pathlib.Path(tools['semgrep']).resolve()),'scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output='+str(path),*config_args,'.',*coverage['explicitTargets']],root,1200)
  save('semgrep',code,json.loads(path.read_bytes()) if path.exists() else {'scannerExecutionFailed':True})
  suites={
  'backport-and-installer':['scripts/phase9/patch-tooling-security.test.mjs','scripts/phase9/tooling-security-vulnerabilities.test.mjs'],

@@ -17,7 +17,8 @@ class ContractTests(unittest.TestCase):
   # A deliberately synthetic complete SAST vector tests other boundaries. The
   # real scanner's inherited warnings are tested separately and remain blocking.
   v=copy.deepcopy(self.actual);v['semgrep']['report']['errors']=[]
-  v['semgrep']['report'].setdefault('time',{})['fixpoint_timeouts']=[];return v
+  v['semgrep']['report'].setdefault('time',{})['fixpoint_timeouts']=[]
+  v['semgrep']['report']['paths']['scanned']=sorted(c.scan_coverage(self.policy)['targets']);return v
  def test_exact_record_projection_positive_with_synthetic_SAST_only(self):c.records(self.clean_vector(),self.policy)
  def test_retained_Semgrep_warning_fixture_is_not_accepted(self):
   with self.assertRaisesRegex(c.Rejected,'SEMGREP_INCOMPLETE'):c.records(self.actual,self.policy)
@@ -171,7 +172,7 @@ class ContractTests(unittest.TestCase):
   gl=['gitleaks','detect','--config=C:/repo/scripts/phase9/security_acceptance/gitleaks.toml','--redact=100','--exit-code=2','--report-format=json','--report-path=C:/evidence/gitleaks-raw.json','--log-opts=--all --full-history','--log-level=info']
   osv=['osv','scan','source','--recursive','--format=json','--output=C:/evidence/osv-raw.json','.']
   truffle=['trufflehog','git','file://candidate','--bare','--fail','--no-update','--json','--only-verified','--concurrency=1']
-  sg=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
+  sg=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
   for name,args in [('gitleaks',gl),('osv',osv),('trufflehog',truffle),('semgrep',sg)]:
    c.scanner_scope(name,args)
    bad=list(args)
@@ -220,5 +221,126 @@ class ContractTests(unittest.TestCase):
   bad=copy.deepcopy(receipt);bad['signature']=base64.b64encode(bytes(64)).decode()
   with self.assertRaisesRegex(c.Rejected,'SIGNATURE'):c.approval(bad,keys['pub'],self.policy,'a'*40,'b'*64,clock)
   with self.assertRaises(c.Rejected):c.approval({},keys['pub'],self.policy,'a'*40,'b'*64,clock)
+
+ def test_oversize_text_is_scanned_and_bounded_not_excluded(self):
+  for path in ('docs/e2e/generated/human-e2e-manifest.md','test-results/fixture.json','scripts/phase9/security_acceptance/source-manifest.json','apps/mobile/src/large.ts'):
+   with self.subTest(path=path):
+    self.assertEqual(c.coverage_kind(path,b'x'*(1024**2+1)),('required','source-text-or-generic-input'))
+    self.assertEqual(c.coverage_kind(path,b'x'*(4*1024**2)),('required','source-text-or-generic-input'))
+    with self.assertRaisesRegex(c.Rejected,'REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT'):
+     c.coverage_kind(path,b'x'*(4*1024**2+1))
+ def test_scanner_strictness_and_bounded_size_cannot_be_removed(self):
+  args=['python','-B','-X','pycache_prefix=C:/temporary','-c',c.SEMGREP_ENTRY,'C:/semgrep','scan','--error','--strict','--metrics=off','--jobs=1','--max-memory=768','--timeout=30','--max-target-bytes=4194304','--json','--output=C:/evidence/semgrep-raw.json']+[v for r in ('owasp-top-ten','typescript','react','secrets') for v in ('--config','C:/evidence/rules/'+r+'.yaml')]+['.',*c.scan_coverage(self.policy)['explicitTargets']]
+  c.scanner_scope('semgrep',args)
+  for token in ('--strict','--max-target-bytes=4194304'):
+   with self.subTest(token=token):
+    bad=list(args);bad.remove(token)
+    with self.assertRaisesRegex(c.Rejected,'SCANNER_SCOPE_DRIFT'):c.scanner_scope('semgrep',bad)
+
+ def workflow_fixture(self):
+  """Synthetic legacy artifacts only; no scanner receipt or approval is made."""
+  import workflow_admission as w
+  temp=tempfile.TemporaryDirectory(prefix='g97-workflow-unit-');self.addCleanup(temp.cleanup)
+  root=pathlib.Path(temp.name);fresh=self.clean_vector();commit='a'*40;run_id='123987'
+  needs={name:{'result':'success','outputs':{}} for name in w.JOBS}
+  def write(name,value):
+   p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(value if isinstance(value,bytes) else c.CANON(value))
+  for name,fields in w.JOBS.items():
+   obj={field:'success' for field in fields};obj.update(job=name,sha=commit,run_id=run_id)
+   if name=='code-gates':obj.update(npm_audit_high='failure',npm_exception_gate='failure')
+   if name=='secret-scan':obj.update(gitleaks='failure',gitleaks_exit='2')
+   if name=='static-analysis':obj.update(osv='failure',osv_exception_gate='failure')
+   write(w.MANIFESTS[name],obj)
+  write('code/npm-audit-high.json',fresh['npm-installed']['report']);write('code/npm-audit-high.exit-code',b'1\n')
+  write('static/osv-scan.json',fresh['osv']['report'])
+  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine']}}}]} for item in fresh['gitleaks']['report'][:2]]
+  write('secret/gitleaks-results.sarif',{'version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','version':'8.24.3'}},'results':findings}]})
+  return w,root,needs,commit,run_id,fresh
+ def test_original_workflow_valid_known_artifacts_are_technical_only(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture()
+  result=w.original_jobs(root,needs,commit,run_id,fresh)
+  self.assertEqual(result['sourceCommit'],commit);self.assertEqual(result['runId'],run_id)
+  self.assertEqual(result['eventRangeHistoricalFindings'],2);self.assertEqual(set(result['files']),w.LEGACY_FILES)
+  self.assertNotIn('acceptanceGranted',result);self.assertNotIn('signature',result)
+ def test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture()
+  for action in ('missing','extra','failure','skipped','cancelled','outputs'):
+   with self.subTest(action=action):
+    changed=copy.deepcopy(needs)
+    if action=='missing':changed.pop('code-gates')
+    elif action=='extra':changed['alternate-green']={'result':'success','outputs':{}}
+    elif action=='outputs':changed['code-gates']['outputs']={'approval':'claimed'}
+    else:changed['code-gates']['result']=action
+    with self.assertRaises(c.Rejected):w.original_jobs(root,changed,commit,run_id,fresh)
+ def test_original_workflow_wrong_source_run_schema_or_unrelated_check_rejects(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture()
+  for name,field,value in [('code-gates','sha','b'*40),('secret-scan','run_id','999'),('static-analysis','semgrep','failure'),('secret-scan','trufflehog','failure'),('code-gates','phase9_verify','skipped'),('code-gates','dependency_sbom','failure'),('static-analysis','osv_exception_gate','success'),('code-gates','npm_exception_gate','success'),('code-gates','npm_audit_high',True)]:
+   p=root/w.MANIFESTS[name];original=p.read_bytes();obj=c.parse_json(original);obj[field]=value;p.write_bytes(c.CANON(obj))
+   with self.subTest(job=name,field=field):
+    with self.assertRaises(c.Rejected):w.original_jobs(root,needs,commit,run_id,fresh)
+   p.write_bytes(original)
+ def test_original_workflow_omitted_added_or_linked_artifacts_reject(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture()
+  for name in w.LEGACY_FILES:
+   p=root/name;original=p.read_bytes();p.unlink()
+   with self.subTest(missing=name):
+    with self.assertRaises((c.Rejected,FileNotFoundError)):w.original_jobs(root,needs,commit,run_id,fresh)
+   p.write_bytes(original)
+  p=root/'alternate-green.json';p.write_text('{}')
+  with self.assertRaisesRegex(c.Rejected,'INVENTORY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+  p.unlink()
+  p=root/'secret/secret-scan-outcomes.json';original=p.read_bytes();p.unlink();target=root/'linked-target.json';target.write_bytes(original);p.symlink_to(target)
+  with self.assertRaisesRegex(c.Rejected,'LINKED_INPUT'):w.original_jobs(root,needs,commit,run_id,fresh)
+ def test_original_workflow_unknown_npm_or_osv_finding_rejects(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture()
+  p=root/'code/npm-audit-high.json';original=p.read_bytes();obj=c.parse_json(original);obj['vulnerabilities']['braces']['via'][0]['url']='https://github.com/advisories/GHSA-aaaa-bbbb-cccc';p.write_bytes(c.CANON(obj))
+  with self.assertRaisesRegex(c.Rejected,'NPM_FINDING_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+  p.write_bytes(original)
+  p=root/'static/osv-scan.json';obj=c.load(root,'static/osv-scan.json');obj['results'][0]['packages'][0]['vulnerabilities'][0]['id']='GHSA-aaaa-bbbb-cccc';p.write_bytes(c.CANON(obj))
+  with self.assertRaisesRegex(c.Rejected,'OSV_FINDING_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+ def test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'secret/gitleaks-results.sarif';original=p.read_bytes()
+  for action in ('unknown','duplicate','range','version','empty'):
+   obj=c.parse_json(original);run=obj['runs'][0]
+   if action=='unknown':run['results'][0]['ruleId']='unknown-rule'
+   elif action=='duplicate':run['results'].append(copy.deepcopy(run['results'][0]))
+   elif action=='range':run['results'][0]['locations'][0]['physicalLocation']['region']['endLine']+=1
+   elif action=='version':run['tool']['driver']['version']='0.0.0'
+   else:run['results']=[]
+   p.write_bytes(c.CANON(obj))
+   with self.subTest(action=action):
+    with self.assertRaises(c.Rejected):w.original_jobs(root,needs,commit,run_id,fresh)
+  p.write_bytes(original)
+  p=root/'secret/secret-scan-outcomes.json';obj=c.load(root,'secret/secret-scan-outcomes.json');obj['gitleaks_exit']='1';p.write_bytes(c.CANON(obj))
+  with self.assertRaisesRegex(c.Rejected,'EXECUTION_ERROR'):w.original_jobs(root,needs,commit,run_id,fresh)
+ def test_owner_decision_digest_changes_for_any_original_raw_byte_change(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture();before=w.original_jobs(root,needs,commit,run_id,fresh)
+  p=root/'code/npm-audit-high.json';p.write_bytes(p.read_bytes()+b'\n')
+  after=w.original_jobs(root,needs,commit,run_id,fresh)
+  self.assertNotEqual(c.SHA(c.CANON(before)),c.SHA(c.CANON(after)))
+  self.assertEqual(before['outcomes'],after['outcomes']);self.assertNotEqual(before['files'],after['files'])
+
+
+ def test_physical_evidence_extra_missing_link_and_hardlink_reject(self):
+  with tempfile.TemporaryDirectory(prefix='g97-inventory-unit-') as d:
+   root=pathlib.Path(d);(root/'receipt.json').write_text('{}');p=root/'report.json';p.write_text('{}')
+   expected={'receipt.json','report.json'};c.verify_artifact_inventory(root,expected)
+   extra=root/'unreported-scanner.json';extra.write_text('{}')
+   with self.assertRaisesRegex(c.Rejected,'INVENTORY_DRIFT'):c.verify_artifact_inventory(root,expected)
+   extra.unlink();p.unlink()
+   with self.assertRaisesRegex(c.Rejected,'INVENTORY_DRIFT'):c.verify_artifact_inventory(root,expected)
+   p.symlink_to(root/'receipt.json')
+   with self.assertRaisesRegex(c.Rejected,'NONREGULAR_EVIDENCE'):c.verify_artifact_inventory(root,expected)
+   p.unlink();os.link(root/'receipt.json',p)
+   with self.assertRaisesRegex(c.Rejected,'NONREGULAR_EVIDENCE'):c.verify_artifact_inventory(root,expected)
+ def test_owner_receipt_loader_rejects_duplicate_nonfinite_oversize_and_links(self):
+  with tempfile.TemporaryDirectory(prefix='g97-owner-json-unit-') as d:
+   root=pathlib.Path(d);p=root/'approval.json';p.write_text('{}');self.assertEqual(c.load_approval(p),{})
+   for body,code in [(b'{"payload":{},"payload":{},"signature":""}','DUPLICATE_JSON_FIELD'),(b'{"payload":NaN}','NONFINITE_JSON'),(b' '*65537,'NONREGULAR_INPUT')]:
+    p.write_bytes(body)
+    with self.subTest(code=code):
+     with self.assertRaisesRegex(c.Rejected,code):c.load_approval(p)
+   target=root/'actual.json';target.write_text('{}');p.unlink();p.symlink_to(target)
+   with self.assertRaisesRegex(c.Rejected,'LINKED_INPUT'):c.load_approval(p)
 
 if __name__=='__main__':unittest.main(verbosity=2)
