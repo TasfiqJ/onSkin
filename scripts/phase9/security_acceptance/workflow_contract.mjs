@@ -35,6 +35,9 @@ export function validateWorkflowAdmission(text) {
       ['static-analysis', 'osv_exception_gate', 'security-advisory-exceptions.mjs osv'],
     ]) {
       if (!jobs[name].steps.some((step) => step.id === id && step['continue-on-error'] === true && step.run?.includes(run))) return false;
+      const capture = jobs[name].steps.find((step) => step.id === id);
+      const prefix = id.replace('_exception_gate', '-exception-gate');
+      if (!['.stdout', '.stderr', '.exit-code'].every((suffix) => capture.run.includes(prefix + suffix)) || !capture.run.includes('exit "$gate_exit"')) return false;
     }
     const leak = jobs['secret-scan'].steps.find((step) => step.id === 'gitleaks');
     if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif')) return false;
@@ -64,7 +67,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validateNpmAudit, REVIEWED_ADVISORIES } from '../security-advisory-exceptions.mjs';
+import { validateNpmAudit, validateOsvScan, REVIEWED_ADVISORIES } from '../security-advisory-exceptions.mjs';
 import { dependencyAuditEvidenceWarnings } from '../dependency-sbom-contract.mjs';
 
 const auditedInstallScripts = new Map([
@@ -117,16 +120,41 @@ export function assertLegacyAuditedSbom({ packet, audit, lock, policy, auditExit
   return { status: 'EXACT_EXPIRED_SBOM_POLICY_REFUSAL_BOUND', auditRecords: counts.total, expiredBlockers: blockers.length, rawExit: sbomExit, rawScannerPass: false, approval: false };
 }
 
+export function assertLegacyPolicyRefusals({ npmAudit, osvReport, lock, policy, npm, osv, now = new Date() }) {
+  const today = now.toISOString().slice(0, 10);
+  const npmErrors = validateNpmAudit({ report: npmAudit, lock, policy, scannerExitCode: 1, today });
+  assert.deepEqual([...npmErrors].sort(), REVIEWED_ADVISORIES.map(entry => `${entry.package}: review is expired or dates are invalid`).sort());
+  const osvErrors = validateOsvScan({ report: osvReport, lock, policy, today });
+  assert.ok(osvErrors.length >= REVIEWED_ADVISORIES.length);
+  for (const [actual, errors] of [[npm, npmErrors], [osv, osvErrors]]) {
+    assert.deepEqual(Object.keys(actual).sort(), ['exit', 'stderr', 'stdout']);
+    assert.equal(actual.exit, 1); assert.equal(actual.stdout, '');
+    assert.equal(actual.stderr, errors.join('\n') + '\n');
+  }
+  return { status: 'EXACT_LEGACY_POLICY_REFUSALS_BOUND', approval: false, rawScannerPass: false };
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    assert.equal(process.argv[2], 'sbom'); assert.ok([3, 4].includes(process.argv.length));
+    assert.ok(['sbom', 'policies'].includes(process.argv[2])); assert.ok([3, 4].includes(process.argv.length));
     const root = fileURLToPath(new URL('../../../', import.meta.url));
     const load = path => JSON.parse(readFileSync(resolve(root,path), 'utf8'));
     const directory = process.argv[3] ? resolve(process.argv[3]) + '/' : 'docs/phase-9/generated/ci-scanner-evidence/';
     const policyBytes = readFileSync(resolve(root,'docs/phase-9/security-advisory-exceptions.json'));
     assert.equal(createHash('sha256').update(policyBytes).digest('hex'), '938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d');
+    if (process.argv[2] === 'policies') {
+      assert.equal(process.argv.length, 4);
+      const group = mode => {
+        const prefix = directory + (mode === 'npm' ? 'code/' : 'static/') + mode + '-exception-gate';
+        const exitText = readFileSync(prefix + '.exit-code', 'utf8').trim(); assert.equal(exitText, '1');
+        return { exit: 1, stdout: readFileSync(prefix + '.stdout', 'utf8'), stderr: readFileSync(prefix + '.stderr', 'utf8') };
+      };
+      const result = assertLegacyPolicyRefusals({ npmAudit: load(directory + 'code/npm-audit-high.json'), osvReport: load(directory + 'static/osv-scan.json'), lock: load('package-lock.json'), policy: JSON.parse(policyBytes), npm: group('npm'), osv: group('osv') });
+      console.log(JSON.stringify(result));
+    } else {
     const exit = name => { const value = readFileSync(resolve(root,directory+name), 'utf8').trim(); assert.equal(value, '1'); return 1; };
     const result = assertLegacyAuditedSbom({ packet: load(directory+'dependency-inventory.json'), audit: load(directory+'dependency-sbom-audit.json'), lock: load('package-lock.json'), policy: JSON.parse(policyBytes), auditExit: exit('dependency-sbom-audit.exit-code'), sbomExit: exit('dependency-sbom.exit-code') });
     console.log(JSON.stringify(result));
-  } catch { console.log(JSON.stringify({ status: 'REJECTED', code: 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT', approval: false })); process.exitCode = 1; }
+    }
+  } catch { console.log(JSON.stringify({ status: 'REJECTED', code: process.argv[2] === 'policies' ? 'WORKFLOW_LEGACY_POLICY_REFUSAL_DRIFT' : 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT', approval: false })); process.exitCode = 1; }
 }

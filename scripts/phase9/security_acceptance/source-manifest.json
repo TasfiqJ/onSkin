@@ -29,7 +29,7 @@
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "ddd635f90193daf1669ce36522ce2c333f7c1bbbdd26e92c57afe890bbc5550b"
+    "sha256": "b86ea17ec54da75bfba85ed792bd2c0cef34a3146a3425af49694c717c4d4186"
   },
   {
     "path": ".gitignore",
@@ -9065,7 +9065,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/legacy-sbom-fixture.json.gz",
-    "sha256": "2f58f1ac0f8e178dcc56d08a435e48f3e884c48d38bad4291f353c1e2fbc06cd"
+    "sha256": "3b78b239e58be5df483913627a09ee998c7555c2967c11eb5a6d65b41f1effa8"
   },
   {
     "path": "scripts/phase9/security_acceptance/node-forge.patch",
@@ -9093,19 +9093,19 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "bf1e1b1f3cc5f158e9805557621a9e92f2282712b122a25cf701aecdcf6f6ea9"
+    "sha256": "0c33e1c6471555b88977acf5e557b8f6446da0f060a3def3edb60e4c2ce69054"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
-    "sha256": "7a758243487c5b2a061492aa8a350d0e8e3aeb3c80e93a8fdb1f2ea1acdd025d"
+    "sha256": "ac70d6dbd153894119de23c21d2f7b26dfcab57b475254ab039c0c551a527cbb"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
-    "sha256": "d6743a69b9eca82bcafe57c9fababbce43b98aceaee681814cf780cded25785f"
+    "sha256": "83dc930556cd4147488ddfca6a725755cc4ed509afb13cf95f05b8f096ae5932"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
-    "sha256": "23cf97aaccc2d3cb04e3f4e3e6497da64f4a088abd90cdf1255c5f5aa3a27daa"
+    "sha256": "768bb939211904d687c7028fb727fa58e125b77400483236c3066cd625bff2ea"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

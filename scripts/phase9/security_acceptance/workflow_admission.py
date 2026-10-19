@@ -21,10 +21,11 @@ LEGACY_FILES = set(MANIFESTS.values()) | {
     'secret/gitleaks-results.sarif', 'static/osv-scan.json', 'static/osv-scan.exit-code',
     'code/dependency-inventory.json', 'code/dependency-sbom.exit-code',
     'code/dependency-sbom-audit.json', 'code/dependency-sbom-audit.exit-code',
+    *{folder + '/' + mode + '-exception-gate' + suffix for folder, mode in [('code', 'npm'), ('static', 'osv')] for suffix in ('.stdout', '.stderr', '.exit-code')},
 }
 
 def legacy_inventory(directory):
-    """Only the complete technical receipt may sit beside these twelve files."""
+    """Only the complete technical receipt may sit beside these eighteen files."""
     directory = pathlib.Path(directory)
     observed = set()
     for current, dirs, files in os.walk(directory, followlinks=False):
@@ -37,7 +38,7 @@ def legacy_inventory(directory):
         for name in files:
             observed.add((pathlib.Path(current) / name).relative_to(directory).as_posix())
     c.require(observed == LEGACY_FILES, 'WORKFLOW_EVIDENCE_INVENTORY_DRIFT')
-    return {name: c.SHA(c.safe(directory, name)) for name in sorted(observed)}
+    return {name: c.SHA(c.safe(directory, name, allow_empty=name.endswith('.stdout'))) for name in sorted(observed)}
 
 def original_jobs(directory, needs, commit, run_id, fresh):
     """Bind actual original outcomes and raw reports to the exact fresh scans."""
@@ -101,6 +102,17 @@ def original_jobs(directory, needs, commit, run_id, fresh):
     c.require(static['osv'] == ('success' if fresh['osv']['exit'] == 0 else 'failure')
               and c.osv_projection(osv) == c.osv_projection(fresh['osv']['report']),
               'WORKFLOW_OSV_FINDING_DRIFT')
+    # The unchanged legacy commands fetch live review data. Only their exact
+    # policy refusals may continue: HTTP failures, new releases/fixes, crashes,
+    # unexpected stdout or any different exit still fail closed.
+    for folder, mode in [('code', 'npm'), ('static', 'osv')]:
+        for suffix in ('.stdout', '.stderr', '.exit-code'):
+            c.safe(directory, folder + '/' + mode + '-exception-gate' + suffix,
+                   allow_empty=suffix == '.stdout')
+    legacy = subprocess.run(['node', str(c.HERE / 'workflow_contract.mjs'), 'policies',
+                             str(pathlib.Path(directory))], cwd=c.ROOT,
+                            capture_output=True, timeout=30, check=False)
+    c.require(legacy.returncode == 0, 'WORKFLOW_LEGACY_POLICY_REFUSAL_DRIFT')
     # The event-range Gitleaks action is supplementary to the freshly verified
     # full-ref scan. Infrastructure failures, unknown findings, duplicates and
     # forged ranges cannot masquerade as a known full-history finding.

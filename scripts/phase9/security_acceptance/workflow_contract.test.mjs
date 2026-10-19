@@ -96,3 +96,19 @@ test('original OSV uses the verified exact binary and captures its real numeric 
   reject(w => { const s=w.jobs['static-analysis'].steps.find(s => s.id === 'osv'); s.run=s.run.replace('scan source', '--version'); });
   reject(w => w.jobs['static-analysis'].steps.find(s => s.id === 'osv').uses='unreviewed/action@main');
 });
+
+import { assertLegacyPolicyRefusals } from './workflow_contract.mjs';
+const legacyRefusalInputs = () => ({ npmAudit: structuredClone(actualNpmAudit), osvReport: readFixture('./test-fixtures.json.gz').osv.report, lock: structuredClone(sbomLock), policy: structuredClone(legacyPolicy), ...structuredClone(actualSbomExecution.policyRefusals) });
+test('actual original exception CLI refusals bind source-bound scanner bytes and no approval', () => {
+  assert.equal(assertLegacyPolicyRefusals(legacyRefusalInputs()).approval, false);
+});
+test('legacy fetch errors, newer releases, crashes, missing errors or invented stdout cannot be waived', () => {
+  for (const mode of ['npm', 'osv']) {
+    for (const error of ['security review source returned HTTP 503', 'braces: a newer release requires security review', 'braces: a patched release is listed for the reviewed advisory', 'Cannot find module']) {
+      const input = legacyRefusalInputs(); input[mode].stderr = error + '\n'; assert.throws(() => assertLegacyPolicyRefusals(input));
+    }
+    for (const exit of [0, 2, 127, 137, '1', true]) { const input=legacyRefusalInputs(); input[mode].exit=exit; assert.throws(() => assertLegacyPolicyRefusals(input)); }
+    const input=legacyRefusalInputs();input[mode].stdout='invented success';assert.throws(() => assertLegacyPolicyRefusals(input));
+    reject(w => { const step=w.jobs[mode==='npm'?'code-gates':'static-analysis'].steps.find(s => s.id===mode+'_exception_gate');step.run=step.run.replaceAll(mode+'-exception-gate.stderr','omitted-refusal'); });
+  }
+});

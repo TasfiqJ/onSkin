@@ -6,7 +6,7 @@
   "historyRecordCount": 3265,
   "id": "G97-SOURCE-MITIGATION-R1",
   "minimumTests": {
-    "backport-and-installer": 38,
+    "backport-and-installer": 40,
     "expired-exceptions": 7,
     "native-source-and-archive": 349
   },
@@ -308,7 +308,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "1e14cbb6ad029ada0851ca3dbe1526dca379683ca555f57d83387908992511ae",
+  "sourceManifest": "24928cce569ac157679075c66ce9e27a00e123b3b673375105110945a31c2ff6",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

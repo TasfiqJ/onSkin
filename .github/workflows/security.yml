@@ -92,7 +92,15 @@ jobs:
       - name: Enforce reviewed npm advisory exceptions
         id: npm_exception_gate
         continue-on-error: true
-        run: node scripts/phase9/security-advisory-exceptions.mjs npm
+        run: |
+          set +e
+          node scripts/phase9/security-advisory-exceptions.mjs npm > docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stdout 2> docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stderr
+          gate_exit=$?
+          set -e
+          echo "$gate_exit" > docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.exit-code
+          cat -- docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stdout
+          cat -- docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stderr >&2
+          exit "$gate_exit"
 
       - name: Write code-gate evidence manifest
         if: always()
@@ -284,7 +292,15 @@ jobs:
       - name: Enforce reviewed OSV advisory exceptions
         id: osv_exception_gate
         continue-on-error: true
-        run: node scripts/phase9/security-advisory-exceptions.mjs osv
+        run: |
+          set +e
+          node scripts/phase9/security-advisory-exceptions.mjs osv > docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stdout 2> docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stderr
+          gate_exit=$?
+          set -e
+          echo "$gate_exit" > docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.exit-code
+          cat -- docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stdout
+          cat -- docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stderr >&2
+          exit "$gate_exit"
 
       - name: Write static scanner evidence manifest
         if: always()

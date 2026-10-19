@@ -260,6 +260,9 @@ class ContractTests(unittest.TestCase):
   execution=c.load(c.HERE,'legacy-sbom-fixture.json.gz');sbom=execution['packet'];sbom['generatedAt']=c.now().isoformat(timespec='milliseconds').replace('+00:00','Z')
   write('code/dependency-inventory.json',sbom);write('code/dependency-sbom.exit-code',b'1\n')
   write('code/dependency-sbom-audit.json',execution['audit']);write('code/dependency-sbom-audit.exit-code',b'1\n')
+  for mode,refusal in execution['policyRefusals'].items():
+   folder='code' if mode=='npm' else 'static'
+   for suffix,key in [('.stdout','stdout'),('.stderr','stderr'),('.exit-code','exit')]:write(folder+'/'+mode+'-exception-gate'+suffix,(str(refusal[key])+('\n' if key=='exit' else '')).encode())
   write('static/osv-scan.exit-code',str(fresh['osv']['exit']).encode()+b'\n')
   write('static/osv-scan.json',fresh['osv']['report'])
   findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
@@ -294,6 +297,14 @@ class ContractTests(unittest.TestCase):
    p.write_text(exit)
    with self.subTest(exit=exit):
     with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+ def test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture()
+  for folder,mode in [('code','npm'),('static','osv')]:
+   for suffix,value in [('.stderr','security review source returned HTTP 503\n'),('.stderr','braces: a newer release requires security review\n'),('.exit-code','127\n'),('.stdout','fabricated success\n')]:
+    p=root/folder/(mode+'-exception-gate'+suffix);original=p.read_bytes();p.write_text(value)
+    with self.subTest(mode=mode,suffix=suffix):
+     with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+    p.write_bytes(original)
  def test_original_workflow_valid_known_artifacts_are_technical_only(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
   result=w.original_jobs(root,needs,commit,run_id,fresh)
