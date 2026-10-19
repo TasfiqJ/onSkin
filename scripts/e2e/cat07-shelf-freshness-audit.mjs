@@ -3290,6 +3290,16 @@ export function cat07BrowserArguments({ debugPort = 0, userDataDir }) {
   ];
 }
 
+export function cat07RecordedDebugPort(args) {
+  if (!Array.isArray(args) || !args.every((argument) => typeof argument === 'string')) return null;
+  const flags = args.filter((argument) => argument.startsWith('--remote-debugging-port='));
+  if (flags.length !== 1) return null;
+  const match = /^--remote-debugging-port=(0|[1-9][0-9]{0,4})$/u.exec(flags[0]);
+  if (!match) return null;
+  const port = Number(match[1]);
+  return port <= 65_535 ? port : null;
+}
+
 export function parseCat07DevToolsActivePort(bytes) {
   assert(
     Buffer.isBuffer(bytes) && bytes.length > 0 && bytes.length <= 1_024,

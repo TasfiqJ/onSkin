@@ -13,6 +13,7 @@ import {
   rmSync,
   rmdirSync,
   symlinkSync,
+  unlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -50,6 +51,7 @@ import {
   finalizeCat07ExpoLog,
   cat07BrowserMarker,
   cat07BrowserArguments,
+  cat07RecordedDebugPort,
   findCat07GitExecutable,
   findCat07TrustedBrowserExecutable,
   projectCat07CdpEvent,
@@ -333,7 +335,8 @@ test('CAT07 evidence cleanup and atomic writes reject a root swap race', (t) => 
     symlinkSync(outside, evidence, process.platform === 'win32' ? 'junction' : 'dir');
   };
   const restore = () => {
-    rmdirSync(evidence);
+    if (process.platform === 'win32') rmdirSync(evidence);
+    else unlinkSync(evidence);
     renameSync(heldEvidence, evidence);
   };
 
@@ -495,6 +498,28 @@ test('CAT07 audit inherits the stable local-only browser and consent harness', (
     browserArgs.some((argument) => argument.includes('direct://')),
     false,
   );
+});
+
+test('CAT07 recorded debugging ports accept canonical dynamic ports and reject ambiguous flags', () => {
+  for (const port of [0, 9222, 9820, 65_535]) {
+    assert.equal(
+      cat07RecordedDebugPort(
+        cat07BrowserArguments({ debugPort: port, userDataDir: '<fresh-profile>' }),
+      ),
+      port,
+    );
+  }
+  for (const args of [
+    null,
+    [],
+    ['--remote-debugging-port=-1'],
+    ['--remote-debugging-port=65536'],
+    ['--remote-debugging-port=09222'],
+    ['--remote-debugging-port=9222 ', '--headless'],
+    ['--remote-debugging-port=9222', '--remote-debugging-port=9820'],
+    ['--remote-debugging-port=9222', 1],
+  ])
+    assert.equal(cat07RecordedDebugPort(args), null);
 });
 
 test('CAT07 trusted Git and browser discovery ignore poisoned host executable selectors', (t) => {

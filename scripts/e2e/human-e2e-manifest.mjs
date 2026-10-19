@@ -30,6 +30,7 @@ import {
   CAT07_LOOPBACK_ATTESTATION_SCHEMA_VERSION,
   CAT07_RUNTIME_PROVENANCE_SCHEMA_VERSION,
   cat07BrowserArguments,
+  cat07RecordedDebugPort,
   createCat07TrustedGitContext,
 } from './cat07-shelf-freshness-audit.mjs';
 import { renderHumanE2eManifestMarkdown } from './human-e2e-manifest-render.mjs';
@@ -1104,13 +1105,15 @@ function collectCat07RuntimeProvenanceFailures(runtimeProvenance, sourceGitState
     return ['runtimeProvenance must use the exact reviewed CAT07 schema'];
   }
   const browserLaunch = runtimeProvenance.browserLaunch;
+  const debugPort = cat07RecordedDebugPort(browserLaunch?.args);
   const expectedBrowserArgs = cat07BrowserArguments({
-    debugPort: 9820,
+    debugPort,
     userDataDir: '<fresh-profile>',
   });
   if (
     !hasExactObjectKeys(browserLaunch, ['args', 'schemaVersion']) ||
     browserLaunch?.schemaVersion !== CAT07_BROWSER_LAUNCH_SCHEMA_VERSION ||
+    debugPort === null ||
     !isDeepStrictEqual(browserLaunch?.args, expectedBrowserArgs)
   ) {
     failures.push('runtimeProvenance browserLaunch does not use the exact loopback-only posture');
@@ -6101,6 +6104,7 @@ function runCat07ShelfFreshnessContractSmoke() {
       browserLaunch: {
         args: [
           '--headless',
+          '--remote-debugging-address=127.0.0.1',
           '--remote-debugging-port=0',
           '--user-data-dir=<fresh-profile>',
           '--no-first-run',

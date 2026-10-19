@@ -7745,7 +7745,7 @@
   },
   {
     "path": "scripts/e2e/cat07-committed-evidence.mjs",
-    "sha256": "2afa32baa0ac23d0e2bc24d66551d093924463d34966691f673f28003142b747"
+    "sha256": "3a5a12059c450e4980a8b65abfda82d19551e056d8f9be8af298c51ea7fee06a"
   },
   {
     "path": "scripts/e2e/cat07-png-contract.mjs",
@@ -7753,11 +7753,11 @@
   },
   {
     "path": "scripts/e2e/cat07-shelf-freshness-audit.mjs",
-    "sha256": "786634bcf91a0799ad7957ee3416c95b4ed0c021dfa529c1fcc07c47afa4f93d"
+    "sha256": "97d7845b332dd0972474b1822bc98f1a32e49bfd83a624ed2aff4b06f8b169c1"
   },
   {
     "path": "scripts/e2e/cat07-shelf-freshness-audit.test.mjs",
-    "sha256": "a0f13dbdd816bd33bbf0b16ad5409c7f988f96082edef87d6dc73e2e33e39ae4"
+    "sha256": "c1090c50ea31c656be9045e3dccc9031136fd9e56960e4dc60f204a5048a064e"
   },
   {
     "path": "scripts/e2e/catalog-operator-console-fixture-server.mjs",
@@ -7789,7 +7789,7 @@
   },
   {
     "path": "scripts/e2e/human-e2e-manifest.mjs",
-    "sha256": "7c887ba017a91d47840b79496513c9d3a178286ce652e1e267b1f8a806e89751"
+    "sha256": "247a3c850007d98460dc370db3805e375ad5d3faf9bdbeaa55c0eac808bc5672"
   },
   {
     "path": "scripts/e2e/onboarding-first-session.mjs",

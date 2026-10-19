@@ -12,6 +12,7 @@ import {
   sanitizeEvidenceDiagnosticForDisplay,
 } from './evidence-diagnostic-hygiene.mjs';
 import { renderHumanE2eManifestMarkdown } from './human-e2e-manifest-render.mjs';
+import { cat07RecordedDebugPort } from './cat07-shelf-freshness-audit.mjs';
 
 export const CAT07_COMMITTED_SUMMARY_PATH =
   'test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current/summary.json';
@@ -84,11 +85,11 @@ const CAT07_APP_ENVIRONMENT_KEY_SETS = [
   [...CAT07_APP_ENVIRONMENT_COMMON_KEYS, 'HOME', 'PATH', 'TEMP', 'TMP', 'TMPDIR'].sort(),
 ];
 
-function cat07CommittedExpectedBrowserArguments() {
+function cat07CommittedExpectedBrowserArguments(debugPort) {
   return [
     '--headless',
     '--remote-debugging-address=127.0.0.1',
-    '--remote-debugging-port=0',
+    `--remote-debugging-port=${debugPort}`,
     '--user-data-dir=<fresh-profile>',
     '--no-first-run',
     '--no-default-browser-check',
@@ -349,7 +350,11 @@ function collectSummaryFailures(summary, root, headSha, context) {
     if (
       !hasExactObjectKeys(runtime.browserLaunch, ['args', 'schemaVersion']) ||
       runtime.browserLaunch.schemaVersion !== 1 ||
-      !isDeepStrictEqual(runtime.browserLaunch.args, cat07CommittedExpectedBrowserArguments())
+      cat07RecordedDebugPort(runtime.browserLaunch.args) === null ||
+      !isDeepStrictEqual(
+        runtime.browserLaunch.args,
+        cat07CommittedExpectedBrowserArguments(cat07RecordedDebugPort(runtime.browserLaunch.args)),
+      )
     ) {
       errors.push('committed CAT07 browser launch posture is invalid');
     }
