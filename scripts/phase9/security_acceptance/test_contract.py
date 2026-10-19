@@ -253,8 +253,8 @@ class ContractTests(unittest.TestCase):
    write(w.MANIFESTS[name],obj)
   write('code/npm-audit-high.json',fresh['npm-installed']['report']);write('code/npm-audit-high.exit-code',b'1\n')
   write('static/osv-scan.json',fresh['osv']['report'])
-  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine']}}}]} for item in fresh['gitleaks']['report'][:2]]
-  write('secret/gitleaks-results.sarif',{'version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','version':'8.24.3'}},'results':findings}]})
+  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
+  write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'8.24.3'}},'results':findings}]})
   return w,root,needs,commit,run_id,fresh
  def test_original_workflow_valid_known_artifacts_are_technical_only(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
@@ -300,12 +300,13 @@ class ContractTests(unittest.TestCase):
   with self.assertRaisesRegex(c.Rejected,'OSV_FINDING_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
  def test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'secret/gitleaks-results.sarif';original=p.read_bytes()
-  for action in ('unknown','duplicate','range','version','empty'):
+  for action in ('unknown','duplicate','range','version','unredacted','empty'):
    obj=c.parse_json(original);run=obj['runs'][0]
    if action=='unknown':run['results'][0]['ruleId']='unknown-rule'
    elif action=='duplicate':run['results'].append(copy.deepcopy(run['results'][0]))
    elif action=='range':run['results'][0]['locations'][0]['physicalLocation']['region']['endLine']+=1
-   elif action=='version':run['tool']['driver']['version']='0.0.0'
+   elif action=='version':run['tool']['driver']['semanticVersion']='0.0.0'
+   elif action=='unredacted':run['results'][0]['locations'][0]['physicalLocation']['region']['snippet']['text']='synthetic-not-redacted'
    else:run['results']=[]
    p.write_bytes(c.CANON(obj))
    with self.subTest(action=action):

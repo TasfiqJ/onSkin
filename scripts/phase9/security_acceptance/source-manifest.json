@@ -9081,11 +9081,11 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "c4305558b2950d2fa431bd572303227f709bad79575b87bf3cf4f4591d5eb17e"
+    "sha256": "0fe861c5ab5d84be0acd1527a4d49f06c56613e63bc965c5c523f50feba7228c"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
-    "sha256": "a26f0a32c80332c72f8b7cbfe8fb429aaddb1c21c3dc6dee5b1967bb6c2de220"
+    "sha256": "bccef14adb1e2401d3ff4f4524ae562ca1834b06bde1c39e0241ee0f7b698e3f"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

@@ -77,7 +77,7 @@
     "3264 exact historical source-proven noncredential records"
   ],
   "semgrepPackageTree": "bbfba178d93ca43d27fd3e358c585b22a1ce3b29d652701e5db2b164975df1a8",
-  "sourceManifest": "8e37b959da46d70903c7d5fac63a930eee6306f2d5f1ef9115819e9b6e84e3bc",
+  "sourceManifest": "e3a0c5c9ae97a0c131a900cb60c648ef6a0be5365a0fd1c9d2bab32542fe6e3b",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

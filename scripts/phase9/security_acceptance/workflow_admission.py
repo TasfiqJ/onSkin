@@ -84,12 +84,14 @@ def original_jobs(directory, needs, commit, run_id, fresh):
     c.require(secret['gitleaks'] == ('success' if leak_exit == 0 else 'failure'),
               'WORKFLOW_GITLEAKS_EXIT_DRIFT')
     sarif = c.load(directory, 'secret/gitleaks-results.sarif')
-    c.require(sarif.get('version') == '2.1.0' and isinstance(sarif.get('runs'), list)
+    c.require(isinstance(sarif, dict) and sarif.get('$schema') == 'https://json.schemastore.org/sarif-2.1.0.json'
+              and sarif.get('version') == '2.1.0' and isinstance(sarif.get('runs'), list)
               and len(sarif['runs']) == 1, 'WORKFLOW_GITLEAKS_REPORT_SCHEMA')
     run = sarif['runs'][0]
-    driver = run.get('tool', {}).get('driver', {})
-    c.require(driver.get('name', '').lower() == 'gitleaks'
-              and driver.get('version', '').removeprefix('v') == '8.24.3',
+    c.require(isinstance(run, dict) and isinstance(run.get('tool'), dict), 'WORKFLOW_GITLEAKS_REPORT_SCHEMA')
+    driver = run['tool'].get('driver', {})
+    c.require(isinstance(driver, dict) and driver.get('name') == 'gitleaks'
+              and driver.get('semanticVersion') in ('8.24.3', 'v8.24.3'),
               'WORKFLOW_GITLEAKS_VERSION_DRIFT')
     findings = run.get('results')
     c.require(isinstance(findings, list) and bool(findings) == (leak_exit == 2),
@@ -102,6 +104,8 @@ def original_jobs(directory, needs, commit, run_id, fresh):
         location = locations[0]['physicalLocation']
         path = urllib.parse.unquote(location['artifactLocation']['uri'])
         region = location['region']
+        c.require(isinstance(region.get('snippet'), dict) and region['snippet'].get('text') == 'REDACTED',
+                  'WORKFLOW_UNREDACTED_GITLEAKS_FINDING')
         start = region['startLine']
         c.require(type(start) is int and start > 0, 'WORKFLOW_GITLEAKS_RANGE_DRIFT')
         prior_commit = finding['partialFingerprints']['commitSha']
