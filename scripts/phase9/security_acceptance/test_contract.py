@@ -450,7 +450,7 @@ class ContractTests(unittest.TestCase):
     with self.assertRaises(c.Rejected):c.records(v,self.policy)
  def test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA(self):
   raw=self.actual['gitleaks-current']['report'];prefix=raw[0]['File'].split('/current-source/',1)[0]+'/current-source'
-  result,refs,witnesses=h.verify_current(c.ROOT,raw,prefix,'53bdd045b18d08407d9dea209aa5fa4ed5648836',c.load(c.HERE,'history.json.gz'),c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
+  result,refs,witnesses=h.verify_current(c.ROOT,raw,prefix,'d1626b52b3419567633d7070e9386f431899f354',c.load(c.HERE,'history.json.gz'),c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
   self.assertEqual(result['records'],1107);self.assertEqual(result['unverified'],0);self.assertFalse(result['historicalQARefreshed']);self.assertEqual(result['retainedReferencedSourceDigests'],13);self.assertEqual(result['exactRetainedSyntheticPayloads'],1)
  def test_current_source_report_rejects_path_range_redaction_duplicate_and_findings_drift(self):
   for action in ('path','range','redaction','duplicate','verified'):
@@ -466,7 +466,7 @@ class ContractTests(unittest.TestCase):
   raw=self.actual['gitleaks-current']['report'];prefix=raw[0]['File'].split('/current-source/',1)[0]+'/current-source';rows=c.load(c.HERE,'history.json.gz')
   for row in rows:
    if row['technical_disposition']=='RECOMPUTED_SOURCE_FILE_DIGEST':row['proof']['referenced_source_path']='NONEXISTENT/substituted-reference.mjs'
-  with self.assertRaises((ValueError,KeyError,subprocess.SubprocessError)):h.verify_current(c.ROOT,raw,prefix,'53bdd045b18d08407d9dea209aa5fa4ed5648836',rows,c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
+  with self.assertRaises((ValueError,KeyError,subprocess.SubprocessError)):h.verify_current(c.ROOT,raw,prefix,'d1626b52b3419567633d7070e9386f431899f354',rows,c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
  def test_scanner_startup_ignores_actual_ambient_module_injection(self):
   with tempfile.TemporaryDirectory(prefix='g97-python-startup-unit-') as directory:
    root=pathlib.Path(directory);(root/'socket.py').write_text('raise RuntimeError("UNREVIEWED_AMBIENT_MODULE_EXECUTED")')

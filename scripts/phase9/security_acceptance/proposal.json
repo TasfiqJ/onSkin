@@ -58,7 +58,7 @@
     "gitleaks-current": {
       "exit": 2,
       "file": "scans/gitleaks-current.json.gz",
-      "projection": "342cd635608008a4f9a3d66e0eeaef3264ce72351e92878e0dab3075227e503c"
+      "projection": "526e9c0c5ef4a56aa06707c2ba5321bd16b9127a4bcaa1d5be3e3e59de9826e2"
     },
     "graph": {
       "exit": 0,
@@ -308,7 +308,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "0ae3910c04409950930a49ba3e5d84a8f1cecd833564965ddc1842a90f9e8268",
+  "sourceManifest": "ae8a331ba4a9a217130e3aee0b24f6636584f1e13488460a2cab230bc3683474",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [
