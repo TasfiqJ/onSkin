@@ -6,9 +6,9 @@
   "historyRecordCount": 3265,
   "id": "G97-SOURCE-MITIGATION-R1",
   "minimumTests": {
-    "backport-and-installer": 20,
+    "backport-and-installer": 38,
     "expired-exceptions": 7,
-    "native-source-and-archive": 300
+    "native-source-and-archive": 349
   },
   "notAfter": "2026-10-21T00:00:00Z",
   "notBefore": "2026-10-18T00:00:00Z",
@@ -35,7 +35,7 @@
     "secrets": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
     "typescript": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395"
   },
-  "scanCoverageManifest": "c662e9f9f90e0c1181de32ed2c0e677ed3b48f08bb61ffe9e20dd582c27cb23b",
+  "scanCoverageManifest": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
   "scannerCommands": {
     "gitleaks": "gitleaks8.24.3 detect --config pinned-default --redact=100 --exit-code=2 --log-opts=--all --full-history",
     "gitleaks-current": "gitleaks8.24.3 detect --no-git --source exact committed-source snapshot --config pinned-default --redact=100 --exit-code=2",
@@ -308,7 +308,7 @@
   },
   "semgrepPackageTree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
   "semgrepVersion": "1.181.0",
-  "sourceManifest": "32088ac5a29523842c5d8f6a20847cf7365ca5897db9456af958d4785fff91ef",
+  "sourceManifest": "1e14cbb6ad029ada0851ca3dbe1526dca379683ca555f57d83387908992511ae",
   "state": "INACTIVE_PROPOSAL",
   "toolBytes": {
     "gitleaks": [

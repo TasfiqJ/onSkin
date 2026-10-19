@@ -15,12 +15,21 @@ export function validateWorkflowAdmission(text) {
     const jobs = workflow.jobs;
     if (workflow.name !== 'Security' || workflow.permissions?.contents !== 'read' || !originals.every((name) => jobs[name])) return false;
     for (const [name, checks] of [
-      ['code-gates', ['G97_PHASE9_VERIFY_OUTCOME', 'G97_DEPENDENCY_SBOM_OUTCOME']],
+      ['code-gates', ['G97_PHASE9_VERIFY_OUTCOME']],
       ['secret-scan', ['G97_TRUFFLEHOG_OUTCOME']],
       ['static-analysis', ['G97_SEMGREP_OUTCOME']],
     ]) {
       if (jobs[name]['continue-on-error'] || !checks.every((check) => finalCommand(jobs[name], `test "\${${check}}" = "success"`))) return false;
     }
+    const codeJob = jobs['code-gates'];
+    const sbom = codeJob.steps.find((step) => step.id === 'dependency_sbom');
+    if (sbom?.['continue-on-error'] !== true || sbom.env?.PHASE9_RUN_NPM_AUDIT !== 'true' ||
+        !['npm run phase9:dependency-sbom', 'sbom_exit=$?', 'dependency-sbom.exit-code', 'dependency-inventory.json', 'dependency-sbom-audit.json', 'dependency-sbom-audit.exit-code', 'exit "$sbom_exit"'].every((text) => sbom.run?.includes(text)) ||
+        !finalCommand(codeJob, 'test "${G97_DEPENDENCY_SBOM_OUTCOME}" = "failure"') ||
+        !finalCommand(codeJob, 'node scripts/phase9/security_acceptance/workflow_contract.mjs sbom')) return false;
+    const osv = jobs['static-analysis'].steps.find((step) => step.id === 'osv');
+    if (osv?.uses || osv?.['continue-on-error'] !== true ||
+        !['"$RUNNER_TEMP/g97-tools/scanners/osv" scan source --format=json --output=docs/phase-9/generated/ci-scanner-evidence/osv-scan.json --recursive .', 'osv_exit=$?', 'osv-scan.exit-code', 'exit "$osv_exit"'].every((text) => osv.run?.includes(text))) return false;
     for (const [name, id, run] of [
       ['code-gates', 'npm_exception_gate', 'security-advisory-exceptions.mjs npm'],
       ['static-analysis', 'osv_exception_gate', 'security-advisory-exceptions.mjs osv'],
@@ -47,4 +56,77 @@ export function validateWorkflowAdmission(text) {
   } catch {
     return false;
   }
+}
+
+// Candidate-only validation of the original audited SBOM refusal. This grants no approval.
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { validateNpmAudit, REVIEWED_ADVISORIES } from '../security-advisory-exceptions.mjs';
+import { dependencyAuditEvidenceWarnings } from '../dependency-sbom-contract.mjs';
+
+const auditedInstallScripts = new Map([
+  ['@sentry/cli@2.58.4', 'Sentry native CLI binary installer used by @sentry/react-native tooling.'],
+  ['fsevents@2.3.3', 'Optional Darwin file-watcher native package; not installed on non-Darwin CI runners.'],
+  ['unrs-resolver@1.12.2', 'ESLint resolver native binding installer used by lint tooling.'],
+]);
+const summaryText = value => String(value ?? '').replace(/\s+/g, ' ').trim();
+const packageName = path => path.replace(/^node_modules\//, '').replace(/^apps\/mobile\/node_modules\//, '');
+
+export function assertLegacyAuditedSbom({ packet, audit, lock, policy, auditExit, sbomExit, now = new Date() }) {
+  assert.equal(auditExit, 1); assert.equal(sbomExit, 1);
+  assert.deepEqual(Object.keys(packet).sort(), ['generatedAt', 'auditProvenance', 'packageManager', 'lockfileVersion', 'packageCount', 'vulnerabilities', 'auditFindings', 'installScriptPackages', 'packages', 'blockers', 'warnings'].sort());
+  const generated = new Date(packet.generatedAt);
+  assert.equal(generated.toISOString(), packet.generatedAt);
+  assert.ok(generated <= now && now - generated <= 6 * 60 * 60 * 1000);
+  const provenance = { requested: true, mode: 'registry', completed: true };
+  assert.deepEqual(packet.auditProvenance, provenance);
+  assert.ok(policy.exceptions.every(entry => entry.expiresOn === '2026-10-17'));
+  const blockers = validateNpmAudit({ report: audit, lock, policy, scannerExitCode: auditExit, today: now.toISOString().slice(0, 10) });
+  assert.deepEqual([...blockers].sort(), REVIEWED_ADVISORIES.map(entry => `${entry.package}: review is expired or dates are invalid`).sort());
+  assert.deepEqual(packet.blockers, blockers);
+  const counts = { info: 0, low: 0, moderate: 0, high: 0, critical: 0, total: 0 };
+  for (const finding of Object.values(audit.vulnerabilities)) {
+    assert.ok(Object.hasOwn(counts, finding.severity) && finding.severity !== 'total');
+    counts[finding.severity]++; counts.total++;
+  }
+  assert.deepEqual(audit.metadata.vulnerabilities, counts);
+  assert.deepEqual(packet.vulnerabilities, counts);
+  assert.deepEqual(packet.warnings, [...dependencyAuditEvidenceWarnings({ provenance, signedOff: false })]);
+  const entries = Object.entries(lock.packages).filter(([path]) => path);
+  const packages = entries.map(([path, meta]) => ({ path, name: packageName(path), version: meta.version ?? null, license: meta.license ?? null, resolved: meta.resolved ?? null })).sort((a,b) => a.path.localeCompare(b.path));
+  assert.deepEqual(packet.packages, packages);
+  assert.equal(packet.packageCount, packages.length);
+  assert.equal(packet.lockfileVersion, lock.lockfileVersion ?? null);
+  assert.equal(packet.packageManager, lock.packageManager ?? null);
+  const scripts = entries.filter(([,meta]) => meta?.hasInstallScript).map(([path,meta]) => {
+    const name = packageName(path), version = meta.version ?? 'unknown', key = `${name}@${version}`;
+    return { path, name, version, key, dev: Boolean(meta.dev), optional: Boolean(meta.optional), license: meta.license ?? null, allowed: auditedInstallScripts.has(key), allowlistReason: auditedInstallScripts.get(key) ?? null };
+  }).sort((a,b) => a.key.localeCompare(b.key));
+  assert.ok(scripts.every(item => item.allowed));
+  assert.deepEqual(packet.installScriptPackages, scripts);
+  const findings = Object.values(audit.vulnerabilities).map(finding => ({
+    name: finding.name, severity: finding.severity, isDirect: Boolean(finding.isDirect), range: finding.range ?? null,
+    via: (finding.via ?? []).map(item => typeof item === 'string' ? item : summaryText(`${summaryText(item.title || item.name || item.dependency || item.source)} ${item.range ? `(${item.range})` : ''}`)).filter(Boolean),
+    effects: finding.effects ?? [], nodes: finding.nodes ?? [],
+    fixAvailable: finding.fixAvailable === true ? 'available' : !finding.fixAvailable ? 'none' : summaryText(`${finding.fixAvailable.name}@${finding.fixAvailable.version} (${finding.fixAvailable.isSemVerMajor ? 'breaking' : 'non-breaking'})`),
+  })).sort((a,b) => `${a.severity}:${a.name}`.localeCompare(`${b.severity}:${b.name}`));
+  assert.deepEqual(packet.auditFindings, findings);
+  return { status: 'EXACT_EXPIRED_SBOM_POLICY_REFUSAL_BOUND', auditRecords: counts.total, expiredBlockers: blockers.length, rawExit: sbomExit, rawScannerPass: false, approval: false };
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    assert.equal(process.argv[2], 'sbom'); assert.ok([3, 4].includes(process.argv.length));
+    const root = fileURLToPath(new URL('../../../', import.meta.url));
+    const load = path => JSON.parse(readFileSync(resolve(root,path), 'utf8'));
+    const directory = process.argv[3] ? resolve(process.argv[3]) + '/' : 'docs/phase-9/generated/ci-scanner-evidence/';
+    const policyBytes = readFileSync(resolve(root,'docs/phase-9/security-advisory-exceptions.json'));
+    assert.equal(createHash('sha256').update(policyBytes).digest('hex'), '938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d');
+    const exit = name => { const value = readFileSync(resolve(root,directory+name), 'utf8').trim(); assert.equal(value, '1'); return 1; };
+    const result = assertLegacyAuditedSbom({ packet: load(directory+'dependency-inventory.json'), audit: load(directory+'dependency-sbom-audit.json'), lock: load('package-lock.json'), policy: JSON.parse(policyBytes), auditExit: exit('dependency-sbom-audit.exit-code'), sbomExit: exit('dependency-sbom.exit-code') });
+    console.log(JSON.stringify(result));
+  } catch { console.log(JSON.stringify({ status: 'REJECTED', code: 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT', approval: false })); process.exitCode = 1; }
 }

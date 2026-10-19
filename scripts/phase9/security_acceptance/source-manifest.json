@@ -29,7 +29,7 @@
   },
   {
     "path": ".github/workflows/security.yml",
-    "sha256": "a1872c781d2fcb867fed00cef797b409aaa67463e12ead15ef8c9f812bbbc000"
+    "sha256": "ddd635f90193daf1669ce36522ce2c333f7c1bbbdd26e92c57afe890bbc5550b"
   },
   {
     "path": ".gitignore",
@@ -8809,7 +8809,7 @@
   },
   {
     "path": "scripts/phase9/dependency-sbom.mjs",
-    "sha256": "291aaa5ad5c37a4c7e7d1722538605d660c71c84c7395c4e4ed8a9cd981926e7"
+    "sha256": "083e0779128bd0bb553d1b2243eb231078cc4b2322236f7318cd4b9e375e8b70"
   },
   {
     "path": "scripts/phase9/edge-auth-smoke.mjs",
@@ -9029,7 +9029,7 @@
   },
   {
     "path": "scripts/phase9/security-ci-smoke.mjs",
-    "sha256": "b3b76c4a38536cc6b13717a2ff198f3468b43fb931b797a13e0ffc885ab7b734"
+    "sha256": "9d1bbf62caf7c9e28e4a620dcc6ba626f0b02d5fa0a7775c6574b53e81e08fdb"
   },
   {
     "path": "scripts/phase9/security_acceptance/README.md",
@@ -9049,7 +9049,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/contract.py",
-    "sha256": "d6f36fb77f665528394759c3a668c8a07df3c9a373cc347254c24148e119ea85"
+    "sha256": "478bbdb882f454a13a0a10fcf3e0dbbfe474bc66056e47ed1183b5114849bc0d"
   },
   {
     "path": "scripts/phase9/security_acceptance/gitleaks.toml",
@@ -9064,6 +9064,10 @@
     "sha256": "0e58ddadd9b03e294deb03ac738c2a4bbcbcf8cf7c0f510958e9abccaff7ca93"
   },
   {
+    "path": "scripts/phase9/security_acceptance/legacy-sbom-fixture.json.gz",
+    "sha256": "2f58f1ac0f8e178dcc56d08a435e48f3e884c48d38bad4291f353c1e2fbc06cd"
+  },
+  {
     "path": "scripts/phase9/security_acceptance/node-forge.patch",
     "sha256": "146f37a6b30b9876b6f092d63d9c0b8a948a5add0632c65c8b77252c7a40b4bb"
   },
@@ -9073,7 +9077,7 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
-    "sha256": "c662e9f9f90e0c1181de32ed2c0e677ed3b48f08bb61ffe9e20dd582c27cb23b"
+    "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5"
   },
   {
     "path": "scripts/phase9/security_acceptance/semgrep-engine-linux-x86_64.tar.gz",
@@ -9089,19 +9093,19 @@
   },
   {
     "path": "scripts/phase9/security_acceptance/test_contract.py",
-    "sha256": "f8ae3f77e40e5567925ee7936a3b5ff86df195ebbb7188adf2d9aa7c3990d1c9"
+    "sha256": "bf1e1b1f3cc5f158e9805557621a9e92f2282712b122a25cf701aecdcf6f6ea9"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_admission.py",
-    "sha256": "bccef14adb1e2401d3ff4f4524ae562ca1834b06bde1c39e0241ee0f7b698e3f"
+    "sha256": "7a758243487c5b2a061492aa8a350d0e8e3aeb3c80e93a8fdb1f2ea1acdd025d"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
-    "sha256": "878ec36e386e75f74e152dc4803ec4acd07f694836874c522f4be522ef6d600a"
+    "sha256": "d6743a69b9eca82bcafe57c9fababbce43b98aceaee681814cf780cded25785f"
   },
   {
     "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
-    "sha256": "22f16d09415f2abfdbce3c29dc725a16ac8acf666c454c117cef2b08a06f1d1a"
+    "sha256": "23cf97aaccc2d3cb04e3f4e3e6497da64f4a088abd90cdf1255c5f5aa3a27daa"
   },
   {
     "path": "scripts/phase9/sentry-recovery-verification-smoke.mjs",

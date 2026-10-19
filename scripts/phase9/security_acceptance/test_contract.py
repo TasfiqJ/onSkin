@@ -251,15 +251,49 @@ class ContractTests(unittest.TestCase):
    p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(value if isinstance(value,bytes) else c.CANON(value))
   for name,fields in w.JOBS.items():
    obj={field:'success' for field in fields};obj.update(job=name,sha=commit,run_id=run_id)
-   if name=='code-gates':obj.update(npm_audit_high='failure',npm_exception_gate='failure')
+   if name=='code-gates':obj.update(dependency_sbom='failure',npm_audit_high='failure',npm_exception_gate='failure')
    if name=='secret-scan':obj.update(gitleaks='failure',gitleaks_exit='2')
    if name=='static-analysis':obj.update(osv='failure',osv_exception_gate='failure')
    write(w.MANIFESTS[name],obj)
   write('code/npm-audit-high.json',fresh['npm-installed']['report']);write('code/npm-audit-high.exit-code',b'1\n')
+  # Actual source-generated packet; only the unit fixture's clock is refreshed.
+  execution=c.load(c.HERE,'legacy-sbom-fixture.json.gz');sbom=execution['packet'];sbom['generatedAt']=c.now().isoformat(timespec='milliseconds').replace('+00:00','Z')
+  write('code/dependency-inventory.json',sbom);write('code/dependency-sbom.exit-code',b'1\n')
+  write('code/dependency-sbom-audit.json',execution['audit']);write('code/dependency-sbom-audit.exit-code',b'1\n')
+  write('static/osv-scan.exit-code',str(fresh['osv']['exit']).encode()+b'\n')
   write('static/osv-scan.json',fresh['osv']['report'])
   findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
   write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'8.24.3'}},'results':findings}]})
   return w,root,needs,commit,run_id,fresh
+ def test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'code/dependency-inventory.json';original=p.read_bytes()
+  for action in ('blocker','counts','packages','provenance','signoff','stale'):
+   value=c.parse_json(original)
+   if action=='blocker':value['blockers'].append('Unexpected dependency install scripts detected.')
+   elif action=='counts':value['vulnerabilities']['total']+=1
+   elif action=='packages':value['packages'].pop()
+   elif action=='provenance':value['auditProvenance']['completed']=False
+   elif action=='signoff':value['warnings']=[]
+   else:value['generatedAt']='2026-10-17T00:00:00.000Z'
+   p.write_bytes(c.CANON(value))
+   with self.subTest(action=action):
+    with self.assertRaisesRegex(c.Rejected,'SBOM_UNRELATED_FAILURE'):w.original_jobs(root,needs,commit,run_id,fresh)
+  p.write_bytes(original)
+ def test_original_workflow_sbom_execution_exit_cannot_be_waived(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'code/dependency-sbom.exit-code'
+  for name in ('dependency-sbom.exit-code','dependency-sbom-audit.exit-code'):
+   p=root/'code'/name
+   for exit in ('0','2','127','137','143','true',''):
+    p.write_text(exit)
+    with self.subTest(file=name,exit=exit):
+     with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'SBOM_(AUDIT_)?EXECUTION_ERROR'):w.original_jobs(root,needs,commit,run_id,fresh)
+   p.write_text('1\n')
+ def test_original_workflow_osv_execution_error_with_known_json_rejects(self):
+  w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'static/osv-scan.exit-code'
+  for exit in ('0','2','127','137','143','true',''):
+   p.write_text(exit)
+   with self.subTest(exit=exit):
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
  def test_original_workflow_valid_known_artifacts_are_technical_only(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
   result=w.original_jobs(root,needs,commit,run_id,fresh)
@@ -278,7 +312,7 @@ class ContractTests(unittest.TestCase):
     with self.assertRaises(c.Rejected):w.original_jobs(root,changed,commit,run_id,fresh)
  def test_original_workflow_wrong_source_run_schema_or_unrelated_check_rejects(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
-  for name,field,value in [('code-gates','sha','b'*40),('secret-scan','run_id','999'),('static-analysis','semgrep','failure'),('secret-scan','trufflehog','failure'),('code-gates','phase9_verify','skipped'),('code-gates','dependency_sbom','failure'),('static-analysis','osv_exception_gate','success'),('code-gates','npm_exception_gate','success'),('code-gates','npm_audit_high',True)]:
+  for name,field,value in [('code-gates','sha','b'*40),('secret-scan','run_id','999'),('static-analysis','semgrep','failure'),('secret-scan','trufflehog','failure'),('code-gates','phase9_verify','skipped'),('code-gates','dependency_sbom','success'),('static-analysis','osv_exception_gate','success'),('code-gates','npm_exception_gate','success'),('code-gates','npm_audit_high',True)]:
    p=root/w.MANIFESTS[name];original=p.read_bytes();obj=c.parse_json(original);obj[field]=value;p.write_bytes(c.CANON(obj))
    with self.subTest(job=name,field=field):
     with self.assertRaises(c.Rejected):w.original_jobs(root,needs,commit,run_id,fresh)

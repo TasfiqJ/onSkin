@@ -147,7 +147,7 @@ def bind_regression(result,data,actual_exit,minimum):
  for k in ('tests','pass','fail','cancelled','skipped','todo'):
   values=re.findall(rb'^# '+k.encode()+rb' (\d+)\r?$',data,re.M)
   require(len(values)==1 and int(values[0])==result[k],'REGRESSION_SUMMARY_DRIFT')
-COMPRESSED_WITNESSES={'scripts/phase9/security_acceptance/'+name for name in ('history.json.gz','scan-targets.json.gz','test-fixtures.json.gz')}|{'scripts/phase9/tooling-security-backports/originals.json.gz'}
+COMPRESSED_WITNESSES={'scripts/phase9/security_acceptance/'+name for name in ('history.json.gz','scan-targets.json.gz','test-fixtures.json.gz','legacy-sbom-fixture.json.gz')}|{'scripts/phase9/tooling-security-backports/originals.json.gz'}
 ENGINE_SOURCE_ARCHIVE='scripts/phase9/security_acceptance/semgrep-engine-linux-x86_64.tar.gz'
 
 def coverage_kind(path,body):

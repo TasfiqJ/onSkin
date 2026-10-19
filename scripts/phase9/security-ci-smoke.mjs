@@ -166,7 +166,7 @@ if (exists(workflowPath)) {
   );
   block(
     errors,
-    /google\/osv-scanner-action/.test(workflow),
+    /g97-tools\/scanners\/osv/.test(workflow) && /osv-scan\.exit-code/.test(workflow),
     'Security workflow must run OSV scanner.',
   );
   block(

@@ -60,7 +60,17 @@ jobs:
       - name: Dependency SBOM with audit metadata
         id: dependency_sbom
         continue-on-error: true
-        run: npm run phase9:dependency-sbom
+        run: |
+          mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          set +e
+          npm run phase9:dependency-sbom
+          sbom_exit=$?
+          set -e
+          echo "$sbom_exit" > docs/phase-9/generated/ci-scanner-evidence/dependency-sbom.exit-code
+          cp -- docs/phase-9/generated/dependency-inventory.json docs/phase-9/generated/ci-scanner-evidence/dependency-inventory.json
+          cp -- docs/phase-9/generated/dependency-sbom-audit.json docs/phase-9/generated/ci-scanner-evidence/dependency-sbom-audit.json
+          cp -- docs/phase-9/generated/dependency-sbom-audit.exit-code docs/phase-9/generated/ci-scanner-evidence/dependency-sbom-audit.exit-code
+          exit "$sbom_exit"
         env:
           PHASE9_RUN_NPM_AUDIT: 'true'
 
@@ -123,7 +133,8 @@ jobs:
           G97_NPM_EXCEPTION_GATE_OUTCOME: ${{ steps.npm_exception_gate.outcome }}
         run: |
           test "${G97_PHASE9_VERIFY_OUTCOME}" = "success"
-          test "${G97_DEPENDENCY_SBOM_OUTCOME}" = "success"
+          test "${G97_DEPENDENCY_SBOM_OUTCOME}" = "failure"
+          node scripts/phase9/security_acceptance/workflow_contract.mjs sbom
 
   secret-scan:
     name: Secret scanning
@@ -260,14 +271,15 @@ jobs:
       - name: OSV scanner
         id: osv
         continue-on-error: true
-        # google/osv-scanner-action/osv-scanner-action v2.3.8
-        uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2
-        with:
-          scan-args: |-
-            --format=json
-            --output=docs/phase-9/generated/ci-scanner-evidence/osv-scan.json
-            --recursive
-            .
+        # Same official OSV 2.3.8 scanner, installed with verified release bytes.
+        # Capture its actual numeric exit; the former Docker action has no outputs.
+        run: |
+          set +e
+          "$RUNNER_TEMP/g97-tools/scanners/osv" scan source --format=json --output=docs/phase-9/generated/ci-scanner-evidence/osv-scan.json --recursive .
+          osv_exit=$?
+          set -e
+          echo "$osv_exit" > docs/phase-9/generated/ci-scanner-evidence/osv-scan.exit-code
+          exit "$osv_exit"
 
       - name: Enforce reviewed OSV advisory exceptions
         id: osv_exception_gate

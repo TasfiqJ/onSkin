@@ -39,6 +39,7 @@ const packages = Object.entries(lock.packages ?? {})
   .sort((a, b) => a.path.localeCompare(b.path));
 
 let audit = null;
+let auditRaw = null;
 let auditExitCode = null;
 if (npmAuditRequested) {
   try {
@@ -48,10 +49,13 @@ if (npmAuditRequested) {
           stdio: ['ignore', 'pipe', 'pipe'],
         })
       : command('npm', ['audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    auditRaw = auditJson;
     audit = JSON.parse(auditJson);
     auditExitCode = 0;
   } catch (error) {
     const stdout = error?.stdout?.toString?.() ?? '';
+    auditRaw = stdout;
+    auditExitCode = error?.status ?? null;
     try {
       audit = JSON.parse(stdout);
       auditExitCode = error?.status;
@@ -63,6 +67,13 @@ if (npmAuditRequested) {
       );
     }
   }
+}
+
+// Preserve the exact audited command's bytes and exit. Registry cache state can
+// change npm's transitive expansion between this command and the later high scan.
+if (npmAuditRequested) {
+  write('docs/phase-9/generated/dependency-sbom-audit.json', auditRaw ?? '');
+  write('docs/phase-9/generated/dependency-sbom-audit.exit-code', `${auditExitCode}\n`);
 }
 
 const vulnerabilities = audit?.metadata?.vulnerabilities ?? null;

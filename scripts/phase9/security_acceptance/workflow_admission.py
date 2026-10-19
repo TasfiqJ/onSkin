@@ -18,11 +18,13 @@ MANIFESTS = {
 }
 LEGACY_FILES = set(MANIFESTS.values()) | {
     'code/npm-audit-high.json', 'code/npm-audit-high.exit-code',
-    'secret/gitleaks-results.sarif', 'static/osv-scan.json',
+    'secret/gitleaks-results.sarif', 'static/osv-scan.json', 'static/osv-scan.exit-code',
+    'code/dependency-inventory.json', 'code/dependency-sbom.exit-code',
+    'code/dependency-sbom-audit.json', 'code/dependency-sbom-audit.exit-code',
 }
 
 def legacy_inventory(directory):
-    """Only the complete technical receipt may sit beside these seven files."""
+    """Only the complete technical receipt may sit beside these twelve files."""
     directory = pathlib.Path(directory)
     observed = set()
     for current, dirs, files in os.walk(directory, followlinks=False):
@@ -56,7 +58,7 @@ def original_jobs(directory, needs, commit, run_id, fresh):
         c.require(all(type(value) is str for value in obj.values()), 'WORKFLOW_OUTCOME_TYPES')
         manifests[name] = obj
     code, secret, static = [manifests[name] for name in JOBS]
-    c.require(code['phase9_verify'] == code['dependency_sbom'] == 'success', 'WORKFLOW_CODE_CHECK_FAILURE')
+    c.require(code['phase9_verify'] == 'success' and code['dependency_sbom'] == 'failure', 'WORKFLOW_CODE_CHECK_FAILURE')
     c.require(secret['trufflehog'] == 'success', 'WORKFLOW_TRUFFLEHOG_FAILURE')
     c.require(static['semgrep'] == 'success', 'WORKFLOW_SEMGREP_FAILURE')
     # The untouched legacy policy is expired. Its refusal is retained, never
@@ -72,6 +74,29 @@ def original_jobs(directory, needs, commit, run_id, fresh):
     npm = c.load(directory, 'code/npm-audit-high.json')
     c.require(c.audit_projection(npm) == c.audit_projection(fresh['npm-installed']['report']),
               'WORKFLOW_NPM_FINDING_DRIFT')
+    # The original audited SBOM must retain its actual expired-policy refusal.
+    # Only the exact two blockers computed by the unchanged legacy validator are
+    # admissible. Package, provenance, summary and structural drift still reject.
+    c.require(c.safe(directory, 'code/dependency-sbom.exit-code').decode().strip() == '1',
+              'WORKFLOW_SBOM_EXECUTION_ERROR')
+    c.require(c.safe(directory, 'code/dependency-sbom-audit.exit-code').decode().strip() == '1',
+              'WORKFLOW_SBOM_AUDIT_EXECUTION_ERROR')
+    # The separately preserved SBOM audit may have a cache-dependent transitive
+    # subset, but must retain every exact primary advisory and source-bound row.
+    c.initial_audit_subset(c.load(directory, 'code/dependency-sbom-audit.json'),
+                           fresh['npm-installed']['report'])
+    c.load(directory, 'code/dependency-inventory.json')
+    sbom = subprocess.run(['node', str(c.HERE / 'workflow_contract.mjs'), 'sbom',
+                           str(pathlib.Path(directory) / 'code')], cwd=c.ROOT,
+                          capture_output=True, timeout=30, check=False)
+    c.require(sbom.returncode == 0, 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT')
+    sbom_result = c.parse_json(sbom.stdout)
+    c.require(sbom_result.get('status') == 'EXACT_EXPIRED_SBOM_POLICY_REFUSAL_BOUND'
+              and sbom_result.get('approval') is False, 'WORKFLOW_SBOM_VALIDATOR_DRIFT')
+    osv_exit_text = c.safe(directory, 'static/osv-scan.exit-code').decode().strip()
+    c.require(osv_exit_text in ('0', '1'), 'WORKFLOW_OSV_EXECUTION_ERROR')
+    osv_exit = int(osv_exit_text)
+    c.require(osv_exit == fresh['osv']['exit'], 'WORKFLOW_OSV_EXIT_DRIFT')
     osv = c.load(directory, 'static/osv-scan.json')
     c.require(static['osv'] == ('success' if fresh['osv']['exit'] == 0 else 'failure')
               and c.osv_projection(osv) == c.osv_projection(fresh['osv']['report']),
