@@ -1567,6 +1567,11 @@ async function run() {
       'Shelf did not retain every product added during onboarding.',
     );
 
+    if (crossOwnerMode) {
+      await crossOwnerFlow(client, productNames);
+      return;
+    }
+
     await clickByText(client, 'Progress', { exact: false });
     await waitForPath(client, '/progress', 30_000);
     await waitForText(
@@ -1608,10 +1613,6 @@ async function run() {
     const todayAfterTabRoundTrip = await captureStep(client, '23-today-after-tab-round-trip', {
       assertClean: false,
     });
-    if (crossOwnerMode) {
-      await crossOwnerFlow(client, productNames);
-      return;
-    }
     if (process.argv.includes('--retained-safety')) await retainedShelfFlow(client);
 
     let ageReverificationBefore = null;
