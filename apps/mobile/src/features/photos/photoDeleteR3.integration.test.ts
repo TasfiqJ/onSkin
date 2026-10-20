@@ -1,3 +1,12 @@
+import { toggleCompletion, getPendingCompletionSyncOperations, getCompletedSteps } from '@/features/today/completionsStore';
+import { localDateString } from '@/features/today/useToday';
+import { flushCompletions } from '@/lib/offline/completionQueue';
+import { loadRoutineOrderOverrides, saveRoutineOrderOverrides } from '@/features/routine/orderStore';
+import { loadCycleConfig, updateCycleConfig, skipTonight } from '@/features/scheduler/cycleStore';
+import { loadNotifPrefs, saveNotifPrefs } from '@/features/notifications/store';
+import { reserveNotificationSlotLocal, schedulingAttemptsThisWeekForTierLocal } from '@/features/notifications/sentStore';
+import { decryptPhotoToDataUri } from './encryptedStorage';
+import { updatePhoto } from './store';
 import * as React from 'react';
 import { randomUUID, createHash } from 'node:crypto';
 import {
@@ -62,6 +71,11 @@ const mocks = vi.hoisted(() => ({
   files: new Map<string, string>(),
   directories: new Set<string>(),
   owner: 'owner-a',
+  completionLostOnce: false,
+  completionGate: null as Promise<void> | null,
+  completionStarted: null as (() => void) | null,
+  completionFacts: new Map<string, string>(),
+  completionCalls: [] as string[],
   offline: true,
   infoError: null as string | null,
   moveAfterError: null as string | null,
@@ -221,14 +235,31 @@ vi.mock('@/lib/query/queryClient', async () => {
   };
 });
 vi.mock('@/lib/supabase/client', () => ({
+  getPersistedSupabaseUser: async () => ({ data: { user: { id: mocks.owner } } }),
   supabase: {
-    rpc: (name: string, args: { p_operations: Record<string, unknown>[] }) => ({
-      abortSignal: async (signal: AbortSignal) => {
+    rpc: (name: string, args: Record<string, unknown>) => {
+      if (name === 'record_routine_completion') return (async () => {
+        const event = String(args.p_event_id);
+        mocks.completionCalls.push(event);
+        if (mocks.offline) throw new Error('OFFLINE');
+        const prior = mocks.completionFacts.get(event);
+        const payload = JSON.stringify(args);
+        if (prior && prior !== payload) throw new Error('CONFLICTING_REPLAY_PAYLOAD');
+        mocks.completionFacts.set(event, payload);
+        mocks.completionStarted?.();
+        if (mocks.completionGate) await mocks.completionGate;
+        if (mocks.completionLostOnce) {
+          mocks.completionLostOnce = false;
+          throw new Error('COMMIT_THEN_RESPONSE_LOST');
+        }
+        return { data: { version: 1, event_id: event, status: prior ? 'idempotent' : 'accepted', code: null }, error: null };
+      })();
+      return { abortSignal: async (signal: AbortSignal) => {
         if (signal.aborted) throw new Error('ABORTED');
-        mocks.outgoing.push({ name, operations: args.p_operations });
+        mocks.outgoing.push({ name, operations: args.p_operations as Record<string, unknown>[] });
         if (mocks.offline) throw new Error('OFFLINE');
         return {
-          data: args.p_operations.map((operation) => ({
+          data: (args.p_operations as Record<string, unknown>[]).map((operation) => ({
             operation_id: operation.operation_id,
             status: 'applied',
             error_class: null,
@@ -236,7 +267,8 @@ vi.mock('@/lib/supabase/client', () => ({
           error: null,
         };
       },
-    }),
+    };
+    },
   },
 }));
 
@@ -392,6 +424,11 @@ beforeEach(async () => {
   mocks.files.clear();
   mocks.directories.clear();
   mocks.owner = 'owner-a';
+  mocks.completionLostOnce = false;
+  mocks.completionGate = null;
+  mocks.completionStarted = null;
+  mocks.completionFacts.clear();
+  mocks.completionCalls = [];
   mocks.offline = true;
   mocks.infoError = null;
   mocks.moveAfterError = null;
@@ -735,6 +772,107 @@ describe.sequential('C-08B2-R3 real encrypted deletion/file/sign-out recovery', 
     expect(mocks.storage.has(PHOTO_DELETE_CLEANUP_VAULT_KEY)).toBe(false);
     expect(mocks.secure.has(PHOTO_DELETE_CLEANUP_VAULT_KEY)).toBe(false);
     await verifyFreshGrant();
+  });
+
+  it('M102 retains real encrypted completion identities across parallel duplicates, offline and lost acknowledgements', async () => {
+    const day = localDateString();
+    const a = `PM:${PHOTO_A}`;
+    const b = `PM:${OPERATION_A}`;
+    const scheduled = { phase: 'PM' as const, stepKeys: [a, b] };
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const remote = { source: 'real_plan' as const, timezone, stepOrder: 1 };
+    await Promise.all(Array.from({ length: 12 }, (_, index) => toggleCompletion(
+      index % 2 ? a : b, day, scheduled, { ...remote, stepOrder: index % 2 ? 1 : 2 },
+    )));
+    expect(await getCompletedSteps(day)).toEqual(new Set([a, b]));
+    const pending = await getPendingCompletionSyncOperations();
+    expect(pending.map((operation) => operation.kind)).toEqual(['step', 'step', 'routine_day']);
+    const ids = pending.map((operation) => operation.eventId);
+    expect(mocks.storage.get('layerwell.completions.v1')).not.toContain(PHOTO_A);
+    expect(await flushCompletions()).toMatchObject({ flushed: 0, remaining: 3 });
+    mocks.offline = false;
+    mocks.completionLostOnce = true;
+    expect(await flushCompletions()).toMatchObject({ flushed: 0, remaining: 3 });
+    expect((await getPendingCompletionSyncOperations()).map((operation) => operation.eventId)).toEqual(ids);
+    expect(await flushCompletions()).toMatchObject({ flushed: 3, remaining: 0 });
+    expect(mocks.completionFacts.size).toBe(3);
+    expect(mocks.completionCalls.slice(-3)).toEqual(ids);
+    await toggleCompletion(a, day, scheduled, remote);
+    expect(await getPendingCompletionSyncOperations()).toEqual([]);
+  });
+
+  it('M102 withdrawal beats an actual encrypted outbox late remote acknowledgement', async () => {
+    const day = localDateString();
+    await toggleCompletion(`AM:${PHOTO_A}`, day, undefined, {
+      source: 'real_plan', stepOrder: 1, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
+    let release!: () => void;
+    let started!: () => void;
+    mocks.offline = false;
+    mocks.completionGate = new Promise<void>((resolve) => { release = resolve; });
+    const entered = new Promise<void>((resolve) => { started = resolve; });
+    mocks.completionStarted = started;
+    const replay = flushCompletions().catch((error: unknown) => error);
+    await entered;
+    const cleanup = clearHealthPurposeLocalData('owner-a');
+    // Wait for the real boundary to close, without manually fabricating one.
+    for (let i = 0; i < 20 && activeHealthProcessingLeaseSnapshot(); i++) await Promise.resolve();
+    expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
+    release();
+    expect(await replay).toBeInstanceOf(Error);
+    await cleanup;
+    expect(mocks.storage.has('layerwell.completions.v1')).toBe(false);
+    await grant('owner-a', 2);
+    expect(await getPendingCompletionSyncOperations()).toEqual([]);
+    expect(await getCompletedSteps(day)).toEqual(new Set());
+  });
+
+  it('M102 merges real encrypted routine/cycle/preferences and atomically caps local attempts', async () => {
+    vi.stubGlobal('__DEV__', true); // Existing draft corpus, never an approval receipt.
+    try {
+      const empty = await loadRoutineOrderOverrides();
+      await Promise.all([
+        saveRoutineOrderOverrides({ previous: empty, next: { ...empty, am: [PHOTO_A] } }),
+        saveRoutineOrderOverrides({ previous: empty, next: { ...empty, pm: [OPERATION_A] } }),
+        updateCycleConfig({ variant: 'classic' }),
+        skipTonight(),
+        saveNotifPrefs({ amEnabled: true }),
+        saveNotifPrefs({ pmTime: '20:00' }),
+      ]);
+      expect(await loadRoutineOrderOverrides()).toMatchObject({ am: [PHOTO_A], pm: [OPERATION_A] });
+      expect(await loadCycleConfig()).toMatchObject({ variant: 'classic', skips: [localDateString()] });
+      expect(await loadNotifPrefs()).toMatchObject({ amEnabled: true, pmEnabled: false, pmTime: '20:00', liveActivityEnabled: false });
+      const now = Date.now();
+      const outcomes = await Promise.all(Array.from({ length: 10 }, () => reserveNotificationSlotLocal('replenishment', now)));
+      expect(outcomes.filter(Boolean)).toHaveLength(3);
+      expect(await schedulingAttemptsThisWeekForTierLocal('behavioural', now)).toBe(3);
+      for (const key of ['layerwell.routineOrder.v1', 'layerwell.cycle.v2', 'layerwell.notifPrefs.v1', 'layerwell.notiflog.v1']) {
+        expect(JSON.parse(mocks.storage.get(key)!)).toHaveProperty('ciphertextHex');
+      }
+      await clearHealthPurposeLocalData('owner-a');
+      await grant('owner-a', 2);
+      expect(await loadRoutineOrderOverrides()).toEqual(empty);
+      expect(await loadNotifPrefs()).toMatchObject({ amEnabled: false, pmEnabled: false });
+    } finally { vi.unstubAllGlobals(); }
+  });
+
+  it('M102 opens and edits actual encrypted pair/notes and preserves ciphertext on unknown metadata', async () => {
+    const live = await seedPending('live');
+    const [photo] = await loadPhotos();
+    expect(photo?.notes).toBe('old private health note');
+    for (const [index, uri] of live.files.entries()) expect(await decryptPhotoToDataUri(uri, {
+      photoId: PHOTO_A, captureSessionId: null, rendition: index === 0 ? 'original' : 'thumbnail',
+    })).toBe(`data:image/png;base64,${PNG}`);
+    await updatePhoto(PHOTO_A, { notes: 'synthetic edited note' });
+    expect((await loadPhotos())[0]?.notes).toBe('synthetic edited note');
+    expect(mocks.storage.get(PHOTO_KEY)).not.toContain('synthetic edited note');
+    const prior = await getPrivateItem(PHOTO_KEY);
+    const originals = live.files.map((uri) => mocks.files.get(uri));
+    await setPrivateItem(PHOTO_KEY, '{bad metadata');
+    await expect(loadPhotos()).rejects.toThrow('PHOTO_METADATA_INVALID');
+    expect(live.files.map((uri) => mocks.files.get(uri))).toEqual(originals);
+    await setPrivateItem(PHOTO_KEY, prior!);
+    expect((await loadPhotos())[0]?.notes).toBe('synthetic edited note');
   });
 
   it('restarts from durable encrypted state after a partial prepared delete with both renditions missing', async () => {

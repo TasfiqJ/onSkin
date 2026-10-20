@@ -10,6 +10,7 @@ import type { GeneratedPlan, PlanStep } from './generate';
 const STORAGE_KEY = 'layerwell.routineOrder.v1';
 
 export const ROUTINE_ORDER_INVALID = 'ROUTINE_ORDER_INVALID';
+export const ROUTINE_ORDER_CONFLICT = 'ROUTINE_ORDER_CONFLICT';
 export const ROUTINE_ORDER_UNSUPPORTED_VERSION = 'ROUTINE_ORDER_UNSUPPORTED_VERSION';
 
 export const ROUTINE_ORDER_QUERY_KEY = ['routineOrder', 'v1'] as const;
@@ -213,6 +214,12 @@ export async function saveRoutineOrderOverrides(
     await updatePrivateItem(STORAGE_KEY, (current) => {
       lease.assertCurrent();
       const latest = current === null ? emptyOverrides() : decodeOverrides(current);
+      for (const phase of ['am', 'pm'] as const) {
+        if (changed[phase] && !sameIds(latest[phase], previous[phase]) &&
+            !sameIds(latest[phase], next[phase])) {
+          throw new Error(ROUTINE_ORDER_CONFLICT);
+        }
+      }
       committed = {
         schemaVersion: 1,
         am: changed.am ? next.am : latest.am,

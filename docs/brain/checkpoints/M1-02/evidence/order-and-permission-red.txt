@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/features/routine/orderStore.test.ts (49 tests | 1 failed) 27ms
+     × rejects a stale changed phase without overwriting a newer order, but accepts exact retries 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/routine/orderStore.test.ts > routine order persistence > rejects a stale changed phase without overwriting a newer order, but accepts exact retries
+AssertionError: promise resolved "{ schemaVersion: 1, am: [ …(2) ], …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "am": [
++     "serum",
++     "cleanser",
++   ],
++   "pm": [],
++   "schemaVersion": 1,
+  }
+
+ ❯ src/features/routine/orderStore.test.ts:319:90
+    317|     await saveOverrides(first);
+    318|     const committed = mocks.storage.get(KEY);
+    319|     await expect(saveOverrides({ ...first, am: ['serum', 'cleanser'] }…
+       |                                                                                          ^
+    320|       .rejects.toThrow('ROUTINE_ORDER_CONFLICT');
+    321|     expect(mocks.storage.get(KEY)).toBe(committed);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 82 passed (83)
+   Start at  16:14:22
+   Duration  414ms (transform 253ms, setup 0ms, import 282ms, tests 121ms, environment 0ms)
+

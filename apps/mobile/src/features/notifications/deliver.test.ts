@@ -376,7 +376,7 @@ describe('rescheduleReminders', () => {
       mocks.getPermissionsAsync.mockResolvedValue({ status: 'denied', granted: false, canAskAgain: false, expires: 'never' });
       return 'permission-race-id';
     });
-    await expect(rescheduleReminders(prefs)).rejects.toThrow('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+    await expect(rescheduleReminders({ ...prefs, pmEnabled: false, captureReminders: false })).rejects.toThrow('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
     expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('permission-race-id');
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
   });
