@@ -64,6 +64,7 @@ export function getAccountIsolationE2EFixture(
         ? null
         : fixtureSession(
             mode === 'cross_owner' && fixtureStorage()?.getItem(E2E_OWNER_KEY) === 'b' ? 'b' : 'a',
+            mode === 'cross_owner',
           ),
   };
 }

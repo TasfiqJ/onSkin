@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { parseSupabaseAccessTokenClaims } from '@/lib/supabase/authRefreshProtection';
 
 import {
   accountIsolationE2EEvent,
@@ -92,4 +93,16 @@ it('accepts a canonical Request from the real gate and rejects a stale candidate
   delete process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION;
   expect(accountIsolationE2EPreflightTransport()).toBeUndefined();
   expect(() => accountIsolationE2EEvent('a')).toThrow('DISABLED');
+});
+
+it('starts cross-owner with a candidate the real session claims parser can bind', () => {
+  process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'cross_owner';
+  const fixture = getAccountIsolationE2EFixture(true, 'development', false, 'web')!;
+  expect(parseSupabaseAccessTokenClaims(fixture.session!.access_token)?.subject).toBe(
+    fixture.session!.user.id,
+  );
+  process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'signout_clear_retry';
+  expect(
+    getAccountIsolationE2EFixture(true, 'development', false, 'web')?.session?.access_token,
+  ).toBe('e2e-account-a-access-token');
 });
