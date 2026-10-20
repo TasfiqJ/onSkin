@@ -39,6 +39,8 @@ type LocalOwnerProof =
 
 const h = vi.hoisted(() => {
   const state = {
+    fixture: null as { mode: 'cross_owner'; session: Session; clearDelayMs: number; clearFailures: number } | null,
+    fixtureB: null as Session | null,
     admissionPaused: false,
     activeSessionId: null as string | null,
     activeUserId: null as string | null,
@@ -373,7 +375,11 @@ vi.mock('./accountGeneration', () => ({
   endAccountGenerationBoundary: vi.fn(),
   waitForAccountGenerationOperationsToSettle: vi.fn(),
 }));
-vi.mock('./accountIsolationE2E', () => ({ getAccountIsolationE2EFixture: () => null }));
+vi.mock('./accountIsolationE2E', () => ({
+  getAccountIsolationE2EFixture: () => h.state.fixture,
+  accountIsolationE2EPreflightTransport: () => undefined,
+  accountIsolationE2EEvent: () => h.state.fixtureB,
+}));
 vi.mock('./accountUpgrade', () => ({
   authenticateWithAppleCredential: h.authenticateWithAppleCredential,
   authenticateWithProviderToken: vi.fn(),
@@ -597,6 +603,8 @@ beforeEach(() => {
     globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
   ).IS_REACT_ACT_ENVIRONMENT = true;
   currentAuth = null;
+  h.state.fixture = null;
+  h.state.fixtureB = null;
   h.state.admissionPaused = false;
   h.state.activeSessionId = null;
   h.state.activeUserId = null;
@@ -807,6 +815,26 @@ describe('AuthProvider Sign in with Apple publication boundary', () => {
 });
 
 describe('AuthProvider cold restore and foreground publication lifecycle', () => {
+  it('retries the pending cross-owner boundary when the synthetic transport has no commerce resume hook', async () => {
+    const owner = session(USER_A, SESSION_A, 'fixture-a', 'fixture-a');
+    const replacement = session(USER_B, SESSION_B, 'fixture-b', 'fixture-b');
+    h.state.fixture = { mode: 'cross_owner', session: owner, clearDelayMs: 0, clearFailures: 0 };
+    h.state.fixtureB = replacement;
+    await mount();
+    expect(currentAuth?.session?.user.id).toBe(USER_A);
+    h.prepareLocalDataForSession.mockRejectedValueOnce(new Error('synthetic cleanup refusal'));
+    await act(async () => {
+      (globalThis as typeof globalThis & { __LAYERWELL_E2E_ACCOUNT_EVENT__?: (owner: 'b') => void }).__LAYERWELL_E2E_ACCOUNT_EVENT__?.('b');
+    });
+    await flush();
+    expect(currentAuth?.sessionBoundaryError).toBe(true);
+    expect(currentAuth?.session).toBeNull();
+    await act(async () => currentAuth?.retrySessionBoundary());
+    await flush();
+    expect(currentAuth?.session?.user.id).toBe(USER_B);
+    expect(currentAuth?.sessionBoundaryError).toBe(false);
+  });
+
   it('does not let an initial active event cancel a delayed cold restore', async () => {
     const restored = session(USER_A, SESSION_A, 'cold', 'refresh-cold');
     const restore = deferred<{ data: { session: Session }; error: null }>();
