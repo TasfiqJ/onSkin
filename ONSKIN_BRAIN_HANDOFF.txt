@@ -1,0 +1,64 @@
+onSkin - BRAIN HANDOFF / STAGE BRANCH CHECKPOINT
+================================================
+ATTENTION: Codex implementation checkpoint, NOT Brain acceptance.
+Handoff protocol: stage-branch-v1, founder supersession 2026-10-20 UTC.
+
+STAGE: M0
+TASK: M0-01
+STATUS: PARTIAL
+BRAIN_REVIEW: REQUIRED / NOT YET ACCEPTED
+BRANCH: stage/m0-baseline
+STAGE_ORIGINAL_BASE_SHA: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+LATEST_OBSERVED_MAIN_SHA: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+STAGE_LIVE_HEAD_SHA: read GitHub ref stage/m0-baseline after push; self-SHA cannot be embedded.
+
+AT A GLANCE
+Fresh main equals the supplied historical pin; stage was absent and created from fetched main in an isolated clean worktree. Founder checkout remains separate and dirty.
+Authenticated Quality attempt 3 fails before stack startup during canonical ECR Postgres pull, with Data limit exceeded. This is an observed external availability failure, not a reproduced/fixed root cause.
+Added a passing regression for existing fail-closed data-limit handling. No runtime repair is claimed. Local verification and stage CI investigation remain in progress at this interim checkpoint.
+
+ROOT CAUSE / EVIDENCE CLASS
+OBSERVED: run 39330376557/job 118333051806, npm run phase2:db-local-verify, exit 1, H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded.
+OBSERVED: stack is prepareCanonicalPostgresImage -> runWithCanonicalPostgresPullRetry -> runHistoryDocker; no SQL/reset/type generation reached in that job.
+INFERRED: consistent with ECR Public's anonymous data allowance, distinct from per-second throttling. Runner quota/auth/egress state is UNKNOWN.
+OBSERVED LOCALLY: canonical pull succeeded; verifier also admitted canonical image with empty Docker auth config. Historical CI error was not independently reproduced.
+
+CODE/FILES
+scripts/phase2/canonical-postgres-pull-retry.test.mjs: regression only, existing production behavior unchanged.
+docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md: sanitized investigation record.
+ONSKIN_BRAIN_HANDOFF.txt: mandatory checkpoint. Read live branch for commit identities.
+
+EXACT TESTS (command | environment | exit/status | evidence)
+node --test scripts/phase2/canonical-postgres-pull-retry.test.mjs | Windows/Node20.20.2 | 0, 6 pass | fixture/source, not provider reproduction.
+npm ci | Windows/Node20.20.2/npm11.20.0/Supabase2.117.0 lock | 0 | postinstall patches applied; lock unchanged.
+docker pull --platform linux/amd64 public.ecr.aws/supabase/postgres:15.8.1.085 | local Docker29.2.1/linux-amd64 | 0 | immutable identity in evidence.
+npm run phase2:db-local-contract | pinned local environment | RUNNING at interim checkpoint, not PASS.
+npm run phase2:db-local-verify | pinned local environment/empty Docker auth config | RUNNING at interim checkpoint, canonical preparation succeeded; not PASS.
+
+CI STATUS
+Main bbc28dc3d1f945191a81be56945b8bda7bb6ef73: Quality39330376557 attempt3 FAILURE (job118333051806); other Quality jobs succeeded.
+Security39330376548 attempt2 SUCCESS_SOURCE_ONLY; live adversarial job skipped. iOS39330376531 SUCCESS_SOURCE_CONTRACT_ONLY.
+Stage CI: NOT_RUN at interim checkpoint. Quality supports pull_request/workflow_dispatch, push only main. Draft PR may be used without merging.
+
+PROTECTED BOUNDARIES / DATA / SPEND
+DB06 remains unconditional DB06_CURRENT_CHAIN_REPLAY_REQUIRED; 97-migration source inventory/head/hash unchanged. DB08 generated types unchanged; no parity/promotion claimed.
+No R2B custody/replay/acceptance issuance, hosted linking, live migration, V2 schema, J05, product activation, signing, deployment, or release.
+Security proposal SINGLE_OWNER_AUTOMATED_SOURCE_ONLY, notAfter2026-10-21T00:00:00Z; databaseReplayAuthority/integrationAuthority/releaseAuthority all false. No expiry, manifest, count/hash, scanner, policy or issuer changes.
+No vendor account, spending, patient data, photos, restricted JANUS material or credentials introduced.
+
+BLOCKERS / RISKS / SAFE NEXT STEPS
+No demonstrated ordinary-source root-cause repair. Do not substitute a mirror, retag a foreign image, loosen H01 or retry monthly data exhaustion as a presumed fix.
+Complete current local command and use bounded draft-PR CI for exact Linux runner evidence; record each new failure separately. Authentication/caching options require preserving canonical image and authority, with no implicit spend approval.
+
+DIRTY / UNPUSHED / NOT SAFE FOR GITHUB
+Founder original checkout ai-integration-v1 contains preexisting modifications/untracked work; not staged or copied. Only explicit safe stage files committed.
+Task runtime downloads/logs are outside repository. No unsafe task source pending.
+
+DETAILS / SANITIZED EVIDENCE PATHS
+docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md
+
+CONTEXT HEALTH
+Medium estimated pressure; no compaction; one writer; zero accepted tasks. This is an interim checkpoint within M0-01.
+
+PUSH OUTCOME
+Pending initial non-forced stage push at checkpoint creation; verify live GitHub ref, never infer success from this file.

@@ -35,6 +35,19 @@ test('persistent throttling stops after four attempts and preserves the last fai
   assert.equal(calls, 4);
 });
 
+test('ECR data allowance exhaustion fails once without treating it as transient request throttling', async () => {
+  // Quality 39330376557, attempt 3, job 118333051806: no SQL or reset ran.
+  // A monthly data allowance is separate from the per-second pull rate.
+  const error = failure('exit-nonzero', 'Error response from daemon: toomanyrequests: Data limit exceeded');
+  let calls = 0;
+  await assert.rejects(runWithCanonicalPostgresPullRetry({
+    operation: async () => { calls += 1; throw error; },
+    onRetry: () => assert.fail('data exhaustion must not retry'),
+    wait: async () => assert.fail('data exhaustion must not back off'),
+  }), actual => actual === error);
+  assert.equal(calls, 1);
+});
+
 test('timeouts, cancellation, output bounds, auth, network and unstructured errors never retry', async () => {
   for (const error of [
     ...['timeout', 'aborted', 'cancelled', 'output-limit'].map(reason => failure(reason, 'toomanyrequests: Rate exceeded')),
