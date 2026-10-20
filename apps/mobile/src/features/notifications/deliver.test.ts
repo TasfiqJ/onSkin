@@ -29,6 +29,7 @@ const mocks = vi.hoisted(() => ({
     canAskAgain: false,
     expires: 'never',
   })),
+  platformOS: 'ios',
   healthOpen: true,
   loadNotifPrefs: vi.fn(),
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
@@ -99,7 +100,7 @@ vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
 }));
 
 vi.mock('react-native', () => ({
-  Platform: { OS: 'ios' },
+  Platform: { get OS() { return mocks.platformOS; } },
 }));
 
 vi.mock('@/features/routine/reviewGate', () => ({
@@ -166,6 +167,7 @@ const prefs: NotifPrefs = {
 
 beforeEach(() => {
   mocks.healthOpen = true;
+  mocks.platformOS = 'ios';
   mocks.canUseRoutineCadence.mockReset();
   mocks.canUseRoutineCadence.mockReturnValue(true);
   mocks.canUseRoutineRecovery.mockReset();
@@ -329,6 +331,15 @@ describe('rescheduleReminders', () => {
     await expect(rescheduleReminders(prefs)).rejects.toThrow(`${failure} failed`);
     expect(mocks.loadEntitlement).toHaveBeenCalledOnce();
     await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+  });
+
+  it('keeps web preference saves separate from unavailable native scheduling', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    mocks.platformOS = 'web';
+    await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+    expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.getPermissionsAsync).not.toHaveBeenCalled();
   });
 
   it('shifts scheduled reminders inside quiet hours to the quiet-hours end', async () => {

@@ -1,10 +1,10 @@
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  runAccountGenerationOperation,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
 } from '@/lib/auth/accountGeneration';

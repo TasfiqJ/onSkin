@@ -340,6 +340,9 @@ export async function rescheduleReminders(
   prefs?: NotifPrefs,
   lifecycle?: NotificationScheduleLifecycle,
 ): Promise<void> {
+  // Web persists local preferences and reports OS availability separately.
+  // There is no native scheduler to converge on this platform.
+  if (Platform.OS === 'web') return;
   let lifecycleFailure: unknown = null;
   try {
     await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {

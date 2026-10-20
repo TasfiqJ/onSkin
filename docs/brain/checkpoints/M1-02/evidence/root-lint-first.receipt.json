@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd run lint -- --force",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+  "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-first.txt",
+    "sha256": "d6bb36ea5525d8b7f41cabe6cedc682a3f391ac6de32896ddc737ca928157a92"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T20:22:15.093502+00:00",
+  "finished_at_utc": "2026-10-20T20:22:59.713331+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ]
+}

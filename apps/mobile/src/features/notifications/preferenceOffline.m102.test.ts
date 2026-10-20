@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -20,9 +20,14 @@ let observed: ReturnType<typeof useNotifPrefs>;
 let mutation: ReturnType<typeof useUpdateNotifPrefs>;
 let authorization: ReturnType<typeof useNotificationAuthorization>;
 function Probe() {
-  observed = useNotifPrefs();
-  mutation = useUpdateNotifPrefs();
-  authorization = useNotificationAuthorization();
+  const nextObserved = useNotifPrefs();
+  const nextMutation = useUpdateNotifPrefs();
+  const nextAuthorization = useNotificationAuthorization();
+  useEffect(() => {
+    observed = nextObserved;
+    mutation = nextMutation;
+    authorization = nextAuthorization;
+  }, [nextObserved, nextMutation, nextAuthorization]);
   return null;
 }
 async function flush() {
@@ -73,4 +78,16 @@ it('reports a failed scheduler and retries the retained idempotent patch offline
   await flush();
   expect(mutation.isSuccess).toBe(true);
   expect(ports.save).toHaveBeenCalledTimes(2);
+});
+
+
+it('refuses a retained owner-A permission continuation after unmount and B admission', async () => {
+  const oldSave = mutation.mutateAsync;
+  await act(async () => renderer?.unmount());
+  renderer = undefined;
+  clearActiveHealthProcessingEpoch();
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  setActiveHealthProcessingEpoch(2, { ownerUserId: 'synthetic-owner-b', accountGeneration });
+  await expect(oldSave({ amEnabled: true })).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+  expect(ports.save).not.toHaveBeenCalled();
 });

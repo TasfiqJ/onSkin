@@ -5,8 +5,6 @@ import { loadRoutineOrderOverrides, saveRoutineOrderOverrides } from '@/features
 import { loadCycleConfig, updateCycleConfig, skipTonight } from '@/features/scheduler/cycleStore';
 import { loadNotifPrefs, saveNotifPrefs } from '@/features/notifications/store';
 import { reserveNotificationSlotLocal, schedulingAttemptsThisWeekForTierLocal } from '@/features/notifications/sentStore';
-import { decryptPhotoToDataUri } from './encryptedStorage';
-import { updatePhoto } from './store';
 import * as React from 'react';
 import { randomUUID, createHash } from 'node:crypto';
 import {
@@ -37,6 +35,7 @@ import {
 } from '@/lib/storage/privateKV';
 
 import {
+  decryptPhotoToDataUri,
   endEncryptedPhotoAccountBoundary,
   encryptPhotoNote,
   encryptPhotoRendition,
@@ -48,7 +47,7 @@ import {
   writePhotoDeleteJournal,
   type PhotoDeleteCommand,
 } from './photoDeleteJournal';
-import { getPhotoDeleteStatus, loadPhotos, removePhoto, retryPhotoDeletes } from './store';
+import { getPhotoDeleteStatus, loadPhotos, removePhoto, retryPhotoDeletes, updatePhoto } from './store';
 import { usePhotos } from './usePhotos';
 import { LargeSecureStore } from '@/lib/supabase/largeSecureStore';
 import {

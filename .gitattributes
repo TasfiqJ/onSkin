@@ -22,3 +22,7 @@ docs/brain/reviews/M1-01/REVIEW-02/** -text
 # Exact CONT-03 issuance, review and raw observations.
 docs/brain/checkpoints/M1-01/CONT-03/** -text
 docs/brain/reviews/M1-01/REVIEW-03/** -text
+
+# Exact M1-02 issuance, accepted successor and raw execution bytes.
+docs/brain/checkpoints/M1-02/** -text
+docs/brain/reviews/M1-01/ACCEPTANCE/** -text
