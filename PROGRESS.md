@@ -1,5 +1,16 @@
 # Build Progress
 
+## 2026-10-19 - M0-01 stage baseline investigation (review required)
+
+Fresh main remains `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`.
+Work is isolated on `stage/m0-baseline`, with no main push or merge.
+Draft PR #8 independently reproduced canonical ECR Postgres preparation failing
+with `toomanyrequests: Data limit exceeded` before SQL. The added regression
+preserves existing fail-closed handling; no runtime repair or upstream quota
+cause is claimed. DB06/DB08/R2B, canonical image and source-only Security
+acceptance boundaries remain unchanged. See `ONSKIN_BRAIN_HANDOFF.txt` and
+`docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md` for exact checks and blockers.
+
 
 ## 2026-10-19 — G97 single-owner source-only Security correction (not integrated)
 
