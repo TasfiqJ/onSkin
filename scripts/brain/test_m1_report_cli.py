@@ -14,6 +14,8 @@ import test_brain
 class M1ReportCLI(unittest.TestCase):
     save = test_brain.InstalledControls.save
     name = 'docs/brain/checkpoints/M1-01/CONT-01/synthetic-report.json'
+    checkpoint = 'docs/brain/checkpoints/M1-01/CONT-01/'
+    base = m1_profile.CONT02_BASE
 
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
@@ -22,7 +24,7 @@ class M1ReportCLI(unittest.TestCase):
         alternate = self.root / '.git/objects/info/alternates'
         alternate.parent.mkdir(parents=True, exist_ok=True)
         alternate.write_bytes((common.as_posix() + '\n').encode('utf-8'))
-        self.command('update-ref', 'HEAD', m1_profile.CONT02_BASE)
+        self.command('update-ref', 'HEAD', self.base)
         self.runtime = self.root / 'apps/mobile/src/synthetic.ts'
         self.runtime.parent.mkdir(parents=True, exist_ok=True)
         self.runtime.write_text('export const fixture = 1;\n', encoding='utf-8')
@@ -49,7 +51,7 @@ class M1ReportCLI(unittest.TestCase):
                      '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Synthetic M1 validator fixture only')
 
     def add_execution(self, axis, status, exit_code):
-        prefix = 'docs/brain/checkpoints/M1-01/CONT-01/' + axis
+        prefix = self.checkpoint + axis
         output = prefix + '.txt'
         (self.root / output).write_text('Synthetic fixture only; not a real execution claim.\n', encoding='utf-8')
         receipt = dict(schema_version=1, kind='LOCAL_EXECUTION', claim_origin='CODEX_REPORTED_EXECUTION',

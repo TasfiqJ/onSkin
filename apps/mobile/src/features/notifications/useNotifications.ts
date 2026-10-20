@@ -14,7 +14,7 @@ import { getPermissionStatus, rescheduleReminders } from './deliver';
 import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
 
 // Reads/writes the local-first notification preferences and reschedules the
-// utility reminders whenever they change (docs/07 Â§3.4). Visible state updates
+// utility reminders whenever they change (docs/07 §3.4). Visible state updates
 // only after local private persistence succeeds.
 const KEY = ['notifPrefs'] as const;
 const AUTHORIZATION_KEY = ['notificationAuthorization'] as const;

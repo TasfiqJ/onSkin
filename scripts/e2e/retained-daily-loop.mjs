@@ -54,9 +54,19 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   // time while loaded offline must not leave a permanently blank paused query.
   await route('/settings/timing');
   await waitForText(client, 'Timing');
+  const prefsBefore = await evaluate(client, `localStorage.getItem('layerwell.notifPrefs.v1')`);
+  await evaluate(client, `(() => { const original=Storage.prototype.setItem;
+    globalThis.__M102_RESTORE_PREFS__=()=>{Storage.prototype.setItem=original;delete globalThis.__M102_RESTORE_PREFS__;};
+    Storage.prototype.setItem=function(key,value){if(key==='layerwell.notifPrefs.v1')throw new DOMException('Synthetic preference write failure','QuotaExceededError');return original.call(this,key,value);};
+  })()`);
   await clickByText(client, 'Morning reminder time, 7:30 AM');
   await scrollTextIntoView(client, 'Morning reminder, 8:00 AM');
   await clickByText(client, 'Morning reminder, 8:00 AM');
+  await waitForText(client, 'Your preferences may be saved, but reminders were not confirmed.');
+  assert.equal(await evaluate(client, `localStorage.getItem('layerwell.notifPrefs.v1')`), prefsBefore);
+  await capture('04a-offline-reminder-recovery');
+  await evaluate(client, 'globalThis.__M102_RESTORE_PREFS__()');
+  await clickByText(client, 'Try saving reminder preferences again');
   await waitForCondition(client, `document.querySelector('[aria-label="Morning reminder time, 8:00 AM"]') !== null`, 30_000, 'offline timing save');
   const prefs = JSON.parse(await privateRead('layerwell.notifPrefs.v1'));
   assert.equal(prefs.prefs.amTime, '08:00');
@@ -64,8 +74,18 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   assert.equal(prefs.prefs.liveActivityEnabled, false);
   await capture('04-offline-timing');
 
+  await route('/cycle/settings');
+  await waitForText(client, 'Save cycle');
+  await clickByText(client, 'Gentle. More recovery');
+  await scrollTextIntoView(client, 'Save cycle');
+  await clickByText(client, 'Save cycle');
+  await waitForCondition(client, `location.pathname !== '/cycle/settings'`, 30_000, 'durable offline cycle save');
+  assert.equal(JSON.parse(await privateRead('layerwell.cycle.v2')).variant, 'gentle');
+  await capture('04b-offline-cycle-saved');
+
   await network(false);
   await client.send('Page.reload', { ignoreCache: true });
+  await route('/settings/timing');
   await waitForText(client, 'Timing', 60_000);
   assert.equal(JSON.parse(await privateRead('layerwell.notifPrefs.v1')).prefs.amTime, '08:00');
   await route('/today?routine=AM');

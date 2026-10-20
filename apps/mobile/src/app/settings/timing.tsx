@@ -17,7 +17,7 @@ import { colors } from '@/theme/tokens';
 
 import { fmtTime } from './notifications';
 
-// Timing, quiet hours & lock-screen discretion (docs/07 Â§3.4/Â§3.6, design screen 03).
+// Timing, quiet hours & lock-screen discretion (docs/07 §3.4/§3.6, design screen 03).
 // Times use a calm 30-minute picker (no native date-picker dependency, the D-030
 // convention). Health-adjacent content stays generic on the lock screen.
 
@@ -105,7 +105,7 @@ function TimePickerModal({
                   >
                     {formattedTime}
                   </Text>
-                  {sel ? <Text style={{ color: colors.clay }}>âœ“</Text> : null}
+                  {sel ? <Text style={{ color: colors.clay }}>✓</Text> : null}
                 </Pressable>
               );
             })}
@@ -279,7 +279,7 @@ export default function TimingScreen() {
                 label={quietStartTimeLabel}
                 onPress={() => setPicking('qstart')}
               />
-              <Text tone="muted">â†’</Text>
+              <Text tone="muted">→</Text>
               <TimePill
                 accessibilityLabel={`Quiet hours end, ${quietEndTimeLabel}`}
                 label={quietEndTimeLabel}

@@ -381,6 +381,27 @@ describe('rescheduleReminders', () => {
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
   });
 
+  it('serially cancels every created reminder through the exclusive native mutation port', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    const live = new Set<string>();
+    let busy = false;
+    mocks.scheduleNotificationAsync.mockImplementation(async (value) => {
+      const id = (value as { identifier: string }).identifier;
+      if (id.includes('capture')) throw new Error('capture schedule failed');
+      live.add(id);
+      return id;
+    });
+    mocks.cancelScheduledNotificationAsync.mockImplementation(async (id) => {
+      if (busy) throw new Error('exclusive native port busy');
+      busy = true;
+      await Promise.resolve();
+      live.delete(id);
+      busy = false;
+    });
+    await expect(rescheduleReminders(prefs)).rejects.toThrow('capture schedule failed');
+    expect(live.size).toBe(0);
+  });
+
   it('cancels stale health schedules and creates none when authorization is not deliverable', async () => {
     mocks.getPermissionsAsync.mockResolvedValue({
       status: 'denied',

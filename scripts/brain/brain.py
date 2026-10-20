@@ -713,7 +713,7 @@ def ready(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=ROOT)
-    parser.add_argument('--profile', choices=['M0-02', 'M1-01'], default='M0-02',
+    parser.add_argument('--profile', choices=['M0-02', 'M1-01', 'M1-02'], default='M0-02',
                         help='M0 is historical; active M1 requires its independently anchored issuance')
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('validate')
@@ -729,8 +729,11 @@ def main():
     args = parser.parse_args()
     root = args.root.absolute()
     try:
-        if args.profile == 'M1-01':
-            import m1_profile
+        if args.profile in ['M1-01', 'M1-02']:
+            if args.profile == 'M1-02':
+                import m102_profile as m1_profile
+            else:
+                import m1_profile
             if args.command == 'report':
                 m1_profile.report(root, args.path)
             else:
@@ -739,7 +742,7 @@ def main():
                     print(encoded({'active_task': current['task_id'], 'automatic_issue': False,
                                    'next_issued_task': None, 'active_writers': 1}).decode('utf-8'), end='')
                 elif args.command in ['pack', 'verify-pack']:
-                    require(args.task == 'M1-01', 'Profile/task mismatch')
+                    require(args.profile == 'M1-01' and args.task == 'M1-01', 'Profile/task mismatch')
                     result = build_pack(root, args.task, args.output) if args.command == 'pack' else verify_pack(root, args.task, args.output)
                     print(encoded(result).decode('utf-8'), end='')
                 else:

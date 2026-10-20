@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/features/notifications/deliver.test.ts (34 tests | 1 failed) 91ms
+     × cancels a schedule when OS permission changes during its native acknowledgement 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > cancels a schedule when OS permission changes during its native acknowledgement
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/features/notifications/deliver.test.ts:379:95
+    377|       return 'permission-race-id';
+    378|     });
+    379|     await expect(rescheduleReminders({ ...prefs, pmEnabled: false, cap…
+       |                                                                                               ^
+    380|     expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWit…
+    381|     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 passed (34)
+   Start at  16:16:23
+   Duration  406ms (transform 132ms, setup 0ms, import 129ms, tests 91ms, environment 0ms)
+

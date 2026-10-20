@@ -19,7 +19,7 @@ import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// Notification settings hub (docs/07 Â§3.1, design screen 02). Three tiers, each
+// Notification settings hub (docs/07 §3.1, design screen 02). Three tiers, each
 // independently toggleable; the non-utility "gentle nudges" are frequency-capped.
 export function fmtTime(hm: string): string {
   const [h, m] = hm.split(':').map(Number);
@@ -248,7 +248,7 @@ export default function NotificationSettingsScreen() {
         {authorizationPending ? (
           <View className="mb-2 rounded-[14px] bg-paper-raised px-4 py-3">
             <Text variant="bodySm" tone="muted">
-              Checking notification accessâ€¦
+              Checking notification access…
             </Text>
           </View>
         ) : !deliveryAuthorized ? (
@@ -289,7 +289,7 @@ export default function NotificationSettingsScreen() {
         ) : null}
 
         <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-          UTILITY Â· YOUR ROUTINE
+          UTILITY · YOUR ROUTINE
         </SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
@@ -302,7 +302,7 @@ export default function NotificationSettingsScreen() {
             disabled={authorizationPending}
           />
           <Row
-            title="Evening Â· tonightâ€™s step"
+            title="Evening · tonight’s step"
             subtitle={fmtTime(p.pmTime)}
             value={effective(p.pmEnabled)}
             onChange={(v) => void setAuthorizedToggle('pmEnabled', v)}

@@ -2760,3 +2760,11 @@ source tests, or fixture-only screenshots.
 - Critical, synthetic Expo web transport on 390x844, then 375x667 and 430x932. Complete A age/consent onboarding and create distinct Shelf products through UI. Emit B through the same Auth event reconciliation callback and real bounded preflight parser; no receipt/lease injection.
 - Delay A read/write/callback settlement; duplicate B event; first and repeated cleanup refusal expose usable recovery. Observe rendered boundary states for A flashes and uncaught overlays. Retry until B reaches its own age and consent forms, completes onboarding, creates/edits its own manual Shelf and displays B identity.
 - Verify exact durable B owner, health owner, cache/queue isolation and ciphertext; remount/navigation and document reload preserve usable B. Replacement back to A requires age/consent and cannot restore A or B data. Sign-out, same-owner upgrade and retained age-closed withdrawal/deletion remain separate regression scenarios. Native process death/provider authentication remain external.
+
+
+## M1-02 retained daily continuity (2026-10-20)
+
+- Critical: run `node scripts/e2e/onboarding-first-session.mjs --daily-loop` with a fresh synthetic profile at 390x844 first, then 375x667 and 430x932. Complete the actual adult/consent/product/free-plan flow; the existing development draft corpus is source-test context, not qualified review.
+- Today: loaded-app network loss, rejected private write with unchanged bytes, explicit reload/retry, rapid duplicate presses, retained append-only undo refusal, and stable encrypted event identities after document reload. Keep genuine offline cold native launch separate from a Metro-assisted reload after reconnect.
+- Reminder Timing: first visit while loaded offline, failed local write with a visible retained-patch retry, durable time change without purpose opt-in, and reload. Native schedule/cancel/permission/response races use controlled ports; web does not prove OS notifications.
+- Cycle/plan: navigate and save currently admitted draft settings; unavailable review or storage is a truthful retry surface. Never forge paid authority for the diary. Actual crypto/store integration covers synthetic originals/thumbnails/notes and cleanup; installed-device and authentic provider evidence remain separate.

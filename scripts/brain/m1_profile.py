@@ -87,8 +87,9 @@ def validate(root):
     return current
 
 
-def report(root, name):
-    validate(root)
+def report(root, name, *, task='M1-01', base=BASE, validator=validate,
+           checkpoint='docs/brain/checkpoints/M1-01/'):
+    validator(root)
     value = brain.load(root, name)
     fields = {'schema_version', 'task_id', 'branch', 'status', 'measured',
                   'delivery_ref', 'executions', 'artifacts', 'scope_matrix', 'axes', 'blockers',
@@ -96,7 +97,7 @@ def report(root, name):
     brain.require(set(value) == fields | ({'ci'} if value.get('schema_version') in [2, 3] else set()) |
                   ({'iteration'} if value.get('schema_version') == 3 else set()), 'Unknown/missing M1 report field')
     brain.require(type(value['schema_version']) is int and value['schema_version'] in [1, 2, 3] and
-                  value['task_id'] == 'M1-01' and value['branch'] == BRANCH and
+                  value['task_id'] == task and value['branch'] == BRANCH and
                   value['status'] in ['PARTIAL', 'BLOCKED', 'SUBMITTED_REVIEW_REQUIRED'],
                   'Invalid M1 report authority/status')
     brain.require(value['delivery_ref'] == 'refs/heads/' + BRANCH, 'Invalid delivery ref')
@@ -105,7 +106,7 @@ def report(root, name):
         binding = {'CONT-02': (CONT02_INPUT, CONT02_BASE), 'CONT-03': (CONT03_INPUT, CONT03_BASE)}.get(value['iteration'])
         brain.require(binding is not None and name.startswith(binding[0].rsplit('/', 1)[0] + '/'), 'Wrong continuation report binding')
         brain.ancestor(root, binding[1], value['measured']['commit'], value['iteration'] + ' base -> measured')
-    brain.ancestor(root, BASE, value['measured']['commit'], 'accepted base -> measured')
+    brain.ancestor(root, base, value['measured']['commit'], 'accepted base -> measured')
     brain.ancestor(root, value['measured']['commit'], brain.git(root, 'rev-parse', 'HEAD'),
                    'measured -> delivery')
     brain.require(isinstance(value['executions'], list) and isinstance(value['artifacts'], list),
@@ -130,7 +131,7 @@ def report(root, name):
     # test, configuration, tooling, or authority changes, including dirty files.
     changed = brain.git(root, 'diff', '--name-only', value['measured']['commit']).splitlines()
     changed += brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()
-    allowed = lambda path: path == 'ONSKIN_BRAIN_HANDOFF.txt' or path.startswith('docs/brain/checkpoints/M1-01/')
+    allowed = lambda path: path == 'ONSKIN_BRAIN_HANDOFF.txt' or path.startswith(checkpoint)
     brain.require(all(allowed(path) for path in changed), 'Implementation differs from measured snapshot: ' + ', '.join(path for path in changed if not allowed(path)))
     # Evidence dimensions stay independent; no M1 report grants external admission.
     brain.require(set(value['axes']) == {'source', 'integration', 'surface', 'physical_device',

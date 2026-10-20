@@ -1472,7 +1472,7 @@ async function run() {
     const postAgeSubmit = await captureStep(client, '03a-after-age-submit');
     assert(
       postAgeSubmit.bodyText.includes('Before the quiz'),
-      `Age submission did not reach consent. Current screen: ${postAgeSubmit.url} â€” ${postAgeSubmit.bodyText}`,
+      `Age submission did not reach consent. Current screen: ${postAgeSubmit.url} — ${postAgeSubmit.bodyText}`,
     );
     await captureStep(client, '04-consent');
     await clickByText(client, 'I agree. Continue');
