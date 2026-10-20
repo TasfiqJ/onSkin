@@ -86,29 +86,21 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   assert.equal(prefs.prefs.liveActivityEnabled, false);
   await capture('04-offline-timing');
 
-  await route('/routine/reorder?phase=am');
-  await waitForText(client, 'Routine order');
-  const secondStep = await evaluate(client, `Array.from(document.querySelectorAll('[role="button"]')).map(n=>n.getAttribute('aria-label')).find(label=>label?.endsWith('Step 2 of 2'))`);
-  assert(secondStep, 'Two real Shelf products must support an authored order');
-  await clickByText(client, secondStep);
-  await clickByText(client, `Move ${secondStep.split('. Step ')[0]} earlier`);
-  await scrollTextIntoView(client, 'Keep mine');
-  await clickByText(client, 'Keep mine');
-  await scrollTextIntoView(client, 'Save');
-  await clickByText(client, 'Save');
-  await waitForCondition(client, `location.pathname !== '/routine/reorder'`, 30_000, 'offline routine order save');
-  const authoredOrder = JSON.parse(await privateRead('layerwell.routineOrder.v1'));
-  assert.equal(authoredOrder.am.length, 2);
-  await capture('04c-offline-authored-order');
-
-  await route('/cycle/settings');
-  await waitForText(client, 'Save cycle');
-  await clickByText(client, 'Gentle. More recovery');
-  await scrollTextIntoView(client, 'Save cycle');
-  await clickByText(client, 'Save cycle');
-  await waitForCondition(client, `location.pathname !== '/cycle/settings'`, 30_000, 'durable offline cycle save');
-  assert.equal(JSON.parse(await privateRead('layerwell.cycle.v2')).variant, 'gentle');
-  await capture('04b-offline-cycle-saved');
+  // Current paid authority is deliberately unavailable. Exercise the actual
+  // denial rather than inventing an entitlement to open these editors.
+  const paidBoundary = async (path, name) => {
+    const originalCycle = await evaluate(client, `localStorage.getItem('layerwell.cycle.v2')`);
+    const originalOrder = await evaluate(client, `localStorage.getItem('layerwell.routineOrder.v1')`);
+    await evaluate(client, `(() => { history.pushState({}, '', ${JSON.stringify(path)}); dispatchEvent(new PopStateEvent('popstate')); })()`);
+    await waitForCondition(client, `/Subscribe to Pro|Pro-only screens hidden/.test(document.body.innerText)`, 30_000, 'truthful paid route boundary');
+    await capture(name);
+    assert.equal(await evaluate(client, `localStorage.getItem('layerwell.routineOrder.v1')`), originalOrder);
+    assert.equal(await evaluate(client, `localStorage.getItem('layerwell.cycle.v2')`), originalCycle);
+    await route('/settings/timing');
+    await waitForText(client, 'Timing');
+  };
+  await paidBoundary('/routine/reorder?phase=am', '04c-reorder-paid-boundary');
+  await paidBoundary('/cycle/settings', '04b-cycle-paid-boundary');
 
   await network(false);
   await route('/settings/timing');
@@ -116,8 +108,6 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   await client.send('Page.reload', { ignoreCache: true });
   await waitForText(client, 'Timing', 60_000);
   assert.equal(JSON.parse(await privateRead('layerwell.notifPrefs.v1')).prefs.amTime, '08:00');
-  assert.deepEqual(JSON.parse(await privateRead('layerwell.routineOrder.v1')), authoredOrder);
-  assert.equal(JSON.parse(await privateRead('layerwell.cycle.v2')).variant, 'gentle');
   await route('/today?routine=AM');
   await waitForCondition(client, `document.querySelector('[role="checkbox"][aria-checked="true"]') !== null`, 30_000, 'reloaded saved AM progress');
   assert.deepEqual((await readCompletions()).sync, first.sync, 'Reload changed stable replay identities');
@@ -133,20 +123,13 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   const completedPM = await readCompletions();
   assert.equal(completedPM.sync.journal.filter(e=>e.kind==='routine_day').length, 1, 'PM must create exactly one routine-day marker');
   await capture('06-pm');
-  await route('/routine/plan');
-  await waitForText(client, 'Start today');
-  await capture('07-plan');
-  await clickByText(client, 'Start today');
-  await waitForText(client, 'Today');
-  await route('/cycle/settings');
-  await waitForText(client, 'Save cycle');
-  await capture('08-cycle');
+  await paidBoundary('/routine/plan', '07-plan-paid-boundary');
   await route('/settings/notifications');
   await waitForText(client, 'Morning routine');
   await capture('09-web-reminder-availability');
   writeJson('M102-daily-loop.json', { verdict: 'pass', fixture: 'existing-development-corpus; real onboarding authority; synthetic local IO only',
     offlineMutation: true, rejectedWriteRetry: true, duplicateSingleEvent: true,
     undo: 'UNAVAILABLE_RETAINED_APPEND_ONLY', reloadStableIdentities: true,
-    offlineTimingPersistsWithoutOptIn: true, offlineReorderAndCycleSave: true, pmDayMarker: true, nativeOS: 'NOT_RUN',
+    offlineTimingPersistsWithoutOptIn: true, routineReorder: 'BLOCKED_CURRENT_PAID_AUTHORITY', cycleSettings: 'BLOCKED_CURRENT_PAID_AUTHORITY', routinePlan: 'BLOCKED_CURRENT_PAID_AUTHORITY', pmDayMarker: true, nativeOS: 'NOT_RUN',
     offlineReload: 'NOT_RUN: Metro reload performed after reconnect; no installed-native cold-start claim' });
 }

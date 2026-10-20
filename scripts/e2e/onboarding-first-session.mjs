@@ -838,6 +838,7 @@ async function crossOwnerFlow(client, products) {
     'tas.account-a.e2e@example.com',
     '00000000-0000-4000-8000-0000000000a1',
     'late-owner-a',
+    'M102 synthetic moisturizer',
   ];
   const bName = 'Owner B manual moisturizer';
   const moduleExpression = `(suffix) => {
@@ -1002,8 +1003,11 @@ async function crossOwnerFlow(client, products) {
       const health = mod('/lib/consent/healthProcessingEpoch.ts');
       const queries = mod('/lib/query/queryClient.ts').queryClient.getQueryCache().getAll();
       const shelf = await mod('/lib/storage/privateKV.ts').getPrivateItem('layerwell.shelf.v1');
+      const daily = await Promise.all(['layerwell.notifPrefs.v1', 'layerwell.completions.v1', 'layerwell.routineOrder.v1']
+        .map(key => mod('/lib/storage/privateKV.ts').getPrivateItem(key)));
       const markers = [...${JSON.stringify(aMarkers)}, await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000a1')];
       return { exactB: proof.kind === 'owned' && proof.ownerBinding === await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000b2'),
+        noRetainedADailyState: daily.every(raw => raw === null),
         healthOwnerB: health.activeHealthProcessingOwnerUserId() === '00000000-0000-4000-8000-0000000000b2',
         noAInCache: !markers.some(x => JSON.stringify(queries.map(q => [q.queryKey, q.state.data])).includes(x)),
         noAInShelfOrQueue: !markers.some(x => (shelf ?? '').includes(x)), hasB: shelf?.includes(${JSON.stringify(bName)}) === true,
@@ -1665,6 +1669,10 @@ async function run() {
     );
 
     if (crossOwnerMode) {
+      if (process.argv.includes('--daily-loop')) {
+        await dailyLoopFlow({ client, evaluate, retainedRoute, waitForText, waitForCondition,
+          clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson });
+      }
       await crossOwnerFlow(client, productNames);
       return;
     }
