@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-02",
+  "iteration": "CONT-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "8c1149116df00f34314357d10929b32f52f6d118",
+  "base_tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+  "state_version": "brain-m1-02-partial-reviewed-cont01-issued-10",
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1057,
+      "sha256": "4410e75cf1eab8e359dee4befcbae8a09df4bb01c2e3fc1db2841e0a49fc5d8a"
+    },
+    {
+      "path": "ACCEPTANCE_MATRIX.md",
+      "bytes": 2145,
+      "sha256": "9be749c6320dbe0666f8ef9c02fcf0d4b62f66f4afa9d378e079dcbf3b757283"
+    },
+    {
+      "path": "BRAIN_REVIEW/ACCEPTANCE_LEDGER.json",
+      "bytes": 15823,
+      "sha256": "535a521c80d8a922894ef76d5aafc6ef7b549a6c77be9726503358e2e4dbfe7a"
+    },
+    {
+      "path": "BRAIN_REVIEW/ACCEPTANCE_SCOPE.md",
+      "bytes": 551,
+      "sha256": "642cbb89cecdbdb2dca2190b5f29930b13946d9df8acda654a0b7df3903f5dc6"
+    },
+    {
+      "path": "BRAIN_REVIEW/ADR_REGISTRY.json",
+      "bytes": 20996,
+      "sha256": "f18986844f9e6fdd721207891ca6c98183b3a425be79e797a801cf556016fb63"
+    },
+    {
+      "path": "BRAIN_REVIEW/AUDIT_M1-02_REVIEW01.md",
+      "bytes": 9114,
+      "sha256": "4f5799bef4c64d871894118d27311e4b2f341a565de8c8289ece97a5244f391a"
+    },
+    {
+      "path": "BRAIN_REVIEW/BLOCKERS.json",
+      "bytes": 32192,
+      "sha256": "275517deff6e2d8b3e9a1ac822d06915f537c6112da3781ad0a20197350bd2ca"
+    },
+    {
+      "path": "BRAIN_REVIEW/BLOCKERS.md",
+      "bytes": 860,
+      "sha256": "40e8b3b4bd6f3ca67b8fc9dcf18e86003ae2edaaaed9df3b90e8497e892b28f6"
+    },
+    {
+      "path": "BRAIN_REVIEW/BRAIN_RESUME_PROMPT.md",
+      "bytes": 1500,
+      "sha256": "d7b83ce31b91149039d612dba7bbf036853dd5f035c4eccf994c7707b624c797"
+    },
+    {
+      "path": "BRAIN_REVIEW/CI_OBSERVATIONS.md",
+      "bytes": 2429,
+      "sha256": "863feb32ed46675983ecd1de733654f07699a70eee0bd0845abdee2cd78e731f"
+    },
+    {
+      "path": "BRAIN_REVIEW/DECISIONS_DELTA.md",
+      "bytes": 1616,
+      "sha256": "fa07a749f1439f80aecfadb053a7cba2ab0455ddc1d08fdb76a042bcbf086dd9"
+    },
+    {
+      "path": "BRAIN_REVIEW/REVIEW_OBSERVATIONS.md",
+      "bytes": 7234,
+      "sha256": "a5aef12368b91bb65a1b3ca7e628c6d62877208f77a015f6db7272a2a1baced9"
+    },
+    {
+      "path": "BRAIN_REVIEW/STATE_AT_GLANCE.md",
+      "bytes": 1055,
+      "sha256": "df100c85ee839e9ce64a5847f61f2133f6a088cda32574b32c9706e7cd4d360f"
+    },
+    {
+      "path": "BRAIN_REVIEW/STATE_MANIFEST.json",
+      "bytes": 2186,
+      "sha256": "c534a3b38f78824e8fd50fc17fe8e3908cccda0e98f15daa056191252b24ec67"
+    },
+    {
+      "path": "BRAIN_REVIEW/brain_state.json",
+      "bytes": 46628,
+      "sha256": "7aca9861787da7c8f9980c067844e0e0d06f5a2f5e16ca058824b4d26c6951a0"
+    },
+    {
+      "path": "BRAIN_REVIEW/roadmap.json",
+      "bytes": 48645,
+      "sha256": "679787c75c60de6d6cdb46f72ea4d430a4957958ba035224d5a9bf2638fd0431"
+    },
+    {
+      "path": "GOVERNANCE_TRANSITION.md",
+      "bytes": 1099,
+      "sha256": "facc033b0c6347d07cf331da90bd1041213b3ad363741c9ec227166a08b29b16"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF_TEMPLATE.md",
+      "bytes": 956,
+      "sha256": "a31ca5c6f7fed9f29c0d0ba79f8c72013d9119d403791ff56036261d6cbdeb49"
+    },
+    {
+      "path": "PRIVACY_AND_EXTERNAL_LIMITS.md",
+      "bytes": 1147,
+      "sha256": "9b2f24091371fe3de9ed417bfe09ad2f0569f4293726cb8f3ea6dfab7f341be7"
+    },
+    {
+      "path": "REPORT_CONTRACT.md",
+      "bytes": 1574,
+      "sha256": "527cd2b58a811cb4deda02f377d50e9dfb1e416769f533c567c30d99bbf5b792"
+    },
+    {
+      "path": "REPRODUCERS.md",
+      "bytes": 3978,
+      "sha256": "eb7fab9c9ed36d49383cc6d1c119dd6633593f8c4f80d5d503b7f5bb1cbccedf"
+    },
+    {
+      "path": "SOURCE_ORIENTATION.md",
+      "bytes": 1879,
+      "sha256": "d5e3675b6129c2a5578688d36b2354c786716e62255c6f3a155edc9491a7e7d8"
+    },
+    {
+      "path": "STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 1227,
+      "sha256": "2417c9a133eb2f215e375c80ad1bcf003cff499ab9584a658e14471bd378476d"
+    },
+    {
+      "path": "TASK.md",
+      "bytes": 7609,
+      "sha256": "18f0637a96f4d267522bcc02e779a36250d65d79cea0e9e1f87c148f8a54da0d"
+    },
+    {
+      "path": "contracts/ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "path": "contracts/AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "path": "contracts/CORE_CONTRACT.md",
+      "bytes": 11753,
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+    },
+    {
+      "path": "contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "bytes": 9856,
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d"
+    },
+    {
+      "path": "verify_context.py",
+      "bytes": 2744,
+      "sha256": "272f8de5670233278b765f9ea787289cbe56d6af8f3d620413d281fca1f2cd4e"
+    }
+  ],
+  "actual_input_bytes": 251736,
+  "max_input_bytes": 524288,
+  "authority": "Only this explicitly issued bounded task; external digest required; no main/release/protected admission."
+}

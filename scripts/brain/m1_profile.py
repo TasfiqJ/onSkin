@@ -88,7 +88,7 @@ def validate(root):
 
 
 def report(root, name, *, task='M1-01', base=BASE, validator=validate,
-           checkpoint='docs/brain/checkpoints/M1-01/'):
+           checkpoint='docs/brain/checkpoints/M1-01/', continuation_bindings=None):
     validator(root)
     value = brain.load(root, name)
     fields = {'schema_version', 'task_id', 'branch', 'status', 'measured',
@@ -103,7 +103,8 @@ def report(root, name, *, task='M1-01', base=BASE, validator=validate,
     brain.require(value['delivery_ref'] == 'refs/heads/' + BRANCH, 'Invalid delivery ref')
     brain.git_snapshot(root, value['measured'], 'Measured M1 source')
     if value['schema_version'] == 3:
-        binding = {'CONT-02': (CONT02_INPUT, CONT02_BASE), 'CONT-03': (CONT03_INPUT, CONT03_BASE)}.get(value['iteration'])
+        binding = (continuation_bindings if continuation_bindings is not None else
+                   {'CONT-02': (CONT02_INPUT, CONT02_BASE), 'CONT-03': (CONT03_INPUT, CONT03_BASE)}).get(value['iteration'])
         brain.require(binding is not None and name.startswith(binding[0].rsplit('/', 1)[0] + '/'), 'Wrong continuation report binding')
         brain.ancestor(root, binding[1], value['measured']['commit'], value['iteration'] + ' base -> measured')
     brain.ancestor(root, base, value['measured']['commit'], 'accepted base -> measured')

@@ -1,0 +1,7 @@
+# Brain resume — review state10
+
+Act as onSkin Brain under the original SourcePack/adopted authority and stage-branch user rule. Read STATE_AT_GLANCE.md, AUDIT_M1-02_REVIEW01.md, DECISIONS_DELTA.md, then typed state as needed. Current head `8c1149116df00f34314357d10929b32f52f6d118`; last accepted M1-01 `31307694ebb9895ed8cfb77fa6ac532b789d2810`; main `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`. M1-02 CONT-01 is the only issued task. On “Codex is done,” fetch actual stage handoff, exact diff/commit chain, source/tests and CI. Independently reproduce relevant failures/fixes and return ACCEPTED/FIX_REQUIRED/BLOCKED_UNVERIFIED. Do not accept a narrative or unseen audit.
+
+New findings F1/F2 reminder unavailable/retry and F3 clock-bound daily browser reproduction must be resolved. ADR038 preserves append-only retained completions and assigns additive correction contracts/UI to already planned M2-01/M2-02 before M2-03/M2-04. Preserve this explicit requirement, not a silent waiver. Original inputs remain immutable.
+
+User needs new/continue chat instruction, one ready ZIP, exact prompt, then returns “Codex is done.” Human docs Markdown-first; retain functional JSON. No main promotion until Brain exact-head decision and gates; no protected date/count/hash changes, spend, credentials/private patient media, clinical activation or background promises. All safe Codex sessions push stage+ONSKIN_BRAIN_HANDOFF.txt even partial. Rotate HIGH/compaction. No next module pack needed now.

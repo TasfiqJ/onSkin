@@ -1,0 +1,276 @@
+{
+  "authority": "Executive SourcePack ADR-001..021; founder branch override ADR-022; scoped Brain execution decisions ADR-023..024. No runtime or protected admission.",
+  "count": 39,
+  "records": [
+    {
+      "id": "ADR-001",
+      "decision": "Incremental migration on current main; no rewrite, reset or fresh app",
+      "limit_or_rationale": "Retain verified owner, privacy, persistence, payment and UI work.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-002",
+      "decision": "Fix the present failed Quality baseline before additive database changes",
+      "limit_or_rationale": "Oct14's green Quality/red Security is stale; current evidence reverses those overall outcomes.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-003",
+      "decision": "Preserve existing Expo/RN/TypeScript + Postgres/Supabase stack and exact installed versions unless a scoped defect requires change",
+      "limit_or_rationale": "Native camera is an adapter, not a framework migration. Installed runtime support must be inspected, not guessed.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-004",
+      "decision": "onSkin remains working product name; no mass bundle-ID/SKU rename",
+      "limit_or_rationale": "Final public spelling, rights, seller identity and domains remain exact-name external gates. Existing Layerwell references are historical/technical, not clearance.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-005",
+      "decision": "Adult 18+ product; first closed cohort California residents, US storefront; appeal hypothesis adults 25–55",
+      "limit_or_rationale": "Carries forward V2's bounded geography. Align source age checks if they still allow 16; do not claim legal sufficiency. Pro pilot California nonmedical estheticians, subject to qualified review.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-006",
+      "decision": "Consumer record + optional text-only professional continuity + separate cosmetic-analysis vertical",
+      "limit_or_rationale": "Do not abandon V2's client ownership, grants, intended/actual distinction or professional queue.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-007",
+      "decision": "Build J05 after shared record/privacy/versioning/capture foundations, before finishing every professional feature",
+      "limit_or_rationale": "Reduces the principal native/data risk early without bolting an isolated scanner onto V1.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-008",
+      "decision": "On-device analysis/local images by default; optional consented hosted text only",
+      "limit_or_rationale": "Keeps burn and image exposure low. Cloud training is a separate research-purpose system; no hosted photo backup in initial core.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-009",
+      "decision": "Independent cosmetic visible-spot area, not a JANUS clone, diagnosis or physiological quantity",
+      "limit_or_rationale": "Report topology is known; proprietary score/masks/denominators, equivalence and rights are not.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-010",
+      "decision": "All J01–J27 are retained as roadmap items, not promised sensors",
+      "limit_or_rationale": "Derived outputs require validated parents; hard targets may remain research-only or be omitted by explicit no-go.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-011",
+      "decision": "First internal TestFlight at M2-04; first external usability TestFlight at M3-04",
+      "limit_or_rationale": "Early technical testing is not a public marketing launch. J05 measurement exposure has its own later gate.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-012",
+      "decision": "$0 incremental vendor burn until a concrete device/distribution/hosted-data dependency",
+      "limit_or_rationale": "Existing hardware, founder/agent time and existing subscriptions are not economically free. No credit-card signup merely for a phase label.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-013",
+      "decision": "Reject the $600k commercial-build investment premise and unsupported $10k-MRR narrative",
+      "limit_or_rationale": "Round2 shows commercial, ROI, payback, evidence and lifecycle defects. No forecasts are repaired by inventing demand.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-014",
+      "decision": "Preserve free ordinary edits, logs, private photos, standard brief/export and data rights; free advanced quota is not paid authority",
+      "limit_or_rationale": "Explicitly resolves EP-V2-07. Plus receipt must be exact-owner verified.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-015",
+      "decision": "Professional core never requires hosted media; text-only grants are the default and first release",
+      "limit_or_rationale": "Explicitly resolves EP-V2-08. Native local-owner export is not a server media entitlement.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-016",
+      "decision": "V2 prices are experiment hypotheses, not instructions to change live SKUs",
+      "limit_or_rationale": "$6.99/month or $49.99/year Plus; $49 Solo/$99 Studio retained only as test hypotheses. Existing subscribers keep verified current terms.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-017",
+      "decision": "Staffed hours retained at 09:00–17:00 America/New_York weekdays, no implied 24/7 response",
+      "limit_or_rationale": "Geography and service hours are different. No actual staffed promise until named funded coverage exists.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-018",
+      "decision": "Missing research triggers one exact pack request when its module becomes ready",
+      "limit_or_rationale": "Never ask for all future packs now; never invent absent specifications, data, permissions or targets.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-019",
+      "decision": "Per-feature/per-device/per-pipeline evidence admission, not a global AI toggle",
+      "limit_or_rationale": "Broad skin-score, age, relative-improvement, cloud Ask and other legacy closed surfaces stay off.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-020",
+      "decision": "Brain autonomy ends at real-world access, professional signoff and founder spending authorization",
+      "limit_or_rationale": "It prepares one precise action packet and proceeds with independent safe tasks; it never records an unperformed action as complete.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-021",
+      "decision": "Studio-only candidate for a future qualified paid professional experiment; no new Solo paid admission",
+      "limit_or_rationale": "Preserve historical capacity code and verified existing customers. Studio's buyer-volume and measured ROI gates must pass before any new commercial admission; the $99 price is still a hypothesis.",
+      "status": "ADOPTED_SOURCE_PACK",
+      "source": "01_Executive/AUTHORITY_AND_DECISIONS.md"
+    },
+    {
+      "id": "ADR-022",
+      "decision": "All Codex implementation work uses phase/stage branches, never direct-to-main; stage M0 uses `stage/m0-baseline`. Each session pushes safe work and a tracked sanitized root `ONSKIN_BRAIN_HANDOFF.txt` for readback; Brain independently audits the entire branch.",
+      "limit_or_rationale": "Founder-direct supersession of SourcePack main-push workflow only; user need only report completion, with no manual file transfer in normal GitHub-connected operation. No force push, protected bypass, personal/restricted content, automatic merge or clinical/release waivers.",
+      "status": "ADOPTED_FOUNDER_DIRECT",
+      "source": "User instruction after M0-01 bootstrap, 2026-10-20 UTC"
+    },
+    {
+      "id": "ADR-023",
+      "decision": "Accept M0-01 only as a diagnostic/regression checkpoint; advance to independent non-runtime M0-02 while baseline CI and all protected admissions remain blocked.",
+      "limit_or_rationale": "M0-01 explicitly permits no-fix diagnostic closure. M0-02 installs planning authority, state and validators without database/runtime changes. This acceptance is not G97 BRAIN source GO and authorizes no pin/date/inventory rebinding or main promotion.",
+      "status": "ADOPTED_BRAIN_WITHIN_EXECUTIVE_AUTHORITY",
+      "source": "M0-01_TASK.md Work/Acceptance; roadmap M0-02; independent b9a6b09 review",
+      "evidence": "AUDIT_M0-01.md"
+    },
+    {
+      "id": "ADR-024",
+      "decision": "Start a fresh Codex instance for M0-02 and continue the same persistent M0 stage branch. Version the distinction between tested snapshot and live delivery head in machine handoffs.",
+      "limit_or_rationale": "Diagnostic environment work is complete; plan/tooling is a subsystem handoff. Previous report requested a handoff. Avoid self-referential commit hashes and any competing writer.",
+      "status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "source": "BRAIN_CODEX_PROTOCOL.md context policy; ADR-022; M0-01 completion report"
+    },
+    {
+      "id": "ADR-025",
+      "decision": "M0-02 is FIX_REQUIRED at da9fa0475. Continue the same Codex instance on the existing stage for governance-only FIX-01; main promotion remains reserved to Brain and unauthorized.",
+      "limit_or_rationale": "Independent positive controls passed but negative cases exposed unbound PASS, CI/Git metadata acceptance, self-repointed packaging authority and mirror writes through dangling links. Preserve immutable snapshots and all external/protected gates.",
+      "status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "source": "M0-02 independent review 01; founder clarification of main-promotion authority",
+      "evidence": "AUDIT_M0-02_REVIEW01.md"
+    },
+    {
+      "id": "ADR-026",
+      "decision": "Accept M0-02 including FIX-01 at 6aa01995 as the planning/governance subsystem only; resolve its four identified defects using exact-head Windows and Linux evidence.",
+      "limit_or_rationale": "Independent source/diff/input/artifact checks, real CLI regressions and complementary platform filesystem tests pass. Offline receipt consistency is not external authentication; no general concurrent-filesystem transaction guarantee. Security remains failed and main promotion remains unauthorized.",
+      "status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "source": "M0-02 independent REVIEW-02",
+      "evidence": "AUDIT_M0-02_ACCEPTANCE.md"
+    },
+    {
+      "id": "ADR-027",
+      "decision": "Issue dependency-ready M1-01 to a fresh Codex on stage/m1-retained-safety based on accepted 6aa01995, preserving the unmerged M0 branch and main.",
+      "limit_or_rationale": "Major phase and subsystem transition. The source pack explicitly orders retained owner/consent/storage safety after M0-02 and protected baseline resolution at M1-03. The new branch inherits accepted governance without merging or resetting main. Its only task is M1-01, not the entire phase.",
+      "status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "source": "roadmap M1-01/M1-03; ADR-022; founder main-promotion authority",
+      "evidence": "TASK_M1-01_DECISION.md"
+    },
+    {
+      "id": "ADR-028",
+      "decision": "Record final Quality39376189137 as exact-run database/Quality success, while retaining ECR availability risk and separate Security/replay gates.",
+      "limit_or_rationale": "Full credential-free database log and exact PR tree confirm success. No canonical-image/runtime/workflow repair was made. A successful later acquisition does not establish a permanent upstream quota fix; Security39376189138 still fails and proposal expiry remains October21 00:00UTC.",
+      "status": "ADOPTED_BRAIN_EVIDENCE_RECONCILIATION",
+      "source": "Fresh final-head GitHub workflow/jobs/logs and git-commit REST",
+      "evidence": "CI_OBSERVATIONS.json"
+    },
+    {
+      "id": "ADR-029",
+      "decision": "M1-01 may implement the already adopted adult18+ source rule with a new explicitly versioned age-policy tuple/receipt binding; existing16+ receipts must not be silently treated as adult18+ proof.",
+      "limit_or_rationale": "Exact source at6aa still has MINIMUM_AGE=16 and draft_blocked review status. Preserve minimized no-DOB receipt storage, existing owner data and data-rights exits; require fresh eligibility where the old receipt is insufficient. This changes product policy implementation, not legal-review status or protected Security/DB hashes. No new parental-consent path or automatic deletion is authorized.",
+      "status": "ADOPTED_BRAIN_IMPLEMENTATION_CLARIFICATION",
+      "source": "SourcePack ADR-005; M1-01 roadmap; exact ageGate.ts and ageGateStore.ts readback",
+      "evidence": "SOURCE_ORIENTATION_M1-01.md"
+    },
+    {
+      "id": "ADR-030",
+      "status": "DECIDED_BRAIN",
+      "decision": "Rotate at HIGH context; continue the complete M1-01 retained safety objective on the existing stage, not a new task or main merge. Repair actual UI/private-storage dependencies, preserve gated data-rights access, close integrated safety gaps and restore report evidence invariants.",
+      "limit_or_rationale": "Same original product/dependency scope; no SQL, package version, workflow, protected Security/DB, research or release expansion. Chat creation instructions belong to founder step1, not engineer prompt."
+    },
+    {
+      "id": "ADR-031",
+      "status": "DECIDED_BRAIN",
+      "decision": "Permit regeneration of exactly docs/phase-4/generated/source-worklist.json and source-worklist.md using the unchanged reviewed generator for actual source-fingerprint freshness after M1 changes.",
+      "limit_or_rationale": "This operator worklist is a derived inventory, not frozen Security/owner/release approval. Preserve all item IDs, gate/status/evidence obligations and source membership except truthful hashes/bytes or legitimate in-scope source additions. No generator/scanner/policy edits, hand-pinned hash replacement, acceptance rebind or blanket evidence refresh."
+    },
+    {
+      "id": "ADR-032",
+      "status": "DECIDED_BRAIN",
+      "decision": "Continue M1-01 as CONT-02 on the same stage after high-context/compaction rotation, focusing on complete account-transition recovery and final scoped client acceptance. Preserve independently verified improvements instead of restarting M1 or expanding phases.",
+      "limit_or_rationale": "Expected cleanup refusals must remain failures in the authority layer and become usable, contained recovery at every UI invocation. No unhandled-error overlay, force-click, blanket log suppression, gate bypass or fake signed-out success. Consolidate a portable maintained local-only test path; do not duplicate large evidence harnesses or rewrite historical evidence."
+    },
+    {
+      "id": "ADR-033",
+      "status": "DECIDED_BRAIN",
+      "decision": "Prioritize the remaining actual cross-owner browser acceptance in M1-01 CONT-03, using a tightly gated local transport fixture through the existing authority machinery. Preserve reviewed fixes; no invented account switching product feature or rewrite.",
+      "limit_or_rationale": "Source A-to-B tests and same-owner upgrades are not cross-owner UI proof. Implement the missing scenario before broad repetitive reruns or report expansion; retain one portable runner and concise decisive evidence. Historical failures remain immutable and may be referenced by exact path/commit/hash instead of copied. No task, protected gate or main-promotion approval follows from evidence volume."
+    },
+    {
+      "id": "ADR-034",
+      "status": "DECIDED_BRAIN",
+      "decision": "Accept M1-01 at 31307694 for retained client source and supported synthetic-browser safety after independent full tests, real A-to-B at all three phone sizes, sign-out/retained regression and artifact/custody review.",
+      "limit_or_rationale": "No native/live-provider/qualified/research/commercial/release gate, protected Security source GO or main-promotion authority is granted. New Security Vite refusal is preserved, not waived."
+    },
+    {
+      "id": "ADR-035",
+      "status": "DECIDED_BRAIN",
+      "decision": "Issue M1-02 on existing stage/m1-retained-safety with a fresh implementer at the major subsystem boundary. Own complete retained Today/checkoff/cycle persistence, encrypted local diary cleanup and local reminder lifecycle, not a new V2 data model or capture module.",
+      "limit_or_rationale": "M1-02 depends only on accepted M1-01 for local source work. M1-03 retains protected baseline resolution before dependent schema work. Repair demonstrated in-scope defects; no unnecessary rewrite, gate activation, new spending or founder preference decisions."
+    },
+    {
+      "id": "ADR-036",
+      "status": "DECIDED_FOUNDER_FORMAT_BRAIN_IMPLEMENTATION",
+      "decision": "Use compact Markdown-first task packets and selective reading. Keep machine-readable brain_state, roadmap/ledger/ADR/blocker registries, manifest and verifier in their functional formats.",
+      "limit_or_rationale": "Do not rename JSON as prose to evade validation or duplicate all evidence. File suffix is not an evidence gate or a promised token reduction; content volume and read selection are managed."
+    },
+    {
+      "id": "ADR-037",
+      "status": "DECIDED_BRAIN",
+      "decision": "M1-02 submitted 8c114911 is FIX_REQUIRED. Issue one same-stage CONT-01 task to complete truthful reminder setup/save/retry and stable daily-loop acceptance while retaining useful privacy/persistence repairs. Rotate to a fresh Codex after HIGH context and one compaction.",
+      "limit_or_rationale": "No M1-02 acceptance, M1-03 execution, protected source GO, main promotion or external admission. Root green does not erase adverse probes or real-surface failures."
+    },
+    {
+      "id": "ADR-038",
+      "status": "DECIDED_BRAIN_SCOPE_RECONCILIATION",
+      "decision": "The retained completion authority is append-only and currently has no reversal event. Do not implement a local destructive toggle or fabricate server undo. M1-02 must preserve truthful once-recorded behavior, expose correct accessible interaction/copy, and label retained undo UNAVAILABLE_RETAINED_APPEND_ONLY, never PASS. Implement owner-bound additive correction semantics with M2-01 immutable contracts/adapters and M2-02 existing corrections UI.",
+      "limit_or_rationale": "This explicitly supersedes the unsupported immediate check-off/undo implementation portion of the original M1-02 task, not the product requirement. Correction remains open and is required before M2-03 candidate/M2-04 internal TestFlight readiness. All47 IDs/dependencies remain unchanged; M2 is not authorized now. Gate/privacy invariants and original historical records are preserved."
+    },
+    {
+      "id": "ADR-039",
+      "status": "DECIDED_BRAIN",
+      "decision": "Daily-loop verification must bind the displayed routine phase and local date to each actual interaction and persisted assertion. A query URL alone is not proof that the mounted clock uses it. Repair deterministic harness setup; change production only when an independently attributable supported-flow defect is established.",
+      "limit_or_rationale": "Four unmodified Brain replays failed at the same phase mismatch; a diagnostic first-entry reload advanced but failed on second AM entry. Do not infer lost data, extend timeouts, force-click or suppress failures. Repeat at controlled AM/PM and required geometries without altering host clock or live/private data."
+    }
+  ],
+  "updated_at_utc": "2026-10-20T21:22:24+00:00"
+}

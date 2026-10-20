@@ -292,6 +292,14 @@ describe('notification authorization', () => {
 });
 
 describe('rescheduleReminders', () => {
+  it('rejects ordinary scheduling when native startup is unavailable', async () => {
+    mocks.configureNotifications.mockResolvedValueOnce('unavailable');
+    mocks.loadEntitlement.mockResolvedValueOnce(null);
+    const { rescheduleReminders } = await import('./deliver');
+    await expect(rescheduleReminders({ ...prefs, amEnabled: true, pmEnabled: false, captureReminders: false }))
+      .rejects.toThrow('NOTIFICATION_RUNTIME_UNAVAILABLE');
+  });
+
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
@@ -330,13 +338,13 @@ describe('rescheduleReminders', () => {
     else mocks.scheduleNotificationAsync.mockRejectedValueOnce(new Error('schedule failed'));
     await expect(rescheduleReminders(prefs)).rejects.toThrow(`${failure} failed`);
     expect(mocks.loadEntitlement).toHaveBeenCalledOnce();
-    await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+    await expect(rescheduleReminders(prefs)).resolves.toBe('scheduled');
   });
 
   it('keeps web preference saves separate from unavailable native scheduling', async () => {
     const { rescheduleReminders } = await import('./deliver');
     mocks.platformOS = 'web';
-    await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+    await expect(rescheduleReminders(prefs)).resolves.toBe('web_preferences_only');
     expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenCalled();
     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
     expect(mocks.getPermissionsAsync).not.toHaveBeenCalled();

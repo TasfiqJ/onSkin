@@ -49,6 +49,16 @@ async function configureNotificationRuntime(): Promise<NotificationRuntimeConfig
 
 /** Minimal, idempotent root setup: notification handler plus calm Android channel. */
 export function configureNotifications(): Promise<NotificationRuntimeConfiguration> {
-  configuration ??= configureNotificationRuntime();
+  if (!configuration) {
+    const attempt = configureNotificationRuntime().catch(() => 'unavailable' as const);
+    configuration = attempt;
+    void attempt.then((result) => {
+      // One attempt per caller wave; ready and permanently unsupported web reuse.
+      // A later native caller may retry only after the prior attempt settles.
+      if (result === 'unavailable' && Platform.OS !== 'web' && configuration === attempt) {
+        configuration = null;
+      }
+    });
+  }
   return configuration;
 }

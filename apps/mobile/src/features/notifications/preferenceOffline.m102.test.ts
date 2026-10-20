@@ -41,7 +41,7 @@ beforeEach(async () => {
   client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } });
   ports.read.mockReset().mockResolvedValue({ amTime: '07:30', amEnabled: false });
   ports.save.mockReset().mockImplementation(async (patch) => ({ amTime: '07:30', amEnabled: false, ...patch }));
-  ports.reconcile.mockReset().mockResolvedValue(undefined);
+  ports.reconcile.mockReset().mockResolvedValue('web_preferences_only');
   onlineManager.setOnline(false);
   await act(async () => {
     renderer = create(createElement(QueryClientProvider, { client }, createElement(Probe)));
@@ -61,7 +61,7 @@ it('reads device preferences/permission and saves while the actual QueryClient i
   expect(observed.isPaused).toBe(false);
   let result: unknown;
   await act(async () => { result = await mutation.mutateAsync({ amTime: '08:00' }); });
-  expect(result).toMatchObject({ amTime: '08:00', amEnabled: false });
+  expect(result).toMatchObject({ prefs: { amTime: '08:00', amEnabled: false }, scheduling: 'web_preferences_only' });
   expect(ports.save).toHaveBeenCalledOnce();
   expect(mutation.isPaused).toBe(false);
 });
@@ -69,7 +69,7 @@ it('reads device preferences/permission and saves while the actual QueryClient i
 it('reports a failed scheduler and retries the retained idempotent patch offline', async () => {
   ports.reconcile.mockRejectedValueOnce(new Error('synthetic native scheduling failure'));
   await act(async () => {
-    await expect(mutation.mutateAsync({ amEnabled: true })).rejects.toThrow('synthetic native scheduling failure');
+    await expect(mutation.mutateAsync({ amEnabled: true })).rejects.toThrow('PREFERENCES_SAVED_REMINDERS_UNCONFIRMED');
   });
   await flush();
   expect(mutation.isError).toBe(true);

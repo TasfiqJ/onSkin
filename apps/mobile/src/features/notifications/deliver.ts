@@ -336,13 +336,21 @@ async function cancelPreferenceReminderSchedules(assertCurrent: () => void): Pro
  * preference-owned fixed IDs are cancelled, billing/behavioural notifications are
  * left alone, and a background transition aborts/compensates in-flight schedules.
  */
+export type ReminderScheduleOutcome =
+  | 'scheduled'
+  | 'disabled'
+  | 'permission_denied'
+  | 'web_preferences_only'
+  | 'admission_closed';
+
 export async function rescheduleReminders(
   prefs?: NotifPrefs,
   lifecycle?: NotificationScheduleLifecycle,
-): Promise<void> {
+): Promise<ReminderScheduleOutcome> {
   // Web persists local preferences and reports OS availability separately.
   // There is no native scheduler to converge on this platform.
-  if (Platform.OS === 'web') return;
+  if (Platform.OS === 'web') return 'web_preferences_only';
+  let outcome: ReminderScheduleOutcome = 'admission_closed';
   let lifecycleFailure: unknown = null;
   try {
     await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {
@@ -357,15 +365,19 @@ export async function rescheduleReminders(
       assertCurrent();
       const authorization = await getPermissionStatus();
       if (!isDeliverableAuthorizationState(authorization)) {
-        if (lifecycle && authorization === 'unavailable') {
+        if (authorization === 'unavailable') {
           throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
         }
+        outcome = 'permission_denied';
         return;
       }
       assertCurrent();
-      if ((await configureNotifications()) !== 'ready') {
-        if (lifecycle) throw new Error('NOTIFICATION_RUNTIME_UNAVAILABLE');
+      if (!p.amEnabled && !p.pmEnabled && !p.captureReminders) {
+        outcome = 'disabled';
         return;
+      }
+      if ((await configureNotifications()) !== 'ready') {
+        throw new Error('NOTIFICATION_RUNTIME_UNAVAILABLE');
       }
       assertCurrent();
       const channelId = Platform.OS === 'android' ? 'routine' : undefined;
@@ -420,6 +432,7 @@ export async function rescheduleReminders(
           assertCurrent();
         }
       }
+      outcome = 'scheduled';
       // The ordinary settings/onboarding path intentionally keeps the existing
       // global sweep + billing rebuild behavior. Root lifecycle mode stays local.
     }, lifecycle);
@@ -433,13 +446,14 @@ export async function rescheduleReminders(
 
   if (lifecycle) {
     if (lifecycleFailure) throw lifecycleFailure;
-    return;
+    return outcome;
   }
 
   // Billing safety is deliberately outside health admission and its tracked
   // operation. Re-create it even if health scheduling was closed or aborted.
   await scheduleTrialReminder();
   if (lifecycleFailure) throw lifecycleFailure;
+  return outcome;
 }
 
 const TRIAL_REMINDER_ID = 'layerwell-trial-reminder';

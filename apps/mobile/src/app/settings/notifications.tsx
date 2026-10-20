@@ -1,4 +1,5 @@
-import { NotificationPreferenceSaveNotice } from '@/features/notifications/NotificationPreferenceSaveNotice';
+import { notificationPreferenceRetryPatch } from '@/features/notifications/applyPreferences';
+import { NotificationPreferenceSaveNotice, NotificationPreferenceSavedNotice } from '@/features/notifications/NotificationPreferenceSaveNotice';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
@@ -281,10 +282,12 @@ export default function NotificationSettingsScreen() {
           </View>
         ) : null}
 
+        {update.isSuccess && update.data ? <NotificationPreferenceSavedNotice scheduling={update.data.scheduling} /> : null}
         {update.isError ? (
           <NotificationPreferenceSaveNotice
             pending={update.isPending}
-            onRetry={() => update.mutate(update.variables ?? {})}
+            error={update.error}
+            onRetry={() => update.mutate(notificationPreferenceRetryPatch(update.error, update.variables))}
           />
         ) : null}
 

@@ -59,7 +59,7 @@ const next: NotifPrefs = {
 
 const deps = {
   save: vi.fn<(patch: Partial<NotifPrefs>) => Promise<NotifPrefs>>(),
-  reschedule: vi.fn<(prefs: NotifPrefs) => Promise<void>>(),
+  reschedule: vi.fn<(prefs: NotifPrefs) => Promise<import('./deliver').ReminderScheduleOutcome>>(),
 };
 
 describe('notification preference application', () => {
@@ -68,7 +68,7 @@ describe('notification preference application', () => {
     deps.save.mockReset();
     deps.reschedule.mockReset();
     deps.save.mockResolvedValue(next);
-    deps.reschedule.mockResolvedValue(undefined);
+    deps.reschedule.mockResolvedValue('scheduled');
   });
 
   it('serializes saved purposes with scheduling so parallel saves cannot reorder native intent', async () => {
@@ -76,7 +76,7 @@ describe('notification preference application', () => {
     let started!: () => void;
     const gate = new Promise<void>((resolve) => { release = resolve; });
     const entered = new Promise<void>((resolve) => { started = resolve; });
-    deps.reschedule.mockImplementationOnce(async () => { started(); await gate; });
+    deps.reschedule.mockImplementationOnce(async () => { started(); await gate; return 'scheduled'; });
     const first = applyNotificationPreferencePatch({ amEnabled: true }, deps);
     await entered;
     const second = applyNotificationPreferencePatch({ amEnabled: false }, deps);
@@ -94,7 +94,7 @@ describe('notification preference application', () => {
     let started!: () => void;
     const gate = new Promise<void>((resolve) => { release = resolve; });
     const entered = new Promise<void>((resolve) => { started = resolve; });
-    deps.reschedule.mockImplementationOnce(async () => { started(); await gate; });
+    deps.reschedule.mockImplementationOnce(async () => { started(); await gate; return 'scheduled'; });
     const first = applyNotificationPreferencePatch({ amEnabled: true }, deps).catch((error: unknown) => error);
     await entered;
     const queued = applyNotificationPreferencePatch({ amEnabled: false }, deps).catch((error: unknown) => error);
@@ -108,7 +108,7 @@ describe('notification preference application', () => {
   it('saves local private prefs before rescheduling reminders', async () => {
     const patch = { amEnabled: false };
 
-    await expect(applyNotificationPreferencePatch(patch, deps)).resolves.toBe(next);
+    await expect(applyNotificationPreferencePatch(patch, deps)).resolves.toEqual({ prefs: next, scheduling: 'scheduled' });
 
     expect(deps.save).toHaveBeenCalledWith(patch);
     expect(deps.reschedule).toHaveBeenCalledWith(next);

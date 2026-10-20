@@ -11,7 +11,7 @@ import {
 } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 
-import { applyNotificationPreferencePatch } from './applyPreferences';
+import { applyNotificationPreferencePatch, NotificationPreferenceSaveError } from './applyPreferences';
 import { getPermissionStatus, rescheduleReminders } from './deliver';
 import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
 
@@ -76,20 +76,30 @@ export function useUpdateNotifPrefs() {
       assertHealthDataWriteLease(expectedLease);
       const expectedOwnerUserId = expectedLease.ownerUserId;
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
-        const next = await applyNotificationPreferencePatch(
-          patch,
-          {
-            save: saveNotifPrefs,
-            reschedule: rescheduleReminders,
-          },
-          lease,
-        );
+        let result: Awaited<ReturnType<typeof applyNotificationPreferencePatch>>;
+        try {
+          result = await applyNotificationPreferencePatch(
+            patch,
+            {
+              save: saveNotifPrefs,
+              reschedule: rescheduleReminders,
+            },
+            lease,
+          );
+        } catch (error) {
+          lease.assertCurrent();
+          if (error instanceof NotificationPreferenceSaveError) {
+            qc.setQueryData<NotifPrefs>(KEY, error.prefs);
+          }
+          throw error;
+        }
         lease.assertCurrent();
+        const next = result.prefs;
         qc.setQueryData<NotifPrefs>(KEY, next);
         lease.assertCurrent();
         await qc.invalidateQueries({ queryKey: KEY });
         lease.assertCurrent();
-        return next;
+        return result;
       });
     },
   });

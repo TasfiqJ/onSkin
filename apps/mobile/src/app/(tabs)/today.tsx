@@ -294,10 +294,13 @@ function CheckRow({
   return (
     <Pressable
       accessibilityRole="checkbox"
-      accessibilityState={{ checked: state === 'done', disabled }}
+      accessibilityState={{ checked: state === 'done', disabled: disabled || state === 'done' }}
       accessibilityLabel={name}
+      accessibilityHint={state === 'done'
+        ? 'Recorded. This check-off cannot be undone in this version.'
+        : 'Record this check-off. Recorded check-offs cannot be undone in this version.'}
       aria-checked={state === 'done'}
-      disabled={disabled}
+      disabled={disabled || state === 'done'}
       onPress={() => {
         if (disabled || state === 'done') return;
         onPress();
@@ -331,6 +334,7 @@ function CheckRow({
         {state === 'done' ? <Check /> : null}
       </View>
       <View className="flex-1">
+        {state === 'done' ? <Text variant="bodySm" tone="muted">Recorded - cannot undo</Text> : null}
         <Text
           numberOfLines={nameLineCount}
           variant="body"
