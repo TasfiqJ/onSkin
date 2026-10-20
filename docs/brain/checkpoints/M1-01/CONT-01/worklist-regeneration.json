@@ -1,0 +1,29 @@
+{
+  "kind": "DERIVED_FRESHNESS_OBSERVATION",
+  "source_commit": "4abe52d61ee187aca75e5992f74fb3b6175ed587",
+  "source_tree": "d06a0474acabc53eb5284fb8c5391e854c82dbf2",
+  "clean_before_generation": true,
+  "generator_sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+  "commands": [
+    {
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "exit_code": 0
+    }
+  ],
+  "meaning_check": "All 14 item fields other than derived sourcePaths are byte-value equal after JSON parsing: status, launchGate, owner, requiredEvidence, sources, domain and area unchanged. Summary only sourcePathCount changes 413 -> 414. Diff inspected in both outputs.",
+  "artifacts": [
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "sha256": "421ade9bd2e6ea2aa87e0856bd437fa65bd57c183169fd3d15a747d58a031b90"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "sha256": "d36ba7d8c9415832c7efa489bfdeec6cad3291ce9d5a9b80248cd45b87a6f766"
+    }
+  ],
+  "scope": "ADR-031 only; not Security inventory renewal or source approval"
+}
