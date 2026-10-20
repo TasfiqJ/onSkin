@@ -15,7 +15,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = 'docs/v2/source-inputs'
 STATE = 'docs/brain/state'
-GENERATED = 'docs/v2/generated'
+GENERATED = 'docs/v2/mirrors'
 MANIFEST_HASH = 'fd04a4fe643949b994ab01697cf48fb2894da805951f7389c76aa770b0972957'
 CLASSES = ['SOURCE_REPORTED', 'INDEPENDENTLY_OBSERVED', 'INDEPENDENTLY_REPRODUCED', 'DECIDED', 'UNKNOWN']
 AXES = ['source', 'integration', 'physical_device_surface', 'qualified_review', 'live_provider',

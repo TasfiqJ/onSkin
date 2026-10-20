@@ -23,7 +23,7 @@ class InstalledControls(unittest.TestCase):
             # Only governance inputs, selected source documents, and sanitized evidence; no runtime tree.
             src = brain.ROOT / folder
             if folder == 'docs/hugeToDo':
-                for row in json.loads((brain.ROOT / 'docs/v2/generated/source-reconciliation.json').read_text(encoding='utf-8'))['sources']:
+                for row in json.loads((brain.ROOT / 'docs/v2/mirrors/source-reconciliation.json').read_text(encoding='utf-8'))['sources']:
                     p = brain.ROOT / row['path']
                     dest = self.root / row['path']
                     dest.parent.mkdir(parents=True, exist_ok=True)
