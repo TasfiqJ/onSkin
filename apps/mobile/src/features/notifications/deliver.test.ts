@@ -370,6 +370,17 @@ describe('rescheduleReminders', () => {
     );
   });
 
+  it('cancels a schedule when OS permission changes during its native acknowledgement', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    mocks.scheduleNotificationAsync.mockImplementationOnce(async () => {
+      mocks.getPermissionsAsync.mockResolvedValue({ status: 'denied', granted: false, canAskAgain: false, expires: 'never' });
+      return 'permission-race-id';
+    });
+    await expect(rescheduleReminders(prefs)).rejects.toThrow('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('permission-race-id');
+    expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
+  });
+
   it('cancels stale health schedules and creates none when authorization is not deliverable', async () => {
     mocks.getPermissionsAsync.mockResolvedValue({
       status: 'denied',

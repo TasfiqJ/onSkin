@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Platform } from 'react-native';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { assertHealthDataWriteLease, captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
 
 import { notificationRouteFromData } from './contract';
 
@@ -17,6 +18,9 @@ export function NotificationResponseHost() {
 
   useEffect(() => {
     if (Platform.OS === 'web') return;
+    // Bind the listener at registration, before any delayed native response.
+    let healthLease: ReturnType<typeof captureHealthDataWriteLease>;
+    try { healthLease = captureHealthDataWriteLease(); } catch { return; }
     let active = true;
     const handledIdentifiers = new Set<string>();
 
@@ -34,6 +38,7 @@ export function NotificationResponseHost() {
         // JavaScript cannot interleave a boundary between this synchronous
         // current-owner assertion and the navigation side effect.
         lease.assertCurrent();
+        assertHealthDataWriteLease(healthLease);
         router.push(route as never);
         lease.assertCurrent();
       })

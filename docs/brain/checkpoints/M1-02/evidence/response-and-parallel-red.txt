@@ -1,0 +1,80 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/features/notifications/applyPreferences.test.ts (6 tests | 2 failed) 14ms
+     × serializes saved purposes with scheduling so parallel saves cannot reorder native intent 7ms
+     × never starts a queued save after withdrawal closes the calling lease 1ms
+stderr | src/features/notifications/NotificationResponseHost.test.ts > NotificationResponseHost > refuses the old mounted listener after withdrawal even before React cleanup
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/NotificationResponseHost.test.ts > NotificationResponseHost > refuses the old mounted listener after owner-change even before React cleanup
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/NotificationResponseHost.test.ts (6 tests | 2 failed) 23ms
+     × refuses the old mounted listener after withdrawal even before React cleanup 4ms
+     × refuses the old mounted listener after owner-change even before React cleanup 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/applyPreferences.test.ts > notification preference application > serializes saved purposes with scheduling so parallel saves cannot reorder native intent
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/features/notifications/applyPreferences.test.ts:87:32
+     85|     release();
+     86|     await Promise.all([first, second]);
+     87|     expect(countBeforeRelease).toBe(1);
+       |                                ^
+     88|     expect(deps.save).toHaveBeenNthCalledWith(2, { amEnabled: false });
+     89|     expect(deps.reschedule.mock.invocationCallOrder[0]).toBeLessThan(d…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/features/notifications/applyPreferences.test.ts > notification preference application > never starts a queued save after withdrawal closes the calling lease
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/features/notifications/applyPreferences.test.ts:105:23
+    103|     expect(await first).toBeInstanceOf(Error);
+    104|     expect(await queued).toBeInstanceOf(Error);
+    105|     expect(deps.save).toHaveBeenCalledOnce();
+       |                       ^
+    106|   });
+    107|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/features/notifications/NotificationResponseHost.test.ts > NotificationResponseHost > refuses the old mounted listener after withdrawal even before React cleanup
+ FAIL  src/features/notifications/NotificationResponseHost.test.ts > NotificationResponseHost > refuses the old mounted listener after owner-change even before React cleanup
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "/(tabs)/today",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/features/notifications/NotificationResponseHost.test.ts:138:28
+    136|     }
+    137|     await act(async () => listener?.(response('late-owner-a', ROUTINE_…
+    138|     expect(mocks.push).not.toHaveBeenCalled();
+       |                            ^
+    139|     expect(mocks.clear).toHaveBeenCalledOnce();
+    140|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 8 passed (12)
+   Start at  16:13:02
+   Duration  359ms (transform 122ms, setup 0ms, import 225ms, tests 36ms, environment 0ms)
+
