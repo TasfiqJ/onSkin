@@ -902,20 +902,15 @@ export async function restoreQuarantinedPhoto(file: QuarantinedPhotoFile): Promi
       assertHealthDataWriteLease(healthLease);
     };
     assertAuthorized();
-    let restoreCompleted = false;
     try {
       await FileSystem.moveAsync({ from: file.quarantinedUri, to: file.originalUri });
-      restoreCompleted = true;
       assertAuthorized();
     } catch (error) {
       try {
-        assertHealthDataWriteLease(healthLease);
+        assertAuthorized();
       } catch (healthError) {
-        if (restoreCompleted) {
-          await FileSystem.deleteAsync(file.originalUri, { idempotent: true }).catch(
-            () => undefined,
-          );
-        }
+        // A native move may commit before its acknowledgement rejects.
+        await FileSystem.deleteAsync(file.originalUri, { idempotent: true });
         throw healthError;
       }
       throw error;
@@ -1015,8 +1010,9 @@ export async function reconcileEncryptedPhotoStorage(
               assertAuthorized();
             } else {
               assertAuthorized();
-              await FileSystem.moveAsync({ from: uri, to: originalUri });
+              // Own the destination before dispatch, including ambiguous rejection.
               restorationCandidates.add(originalUri);
+              await FileSystem.moveAsync({ from: uri, to: originalUri });
               assertAuthorized();
             }
           } else {

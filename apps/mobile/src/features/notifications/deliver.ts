@@ -109,9 +109,10 @@ async function runHealthNotificationOperation<T>(
   operation: (context: HealthNotificationOperation) => Promise<T>,
   lifecycle?: NotificationScheduleLifecycle,
 ): Promise<T> {
-  const execute = () =>
-    runAccountGenerationOperation(async (accountLease) => {
-      const healthLease = captureHealthDataWriteLease();
+  const pending = runAccountGenerationOperation(async (accountLease) => {
+    // Capture before queueing: deferred work belongs to its calling authority.
+    const healthLease = captureHealthDataWriteLease();
+    const execute = async () => {
       const createdIds = new Set<string>();
       const assertCurrent = () =>
         assertHealthNotificationOperationCurrent(accountLease, healthLease, lifecycle);
@@ -150,12 +151,14 @@ async function runHealthNotificationOperation<T>(
         await cancelCreatedHealthNotifications(createdIds);
         throw error;
       }
-    });
-  const pending = healthNotificationOperationTail.then(execute, execute);
-  healthNotificationOperationTail = pending.then(
-    () => undefined,
-    () => undefined,
-  );
+    };
+    const queued = healthNotificationOperationTail.then(execute, execute);
+    healthNotificationOperationTail = queued.then(
+      () => undefined,
+      () => undefined,
+    );
+    return queued;
+  });
   inFlightHealthNotificationOperations.add(pending);
   try {
     return await pending;
@@ -177,14 +180,14 @@ export function nowHHMM(d = new Date()): string {
 }
 
 /**
- * Local-first notification delivery (docs/07 §3.4/§9). The utility AM/PM reminders
+ * Local-first notification delivery (docs/07 Ã‚Â§3.4/Ã‚Â§9). The utility AM/PM reminders
  * are scheduled as repeating DAILY local notifications at the user's chosen times
- * (no server round-trip, content on-device, §3.6 discretion). Behavioural triggers
+ * (no server round-trip, content on-device, Ã‚Â§3.6 discretion). Behavioural triggers
  * go through the frequency-cap engine before firing. Everything is guarded. On
  * Expo Go / emulators / unsupported devices it degrades to a no-op rather than
  * throwing (real on-device behaviour + Android-14 exact-alarm acceptance is
  * B-NOTIF-VERIFY). NO health-revealing content is placed in any push payload; these
- * are LOCAL notifications (§8).
+ * are LOCAL notifications (Ã‚Â§8).
  */
 
 export type NotificationAuthorizationState =
@@ -255,7 +258,7 @@ export async function getPermissionStatus(): Promise<NotificationAuthorizationSt
   }
 }
 
-/** The OS prompt. Fired only after the soft-ask "yes" (docs/07 §3.2). */
+/** The OS prompt. Fired only after the soft-ask "yes" (docs/07 Ã‚Â§3.2). */
 export async function requestPermission(): Promise<NotificationPermissionOutcome> {
   let requestAttempted = false;
   try {
@@ -380,7 +383,7 @@ export async function rescheduleReminders(
       if (p.amEnabled) await scheduleRoutine('am_reminder', p.amTime);
       if (p.pmEnabled) await scheduleRoutine('pm_step', p.pmTime);
 
-      // Weekly progress-photo capture nudge (docs/07 §3.3 / docs/06 §5): a recurring
+      // Weekly progress-photo capture nudge (docs/07 Ã‚Â§3.3 / docs/06 Ã‚Â§5): a recurring
       // WEEKLY local notification when opted in, the weekly cadence being its own
       // frequency control. If the usual AM time is quiet, it waits until quiet ends.
       if (p.captureReminders) {
@@ -409,7 +412,11 @@ export async function rescheduleReminders(
       // global sweep + billing rebuild behavior. Root lifecycle mode stays local.
     }, lifecycle);
   } catch (error) {
-    if (lifecycle) lifecycleFailure = error;
+    if (lifecycle || !(error instanceof AccountGenerationLeaseError ||
+      (error instanceof Error && [HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+        HEALTH_DATA_WRITE_OWNER_MISMATCH].includes(error.message)))) {
+      lifecycleFailure = error;
+    }
   }
 
   if (lifecycle) {
@@ -420,6 +427,7 @@ export async function rescheduleReminders(
   // Billing safety is deliberately outside health admission and its tracked
   // operation. Re-create it even if health scheduling was closed or aborted.
   await scheduleTrialReminder();
+  if (lifecycleFailure) throw lifecycleFailure;
 }
 
 const TRIAL_REMINDER_ID = 'layerwell-trial-reminder';
@@ -430,7 +438,7 @@ function fmtShortDate(iso: string): string {
 
 /**
  * Schedule the one-shot pre-charge reminder fired 2 days before a carded trial
- * converts (docs/08 §6 / docs/07). The UI describes this as optional because
+ * converts (docs/08 Ã‚Â§6 / docs/07). The UI describes this as optional because
  * delivery depends on notification permission and device availability. Only an
  * active carded trial with an exact configured-product cadence, localized price,
  * and future 2-days-before instant is eligible. Idempotent (fixed identifier,
@@ -490,12 +498,12 @@ export async function cancelTrialReminder(): Promise<void> {
 
 /**
  * An event-triggered optional notification (replenishment / ramp-up /
- * de-escalation / win-back), gated by the frequency-cap engine + quiet hours (§9).
+ * de-escalation / win-back), gated by the frequency-cap engine + quiet hours (Ã‚Â§9).
  * Reserves device-local cap capacity before asking the native scheduler and returns
  * whether the schedule request succeeded. A reservation is an attempt record, not
  * delivery/open proof. Behavioural delivery is wired here for the features that
  * raise these triggers to call; the trigger *content* is owned by those features
- * (docs/07 §1).
+ * (docs/07 Ã‚Â§1).
  */
 export async function notifyBehavioural(
   kind: EventTriggeredNotificationKind,
@@ -508,7 +516,7 @@ export async function notifyBehavioural(
       assertCurrent();
       const p = await loadNotifPrefs();
       assertCurrent();
-      // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier ,
+      // Honour the user's per-kind opt-out FIRST (docs/07 Ã‚Â§3.1/Ã‚Â§8): a disabled tier ,
       // and especially the off-by-default promotional tier. Never fires.
       if (!tierEnabled(kind, p)) return false;
       const now = Date.now();
