@@ -160,7 +160,7 @@ describe('minimal notification startup', () => {
   it('drains already-started category work when another native wrapper throws synchronously', async () => {
     let release!: () => void;
     const gate = new Promise<void>((resolve) => { release = resolve; });
-    mocks.setNotificationCategoryAsync.mockImplementationOnce(() => gate)
+    mocks.setNotificationCategoryAsync.mockImplementationOnce(async () => { await gate; return undefined; })
       .mockImplementationOnce(() => { throw new Error('sync partial bridge failure'); });
     const { configureNotifications } = await import('./startup');
     const first = configureNotifications();
