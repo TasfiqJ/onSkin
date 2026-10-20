@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, expect, it, vi } from 'vitest';
 
@@ -13,7 +13,11 @@ vi.mock('react-native', () => ({ AppState: {
 } }));
 let renderer: ReactTestRenderer | undefined;
 let observed: ReturnType<typeof useRoutineClock>;
-function Probe() { observed = useRoutineClock(); return null; }
+function Probe() {
+  const clock = useRoutineClock();
+  useEffect(() => { observed = clock; }, [clock]);
+  return null;
+}
 afterEach(async () => {
   await act(async () => renderer?.unmount()); renderer = undefined;
   vi.useRealTimers(); app.currentState = 'active';
