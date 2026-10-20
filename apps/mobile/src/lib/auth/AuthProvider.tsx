@@ -1271,7 +1271,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               targetUserId,
               latestPendingSession.access_token,
             );
-            retrySessionRestoreRef.current = publicationActive
+            retrySessionRestoreRef.current = publicationActive || accountIsolationE2EFixture
               ? null
               : () => resumeForegroundPublicationRef.current();
             publicationRecoveryNeededRef.current = !publicationActive;
