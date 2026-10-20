@@ -872,7 +872,9 @@ async function retainedShelfFlow(client) {
     `Array.from(document.querySelectorAll('[role="button"]')).filter(n => n.getAttribute('aria-label')?.startsWith('Synthetic manual moisturizer')).length`,
   );
   assert(matches === 1, `Double save rendered ${matches} manual rows.`);
+  await scrollTextIntoView(client, 'Synthetic manual moisturizer', { exact: false });
   await clickByText(client, 'Synthetic manual moisturizer', { exact: false });
+  await scrollTextIntoView(client, 'Edit opened date');
   await clickByText(client, 'Edit opened date');
   await clickByText(client, '1 mo ago');
   await captureStep(client, 'M1-03-offline-edit');
