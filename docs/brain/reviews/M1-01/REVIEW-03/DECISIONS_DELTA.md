@@ -1,0 +1,7 @@
+# REVIEW-03 decisions delta
+
+At `fdf040cf28a4b3576f98b60d3b8d96a54bf689b0`: FIX_REQUIRED for the missing actual cross-owner browser acceptance. Sign-out and portable-runner findings closed at exact reviewed head; keep improvements, no restart. Current accepted-task/last-accepted heads unchanged. ADR033 prioritizes the missing full scenario before repetitive validation/evidence expansion. New CONT03 authorizes development-only synthetic transport through real client authority, not a consumer feature or live provider mutation. Fresh Codex required after HIGH/no compaction. Same stage, PR9 draft, main read-only.
+
+Independent6013 root tests/typecheck/lint pass; governance44pass2Windows skips;14source contracts; six actual browser runs pass as explicitly enumerated. Codex's larger reported matrix is separate. Current final Quality including full DB verification completed success; Security raw refusals confirmed, iOS source-only success. Exact-run recovery is not permanent ECR remediation or protected authority. No source GO, replay/main/release/clinical/commercial/spend authority. Proposal expiry unchanged.
+
+Successor metadata also corrects previously stale current-review/next-iteration display pointers; historical immutable state is not rewritten. All47 roadmap identities/dependencies remain unchanged. Raw logs are identified on the authorized device; this text-only context is not a full evidence archive.

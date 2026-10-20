@@ -15,11 +15,16 @@ CONT02_REVIEW = 'docs/brain/reviews/M1-01/REVIEW-02'
 CONT02_DIGEST = '4a5812eaac01c099c831a5f445898c1bd101d6a754aac497e67dfe50d966fcd1'
 CONT02_BASE = '6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a'
 
+CONT03_INPUT = 'docs/brain/checkpoints/M1-01/CONT-03/inputs'
+CONT03_REVIEW = 'docs/brain/reviews/M1-01/REVIEW-03'
+CONT03_DIGEST = '42ed0cb652fe921640d525578d0ac59b7832f3d0567e6a5515f3687347c5d2b5'
+CONT03_BASE = 'fdf040cf28a4b3576f98b60d3b8d96a54bf689b0'
 
 def validate_continuation(root):
     for inputs, review, digest, iteration in [
         (CONT_INPUT, CONT_REVIEW, CONT_DIGEST, 'CONT-01'),
         (CONT02_INPUT, CONT02_REVIEW, CONT02_DIGEST, 'CONT-02'),
+        (CONT03_INPUT, CONT03_REVIEW, CONT03_DIGEST, 'CONT-03'),
     ]:
         raw = brain.read(root, inputs + '/TASK_MANIFEST.json')
         brain.require(brain.digest(raw) == digest, 'Continuation independently anchored manifest differs')
@@ -64,9 +69,9 @@ def validate(root):
     brain.require(current['accepted_tasks'] == approved['accepted_tasks'] == ['M0-01', 'M0-02'],
                   'False acceptance')
     brain.require(current['continuation'] == {
-        'iteration': 'CONT-02', 'input_manifest_sha256': CONT02_DIGEST,
-        'review_overlay': CONT02_REVIEW, 'base_commit': CONT02_BASE,
-        'state_version': 'brain-m1-01-partial-reviewed-cont02-issued-7',
+        'iteration': 'CONT-03', 'input_manifest_sha256': CONT03_DIGEST,
+        'review_overlay': CONT03_REVIEW, 'base_commit': CONT03_BASE,
+        'state_version': 'brain-m1-01-partial-reviewed-cont03-issued-8',
     }, 'Unissued continuation overlay')
     brain.require(current['submission_status'] in ['IN_PROGRESS', 'PARTIAL', 'BLOCKED',
                   'SUBMITTED_REVIEW_REQUIRED'], 'Codex cannot accept M1')
@@ -97,8 +102,9 @@ def report(root, name):
     brain.require(value['delivery_ref'] == 'refs/heads/' + BRANCH, 'Invalid delivery ref')
     brain.git_snapshot(root, value['measured'], 'Measured M1 source')
     if value['schema_version'] == 3:
-        brain.require(value['iteration'] == 'CONT-02' and name.startswith(CONT02_INPUT.rsplit('/', 1)[0] + '/'), 'Wrong continuation report binding')
-        brain.ancestor(root, CONT02_BASE, value['measured']['commit'], 'CONT-02 base -> measured')
+        binding = {'CONT-02': (CONT02_INPUT, CONT02_BASE), 'CONT-03': (CONT03_INPUT, CONT03_BASE)}.get(value['iteration'])
+        brain.require(binding is not None and name.startswith(binding[0].rsplit('/', 1)[0] + '/'), 'Wrong continuation report binding')
+        brain.ancestor(root, binding[1], value['measured']['commit'], value['iteration'] + ' base -> measured')
     brain.ancestor(root, BASE, value['measured']['commit'], 'accepted base -> measured')
     brain.ancestor(root, value['measured']['commit'], brain.git(root, 'rev-parse', 'HEAD'),
                    'measured -> delivery')

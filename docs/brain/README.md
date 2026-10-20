@@ -1,3 +1,5 @@
+Current issuance: [M1-01 CONT-03](checkpoints/M1-01/CONT-03/inputs/TASK.md), independently anchored by [Brain REVIEW-03](reviews/M1-01/REVIEW-03/AUDIT_M1-01_REVIEW03.md). Same M1 stage; actual cross-owner acceptance remains under review. The active profile admits schema 3 CONT-03 reports and preserves all historical anchors/refusals. No self-acceptance or main promotion.
+
 Current continuation: [M1-01 CONT-02](checkpoints/M1-01/CONT-02/inputs/TASK.md), issued by [Brain REVIEW-02](reviews/M1-01/REVIEW-02/AUDIT_M1-01_REVIEW02.md). Original M1/CONT-01 records below remain historical. The active overlay binds the independently supplied CONT-02 digest; schema 3 reports bind this iteration without changing prior reports or accepting M1.
 
 # Durable Brain state and succession

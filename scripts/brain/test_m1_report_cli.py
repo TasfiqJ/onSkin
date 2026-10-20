@@ -109,6 +109,25 @@ class M1ReportCLI(unittest.TestCase):
         self.name = 'docs/brain/checkpoints/M1-01/CONT-01/synthetic-report.json'
         self.assertNotEqual(self.cli(self.value).returncode, 0)
 
+    def test_cont03_report_binds_exact_issued_base_and_location(self):
+        # Move only this disposable fixture to the independently issued base.
+        self.command('update-ref', 'HEAD', m1_profile.CONT03_BASE)
+        self.commit()
+        self.measured = {'commit': brain.git(self.root, 'rev-parse', 'HEAD'),
+                         'tree': brain.git(self.root, 'rev-parse', 'HEAD^{tree}')}
+        self.value.update(schema_version=3, iteration='CONT-03', measured=self.measured)
+        self.value.update(executions=[], artifacts=[])
+        self.add_execution('source', 'PASS', 0)
+        self.name = 'docs/brain/checkpoints/M1-01/CONT-03/synthetic-report.json'
+        result = self.cli(self.value)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.name = 'docs/brain/checkpoints/M1-01/CONT-02/synthetic-report.json'
+        self.assertNotEqual(self.cli(self.value).returncode, 0)
+        self.name = 'docs/brain/checkpoints/M1-01/CONT-03/synthetic-report.json'
+        self.value['measured'] = {'commit': m1_profile.CONT02_BASE,
+                                 'tree': brain.git(self.root, 'rev-parse', m1_profile.CONT02_BASE + '^{tree}')}
+        self.assertNotEqual(self.cli(self.value).returncode, 0)
+
     def test_future_execution_and_dirty_untracked_committed_runtime_drift(self):
         self.assertEqual(self.cli(self.value).returncode, 0)
         self.runtime.write_text('export const fixture = 2;\n', encoding='utf-8')
