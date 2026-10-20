@@ -13,7 +13,14 @@ const admitted = {
   mode: 'pending_then_completed_manual',
 };
 it('admits only explicit local DEV fixture modes', () => {
-  expect(resolveAccountDeletionRecoveryFixture(admitted)).toBe(admitted.mode);
+  for (const mode of [
+    'pending_then_completed_manual',
+    'invalid',
+    'invalid_support_only',
+    'expired',
+  ]) {
+    expect(resolveAccountDeletionRecoveryFixture({ ...admitted, mode })).toBe(mode);
+  }
   for (const override of [
     { isDev: false },
     { appEnvironment: 'production' },
