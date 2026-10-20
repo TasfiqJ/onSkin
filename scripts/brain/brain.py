@@ -713,7 +713,7 @@ def ready(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=ROOT)
-    parser.add_argument('--profile', choices=['M0-02', 'M1-01', 'M1-02'], default='M0-02',
+    parser.add_argument('--profile', choices=['M0-02', 'M1-01', 'M1-02', 'M1-03'], default='M0-02',
                         help='M0 is historical; active M1 requires its independently anchored issuance')
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('validate')
@@ -729,8 +729,10 @@ def main():
     args = parser.parse_args()
     root = args.root.absolute()
     try:
-        if args.profile in ['M1-01', 'M1-02']:
-            if args.profile == 'M1-02':
+        if args.profile in ['M1-01', 'M1-02', 'M1-03']:
+            if args.profile == 'M1-03':
+                import m103_profile as m1_profile
+            elif args.profile == 'M1-02':
                 import m102_profile as m1_profile
             else:
                 import m1_profile

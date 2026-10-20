@@ -1,0 +1,3 @@
+# Current CI observation
+See CI_OBSERVATIONS.json for exact head, tree, PR merge checkout, job/run IDs and finite observation time. Security failed; iOS passed source-only; Quality was still running because canonical database verification had not completed. Repository, PostgreSQL rehearsals and platform exports passed independently. This packet does not call any pending or skipped job a pass, or attribute a historical ECR failure to an unseen current log.
+M1-03 must refresh exact current runs and retrieve all original failure evidence, including the original code-security job, rather than only the final acceptance aggregator. No scanner-return reinterpretation or expired-acceptance renewal is authorized.

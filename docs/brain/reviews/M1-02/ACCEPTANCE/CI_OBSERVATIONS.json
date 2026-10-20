@@ -1,0 +1,52 @@
+{
+  "observed_at_utc": "2026-10-20T22:35:24Z",
+  "head_commit": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "head_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+  "event": "pull_request",
+  "checkout_commit": "ca62c6c05c40a88d29403c831173821348852512",
+  "checkout_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+  "checkout_parents": [
+    "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "2de9ef75a1a1d539b0520ca22160abd6171c9c3b"
+  ],
+  "tree_equality_independently_verified": true,
+  "quality": {
+    "run_id": 39506203149,
+    "status": "in_progress",
+    "conclusion": null,
+    "repository_job": {
+      "id": 118915845232,
+      "conclusion": "success"
+    },
+    "canonical_database_job": {
+      "id": 118915844992,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "postgres15_17_rehearsals": "success",
+    "expo_ios_android_exports": "success",
+    "note": "Unfinished canonical DB/overall Quality is NOT PASS. Prior candidate ECR failure remains historical, not asserted as this running job outcome."
+  },
+  "security": {
+    "run_id": 39506203186,
+    "status": "completed",
+    "conclusion": "failure",
+    "note": "Exact source Security refusal remains open. M1-03 must obtain all raw current scanner/gate results and distinguish finding, execution, inventory, expiry and approval failures; no positive Security claim."
+  },
+  "ios_launch_contract": {
+    "run_id": 39506203634,
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "SOURCE_ONLY_NOT_DEVICE"
+  },
+  "pr": {
+    "number": 9,
+    "draft": true,
+    "merged": false,
+    "head": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+    "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73"
+  },
+  "source_proposal_not_after": "2026-10-21T00:00:00Z",
+  "protected_source_go": false,
+  "main_promotion_authorized": false
+}

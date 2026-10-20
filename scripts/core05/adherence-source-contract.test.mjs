@@ -627,13 +627,21 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
 });
 
-test('database adherence and atomic Shelf/completion sync remain server-owned at head 0078', () => {
-  const migration = read(paths.adherenceMigration);
-  const dbTest = read(paths.adherenceDbTest);
-  const syncBridgeMigration = read(paths.syncBridgeMigration);
-  const syncBridgeDbTest = read(paths.syncBridgeDbTest);
-  const databaseTypes = read(paths.databaseTypes);
-  const schemaContract = read(paths.schemaContract);
+function assertRetainedHistory(source) {
+  // Independently reconciled with the unchanged DB05 frozen inventory, not
+  // inferred from today's directory count or a descriptive SQL test label.
+  const sql = source.replace(/--[^\n]*/gu, '');
+  assert.match(sql, /select is\(\s*\(select count\(\*\) from supabase_migrations\.schema_migrations\),\s*97::bigint,/u);
+  assert.match(sql, /select is\(\s*\(select max\(version\) from supabase_migrations\.schema_migrations\),\s*'20261010000081'::text,/u);
+}
+
+function assertDatabaseAuthority(readSource = read) {
+  const migration = readSource(paths.adherenceMigration);
+  const dbTest = readSource(paths.adherenceDbTest);
+  const syncBridgeMigration = readSource(paths.syncBridgeMigration);
+  const syncBridgeDbTest = readSource(paths.syncBridgeDbTest);
+  const databaseTypes = readSource(paths.databaseTypes);
+  const schemaContract = readSource(paths.schemaContract);
 
   assert.match(migration, /private\.routine_adherence_timezone_is_valid/u);
   assert.match(migration, /completions\.step_id is null/u);
@@ -672,7 +680,7 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
   assert.match(syncBridgeMigration, /create table public\.shelf_product_identities/u);
   assert.match(syncBridgeMigration, /COMPLETION_PRODUCT_RETRY_LATER/u);
   assert.doesNotMatch(syncBridgeMigration, /COMPLETION_DEPENDENCY_TERMINAL/u);
-  assert.match(syncBridgeDbTest, /exact 94-migration source history/u);
+  assertRetainedHistory(syncBridgeDbTest);
   assert.match(syncBridgeDbTest, /semantic-conflict rejection cannot mutate adherence authority/u);
   assert.match(
     syncBridgeDbTest,
@@ -690,8 +698,7 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
     syncBridgeDbTest,
     /zero-attestation proves stable identities and all relational health data erased/u,
   );
-  assert.match(schemaContract, /\b94::bigint\b/u);
-  assert.match(schemaContract, /'20260926000078'::text/u);
+  assertRetainedHistory(schemaContract);
   assert.match(databaseTypes, /shelf_product_identities:\s*\{/u);
   const exportShelfIdentities = generatedFunctionBlock(
     databaseTypes,
@@ -775,7 +782,56 @@ test('database adherence and atomic Shelf/completion sync remain server-owned at
     p_user_product_id: 'string',
   });
   assertGeneratedScalarReturn(recordRoutineCompletion, 'Json');
+}
+
+test('database adherence and atomic Shelf/completion sync retain server authority and frozen history', () => {
+  assertDatabaseAuthority();
 });
+
+test('history descriptions may change without changing the asserted SQL contract', () => {
+  assertDatabaseAuthority((path) => read(path).replaceAll('exact 97-migration source history', 'retained history'));
+});
+
+for (const path of [paths.syncBridgeDbTest, paths.schemaContract]) {
+  for (const [label, before, after] of [
+    ['wrong count', '97::bigint', '94::bigint'],
+    ['wrong head', "'20261010000081'::text", "'20260926000078'::text"],
+    ['wrong history table', 'supabase_migrations.schema_migrations', 'public.schema_migrations'],
+    ['wrong aggregate', 'count(*)', 'count(version)'],
+    ['removed count assertion', 'select is(\n  (select count(*)', 'select isnt(\n  (select count(*)'],
+  ]) {
+    test(`database authority rejects ${label} in ${path}`, () => {
+      const original = read(path);
+      assert.ok(original.includes(before), 'mutation must change the actual source');
+      assert.throws(() => assertDatabaseAuthority((name) => name === path
+        ? original.replaceAll(before, after) + `\n-- ${original.replaceAll('\n', '\n-- ')}`
+        : read(name)), assert.AssertionError);
+    });
+  }
+}
+
+for (const [label, mutate] of [
+  ['missing required source', (files) => files.delete(paths.syncBridgeDbTest)],
+  ['renamed required source', (files) => {
+    files.set(`${paths.syncBridgeDbTest}.renamed`, files.get(paths.syncBridgeDbTest));
+    files.delete(paths.syncBridgeDbTest);
+  }],
+  ['removed server-owned guard', (files) => files.set(paths.adherenceMigration,
+    files.get(paths.adherenceMigration).replaceAll('ROUTINE_ADHERENCE_CACHE_SERVER_OWNED', 'REMOVED'))],
+  ['altered consent protection', (files) => files.set(paths.syncBridgeDbTest,
+    files.get(paths.syncBridgeDbTest).replaceAll('completion sync rejects a formerly active epoch after its exact grant closes', 'REMOVED'))],
+]) {
+  test(`database authority rejects ${label}`, () => {
+    const files = new Map([paths.adherenceMigration, paths.adherenceDbTest,
+      paths.syncBridgeMigration, paths.syncBridgeDbTest, paths.databaseTypes,
+      paths.schemaContract].map((path) => [path, read(path)]));
+    mutate(files);
+    assert.throws(() => assertDatabaseAuthority((path) => {
+      assert.ok(files.has(path), `missing source: ${path}`);
+      return files.get(path);
+    }), assert.AssertionError);
+  });
+}
 
 test('the hashed corpus executes the actual client streak implementation and binds SQL parity', async () => {
   const corpus = JSON.parse(read(paths.adherenceParityCorpus));

@@ -1,0 +1,4 @@
+# Independent review observations
+Nine continuation commits and relevant surrounding source inspected;180 committed artifact hashes matched. Current source checks, six fresh synthetic app flows and two recovered/unavailable notification probes independently executed at the exact delivery. The clock suites were rerun under two test timezones without changing the host clock.
+Raw logs and selected synthetic screenshots remain at the owner-device paths in EXECUTION_EVIDENCE.json. Evidence classes are separated: Codex's earlier measured runs are source-reported; the listed Brain runs are independent; acceptance/next scope are newly decided; native/provider/qualified/live admissions remain unknown or closed.
+The selected broad source test suite still fails one inherited CORE05 assertion. That failure is preserved and assigned, not silently corrected or counted as pass.

@@ -1,0 +1,3 @@
+# Useful completion
+The output should let the Brain make the next exact engineering or authorization decision without asking the founder to reconstruct history: a causally repaired ordinary source test where justified, current original failure evidence, a precise DB06/DB08/R2B/Security custody matrix, independently checkable proposed remedies and realistic pending review actions.
+A completed investigation can still conclude that protected baseline is blocked. Do not fill that gap with a synthetic owner receipt or missing-provider PASS. Do not move to schema or J05 because all safe local work is exhausted. Preserve last accepted retained app behavior and stop for Brain review.

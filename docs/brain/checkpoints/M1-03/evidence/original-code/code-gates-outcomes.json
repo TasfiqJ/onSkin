@@ -1,0 +1,9 @@
+{
+  "job": "code-gates",
+  "sha": "ca62c6c05c40a88d29403c831173821348852512",
+  "run_id": "39506203186",
+  "phase9_verify": "success",
+  "dependency_sbom": "failure",
+  "npm_audit_high": "failure",
+  "npm_exception_gate": "failure"
+}

@@ -1,0 +1,1002 @@
+PRIMARY NPM {
+  "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm": {
+    "source": 1240992,
+    "name": "braces",
+    "dependency": "braces",
+    "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+    "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "severity": "high",
+    "cwe": [
+      "CWE-674"
+    ],
+    "cvss": {
+      "score": 7.5,
+      "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+    },
+    "range": "<=3.0.3",
+    "paths": [
+      "node_modules/braces"
+    ]
+  },
+  "https://github.com/advisories/GHSA-86w9-cpqp-85rv": {
+    "source": 1240912,
+    "name": "node-forge",
+    "dependency": "node-forge",
+    "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+    "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+    "severity": "high",
+    "cwe": [
+      "CWE-347"
+    ],
+    "cvss": {
+      "score": 7.5,
+      "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+    },
+    "range": "<=1.4.0",
+    "paths": [
+      "node_modules/node-forge"
+    ]
+  },
+  "https://github.com/advisories/GHSA-698v-4r3x-3vcv": {
+    "source": 1242624,
+    "name": "vite",
+    "dependency": "vite",
+    "title": "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+    "url": "https://github.com/advisories/GHSA-698v-4r3x-3vcv",
+    "severity": "moderate",
+    "cwe": [
+      "CWE-78"
+    ],
+    "cvss": {
+      "score": 0,
+      "vectorString": null
+    },
+    "range": ">=8.0.0 <=8.1.5",
+    "paths": [
+      "node_modules/vite"
+    ]
+  },
+  "https://github.com/advisories/GHSA-r825-w8mm-5pxw": {
+    "source": 1242653,
+    "name": "vite",
+    "dependency": "vite",
+    "title": "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+    "url": "https://github.com/advisories/GHSA-r825-w8mm-5pxw",
+    "severity": "moderate",
+    "cwe": [
+      "CWE-88"
+    ],
+    "cvss": {
+      "score": 0,
+      "vectorString": null
+    },
+    "range": ">=8.0.0 <=8.1.5",
+    "paths": [
+      "node_modules/vite"
+    ]
+  },
+  "https://github.com/advisories/GHSA-587h-7wmj-h5pm": {
+    "source": 1242660,
+    "name": "vite",
+    "dependency": "vite",
+    "title": "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+    "url": "https://github.com/advisories/GHSA-587h-7wmj-h5pm",
+    "severity": "high",
+    "cwe": [
+      "CWE-77"
+    ],
+    "cvss": {
+      "score": 0,
+      "vectorString": null
+    },
+    "range": ">=8.0.0 <=8.1.5",
+    "paths": [
+      "node_modules/vite"
+    ]
+  }
+}
+OSV [
+  {
+    "source": {
+      "path": "/home/runner/work/onSkin/onSkin/package-lock.json",
+      "type": "lockfile"
+    },
+    "package": {
+      "name": "braces",
+      "version": "3.0.3",
+      "ecosystem": "npm"
+    },
+    "vulnerabilities": [
+      {
+        "id": "GHSA-vfj7-8cjw-p6xm",
+        "summary": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+        "affected": [
+          {
+            "database_specific": {
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/09/GHSA-vfj7-8cjw-p6xm/GHSA-vfj7-8cjw-p6xm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "braces",
+              "purl": "pkg:npm/braces"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "last_affected": "3.0.3"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": {
+      "path": "/home/runner/work/onSkin/onSkin/package-lock.json",
+      "type": "lockfile"
+    },
+    "package": {
+      "name": "node-forge",
+      "version": "1.4.0",
+      "ecosystem": "npm"
+    },
+    "vulnerabilities": [
+      {
+        "id": "GHSA-86w9-cpqp-85rv",
+        "summary": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+        "affected": [
+          {
+            "database_specific": {
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/09/GHSA-86w9-cpqp-85rv/GHSA-86w9-cpqp-85rv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "node-forge",
+              "purl": "pkg:npm/node-forge"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "last_affected": "1.4.0"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": {
+      "path": "/home/runner/work/onSkin/onSkin/package-lock.json",
+      "type": "lockfile"
+    },
+    "package": {
+      "name": "vite",
+      "version": "8.1.3",
+      "ecosystem": "npm"
+    },
+    "vulnerabilities": [
+      {
+        "id": "GHSA-587h-7wmj-h5pm",
+        "summary": "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+        "affected": [
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 2.14.1",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "launch-editor",
+              "purl": "pkg:npm/launch-editor"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "2.14.2"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.3.2",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.3.0"
+                  },
+                  {
+                    "fixed": "8.3.3"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.2.3",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.2.0"
+                  },
+                  {
+                    "fixed": "8.2.4"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.1.5",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.0.0"
+                  },
+                  {
+                    "fixed": "8.1.6"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 7.3.6",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "7.0.0"
+                  },
+                  {
+                    "fixed": "7.3.7"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 6.4.3",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "6.4.4"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 1.0.0",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-587h-7wmj-h5pm/GHSA-587h-7wmj-h5pm.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite-plus",
+              "purl": "pkg:npm/vite-plus"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "1.1.0"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "GHSA-698v-4r3x-3vcv",
+        "summary": "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+        "affected": [
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 2.14.1",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "launch-editor",
+              "purl": "pkg:npm/launch-editor"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "2.14.2"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.3.2",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.3.0"
+                  },
+                  {
+                    "fixed": "8.3.3"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.2.3",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.2.0"
+                  },
+                  {
+                    "fixed": "8.2.4"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.1.5",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.0.0"
+                  },
+                  {
+                    "fixed": "8.1.6"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 7.3.6",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "7.0.0"
+                  },
+                  {
+                    "fixed": "7.3.7"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 6.4.3",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "6.4.4"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 1.0.0",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-698v-4r3x-3vcv/GHSA-698v-4r3x-3vcv.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite-plus",
+              "purl": "pkg:npm/vite-plus"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "1.1.0"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "GHSA-r825-w8mm-5pxw",
+        "summary": "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+        "affected": [
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 2.14.1",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "launch-editor",
+              "purl": "pkg:npm/launch-editor"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "2.14.2"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.3.2",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.3.0"
+                  },
+                  {
+                    "fixed": "8.3.3"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.2.3",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.2.0"
+                  },
+                  {
+                    "fixed": "8.2.4"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 8.1.5",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "8.0.0"
+                  },
+                  {
+                    "fixed": "8.1.6"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 7.3.6",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "7.0.0"
+                  },
+                  {
+                    "fixed": "7.3.7"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 6.4.3",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite",
+              "purl": "pkg:npm/vite"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "6.4.4"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          },
+          {
+            "database_specific": {
+              "last_known_affected_version_range": "<= 1.0.0",
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-r825-w8mm-5pxw/GHSA-r825-w8mm-5pxw.json"
+            },
+            "package": {
+              "ecosystem": "npm",
+              "name": "vite-plus",
+              "purl": "pkg:npm/vite-plus"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "0"
+                  },
+                  {
+                    "fixed": "1.1.0"
+                  }
+                ],
+                "type": "SEMVER"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": {
+      "path": "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "type": "lockfile"
+    },
+    "package": {
+      "name": "certifi",
+      "version": "2026.10.18",
+      "ecosystem": "PyPI"
+    },
+    "vulnerabilities": [
+      {
+        "id": "PYSEC-2026-4320",
+        "summary": "certifi bundles emSign root CAs with compromised intermediate CA keys",
+        "affected": [
+          {
+            "database_specific": {
+              "source": "https://github.com/pypa/advisory-database/blob/main/vulns/certifi/PYSEC-2026-4320.yaml"
+            },
+            "package": {
+              "ecosystem": "PyPI",
+              "name": "certifi",
+              "purl": "pkg:pypi/certifi"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "2019.03.09"
+                  },
+                  {
+                    "fixed": "2026.10.19"
+                  }
+                ],
+                "type": "ECOSYSTEM"
+              }
+            ],
+            "versions": [
+              "2019.11.28",
+              "2019.3.9",
+              "2019.6.16",
+              "2019.9.11",
+              "2020.11.8",
+              "2020.12.5",
+              "2020.4.5",
+              "2020.4.5.1",
+              "2020.4.5.2",
+              "2020.6.20",
+              "2021.10.8",
+              "2021.5.30",
+              "2022.12.7",
+              "2022.5.18",
+              "2022.5.18.1",
+              "2022.6.15",
+              "2022.6.15.1",
+              "2022.6.15.2",
+              "2022.9.14",
+              "2022.9.24",
+              "2023.11.17",
+              "2023.5.7",
+              "2023.7.22",
+              "2024.12.14",
+              "2024.2.2",
+              "2024.6.2",
+              "2024.7.4",
+              "2024.8.30",
+              "2025.1.31",
+              "2025.10.5",
+              "2025.11.12",
+              "2025.4.26",
+              "2025.6.15",
+              "2025.7.14",
+              "2025.7.9",
+              "2025.8.3",
+              "2026.1.4",
+              "2026.10.18",
+              "2026.2.25",
+              "2026.4.22",
+              "2026.5.20",
+              "2026.6.17",
+              "2026.7.22"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "GHSA-6q48-6c7w-9gw2",
+        "summary": "certifi bundles emSign root CAs with compromised intermediate CA keys",
+        "affected": [
+          {
+            "database_specific": {
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-6q48-6c7w-9gw2/GHSA-6q48-6c7w-9gw2.json"
+            },
+            "package": {
+              "ecosystem": "PyPI",
+              "name": "certifi",
+              "purl": "pkg:pypi/certifi"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "2019.03.09"
+                  },
+                  {
+                    "fixed": "2026.10.19"
+                  }
+                ],
+                "type": "ECOSYSTEM"
+              }
+            ],
+            "versions": [
+              "2019.11.28",
+              "2019.3.9",
+              "2019.6.16",
+              "2019.9.11",
+              "2020.11.8",
+              "2020.12.5",
+              "2020.4.5",
+              "2020.4.5.1",
+              "2020.4.5.2",
+              "2020.6.20",
+              "2021.10.8",
+              "2021.5.30",
+              "2022.12.7",
+              "2022.5.18",
+              "2022.5.18.1",
+              "2022.6.15",
+              "2022.6.15.1",
+              "2022.6.15.2",
+              "2022.9.14",
+              "2022.9.24",
+              "2023.11.17",
+              "2023.5.7",
+              "2023.7.22",
+              "2024.12.14",
+              "2024.2.2",
+              "2024.6.2",
+              "2024.7.4",
+              "2024.8.30",
+              "2025.1.31",
+              "2025.10.5",
+              "2025.11.12",
+              "2025.4.26",
+              "2025.6.15",
+              "2025.7.14",
+              "2025.7.9",
+              "2025.8.3",
+              "2026.1.4",
+              "2026.10.18",
+              "2026.2.25",
+              "2026.4.22",
+              "2026.5.20",
+              "2026.6.17",
+              "2026.7.22"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": {
+      "path": "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "type": "lockfile"
+    },
+    "package": {
+      "name": "mcp",
+      "version": "1.29.0",
+      "ecosystem": "PyPI"
+    },
+    "vulnerabilities": [
+      {
+        "id": "GHSA-84m7-p3x7-pcfv",
+        "summary": "MCP Python SDK: Unbounded Session Accumulation in StreamableHTTP Transport Enables Resource Exhaustion",
+        "affected": [
+          {
+            "database_specific": {
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+            },
+            "package": {
+              "ecosystem": "PyPI",
+              "name": "mcp",
+              "purl": "pkg:pypi/mcp"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "1.8.0"
+                  },
+                  {
+                    "fixed": "1.30.0"
+                  }
+                ],
+                "type": "ECOSYSTEM"
+              }
+            ],
+            "versions": [
+              "1.10.0",
+              "1.10.1",
+              "1.11.0",
+              "1.12.0",
+              "1.12.1",
+              "1.12.2",
+              "1.12.3",
+              "1.12.4",
+              "1.13.0",
+              "1.13.1",
+              "1.14.0",
+              "1.14.1",
+              "1.15.0",
+              "1.16.0",
+              "1.17.0",
+              "1.18.0",
+              "1.19.0",
+              "1.20.0",
+              "1.21.0",
+              "1.21.1",
+              "1.21.2",
+              "1.22.0",
+              "1.23.0",
+              "1.23.1",
+              "1.23.2",
+              "1.23.3",
+              "1.24.0",
+              "1.25.0",
+              "1.26.0",
+              "1.27.0",
+              "1.27.1",
+              "1.27.2",
+              "1.28.0",
+              "1.28.1",
+              "1.29.0",
+              "1.29.1",
+              "1.8.0",
+              "1.8.1",
+              "1.9.0",
+              "1.9.1",
+              "1.9.2",
+              "1.9.3",
+              "1.9.4"
+            ]
+          },
+          {
+            "database_specific": {
+              "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+            },
+            "package": {
+              "ecosystem": "PyPI",
+              "name": "mcp",
+              "purl": "pkg:pypi/mcp"
+            },
+            "ranges": [
+              {
+                "events": [
+                  {
+                    "introduced": "2.0.0"
+                  },
+                  {
+                    "fixed": "2.2.0"
+                  }
+                ],
+                "type": "ECOSYSTEM"
+              }
+            ],
+            "versions": [
+              "2.0.0",
+              "2.0.1",
+              "2.1.0",
+              "2.1.1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+SOURCE scripts/phase2/local-supabase-reset.mjs 4a5a58b3547c82e8a61fe17ba20ac970b26aa9d2721e713be583bebd90a6a920
+SOURCE supabase/tests/database/schema_contract.test.sql 037c7e5896412872019381461b28e7cf5528e80ede97ae2832d76c41014b132d
+SOURCE supabase/tests/database/routine_completion_sync_bridge.test.sql b976083dbc00cf5041b3aafe1e537198c60edc3d6c18e629823eaaa0a5b4cd7a
+SOURCE supabase/migrations/20260726000068_routine_adherence_authority.sql 37bfd190919f62e63f4e2a61580c5cfe96dea30af72f80259b8d3e9a704f8885
+SOURCE supabase/migrations/20260726000069_routine_completion_sync_bridge.sql a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c
+FROZEN INVENTORY 97 20261010000081 5ee03b2032781512fe2ab893e46a3f28daf68ea55ba7b800393265256898c3d6
+LOCK 474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223

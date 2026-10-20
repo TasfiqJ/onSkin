@@ -1,0 +1,2 @@
+# Scope of acceptance
+M1-02 is accepted at `2de9ef75a1a1d539b0520ca22160abd6171c9c3b` / `fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0` for retained client source and available synthetic local/browser continuity, including the three repaired findings. Overall baseline source/CI is not green. Native/provider/paid-positive/expert/research/commercial/release axes remain unadmitted. Undo remains unavailable under ADR038, and its later additive correction requirement is preserved. No main promotion or protected source GO.
