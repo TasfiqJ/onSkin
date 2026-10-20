@@ -982,8 +982,14 @@ async function crossOwnerFlow(client, products) {
   await clickByText(client, 'Shelf');
   await waitForText(client, bName);
   const bShelf = await captureStep(client, 'CO-09-b-usable-shelf', { assertClean: false });
-  assertInteractiveControl(bShelf, bName);
-  await clickByText(client, bName, { exact: false });
+  assert(new URL(bShelf.url).pathname === '/shelf', 'B product interaction must target Shelf');
+  // The mounted Today tab may contain a same-name checkbox. Bind the visible
+  // Shelf product button by its complete accessible label, then hit-test it.
+  const bProduct = bShelf.controls.find((control) =>
+    control.role === 'button' && control.label.startsWith(`${bName},`));
+  assert(bProduct, 'B Shelf product button is unavailable');
+  assertInteractiveControl(bShelf, bProduct.label);
+  await clickByText(client, bProduct.label);
   await scrollTextIntoView(client, 'Edit opened date');
   const bDetail = await captureStep(client, 'CO-09b-b-product-detail', { assertClean: false });
   assertInteractiveControl(bDetail, 'Edit opened date');
