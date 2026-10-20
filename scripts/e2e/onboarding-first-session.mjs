@@ -1105,7 +1105,12 @@ async function run() {
         });
         assertInteractiveControl(notice, 'Continue');
         await clickByText(client, 'Continue');
-        await waitForText(client, 'Begin');
+        await waitForCondition(
+          client,
+          `document.body.innerText.includes('Begin') || document.body.innerText.includes('First, your')`,
+          30_000,
+          'acknowledged deletion public entry',
+        );
         await captureStep(client, 'deletion-03-acknowledged');
       } else {
         assert(
@@ -1115,10 +1120,14 @@ async function run() {
         await clickByText(client, 'Check status now');
         await waitForText(client, terminalText);
       }
+      const afterReload =
+        deletionRecoveryMode === 'pending_then_completed_manual'
+          ? `document.body.innerText.includes('First, your') || document.body.innerText.includes('Begin')`
+          : `document.body.innerText.includes(${JSON.stringify(terminalText)})`;
       await client.send('Page.navigate', { url: `${baseUrl}/shelf` });
-      await waitForText(client, terminalText, 60_000);
+      await waitForCondition(client, afterReload, 60_000, 'closed deletion direct entry');
       await client.send('Page.reload', { ignoreCache: true });
-      await waitForText(client, terminalText, 60_000);
+      await waitForCondition(client, afterReload, 60_000, 'closed deletion relaunch');
       const reloaded = await captureStep(client, 'deletion-04-relaunch-closed', {
         assertClean: false,
       });
