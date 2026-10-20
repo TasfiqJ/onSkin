@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-20T17:14:42.097Z",
+  "generatedAt": "2026-10-20T19:12:38.542Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "56c4b2d6ea3684a49c3fe0d765f10df3a82b8823",
-  "gitStatus": "",
+  "gitSha": "8a485b2e462b041aa9b0a54570595cbcf04bad5e",
+  "gitStatus": "M .gitattributes\n M docs/USER_FLOW_TREE.md\n M docs/brain/README.md\n M docs/brain/active.json\n M scripts/brain/m1_profile.py\n M scripts/brain/test_m1_profile.py\n M scripts/brain/test_m1_report_cli.py",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 414,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -2218,8 +2218,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 496597,
-          "sha256": "2462ed9abd590e732741a61f3f2bcb0542ded04cfdb70128e91e41050ab5203f"
+          "bytes": 497643,
+          "sha256": "13d6110508b530af15b51eb6e484d12e8c055ff7592826660a32993cb91791c1"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -3088,5 +3088,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
+  ]
 }
