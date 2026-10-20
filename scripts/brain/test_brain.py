@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 
 import brain
@@ -30,6 +31,10 @@ class InstalledControls(unittest.TestCase):
                     shutil.copyfile(p, dest)
                 continue
             shutil.copytree(src, self.root / folder)
+        # Claims from the real working session are not executions in a disposable fixture.
+        current = brain.load(self.root, 'docs/brain/current.json')
+        current['observations'] = []
+        self.save('docs/brain/current.json', current)
 
     def save(self, name, data):
         (self.root / name).write_bytes(brain.encoded(data))
@@ -149,6 +154,12 @@ class InstalledControls(unittest.TestCase):
 
     def report_fixture(self):
         subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        common = Path(brain.git(brain.ROOT, 'rev-parse', '--path-format=absolute', '--git-common-dir')) / 'objects'
+        alternate = self.root / '.git/objects/info/alternates'
+        alternate.parent.mkdir(parents=True, exist_ok=True)
+        alternate.write_bytes((common.as_posix() + '\n').encode('utf-8'))
+        # Read actual immutable base objects, but create the fixture commit only in its own Git store.
+        subprocess.run(['git', '-C', str(self.root), 'update-ref', 'HEAD', brain.REPAIR_BASE], check=True)
         subprocess.run(['git', '-C', str(self.root), 'add', '.'], check=True, capture_output=True)
         subprocess.run(['git', '-C', str(self.root), '-c', 'user.name=Synthetic Fixture',
                         '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Synthetic fixture only'], check=True)
@@ -158,9 +169,20 @@ class InstalledControls(unittest.TestCase):
         log = 'docs/brain/checkpoints/M0-02/synthetic.log'
         (self.root / log).parent.mkdir(parents=True, exist_ok=True)
         (self.root / log).write_bytes(b'SYNTHETIC TEST FIXTURE ONLY\n')
-        report = {'schema_version': 2, 'task_id': 'M0-02', 'branch': 'stage/m0-baseline',
+        receipt_path = 'docs/brain/checkpoints/M0-02/synthetic-execution.json'
+        receipt = {'schema_version': 1, 'kind': 'LOCAL_EXECUTION', 'claim_origin': 'CODEX_REPORTED_EXECUTION',
+                   'command': 'synthetic', 'working_directory': 'synthetic', 'environment': 'fixture',
+                   'source_commit': sha, 'source_tree': tree, 'status': 'PASS', 'exit_code': 0,
+                   'output': {'path': log, 'sha256': brain.digest((self.root / log).read_bytes())},
+                   'counts': {'passed': 1, 'failed': 0, 'skipped': 0}}
+        self.save(receipt_path, receipt)
+        report = {'schema_version': 3, 'task_id': 'M0-02', 'branch': 'stage/m0-baseline',
+                  'iteration': 'FIX-01', 'last_brain_verdict': 'FIX_REQUIRED',
+                  'repair_base': {'commit': brain.REPAIR_BASE, 'tree': brain.git(self.root, 'rev-parse', brain.REPAIR_BASE + '^{tree}')},
                   'base_commit': brain.snapshot(self.root, 'TASK_MANIFEST.json')['base_commit'],
-                  'original_stage_base': 'b' * 40, 'observed_main': snapshot, 'implementation_snapshot': snapshot,
+                  'original_stage_base': brain.ORIGINAL_BASE,
+                  'observed_main': {'commit': brain.ORIGINAL_BASE, 'tree': brain.git(self.root, 'rev-parse', brain.ORIGINAL_BASE + '^{tree}')},
+                  'implementation_snapshot': snapshot,
                   'delivery': {'ref': 'refs/heads/stage/m0-baseline', 'resolve_via': 'git ls-remote origin refs/heads/stage/m0-baseline',
                                'last_observed_pushed_snapshot': snapshot, 'status': 'PUSH_BLOCKED'},
                   'submission_status': 'SUBMITTED_REVIEW_REQUIRED', 'accepted_by_brain': False, 'admission': 'NONE',
@@ -168,8 +190,8 @@ class InstalledControls(unittest.TestCase):
                   'tests': [{'command': 'synthetic', 'working_directory': 'synthetic', 'environment': 'fixture',
                              'snapshot_commit': sha, 'snapshot_tree': tree, 'status': 'PASS', 'exit_code': 0,
                              'evidence_class': 'INDEPENDENTLY_REPRODUCED', 'axis': 'source', 'count': 1,
-                             'artifact': log, 'limitations': 'Synthetic contract test'}],
-                  'ci': [], 'evidence_artifacts': [{'path': log, 'sha256': brain.digest((self.root / log).read_bytes()), 'scope': 'synthetic'}],
+                             'artifact': receipt_path, 'limitations': 'Synthetic contract test'}],
+                  'ci': [], 'evidence_artifacts': [{'path': n, 'sha256': brain.digest((self.root / n).read_bytes()), 'scope': 'synthetic'} for n in [log, receipt_path]],
                   'blockers': ['Synthetic only'], 'rollback': 'Disposable test fixture',
                   'context_health': {'estimate': 'unknown', 'compaction_observed': False, 'accepted_tasks_in_instance': 0,
                                      'handoff_needed': False, 'notes': 'Fixture only'}, 'handoff_file': 'ONSKIN_BRAIN_HANDOFF.txt'}
@@ -193,10 +215,232 @@ class InstalledControls(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'artifact hash'):
             brain.validate_report(self.root, path)
         self.save(path, report)
-        target = self.root / 'docs/brain/contracts/completion-report.v2.schema.json'
+        target = self.root / 'docs/brain/contracts/completion-report.v3.schema.json'
         target.write_bytes(target.read_bytes() + b' ')
         with self.assertRaisesRegex(ValueError, 'Implementation differs'):
             brain.validate_report(self.root, path)
+
+    def cli(self, *args):
+        return subprocess.run([sys.executable, '-B', str(brain.ROOT / 'scripts/brain/brain.py'),
+                               '--root', str(self.root), *args], capture_output=True, text=True, encoding='utf-8')
+
+    def test_f1_observation_cli_positive_and_bound_negative_cases(self):
+        report = self.report_fixture()
+        test = report['tests'][0]
+        path = 'docs/brain/current.json'
+        current = brain.load(self.root, path)
+        execution = dict(test, id='SYNTHETIC-F1', source_commit=test['snapshot_commit'],
+                         source_tree=test['snapshot_tree'], admission='NONE',
+                         sha256=brain.digest(brain.read(self.root, test['artifact'])))
+        current['observations'] = [execution]
+        self.save(path, current)
+        result = self.cli('validate')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        variants = [({'id': 'A1', 'status': 'PASS', 'evidence_class': 'INDEPENDENTLY_REPRODUCED', 'axis': 'source',
+                      'exit_code': 0, 'admission': 'NONE'}, 'Missing bound execution'),
+                    (dict(execution, exit_code=False), 'exit must be an integer'),
+                    (dict(execution, exit_code='0'), 'exit must be an integer'),
+                    (dict(execution, sha256='0' * 64), 'receipt hash'),
+                    (dict(execution, command='changed-command'), 'receipt binding'),
+                    (dict(execution, source_tree='0' * 40), 'commit/tree mismatch'),
+                    (dict(execution, exit_code=1), 'outcome/exit mismatch'),
+                    (dict(execution, status='NOT_RUN'), 'Invalid execution classification')]
+        for entry, reason in variants:
+            self.save(path, dict(current, observations=[entry]))
+            result = self.cli('validate')
+            with self.subTest(reason=reason):
+                self.assertEqual(result.returncode, 1, result.stdout)
+                self.assertIn(reason, result.stderr)
+        # A hash-matched receipt cannot disguise failed/skipped output or a boolean exit.
+        self.save(path, current)
+        receipt_path = execution['artifact']
+        original = brain.load(self.root, receipt_path)
+        for update, reason in [(dict(exit_code=False), 'receipt binding'),
+                               (dict(counts={'passed': 0, 'failed': 0, 'skipped': 1}), 'cannot establish PASS'),
+                               (dict(output={'path': original['output']['path'], 'sha256': '0' * 64}), 'output hash')]:
+            self.save(receipt_path, dict(original, **update))
+            entry = dict(execution, sha256=brain.digest(brain.read(self.root, receipt_path)))
+            self.save(path, dict(current, observations=[entry]))
+            result = self.cli('validate')
+            with self.subTest(update=update):
+                self.assertEqual(result.returncode, 1)
+                self.assertIn(reason, result.stderr)
+
+    def ci_fixture(self, report):
+        row = {'head_commit': report['implementation_snapshot']['commit'], 'repository': 'TasfiqJ/onSkin',
+               'name': 'SYNTHETIC CI ONLY', 'workflow_id': 123, 'run_id': 101, 'status': 'completed',
+               'conclusion': 'failure', 'scope': 'SYNTHETIC OFFLINE CONSISTENCY, NOT PROVIDER AUTHENTICITY',
+               'evidence_class': 'INDEPENDENTLY_OBSERVED', 'artifact': 'docs/brain/checkpoints/M0-02/synthetic-ci.json'}
+        report['ci'] = [row]
+        observation = {'schema_version': 1, 'kind': 'CI_OBSERVATION', 'claim_origin': 'CODEX_OBSERVED_PROVIDER_METADATA',
+                       'repository': 'TasfiqJ/onSkin', 'evidence_class': 'INDEPENDENTLY_OBSERVED',
+                       'recorded_at_utc': '2026-10-20T00:00:00Z', 'runs': [dict(row)]}
+        self.save(row['artifact'], observation)
+        report['evidence_artifacts'].append({'path': row['artifact'], 'sha256': brain.digest(brain.read(self.root, row['artifact'])), 'scope': 'synthetic'})
+        return observation
+
+    def test_f2_report_cli_ci_relationships_and_git_identities(self):
+        report = self.report_fixture()
+        observation = self.ci_fixture(report)
+        path = 'docs/brain/checkpoints/M0-02/synthetic-v3.json'
+
+        def run(value, record=None):
+            if record is not None:
+                self.save(report['ci'][0]['artifact'], record)
+                for a in value['evidence_artifacts']:
+                    if a['path'] == report['ci'][0]['artifact']:
+                        a['sha256'] = brain.digest(brain.read(self.root, a['path']))
+            self.save(path, value)
+            return self.cli('report', path)
+
+        result = run(copy.deepcopy(report), observation)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        # Valid pending, skipped and cancelled observations remain available without green conclusions.
+        for status, conclusion in [('in_progress', 'pending'), ('completed', 'skipped'), ('completed', 'cancelled')]:
+            value, record = copy.deepcopy(report), copy.deepcopy(observation)
+            value['ci'][0].update(status=status, conclusion=conclusion)
+            record['runs'][0].update(status=status, conclusion=conclusion)
+            result = run(value, record)
+            self.assertEqual(result.returncode, 0, result.stderr)
+        for status, conclusion, reason in [('in_progress', 'success', 'Unfinished CI'), ('queued', 'failure', 'Unfinished CI'),
+                                            ('completed', 'pending', 'Completed CI')]:
+            value, record = copy.deepcopy(report), copy.deepcopy(observation)
+            value['ci'][0].update(status=status, conclusion=conclusion)
+            record['runs'][0].update(status=status, conclusion=conclusion)
+            result = run(value, record)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(reason, result.stderr)
+        for field, bad in [('head_commit', '0' * 40), ('run_id', 102), ('workflow_id', 124), ('name', 'different')]:
+            value = copy.deepcopy(report)
+            value['ci'][0][field] = bad
+            result = run(value, observation)
+            self.assertEqual(result.returncode, 1)
+            self.assertTrue('binding mismatch' in result.stderr or 'Missing/duplicate CI' in result.stderr, result.stderr)
+        value = copy.deepcopy(report)
+        value['ci'][0]['artifact'] = 'nonexistent.json'
+        result = run(value, observation)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('CI artifact is not declared', result.stderr)
+        value = copy.deepcopy(report)
+        result = run(value, {})
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Invalid structured CI observation', result.stderr)
+        value, record = copy.deepcopy(report), copy.deepcopy(observation)
+        value['ci'][0]['head_commit'] = record['runs'][0]['head_commit'] = '0' * 40
+        result = run(value, record)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Missing Git CI head', result.stderr)
+        for key, bad, reason in [('observed_main', {'commit': '0' * 40, 'tree': '0' * 40}, 'Missing Git observed_main'),
+                                 ('observed_main', dict(report['observed_main'], tree='0' * 40), 'commit/tree mismatch'),
+                                 ('original_stage_base', '0' * 40, 'Declared original/task/repair'),
+                                 ('base_commit', '0' * 40, 'Report task/base mismatch'),
+                                 ('repair_base', dict(report['repair_base'], tree='0' * 40), 'commit/tree mismatch')]:
+            value = copy.deepcopy(report)
+            value[key] = bad
+            result = run(value, observation)
+            with self.subTest(key=key, bad=bad):
+                self.assertEqual(result.returncode, 1)
+                self.assertIn(reason, result.stderr)
+        # A real existing commit with no parent is still not a valid measured stage descendant.
+        tree = report['implementation_snapshot']['tree']
+        unrelated = subprocess.check_output(['git', '-C', str(self.root), '-c', 'user.name=Synthetic Fixture',
+                                             '-c', 'user.email=fixture@example.invalid', 'commit-tree', tree],
+                                            input=b'Synthetic unrelated history\n').decode().strip()
+        value = copy.deepcopy(report)
+        value['implementation_snapshot'] = {'commit': unrelated, 'tree': tree}
+        result = run(value, observation)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Invalid ancestry: repair -> measured', result.stderr)
+        value = copy.deepcopy(report)
+        value['delivery']['last_observed_pushed_snapshot'] = report['repair_base']
+        result = run(value, observation)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Invalid ancestry: measured -> past pushed', result.stderr)
+        value = copy.deepcopy(report)
+        value['delivery']['last_observed_pushed_snapshot'] = {'commit': '0' * 40, 'tree': '0' * 40}
+        result = run(value, observation)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Missing Git Past pushed snapshot', result.stderr)
+
+    def test_f3_pack_cli_cannot_repoint_its_own_issuance(self):
+        output = Path(self.temp.name) / 'approved.zip'
+        result = self.cli('pack', '--task', 'M0-02', '--output', str(output))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(brain.digest(output.read_bytes()), 'b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547')
+        prefix = 'docs/brain/synthetic-unapproved'
+        folder = self.root / prefix
+        folder.mkdir(parents=True)
+        data = b'SYNTHETIC UNAPPROVED CONTENT. Not a Brain-issued task.\n'
+        (folder / 'UNAPPROVED.txt').write_bytes(data)
+        issue = {'task_id': 'M0-02', 'issued_by': 'onSkin Brain', 'max_input_bytes': 8192, 'synthetic_fixture': True,
+                 'files': [{'path': 'UNAPPROVED.txt', 'bytes': len(data), 'sha256': brain.digest(data)}]}
+        raw = brain.encoded(issue)
+        (folder / 'TASK_MANIFEST.json').write_bytes(raw)
+        rows = issue['files'] + [{'path': 'TASK_MANIFEST.json', 'bytes': len(raw), 'sha256': brain.digest(raw)}]
+        spec = brain.load(self.root, 'docs/brain/task-specs/M0-02.json')
+        spec.update(input_prefix=prefix, approval={'path': prefix + '/TASK_MANIFEST.json', 'sha256': brain.digest(raw)},
+                    max_input_bytes=8192, max_files=10,
+                    files=[{'source': prefix + '/' + r['path'], 'archive': r['path'], 'bytes': r['bytes'],
+                            'sha256': r['sha256'], 'code_reviewed': False} for r in rows])
+        self.save('docs/brain/task-specs/M0-02.json', spec)
+        output = Path(self.temp.name) / 'unapproved.zip'
+        result = self.cli('pack', '--task', 'M0-02', '--output', str(output))
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Spec cannot repoint anchored issuance', result.stderr)
+        self.assertFalse(output.exists())
+
+    def test_f4_real_dangling_mirror_file_and_existing_symlink_no_side_effects(self):
+        target = self.root / brain.GENERATED / 'compatibility.json'
+        before = target.read_bytes()
+        target.unlink()
+        outside = Path(self.temp.name) / 'outside.json'
+        try:
+            target.symlink_to(outside)
+        except OSError as exc:
+            self.skipTest('Real symbolic links unavailable: ' + str(exc))
+        result = self.cli('mirrors')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Linked mirror/output', result.stderr)
+        self.assertFalse(outside.exists())
+        outside.write_bytes(before)
+        result = self.cli('mirrors')
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(outside.read_bytes(), before)
+
+    def test_f4_hardlinked_mirror_rejected_without_modification(self):
+        target = self.root / brain.GENERATED / 'modules.csv'
+        outside = Path(self.temp.name) / 'hardlink.json'
+        os.link(target, outside)
+        before = outside.read_bytes()
+        earlier = self.root / brain.GENERATED / 'compatibility.json'
+        earlier.write_bytes(b'Preserve earlier destination on a later unsafe target\n')
+        result = self.cli('mirrors')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('hard-linked mirror', result.stderr)
+        self.assertEqual(outside.read_bytes(), before)
+        self.assertEqual(earlier.read_bytes(), b'Preserve earlier destination on a later unsafe target\n')
+
+    @unittest.skipUnless(os.name == 'nt', 'Windows junction test only')
+    def test_f4_dangling_and_existing_directory_junctions_do_not_create_targets(self):
+        mirrors = self.root / brain.GENERATED
+        backup = self.root / 'saved-mirrors'
+        mirrors.rename(backup)
+        outside = Path(self.temp.name) / 'outside-directory'
+        result = subprocess.run(['cmd', '/c', 'mklink', '/J', str(mirrors), str(outside)], capture_output=True)
+        if result.returncode:
+            self.skipTest('Dangling junction creation unavailable')
+        self.addCleanup(lambda: os.rmdir(mirrors) if mirrors.lstat().st_file_attributes & 0x400 else None)
+        result = self.cli('mirrors')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('Linked mirror/output', result.stderr)
+        self.assertFalse(outside.exists())
+        outside.mkdir()
+        sentinel = outside / 'sentinel.txt'
+        sentinel.write_bytes(b'unchanged')
+        result = self.cli('mirrors')
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(list(outside.iterdir()), [sentinel])
+        self.assertEqual(sentinel.read_bytes(), b'unchanged')
 
 
 class SyntheticPackaging(unittest.TestCase):
@@ -207,6 +451,10 @@ class SyntheticPackaging(unittest.TestCase):
         self.root = self.base / 'source'
         self.files = {'TASK.md': b'SYNTHETIC TEST ONLY. No real task approval.\n',
                       'sample.ts': b'// Synthetic reviewed text code\nexport const example = 1;\n'}
+        # Test-only fixed-code authority injection. The production CLI never loads this from a spec.
+        patch = mock.patch.dict(brain.ISSUANCES, {}, clear=True)
+        patch.start()
+        self.addCleanup(patch.stop)
         self.issue()
 
     def issue(self, files=None):
@@ -222,6 +470,7 @@ class SyntheticPackaging(unittest.TestCase):
         issue = {'task_id': 'TEST-01', 'issued_by': 'onSkin Brain', 'files': records, 'max_input_bytes': 8192,
                  'synthetic_fixture': True}
         raw = brain.encoded(issue)
+        brain.ISSUANCES['TEST-01'] = {'path': 'inputs/TASK_MANIFEST.json', 'sha256': brain.digest(raw), 'input_prefix': 'inputs'}
         target = self.root / 'inputs/TASK_MANIFEST.json'
         target.write_bytes(raw)
         records += [{'path': 'TASK_MANIFEST.json', 'bytes': len(raw), 'sha256': brain.digest(raw)}]
@@ -271,7 +520,7 @@ class SyntheticPackaging(unittest.TestCase):
         (self.root / 'docs/brain/current.json').write_bytes(brain.encoded({'task_id': 'OTHER-01', 'active_writers': 1, 'next_task': None}))
         with self.assertRaises(ValueError):
             brain.package_data(self.root, 'TEST-01')
-        with self.assertRaises(OSError):
+        with self.assertRaisesRegex(ValueError, 'anchored task issuance'):
             brain.package_data(self.root, 'UNKNOWN-01')
 
     def test_hash_length_approval_and_allowlist_tampering(self):
@@ -323,6 +572,20 @@ class SyntheticPackaging(unittest.TestCase):
             brain.package_data(self.root, 'TEST-01')
         self.issue({'a.txt': b'a' * (brain.HARD_BYTES + 1)})
         with self.assertRaises(ValueError):
+            brain.package_data(self.root, 'TEST-01')
+
+    def test_allowlist_and_bound_booleans_cannot_stand_in_for_integers(self):
+        self.issue({'a.txt': b'a'})
+        self.spec(lambda d: d['files'][0].update(bytes=True))
+        with self.assertRaisesRegex(ValueError, 'Invalid allowlist field types'):
+            brain.package_data(self.root, 'TEST-01')
+        self.issue({'a.txt': b'a'})
+        self.spec(lambda d: d['files'][0].update(code_reviewed=0))
+        with self.assertRaisesRegex(ValueError, 'Invalid allowlist field types'):
+            brain.package_data(self.root, 'TEST-01')
+        self.issue({'a.txt': b'a'})
+        self.spec(lambda d: d.update(max_files=True))
+        with self.assertRaisesRegex(ValueError, 'Context bounds must be integers'):
             brain.package_data(self.root, 'TEST-01')
 
     def test_output_inside_input_and_overwrite_rejected(self):
@@ -409,7 +672,7 @@ class ReportContracts(unittest.TestCase):
             brain.schema_check({}, {'allOf': []})
 
     def test_versioned_report_rejects_legacy_shape_and_self_acceptance(self):
-        schema = brain.load(brain.ROOT, 'docs/brain/contracts/completion-report.v2.schema.json')
+        schema = brain.load(brain.ROOT, 'docs/brain/contracts/completion-report.v3.schema.json')
         with self.assertRaises(ValueError):
             brain.schema_check({'head_commit': 'a' * 40, 'head_tree': 'b' * 40}, schema)
         with self.assertRaises(ValueError):

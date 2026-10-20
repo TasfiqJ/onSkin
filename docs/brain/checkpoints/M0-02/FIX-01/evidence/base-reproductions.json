@@ -1,0 +1,33 @@
+[
+  {
+    "case": "F1-0",
+    "exit": 0,
+    "stdout": "PASS: immutable inputs, identities, dependencies, closed state and generated mirrors\r\n",
+    "scope": "Disposable fixture; no actual execution evidence"
+  },
+  {
+    "case": "F1-False",
+    "exit": 0,
+    "stdout": "PASS: immutable inputs, identities, dependencies, closed state and generated mirrors\r\n",
+    "scope": "Disposable fixture; no actual execution evidence"
+  },
+  {
+    "case": "F2-CI",
+    "exit": 0,
+    "stdout": "PASS: report v2; measured tests are separate from live delivery ref\r\n",
+    "scope": "Synthetic report only"
+  },
+  {
+    "case": "F2-Git",
+    "exit": 0,
+    "stdout": "PASS: report v2; measured tests are separate from live delivery ref\r\n",
+    "scope": "Synthetic report only"
+  },
+  {
+    "case": "F3-repointed-approval",
+    "exit": 0,
+    "stdout": "{\r\n  \"task_id\": \"M0-02\",\r\n  \"files\": 3,\r\n  \"input_bytes\": 331,\r\n  \"archive_bytes\": 1208,\r\n  \"sha256\": \"b516a329f8fdcc803d75135c85e2a3cf352c82fcdc6fcf4ebaf26ae61ded3229\"\r\n}\r\n",
+    "unapproved_output_created": true,
+    "scope": "Disposable synthetic input only"
+  }
+]

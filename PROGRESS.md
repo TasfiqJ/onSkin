@@ -7914,3 +7914,8 @@ verification and exact-source review remain required before any further push.
 ## M0-02 — additive V2 planning controls (2026-10-20)
 
 The adopted planning entrypoint is [docs/v2/README.md](docs/v2/README.md); durable approved Brain state and Codex observations are indexed in [docs/brain/README.md](docs/brain/README.md). M0-02 is submitted for independent review, not self-accepted. Runtime/protected/external statuses are unchanged; the baseline remains blocked. Detailed measured checks and submission live under docs/brain/checkpoints/M0-02. No M1 work is issued.
+
+
+## M0-02 / FIX-01 (2026-10-20)
+
+Brain REVIEW-01 is FIX_REQUIRED. Repair scope is governance evidence, CI/Git bindings, anchored task issuance and mirror write containment only. Versioned review: docs/brain/reviews/M0-02/REVIEW-01; separate repair evidence/report: docs/brain/checkpoints/M0-02/FIX-01. Original submitted report/inputs/state are preserved. No runtime, protected gate, M1 or main promotion is authorized.

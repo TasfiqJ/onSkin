@@ -2,9 +2,11 @@
 """Standalone M0 planning controls. Python 3.9+, standard library, no network/writes to runtime."""
 import argparse
 import csv
+import datetime
 import hashlib
 import io
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
@@ -17,6 +19,13 @@ INPUT = 'docs/v2/source-inputs'
 STATE = 'docs/brain/state'
 GENERATED = 'docs/v2/mirrors'
 MANIFEST_HASH = 'fd04a4fe643949b994ab01697cf48fb2894da805951f7389c76aa770b0972957'
+REVIEW = 'docs/brain/reviews/M0-02/REVIEW-01'
+REPAIR_INPUT = 'docs/brain/checkpoints/M0-02/FIX-01/inputs'
+REPAIR_MANIFEST_HASH = '5778db7e2a1f6eb8b76018c44f110f40047ca867eb9c74facf294bddeddd8e35'
+ISSUANCES = {'M0-02': {'path': INPUT + '/TASK_MANIFEST.json', 'sha256': MANIFEST_HASH, 'input_prefix': INPUT}}
+ORIGINAL_BASE = 'bbc28dc3d1f945191a81be56945b8bda7bb6ef73'
+TASK_BASE = 'b9a6b093f392ced340c156f2e7dcaefc72ed58e1'
+REPAIR_BASE = 'da9fa04759164b402ee3b2abd1c80e14261614fb'
 CLASSES = ['SOURCE_REPORTED', 'INDEPENDENTLY_OBSERVED', 'INDEPENDENTLY_REPRODUCED', 'DECIDED', 'UNKNOWN']
 AXES = ['source', 'integration', 'physical_device_surface', 'qualified_review', 'live_provider',
         'public_release', 'research', 'commercial']
@@ -82,10 +91,12 @@ def safe_file(root, name):
 
 def no_link_parents(path):
     for p in [path, *path.parents]:
-        if p.exists() or p.is_symlink():
+        try:
             info = p.lstat()
-            require(not stat.S_ISLNK(info.st_mode) and not (getattr(info, 'st_file_attributes', 0) & 0x400),
-                    'Linked destination directory')
+        except FileNotFoundError:
+            continue
+        require(not stat.S_ISLNK(info.st_mode) and not (getattr(info, 'st_file_attributes', 0) & 0x400),
+                'Linked mirror/output destination')
 
 
 def read(root, name):
@@ -174,6 +185,18 @@ def verify_inputs(root):
     return manifest
 
 
+def verify_review(root):
+    raw = read(root, REPAIR_INPUT + '/CONTEXT_MANIFEST.json')
+    require(digest(raw) == REPAIR_MANIFEST_HASH, 'Repair manifest anchor changed')
+    manifest = decode(raw)
+    for row in manifest['files']:
+        blob = read(root, REPAIR_INPUT + '/' + row['path'])
+        require(len(blob) == row['bytes'] and digest(blob) == row['sha256'], 'Repair input changed: ' + row['path'])
+        if row['path'].startswith('BRAIN_REVIEW/'):
+            require(blob == read(root, REVIEW + '/' + row['path'].split('/', 1)[1]), 'Approved review overlay changed')
+    return load(root, REVIEW + '/brain_state.json')
+
+
 def validate_data(root):
     contract = snapshot(root, 'IDENTITY_PRESERVATION_CONTRACT.json')
     features = snapshot(root, 'source_pack/02_Current_State/legacy_feature_crosswalk.json')
@@ -195,7 +218,7 @@ def validate_data(root):
     for row in gates:
         require(set(row['blockedBy']) <= set(contract['active_gate_ids']), 'Unknown blocking gate')
     original = snapshot(root, 'source_pack/05_Execution/roadmap.json')
-    current = load(root, STATE + '/roadmap.json')
+    current = load(root, REVIEW + '/roadmap.json')
     for roadmap in [original, current]:
         identities(roadmap['tasks'], contract['roadmap_task_ids'], ordered=True)
         graph(roadmap['tasks'])
@@ -294,39 +317,63 @@ def generated_views(root):
 
 def mirrors(root, check=True):
     verify_inputs(root)
-    for name, data in generated_views(root).items():
+    verify_review(root)
+    views = generated_views(root)
+    # Preflight every lexical destination, including dangling links, before any mkdir/open/write.
+    if not check:
+        for name in views:
+            relative_name(GENERATED + '/' + name)
+            target = root / GENERATED / name
+            no_link_parents(target)
+            try:
+                info = target.lstat()
+            except FileNotFoundError:
+                continue
+            require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'Nonregular/hard-linked mirror target')
+    for name, data in views.items():
         target = root / GENERATED / name
         if check:
             require(read(root, GENERATED + '/' + name) == data, 'Stale/altered generated mirror: ' + name)
         else:
-            require(not target.exists() or not target.is_symlink(), 'Generated destination link')
-            no_link_parents(target.parent)
             target.parent.mkdir(parents=True, exist_ok=True)
-            # Validate parents through the same filesystem guard before replacing existing bytes.
-            if not target.exists():
-                target.touch()
-            safe_file(root, GENERATED + '/' + name).write_bytes(data)
+            try:
+                info = target.lstat()
+            except FileNotFoundError:
+                # Exclusive creation rejects a link appearing after preflight; never touch a dangling target.
+                with target.open('xb') as handle:
+                    handle.write(data)
+                continue
+            safe_file(root, GENERATED + '/' + name)
+            descriptor = os.open(target, os.O_WRONLY | getattr(os, 'O_NOFOLLOW', 0))
+            with os.fdopen(descriptor, 'wb') as handle:
+                opened = os.fstat(handle.fileno())
+                require((opened.st_dev, opened.st_ino) == (info.st_dev, info.st_ino) and opened.st_nlink == 1,
+                        'Mirror target changed before write')
+                handle.truncate(0)
+                handle.write(data)
 
 
 def validate_state(root):
-    approved = load(root, STATE + '/brain_state.json')
+    approved = verify_review(root)
     current = load(root, 'docs/brain/current.json')
     require(set(current) == {'schema_version', 'task_id', 'submission_status', 'approved_state_version',
                             'accepted_tasks', 'accepted_scope', 'protected_source_go', 'main_promotion_authorized',
                             'incremental_spend_usd', 'active_writers', 'next_task', 'research_requests',
-                            'open_blocker_ids', 'proposal_expires_utc', 'axes', 'observations'}, 'Unknown/missing current-state field')
-    require(current['schema_version'] == 2 and current['task_id'] == approved['in_flight_task'] == 'M0-02', 'Unissued current task')
+                            'open_blocker_ids', 'proposal_expires_utc', 'axes', 'observations',
+                            'iteration', 'review_overlay', 'last_brain_verdict'}, 'Unknown/missing current-state field')
+    require(type(current['schema_version']) is int and current['schema_version'] == 3 and current['task_id'] == approved['in_flight_task'] == 'M0-02', 'Unissued current task')
+    require(current['iteration'] == 'FIX-01' and current['review_overlay'] == REVIEW and current['last_brain_verdict'] == 'FIX_REQUIRED', 'Invalid review/iteration authority')
     require(current['submission_status'] in ['IN_PROGRESS', 'SUBMITTED_REVIEW_REQUIRED', 'PARTIAL', 'BLOCKED'], 'Codex cannot accept task')
     require(current['accepted_tasks'] == approved['accepted_tasks'] == ['M0-01'], 'False task acceptance')
     require(current['accepted_scope'] == approved['accepted_task_scopes'], 'Diagnostic scope changed')
     require(current['approved_state_version'] == approved['state_version'], 'State version differs')
     require(current['protected_source_go'] is False and current['main_promotion_authorized'] is False and type(current['incremental_spend_usd']) is int and current['incremental_spend_usd'] == 0, 'Protected/spend upgrade')
     require(type(current['active_writers']) is int and current['active_writers'] == 1 and current['next_task'] is None and current['research_requests'] == [], 'Extra task/writer/research request')
-    ledger = load(root, STATE + '/ACCEPTANCE_LEDGER.json')
+    ledger = load(root, REVIEW + '/ACCEPTANCE_LEDGER.json')
     expected = dict(ledger['axes'])
     expected['physical_device_surface'] = expected.pop('physical_device')
     expected['research'] = {'single_scan': expected.pop('clinical_single_scan'), 'change': expected.pop('clinical_change')}
-    require(current['axes'] == expected and set(current['axes']) == set(AXES), 'Evidence axes upgraded/conflated')
+    require(current['axes'] == expected and set(current['axes']) == set(AXES) | {'governance_tooling'}, 'Evidence axes upgraded/conflated')
     require(current['open_blocker_ids'] == approved['open_blocker_ids'], 'Blocker silently closed')
     require(current['proposal_expires_utc'] == '2026-10-21T00:00:00Z', 'Expiry changed')
     require(read(root, 'docs/hugeToDo/launch-contract.json') == read(root, INPUT + '/reference_legacy/LAUNCH_CONTRACT_RAW.json'), 'Runtime launch contract changed')
@@ -335,9 +382,12 @@ def validate_state(root):
         require(entry['evidence_class'] in CLASSES and entry['axis'] in AXES, 'Unknown evidence class/axis')
         require(entry['status'] in ['OBSERVED', 'PASS', 'FAIL', 'NOT_RUN', 'BLOCKED', 'UNKNOWN'], 'Unknown observation outcome')
         require(entry.get('admission') == 'NONE', 'Observation cannot grant admission')
-        if entry['status'] == 'PASS':
-            require(entry['exit_code'] == 0 and entry['evidence_class'] == 'INDEPENDENTLY_REPRODUCED', 'Unrun check labeled PASS')
-        if entry.get('artifact'):
+        if entry['status'] in ['PASS', 'FAIL'] or entry['evidence_class'] == 'INDEPENDENTLY_REPRODUCED':
+            validate_execution(root, entry)
+        else:
+            require(entry.get('exit_code') is None, 'Non-execution observation has an exit')
+        if 'artifact' in entry:
+            require(isinstance(entry['artifact'], str) and bool(entry['artifact']) and isinstance(entry.get('sha256'), str) and re.fullmatch('[0-9a-f]{64}', entry['sha256']), 'Invalid observation artifact identity')
             require(digest(read(root, entry['artifact'])) == entry['sha256'], 'Observation artifact hash differs')
     return current
 
@@ -381,12 +431,87 @@ def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args], text=True, encoding='utf-8').strip()
 
 
+def commit_identity(root, sha, label):
+    require(isinstance(sha, str) and re.fullmatch('[0-9a-f]{40}', sha), 'Invalid ' + label + ' commit')
+    try:
+        require(git(root, 'cat-file', '-t', sha) == 'commit', label + ' is not a commit')
+    except subprocess.CalledProcessError as exc:
+        raise ValueError('Missing Git ' + label + ' commit') from exc
+    return sha
+
+
+def git_snapshot(root, value, label):
+    commit_identity(root, value['commit'], label)
+    require(isinstance(value['tree'], str) and re.fullmatch('[0-9a-f]{40}', value['tree']) and
+            git(root, 'rev-parse', value['commit'] + '^{tree}') == value['tree'], label + ' commit/tree mismatch')
+
+
+def ancestor(root, before, after, label):
+    result = subprocess.run(['git', '-C', str(root), 'merge-base', '--is-ancestor', before, after], capture_output=True)
+    require(result.returncode == 0, 'Invalid ancestry: ' + label)
+
+
+def validate_execution(root, entry):
+    require(type(entry.get('exit_code')) is int, 'Execution exit must be an integer, never boolean/string')
+    required = {'command', 'working_directory', 'environment', 'source_commit', 'source_tree', 'artifact', 'sha256'}
+    require(required <= set(entry), 'Missing bound execution evidence')
+    require(entry['status'] in ['PASS', 'FAIL'] and entry['evidence_class'] == 'INDEPENDENTLY_REPRODUCED', 'Invalid execution classification')
+    require((entry['status'] == 'PASS') == (entry['exit_code'] == 0), 'Execution outcome/exit mismatch')
+    require(all(isinstance(entry[k], str) and entry[k].strip() for k in required), 'Invalid execution metadata')
+    git_snapshot(root, {'commit': entry['source_commit'], 'tree': entry['source_tree']}, 'Execution source')
+    ancestor(root, entry['source_commit'], git(root, 'rev-parse', 'HEAD'), 'execution source -> local head')
+    raw = read(root, entry['artifact'])
+    require(digest(raw) == entry['sha256'], 'Execution receipt hash differs')
+    receipt = decode(raw)
+    require(type(receipt.get('schema_version')) is int and receipt['schema_version'] == 1 and receipt.get('kind') == 'LOCAL_EXECUTION', 'Invalid execution receipt format')
+    require(receipt.get('claim_origin') == 'CODEX_REPORTED_EXECUTION', 'Execution attribution missing')
+    for key in ['command', 'working_directory', 'environment', 'source_commit', 'source_tree', 'status', 'exit_code']:
+        require(type(receipt.get(key)) is type(entry[key]) and receipt[key] == entry[key], 'Execution receipt binding differs: ' + key)
+    require(type(receipt['exit_code']) is int, 'Receipt exit must be integer')
+    log = receipt.get('output')
+    require(isinstance(log, dict) and set(log) == {'path', 'sha256'}, 'Missing execution output binding')
+    require(log['path'] != entry['artifact'] and digest(read(root, log['path'])) == log['sha256'], 'Execution output hash differs')
+    counts = receipt.get('counts')
+    if counts is not None:
+        require(isinstance(counts, dict) and set(counts) == {'passed', 'failed', 'skipped'} and
+                all(type(v) is int and v >= 0 for v in counts.values()), 'Invalid execution counts')
+        if entry['status'] == 'PASS':
+            require(counts['failed'] == 0 and counts['passed'] > 0, 'Skipped/failed tests cannot establish PASS')
+    return receipt
+
+
+def ci_consistency(root, row, artifacts):
+    require(row['artifact'] in artifacts, 'CI artifact is not declared')
+    observation = load(root, row['artifact'])
+    require(type(observation.get('schema_version')) is int and observation['schema_version'] == 1 and observation.get('kind') == 'CI_OBSERVATION' and
+            observation.get('evidence_class') == 'INDEPENDENTLY_OBSERVED', 'Invalid structured CI observation')
+    require(observation.get('claim_origin') == 'CODEX_OBSERVED_PROVIDER_METADATA', 'CI attribution missing')
+    require(isinstance(observation.get('recorded_at_utc'), str) and re.fullmatch(r'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ', observation['recorded_at_utc']), 'CI observation time missing')
+    datetime.datetime.strptime(observation['recorded_at_utc'], '%Y-%m-%dT%H:%M:%SZ')
+    require(observation.get('repository') == row['repository'] == 'TasfiqJ/onSkin', 'CI repository mismatch')
+    require(type(row['run_id']) is int and row['run_id'] > 0, 'Invalid CI run ID')
+    matches = [r for r in observation.get('runs', []) if r.get('run_id') == row['run_id']]
+    require(len(matches) == 1, 'Missing/duplicate CI run evidence')
+    recorded = matches[0]
+    for key in ['head_commit', 'name', 'workflow_id', 'run_id', 'status', 'conclusion']:
+        require(type(recorded.get(key)) is type(row[key]) and recorded[key] == row[key], 'CI binding mismatch: ' + key)
+    require(type(row['workflow_id']) is int and row['workflow_id'] > 0, 'Invalid CI workflow ID')
+    require(row['status'] in ['queued', 'in_progress', 'completed'], 'Invalid CI status')
+    if row['status'] != 'completed':
+        require(row['conclusion'] == 'pending', 'Unfinished CI cannot have a completed conclusion')
+    else:
+        require(row['conclusion'] in ['success', 'failure', 'skipped', 'cancelled', 'timed_out', 'action_required', 'neutral', 'stale'], 'Completed CI needs final conclusion')
+    commit_identity(root, row['head_commit'], 'CI head')
+    ancestor(root, row['head_commit'], git(root, 'rev-parse', 'HEAD'), 'CI head -> local stage')
+
+
 def validate_report(root, name):
     verify_inputs(root)
     validate_state(root)
     mirrors(root)
     report = load(root, name)
-    schema_check(report, load(root, 'docs/brain/contracts/completion-report.v2.schema.json'))
+    require(report.get('schema_version') == 3, 'Historical report format; current submissions require v3')
+    schema_check(report, load(root, 'docs/brain/contracts/completion-report.v3.schema.json'))
     require(report['task_id'] == 'M0-02' and report['base_commit'] == snapshot(root, 'TASK_MANIFEST.json')['base_commit'], 'Report task/base mismatch')
     require(report['accepted_by_brain'] is False and report['admission'] == 'NONE', 'Self acceptance')
     artifacts = {a['path']: a for a in report['evidence_artifacts']}
@@ -394,9 +519,24 @@ def validate_report(root, name):
     require(name not in artifacts and 'ONSKIN_BRAIN_HANDOFF.txt' not in artifacts, 'Self-referential report/handoff artifact')
     for path, entry in artifacts.items():
         require(digest(read(root, path)) == entry['sha256'], 'Report artifact hash differs: ' + path)
+    require(report['iteration'] == 'FIX-01' and report['last_brain_verdict'] == 'FIX_REQUIRED', 'Invalid repair identity/verdict')
+    require(report['original_stage_base'] == ORIGINAL_BASE and report['base_commit'] == TASK_BASE and
+            report['repair_base']['commit'] == REPAIR_BASE, 'Declared original/task/repair base changed')
+    commit_identity(root, report['original_stage_base'], 'Original stage base')
+    commit_identity(root, report['base_commit'], 'Task base')
+    for key in ['observed_main', 'repair_base', 'implementation_snapshot']:
+        git_snapshot(root, report[key], key)
+    measured = report['implementation_snapshot']
+    for before, after, label in [(ORIGINAL_BASE, TASK_BASE, 'original -> task'),
+                                 (TASK_BASE, REPAIR_BASE, 'task -> repair'),
+                                 (REPAIR_BASE, measured['commit'], 'repair -> measured'),
+                                 (ORIGINAL_BASE, report['observed_main']['commit'], 'original -> observed main'),
+                                 (report['observed_main']['commit'], measured['commit'], 'observed main -> measured'),
+                                 (measured['commit'], git(root, 'rev-parse', 'HEAD'), 'measured -> local stage')]:
+        ancestor(root, before, after, label)
     for test in report['tests']:
         if test['status'] == 'PASS':
-            require(test['exit_code'] == 0 and test['evidence_class'] == 'INDEPENDENTLY_REPRODUCED', 'False PASS')
+            require(type(test['exit_code']) is int and test['exit_code'] == 0 and test['evidence_class'] == 'INDEPENDENTLY_REPRODUCED', 'False PASS')
         if test['status'] in ['NOT_RUN', 'BLOCKED']:
             require(test['exit_code'] is None, 'Unrun check has exit')
         if test['status'] == 'FAIL':
@@ -404,28 +544,41 @@ def validate_report(root, name):
         require(test['artifact'] in artifacts or (test['status'] in ['NOT_RUN', 'BLOCKED'] and test['artifact'] is None), 'Unbound test artifact')
     for test in report['tests']:
         if test['status'] in ['PASS', 'FAIL']:
-            require(git(root, 'rev-parse', test['snapshot_commit'] + '^{tree}') == test['snapshot_tree'], 'Test commit/tree mismatch')
-    measured = report['implementation_snapshot']
-    require(git(root, 'rev-parse', measured['commit'] + '^{tree}') == measured['tree'], 'Implementation commit/tree mismatch')
+            require(test['artifact'] in artifacts, 'Execution receipt not listed')
+            local = dict(test, source_commit=test['snapshot_commit'], source_tree=test['snapshot_tree'], sha256=artifacts[test['artifact']]['sha256'])
+            receipt = validate_execution(root, local)
+            require(receipt['output']['path'] in artifacts, 'Execution output not listed')
+            ancestor(root, test['snapshot_commit'], measured['commit'], 'test -> measured')
+    seen = set()
+    for row in report['ci']:
+        require((row['repository'], row['run_id']) not in seen, 'Duplicate CI report row')
+        seen.add((row['repository'], row['run_id']))
+        ci_consistency(root, row, artifacts)
     # New report commits may add evidence/docs; they cannot silently replace the tested implementation.
     changed = git(root, 'diff', '--name-only', measured['commit'], '--', 'scripts/brain', 'docs/v2', STATE, 'docs/brain/contracts', 'docs/brain/task-specs')
     require(not changed, 'Implementation differs from measured snapshot: ' + changed)
     require(not git(root, 'status', '--porcelain', '--untracked-files=all', '--', 'scripts/brain', 'docs/v2', STATE,
                     'docs/brain/contracts', 'docs/brain/task-specs'), 'Uncommitted implementation files')
     pushed = report['delivery']['last_observed_pushed_snapshot']
-    require(git(root, 'rev-parse', pushed['commit'] + '^{tree}') == pushed['tree'], 'Pushed snapshot tree differs')
+    git_snapshot(root, pushed, 'Past pushed snapshot')
+    ancestor(root, measured['commit'], pushed['commit'], 'measured -> past pushed')
+    ancestor(root, pushed['commit'], git(root, 'rev-parse', 'HEAD'), 'past pushed -> local stage')
     return report
 
 
 def pack_spec(root, task):
     require(re.fullmatch(r'[A-Z0-9]+-[A-Z0-9]+', task), 'Invalid task ID')
+    require(task in ISSUANCES, 'No independently anchored task issuance')
+    authority = ISSUANCES[task]
     spec = load(root, 'docs/brain/task-specs/' + task + '.json')
     require(spec['task_id'] == task and spec['issued'] is True and spec['issued_by'] == 'onSkin Brain', 'Unissued task')
     current = load(root, 'docs/brain/current.json')
     require(current['task_id'] == task and current['active_writers'] == 1 and current['next_task'] is None, 'Task/writer conflict')
     approval = spec['approval']
+    require(approval == {'path': authority['path'], 'sha256': authority['sha256']} and
+            spec['input_prefix'] == authority['input_prefix'], 'Spec cannot repoint anchored issuance')
     raw = read(root, approval['path'])
-    require(digest(raw) == approval['sha256'], 'Approval hash differs')
+    require(digest(raw) == authority['sha256'], 'Approval hash differs from independent anchor')
     issued = decode(raw)
     require(issued['task_id'] == task and issued['issued_by'] == spec['issued_by'], 'Task approval differs')
     # Files are derived from the reviewed issued manifest; arbitrary additions cannot become approved.
@@ -435,6 +588,8 @@ def pack_spec(root, task):
                  'code_reviewed': r.get('code_reviewed', task == 'M0-02' and r['path'] == 'source_pack/tools/build_codex_context.py')}
                 for r in approved_rows]
     require(spec['files'] == expected, 'Allowlist differs from reviewed issue manifest')
+    require(all(type(r['bytes']) is int and r['bytes'] >= 0 and type(r['code_reviewed']) is bool for r in spec['files']), 'Invalid allowlist field types')
+    require(type(spec['max_input_bytes']) is int and type(spec['max_files']) is int, 'Context bounds must be integers')
     require(0 < spec['max_input_bytes'] <= issued['max_input_bytes'] <= HARD_BYTES, 'Invalid context bound')
     require(0 < len(spec['files']) <= spec['max_files'] <= HARD_FILES, 'Invalid file bound')
     return spec
@@ -534,13 +689,13 @@ def build_pack(root, task, output):
 def ready(root):
     verify_inputs(root)
     current = validate_state(root)
-    tasks = load(root, STATE + '/roadmap.json')['tasks']
+    tasks = load(root, REVIEW + '/roadmap.json')['tasks']
     return {'active_task': current['task_id'], 'execution_status': current['submission_status'],
             'next_issued_task': None, 'automatic_issue': False, 'active_writers': 1,
             'blockers': current['open_blocker_ids'],
             'candidates': [{'id': t['id'], 'unaccepted_dependencies': [p for p in t['depends_on'] if p not in current['accepted_tasks']],
                             'priority_predecessor': t.get('sequencing_predecessor'), 'external_gates': t['external_gates'],
-                            'authorized_to_execute': t['id'] == current['task_id'],
+                            'authorized_to_execute': t['id'] == current['task_id'] and current['submission_status'] == 'IN_PROGRESS',
                             'reason': 'Only M0-02 is issued; diagnostic M0-01 acceptance does not clear baseline/protected gates'}
                            for t in tasks if t['id'] not in current['accepted_tasks']]}
 
@@ -572,7 +727,7 @@ def main():
             print('PASS: mirrors ' + ('unchanged' if args.check else 'generated'))
         elif args.command == 'report':
             validate_report(root, args.path)
-            print('PASS: report v2; measured tests are separate from live delivery ref')
+            print('PASS: report v3; internally bound evidence, not independent provider authentication')
         elif args.command == 'ready':
             print(encoded(ready(root)).decode('utf-8'), end='')
         else:

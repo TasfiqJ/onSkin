@@ -1,48 +1,21 @@
-ONSKIN BRAIN HANDOFF — M0-02 / M0
-Branch: stage/m0-baseline | PUSHED_STAGE_BRANCH | SUBMITTED_REVIEW_REQUIRED
-Original stage/main base: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
-Task base / accepted DIAGNOSTIC ONLY: b9a6b093f392ced340c156f2e7dcaefc72ed58e1
-Task base tree: ed42b889912e3fb383cfbafe413e7a66dd558221
-Observed main: bbc28dc3d1f945191a81be56945b8bda7bb6ef73 (unchanged/read-only)
-Measured implementation: c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c
-Measured tree: d60d4a591653b141964680f153a8d82937d2984f
-Prior implementation: 8fd48286e0ad65e7797588d7cd88edde27fe4a5f (own mirror namespace collision fixed)
-The report/handoff commit follows measurement. Resolve ACTUAL delivery tip with:
-  git ls-remote origin refs/heads/stage/m0-baseline
-Do not label this file's own future commit as tested.
-
-Delivered: docs/v2 authority + immutable supplied inputs; docs/brain approved state;
-408 feature crosswalk records (376 items + 20 families + 12 surfaces), 202 legacy
-rows, 25 gates, 38 V1/V2 rows; all 47 tasks and 27 module IDs/order/dependencies.
-Original statuses/evidence/unknown fields preserved. Exact task mappings absent
-from supplied inputs remain explicitly unresolved. No M1 or research request.
-Standalone validators, check-mode mirrors, report v2 and safe context ZIP builder.
-
-Measured Windows checks: Python3.9.13 and3.12.14 each 27 PASS / 1 symlink privilege
-SKIP; real junction/hard-link rejections PASS; validators/mirrors/report PASS.
-Cross-runtime deterministic ZIP: 49 entries,860347 input bytes,876597 ZIP bytes,
-SHA256 b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547.
-Unknown task/traversal/in-root output CLI refusals exit1 as expected; no output.
-Existing canonical6,exception7,workflow27 source contracts PASS at initial snapshot.
-Local typecheck/lint/test exit0 through existing Turbo caches; no fresh app test
-count claimed. Extra existing Windows Security diagnostics FAILED (Python syntax,
-Linux-path fixtures/symlink privilege); raw failures and binding limits retained.
-Measured source whitespace exit2 on immutable CRLF CSV; cr-at-eol PASS.
-Raw cached npm logs retain trailing spaces (evidence-tail exit2); authored tail PASS.
-
-Completed measured-source CI: Quality39370706322 FAILURE (DB118457832604 ECR Data
-limit exceeded before SQL;171 source tests passed); repository/rehearsals/exports
-passed. Security39370706309 FAILURE (inventory + OSV dates/advisory; acceptance
-118458941530 failed); code/secrets passed, live skipped. iOS39370706312 SOURCE-ONLY
-SUCCESS. CI temporary merge tree equals measured tree. New delivery CI is separate.
-
-Top blockers: BLK-01/02/03/08/09 remain open; expiry2026-10-21T00:00:00Z unchanged.
-M0-01 diagnostic acceptance is NOT G97 BRAIN source GO. No protected custody,
-runtime/schema/package/workflow/security policy/pin/exception changes; spend $0.
-PR #8 stays draft/unmerged. Founder dirty checkout and all other work preserved.
-Detailed sanitized evidence/report: docs/brain/checkpoints/M0-02/
-Active authority: docs/v2/README.md; approved state: docs/brain/state/
-Current Codex submission: docs/brain/current.json; acceptance belongs to Brain.
-Dirty/unpushed after normal delivery: none; verify actual live ref and working tree.
-Context health: medium estimate; no compaction; zero accepted tasks in this instance.
-Next safe action: independent Brain review. Stop; no automatic task/owner action.
+TASK M0-02 / ITERATION FIX-01 | STAGE M0 | IN_PROGRESS / REVIEW_REQUIRED
+Last Brain verdict: FIX_REQUIRED at da9fa04759164b402ee3b2abd1c80e14261614fb.
+Original main/stage base: bbc28dc3d1f945191a81be56945b8bda7bb6ef73 (main read-only).
+Original M0-02 task base: b9a6b093f392ced340c156f2e7dcaefc72ed58e1.
+Repair base: da9fa04759164b402ee3b2abd1c80e14261614fb / e18f73771b5f440613a7e7cd339889949a8ae72a.
+Existing branch stage/m0-baseline retained; one writer. PR8 draft/unmerged.
+F1 typed/bound execution receipts; F2 structured CI/Git/ancestry validation;
+F3 independent fixed-code issuance; F4 preflight all mirror targets before writes.
+Development suite: 35 considered,33 pass,2 actual Windows file-symlink skips;
+real dangling/existing junction and hard-link containment tests passed.
+Pre-commit checks are not final measured-snapshot claims. Measurement/report follow.
+Approved review: docs/brain/reviews/M0-02/REVIEW-01 (immutable versioned overlay).
+Evidence/new report: docs/brain/checkpoints/M0-02/FIX-01/. Original report preserved.
+All original inputs,47 tasks,27 module IDs/dependencies and external gates retained.
+No runtime/package/workflow/Security/DB06/DB08/R2B change,spend,auth,M1,J05 or release.
+Quality39371600842/Security39371600769 failed; iOS39371600772 source-only success.
+Expiry2026-10-21T00:00:00Z unchanged. No source GO or main promotion.
+Fetch/reconcile before push. Final delivery tip comes from live branch:
+git ls-remote origin refs/heads/stage/m0-baseline
+Founder/other dirty work preserved in separate checkouts. Current safe repair pending commit.
+Context health medium estimate; no compaction; zero accepted tasks. Stop for Brain review.

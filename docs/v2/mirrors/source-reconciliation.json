@@ -71,8 +71,8 @@
       "path": "PROGRESS.md",
       "supplied_sha256": "c76711501d743cf9500e6130424e91ad559f11d91d6e0b8f26d22a49ddb3bbee",
       "supplied_bytes": 530513,
-      "observed_sha256": "bbdd519019845436d01a4689e0aab7505f69f1843b7c68f44b04d90e5ae5be9e",
-      "observed_bytes": 531673,
+      "observed_sha256": "4ab8ec63364bfa136ccc438b91faabcd3d0cf6c576eddda1ef2cdc34e625730c",
+      "observed_bytes": 532094,
       "state": "OBSERVED_DELTA_NO_STATUS_UPGRADE"
     },
     {

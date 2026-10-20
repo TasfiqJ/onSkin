@@ -1,0 +1,13 @@
+{
+  "task_id": "M0-02",
+  "iteration": "FIX-01",
+  "zip_bytes": 62282,
+  "zip_sha256": "3e4c7425f67b9763e811b18677908de6623c12f1cca58540d303575de65a0354",
+  "manifest_sha256": "5778db7e2a1f6eb8b76018c44f110f40047ca867eb9c74facf294bddeddd8e35",
+  "verified_files": 21,
+  "repair_base": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+  "base_brain_py_sha256": "7eba8d01320ade6cc57183ba191769246a83e11ed35d0523a0fb9a3f5d3edf82",
+  "F4_base_reproduction": "NOT_RUN on Windows: unavailable symbolic-link privilege. Supplied Brain Linux proof is attributed function-slice evidence with inert upstreams, not full Linux CLI. Real fixed-code Windows junction/hard-link regressions are separate.",
+  "last_brain_verdict": "FIX_REQUIRED",
+  "self_acceptance": false
+}

@@ -1,5 +1,7 @@
 # Durable Brain state and succession
 
+Latest authority: [Brain REVIEW-01](reviews/M0-02/REVIEW-01/README.md), verdict **FIX_REQUIRED**, M0-02 / FIX-01 from `da9fa04759164b402ee3b2abd1c80e14261614fb`. This versioned overlay supersedes prior submission/review status, while the original state/input bytes below remain immutable. Current observations use schema 3 and [report/evidence contract v3](contracts/FIX-01-v3.md). The [original submitted report](checkpoints/M0-02/completion-report.json) is historical; the new [FIX-01 report](checkpoints/M0-02/FIX-01/completion-report.json) is separate. Only Brain can accept or authorize an exact-head main promotion; this repair does neither.
+
 Start at [V2 authority](../v2/README.md), [approved state](state/brain_state.json), [acceptance ledger](state/ACCEPTANCE_LEDGER.json), [ADRs](state/ADR_REGISTRY.json), [blockers](state/BLOCKERS.json) and [approved roadmap](state/roadmap.json). These are the exact Brain-approved bytes supplied for M0-02. [Current observations](current.json) are a separate Codex overlay and cannot modify acceptance. The original Codex [M0-01 evidence](checkpoints/M0-01/REVIEW_EVIDENCE.md) is preserved beside the separately attributed [Brain audit](checkpoints/M0-01/BRAIN_AUDIT_M0-01.md) and [Brain machine observations](checkpoints/M0-01/BRAIN_REVIEW_OBSERVATIONS.json).
 
 Only one writer and one issued task are permitted. M0-02 installs non-runtime planning controls; no M1 task is issued. Ready selection lists outstanding dependencies, priority predecessors and external gates but never issues work, starts a process, merges or purchases anything. M0-01 diagnostic acceptance satisfies only this explicitly independent M0-02 dependency. All baseline, DB06/DB08/R2B, source custody, device, provider, research and release constraints remain open.
@@ -12,7 +14,7 @@ From repository root, using the installed Python interpreter:
 python scripts/brain/brain.py validate
 python scripts/brain/brain.py mirrors --check
 python -B -m unittest discover -s scripts/brain -p "test_*.py" -v
-python scripts/brain/brain.py report docs/brain/checkpoints/M0-02/completion-report.json
+python scripts/brain/brain.py report docs/brain/checkpoints/M0-02/FIX-01/completion-report.json
 python scripts/brain/brain.py ready
 python scripts/brain/brain.py pack --task M0-02 --output <absolute-external-new-path.zip>
 python scripts/brain/brain.py verify-pack --task M0-02 --output <absolute-external-existing-path.zip>

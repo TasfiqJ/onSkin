@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "kind": "BRAIN_ISSUED_TASK_REPAIR_CONTEXT",
+  "task_id": "M0-02",
+  "iteration": "FIX-01",
+  "issued_by": "onSkin Brain",
+  "base_commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+  "base_tree": "e18f73771b5f440613a7e7cd339889949a8ae72a",
+  "main_promotion_authorized": false,
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1394,
+      "sha256": "417bd8e7920b3857654e2e35197e49d8cdcc20b783444ee4d7bb507f8e3bffda"
+    },
+    {
+      "path": "ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "path": "AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "path": "BRAIN_REVIEW/ACCEPTANCE_LEDGER.json",
+      "bytes": 3066,
+      "sha256": "65a5d2b4b52ccf3c36b9f1975357edbb7383529e0520f6c5dac58020b11a4453"
+    },
+    {
+      "path": "BRAIN_REVIEW/ADR_REGISTRY.json",
+      "bytes": 11184,
+      "sha256": "2c79e2f060baf66937568250e9dbb9971c28ed40a336c8d8a862199e6fae9ac3"
+    },
+    {
+      "path": "BRAIN_REVIEW/AUDIT_M0-02_REVIEW01.md",
+      "bytes": 10375,
+      "sha256": "d24e91fb6c719a2c46c9d7044a9e485bfa3f5d82ac3b2cfd69d6857134325dda"
+    },
+    {
+      "path": "BRAIN_REVIEW/BLOCKERS.json",
+      "bytes": 5937,
+      "sha256": "b459ec1f60ce1efc9dea03967756007b624ffd18546e9a379253b0a3b754da32"
+    },
+    {
+      "path": "BRAIN_REVIEW/DECISIONS_DELTA.md",
+      "bytes": 1215,
+      "sha256": "e009ba8dc8f151996f6ab8b1d89a2b523ed58025e5bd8afec31cfe5f01486eac"
+    },
+    {
+      "path": "BRAIN_REVIEW/FINDINGS.json",
+      "bytes": 3012,
+      "sha256": "4f294e9093fb9139d83bc3c950bd47483ea4987e60753e48cff9d456647cdc56"
+    },
+    {
+      "path": "BRAIN_REVIEW/README.md",
+      "bytes": 974,
+      "sha256": "637e8858a6e64ae42e8a4f55ea6bae7424470d05d2dba254d2dfb23cfb3af3bc"
+    },
+    {
+      "path": "BRAIN_REVIEW/REPRODUCED_CASES.json",
+      "bytes": 3608,
+      "sha256": "2f8aacc8ec0768b1a962a72ea750fadef9b3a042d4e8ac8b7daaa1f5d2781458"
+    },
+    {
+      "path": "BRAIN_REVIEW/REVIEW_OBSERVATIONS.json",
+      "bytes": 13086,
+      "sha256": "5bda7f40af0fa5011dede11077f4f98c0fcf069ee2571b0157fb5655e3e30284"
+    },
+    {
+      "path": "BRAIN_REVIEW/brain_state.json",
+      "bytes": 15760,
+      "sha256": "b6e9123af152ab9f13d13f5cc20d801f2dea0c1ecd3d73b9accd2700299515be"
+    },
+    {
+      "path": "BRAIN_REVIEW/mirror-symlink-result.json",
+      "bytes": 811,
+      "sha256": "a9d63a1ae934d25a7d95859c01a6f5d95635312c9bde12ef907a1349c17b304f"
+    },
+    {
+      "path": "BRAIN_REVIEW/mirror_source_slice.py",
+      "bytes": 2503,
+      "sha256": "6173fc993c827fbf7df854e44ba7c1f34577df9e68ae4bfa3f471308951c01a0"
+    },
+    {
+      "path": "BRAIN_REVIEW/roadmap.json",
+      "bytes": 44786,
+      "sha256": "fdb3f4fc8ebb04c406c3ea70264a5008dba108c5c416335d20c610fe79e91164"
+    },
+    {
+      "path": "EXECUTION_PROMPT.txt",
+      "bytes": 4266,
+      "sha256": "a06e9569ccad510b94370a6de394bd0f642a0be8989d3ef6012300a0c75bb7f8"
+    },
+    {
+      "path": "ORIGINAL_M0-02_TASK.md",
+      "bytes": 12807,
+      "sha256": "a714815bd55d416cb57c7749d8fedae23cec0fee32e520ae312554ab2cf90f0d"
+    },
+    {
+      "path": "REPRODUCERS.md",
+      "bytes": 4950,
+      "sha256": "af8b32ea419cba3153509bfc9c0b21badd43e5d555e50c6f5a37abd6daf82ebb"
+    },
+    {
+      "path": "STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 2677,
+      "sha256": "3ec39268e1710b926fad1b61ed66e15120bff2dbb0bc46e598b4a7fc187f16aa"
+    },
+    {
+      "path": "TASK.md",
+      "bytes": 9377,
+      "sha256": "1c90d73dca86185c76db841201ae9d74cb860175cce9f685c23e11e0907dcd90"
+    }
+  ],
+  "total_content_bytes": 165671,
+  "max_content_bytes": 300000,
+  "note": "Integrity manifest is not external source/scanner/replay/release approval. Archive SHA256 is in companion ARTIFACTS.json."
+}

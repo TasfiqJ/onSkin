@@ -1,5 +1,7 @@
 # Stage completion report contract v2
 
+Historical contract below. Current M0-02 / FIX-01 submissions use [v3](FIX-01-v3.md); the v2 report is preserved but is not accepted by the repaired CLI as a current submission.
+
 [completion-report.v2.schema.json](completion-report.v2.schema.json) is the active M0-02 submission contract. The original SourcePack schema and root compatibility schema remain immutable under `docs/v2/source-inputs/`. Their ambiguous `head_commit/head_tree` fields must not be used to claim the report commit tested itself. Version 2 is intentionally a distinct schema, not a silent reinterpretation.
 
 `implementation_snapshot` names the committed implementation/tree measured before report authoring. Each executed test names its own exact snapshot commit/tree, command, working directory, environment, exit, count, evidence class and hashed sanitized log. Unrun/blocked checks use null exits/artifacts and an explicit limitation. Historical CI names its associated source head, real run conclusion and evidence scope. A continued green step does not override an original nonzero exit or failed job.

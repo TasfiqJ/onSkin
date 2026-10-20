@@ -1,8 +1,8 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "task_id": "M0-02",
-  "submission_status": "SUBMITTED_REVIEW_REQUIRED",
-  "approved_state_version": "brain-m0-01-diagnostic-accepted-m0-02-issued-3",
+  "submission_status": "IN_PROGRESS",
+  "approved_state_version": "brain-m0-02-review01-fix-required-fix01-issued-4",
   "accepted_tasks": [
     "M0-01"
   ],
@@ -24,7 +24,11 @@
     "BLK-06",
     "BLK-07",
     "BLK-08",
-    "BLK-09"
+    "BLK-09",
+    "BLK-10",
+    "BLK-11",
+    "BLK-12",
+    "BLK-13"
   ],
   "proposal_expires_utc": "2026-10-21T00:00:00Z",
   "axes": {
@@ -34,6 +38,7 @@
     "live_provider": "NOT_RUN",
     "public_release": "BLOCKED",
     "commercial": "NO_GO",
+    "governance_tooling": "FIX_REQUIRED",
     "physical_device_surface": "NOT_RUN",
     "research": {
       "single_scan": "NOT_ADMITTED",
@@ -42,40 +47,17 @@
   },
   "observations": [
     {
-      "id": "M0-02-INTAKE",
-      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "id": "FIX01-REVIEW-INTAKE",
+      "evidence_class": "SOURCE_REPORTED",
       "axis": "source",
       "status": "OBSERVED",
       "admission": "NONE",
-      "detail": "Clean existing stage b9a6b09; manifests verified. Source pack provenance is supplied, not a reread of the excluded original archive.",
-      "artifact": "docs/v2/PROVENANCE.json",
-      "sha256": "52b74d5030013226db2ef998df731a7086f44eb04e2b44dee8601b4708b5c71e"
-    },
-    {
-      "id": "M0-02-MEASURED-TOOLS",
-      "evidence_class": "INDEPENDENTLY_REPRODUCED",
-      "axis": "source",
-      "status": "PASS",
-      "exit_code": 0,
-      "admission": "NONE",
-      "artifact": "docs/brain/checkpoints/M0-02/evidence/measured-governance-py312.log",
-      "sha256": "4bf38b567f77f9a5828f9efbda18e2d256d471eab1cab272b322048e6954294e",
-      "source_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
-      "source_tree": "d60d4a591653b141964680f153a8d82937d2984f",
-      "detail": "27 governance passes plus 1 unavailable symlink case"
-    },
-    {
-      "id": "M0-02-MEASURED-CI",
-      "evidence_class": "INDEPENDENTLY_OBSERVED",
-      "axis": "source",
-      "status": "FAIL",
-      "exit_code": 1,
-      "admission": "NONE",
-      "artifact": "docs/brain/checkpoints/M0-02/evidence/measured-ci-database.json",
-      "sha256": "173b97e651074115b54da0b9421800755c19f91feab802b48c1d0bdd913fdd81",
-      "source_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
-      "source_tree": "d60d4a591653b141964680f153a8d82937d2984f",
-      "detail": "Actual failed CI database job; baseline remains blocked"
+      "artifact": "docs/brain/reviews/M0-02/REVIEW-01/AUDIT_M0-02_REVIEW01.md",
+      "sha256": "d24e91fb6c719a2c46c9d7044a9e485bfa3f5d82ac3b2cfd69d6857134325dda",
+      "detail": "Brain verdict FIX_REQUIRED; four findings. Prior execution claims remain in preserved legacy-current.v2.json and original report; no new PASS inferred."
     }
-  ]
+  ],
+  "iteration": "FIX-01",
+  "last_brain_verdict": "FIX_REQUIRED",
+  "review_overlay": "docs/brain/reviews/M0-02/REVIEW-01"
 }

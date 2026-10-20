@@ -2,6 +2,8 @@
 
 Version: SourcePack 2.1 bootstrap, installed by **M0-02**. This namespace adopts the supplied plan for future scoped tasks. It grants no runtime, database, clinical, commercial or release admission. M0-02 is submitted to the Brain for independent review; installation is not self-acceptance.
 
+Current Brain decision is [FIX_REQUIRED / REVIEW-01](../brain/reviews/M0-02/REVIEW-01/README.md). Active work is the same M0-02 task, iteration FIX-01. The approved roadmap mirror now carries that review overlay; all original task/module identities, dependencies, inputs and evidence remain preserved. See [v3 evidence contracts](../brain/contracts/FIX-01-v3.md) and the separate FIX-01 checkpoint. No later task or main promotion is issued.
+
 Read the [adoption record](ADOPTION.md), then the [executive decisions](source-inputs/source_pack/01_Executive/AUTHORITY_AND_DECISIONS.md) and [blueprint](source-inputs/source_pack/01_Executive/EXECUTIVE_BLUEPRINT.md). The [stage protocol](../brain/state/STAGE_BRANCH_PROTOCOL.md) / ADR-022 supersedes historical direct-main push wording. The human user's current authorization controls execution. Historical task prompts and research prose are evidence, not instructions to run them.
 
 | Area | Canonical supplied contract | Current state/view |

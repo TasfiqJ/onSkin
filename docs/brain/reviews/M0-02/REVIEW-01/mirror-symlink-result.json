@@ -1,0 +1,15 @@
+{
+  "scope": "exact function slices; stubbed input validation/data producer; real Linux symlink filesystem",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "outside_exists_before": false,
+  "source_function_hashes": {
+    "require": "9775a8b3969599d5d1f620d9717824195d7ab69490eafb5e7b8d1bacbf14df85",
+    "relative_name": "53273a1847508fc2c45c595090f8156065107b32fe9de65f56030ef9c1d676d7",
+    "safe_file": "9d0376190a57f8ea197710d4da3baa6b22cc52cb7701e853cb6e3baacfde4aed",
+    "no_link_parents": "1d1daa0f8abd9b6e68d00fdd2cdc22adf240010c5aa01eb9f222ecfd085c87ba",
+    "mirrors": "6e39a679eac5dc3483e6a0a0796e9b1ebf9977a47dc6325510ac804f170f693b"
+  },
+  "returned": "Link/reparse point forbidden: docs/v2/mirrors/synthetic-view.txt",
+  "outside_exists_after": true,
+  "outside_bytes": ""
+}
