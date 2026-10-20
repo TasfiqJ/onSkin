@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "measured": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+  "earlier_surface_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+  "unchanged_mobile_tree": true,
+  "unchanged_daily_flow": true,
+  "harness_diff": "diff --git a/scripts/e2e/onboarding-first-session.mjs b/scripts/e2e/onboarding-first-session.mjs\nindex 28ec7c941..9d242c738 100644\n--- a/scripts/e2e/onboarding-first-session.mjs\n+++ b/scripts/e2e/onboarding-first-session.mjs\n@@ -1007,7 +1007,9 @@ async function crossOwnerFlow(client, products) {\n         .map(key => mod('/lib/storage/privateKV.ts').getPrivateItem(key)));\n       const markers = [...${JSON.stringify(aMarkers)}, await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000a1')];\n       return { exactB: proof.kind === 'owned' && proof.ownerBinding === await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000b2'),\n-        noRetainedADailyState: daily.every(raw => raw === null),\n+        noRetainedADailyState: daily[1] === null && daily[2] === null &&\n+          daily[0] !== null && JSON.parse(daily[0]).prefs.amTime === '07:30' &&\n+          JSON.parse(daily[0]).prefs.amEnabled === false && JSON.parse(daily[0]).prefs.pmEnabled === false,\n         healthOwnerB: health.activeHealthProcessingOwnerUserId() === '00000000-0000-4000-8000-0000000000b2',\n         noAInCache: !markers.some(x => JSON.stringify(queries.map(q => [q.queryKey, q.state.data])).includes(x)),\n         noAInShelfOrQueue: !markers.some(x => (shelf ?? '').includes(x)), hasB: shelf?.includes(${JSON.stringify(bName)}) === true,",
+  "impact": "Only B post-transition assertion changed from no preference record to B-owned default-off preferences. Daily 390/375/430 records retain their actual earlier SHA/tree; cross-owner and accepted safety regressions reran on the final measured source. No earlier execution is relabelled exact-head."
+}

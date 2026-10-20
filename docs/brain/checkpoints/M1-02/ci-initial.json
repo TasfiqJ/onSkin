@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "recorded_at_utc": "2026-10-20T20:52:41Z",
+  "repository": "TasfiqJ/onSkin",
+  "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+  "checkout": {
+    "commit": "54b300a7e40d510225d29bb54904e94fc4d51949",
+    "tree": "4c97d4432e592b7b2fa2e11fb29d9b3ea030e962",
+    "parents": [
+      "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "5957a9617136a95c63b049db86d6b73f20c59c6f"
+    ],
+    "verified_equal_to_candidate_tree": true,
+    "event": "pull_request",
+    "event_basis": "Connector endpoint filters pull-request-triggered runs; Git merge ref read independently."
+  },
+  "pr": {
+    "number": 9,
+    "draft": true,
+    "merged": false,
+    "base": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "head": "5957a9617136a95c63b049db86d6b73f20c59c6f"
+  },
+  "runs": [
+    {
+      "run_id": 39495562156,
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "run_id": 39495561749,
+      "name": "Security",
+      "workflow_id": 308213475,
+      "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "run_id": 39495561871,
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+      "status": "in_progress",
+      "conclusion": "pending"
+    }
+  ],
+  "security_jobs": [
+    {
+      "id": 118879595239,
+      "name": "Code security gates",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_id": 39495561749,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Setup Node",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 3
+        },
+        {
+          "name": "Setup Deno",
+          "status": "pending",
+          "conclusion": null,
+          "number": 4
+        },
+        {
+          "name": "Use reviewed npm",
+          "status": "pending",
+          "conclusion": null,
+          "number": 5
+        },
+        {
+          "name": "Install",
+          "status": "pending",
+          "conclusion": null,
+          "number": 6
+        },
+        {
+          "name": "Phase 9 verification",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7
+        },
+        {
+          "name": "Dependency SBOM with audit metadata",
+          "status": "pending",
+          "conclusion": null,
+          "number": 8
+        },
+        {
+          "name": "Capture high or critical npm advisories",
+          "status": "pending",
+          "conclusion": null,
+          "number": 9
+        },
+        {
+          "name": "Test reviewed security exceptions",
+          "status": "pending",
+          "conclusion": null,
+          "number": 10
+        },
+        {
+          "name": "Enforce reviewed npm advisory exceptions",
+          "status": "pending",
+          "conclusion": null,
+          "number": 11
+        },
+        {
+          "name": "Write code-gate evidence manifest",
+          "status": "pending",
+          "conclusion": null,
+          "number": 12
+        },
+        {
+          "name": "Upload code-gate evidence",
+          "status": "pending",
+          "conclusion": null,
+          "number": 13
+        },
+        {
+          "name": "Enforce code-gate results",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14
+        },
+        {
+          "name": "Post Setup Node",
+          "status": "pending",
+          "conclusion": null,
+          "number": 27
+        },
+        {
+          "name": "Post Checkout",
+          "status": "pending",
+          "conclusion": null,
+          "number": 28
+        }
+      ]
+    },
+    {
+      "id": 118879595375,
+      "name": "Static analysis and OSV",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_id": 39495561749,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Setup Node",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 3
+        },
+        {
+          "name": "Setup Python",
+          "status": "pending",
+          "conclusion": null,
+          "number": 4
+        },
+        {
+          "name": "Prepare exact Linux scanners and npm",
+          "status": "pending",
+          "conclusion": null,
+          "number": 5
+        },
+        {
+          "name": "Install",
+          "status": "pending",
+          "conclusion": null,
+          "number": 6
+        },
+        {
+          "name": "Semgrep OWASP/TypeScript/React/secrets",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7
+        },
+        {
+          "name": "Prepare OSV evidence directory",
+          "status": "pending",
+          "conclusion": null,
+          "number": 8
+        },
+        {
+          "name": "OSV scanner",
+          "status": "pending",
+          "conclusion": null,
+          "number": 9
+        },
+        {
+          "name": "Enforce reviewed OSV advisory exceptions",
+          "status": "pending",
+          "conclusion": null,
+          "number": 10
+        },
+        {
+          "name": "Write static scanner evidence manifest",
+          "status": "pending",
+          "conclusion": null,
+          "number": 11
+        },
+        {
+          "name": "Stage verified technical receipt after all source checks",
+          "status": "pending",
+          "conclusion": null,
+          "number": 12
+        },
+        {
+          "name": "Upload static scanner evidence",
+          "status": "pending",
+          "conclusion": null,
+          "number": 13
+        },
+        {
+          "name": "Enforce static scanner results",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14
+        },
+        {
+          "name": "Post Setup Node",
+          "status": "pending",
+          "conclusion": null,
+          "number": 27
+        },
+        {
+          "name": "Post Checkout",
+          "status": "pending",
+          "conclusion": null,
+          "number": 28
+        }
+      ]
+    },
+    {
+      "id": 118879595390,
+      "name": "Secret scanning",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_id": 39495561749,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Gitleaks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Bind actual Gitleaks executable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "TruffleHog verified secrets",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 5
+        },
+        {
+          "name": "Write secret scanner evidence manifest",
+          "status": "pending",
+          "conclusion": null,
+          "number": 6
+        },
+        {
+          "name": "Upload secret scanner evidence",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7
+        },
+        {
+          "name": "Enforce secret scanner results",
+          "status": "pending",
+          "conclusion": null,
+          "number": 8
+        },
+        {
+          "name": "Post Checkout",
+          "status": "pending",
+          "conclusion": null,
+          "number": 16
+        }
+      ]
+    },
+    {
+      "id": 118879597163,
+      "name": "Live Supabase adversarial evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 39495561749,
+      "logs_url": null,
+      "steps": null
+    }
+  ],
+  "limits": "Observed candidate 5957a96 is an evidence-only descendant of measured 0377c19. Pending and skipped are not PASS. This observation is not a final-delivery CI claim."
+}

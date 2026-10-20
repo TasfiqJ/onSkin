@@ -1,0 +1,36 @@
+{
+  "bodyText": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Synthetic manual moisturizer finished Oct · used 1 week archived",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 102,
+      "hitOk": true,
+      "label": "Synthetic manual moisturizer, finished Oct · used 1 week",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 204
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8362/shelf/archive",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}
