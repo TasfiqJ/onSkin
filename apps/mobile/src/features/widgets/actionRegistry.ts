@@ -5,7 +5,11 @@ import {
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { HEALTH_PROCESSING_STATUS_LEASE_MS } from '@/lib/consent/healthProcessingEpoch';
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  clearRoutineWidgetActionPrivateItems,
+  getPrivateItem,
+  updatePrivateItem,
+} from '@/lib/storage/privateKV';
 
 export const ROUTINE_WIDGET_ACTION_REGISTRY_KEY = 'layerwell.widgetActionMap.v2';
 export const ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY = 'layerwell.widgetActionMap.v1';
@@ -591,12 +595,5 @@ export async function retainOnlyPublishedRoutineWidgetActions(input: {
 
 /** Deletion-only lane used by consent/account cleanup and disabled widget state. */
 export async function clearRoutineWidgetActions(): Promise<void> {
-  const removals = await Promise.allSettled([
-    removePrivateItem(ROUTINE_WIDGET_ACTION_REGISTRY_KEY),
-    removePrivateItem(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY),
-  ]);
-  const failure = removals.find(
-    (result): result is PromiseRejectedResult => result.status === 'rejected',
-  );
-  if (failure) throw failure.reason;
+  await clearRoutineWidgetActionPrivateItems();
 }

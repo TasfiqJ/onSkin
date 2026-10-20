@@ -1,4 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+vi.mock('expo-crypto', () => ({ randomUUID: vi.fn() }));
+import {
+  clearRoutineWidgetActions,
+  ROUTINE_WIDGET_ACTION_REGISTRY_KEY,
+  ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY,
+} from '@/features/widgets/actionRegistry';
 
 import {
   ACCOUNT_GENERATION_CHANGED,
@@ -63,6 +69,71 @@ const mocks = vi.hoisted(() => ({
   setItemOutcomes: [] as ('resolve' | 'reject-before' | 'reject-after')[],
   setItemStarted: null as (() => void) | null,
 }));
+
+it('removes only widget action capabilities while the real account write boundary stays closed', async () => {
+  mocks.asyncStorage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'revoked-capability');
+  mocks.asyncStorage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, 'legacy-capability');
+  mocks.asyncStorage.set('layerwell.shelf.v1', 'retained-owner-ciphertext');
+  beginAccountGenerationBoundary();
+  beginPrivateKVAccountBoundary();
+  try {
+    await expect(clearRoutineWidgetActions()).resolves.toBeUndefined();
+    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
+    expect(mocks.asyncStorage.get('layerwell.shelf.v1')).toBe('retained-owner-ciphertext');
+    await expect(setPrivateItem('layerwell.shelf.v1', 'forbidden')).rejects.toThrow();
+  } finally {
+    endPrivateKVAccountBoundary();
+    endAccountGenerationBoundary();
+  }
+});
+
+it('orders widget revocation after an already-entered private write and its stale rollback', async () => {
+  let started!: () => void;
+  const entered = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let release!: () => void;
+  mocks.setItemGate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  mocks.setItemStarted = started;
+  const write = setPrivateItem(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'late-token');
+  const rejectedWrite = expect(write).rejects.toThrow();
+  await entered;
+  beginAccountGenerationBoundary();
+  beginPrivateKVAccountBoundary();
+  try {
+    const purge = clearRoutineWidgetActions();
+    release();
+    await rejectedWrite;
+    await purge;
+    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+  } finally {
+    release();
+    endPrivateKVAccountBoundary();
+    endAccountGenerationBoundary();
+  }
+});
+
+it('retains a failed widget revocation for retry while attempting the other capability key', async () => {
+  mocks.asyncStorage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'retry-token');
+  mocks.asyncStorage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, 'legacy-token');
+  mocks.removeItemOutcomeKey = ROUTINE_WIDGET_ACTION_REGISTRY_KEY;
+  mocks.removeItemOutcomes = ['reject-before'];
+  beginPrivateKVAccountBoundary();
+  try {
+    await expect(clearRoutineWidgetActions()).rejects.toThrow(
+      'ASYNC_STORAGE_REMOVE_REJECTED_BEFORE_COMMIT',
+    );
+    expect(mocks.asyncStorage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe('retry-token');
+    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
+    await clearRoutineWidgetActions();
+    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+  } finally {
+    endPrivateKVAccountBoundary();
+  }
+});
 
 vi.mock('react-native', () => ({
   Platform: {
@@ -210,16 +281,24 @@ describe('private KV encrypted storage', () => {
     let current = true;
     let release!: () => void;
     let readStarted!: () => void;
-    const nextRead = new Promise<void>((resolve) => { readStarted = resolve; });
-    const held = new Promise<void>((resolve) => { release = resolve; });
-    const write = updatePrivateItem(key, () => {
-      // The real writer awaits a final native read after its sync transform.
-      mocks.getItemGate = held;
-      mocks.getItemStarted = readStarted;
-      return JSON.stringify({ store: { serverProtocolRejected: false } });
-    }, () => {
-      if (!current) throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED');
+    const nextRead = new Promise<void>((resolve) => {
+      readStarted = resolve;
     });
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const write = updatePrivateItem(
+      key,
+      () => {
+        // The real writer awaits a final native read after its sync transform.
+        mocks.getItemGate = held;
+        mocks.getItemStarted = readStarted;
+        return JSON.stringify({ store: { serverProtocolRejected: false } });
+      },
+      () => {
+        if (!current) throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED');
+      },
+    );
     const denied = expect(write).rejects.toThrow('ENTITLEMENT_SERVER_READ_INVALIDATED');
     await nextRead;
     current = false;
@@ -239,14 +318,24 @@ describe('private KV encrypted storage', () => {
     let current = true;
     let release!: () => void;
     let writeStarted!: () => void;
-    mocks.setItemGate = new Promise<void>((resolve) => { release = resolve; });
-    const writing = new Promise<void>((resolve) => { writeStarted = resolve; });
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const writing = new Promise<void>((resolve) => {
+      writeStarted = resolve;
+    });
     mocks.setItemStarted = writeStarted;
     const commits: string[] = [];
-    mocks.setItemCommitted = (storedKey, raw) => { if (storedKey === key) commits.push(raw); };
-    const recovery = updatePrivateItem(key,
+    mocks.setItemCommitted = (storedKey, raw) => {
+      if (storedKey === key) commits.push(raw);
+    };
+    const recovery = updatePrivateItem(
+      key,
       () => JSON.stringify({ store: { serverProtocolRejected: false } }),
-      () => { if (!current) throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED'); });
+      () => {
+        if (!current) throw new Error('ENTITLEMENT_SERVER_READ_INVALIDATED');
+      },
+    );
     const recoveryDenied = expect(recovery).rejects.toThrow('ENTITLEMENT_SERVER_READ_INVALIDATED');
     await writing;
     current = false;
@@ -254,7 +343,9 @@ describe('private KV encrypted storage', () => {
     // applies to the queued negative operation, after the first writer rolls back.
     mocks.secureGetThrows = true;
     const negative = updatePrivateItem(key, () => prior);
-    const negativeFailed = expect(negative).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
+    const negativeFailed = expect(negative).rejects.toThrow(
+      'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
+    );
     release();
     await Promise.all([recoveryDenied, negativeFailed]);
     expect(commits).toHaveLength(2);
@@ -269,8 +360,13 @@ describe('private KV encrypted storage', () => {
     await setPrivateItem('layerwell.skinprofile.v1', 'prior-profile');
     const priorRaw = mocks.asyncStorage.get('layerwell.skinprofile.v1');
     clearActiveHealthProcessingEpoch();
-    await expect(updatePrivateItem('layerwell.skinprofile.v1', () => 'changed', () => undefined))
-      .rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    await expect(
+      updatePrivateItem(
+        'layerwell.skinprofile.v1',
+        () => 'changed',
+        () => undefined,
+      ),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
     expect(mocks.asyncStorage.get('layerwell.skinprofile.v1')).toBe(priorRaw);
   });
 
@@ -749,8 +845,12 @@ describe('private KV encrypted storage', () => {
       const raw = mocks.asyncStorage.get(key);
       let release!: () => void;
       let started!: () => void;
-      const held = new Promise<void>((resolve) => { release = resolve; });
-      const reading = new Promise<void>((resolve) => { started = resolve; });
+      const held = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const reading = new Promise<void>((resolve) => {
+        started = resolve;
+      });
       if (kind === 'single') {
         mocks.getItemGate = held;
         mocks.getItemStarted = started;
@@ -950,7 +1050,9 @@ describe('private KV encrypted storage', () => {
       setPrivateItem('layerwell.concurrent-b', 'value-b'),
     ]);
 
-    await expect(getPrivateItems(['layerwell.concurrent-a', 'layerwell.concurrent-b'])).resolves.toEqual(
+    await expect(
+      getPrivateItems(['layerwell.concurrent-a', 'layerwell.concurrent-b']),
+    ).resolves.toEqual(
       new Map([
         ['layerwell.concurrent-a', 'value-a'],
         ['layerwell.concurrent-b', 'value-b'],

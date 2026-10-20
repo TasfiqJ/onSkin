@@ -41,9 +41,13 @@ vi.mock('expo-crypto', () => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
-  removePrivateItem: vi.fn(async (key: string) => {
-    if (mocks.removeFailures.has(key)) throw new Error(`remove failed:${key}`);
-    mocks.storage.delete(key);
+  clearRoutineWidgetActionPrivateItems: vi.fn(async () => {
+    let failure: Error | null = null;
+    for (const key of ['layerwell.widgetActionMap.v1', 'layerwell.widgetActionMap.v2']) {
+      if (mocks.removeFailures.has(key)) failure = new Error(`remove failed:${key}`);
+      else mocks.storage.delete(key);
+    }
+    if (failure) throw failure;
   }),
   updatePrivateItem: vi.fn(
     async (key: string, updater: (current: string | null) => string | null) => {

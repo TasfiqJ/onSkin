@@ -825,6 +825,32 @@ export async function multiRemovePrivateItems(keys: readonly string[]): Promise<
   );
 }
 
+/** Revoke only widget bearer capabilities, even after an account boundary closes. */
+export async function clearRoutineWidgetActionPrivateItems(): Promise<void> {
+  const keys = ['layerwell.widgetActionMap.v1', 'layerwell.widgetActionMap.v2'] as const;
+  // Share the ordinary per-key queue so an older write/rollback cannot restore
+  // a revoked token after this deletion. This lane cannot read or write data,
+  // accepts no caller-selected key and never reopens account admission.
+  const pending = runSerializedPrivateMutations(keys, async () => {
+    const results = await Promise.allSettled(
+      keys.map(async (key) => {
+        await AsyncStorage.removeItem(key);
+        failedReadSnapshots.delete(key);
+      }),
+    );
+    const failure = results.find(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    );
+    if (failure) throw failure.reason;
+  });
+  inFlightOperations.add(pending);
+  try {
+    await pending;
+  } finally {
+    inFlightOperations.delete(pending);
+  }
+}
+
 export async function clearPrivateKVContentKey(): Promise<void> {
   await clearStoredPrivateKVContentKey();
   failedReadSnapshots.clear();
