@@ -1,11 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
+import { accountIsolationE2EEvent, accountIsolationE2EPreflightTransport, getAccountIsolationE2EFixture } from './accountIsolationE2E';
 
+vi.mock('@/lib/env', () => ({ env: { appEnvironment: 'development' }, isSupabaseConfigured: false }));
 vi.mock('react-native', () => ({ Platform: { OS: 'web' } }));
 
 afterEach(() => {
   delete process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION;
+  vi.unstubAllGlobals();
 });
 
 describe('account isolation E2E fixture', () => {
@@ -49,4 +51,23 @@ describe('cross-owner fixture environment refusal', () => {
     expect(getAccountIsolationE2EFixture(true, 'development', false, 'ios')).toBeNull();
     expect(getAccountIsolationE2EFixture(true, 'development', false, 'android')).toBeNull();
   });
+});
+
+it('accepts a canonical Request from the real gate and rejects a stale candidate bearer', async () => {
+  vi.stubGlobal('__DEV__', true);
+  vi.stubGlobal('localStorage', { getItem: (key: string) => state.get(key) ?? null, setItem: (key: string, value: string) => state.set(key, value) });
+  const state = new Map<string, string>();
+  process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'cross_owner';
+  const a = accountIsolationE2EEvent('a');
+  const transport = accountIsolationE2EPreflightTransport()!;
+  const request = (token: string) => new Request('https://blocked-supabase-url.invalid/functions/v1/account-deletion', {
+    method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ action: 'preflight' }),
+  });
+  expect(await (await transport(request(a.access_token))).json()).toEqual({ status: 'clear', ownerSubject: a.user.id });
+  const b = accountIsolationE2EEvent('b');
+  expect((await transport(request(a.access_token))).status).toBe(401);
+  expect(await (await transport(request(b.access_token))).json()).toEqual({ status: 'clear', ownerSubject: b.user.id });
+  delete process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION;
+  expect(accountIsolationE2EPreflightTransport()).toBeUndefined();
+  expect(() => accountIsolationE2EEvent('a')).toThrow('DISABLED');
 });

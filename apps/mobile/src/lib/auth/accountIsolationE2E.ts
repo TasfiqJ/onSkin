@@ -87,12 +87,13 @@ export function accountIsolationE2EEvent(owner: 'a' | 'b'): Session {
 
 export function accountIsolationE2EPreflightTransport(): AccountDeletionBarrierTransport | undefined {
   if (getAccountIsolationE2EFixture()?.mode !== 'cross_owner') return undefined;
-  return async (_input, init) => {
+  return async (input, init) => {
+    const request = new Request(input, init);
     // Exercise the real permit and bounded response parser. This attests only
     // the local synthetic identity, never provider authentication or commerce.
     const candidate = getAccountIsolationE2EFixture()?.session;
-    if (!candidate || new Headers(init?.headers).get('Authorization') !== `Bearer ${candidate.access_token}` ||
-        init?.body !== JSON.stringify({ action: 'preflight' })) {
+    if (!candidate || request.headers.get('Authorization') !== `Bearer ${candidate.access_token}` ||
+        await request.text() !== JSON.stringify({ action: 'preflight' })) {
       return new Response(JSON.stringify({ error: 'ACCOUNT_DELETION_SESSION_REJECTED' }), { status: 401 });
     }
     return new Response(JSON.stringify({ status: 'clear', ownerSubject: candidate.user.id }), { status: 200 });
