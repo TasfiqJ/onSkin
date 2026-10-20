@@ -1,0 +1,10 @@
+{
+  "kind": "CODEX_TIME_OBSERVATION_NOT_APPROVAL",
+  "observed_at_utc": "2026-10-20T23:46:35.236156+00:00",
+  "proposal_not_after_utc": "2026-10-21T00:00:00Z",
+  "expired": false,
+  "acceptance_granted": false,
+  "protected_source_go": false,
+  "status": "INACTIVE_PENDING_EXACT_SOURCE_REVIEW",
+  "renewed": false
+}

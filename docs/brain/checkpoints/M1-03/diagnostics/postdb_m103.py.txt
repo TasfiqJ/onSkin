@@ -1,0 +1,27 @@
+import datetime,hashlib,json,pathlib,re,subprocess,tempfile
+r=pathlib.Path.cwd();e=r/'docs/brain/checkpoints/M1-03/evidence'
+receipt=json.loads((e/'measured-local-verifier.receipt.json').read_bytes())
+raw=(r/receipt['output']['path']).read_text(encoding='utf-8',errors='replace')
+bindings=[json.loads(l.split(': ',1)[1]) for l in raw.splitlines() if l.startswith('[db05-local] verified SQL/CLI database binding: ')]
+assert bindings
+last=bindings[-1]; project=last['project'];assert re.fullmatch(r'layerwell_db05_[0-9a-f]{16}',project)
+sandbox=pathlib.Path(last['workdir']);assert sandbox.parent.resolve()==pathlib.Path(tempfile.gettempdir()).resolve() and sandbox.name.startswith('layerwell-db05-local-')
+docker=pathlib.Path(r'C:/Program Files/Docker/Docker/resources/bin/docker.exe')
+bound=json.loads(next(l.split(': ',1)[1] for l in raw.splitlines() if l.startswith('[db05-local] history Docker identity: ')))
+assert hashlib.sha256(docker.read_bytes()).hexdigest()==bound['sha256']
+results=[]
+for args in [['ps','--all','--filter','label=com.supabase.cli.project='+project,'--format','{{.ID}}'],['volume','ls','--filter','label=com.supabase.cli.project='+project,'--format','{{.Name}}']]:
+ v=subprocess.run([str(docker),'--host','npipe:////./pipe/docker_engine',*args],capture_output=True,text=True,timeout=20)
+ results.append(dict(command=subprocess.list2cmdline([str(docker),'--host','npipe:////./pipe/docker_engine',*args]),exit_code=v.returncode,stdout=v.stdout,stderr=v.stderr))
+ assert v.returncode==0 and not v.stdout.strip(), 'Owned resources remain; do not claim cleanup or remove unrelated resources'
+assert not sandbox.exists(), 'Verifier-owned forensic directory remains; no ad-hoc deletion authorized'
+code="import {readFileSync} from 'node:fs'; import {summarizeCanonicalDatabaseTypes} from './scripts/phase2/database-types-contract-lib.mjs'; const {sha256,lineCount}=summarizeCanonicalDatabaseTypes(readFileSync('packages/types/src/database.types.ts','utf8')); console.log(JSON.stringify({sha256,lineCount}));"
+types=json.loads(subprocess.check_output(['node','--input-type=module','-e',code],cwd=r))
+generated=re.search(r'temporary types: PASS \((\d+) lines, sha256 ([0-9a-f]{64})\)',raw)
+parity=bool(generated and int(generated[1])==types['lineCount'] and generated[2]==types['sha256'])
+if receipt['status']=='PASS':assert parity and '[db05-local] full local verification: PASS' in raw
+v=dict(recorded_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),verifier_source_commit=receipt['source_commit'],verifier_status=receipt['status'],verifier_exit=receipt['exit_code'],
+ project=project,sandbox_path=str(sandbox),sandbox_absent=True,owned_container_and_volume_queries=results,canonical_types=types,generated_to_repository_parity=parity,
+ docker_executable_sha256=bound['sha256'],scope='READ_ONLY_POST_CLEANUP_DIAGNOSTIC; no resource deletion, hosted target or gate upgrade')
+(e/'post-database-cleanup.json').write_bytes((json.dumps(v,indent=2)+'\n').encode())
+print(json.dumps(v))

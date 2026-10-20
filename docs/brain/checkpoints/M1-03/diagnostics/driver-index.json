@@ -18,5 +18,10 @@
     "path": "docs/brain/checkpoints/M1-03/diagnostics/listener_m103.py.txt",
     "sha256": "4a42febeb719e096adbece407b86917386a46de6f639732cfd06d250031f50d3",
     "purpose": "Inert copy of actual diagnostic driver; not execution authority"
+  },
+  {
+    "path": "docs/brain/checkpoints/M1-03/diagnostics/postdb_m103.py.txt",
+    "sha256": "a6ec34357f1b6222a9156b4026f84a42ae5338052ebae3808a38eaf35f35647f",
+    "purpose": "Inert copy of actual read-only owned cleanup/type diagnostic; not execution authority"
   }
 ]
