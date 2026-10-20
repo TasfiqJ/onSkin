@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-20T23:08:16.329Z",
+  "generatedAt": "2026-10-20T23:25:29.368Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
-  "gitStatus": "M docs/brain/README.md\n M scripts/brain/brain.py\n M scripts/core05/adherence-source-contract.test.mjs\n?? docs/brain/checkpoints/M1-03/evidence/original-ci-snapshot.json\n?? docs/brain/checkpoints/M1-03/evidence/original-job-118915629932.txt\n?? docs/brain/checkpoints/M1-03/evidence/original-job-118915630272.txt\n?? docs/brain/checkpoints/M1-03/evidence/original-job-118915630613.txt\n?? docs/brain/checkpoints/M1-03/evidence/original-job-118915631281.txt\n?? docs/brain/checkpoints/M1-03/evidence/original-job-118915844992.txt\n?? docs/brain/checkpoints/M1-03/evidence/original-job-118918184430.txt\n?? docs/brain/checkpoints/M1-03/evidence/original-source-contracts.receipt.json\n?? docs/brain/checkpoints/M1-03/evidence/original-source-contracts.txt\n?? docs/brain/checkpoints/M1-03/inputs/00_READ_FIRST.md\n?? docs/brain/checkpoints/M1-03/inputs/ACCEPTANCE_MATRIX.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/ACCEPTANCE_LEDGER.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/ACCEPTANCE_SCOPE.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/ADR_DECISIONS.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/ADR_REGISTRY.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/AUDIT_M1-02_ACCEPTANCE.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/BLOCKERS.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/BLOCKERS.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/BRAIN_RESUME_PROMPT.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/CI_OBSERVATIONS.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/CI_OBSERVATIONS.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/DECISIONS_DELTA.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/EXECUTION_EVIDENCE.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/REVIEW_OBSERVATIONS.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/ROADMAP_STATUS.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/STATE_AT_GLANCE.md\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/STATE_MANIFEST.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/brain_state.json\n?? docs/brain/checkpoints/M1-03/inputs/BRAIN_STATE/roadmap.json\n?? docs/brain/checkpoints/M1-03/inputs/CI_REFRESH_CHECKLIST.md\n?? docs/brain/checkpoints/M1-03/inputs/GOVERNANCE_TRANSITION.md\n?? docs/brain/checkpoints/M1-03/inputs/ONSKIN_BRAIN_HANDOFF_TEMPLATE.md\n?? docs/brain/checkpoints/M1-03/inputs/OWNER_ACTION_PACKET.md\n?? docs/brain/checkpoints/M1-03/inputs/PROTECTED_CHANGE_BOUNDARY.md\n?? docs/brain/checkpoints/M1-03/inputs/REPORT_CONTRACT.md\n?? docs/brain/checkpoints/M1-03/inputs/SOURCE_ORIENTATION.md\n?? docs/brain/checkpoints/M1-03/inputs/STAGE_BRANCH_PROTOCOL.md\n?? docs/brain/checkpoints/M1-03/inputs/SUCCESS_CRITERIA.md\n?? docs/brain/checkpoints/M1-03/inputs/TASK.md\n?? docs/brain/checkpoints/M1-03/inputs/TASK_MANIFEST.json\n?? docs/brain/checkpoints/M1-03/inputs/contracts/ACCEPTANCE_AND_MIGRATION.md\n?? docs/brain/checkpoints/M1-03/inputs/contracts/AUTHORITY_AND_DECISIONS.md\n?? docs/brain/checkpoints/M1-03/inputs/contracts/CORE_CONTRACT.md\n?? docs/brain/checkpoints/M1-03/inputs/contracts/FINANCIAL_AND_SPEND_DECISIONS.md\n?? docs/brain/checkpoints/M1-03/inputs/verify_context.py\n?? docs/brain/m103-active.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/ACCEPTANCE_LEDGER.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/ACCEPTANCE_SCOPE.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/ADR_DECISIONS.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/ADR_REGISTRY.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/AUDIT_M1-02_ACCEPTANCE.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/BLOCKERS.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/BLOCKERS.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/BRAIN_RESUME_PROMPT.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/CI_OBSERVATIONS.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/CI_OBSERVATIONS.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/DECISIONS_DELTA.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/EXECUTION_EVIDENCE.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/REVIEW_OBSERVATIONS.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/ROADMAP_STATUS.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/STATE_AT_GLANCE.md\n?? docs/brain/reviews/M1-02/ACCEPTANCE/STATE_MANIFEST.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/brain_state.json\n?? docs/brain/reviews/M1-02/ACCEPTANCE/roadmap.json\n?? scripts/brain/m103_profile.py\n?? scripts/brain/test_m103_profile.py",
+  "gitSha": "ad04f618a6875e206dca179dca99514d9ef6e791",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 414,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -3088,7 +3088,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }
