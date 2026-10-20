@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103-observer-fixture
+
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  19:15:39
+   Duration  789ms (transform 186ms, setup 0ms, import 369ms, tests 221ms, environment 0ms)
+

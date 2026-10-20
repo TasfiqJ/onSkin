@@ -1,0 +1,455 @@
+{
+  "recorded_at_utc": "2026-10-20T23:23:44Z",
+  "head_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+  "pr_checkout": "19c0ecee9121c7a83867cf704b9382d7a30c14cc",
+  "pr_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+  "runs": [
+    {
+      "id": 39513358197,
+      "name": "Quality",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_number": 366,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39513358197/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39513358197/logs",
+      "workflow_id": 312030668
+    },
+    {
+      "id": 39513358256,
+      "name": "iOS launch contract",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 366,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39513358256/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39513358256/logs",
+      "workflow_id": 312030667
+    },
+    {
+      "id": 39513358192,
+      "name": "Security",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_number": 898,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39513358192/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39513358192/logs",
+      "workflow_id": 308213475
+    }
+  ],
+  "security_jobs": [
+    {
+      "id": 118939526419,
+      "name": "Code security gates",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 39513358192,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Setup Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Deno",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Use reviewed npm",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Install",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Phase 9 verification",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Dependency SBOM with audit metadata",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Capture high or critical npm advisories",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Test reviewed security exceptions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Enforce reviewed npm advisory exceptions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Write code-gate evidence manifest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Upload code-gate evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Enforce code-gate results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 14
+        },
+        {
+          "name": "Post Setup Deno",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Post Setup Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29
+        }
+      ]
+    },
+    {
+      "id": 118939526873,
+      "name": "Static analysis and OSV",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 39513358192,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Setup Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Prepare exact Linux scanners and npm",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Install",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Semgrep OWASP/TypeScript/React/secrets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Prepare OSV evidence directory",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "OSV scanner",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Enforce reviewed OSV advisory exceptions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Write static scanner evidence manifest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Stage verified technical receipt after all source checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Upload static scanner evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Enforce static scanner results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 14
+        },
+        {
+          "name": "Post Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26
+        },
+        {
+          "name": "Post Setup Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29
+        }
+      ]
+    },
+    {
+      "id": 118939528220,
+      "name": "Live Supabase adversarial evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "run_id": 39513358192,
+      "logs_url": null,
+      "steps": null
+    },
+    {
+      "id": 118939528828,
+      "name": "Secret scanning",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39513358192,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Gitleaks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Bind actual Gitleaks executable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "TruffleHog verified secrets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Write secret scanner evidence manifest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Upload secret scanner evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Enforce secret scanner results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 118941215554,
+      "name": "Automated single-owner source-only Security acceptance",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 39513358192,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Setup Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Use reviewed npm",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Install exact application dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Download original code evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Download original secret evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Download original static evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Require complete original and exact-source technical evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10
+        },
+        {
+          "name": "Publish automated source-only decision descriptor",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Post Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Post Setup Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23
+        }
+      ]
+    }
+  ]
+}

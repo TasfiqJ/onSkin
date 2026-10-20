@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+  "source_tree": "7bf9730be830e56e19116408e5b9b9675e76c255",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/evidence/measured-governance.txt",
+    "sha256": "f3984dad0ea50e2a25657891ab8e5e1bd9ca7824eb7c07019cc663f7caa81276"
+  },
+  "counts": {
+    "passed": 56,
+    "failed": 0,
+    "skipped": 2
+  },
+  "started_at_utc": "2026-10-20T23:08:50.534583+00:00",
+  "finished_at_utc": "2026-10-20T23:18:30.434493+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ]
+}

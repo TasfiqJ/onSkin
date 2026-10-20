@@ -1,0 +1,816 @@
+﻿2026-10-20T23:11:39.2058955Z Current runner version: '2.338.0'
+2026-10-20T23:11:39.2087063Z ##[group]Runner Image Provisioner
+2026-10-20T23:11:39.2088046Z Hosted Compute Agent
+2026-10-20T23:11:39.2088667Z Version: 20261012.601
+2026-10-20T23:11:39.2089374Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-20T23:11:39.2090116Z Build Date: 2026-10-12T17:48:21Z
+2026-10-20T23:11:39.2090794Z Worker ID: {d2c0c962-0dd1-47eb-a383-d3d334b8555f}
+2026-10-20T23:11:39.2091554Z Region: northcentralus
+2026-10-20T23:11:39.2092134Z Cloud: Azure
+2026-10-20T23:11:39.2092709Z ##[endgroup]
+2026-10-20T23:11:39.2094265Z ##[group]Operating System
+2026-10-20T23:11:39.2094901Z Ubuntu
+2026-10-20T23:11:39.2095470Z 24.04.5
+2026-10-20T23:11:39.2096383Z LTS
+2026-10-20T23:11:39.2096920Z ##[endgroup]
+2026-10-20T23:11:39.2097544Z ##[group]Runner Image
+2026-10-20T23:11:39.2098150Z Image: ubuntu-24.04
+2026-10-20T23:11:39.2098747Z Version: 20261012.334.1
+2026-10-20T23:11:39.2100046Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-20T23:11:39.2101627Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-20T23:11:39.2102583Z ##[endgroup]
+2026-10-20T23:11:39.2103750Z ##[group]GITHUB_TOKEN Permissions
+2026-10-20T23:11:39.2105971Z Contents: read
+2026-10-20T23:11:39.2106762Z Metadata: read
+2026-10-20T23:11:39.2107338Z ##[endgroup]
+2026-10-20T23:11:39.2109886Z Secret source: Actions
+2026-10-20T23:11:39.2111021Z Cache mode: write
+2026-10-20T23:11:39.2111739Z Prepare workflow directory
+2026-10-20T23:11:39.2672742Z Prepare all required actions
+2026-10-20T23:11:39.2744820Z Getting action download info
+2026-10-20T23:11:39.5122415Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-20T23:11:39.8299538Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-20T23:11:39.9887242Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-20T23:11:40.0894087Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-20T23:11:40.2984505Z Complete job name: Static analysis and OSV
+2026-10-20T23:11:40.3846094Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-20T23:11:40.3847318Z with:
+2026-10-20T23:11:40.3847784Z   fetch-depth: 0
+2026-10-20T23:11:40.3848290Z   persist-credentials: false
+2026-10-20T23:11:40.3848850Z   repository: TasfiqJ/onSkin
+2026-10-20T23:11:40.3852950Z   token: ***
+2026-10-20T23:11:40.3853475Z   ssh-strict: true
+2026-10-20T23:11:40.3853946Z   ssh-user: git
+2026-10-20T23:11:40.3854412Z   clean: true
+2026-10-20T23:11:40.3854894Z   sparse-checkout-cone-mode: true
+2026-10-20T23:11:40.3855473Z   fetch-tags: false
+2026-10-20T23:11:40.3856402Z   show-progress: true
+2026-10-20T23:11:40.3856964Z   lfs: false
+2026-10-20T23:11:40.3857429Z   submodules: false
+2026-10-20T23:11:40.3857913Z   set-safe-directory: true
+2026-10-20T23:11:40.3858801Z env:
+2026-10-20T23:11:40.3859283Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:11:40.3859830Z   CI: 1
+2026-10-20T23:11:40.3860263Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:11:40.3860859Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:11:40.3861460Z   GOMAXPROCS: 2
+2026-10-20T23:11:40.3861924Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:11:40.3862398Z ##[endgroup]
+2026-10-20T23:11:40.4982469Z Syncing repository: TasfiqJ/onSkin
+2026-10-20T23:11:40.4985351Z ##[group]Getting Git version info
+2026-10-20T23:11:40.4986872Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-20T23:11:40.4988807Z [command]/usr/bin/git version
+2026-10-20T23:11:40.4989745Z git version 2.55.0
+2026-10-20T23:11:40.4992738Z ##[endgroup]
+2026-10-20T23:11:40.4999179Z Temporarily overriding HOME='/home/runner/work/_temp/7c1801f0-f256-4a1e-8572-b7a95e19b214' before making global git config changes
+2026-10-20T23:11:40.5001522Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T23:11:40.5002777Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-20T23:11:40.5022620Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-20T23:11:40.5028133Z ##[group]Determining repository object format
+2026-10-20T23:11:40.5030421Z ##[endgroup]
+2026-10-20T23:11:40.5031783Z ##[group]Initializing the repository
+2026-10-20T23:11:40.5034910Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-20T23:11:40.5144135Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-20T23:11:40.5146321Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-20T23:11:40.5148705Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-20T23:11:40.5150142Z hint: call:
+2026-10-20T23:11:40.5150861Z hint:
+2026-10-20T23:11:40.5151976Z hint: 	git config --global init.defaultBranch <name>
+2026-10-20T23:11:40.5153097Z hint:
+2026-10-20T23:11:40.5154202Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-20T23:11:40.5156457Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-20T23:11:40.5157913Z hint:
+2026-10-20T23:11:40.5158664Z hint: 	git branch -m <name>
+2026-10-20T23:11:40.5159566Z hint:
+2026-10-20T23:11:40.5160821Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-20T23:11:40.5162626Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-20T23:11:40.5165565Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-20T23:11:40.5210431Z ##[endgroup]
+2026-10-20T23:11:40.5212404Z ##[group]Disabling automatic garbage collection
+2026-10-20T23:11:40.5214063Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-20T23:11:40.5250570Z ##[endgroup]
+2026-10-20T23:11:40.5252480Z ##[group]Setting up auth
+2026-10-20T23:11:40.5253822Z Removing SSH command configuration
+2026-10-20T23:11:40.5257066Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T23:11:40.5294632Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T23:11:40.5649849Z Removing HTTP extra header
+2026-10-20T23:11:40.5667459Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T23:11:40.5699495Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T23:11:40.5939927Z Removing includeIf entries pointing to credentials config files
+2026-10-20T23:11:40.5947319Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T23:11:40.5988665Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T23:11:40.6222991Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-20T23:11:40.6267990Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:40.6303431Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:40.6343261Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:40.6379961Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:40.6414062Z ##[endgroup]
+2026-10-20T23:11:40.6416530Z ##[group]Fetching the repository
+2026-10-20T23:11:40.6426909Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +19c0ecee9121c7a83867cf704b9382d7a30c14cc:refs/remotes/pull/9/merge
+2026-10-20T23:11:46.4970635Z From https://github.com/TasfiqJ/onSkin
+2026-10-20T23:11:46.4971688Z  * [new branch]        ai-v1-finish                             -> origin/ai-v1-finish
+2026-10-20T23:11:46.4972799Z  * [new branch]        c07a-cycle-route-readiness               -> origin/c07a-cycle-route-readiness
+2026-10-20T23:11:46.4974061Z  * [new branch]        c08a1-progress-data-authority            -> origin/c08a1-progress-data-authority
+2026-10-20T23:11:46.4975487Z  * [new branch]        c08a2-progress-lock-authority            -> origin/c08a2-progress-lock-authority
+2026-10-20T23:11:46.4977185Z  * [new branch]        codex/ci-q-h01-diagnostic-20261012       -> origin/codex/ci-q-h01-diagnostic-20261012
+2026-10-20T23:11:46.4978740Z  * [new branch]        codex/core-loop-first-insight-gate       -> origin/codex/core-loop-first-insight-gate
+2026-10-20T23:11:46.4980089Z  * [new branch]        codex/ios-privacy-source                 -> origin/codex/ios-privacy-source
+2026-10-20T23:11:46.4981097Z  * [new branch]        main                                     -> origin/main
+2026-10-20T23:11:46.4982344Z  * [new branch]        progress-authority-render-warning        -> origin/progress-authority-render-warning
+2026-10-20T23:11:46.4983749Z  * [new branch]        stage/m0-baseline                        -> origin/stage/m0-baseline
+2026-10-20T23:11:46.4985122Z  * [new branch]        stage/m1-retained-safety                 -> origin/stage/m1-retained-safety
+2026-10-20T23:11:46.4986677Z  * [new ref]           19c0ecee9121c7a83867cf704b9382d7a30c14cc -> pull/9/merge
+2026-10-20T23:11:46.4989150Z ##[endgroup]
+2026-10-20T23:11:46.4989950Z ##[group]Determining the checkout info
+2026-10-20T23:11:46.4990847Z ##[endgroup]
+2026-10-20T23:11:46.4992561Z [command]/usr/bin/git sparse-checkout disable
+2026-10-20T23:11:46.5049971Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-20T23:11:46.5082501Z ##[group]Checking out the ref
+2026-10-20T23:11:46.5086679Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/9/merge
+2026-10-20T23:11:47.5397960Z Updating files:  32% (5798/17734)
+2026-10-20T23:11:47.5660958Z Updating files:  33% (5853/17734)
+2026-10-20T23:11:47.5877164Z Updating files:  34% (6030/17734)
+2026-10-20T23:11:47.6231935Z Updating files:  35% (6207/17734)
+2026-10-20T23:11:47.6626837Z Updating files:  36% (6385/17734)
+2026-10-20T23:11:47.6859880Z Updating files:  37% (6562/17734)
+2026-10-20T23:11:47.6952812Z Updating files:  38% (6739/17734)
+2026-10-20T23:11:47.7046622Z Updating files:  39% (6917/17734)
+2026-10-20T23:11:47.7261761Z Updating files:  40% (7094/17734)
+2026-10-20T23:11:47.7456784Z Updating files:  41% (7271/17734)
+2026-10-20T23:11:47.7681267Z Updating files:  42% (7449/17734)
+2026-10-20T23:11:47.7910307Z Updating files:  43% (7626/17734)
+2026-10-20T23:11:47.8096025Z Updating files:  44% (7803/17734)
+2026-10-20T23:11:48.0149877Z Updating files:  45% (7981/17734)
+2026-10-20T23:11:48.0289463Z Updating files:  46% (8158/17734)
+2026-10-20T23:11:48.0485583Z Updating files:  47% (8335/17734)
+2026-10-20T23:11:48.0632734Z Updating files:  48% (8513/17734)
+2026-10-20T23:11:48.0745952Z Updating files:  49% (8690/17734)
+2026-10-20T23:11:48.0868993Z Updating files:  50% (8867/17734)
+2026-10-20T23:11:48.0973098Z Updating files:  51% (9045/17734)
+2026-10-20T23:11:48.1081418Z Updating files:  52% (9222/17734)
+2026-10-20T23:11:48.1207376Z Updating files:  53% (9400/17734)
+2026-10-20T23:11:48.1344993Z Updating files:  54% (9577/17734)
+2026-10-20T23:11:48.1465975Z Updating files:  55% (9754/17734)
+2026-10-20T23:11:48.1668846Z Updating files:  56% (9932/17734)
+2026-10-20T23:11:48.1814904Z Updating files:  57% (10109/17734)
+2026-10-20T23:11:48.1981373Z Updating files:  58% (10286/17734)
+2026-10-20T23:11:48.2119149Z Updating files:  59% (10464/17734)
+2026-10-20T23:11:48.2260763Z Updating files:  60% (10641/17734)
+2026-10-20T23:11:48.2392995Z Updating files:  61% (10818/17734)
+2026-10-20T23:11:48.2516407Z Updating files:  62% (10996/17734)
+2026-10-20T23:11:48.2643561Z Updating files:  63% (11173/17734)
+2026-10-20T23:11:48.2846471Z Updating files:  64% (11350/17734)
+2026-10-20T23:11:48.3038433Z Updating files:  65% (11528/17734)
+2026-10-20T23:11:48.3281024Z Updating files:  66% (11705/17734)
+2026-10-20T23:11:48.3407554Z Updating files:  67% (11882/17734)
+2026-10-20T23:11:48.3637835Z Updating files:  68% (12060/17734)
+2026-10-20T23:11:48.3950264Z Updating files:  69% (12237/17734)
+2026-10-20T23:11:48.4247896Z Updating files:  70% (12414/17734)
+2026-10-20T23:11:48.4565096Z Updating files:  71% (12592/17734)
+2026-10-20T23:11:48.4929267Z Updating files:  72% (12769/17734)
+2026-10-20T23:11:48.5239280Z Updating files:  73% (12946/17734)
+2026-10-20T23:11:48.5270203Z Updating files:  74% (13124/17734)
+2026-10-20T23:11:48.5534994Z Updating files:  74% (13145/17734)
+2026-10-20T23:11:48.5755531Z Updating files:  75% (13301/17734)
+2026-10-20T23:11:48.5984591Z Updating files:  76% (13478/17734)
+2026-10-20T23:11:48.6333908Z Updating files:  77% (13656/17734)
+2026-10-20T23:11:48.6739876Z Updating files:  78% (13833/17734)
+2026-10-20T23:11:48.7136785Z Updating files:  79% (14010/17734)
+2026-10-20T23:11:48.7524473Z Updating files:  80% (14188/17734)
+2026-10-20T23:11:48.7872233Z Updating files:  81% (14365/17734)
+2026-10-20T23:11:48.8218305Z Updating files:  82% (14542/17734)
+2026-10-20T23:11:48.8611272Z Updating files:  83% (14720/17734)
+2026-10-20T23:11:48.8987074Z Updating files:  84% (14897/17734)
+2026-10-20T23:11:48.9256711Z Updating files:  85% (15074/17734)
+2026-10-20T23:11:48.9535451Z Updating files:  86% (15252/17734)
+2026-10-20T23:11:48.9690556Z Updating files:  87% (15429/17734)
+2026-10-20T23:11:48.9915587Z Updating files:  88% (15606/17734)
+2026-10-20T23:11:49.0050299Z Updating files:  89% (15784/17734)
+2026-10-20T23:11:49.0290830Z Updating files:  90% (15961/17734)
+2026-10-20T23:11:49.0845005Z Updating files:  91% (16138/17734)
+2026-10-20T23:11:49.1041001Z Updating files:  92% (16316/17734)
+2026-10-20T23:11:49.1224401Z Updating files:  93% (16493/17734)
+2026-10-20T23:11:49.1590849Z Updating files:  94% (16670/17734)
+2026-10-20T23:11:49.1779278Z Updating files:  95% (16848/17734)
+2026-10-20T23:11:49.1967524Z Updating files:  96% (17025/17734)
+2026-10-20T23:11:49.2145933Z Updating files:  97% (17202/17734)
+2026-10-20T23:11:49.2515139Z Updating files:  98% (17380/17734)
+2026-10-20T23:11:49.2851249Z Updating files:  99% (17557/17734)
+2026-10-20T23:11:49.2851704Z Updating files: 100% (17734/17734)
+2026-10-20T23:11:49.2852069Z Updating files: 100% (17734/17734), done.
+2026-10-20T23:11:49.3038281Z Note: switching to 'refs/remotes/pull/9/merge'.
+2026-10-20T23:11:49.3038553Z 
+2026-10-20T23:11:49.3038774Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-20T23:11:49.3039691Z changes and commit them, and you can discard any commits you make in this
+2026-10-20T23:11:49.3040596Z state without impacting any branches by switching back to a branch.
+2026-10-20T23:11:49.3041105Z 
+2026-10-20T23:11:49.3041443Z If you want to create a new branch to retain commits you create, you may
+2026-10-20T23:11:49.3042256Z do so (now or later) by using -c with the switch command. Example:
+2026-10-20T23:11:49.3042706Z 
+2026-10-20T23:11:49.3042877Z   git switch -c <new-branch-name>
+2026-10-20T23:11:49.3043167Z 
+2026-10-20T23:11:49.3043333Z Or undo this operation with:
+2026-10-20T23:11:49.3043592Z 
+2026-10-20T23:11:49.3043736Z   git switch -
+2026-10-20T23:11:49.3043931Z 
+2026-10-20T23:11:49.3044260Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-20T23:11:49.3045022Z 
+2026-10-20T23:11:49.3045948Z HEAD is now at 19c0ecee Merge fc6541adadb9abcdea725cfeee34923a3902f2f0 into bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+2026-10-20T23:11:49.3149340Z ##[endgroup]
+2026-10-20T23:11:49.3201501Z [command]/usr/bin/git log -1 --format=%H
+2026-10-20T23:11:49.3234873Z 19c0ecee9121c7a83867cf704b9382d7a30c14cc
+2026-10-20T23:11:49.3246843Z ##[group]Removing auth
+2026-10-20T23:11:49.3247298Z Removing SSH command configuration
+2026-10-20T23:11:49.3251504Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T23:11:49.3287769Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T23:11:49.3529767Z Removing HTTP extra header
+2026-10-20T23:11:49.3534931Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T23:11:49.3571230Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T23:11:49.3810502Z Removing includeIf entries pointing to credentials config files
+2026-10-20T23:11:49.3815303Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T23:11:49.3846451Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-20T23:11:49.3847007Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-20T23:11:49.3847434Z includeif.gitdir:/github/workspace/.git.path
+2026-10-20T23:11:49.3847813Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-20T23:11:49.3856487Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-20T23:11:49.3882608Z /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.3895340Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.3932679Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-20T23:11:49.3959078Z /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.3968757Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.4006982Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-20T23:11:49.4037220Z /github/runner_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.4051137Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.4088079Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-20T23:11:49.4114583Z /github/runner_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.4127081Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config
+2026-10-20T23:11:49.4163357Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T23:11:49.4402757Z Removing credentials config '/home/runner/work/_temp/git-credentials-74ab4bd2-68a1-4852-aa5d-300a83066ae3.config'
+2026-10-20T23:11:49.4411552Z ##[endgroup]
+2026-10-20T23:11:49.4669786Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-20T23:11:49.4670371Z with:
+2026-10-20T23:11:49.4670574Z   node-version: 22.21.0
+2026-10-20T23:11:49.4670804Z   cache: npm
+2026-10-20T23:11:49.4671003Z   check-latest: false
+2026-10-20T23:11:49.4673543Z   token: ***
+2026-10-20T23:11:49.4673760Z   package-manager-cache: true
+2026-10-20T23:11:49.4674003Z env:
+2026-10-20T23:11:49.4674199Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:11:49.4674431Z   CI: 1
+2026-10-20T23:11:49.4674623Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:11:49.4674871Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:11:49.4675137Z   GOMAXPROCS: 2
+2026-10-20T23:11:49.4675334Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:11:49.4675537Z ##[endgroup]
+2026-10-20T23:11:49.6247745Z Attempting to download 22.21.0...
+2026-10-20T23:11:50.2918019Z Acquiring 22.21.0 - x64 from https://github.com/actions/node-versions/releases/download/22.21.0-18671149699/node-22.21.0-linux-x64.tar.gz
+2026-10-20T23:11:50.8371348Z Extracting ...
+2026-10-20T23:11:50.8497249Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/c9c41375-7d81-4da1-bfe6-c5b2d1df4503 -f /home/runner/work/_temp/34273e87-ae9f-49c7-a0c4-b693b3299783
+2026-10-20T23:11:52.0500842Z Adding to the cache ...
+2026-10-20T23:11:54.1089622Z ##[group]Environment details
+2026-10-20T23:11:54.3444172Z node: v22.21.0
+2026-10-20T23:11:54.3444562Z npm: 10.9.4
+2026-10-20T23:11:54.3444785Z yarn: 1.22.22
+2026-10-20T23:11:54.3445301Z ##[endgroup]
+2026-10-20T23:11:54.3463882Z [command]/opt/hostedtoolcache/node/22.21.0/x64/bin/npm config get cache
+2026-10-20T23:11:54.4543364Z /home/runner/.npm
+2026-10-20T23:11:54.5677656Z Cache hit for: node-cache-Linux-x64-npm-4965482aff42dfede513d69e0aec1cc94371f24997ad1db1c0ed439929987d0a
+2026-10-20T23:11:55.6708926Z Received 184549376 of 408780367 (45.1%), 175.8 MBs/sec
+2026-10-20T23:11:56.6036782Z Received 408780367 of 408780367 (100.0%), 201.6 MBs/sec
+2026-10-20T23:11:56.6038248Z Cache Size: ~390 MB (408780367 B)
+2026-10-20T23:11:56.6157102Z [command]/usr/bin/tar -xf /home/runner/work/_temp/b6c84e1b-7a84-4e41-a3b8-28597d44d175/cache.tzst -P -C /home/runner/work/onSkin/onSkin --use-compress-program unzstd
+2026-10-20T23:11:57.4767680Z Cache restored successfully
+2026-10-20T23:11:57.4954260Z Cache restored from key: node-cache-Linux-x64-npm-4965482aff42dfede513d69e0aec1cc94371f24997ad1db1c0ed439929987d0a
+2026-10-20T23:11:57.5236971Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-20T23:11:57.5237412Z with:
+2026-10-20T23:11:57.5237622Z   python-version: 3.12
+2026-10-20T23:11:57.5237853Z   check-latest: false
+2026-10-20T23:11:57.5240627Z   token: ***
+2026-10-20T23:11:57.5240860Z   update-environment: true
+2026-10-20T23:11:57.5241113Z   allow-prereleases: false
+2026-10-20T23:11:57.5241345Z   freethreaded: false
+2026-10-20T23:11:57.5241558Z env:
+2026-10-20T23:11:57.5241764Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:11:57.5241997Z   CI: 1
+2026-10-20T23:11:57.5242183Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:11:57.5242422Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:11:57.5242719Z   GOMAXPROCS: 2
+2026-10-20T23:11:57.5243065Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:11:57.5243434Z ##[endgroup]
+2026-10-20T23:11:57.6732426Z ##[group]Installed versions
+2026-10-20T23:11:57.7306244Z Successfully set up CPython (3.12.15)
+2026-10-20T23:11:57.7307618Z ##[endgroup]
+2026-10-20T23:11:57.7779529Z ##[group]Run python -B scripts/phase9/security_acceptance/bootstrap_tools.py "$RUNNER_TEMP/g97-tools"
+2026-10-20T23:11:57.7780879Z [36;1mpython -B scripts/phase9/security_acceptance/bootstrap_tools.py "$RUNNER_TEMP/g97-tools"[0m
+2026-10-20T23:11:57.7781852Z [36;1mecho "$RUNNER_TEMP/g97-tools/cli-bin" >> "$GITHUB_PATH"[0m
+2026-10-20T23:11:58.0176842Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:11:58.0177139Z env:
+2026-10-20T23:11:58.0177374Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:11:58.0177627Z   CI: 1
+2026-10-20T23:11:58.0177817Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:11:58.0178074Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:11:58.0178409Z   GOMAXPROCS: 2
+2026-10-20T23:11:58.0178621Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:11:58.0179136Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:11:58.0179603Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:11:58.0180108Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:11:58.0180510Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:11:58.0180902Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:11:58.0181300Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:11:58.0181630Z ##[endgroup]
+2026-10-20T23:12:03.2340436Z 
+2026-10-20T23:12:04.1035306Z added 1 package in 4s
+2026-10-20T23:12:04.1037294Z Collecting annotated-types==0.8.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 3))
+2026-10-20T23:12:04.1585549Z   Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-10-20T23:12:04.1808372Z Collecting anyio==4.15.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 4))
+2026-10-20T23:12:04.1847087Z   Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-20T23:12:04.2173410Z Collecting attrs==26.1.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 5))
+2026-10-20T23:12:04.2209302Z   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-20T23:12:04.2351481Z Collecting boltons==21.0.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 6))
+2026-10-20T23:12:04.2387459Z   Downloading boltons-21.0.0-py2.py3-none-any.whl (193 kB)
+2026-10-20T23:12:04.2530173Z Collecting bracex==3.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 7))
+2026-10-20T23:12:04.2567812Z   Downloading bracex-3.1-py3-none-any.whl (11 kB)
+2026-10-20T23:12:04.2737782Z Collecting certifi==2026.10.18 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 8))
+2026-10-20T23:12:04.2772767Z   Downloading certifi-2026.10.18-py3-none-any.whl (134 kB)
+2026-10-20T23:12:04.4032101Z Collecting cffi==2.1.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 9))
+2026-10-20T23:12:04.4071133Z   Downloading cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+2026-10-20T23:12:04.5474811Z Collecting charset-normalizer==3.5.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 10))
+2026-10-20T23:12:04.5514340Z   Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+2026-10-20T23:12:04.5692522Z Collecting click==8.4.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 11))
+2026-10-20T23:12:04.5726046Z   Downloading click-8.4.2-py3-none-any.whl (119 kB)
+2026-10-20T23:12:04.5838712Z Collecting click-option-group==0.5.9 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 12))
+2026-10-20T23:12:04.5870916Z   Downloading click_option_group-0.5.9-py3-none-any.whl (11 kB)
+2026-10-20T23:12:04.6002696Z Collecting colorama==0.4.6 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 13))
+2026-10-20T23:12:04.6037427Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-10-20T23:12:04.7863645Z Collecting cryptography==50.0.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 14))
+2026-10-20T23:12:04.7904366Z   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+2026-10-20T23:12:04.8124303Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 239.1 MB/s  0:00:00
+2026-10-20T23:12:04.8293570Z Collecting exceptiongroup==1.2.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 15))
+2026-10-20T23:12:04.8328638Z   Downloading exceptiongroup-1.2.2-py3-none-any.whl (16 kB)
+2026-10-20T23:12:04.8455050Z Collecting face==26.0.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 16))
+2026-10-20T23:12:04.8490304Z   Downloading face-26.0.1-py3-none-any.whl (57 kB)
+2026-10-20T23:12:04.8616131Z Collecting glom==25.12.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 17))
+2026-10-20T23:12:04.8650902Z   Downloading glom-25.12.0-py3-none-any.whl (103 kB)
+2026-10-20T23:12:04.8817162Z Collecting googleapis-common-protos==1.75.5 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 18))
+2026-10-20T23:12:04.8852172Z   Downloading googleapis_common_protos-1.75.5-py3-none-any.whl (307 kB)
+2026-10-20T23:12:04.8979892Z Collecting h11==0.16.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 19))
+2026-10-20T23:12:04.9016735Z   Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-20T23:12:04.9164414Z Collecting httpcore==1.0.9 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 20))
+2026-10-20T23:12:04.9202554Z   Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-20T23:12:04.9397074Z Collecting httpx==0.28.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 21))
+2026-10-20T23:12:04.9432774Z   Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-20T23:12:04.9558207Z Collecting httpx-sse==0.4.3 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 22))
+2026-10-20T23:12:04.9592876Z   Downloading httpx_sse-0.4.3-py3-none-any.whl (9.0 kB)
+2026-10-20T23:12:04.9754300Z Collecting idna==3.20 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 23))
+2026-10-20T23:12:04.9789808Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-20T23:12:04.9999840Z Collecting importlib_metadata==8.7.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 24))
+2026-10-20T23:12:05.0034870Z   Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+2026-10-20T23:12:05.0238030Z Collecting jsonschema==4.25.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 25))
+2026-10-20T23:12:05.0279547Z   Downloading jsonschema-4.25.1-py3-none-any.whl (90 kB)
+2026-10-20T23:12:05.0419478Z Collecting jsonschema-specifications==2025.9.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 26))
+2026-10-20T23:12:05.0455078Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-20T23:12:05.0592081Z Collecting markdown-it-py==4.2.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 27))
+2026-10-20T23:12:05.0627993Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-10-20T23:12:05.0816922Z Collecting mcp==1.29.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 28))
+2026-10-20T23:12:05.0853442Z   Downloading mcp-1.29.0-py3-none-any.whl (223 kB)
+2026-10-20T23:12:05.0993231Z Collecting mdurl==0.1.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 29))
+2026-10-20T23:12:05.1027438Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-10-20T23:12:05.1190150Z Collecting opentelemetry-api==1.37.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 30))
+2026-10-20T23:12:05.1226561Z   Downloading opentelemetry_api-1.37.0-py3-none-any.whl (65 kB)
+2026-10-20T23:12:05.1360653Z Collecting opentelemetry-exporter-otlp-proto-common==1.37.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 31))
+2026-10-20T23:12:05.1397884Z   Downloading opentelemetry_exporter_otlp_proto_common-1.37.0-py3-none-any.whl (18 kB)
+2026-10-20T23:12:05.1545481Z Collecting opentelemetry-exporter-otlp-proto-http==1.37.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 32))
+2026-10-20T23:12:05.1580886Z   Downloading opentelemetry_exporter_otlp_proto_http-1.37.0-py3-none-any.whl (19 kB)
+2026-10-20T23:12:05.1749510Z Collecting opentelemetry-instrumentation==0.58b0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 33))
+2026-10-20T23:12:05.1785437Z   Downloading opentelemetry_instrumentation-0.58b0-py3-none-any.whl (33 kB)
+2026-10-20T23:12:05.1960916Z Collecting opentelemetry-instrumentation-requests==0.58b0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 34))
+2026-10-20T23:12:05.1998226Z   Downloading opentelemetry_instrumentation_requests-0.58b0-py3-none-any.whl (12 kB)
+2026-10-20T23:12:05.2128871Z Collecting opentelemetry-instrumentation-threading==0.58b0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 35))
+2026-10-20T23:12:05.2164263Z   Downloading opentelemetry_instrumentation_threading-0.58b0-py3-none-any.whl (9.3 kB)
+2026-10-20T23:12:05.2327985Z Collecting opentelemetry-proto==1.37.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 36))
+2026-10-20T23:12:05.2367657Z   Downloading opentelemetry_proto-1.37.0-py3-none-any.whl (72 kB)
+2026-10-20T23:12:05.2545046Z Collecting opentelemetry-sdk==1.37.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 37))
+2026-10-20T23:12:05.2581565Z   Downloading opentelemetry_sdk-1.37.0-py3-none-any.whl (131 kB)
+2026-10-20T23:12:05.2742998Z Collecting opentelemetry-semantic-conventions==0.58b0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 38))
+2026-10-20T23:12:05.2786315Z   Downloading opentelemetry_semantic_conventions-0.58b0-py3-none-any.whl (207 kB)
+2026-10-20T23:12:05.2957267Z Collecting opentelemetry-util-http==0.58b0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 39))
+2026-10-20T23:12:05.2993554Z   Downloading opentelemetry_util_http-0.58b0-py3-none-any.whl (7.7 kB)
+2026-10-20T23:12:05.3149592Z Collecting packaging==26.3 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 40))
+2026-10-20T23:12:05.3185291Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-20T23:12:05.3367657Z Collecting peewee==3.19.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 41))
+2026-10-20T23:12:05.3412099Z   Downloading peewee-3.19.0-py3-none-any.whl (411 kB)
+2026-10-20T23:12:05.4888748Z Collecting protobuf==6.33.6 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 42))
+2026-10-20T23:12:05.4930148Z   Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+2026-10-20T23:12:05.5050275Z Collecting pycparser==3.11 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 43))
+2026-10-20T23:12:05.5084189Z   Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+2026-10-20T23:12:05.6322630Z Collecting pydantic==2.14.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 44))
+2026-10-20T23:12:05.6364710Z   Downloading pydantic-2.14.1-py3-none-any.whl (488 kB)
+2026-10-20T23:12:05.6564168Z Collecting pydantic-settings==2.16.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 45))
+2026-10-20T23:12:05.6599264Z   Downloading pydantic_settings-2.16.0-py3-none-any.whl (80 kB)
+2026-10-20T23:12:06.3806262Z Collecting pydantic_core==2.50.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 46))
+2026-10-20T23:12:06.3846402Z   Downloading pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+2026-10-20T23:12:06.3969604Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 199.6 MB/s  0:00:00
+2026-10-20T23:12:06.4141919Z Collecting Pygments==2.21.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 47))
+2026-10-20T23:12:06.4179252Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-20T23:12:06.4258031Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 194.6 MB/s  0:00:00
+2026-10-20T23:12:06.4418720Z Collecting PyJWT==2.15.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 48))
+2026-10-20T23:12:06.4459516Z   Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+2026-10-20T23:12:06.4600066Z Collecting python-dotenv==1.2.4 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 49))
+2026-10-20T23:12:06.4633715Z   Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+2026-10-20T23:12:06.4771054Z Collecting python-multipart==0.0.32 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 50))
+2026-10-20T23:12:06.4805746Z   Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+2026-10-20T23:12:06.4987266Z Collecting referencing==0.37.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 51))
+2026-10-20T23:12:06.5021326Z   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-20T23:12:06.5219357Z Collecting requests==2.34.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 52))
+2026-10-20T23:12:06.5254778Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-10-20T23:12:06.5529695Z Collecting rich==15.0.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 53))
+2026-10-20T23:12:06.5569352Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-10-20T23:12:06.8258260Z Collecting rpds-py==2026.9.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 54))
+2026-10-20T23:12:06.8298708Z   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+2026-10-20T23:12:06.9471419Z Collecting ruamel.yaml==0.19.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 55))
+2026-10-20T23:12:06.9510674Z   Downloading ruamel_yaml-0.19.1-py3-none-any.whl (118 kB)
+2026-10-20T23:12:06.9883805Z Collecting ruamel.yaml.clib==0.2.15 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 56))
+2026-10-20T23:12:06.9926600Z   Downloading ruamel_yaml_clib-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (788 kB)
+2026-10-20T23:12:06.9982183Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 788.2/788.2 kB 169.4 MB/s  0:00:00
+2026-10-20T23:12:07.0084486Z Collecting semantic-version==2.10.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 57))
+2026-10-20T23:12:07.0122186Z   Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
+2026-10-20T23:12:07.1026072Z Collecting semgrep==1.181.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 58))
+2026-10-20T23:12:07.1074306Z   Downloading semgrep-1.181.0-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-manylinux_2_34_x86_64.whl (70.5 MB)
+2026-10-20T23:12:07.3210326Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.5/70.5 MB 333.4 MB/s  0:00:00
+2026-10-20T23:12:07.3872255Z Collecting sse-starlette==3.5.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 59))
+2026-10-20T23:12:07.3906345Z   Downloading sse_starlette-3.5.0-py3-none-any.whl (17 kB)
+2026-10-20T23:12:07.4139883Z Collecting starlette==1.9.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 60))
+2026-10-20T23:12:07.4176013Z   Downloading starlette-1.9.0-py3-none-any.whl (80 kB)
+2026-10-20T23:12:07.4467953Z Collecting tomli==2.4.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 61))
+2026-10-20T23:12:07.4507358Z   Downloading tomli-2.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (253 kB)
+2026-10-20T23:12:07.4624999Z Collecting typing-inspection==0.4.4 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 62))
+2026-10-20T23:12:07.4658695Z   Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+2026-10-20T23:12:07.4805498Z Collecting typing_extensions==4.16.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 63))
+2026-10-20T23:12:07.4841298Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-20T23:12:07.5023535Z Collecting urllib3==2.8.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 64))
+2026-10-20T23:12:07.5064594Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-10-20T23:12:07.5287615Z Collecting uvicorn==0.54.0 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 65))
+2026-10-20T23:12:07.5327058Z   Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-10-20T23:12:07.5481819Z Collecting wcmatch==8.5.2 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 66))
+2026-10-20T23:12:07.5516727Z   Downloading wcmatch-8.5.2-py3-none-any.whl (39 kB)
+2026-10-20T23:12:07.9466044Z Collecting wrapt==1.17.3 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 67))
+2026-10-20T23:12:07.9503935Z   Downloading wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (88 kB)
+2026-10-20T23:12:07.9657604Z Collecting zipp==4.1.1 (from -r /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt (line 68))
+2026-10-20T23:12:07.9690813Z   Downloading zipp-4.1.1-py3-none-any.whl (10 kB)
+2026-10-20T23:12:08.1114061Z Installing collected packages: peewee, glom, boltons, zipp, wrapt, wcmatch, uvicorn, urllib3, typing-inspection, typing_extensions, tomli, starlette, sse-starlette, semgrep, semantic-version, ruamel.yaml.clib, ruamel.yaml, rpds-py, rich, requests, referencing, python-multipart, python-dotenv, PyJWT, Pygments, pydantic-settings, pydantic_core, pydantic, pycparser, protobuf, packaging, opentelemetry-util-http, opentelemetry-semantic-conventions, opentelemetry-sdk, opentelemetry-proto, opentelemetry-instrumentation-threading, opentelemetry-instrumentation-requests, opentelemetry-instrumentation, opentelemetry-exporter-otlp-proto-http, opentelemetry-exporter-otlp-proto-common, opentelemetry-api, mdurl, mcp, markdown-it-py, jsonschema-specifications, jsonschema, importlib_metadata, idna, httpx-sse, httpx, httpcore, h11, googleapis-common-protos, face, exceptiongroup, cryptography, colorama, click-option-group, click, charset-normalizer, cffi, certifi, bracex, attrs, anyio, annotated-types
+2026-10-20T23:12:09.5809047Z 
+2026-10-20T23:12:09.5872767Z Successfully installed PyJWT-2.15.1 Pygments-2.21.0 annotated-types-0.8.0 anyio-4.15.1 attrs-26.1.0 boltons-21.0.0 bracex-3.1 certifi-2026.10.18 cffi-2.1.1 charset-normalizer-3.5.2 click-8.4.2 click-option-group-0.5.9 colorama-0.4.6 cryptography-50.0.2 exceptiongroup-1.2.2 face-26.0.1 glom-25.12.0 googleapis-common-protos-1.75.5 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 httpx-sse-0.4.3 idna-3.20 importlib_metadata-8.7.1 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 markdown-it-py-4.2.0 mcp-1.29.0 mdurl-0.1.2 opentelemetry-api-1.37.0 opentelemetry-exporter-otlp-proto-common-1.37.0 opentelemetry-exporter-otlp-proto-http-1.37.0 opentelemetry-instrumentation-0.58b0 opentelemetry-instrumentation-requests-0.58b0 opentelemetry-instrumentation-threading-0.58b0 opentelemetry-proto-1.37.0 opentelemetry-sdk-1.37.0 opentelemetry-semantic-conventions-0.58b0 opentelemetry-util-http-0.58b0 packaging-26.3 peewee-3.19.0 protobuf-6.33.6 pycparser-3.11 pydantic-2.14.1 pydantic-settings-2.16.0 pydantic_core-2.50.1 python-dotenv-1.2.4 python-multipart-0.0.32 referencing-0.37.0 requests-2.34.2 rich-15.0.0 rpds-py-2026.9.1 ruamel.yaml-0.19.1 ruamel.yaml.clib-0.2.15 semantic-version-2.10.0 semgrep-1.181.0 sse-starlette-3.5.0 starlette-1.9.0 tomli-2.4.1 typing-inspection-0.4.4 typing_extensions-4.16.0 urllib3-2.8.0 uvicorn-0.54.0 wcmatch-8.5.2 wrapt-1.17.3 zipp-4.1.1
+2026-10-20T23:12:09.5925558Z 
+2026-10-20T23:12:09.5926191Z [notice] A new release of pip is available: 26.2.1 -> 26.2.2
+2026-10-20T23:12:09.5927081Z [notice] To update, run: pip install --upgrade pip
+2026-10-20T23:12:14.5392556Z {"verifiedTools": 5, "directory": "/home/runner/work/_temp/g97-tools", "ownerAcceptance": false}
+2026-10-20T23:12:14.5558954Z ##[group]Run npm ci --no-audit --no-fund
+2026-10-20T23:12:14.5559346Z [36;1mnpm ci --no-audit --no-fund[0m
+2026-10-20T23:12:14.5622764Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:12:14.5623019Z env:
+2026-10-20T23:12:14.5623236Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:12:14.5623486Z   CI: 1
+2026-10-20T23:12:14.5623669Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:12:14.5623917Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:12:14.5624198Z   GOMAXPROCS: 2
+2026-10-20T23:12:14.5624411Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:12:14.5624698Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:14.5625139Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:12:14.5625568Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:14.5626149Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:14.5626544Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:14.5626985Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:12:14.5627317Z ##[endgroup]
+2026-10-20T23:12:28.3869330Z npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-20T23:12:35.3790229Z 
+2026-10-20T23:12:35.3790780Z > layerwell@0.1.0 postinstall
+2026-10-20T23:12:35.3791362Z > node scripts/postinstall.mjs
+2026-10-20T23:12:35.3791555Z 
+2026-10-20T23:12:35.7258650Z {"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+2026-10-20T23:12:35.8543498Z 
+2026-10-20T23:12:35.8544258Z added 1036 packages in 21s
+2026-10-20T23:12:35.8555986Z npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+2026-10-20T23:12:35.8557131Z npm warn install-scripts   @sentry/cli@2.58.4 (postinstall: node ./scripts/install.js)
+2026-10-20T23:12:35.8557855Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-20T23:12:35.8558668Z npm warn install-scripts
+2026-10-20T23:12:35.8559388Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-20T23:12:35.9967540Z ##[group]Run python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v
+2026-10-20T23:12:35.9968358Z [36;1mpython -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v[0m
+2026-10-20T23:12:35.9968940Z [36;1mpython -B scripts/phase9/security_acceptance/collect.py \[0m
+2026-10-20T23:12:35.9969347Z [36;1m  --output "$RUNNER_TEMP/g97-evidence" \[0m
+2026-10-20T23:12:35.9969796Z [36;1m  --npm "$RUNNER_TEMP/g97-tools/npm/node_modules/npm/bin/npm-cli.js" \[0m
+2026-10-20T23:12:35.9970283Z [36;1m  --gitleaks "$RUNNER_TEMP/g97-tools/scanners/gitleaks" \[0m
+2026-10-20T23:12:35.9970687Z [36;1m  --osv "$RUNNER_TEMP/g97-tools/scanners/osv" \[0m
+2026-10-20T23:12:35.9971107Z [36;1m  --trufflehog "$RUNNER_TEMP/g97-tools/scanners/trufflehog" \[0m
+2026-10-20T23:12:35.9971565Z [36;1m  --semgrep "$RUNNER_TEMP/g97-tools/semgrep"[0m
+2026-10-20T23:12:35.9972055Z [36;1mpython -B scripts/phase9/security_acceptance/contract.py check \[0m
+2026-10-20T23:12:35.9972489Z [36;1m  --evidence "$RUNNER_TEMP/g97-evidence"[0m
+2026-10-20T23:12:36.0037855Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:12:36.0038127Z env:
+2026-10-20T23:12:36.0038345Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:12:36.0038599Z   CI: 1
+2026-10-20T23:12:36.0038794Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:12:36.0039046Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:12:36.0039327Z   GOMAXPROCS: 2
+2026-10-20T23:12:36.0039536Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:12:36.0039834Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:36.0040298Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:12:36.0040742Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:36.0041160Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:36.0041566Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:12:36.0042010Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:12:36.0042339Z ##[endgroup]
+2026-10-20T23:12:36.9792379Z test_OSV_scanner_dependency_lock_cannot_be_omitted_or_substituted (test_contract.ContractTests.test_OSV_scanner_dependency_lock_cannot_be_omitted_or_substituted) ... ok
+2026-10-20T23:12:37.5437877Z test_OSV_unknown_or_missing_root_rejected (test_contract.ContractTests.test_OSV_unknown_or_missing_root_rejected) ... ok
+2026-10-20T23:12:38.0566756Z test_SAST_diagnostics_reject_even_with_current_version_and_exact_paths (test_contract.ContractTests.test_SAST_diagnostics_reject_even_with_current_version_and_exact_paths) ... ok
+2026-10-20T23:12:38.6125389Z test_SAST_engine_substitution_or_skipped_rules_rejects (test_contract.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) ... ok
+2026-10-20T23:12:40.8586574Z test_SAST_finding_empty_coverage_and_version_drift_rejected (test_contract.ContractTests.test_SAST_finding_empty_coverage_and_version_drift_rejected) ... ok
+2026-10-20T23:12:41.3458972Z test_SBOM_component_and_dependency_edge_omissions_rejected (test_contract.ContractTests.test_SBOM_component_and_dependency_edge_omissions_rejected) ... ok
+2026-10-20T23:13:31.8290507Z test_all_3264_dispositions_reproduced_from_Git (test_contract.ContractTests.test_all_3264_dispositions_reproduced_from_Git) ... ok
+2026-10-20T23:13:31.8532648Z test_automated_policy_refuses_absent_extra_or_false_typed_scope (test_contract.ContractTests.test_automated_policy_refuses_absent_extra_or_false_typed_scope) ... ok
+2026-10-20T23:13:31.8594673Z test_automated_reviewed_source_pins_are_required_exact_and_typed (test_contract.ContractTests.test_automated_reviewed_source_pins_are_required_exact_and_typed) ... ok
+2026-10-20T23:13:32.3561297Z test_changed_primary_advisory_and_unrooted_propagation_rejected (test_contract.ContractTests.test_changed_primary_advisory_and_unrooted_propagation_rejected) ... ok
+2026-10-20T23:13:32.3565463Z test_collector_refuses_outputs_inside_reviewed_source_before_creating_files (test_contract.ContractTests.test_collector_refuses_outputs_inside_reviewed_source_before_creating_files) ... ok
+2026-10-20T23:13:33.2194139Z test_coverage_exclusion_manifest_source_identity_and_partition_drift_rejected (test_contract.ContractTests.test_coverage_exclusion_manifest_source_identity_and_partition_drift_rejected) ... ok
+2026-10-20T23:13:33.3593660Z test_current_QA_digest_cannot_borrow_an_unrelated_historical_source_reference (test_contract.ContractTests.test_current_QA_digest_cannot_borrow_an_unrelated_historical_source_reference) ... ok
+2026-10-20T23:14:23.3510457Z test_current_history_includes_new_source_recomputed_ruleset_digest (test_contract.ContractTests.test_current_history_includes_new_source_recomputed_ruleset_digest) ... ok
+2026-10-20T23:14:40.8401212Z test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA (test_contract.ContractTests.test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA) ... ok
+2026-10-20T23:14:41.9943339Z test_current_source_report_rejects_path_range_redaction_duplicate_and_findings_drift (test_contract.ContractTests.test_current_source_report_rejects_path_range_redaction_duplicate_and_findings_drift) ... ok
+2026-10-20T23:14:42.2312588Z test_deleted_advisory_with_live_references_rejected (test_contract.ContractTests.test_deleted_advisory_with_live_references_rejected) ... ok
+2026-10-20T23:14:42.2321734Z test_duplicate_JSON_fields_are_not_normalized_away (test_contract.ContractTests.test_duplicate_JSON_fields_are_not_normalized_away) ... ok
+2026-10-20T23:14:42.2408424Z test_engine_archive_paths_links_duplicates_omissions_bytes_and_size_reject (test_contract.ContractTests.test_engine_archive_paths_links_duplicates_omissions_bytes_and_size_reject) ... ok
+2026-10-20T23:14:42.2524926Z test_engine_install_preserves_original_and_rejects_source_drift_before_move (test_contract.ContractTests.test_engine_install_preserves_original_and_rejects_source_drift_before_move) ... ok
+2026-10-20T23:14:42.3627951Z test_envelope_cannot_hide_changed_raw_scanner_output (test_contract.ContractTests.test_envelope_cannot_hide_changed_raw_scanner_output) ... ok
+2026-10-20T23:14:44.5072923Z test_every_scanner_omission_rejected (test_contract.ContractTests.test_every_scanner_omission_rejected) ... ok
+2026-10-20T23:14:44.8158579Z test_exact_record_projection_positive_with_synthetic_SAST_only (test_contract.ContractTests.test_exact_record_projection_positive_with_synthetic_SAST_only) ... ok
+2026-10-20T23:14:45.5066356Z test_graph_nested_copy_peer_problem_and_omission_rejected (test_contract.ContractTests.test_graph_nested_copy_peer_problem_and_omission_rejected) ... ok
+2026-10-20T23:14:45.5072447Z test_hardlinked_evidence_rejected (test_contract.ContractTests.test_hardlinked_evidence_rejected) ... ok
+2026-10-20T23:14:45.9498328Z test_history_GitHub_links_are_source_bound_and_raw_records_stay_unchanged (test_contract.ContractTests.test_history_GitHub_links_are_source_bound_and_raw_records_stay_unchanged) ... ok
+2026-10-20T23:14:48.3457603Z test_history_GitHub_links_reject_forged_targets_coordinates_queries_and_types (test_contract.ContractTests.test_history_GitHub_links_reject_forged_targets_coordinates_queries_and_types) ... ok
+2026-10-20T23:15:38.1921396Z test_history_forged_blob_hash_or_disposition_rejected (test_contract.ContractTests.test_history_forged_blob_hash_or_disposition_rejected) ... ok
+2026-10-20T23:15:39.4309296Z test_history_link_projection_preserves_unknown_fields_and_schema_refusals (test_contract.ContractTests.test_history_link_projection_preserves_unknown_fields_and_schema_refusals) ... ok
+2026-10-20T23:15:39.6318201Z test_history_values_must_be_redacted (test_contract.ContractTests.test_history_values_must_be_redacted) ... ok
+2026-10-20T23:15:41.2470044Z test_initial_audit_cannot_hide_new_changed_or_missing_primary_records (test_contract.ContractTests.test_initial_audit_cannot_hide_new_changed_or_missing_primary_records) ... ok
+2026-10-20T23:15:41.5719467Z test_initial_audit_may_be_a_source_bound_subset_but_keeps_all_primary_roots (test_contract.ContractTests.test_initial_audit_may_be_a_source_bound_subset_but_keeps_all_primary_roots) ... ok
+2026-10-20T23:15:41.7981276Z test_metadata_count_cannot_hide_record_omission (test_contract.ContractTests.test_metadata_count_cannot_hide_record_omission) ... ok
+2026-10-20T23:15:42.0374168Z test_modified_existing_advisory_rejected (test_contract.ContractTests.test_modified_existing_advisory_rejected) ... ok
+2026-10-20T23:15:42.8344676Z test_new_changed_missing_duplicate_history_records_rejected (test_contract.ContractTests.test_new_changed_missing_duplicate_history_records_rejected) ... ok
+2026-10-20T23:15:43.2934888Z test_new_high_vulnerability_rejected (test_contract.ContractTests.test_new_high_vulnerability_rejected) ... ok
+2026-10-20T23:15:43.3251291Z test_new_ruleset_digest_cannot_authorize_changed_rule_bytes (test_contract.ContractTests.test_new_ruleset_digest_cannot_authorize_changed_rule_bytes) ... ok
+2026-10-20T23:15:44.5661830Z test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) ... ok
+2026-10-20T23:15:46.3161235Z test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject (test_contract.ContractTests.test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject) ... ok
+2026-10-20T23:15:48.1715060Z test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) ... ok
+2026-10-20T23:15:48.3608679Z test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject (test_contract.ContractTests.test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject) ... ok
+2026-10-20T23:15:50.1252386Z test_original_workflow_omitted_added_or_linked_artifacts_reject (test_contract.ContractTests.test_original_workflow_omitted_added_or_linked_artifacts_reject) ... ok
+2026-10-20T23:15:51.1275127Z test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) ... ok
+2026-10-20T23:15:51.3733205Z test_original_workflow_sbom_execution_exit_cannot_be_waived (test_contract.ContractTests.test_original_workflow_sbom_execution_exit_cannot_be_waived) ... ok
+2026-10-20T23:15:52.2379293Z test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects (test_contract.ContractTests.test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects) ... ok
+2026-10-20T23:15:52.5711809Z test_original_workflow_unknown_npm_or_osv_finding_rejects (test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects) ... ok
+2026-10-20T23:15:52.9824083Z test_original_workflow_valid_known_artifacts_are_technical_only (test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only) ... ok
+2026-10-20T23:15:53.1983729Z test_original_workflow_wrong_source_run_schema_or_unrelated_check_rejects (test_contract.ContractTests.test_original_workflow_wrong_source_run_schema_or_unrelated_check_rejects) ... ok
+2026-10-20T23:15:53.1996656Z test_oversize_text_is_scanned_and_bounded_not_excluded (test_contract.ContractTests.test_oversize_text_is_scanned_and_bounded_not_excluded) ... ok
+2026-10-20T23:15:53.8346794Z test_owner_decision_digest_changes_for_any_original_raw_byte_change (test_contract.ContractTests.test_owner_decision_digest_changes_for_any_original_raw_byte_change) ... ok
+2026-10-20T23:15:53.8364130Z test_owner_receipt_loader_rejects_duplicate_nonfinite_oversize_and_links (test_contract.ContractTests.test_owner_receipt_loader_rejects_duplicate_nonfinite_oversize_and_links) ... ok
+2026-10-20T23:15:53.8384176Z test_owner_receipt_requires_exact_binding_signature_and_time (test_contract.ContractTests.test_owner_receipt_requires_exact_binding_signature_and_time) ... ok
+2026-10-20T23:15:53.8397559Z test_physical_evidence_extra_missing_link_and_hardlink_reject (test_contract.ContractTests.test_physical_evidence_extra_missing_link_and_hardlink_reject) ... ok
+2026-10-20T23:15:53.8437184Z test_recomputed_source_manifest_or_policy_cannot_rebind_owner_pins (test_contract.ContractTests.test_recomputed_source_manifest_or_policy_cannot_rebind_owner_pins) ... ok
+2026-10-20T23:15:54.1579947Z test_registry_remediation_suggestions_are_preserved_but_not_authority (test_contract.ContractTests.test_registry_remediation_suggestions_are_preserved_but_not_authority) ... ok
+2026-10-20T23:15:54.1587528Z test_regression_skip_cancel_todo_and_rewritten_summary_rejected (test_contract.ContractTests.test_regression_skip_cancel_todo_and_rewritten_summary_rejected) ... ok
+2026-10-20T23:15:54.2084984Z test_retained_Semgrep_warning_fixture_is_not_accepted (test_contract.ContractTests.test_retained_Semgrep_warning_fixture_is_not_accepted) ... ok
+2026-10-20T23:15:54.4033711Z test_scanner_commands_reject_scope_omissions (test_contract.ContractTests.test_scanner_commands_reject_scope_omissions) ... ok
+2026-10-20T23:15:57.2234126Z test_scanner_execution_errors_are_not_findings (test_contract.ContractTests.test_scanner_execution_errors_are_not_findings) ... ok
+2026-10-20T23:15:57.2647823Z test_scanner_network_listener_guard_rejects_real_IP_bind_and_allows_Unix_engine_socket (test_contract.ContractTests.test_scanner_network_listener_guard_rejects_real_IP_bind_and_allows_Unix_engine_socket) ... ok
+2026-10-20T23:15:57.2960080Z test_scanner_startup_ignores_actual_ambient_module_injection (test_contract.ContractTests.test_scanner_startup_ignores_actual_ambient_module_injection) ... ok
+2026-10-20T23:15:57.7385618Z test_scanner_strictness_and_bounded_size_cannot_be_removed (test_contract.ContractTests.test_scanner_strictness_and_bounded_size_cannot_be_removed) ... ok
+2026-10-20T23:15:57.7410119Z test_semgrep_dependency_or_executable_pth_substitution_rejected (test_contract.ContractTests.test_semgrep_dependency_or_executable_pth_substitution_rejected) ... ok
+2026-10-20T23:15:57.7743722Z test_source_drift_extra_missing_and_expired_policy_tamper (test_contract.ContractTests.test_source_drift_extra_missing_and_expired_policy_tamper) ... ok
+2026-10-20T23:15:57.9154256Z test_standalone_accept_and_external_approval_options_are_retired (test_contract.ContractTests.test_standalone_accept_and_external_approval_options_are_retired) ... ok
+2026-10-20T23:15:58.1117517Z test_unreviewed_scanner_extra_rejected (test_contract.ContractTests.test_unreviewed_scanner_extra_rejected) ... ok
+2026-10-20T23:15:58.1119452Z test_unsafe_paths_rejected (test_contract.ContractTests.test_unsafe_paths_rejected) ... ok
+2026-10-20T23:15:58.1127290Z test_untrusted_semgrep_package_rejected_before_running_a_scanner (test_contract.ContractTests.test_untrusted_semgrep_package_rejected_before_running_a_scanner) ... ok
+2026-10-20T23:15:59.8448517Z test_valid_history_link_cannot_authorize_changed_finding_payload (test_contract.ContractTests.test_valid_history_link_cannot_authorize_changed_finding_payload) ... ok
+2026-10-20T23:16:00.1533682Z test_verified_credential_cannot_be_waived_by_history_dispositions (test_contract.ContractTests.test_verified_credential_cannot_be_waived_by_history_dispositions) ... ok
+2026-10-20T23:16:00.1534804Z 
+2026-10-20T23:16:00.1535179Z ----------------------------------------------------------------------
+2026-10-20T23:16:00.1536066Z Ran 70 tests in 203.983s
+2026-10-20T23:16:00.1536317Z 
+2026-10-20T23:16:00.1536449Z OK
+2026-10-20T23:16:00.3188451Z Traceback (most recent call last):
+2026-10-20T23:16:00.3189692Z   File "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/collect.py", line 120, in <module>
+2026-10-20T23:16:00.3190775Z     if __name__=='__main__':main()
+2026-10-20T23:16:00.3191343Z                             ^^^^^^
+2026-10-20T23:16:00.3192400Z   File "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/collect.py", line 119, in main
+2026-10-20T23:16:00.3207288Z     collect(root,installed,pathlib.Path(a.output).resolve(),{n:getattr(a,n) for n in ('npm','gitleaks','osv','trufflehog','semgrep')},policy)
+2026-10-20T23:16:00.3209209Z   File "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/collect.py", line 41, in collect
+2026-10-20T23:16:00.3210166Z     source(root,policy)
+2026-10-20T23:16:00.3210765Z   File "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/contract.py", line 66, in source
+2026-10-20T23:16:00.3211427Z     require(tracked|untracked==expected,'SOURCE_INVENTORY_DRIFT')
+2026-10-20T23:16:00.3212098Z   File "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/contract.py", line 17, in require
+2026-10-20T23:16:00.3212640Z     if not ok:raise Rejected(code)
+2026-10-20T23:16:00.3212929Z               ^^^^^^^^^^^^^^^^^^^^
+2026-10-20T23:16:00.3213249Z contract.Rejected: SOURCE_INVENTORY_DRIFT
+2026-10-20T23:16:00.3351516Z ##[error]Process completed with exit code 1.
+2026-10-20T23:16:00.3405947Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-20T23:16:00.3406498Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-20T23:16:00.3468918Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:16:00.3469165Z env:
+2026-10-20T23:16:00.3469376Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:00.3469621Z   CI: 1
+2026-10-20T23:16:00.3469806Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:00.3470047Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:00.3470325Z   GOMAXPROCS: 2
+2026-10-20T23:16:00.3470522Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:00.3470817Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3471253Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:00.3471682Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3472061Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3472482Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3472879Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:00.3473203Z ##[endgroup]
+2026-10-20T23:16:00.3600063Z ##[group]Run set +e
+2026-10-20T23:16:00.3600324Z [36;1mset +e[0m
+2026-10-20T23:16:00.3600942Z [36;1m"$RUNNER_TEMP/g97-tools/scanners/osv" scan source --format=json --output=docs/phase-9/generated/ci-scanner-evidence/osv-scan.json --recursive .[0m
+2026-10-20T23:16:00.3601602Z [36;1mosv_exit=$?[0m
+2026-10-20T23:16:00.3601818Z [36;1mset -e[0m
+2026-10-20T23:16:00.3602209Z [36;1mecho "$osv_exit" > docs/phase-9/generated/ci-scanner-evidence/osv-scan.exit-code[0m
+2026-10-20T23:16:00.3602661Z [36;1mexit "$osv_exit"[0m
+2026-10-20T23:16:00.3660858Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:16:00.3661114Z env:
+2026-10-20T23:16:00.3661333Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:00.3661590Z   CI: 1
+2026-10-20T23:16:00.3661777Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:00.3662026Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:00.3662323Z   GOMAXPROCS: 2
+2026-10-20T23:16:00.3662528Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:00.3662857Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3663302Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:00.3663768Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3664173Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3664571Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:00.3664969Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:00.3665299Z ##[endgroup]
+2026-10-20T23:16:00.4051981Z Warning: --output has been deprecated in favor of --output-file
+2026-10-20T23:16:00.4156652Z Scanning dir .
+2026-10-20T23:16:00.4157250Z Starting filesystem walk for root: /
+2026-10-20T23:16:00.4370252Z Scanned /home/runner/work/onSkin/onSkin/package-lock.json file and found 1044 packages
+2026-10-20T23:16:00.5072146Z Scanned /home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt file and found 64 packages
+2026-10-20T23:16:00.7563742Z End status: 440 dirs visited, 8936 inodes visited, 2 Extract calls, 340.461384ms elapsed, 340.461605ms wall time
+2026-10-20T23:16:00.8178692Z Filtered 3 local/unscannable package/s from the scan.
+2026-10-20T23:16:02.8258801Z ##[error]Process completed with exit code 1.
+2026-10-20T23:16:02.8307974Z ##[group]Run set +e
+2026-10-20T23:16:02.8308413Z [36;1mset +e[0m
+2026-10-20T23:16:02.8309929Z [36;1mnode scripts/phase9/security-advisory-exceptions.mjs osv > docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stdout 2> docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stderr[0m
+2026-10-20T23:16:02.8311606Z [36;1mgate_exit=$?[0m
+2026-10-20T23:16:02.8312007Z [36;1mset -e[0m
+2026-10-20T23:16:02.8312787Z [36;1mecho "$gate_exit" > docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.exit-code[0m
+2026-10-20T23:16:02.8313967Z [36;1mcat -- docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stdout[0m
+2026-10-20T23:16:02.8315036Z [36;1mcat -- docs/phase-9/generated/ci-scanner-evidence/osv-exception-gate.stderr >&2[0m
+2026-10-20T23:16:02.8316107Z [36;1mexit "$gate_exit"[0m
+2026-10-20T23:16:02.8385223Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:16:02.8385485Z env:
+2026-10-20T23:16:02.8386002Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:02.8386481Z   CI: 1
+2026-10-20T23:16:02.8386828Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:02.8387244Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:02.8387737Z   GOMAXPROCS: 2
+2026-10-20T23:16:02.8388103Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:02.8388606Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:02.8389368Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:02.8389807Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:02.8390205Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:02.8390601Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:02.8390982Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:02.8391304Z ##[endgroup]
+2026-10-20T23:16:03.1229543Z braces: review is expired or dates are invalid
+2026-10-20T23:16:03.1230062Z node-forge: review is expired or dates are invalid
+2026-10-20T23:16:03.1230587Z unreviewed OSV advisory: vite@8.1.3:GHSA-587h-7wmj-h5pm
+2026-10-20T23:16:03.1231053Z unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv
+2026-10-20T23:16:03.1231901Z unreviewed OSV advisory: vite@8.1.3:GHSA-r825-w8mm-5pxw
+2026-10-20T23:16:03.1232765Z unreviewed OSV advisory: certifi@2026.10.18:PYSEC-2026-4320
+2026-10-20T23:16:03.1233357Z unreviewed OSV advisory: certifi@2026.10.18:GHSA-6q48-6c7w-9gw2
+2026-10-20T23:16:03.1233848Z unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv
+2026-10-20T23:16:03.1236920Z ##[error]Process completed with exit code 1.
+2026-10-20T23:16:03.1274334Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-20T23:16:03.1274855Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-20T23:16:03.1275396Z [36;1mcat > docs/phase-9/generated/ci-scanner-evidence/static-analysis-outcomes.json <<JSON[0m
+2026-10-20T23:16:03.1276149Z [36;1m{[0m
+2026-10-20T23:16:03.1276365Z [36;1m  "job": "static-analysis",[0m
+2026-10-20T23:16:03.1276642Z [36;1m  "sha": "${GITHUB_SHA}",[0m
+2026-10-20T23:16:03.1276905Z [36;1m  "run_id": "${GITHUB_RUN_ID}",[0m
+2026-10-20T23:16:03.1277197Z [36;1m  "semgrep": "${G97_SEMGREP_OUTCOME}",[0m
+2026-10-20T23:16:03.1277491Z [36;1m  "osv": "${G97_OSV_OUTCOME}",[0m
+2026-10-20T23:16:03.1277831Z [36;1m  "osv_exception_gate": "${G97_OSV_EXCEPTION_GATE_OUTCOME}"[0m
+2026-10-20T23:16:03.1278168Z [36;1m}[0m
+2026-10-20T23:16:03.1278348Z [36;1mJSON[0m
+2026-10-20T23:16:03.1341599Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:16:03.1341858Z env:
+2026-10-20T23:16:03.1342130Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:03.1342571Z   CI: 1
+2026-10-20T23:16:03.1342760Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:03.1343008Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:03.1343299Z   GOMAXPROCS: 2
+2026-10-20T23:16:03.1343501Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:03.1343793Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1344237Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:03.1344694Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1345093Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1345487Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1346179Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:03.1346540Z   G97_SEMGREP_OUTCOME: failure
+2026-10-20T23:16:03.1346786Z   G97_OSV_OUTCOME: failure
+2026-10-20T23:16:03.1347033Z   G97_OSV_EXCEPTION_GATE_OUTCOME: failure
+2026-10-20T23:16:03.1347314Z ##[endgroup]
+2026-10-20T23:16:03.1488711Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-20T23:16:03.1489223Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-20T23:16:03.1489697Z [36;1mtest ! -e docs/phase-9/generated/ci-scanner-evidence/g97-evidence[0m
+2026-10-20T23:16:03.1490284Z [36;1mcp -R -- "$RUNNER_TEMP/g97-evidence" docs/phase-9/generated/ci-scanner-evidence/g97-evidence[0m
+2026-10-20T23:16:03.1552034Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:16:03.1552293Z env:
+2026-10-20T23:16:03.1552504Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:03.1552752Z   CI: 1
+2026-10-20T23:16:03.1552947Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:03.1553198Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:03.1553487Z   GOMAXPROCS: 2
+2026-10-20T23:16:03.1553694Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:03.1553995Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1554450Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:03.1554941Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1555327Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1556029Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1556432Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:03.1556758Z ##[endgroup]
+2026-10-20T23:16:03.1751641Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-20T23:16:03.1752071Z with:
+2026-10-20T23:16:03.1752313Z   name: static-scanner-evidence-39513358192
+2026-10-20T23:16:03.1752680Z   path: docs/phase-9/generated/ci-scanner-evidence/
+2026-10-20T23:16:03.1753009Z   if-no-files-found: error
+2026-10-20T23:16:03.1753247Z   retention-days: 30
+2026-10-20T23:16:03.1753462Z   compression-level: 6
+2026-10-20T23:16:03.1753751Z   overwrite: false
+2026-10-20T23:16:03.1753989Z   include-hidden-files: false
+2026-10-20T23:16:03.1754228Z env:
+2026-10-20T23:16:03.1754428Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:03.1754675Z   CI: 1
+2026-10-20T23:16:03.1754855Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:03.1755092Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:03.1755362Z   GOMAXPROCS: 2
+2026-10-20T23:16:03.1755564Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:03.1756203Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1756676Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:03.1757107Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1757486Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1757871Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:03.1758253Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:03.1758583Z ##[endgroup]
+2026-10-20T23:16:03.3434894Z (node:14806) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-20T23:16:03.3437279Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-20T23:16:03.3538868Z With the provided path, there will be 6 files uploaded
+2026-10-20T23:16:03.3539730Z Artifact name is valid!
+2026-10-20T23:16:03.3540148Z Root directory input is valid!
+2026-10-20T23:16:03.6682934Z Beginning upload of artifact content to blob storage
+2026-10-20T23:16:03.6990408Z (node:14806) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-20T23:16:03.7994139Z Uploaded bytes 8891
+2026-10-20T23:16:03.8329535Z Finished uploading artifact content to blob storage!
+2026-10-20T23:16:03.8330926Z SHA256 digest of uploaded artifact zip is 69bd3f643fa45234d34d692437349f4d4aa7d17c49328e8881ef212723ab3be1
+2026-10-20T23:16:03.8332068Z Finalizing artifact upload
+2026-10-20T23:16:04.0567947Z Artifact static-scanner-evidence-39513358192.zip successfully finalized. Artifact ID 12307305742
+2026-10-20T23:16:04.0569394Z Artifact static-scanner-evidence-39513358192 has been successfully uploaded! Final size is 8891 bytes. Artifact ID is 12307305742
+2026-10-20T23:16:04.0575080Z Artifact download URL: https://github.com/TasfiqJ/onSkin/actions/runs/39513358192/artifacts/12307305742
+2026-10-20T23:16:04.0721430Z ##[group]Run test "${G97_SEMGREP_OUTCOME}" = "success"
+2026-10-20T23:16:04.0721863Z [36;1mtest "${G97_SEMGREP_OUTCOME}" = "success"[0m
+2026-10-20T23:16:04.0786116Z shell: /usr/bin/bash -e {0}
+2026-10-20T23:16:04.0786381Z env:
+2026-10-20T23:16:04.0786597Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-20T23:16:04.0786855Z   CI: 1
+2026-10-20T23:16:04.0787046Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T23:16:04.0787301Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-20T23:16:04.0787580Z   GOMAXPROCS: 2
+2026-10-20T23:16:04.0787784Z   GOMEMLIMIT: 768MiB
+2026-10-20T23:16:04.0788084Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:04.0788524Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-20T23:16:04.0788975Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:04.0789369Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:04.0789764Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-20T23:16:04.0790201Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-20T23:16:04.0790550Z   G97_SEMGREP_OUTCOME: failure
+2026-10-20T23:16:04.0790819Z   G97_OSV_EXCEPTION_GATE_OUTCOME: failure
+2026-10-20T23:16:04.0791096Z ##[endgroup]
+2026-10-20T23:16:04.0882791Z ##[error]Process completed with exit code 1.
+2026-10-20T23:16:04.0987539Z Post job cleanup.
+2026-10-20T23:16:04.1873669Z [command]/usr/bin/git version
+2026-10-20T23:16:04.1921620Z git version 2.55.0
+2026-10-20T23:16:04.1965292Z Temporarily overriding HOME='/home/runner/work/_temp/7150ef8e-bc0d-4561-8d0e-dd2ae3035b4c' before making global git config changes
+2026-10-20T23:16:04.1967108Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T23:16:04.1970774Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-20T23:16:04.2010222Z Removing SSH command configuration
+2026-10-20T23:16:04.2018590Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T23:16:04.2075165Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T23:16:04.2361860Z Removing HTTP extra header
+2026-10-20T23:16:04.2368214Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T23:16:04.2407975Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T23:16:04.2683767Z Removing includeIf entries pointing to credentials config files
+2026-10-20T23:16:04.2692202Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T23:16:04.2736608Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T23:16:04.3192330Z Cleaning up orphan processes
+2026-10-20T23:16:04.3504442Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

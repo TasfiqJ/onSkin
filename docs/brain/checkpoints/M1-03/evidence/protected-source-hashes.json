@@ -1,0 +1,146 @@
+{
+  "base": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "head": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+  "files": [
+    {
+      "path": "scripts/phase2/local-supabase-reset.mjs",
+      "sha256": "4a5a58b3547c82e8a61fe17ba20ac970b26aa9d2721e713be583bebd90a6a920",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase2/local-supabase-target-guard.mjs",
+      "sha256": "bdd16d467521ab003cd62acf8c10a31437ad07864042b776e62d704b6e0a502d",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase2/staging-deployment-evidence-lib.mjs",
+      "sha256": "81eaab02486b68d55fa8d0fd50e6ff68da6b59982f47a68ba939676fe757dbe5",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase2/deploy-supabase-staging.mjs",
+      "sha256": "8d37928b674e8191af9bbfd107c6302ff5f83f1f0a65b21d1805cc2f4a351822",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase2/database-types-contract-lib.mjs",
+      "sha256": "36e1cbd27f095781538429fcf22db56395564dceb94117fc012f8bc3426ad78d",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "packages/types/src/database.types.ts",
+      "sha256": "2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "apps/catalog-operator-console/package.json",
+      "sha256": "8080c0c75e699c27e2dd48197b49a52dea74e1d8c04024cec3dfe0bd67012ed5",
+      "matches_accepted_base": true
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8",
+      "matches_accepted_base": true
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "sha256": "20c98df5976fcdd782f5cf0f695fe2386afbf47253aef02d808bf3e5e5cacf09",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "supabase/tests/database/schema_contract.test.sql",
+      "sha256": "037c7e5896412872019381461b28e7cf5528e80ede97ae2832d76c41014b132d",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+      "sha256": "b976083dbc00cf5041b3aafe1e537198c60edc3d6c18e629823eaaa0a5b4cd7a",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "supabase/migrations/20260726000068_routine_adherence_authority.sql",
+      "sha256": "37bfd190919f62e63f4e2a61580c5cfe96dea30af72f80259b8d3e9a704f8885",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "supabase/migrations/20260726000069_routine_completion_sync_bridge.sql",
+      "sha256": "a15a8832786011ae3739af56d2c5156dd4102f1ca9c3acbceb0849fa961f665c",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.mjs",
+      "sha256": "543e6c07e390d0375b808e9d5eafdceb620126441f23b8939eff83eca30d1f80",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "docs/phase-9/security-advisory-exceptions.json",
+      "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/collect.py",
+      "sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "sha256": "789b374f7cd469d4735f5deabdaab062a977b62d87587a784fbaf992cecb1ed8",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/packages.json",
+      "sha256": "4a35614b35ed64f8307ce6db42c01f3c3acfe415800b049a5cc3da689b6aaf04",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/braces.patch",
+      "sha256": "fb78493d2bbc82b9e05f323401b9e6680a8e48483e71cc59b598f71a096ae303",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/node-forge.patch",
+      "sha256": "146f37a6b30b9876b6f092d63d9c0b8a948a5add0632c65c8b77252c7a40b4bb",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
+      "matches_accepted_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "matches_accepted_base": true
+    }
+  ]
+}

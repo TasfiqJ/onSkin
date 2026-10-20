@@ -1,0 +1,136 @@
+
+> layerwell@0.1.0 phase9:tooling-security:test
+> node --test scripts/phase9/patch-tooling-security.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs
+
+TAP version 13
+# Subtest: exact reviewed files and every nested copy are checked without audit clearance
+ok 1 - exact reviewed files and every nested copy are checked without audit clearance
+  ---
+  duration_ms: 169.8391
+  type: 'test'
+  ...
+# Subtest: an unexpected nested copy fails the entire preflight without writing any other target
+ok 2 - an unexpected nested copy fails the entire preflight without writing any other target
+  ---
+  duration_ms: 97.397
+  type: 'test'
+  ...
+# Subtest: wrong lock version, SRI, registry URL, package version and link records fail closed
+    # Subtest: identity mismatch
+    ok 1 - identity mismatch
+      ---
+      duration_ms: 36.0486
+      type: 'test'
+      ...
+    # Subtest: identity mismatch
+    ok 2 - identity mismatch
+      ---
+      duration_ms: 33.6279
+      type: 'test'
+      ...
+    # Subtest: identity mismatch
+    ok 3 - identity mismatch
+      ---
+      duration_ms: 35.0624
+      type: 'test'
+      ...
+    # Subtest: identity mismatch
+    ok 4 - identity mismatch
+      ---
+      duration_ms: 34.216
+      type: 'test'
+      ...
+    # Subtest: identity mismatch
+    ok 5 - identity mismatch
+      ---
+      duration_ms: 35.3455
+      type: 'test'
+      ...
+    1..5
+ok 3 - wrong lock version, SRI, registry URL, package version and link records fail closed
+  ---
+  duration_ms: 175.2697
+  type: 'test'
+  ...
+# Subtest: installed identity and payload tampering fail before writes
+    # Subtest: installed package
+    ok 1 - installed package
+      ---
+      duration_ms: 23.0106
+      type: 'test'
+      ...
+    # Subtest: payload
+    ok 2 - payload
+      ---
+      duration_ms: 28.6709
+      type: 'test'
+      ...
+    1..2
+ok 4 - installed identity and payload tampering fail before writes
+  ---
+  duration_ms: 52.1312
+  type: 'test'
+  ...
+# Subtest: junction targets cannot redirect a reviewed package outside its root
+ok 5 - junction targets cannot redirect a reviewed package outside its root
+  ---
+  duration_ms: 21.4735
+  type: 'test'
+  ...
+# Subtest: official original preimages require application; application is exact and idempotent
+ok 6 - official original preimages require application; application is exact and idempotent
+  ---
+  duration_ms: 147.1207
+  type: 'test'
+  ...
+# Subtest: a commit failure still restores earlier files when temporary cleanup also fails
+ok 7 - a commit failure still restores earlier files when temporary cleanup also fails
+  ---
+  duration_ms: 84.0064
+  type: 'test'
+  ...
+# Subtest: braces preserves ordinary parse, compile, expansion and escaping behavior
+ok 8 - braces preserves ordinary parse, compile, expansion and escaping behavior
+  ---
+  duration_ms: 2.726
+  type: 'test'
+  ...
+# Subtest: braces rejects deeply nested strings before recursive traversal, regardless of caller options
+ok 9 - braces rejects deeply nested strings before recursive traversal, regardless of caller options
+  ---
+  duration_ms: 2.6059
+  type: 'test'
+  ...
+# Subtest: braces direct AST APIs cannot bypass the fixed recursion bound
+ok 10 - braces direct AST APIs cannot bypass the fixed recursion bound
+  ---
+  duration_ms: 12.6236
+  type: 'test'
+  ...
+# Subtest: node-forge rejects extra nested DigestAlgorithm elements that native verification rejects
+ok 11 - node-forge rejects extra nested DigestAlgorithm elements that native verification rejects
+  ---
+  duration_ms: 13.8147
+  type: 'test'
+  ...
+# Subtest: node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures
+ok 12 - node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures
+  ---
+  duration_ms: 5.7676
+  type: 'test'
+  ...
+# Subtest: node-forge ASN.1 capture never inherits prototype parameter markers
+ok 13 - node-forge ASN.1 capture never inherits prototype parameter markers
+  ---
+  duration_ms: 51.9143
+  type: 'test'
+  ...
+1..13
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 828.4171

@@ -1,0 +1,998 @@
+TAP version 13
+# Subtest: Metro watches both dependency targets, linked=false
+ok 1 - Metro watches both dependency targets, linked=false
+  ---
+  duration_ms: 4.0877
+  type: 'test'
+  ...
+# Subtest: Metro watches both dependency targets, linked=true
+ok 2 - Metro watches both dependency targets, linked=true
+  ---
+  duration_ms: 1.8703
+  type: 'test'
+  ...
+# Subtest: CORE01 local module inventory is exact and contains no binary or privacy manifest
+ok 3 - CORE01 local module inventory is exact and contains no binary or privacy manifest
+  ---
+  duration_ms: 7.7978
+  type: 'test'
+  ...
+# Subtest: CORE01 Expo registration is iOS-only and autolinks one first-party module
+ok 4 - CORE01 Expo registration is iOS-only and autolinks one first-party module
+  ---
+  duration_ms: 931.9575
+  type: 'test'
+  ...
+# Subtest: CORE01 native config declares the Apple age-range entitlement
+ok 5 - CORE01 native config declares the Apple age-range entitlement
+  ---
+  duration_ms: 0.4856
+  type: 'test'
+  ...
+# Subtest: CORE01 pod has no third-party or bundled executable dependency
+ok 6 - CORE01 pod has no third-party or bundled executable dependency
+  ---
+  duration_ms: 0.8382
+  type: 'test'
+  ...
+# Subtest: CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+ok 7 - CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+  ---
+  duration_ms: 0.7348
+  type: 'test'
+  ...
+# Subtest: CORE01 maps every known declaration and communication-limit control
+ok 8 - CORE01 maps every known declaration and communication-limit control
+  ---
+  duration_ms: 1.3243
+  type: 'test'
+  ...
+# Subtest: CORE01 native response is deterministic, request-bound, and contains no exact age
+ok 9 - CORE01 native response is deterministic, request-bound, and contains no exact age
+  ---
+  duration_ms: 1.3668
+  type: 'test'
+  ...
+# Subtest: CORE01 source performs no logging, networking, or persistence
+ok 10 - CORE01 source performs no logging, networking, or persistence
+  ---
+  duration_ms: 0.5578
+  type: 'test'
+  ...
+# Subtest: CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+ok 11 - CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+  ---
+  duration_ms: 1.0584
+  type: 'test'
+  ...
+# Subtest: the routine sequencing corpus is exact-hash bound and zero-admission
+ok 12 - the routine sequencing corpus is exact-hash bound and zero-admission
+  ---
+  duration_ms: 3.5933
+  type: 'test'
+  ...
+# Subtest: free-text review metadata and structural injection cannot publish sequencing
+ok 13 - free-text review metadata and structural injection cannot publish sequencing
+  ---
+  duration_ms: 1.1254
+  type: 'test'
+  ...
+# Subtest: cadence arithmetic rejects malformed numbers and avoids unsafe multiplication
+ok 14 - cadence arithmetic rejects malformed numbers and avoids unsafe multiplication
+  ---
+  duration_ms: 0.5211
+  type: 'test'
+  ...
+# Subtest: cadence publication has no Boolean or conservative numeric fallback
+ok 15 - cadence publication has no Boolean or conservative numeric fallback
+  ---
+  duration_ms: 0.9121
+  type: 'test'
+  ...
+# Subtest: executable cadence values and copy come from the exact admitted corpus
+ok 16 - executable cadence values and copy come from the exact admitted corpus
+  ---
+  duration_ms: 3.6656
+  type: 'test'
+  ...
+# Subtest: unavailable stop/refer authority cannot open recovery or irritation writes
+ok 17 - unavailable stop/refer authority cannot open recovery or irritation writes
+  ---
+  duration_ms: 1.3234
+  type: 'test'
+  ...
+# Subtest: unbound claim-bearing explainability copy remains production-closed
+ok 18 - unbound claim-bearing explainability copy remains production-closed
+  ---
+  duration_ms: 1.0959
+  type: 'test'
+  ...
+# Subtest: cycle and ramp mutations refuse before storage, cache, or analytics
+ok 19 - cycle and ramp mutations refuse before storage, cache, or analytics
+  ---
+  duration_ms: 1.056
+  type: 'test'
+  ...
+# Subtest: real shelves cannot inherit the synthetic example profile
+ok 20 - real shelves cannot inherit the synthetic example profile
+  ---
+  duration_ms: 1.1773
+  type: 'test'
+  ...
+# Subtest: ramp state and cadence-derived notifications close before reads or side effects
+ok 21 - ramp state and cadence-derived notifications close before reads or side effects
+  ---
+  duration_ms: 1.4829
+  type: 'test'
+  ...
+# Subtest: plan and streak surfaces do not synthesize sequencing or cycle authority
+ok 22 - plan and streak surfaces do not synthesize sequencing or cycle authority
+  ---
+  duration_ms: 0.8943
+  type: 'test'
+  ...
+# Subtest: closed recovery publication preserves stored bytes while exposing only neutral state
+ok 23 - closed recovery publication preserves stored bytes while exposing only neutral state
+  ---
+  duration_ms: 0.8867
+  type: 'test'
+  ...
+# Subtest: every direct-entry cadence route closes before sensitive hooks or guidance analytics mount
+ok 24 - every direct-entry cadence route closes before sensitive hooks or guidance analytics mount
+  ---
+  duration_ms: 8.7619
+  type: 'test'
+  ...
+# Subtest: the CORE-03 source contract is mandatory in Phase 3 and launch verification
+ok 25 - the CORE-03 source contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.8531
+  type: 'test'
+  ...
+# Subtest: private persistence bounds one serialized guarded transform and verified rollback
+ok 26 - private persistence bounds one serialized guarded transform and verified rollback
+  ---
+  duration_ms: 4.4607
+  type: 'test'
+  ...
+# Subtest: malformed, future-version, read-failure, and write-failure state stays preserved
+ok 27 - malformed, future-version, read-failure, and write-failure state stays preserved
+  ---
+  duration_ms: 2.1405
+  type: 'test'
+  ...
+# Subtest: routine-order phase transactions merge independent concurrent edits
+ok 28 - routine-order phase transactions merge independent concurrent edits
+  ---
+  duration_ms: 0.7804
+  type: 'test'
+  ...
+# Subtest: routine-order success publishes cache, analytics, and navigation only after persistence
+ok 29 - routine-order success publishes cache, analytics, and navigation only after persistence
+  ---
+  duration_ms: 0.5355
+  type: 'test'
+  ...
+# Subtest: custom-cycle cache and analytics publication follows the committed atomic value
+ok 30 - custom-cycle cache and analytics publication follows the committed atomic value
+  ---
+  duration_ms: 1.8197
+  type: 'test'
+  ...
+# Subtest: relaunch loaders decode versioned state and never silently replace unsupported bytes
+ok 31 - relaunch loaders decode versioned state and never silently replace unsupported bytes
+  ---
+  duration_ms: 1.4998
+  type: 'test'
+  ...
+# Subtest: named Node/Vitest timezone cases remain explicit and bounded
+ok 32 - named Node/Vitest timezone cases remain explicit and bounded
+  ---
+  duration_ms: 0.5295
+  type: 'test'
+  ...
+# Subtest: routine and custom-cycle intent uses stable shelf-product identities
+ok 33 - routine and custom-cycle intent uses stable shelf-product identities
+  ---
+  duration_ms: 1.8324
+  type: 'test'
+  ...
+# Subtest: cleanup and purpose-limited export register both current persistence records
+ok 34 - cleanup and purpose-limited export register both current persistence records
+  ---
+  duration_ms: 1.9739
+  type: 'test'
+  ...
+# Subtest: ordering preference cannot create cadence authority and custom-cycle writes cannot bypass it
+ok 35 - ordering preference cannot create cadence authority and custom-cycle writes cannot bypass it
+  ---
+  duration_ms: 1.2731
+  type: 'test'
+  ...
+# Subtest: the CORE-04 persistence contract is mandatory in Phase 3 and launch verification
+ok 36 - the CORE-04 persistence contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.7112
+  type: 'test'
+  ...
+# (node:26720) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile/src/features/streak/streak.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\apps\\mobile\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completion state is strict v3 and legacy versions never invent adherence or replay work
+ok 37 - completion state is strict v3 and legacy versions never invent adherence or replay work
+  ---
+  duration_ms: 3.9019
+  type: 'test'
+  ...
+# Subtest: only a complete projected PM or recovery routine creates an adherence day or remote work
+ok 38 - only a complete projected PM or recovery routine creates an adherence day or remote work
+  ---
+  duration_ms: 3.1798
+  type: 'test'
+  ...
+# Subtest: Today publishes success only after persistence and fails closed on unreadable state
+ok 39 - Today publishes success only after persistence and fails closed on unreadable state
+  ---
+  duration_ms: 2.2048
+  type: 'test'
+  ...
+# Subtest: completion replay uses exact dispositions and a durable Shelf dependency barrier
+ok 40 - completion replay uses exact dispositions and a durable Shelf dependency barrier
+  ---
+  duration_ms: 5.0755
+  type: 'test'
+  ...
+# Subtest: future tolerance rows cannot affect today and live clocks cross routine boundaries
+ok 41 - future tolerance rows cannot affect today and live clocks cross routine boundaries
+  ---
+  duration_ms: 1.3665
+  type: 'test'
+  ...
+# Subtest: streak and welcome-back routes do not turn load failures into fake zero or lapse states
+ok 42 - streak and welcome-back routes do not turn load failures into fake zero or lapse states
+  ---
+  duration_ms: 0.6093
+  type: 'test'
+  ...
+# Subtest: routine milestones describe verified check-offs without outcome claims
+ok 43 - routine milestones describe verified check-offs without outcome claims
+  ---
+  duration_ms: 0.7603
+  type: 'test'
+  ...
+# Subtest: notification opt-in is exact-time, authorization-aware, local-only, and cap-safe
+ok 44 - notification opt-in is exact-time, authorization-aware, local-only, and cap-safe
+  ---
+  duration_ms: 2.8719
+  type: 'test'
+  ...
+# Subtest: database adherence and atomic Shelf/completion sync retain server authority and frozen history
+ok 45 - database adherence and atomic Shelf/completion sync retain server authority and frozen history
+  ---
+  duration_ms: 12.8985
+  type: 'test'
+  ...
+# Subtest: history descriptions may change without changing the asserted SQL contract
+ok 46 - history descriptions may change without changing the asserted SQL contract
+  ---
+  duration_ms: 12.7034
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong count in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 47 - database authority rejects wrong count in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 7.7745
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong head in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 48 - database authority rejects wrong head in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 3.6902
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong history table in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 49 - database authority rejects wrong history table in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 4.7873
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong aggregate in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 50 - database authority rejects wrong aggregate in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 3.7078
+  type: 'test'
+  ...
+# Subtest: database authority rejects removed count assertion in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 51 - database authority rejects removed count assertion in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 3.6021
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong count in supabase/tests/database/schema_contract.test.sql
+ok 52 - database authority rejects wrong count in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 3.5364
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong head in supabase/tests/database/schema_contract.test.sql
+ok 53 - database authority rejects wrong head in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 6.0623
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong history table in supabase/tests/database/schema_contract.test.sql
+ok 54 - database authority rejects wrong history table in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 2.9889
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong aggregate in supabase/tests/database/schema_contract.test.sql
+ok 55 - database authority rejects wrong aggregate in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 3.1153
+  type: 'test'
+  ...
+# Subtest: database authority rejects removed count assertion in supabase/tests/database/schema_contract.test.sql
+ok 56 - database authority rejects removed count assertion in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 3.2475
+  type: 'test'
+  ...
+# Subtest: database authority rejects missing required source
+ok 57 - database authority rejects missing required source
+  ---
+  duration_ms: 2.418
+  type: 'test'
+  ...
+# Subtest: database authority rejects renamed required source
+ok 58 - database authority rejects renamed required source
+  ---
+  duration_ms: 2.5028
+  type: 'test'
+  ...
+# Subtest: database authority rejects removed server-owned guard
+ok 59 - database authority rejects removed server-owned guard
+  ---
+  duration_ms: 3.2167
+  type: 'test'
+  ...
+# Subtest: database authority rejects altered consent protection
+ok 60 - database authority rejects altered consent protection
+  ---
+  duration_ms: 3.0477
+  type: 'test'
+  ...
+# Subtest: the hashed corpus executes the actual client streak implementation and binds SQL parity
+ok 61 - the hashed corpus executes the actual client streak implementation and binds SQL parity
+  ---
+  duration_ms: 82.1114
+  type: 'test'
+  ...
+# Subtest: completion records remain registered for cleanup/export and this contract is mandatory
+ok 62 - completion records remain registered for cleanup/export and this contract is mandatory
+  ---
+  duration_ms: 2.0702
+  type: 'test'
+  ...
+# Subtest: uncaught errors fail even when their text includes a normally allowed environment warning
+ok 63 - uncaught errors fail even when their text includes a normally allowed environment warning
+  ---
+  duration_ms: 2.1698
+  type: 'test'
+  ...
+# Subtest: a visible overlay fails independently of DOM recovery copy and missing exception events
+ok 64 - a visible overlay fails independently of DOM recovery copy and missing exception events
+  ---
+  duration_ms: 0.6758
+  type: 'test'
+  ...
+# Subtest: a recovery summary cannot pass with obsolete or false completion flags
+ok 65 - a recovery summary cannot pass with obsolete or false completion flags
+  ---
+  duration_ms: 0.725
+  type: 'test'
+  ...
+# Subtest: old-owner race refusal must be typed, complete, and attributable to authority closure
+ok 66 - old-owner race refusal must be typed, complete, and attributable to authority closure
+  ---
+  duration_ms: 1.7764
+  type: 'test'
+  ...
+# Subtest: current PAY-07 entitlement-admission source snapshot passes
+ok 67 - current PAY-07 entitlement-admission source snapshot passes
+  ---
+  duration_ms: 157.6247
+  type: 'test'
+  ...
+# Subtest: missing authority files fail closed
+ok 68 - missing authority files fail closed
+  ---
+  duration_ms: 61.4847
+  type: 'test'
+  ...
+# Subtest: positive entitlement fixtures are rejected from base and native modules
+ok 69 - positive entitlement fixtures are rejected from base and native modules
+  ---
+  duration_ms: 99.4313
+  type: 'test'
+  ...
+# Subtest: web fixture cannot grant outside development or leak into native resolution
+ok 70 - web fixture cannot grant outside development or leak into native resolution
+  ---
+  duration_ms: 74.3742
+  type: 'test'
+  ...
+# Subtest: runtime hook cannot regain a direct environment entitlement bypass
+ok 71 - runtime hook cannot regain a direct environment entitlement bypass
+  ---
+  duration_ms: 34.8364
+  type: 'test'
+  ...
+# Subtest: unconfigured Supabase cannot mint or persist a local reverse trial
+ok 72 - unconfigured Supabase cannot mint or persist a local reverse trial
+  ---
+  duration_ms: 50.6873
+  type: 'test'
+  ...
+# Subtest: server custom grant authority rejects hosted and bypassed admission
+ok 73 - server custom grant authority rejects hosted and bypassed admission
+  ---
+  duration_ms: 79.6226
+  type: 'test'
+  ...
+# Subtest: success route cannot default or synthesize a purchase confirmation
+ok 74 - success route cannot default or synthesize a purchase confirmation
+  ---
+  duration_ms: 56.5743
+  type: 'test'
+  ...
+# Subtest: success route requires both current Pro and exact expiry evidence
+ok 75 - success route requires both current Pro and exact expiry evidence
+  ---
+  duration_ms: 26.3484
+  type: 'test'
+  ...
+# Subtest: success admission rejects pre-mount cache and stale verification
+ok 76 - success admission rejects pre-mount cache and stale verification
+  ---
+  duration_ms: 73.8864
+  type: 'test'
+  ...
+# Subtest: success route forces a fresh exact-owner query after mount
+ok 77 - success route forces a fresh exact-owner query after mount
+  ---
+  duration_ms: 154.7832
+  type: 'test'
+  ...
+# Subtest: success claims separate non-billing grants from exact renewing store evidence
+ok 78 - success claims separate non-billing grants from exact renewing store evidence
+  ---
+  duration_ms: 62.2421
+  type: 'test'
+  ...
+# Subtest: app config and EAS profiles reject environment drift
+ok 79 - app config and EAS profiles reject environment drift
+  ---
+  duration_ms: 65.8544
+  type: 'test'
+  ...
+# Subtest: release JavaScript cannot accept a development public environment label
+ok 80 - release JavaScript cannot accept a development public environment label
+  ---
+  duration_ms: 40.3771
+  type: 'test'
+  ...
+# Subtest: RevenueCat NOT_REQUESTED cannot become active or legacy-positive evidence
+ok 81 - RevenueCat NOT_REQUESTED cannot become active or legacy-positive evidence
+  ---
+  duration_ms: 53.214
+  type: 'test'
+  ...
+# Subtest: introductory-offer copy cannot bypass exact per-product eligibility
+ok 82 - introductory-offer copy cannot bypass exact per-product eligibility
+  ---
+  duration_ms: 77.9989
+  type: 'test'
+  ...
+# Subtest: Phase 6, Phase 9, and launch verification cannot drop PAY-07 contracts
+ok 83 - Phase 6, Phase 9, and launch verification cannot drop PAY-07 contracts
+  ---
+  duration_ms: 133.9845
+  type: 'test'
+  ...
+# Subtest: Phase 6 cannot drop the production Trusted Entitlements evidence gate
+ok 84 - Phase 6 cannot drop the production Trusted Entitlements evidence gate
+  ---
+  duration_ms: 60.3099
+  type: 'test'
+  ...
+# Subtest: the repository satisfies the aggregate PHOTO-01 source contract
+ok 85 - the repository satisfies the aggregate PHOTO-01 source contract
+  ---
+  duration_ms: 4.978
+  type: 'test'
+  ...
+# Subtest: the contract rejects thumbnail network capability
+ok 86 - the contract rejects thumbnail network capability
+  ---
+  duration_ms: 2.0541
+  type: 'test'
+  ...
+# Subtest: the contract rejects raw deletion before metadata publication
+ok 87 - the contract rejects raw deletion before metadata publication
+  ---
+  duration_ms: 3.4667
+  type: 'test'
+  ...
+# Subtest: the contract rejects omission of thumbnail deletion
+ok 88 - the contract rejects omission of thumbnail deletion
+  ---
+  duration_ms: 1.5108
+  type: 'test'
+  ...
+# Subtest: the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+ok 89 - the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+  ---
+  duration_ms: 229.7283
+  type: 'test'
+  ...
+# Subtest: rejects an additive Stack mounted before AppLockProvider
+ok 90 - rejects an additive Stack mounted before AppLockProvider
+  ---
+  duration_ms: 97.8608
+  type: 'test'
+  ...
+# Subtest: rejects additive children mounted before the loaded decision
+ok 91 - rejects additive children mounted before the loaded decision
+  ---
+  duration_ms: 76.6473
+  type: 'test'
+  ...
+# Subtest: rejects an early corrupt preference unlock
+ok 92 - rejects an early corrupt preference unlock
+  ---
+  duration_ms: 77.6291
+  type: 'test'
+  ...
+# Subtest: rejects an early unsupported_version preference unlock
+ok 93 - rejects an early unsupported_version preference unlock
+  ---
+  duration_ms: 57.5368
+  type: 'test'
+  ...
+# Subtest: rejects unauthenticated preference disable
+ok 94 - rejects unauthenticated preference disable
+  ---
+  duration_ms: 45.149
+  type: 'test'
+  ...
+# Subtest: rejects an additive unauthenticated setLocked(false)
+ok 95 - rejects an additive unauthenticated setLocked(false)
+  ---
+  duration_ms: 42.2153
+  type: 'test'
+  ...
+# Subtest: rejects usePhotos in the route component before PhotoTimelineLockGate
+ok 96 - rejects usePhotos in the route component before PhotoTimelineLockGate
+  ---
+  duration_ms: 62.5438
+  type: 'test'
+  ...
+# Subtest: rejects malformed-preference deletion moved before authentication
+ok 97 - rejects malformed-preference deletion moved before authentication
+  ---
+  duration_ms: 52.0593
+  type: 'test'
+  ...
+# Subtest: rejects native success publication without current-request revalidation
+ok 98 - rejects native success publication without current-request revalidation
+  ---
+  duration_ms: 57.1693
+  type: 'test'
+  ...
+# Subtest: rejects a preference authentication failure guard weakened with && false
+ok 99 - rejects a preference authentication failure guard weakened with && false
+  ---
+  duration_ms: 59.8321
+  type: 'test'
+  ...
+# Subtest: rejects a reset authentication failure guard weakened with && false
+ok 100 - rejects a reset authentication failure guard weakened with && false
+  ---
+  duration_ms: 56.517
+  type: 'test'
+  ...
+# Subtest: rejects provider success dominance weakened with || true
+ok 101 - rejects provider success dominance weakened with || true
+  ---
+  duration_ms: 85.2574
+  type: 'test'
+  ...
+# Subtest: rejects timeline unlock predicate weakened with || true
+ok 102 - rejects timeline unlock predicate weakened with || true
+  ---
+  duration_ms: 46.9809
+  type: 'test'
+  ...
+# Subtest: rejects private readiness predicate weakened with || true
+ok 103 - rejects private readiness predicate weakened with || true
+  ---
+  duration_ms: 78.4962
+  type: 'test'
+  ...
+# Subtest: rejects an aliased photo hook call before the timeline gate
+ok 104 - rejects an aliased photo hook call before the timeline gate
+  ---
+  duration_ms: 46.5623
+  type: 'test'
+  ...
+# Subtest: rejects preference authentication failure falling through after its return is removed
+ok 105 - rejects preference authentication failure falling through after its return is removed
+  ---
+  duration_ms: 37.405
+  type: 'test'
+  ...
+# Subtest: rejects reset authentication failure falling through after its return is removed
+ok 106 - rejects reset authentication failure falling through after its return is removed
+  ---
+  duration_ms: 44.0338
+  type: 'test'
+  ...
+# Subtest: repository satisfies aggregate PHOTO-03 AST/dataflow contract
+ok 107 - repository satisfies aggregate PHOTO-03 AST/dataflow contract
+  ---
+  duration_ms: 166.2286
+  type: 'test'
+  ...
+# Subtest: rejects enabling native face tracking
+ok 108 - rejects enabling native face tracking
+  ---
+  duration_ms: 62.4149
+  type: 'test'
+  ...
+# Subtest: rejects adding identity-capable face observation fields
+ok 109 - rejects adding identity-capable face observation fields
+  ---
+  duration_ms: 26.694
+  type: 'test'
+  ...
+# Subtest: rejects matched framing without complete pose signals
+ok 110 - rejects matched framing without complete pose signals
+  ---
+  duration_ms: 31.5459
+  type: 'test'
+  ...
+# Subtest: rejects raw native face publication
+ok 111 - rejects raw native face publication
+  ---
+  duration_ms: 36.9977
+  type: 'test'
+  ...
+# Subtest: rejects lighting success before plaintext cleanup
+ok 112 - rejects lighting success before plaintext cleanup
+  ---
+  duration_ms: 26.4042
+  type: 'test'
+  ...
+# Subtest: rejects network egress added to capture analysis
+ok 113 - rejects network egress added to capture analysis
+  ---
+  duration_ms: 54.5703
+  type: 'test'
+  ...
+# Subtest: rejects production-accessible analysis fixtures
+ok 114 - rejects production-accessible analysis fixtures
+  ---
+  duration_ms: 34.1704
+  type: 'test'
+  ...
+# Subtest: rejects an object spread that overrides disabled detector options
+ok 115 - rejects an object spread that overrides disabled detector options
+  ---
+  duration_ms: 19.0978
+  type: 'test'
+  ...
+# Subtest: rejects pose completeness replaced with a true initializer
+ok 116 - rejects pose completeness replaced with a true initializer
+  ---
+  duration_ms: 18.8191
+  type: 'test'
+  ...
+# Subtest: rejects an effective 4096px lighting resize while the bounded constant remains
+ok 117 - rejects an effective 4096px lighting resize while the bounded constant remains
+  ---
+  duration_ms: 29.0497
+  type: 'test'
+  ...
+# Subtest: rejects cleanupOwnedSample returning before owned cleanup
+ok 118 - rejects cleanupOwnedSample returning before owned cleanup
+  ---
+  duration_ms: 18.8119
+  type: 'test'
+  ...
+# Subtest: rejects aliased expo fetch egress
+ok 119 - rejects aliased expo fetch egress
+  ---
+  duration_ms: 17.903
+  type: 'test'
+  ...
+# Subtest: repository satisfies aggregate PHOTO-04 AST/control-flow contract
+ok 120 - repository satisfies aggregate PHOTO-04 AST/control-flow contract
+  ---
+  duration_ms: 126.39
+  type: 'test'
+  ...
+# Subtest: rejects background playback that remains active
+ok 121 - rejects background playback that remains active
+  ---
+  duration_ms: 25.8191
+  type: 'test'
+  ...
+# Subtest: rejects foreground auto-resume
+ok 122 - rejects foreground auto-resume
+  ---
+  duration_ms: 44.8386
+  type: 'test'
+  ...
+# Subtest: rejects playback admission without Reduce Motion protection
+ok 123 - rejects playback admission without Reduce Motion protection
+  ---
+  duration_ms: 16.3239
+  type: 'test'
+  ...
+# Subtest: rejects stale frame readiness starting playback
+ok 124 - rejects stale frame readiness starting playback
+  ---
+  duration_ms: 28.0802
+  type: 'test'
+  ...
+# Subtest: rejects dwell timers that do not require a ready displayed frame
+ok 125 - rejects dwell timers that do not require a ready displayed frame
+  ---
+  duration_ms: 23.8049
+  type: 'test'
+  ...
+# Subtest: rejects animated modal transitions
+ok 126 - rejects animated modal transitions
+  ---
+  duration_ms: 22.5475
+  type: 'test'
+  ...
+# Subtest: rejects removal of accessibility escape
+ok 127 - rejects removal of accessibility escape
+  ---
+  duration_ms: 13.7339
+  type: 'test'
+  ...
+# Subtest: rejects direct network capability
+ok 128 - rejects direct network capability
+  ---
+  duration_ms: 17.8126
+  type: 'test'
+  ...
+# Subtest: rejects time-lapse content mounted outside the timeline lock
+ok 129 - rejects time-lapse content mounted outside the timeline lock
+  ---
+  duration_ms: 19.335
+  type: 'test'
+  ...
+# Subtest: rejects an early active app-state branch that resumes playback
+ok 130 - rejects an early active app-state branch that resumes playback
+  ---
+  duration_ms: 14.8371
+  type: 'test'
+  ...
+# Subtest: rejects reversing frames after the checked oldest-first sort
+ok 131 - rejects reversing frames after the checked oldest-first sort
+  ---
+  duration_ms: 15.8059
+  type: 'test'
+  ...
+# Subtest: rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+ok 132 - rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+  ---
+  duration_ms: 18.2581
+  type: 'test'
+  ...
+# Subtest: rejects an early Reduce Motion branch that keeps playback active
+ok 133 - rejects an early Reduce Motion branch that keeps playback active
+  ---
+  duration_ms: 11.3741
+  type: 'test'
+  ...
+# Subtest: rejects aliased axios network capability
+ok 134 - rejects aliased axios network capability
+  ---
+  duration_ms: 20.7157
+  type: 'test'
+  ...
+# Subtest: real PHOTO-05A sources enforce immutable literal-zero Trend admission
+ok 135 - real PHOTO-05A sources enforce immutable literal-zero Trend admission
+  ---
+  duration_ms: 1778.6898
+  type: 'test'
+  ...
+# Subtest: the audit is deterministic, frozen, path-sorted, and inventory-complete
+ok 136 - the audit is deterministic, frozen, path-sorted, and inventory-complete
+  ---
+  duration_ms: 2121.6925
+  type: 'test'
+  ...
+# Subtest: missing checkpoint, runtime, contract, type, and database authority sources fail closed
+ok 137 - missing checkpoint, runtime, contract, type, and database authority sources fail closed
+  ---
+  duration_ms: 416.6741
+  type: 'test'
+  ...
+# Subtest: capability and surface flags cannot be opened or made environment-driven
+ok 138 - capability and surface flags cannot be opened or made environment-driven
+  ---
+  duration_ms: 3420.2781
+  type: 'test'
+  ...
+# Subtest: every machine admission field is immutable false and extra keys are rejected
+ok 139 - every machine admission field is immutable false and extra keys are rejected
+  ---
+  duration_ms: 10916.1078
+  type: 'test'
+  ...
+# Subtest: simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+ok 140 - simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+  ---
+  duration_ms: 6839.4764
+  type: 'test'
+  ...
+# Subtest: isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+ok 141 - isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+  ---
+  duration_ms: 4374.0136
+  type: 'test'
+  ...
+# Subtest: disabled routes cannot load or invoke a dynamically required positive receipt factory
+ok 142 - disabled routes cannot load or invoke a dynamically required positive receipt factory
+  ---
+  duration_ms: 1360.1033
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+ok 143 - ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+  ---
+  duration_ms: 1166.1519
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+ok 144 - ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+  ---
+  duration_ms: 1333.6175
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+ok 145 - ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+  ---
+  duration_ms: 2407.9703
+  type: 'test'
+  ...
+# Subtest: photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+ok 146 - photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+  ---
+  duration_ms: 3426.2507
+  type: 'test'
+  ...
+# Subtest: caller, fixture, legacy, E2E, and development bypasses are rejected
+ok 147 - caller, fixture, legacy, E2E, and development bypasses are rejected
+  ---
+  duration_ms: 5284.1728
+  type: 'test'
+  ...
+# Subtest: positive consent grants and enabled consent-choice delegation are rejected
+ok 148 - positive consent grants and enabled consent-choice delegation are rejected
+  ---
+  duration_ms: 1849.0625
+  type: 'test'
+  ...
+# Subtest: direct route analytics and hidden enabled fairness or consent branches are rejected
+ok 149 - direct route analytics and hidden enabled fairness or consent branches are rejected
+  ---
+  duration_ms: 1862.4457
+  type: 'test'
+  ...
+# Subtest: Progress and any future production consumer cannot import disabled Trend runtime code
+ok 150 - Progress and any future production consumer cannot import disabled Trend runtime code
+  ---
+  duration_ms: 740.8351
+  type: 'test'
+  ...
+# Subtest: package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+ok 151 - package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+  ---
+  duration_ms: 728.7297
+  type: 'test'
+  ...
+# Subtest: repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+ok 152 - repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+  ---
+  duration_ms: 134.7895
+  type: 'test'
+  ...
+# Subtest: rejects absolute welcome no-egress copy that omits explicit sharing
+ok 153 - rejects absolute welcome no-egress copy that omits explicit sharing
+  ---
+  duration_ms: 31.6889
+  type: 'test'
+  ...
+# Subtest: rejects capture disclosure without device-loss risk
+ok 154 - rejects capture disclosure without device-loss risk
+  ---
+  duration_ms: 35.6051
+  type: 'test'
+  ...
+# Subtest: rejects capture disclosure without the explicit-share exception
+ok 155 - rejects capture disclosure without the explicit-share exception
+  ---
+  duration_ms: 28.6246
+  type: 'test'
+  ...
+# Subtest: rejects enabling Trend while no validated engine ships
+ok 156 - rejects enabling Trend while no validated engine ships
+  ---
+  duration_ms: 14.5131
+  type: 'test'
+  ...
+# Subtest: rejects photo bytes being included in local export
+ok 157 - rejects photo bytes being included in local export
+  ---
+  duration_ms: 13.6499
+  type: 'test'
+  ...
+# Subtest: rejects omission of encrypted photo cleanup
+ok 158 - rejects omission of encrypted photo cleanup
+  ---
+  duration_ms: 25.032
+  type: 'test'
+  ...
+# Subtest: rejects deletion that hides partial cleanup failure
+ok 159 - rejects deletion that hides partial cleanup failure
+  ---
+  duration_ms: 18.6826
+  type: 'test'
+  ...
+# Subtest: rejects contradictory visible automatic-upload copy appended to welcome
+ok 160 - rejects contradictory visible automatic-upload copy appended to welcome
+  ---
+  duration_ms: 15.0675
+  type: 'test'
+  ...
+# Subtest: rejects visible automatic-backup copy with an intervening also
+ok 161 - rejects visible automatic-backup copy with an intervening also
+  ---
+  duration_ms: 19.2068
+  type: 'test'
+  ...
+# Subtest: rejects a spread overriding the literal disabled Trend flag
+ok 162 - rejects a spread overriding the literal disabled Trend flag
+  ---
+  duration_ms: 11.9256
+  type: 'test'
+  ...
+# Subtest: rejects local cleanup returning immediately at function entry
+ok 163 - rejects local cleanup returning immediately at function entry
+  ---
+  duration_ms: 9.8269
+  type: 'test'
+  ...
+# Subtest: rejects returning immediately before terminal partial-failure propagation
+ok 164 - rejects returning immediately before terminal partial-failure propagation
+  ---
+  duration_ms: 13.371
+  type: 'test'
+  ...
+1..164
+# tests 164
+# suites 0
+# pass 164
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 50950.3396

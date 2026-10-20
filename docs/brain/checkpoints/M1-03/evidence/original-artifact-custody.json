@@ -1,0 +1,26 @@
+[
+  {
+    "artifact_id": 12304480502,
+    "sha256": "1bfe2146fbe69bef83f2dd83c1c338864c4f240b52ec8c66dcaa84395a2ae37c",
+    "bytes": 39638,
+    "matches_provider_digest": true
+  },
+  {
+    "artifact_id": 12304745133,
+    "sha256": "14a2a5ccc0e263ee9b549132d917db69be11580a9222eadf312402c98ee0f428",
+    "bytes": 8889,
+    "matches_provider_digest": true
+  },
+  {
+    "artifact_id": 12303711274,
+    "sha256": "7a79c8fe34caca0d96afeaae29f59e88c3b9a0ec8fc334962a664c64d4c71f17",
+    "bytes": 7226,
+    "matches_provider_digest": true
+  },
+  {
+    "artifact_id": 12304226460,
+    "sha256": "c09956e22900eb297877b563fd3adb6dcf8200f19dd76a9ab024e5553fd63b77",
+    "bytes": 249,
+    "matches_provider_digest": true
+  }
+]

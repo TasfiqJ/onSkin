@@ -1,0 +1,24 @@
+UNAUTHORIZED_PROPOSAL — inert text; do not apply without a separate exact-source Brain task.
+Base 2de9ef75a1a1d539b0520ca22160abd6171c9c3b; source hashes in evidence/protected-source-hashes.json.
+
+Original file SHA256 b00042e9dea1a0cf9781cb2beae104324fe69d51c296fb45ea2eaaa7132da729
+Fixture only10/10 is not active-source/root PASS.
+
+--- a/apps/mobile/src/features/notifications/transaction.cont01.test.ts
++++ b/apps/mobile/src/features/notifications/transaction.cont01.test.ts
+@@ -192,6 +192,7 @@
+   await act(async () => { await expect(mutation.mutateAsync({ amEnabled: true })).rejects.toThrow('PREFERENCES_SAVED_REMINDERS_UNCONFIRMED'); });
+   expect(ports.native.size).toBe(0);
+   await act(async () => { await mutation.mutateAsync({ amEnabled: true }); });
++  await flush();
+   expect(mutation.data?.scheduling).toBe('permission_denied');
+   expect(ports.native.size).toBe(0);
+ });
+@@ -207,6 +208,7 @@
+   const patch = notificationPreferenceRetryPatch(failed, { amEnabled: true });
+   expect(patch).toEqual({});
+   await act(async () => { await mutation.mutateAsync(patch); });
++  await flush();
+   expect(mutation.data?.scheduling).toBe('disabled');
+   expect(await loadNotifPrefs()).toMatchObject({ amEnabled: false });
+   expect(ports.native.size).toBe(0);

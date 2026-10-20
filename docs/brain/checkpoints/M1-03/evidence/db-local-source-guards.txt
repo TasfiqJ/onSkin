@@ -1,0 +1,1047 @@
+
+> layerwell@0.1.0 phase2:db-local-contract
+> node --test scripts/phase2/ask-consent-rebrand-hash.test.mjs scripts/phase2/database-types-contract.test.mjs scripts/phase2/local-supabase-reset-retry.test.mjs scripts/phase2/canonical-postgres-pull-retry.test.mjs scripts/phase2/local-supabase-reset-source.test.mjs scripts/phase2/local-supabase-signal-cleanup.test.mjs scripts/phase2/local-supabase-target-guard.test.mjs scripts/phase2/quality-rehearsal-bindings.test.mjs scripts/phase2/quiz-provenance-contract.test.mjs && node scripts/phase2/local-supabase-contract.mjs
+
+TAP version 13
+# Subtest: 0074 stages only exact displayed Ask consent hashes without rewriting history or approving grants
+ok 1 - 0074 stages only exact displayed Ask consent hashes without rewriting history or approving grants
+  ---
+  duration_ms: 48.4896
+  type: 'test'
+  ...
+# Subtest: canonical pull retries only throttling, then returns the successful original result
+ok 2 - canonical pull retries only throttling, then returns the successful original result
+  ---
+  duration_ms: 2.0128
+  type: 'test'
+  ...
+# Subtest: persistent throttling stops after four attempts and preserves the last failure
+ok 3 - persistent throttling stops after four attempts and preserves the last failure
+  ---
+  duration_ms: 1.572
+  type: 'test'
+  ...
+# Subtest: ECR data allowance exhaustion fails once without treating it as transient request throttling
+ok 4 - ECR data allowance exhaustion fails once without treating it as transient request throttling
+  ---
+  duration_ms: 0.332
+  type: 'test'
+  ...
+# Subtest: timeouts, cancellation, output bounds, auth, network and unstructured errors never retry
+ok 5 - timeouts, cancellation, output bounds, auth, network and unstructured errors never retry
+  ---
+  duration_ms: 1.2197
+  type: 'test'
+  ...
+# Subtest: the real default timer obeys cancellation and a pre-aborted signal cannot start a pull
+ok 6 - the real default timer obeys cancellation and a pre-aborted signal cannot start a pull
+  ---
+  duration_ms: 0.7412
+  type: 'test'
+  ...
+# Subtest: a cancelled backoff cannot start another pull
+ok 7 - a cancelled backoff cannot start another pull
+  ---
+  duration_ms: 0.307
+  type: 'test'
+  ...
+# Subtest: generated type canonicalization is stable across line endings and rejects malformed output
+ok 8 - generated type canonicalization is stable across line endings and rejects malformed output
+  ---
+  duration_ms: 9.4825
+  type: 'test'
+  ...
+# Subtest: repository type artifact is generated-only and the client overlay is deny-by-default
+ok 9 - repository type artifact is generated-only and the client overlay is deny-by-default
+  ---
+  duration_ms: 61.8772
+  type: 'test'
+  ...
+# Subtest: mobile direct table mutations and RPC typing stay on the reviewed capability lanes
+ok 10 - mobile direct table mutations and RPC typing stay on the reviewed capability lanes
+  ---
+  duration_ms: 749.4588
+  type: 'test'
+  ...
+# Subtest: retries the precise pre-migration container exit 125 once after the bounded delay
+ok 11 - retries the precise pre-migration container exit 125 once after the bounded delay
+  ---
+  duration_ms: 1.527
+  type: 'test'
+  ...
+# Subtest: propagates a second matching failure without a third attempt
+ok 12 - propagates a second matching failure without a third attempt
+  ---
+  duration_ms: 0.8306
+  type: 'test'
+  ...
+# Subtest: does not retry SQL, migration, seed, test, or other container failures
+ok 13 - does not retry SQL, migration, seed, test, or other container failures
+  ---
+  duration_ms: 1.333
+  type: 'test'
+  ...
+# Subtest: DB05 reset source count and latest version bind the current chain
+ok 14 - DB05 reset source count and latest version bind the current chain
+  ---
+  duration_ms: 1.2352
+  type: 'test'
+  ...
+# Subtest: 0072 commerce rehearsal uses its exact migration, then restores the 0081 head for resets
+ok 15 - 0072 commerce rehearsal uses its exact migration, then restores the 0081 head for resets
+  ---
+  duration_ms: 0.2976
+  type: 'test'
+  ...
+# Subtest: the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist
+ok 16 - the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist
+  ---
+  duration_ms: 0.2493
+  type: 'test'
+  ...
+# Subtest: the pinned trial CLI retains exact current-chain SQL for a local replay
+ok 17 - the pinned trial CLI retains exact current-chain SQL for a local replay
+  ---
+  duration_ms: 0.1642
+  type: 'test'
+  ...
+# Subtest: every local reset uses the precise single-retry wrapper
+ok 18 - every local reset uses the precise single-retry wrapper
+  ---
+  duration_ms: 0.2289
+  type: 'test'
+  ...
+# Subtest: CI retains generated types only as a bounded parity diagnostic
+ok 19 - CI retains generated types only as a bounded parity diagnostic
+  ---
+  duration_ms: 0.2103
+  type: 'test'
+  ...
+# Subtest: 0070 draft-staging evidence is derived from the exact current UTF-8 tuple
+ok 20 - 0070 draft-staging evidence is derived from the exact current UTF-8 tuple
+  ---
+  duration_ms: 1.238
+  type: 'test'
+  ...
+# Subtest: the fixed reviewed source identity rejects altered normal and override inputs before stack creation
+    # Subtest: normal: missing head
+    ok 1 - normal: missing head
+      ---
+      duration_ms: 1001.6738
+      type: 'test'
+      ...
+    # Subtest: normal: extra migration
+    ok 2 - normal: extra migration
+      ---
+      duration_ms: 856.8709
+      type: 'test'
+      ...
+    # Subtest: normal: duplicate version
+    ok 3 - normal: duplicate version
+      ---
+      duration_ms: 839.6071
+      type: 'test'
+      ...
+    # Subtest: normal: renamed middle with identical count and head
+    ok 4 - normal: renamed middle with identical count and head
+      ---
+      duration_ms: 858.549
+      type: 'test'
+      ...
+    # Subtest: normal: changed middle bytes with identical count and head
+    ok 5 - normal: changed middle bytes with identical count and head
+      ---
+      duration_ms: 896.1247
+      type: 'test'
+      ...
+    # Subtest: normal: changed proposal bytes
+    ok 6 - normal: changed proposal bytes
+      ---
+      duration_ms: 869.4625
+      type: 'test'
+      ...
+    # Subtest: normal: unexpected SQL filename
+    ok 7 - normal: unexpected SQL filename
+      ---
+      duration_ms: 855.465
+      type: 'test'
+      ...
+    # Subtest: normal: unexpected directory
+    ok 8 - normal: unexpected directory
+      ---
+      duration_ms: 853.5713
+      type: 'test'
+      ...
+    # Subtest: override: missing head
+    ok 9 - override: missing head
+      ---
+      duration_ms: 883.0142
+      type: 'test'
+      ...
+    # Subtest: override: extra migration
+    ok 10 - override: extra migration
+      ---
+      duration_ms: 882.7209
+      type: 'test'
+      ...
+    # Subtest: override: duplicate version
+    ok 11 - override: duplicate version
+      ---
+      duration_ms: 888.6624
+      type: 'test'
+      ...
+    # Subtest: override: renamed middle with identical count and head
+    ok 12 - override: renamed middle with identical count and head
+      ---
+      duration_ms: 870.3874
+      type: 'test'
+      ...
+    # Subtest: override: changed middle bytes with identical count and head
+    ok 13 - override: changed middle bytes with identical count and head
+      ---
+      duration_ms: 871.871
+      type: 'test'
+      ...
+    # Subtest: override: changed proposal bytes
+    ok 14 - override: changed proposal bytes
+      ---
+      duration_ms: 893.9198
+      type: 'test'
+      ...
+    # Subtest: override: unexpected SQL filename
+    ok 15 - override: unexpected SQL filename
+      ---
+      duration_ms: 862.2722
+      type: 'test'
+      ...
+    # Subtest: override: unexpected directory
+    ok 16 - override: unexpected directory
+      ---
+      duration_ms: 881.1393
+      type: 'test'
+      ...
+    1..16
+ok 21 - the fixed reviewed source identity rejects altered normal and override inputs before stack creation
+  ---
+  duration_ms: 14084.2574
+  type: 'test'
+  ...
+# Subtest: exact installed history uses the captured CLI 2.117.0 database column and rejects corrupted histories
+    # Subtest: missing installed migration
+    ok 1 - missing installed migration
+      ---
+      duration_ms: 0.5592
+      type: 'test'
+      ...
+    # Subtest: extra installed migration
+    ok 2 - extra installed migration
+      ---
+      duration_ms: 0.8648
+      type: 'test'
+      ...
+    # Subtest: substituted installed migration
+    ok 3 - substituted installed migration
+      ---
+      duration_ms: 0.8813
+      type: 'test'
+      ...
+    # Subtest: duplicate replacing middle
+    ok 4 - duplicate replacing middle
+      ---
+      duration_ms: 0.779
+      type: 'test'
+      ...
+    # Subtest: extra duplicate
+    ok 5 - extra duplicate
+      ---
+      duration_ms: 0.8743
+      type: 'test'
+      ...
+    # Subtest: wrong ordering
+    ok 6 - wrong ordering
+      ---
+      duration_ms: 0.5803
+      type: 'test'
+      ...
+    # Subtest: missing remote with truthful local
+    ok 7 - missing remote with truthful local
+      ---
+      duration_ms: 1.0474
+      type: 'test'
+      ...
+    # Subtest: local-only entry is not installed
+    ok 8 - local-only entry is not installed
+      ---
+      duration_ms: 0.3357
+      type: 'test'
+      ...
+    # Subtest: all local-only is not installed
+    ok 9 - all local-only is not installed
+      ---
+      duration_ms: 0.1867
+      type: 'test'
+      ...
+    # Subtest: expected version elsewhere cannot repair remote
+    ok 10 - expected version elsewhere cannot repair remote
+      ---
+      duration_ms: 0.3429
+      type: 'test'
+      ...
+    # Subtest: nested timestamp cannot repair remote
+    ok 11 - nested timestamp cannot repair remote
+      ---
+      duration_ms: 0.4394
+      type: 'test'
+      ...
+    # Subtest: numeric remote
+    ok 12 - numeric remote
+      ---
+      duration_ms: 0.3252
+      type: 'test'
+      ...
+    # Subtest: invalid remote
+    ok 13 - invalid remote
+      ---
+      duration_ms: 0.3114
+      type: 'test'
+      ...
+    # Subtest: short remote
+    ok 14 - short remote
+      ---
+      duration_ms: 0.3151
+      type: 'test'
+      ...
+    # Subtest: whitespace remote
+    ok 15 - whitespace remote
+      ---
+      duration_ms: 0.3219
+      type: 'test'
+      ...
+    # Subtest: missing local
+    ok 16 - missing local
+      ---
+      duration_ms: 0.3417
+      type: 'test'
+      ...
+    # Subtest: incorrect local
+    ok 17 - incorrect local
+      ---
+      duration_ms: 0.3207
+      type: 'test'
+      ...
+    # Subtest: numeric local
+    ok 18 - numeric local
+      ---
+      duration_ms: 0.3237
+      type: 'test'
+      ...
+    # Subtest: missing time
+    ok 19 - missing time
+      ---
+      duration_ms: 0.359
+      type: 'test'
+      ...
+    # Subtest: incorrect time
+    ok 20 - incorrect time
+      ---
+      duration_ms: 0.3324
+      type: 'test'
+      ...
+    # Subtest: numeric time
+    ok 21 - numeric time
+      ---
+      duration_ms: 0.3143
+      type: 'test'
+      ...
+    # Subtest: extra version field
+    ok 22 - extra version field
+      ---
+      duration_ms: 0.3189
+      type: 'test'
+      ...
+    # Subtest: null row
+    ok 23 - null row
+      ---
+      duration_ms: 0.3207
+      type: 'test'
+      ...
+    # Subtest: array row
+    ok 24 - array row
+      ---
+      duration_ms: 0.3189
+      type: 'test'
+      ...
+    # Subtest: missing migrations
+    ok 25 - missing migrations
+      ---
+      duration_ms: 0.1362
+      type: 'test'
+      ...
+    # Subtest: non-array migrations
+    ok 26 - non-array migrations
+      ---
+      duration_ms: 0.1439
+      type: 'test'
+      ...
+    # Subtest: missing message
+    ok 27 - missing message
+      ---
+      duration_ms: 0.2636
+      type: 'test'
+      ...
+    # Subtest: incorrect message
+    ok 28 - incorrect message
+      ---
+      duration_ms: 0.1666
+      type: 'test'
+      ...
+    # Subtest: extra envelope field
+    ok 29 - extra envelope field
+      ---
+      duration_ms: 0.1909
+      type: 'test'
+      ...
+    1..29
+ok 22 - exact installed history uses the captured CLI 2.117.0 database column and rejects corrupted histories
+  ---
+  duration_ms: 21.8298
+  type: 'test'
+  ...
+# Subtest: the local contract requires the exact eight-version withholding list through 0080
+ok 23 - the local contract requires the exact eight-version withholding list through 0080
+  ---
+  duration_ms: 11.8124
+  type: 'test'
+  ...
+# Subtest: H01 complete SQL history is authoritative and cannot accept lossy CLI evidence
+    # Subtest: complete SQL positive through 20260726000067
+    ok 1 - complete SQL positive through 20260726000067
+      ---
+      duration_ms: 0.3536
+      type: 'test'
+      ...
+    # Subtest: complete SQL positive through 20260726000068
+    ok 2 - complete SQL positive through 20260726000068
+      ---
+      duration_ms: 0.1322
+      type: 'test'
+      ...
+    # Subtest: complete SQL positive through 20260726000069
+    ok 3 - complete SQL positive through 20260726000069
+      ---
+      duration_ms: 0.1019
+      type: 'test'
+      ...
+    # Subtest: complete SQL positive through 20260726000070
+    ok 4 - complete SQL positive through 20260726000070
+      ---
+      duration_ms: 0.1002
+      type: 'test'
+      ...
+    # Subtest: complete SQL positive through 20260726000071
+    ok 5 - complete SQL positive through 20260726000071
+      ---
+      duration_ms: 0.0988
+      type: 'test'
+      ...
+    # Subtest: complete SQL positive through 20260729000072
+    ok 6 - complete SQL positive through 20260729000072
+      ---
+      duration_ms: 0.0993
+      type: 'test'
+      ...
+    # Subtest: complete SQL positive through 20261010000081
+    ok 7 - complete SQL positive through 20261010000081
+      ---
+      duration_ms: 0.1005
+      type: 'test'
+      ...
+    # Subtest: reviewer SQL98/CLI97 hidden nonnumeric row
+    ok 8 - reviewer SQL98/CLI97 hidden nonnumeric row
+      ---
+      duration_ms: 0.2218
+      type: 'test'
+      ...
+    # Subtest: hidden int64-overflow row
+    ok 9 - hidden int64-overflow row
+      ---
+      duration_ms: 0.1535
+      type: 'test'
+      ...
+    # Subtest: missing middle row
+    ok 10 - missing middle row
+      ---
+      duration_ms: 0.1461
+      type: 'test'
+      ...
+    # Subtest: extra valid row
+    ok 11 - extra valid row
+      ---
+      duration_ms: 0.15
+      type: 'test'
+      ...
+    # Subtest: duplicate middle row
+    ok 12 - duplicate middle row
+      ---
+      duration_ms: 0.1467
+      type: 'test'
+      ...
+    # Subtest: duplicate extra row
+    ok 13 - duplicate extra row
+      ---
+      duration_ms: 0.1165
+      type: 'test'
+      ...
+    # Subtest: substituted middle row
+    ok 14 - substituted middle row
+      ---
+      duration_ms: 0.1083
+      type: 'test'
+      ...
+    # Subtest: swapped ordering
+    ok 15 - swapped ordering
+      ---
+      duration_ms: 0.1122
+      type: 'test'
+      ...
+    # Subtest: null version
+    ok 16 - null version
+      ---
+      duration_ms: 0.1075
+      type: 'test'
+      ...
+    # Subtest: numeric version
+    ok 17 - numeric version
+      ---
+      duration_ms: 0.112
+      type: 'test'
+      ...
+    # Subtest: whitespace in version
+    ok 18 - whitespace in version
+      ---
+      duration_ms: 0.1055
+      type: 'test'
+      ...
+    # Subtest: incomplete aggregate with unchanged count
+    ok 19 - incomplete aggregate with unchanged count
+      ---
+      duration_ms: 0.1179
+      type: 'test'
+      ...
+    # Subtest: missing count
+    ok 20 - missing count
+      ---
+      duration_ms: 0.1544
+      type: 'test'
+      ...
+    # Subtest: false count
+    ok 21 - false count
+      ---
+      duration_ms: 0.0995
+      type: 'test'
+      ...
+    # Subtest: string count
+    ok 22 - string count
+      ---
+      duration_ms: 0.1312
+      type: 'test'
+      ...
+    # Subtest: missing versions
+    ok 23 - missing versions
+      ---
+      duration_ms: 0.1142
+      type: 'test'
+      ...
+    # Subtest: reject wrong or absent SQL database
+    ok 24 - reject wrong or absent SQL database
+      ---
+      duration_ms: 0.1631
+      type: 'test'
+      ...
+    # Subtest: reject wrong or absent SQL current_user
+    ok 25 - reject wrong or absent SQL current_user
+      ---
+      duration_ms: 0.1017
+      type: 'test'
+      ...
+    # Subtest: reject wrong or absent SQL session_user
+    ok 26 - reject wrong or absent SQL session_user
+      ---
+      duration_ms: 0.0985
+      type: 'test'
+      ...
+    # Subtest: reject wrong or absent SQL server_version_num
+    ok 27 - reject wrong or absent SQL server_version_num
+      ---
+      duration_ms: 0.1045
+      type: 'test'
+      ...
+    # Subtest: reject wrong or absent SQL port
+    ok 28 - reject wrong or absent SQL port
+      ---
+      duration_ms: 0.1092
+      type: 'test'
+      ...
+    # Subtest: reject wrong or absent SQL read_only
+    ok 29 - reject wrong or absent SQL read_only
+      ---
+      duration_ms: 0.1022
+      type: 'test'
+      ...
+    # Subtest: wrong container
+    ok 30 - wrong container
+      ---
+      duration_ms: 0.3454
+      type: 'test'
+      ...
+    # Subtest: wrong project
+    ok 31 - wrong project
+      ---
+      duration_ms: 0.2528
+      type: 'test'
+      ...
+    # Subtest: wrong workdir
+    ok 32 - wrong workdir
+      ---
+      duration_ms: 0.1271
+      type: 'test'
+      ...
+    # Subtest: wrong database port
+    ok 33 - wrong database port
+      ---
+      duration_ms: 0.1232
+      type: 'test'
+      ...
+    # Subtest: wrong image
+    ok 34 - wrong image
+      ---
+      duration_ms: 0.118
+      type: 'test'
+      ...
+    # Subtest: wrong server major
+    ok 35 - wrong server major
+      ---
+      duration_ms: 0.1561
+      type: 'test'
+      ...
+    # Subtest: missing identity
+    ok 36 - missing identity
+      ---
+      duration_ms: 0.1253
+      type: 'test'
+      ...
+    # Subtest: stopped container
+    ok 37 - stopped container
+      ---
+      duration_ms: 0.1219
+      type: 'test'
+      ...
+    1..37
+ok 24 - H01 complete SQL history is authoritative and cannot accept lossy CLI evidence
+  ---
+  duration_ms: 9.7836
+  type: 'test'
+  ...
+# Subtest: H01 contained SQL probe failures stop before successful CLI corroboration
+    # Subtest: nonzero_exit
+    ok 1 - nonzero_exit
+      ---
+      duration_ms: 1.0497
+      type: 'test'
+      ...
+    # Subtest: timeout
+    ok 2 - timeout
+      ---
+      duration_ms: 0.5348
+      type: 'test'
+      ...
+    # Subtest: output_limit
+    ok 3 - output_limit
+      ---
+      duration_ms: 0.5079
+      type: 'test'
+      ...
+    # Subtest: aborted
+    ok 4 - aborted
+      ---
+      duration_ms: 0.55
+      type: 'test'
+      ...
+    1..4
+ok 25 - H01 contained SQL probe failures stop before successful CLI corroboration
+  ---
+  duration_ms: 3.0919
+  type: 'test'
+  ...
+# Subtest: C01 successful proved cleanup is idempotent and permits final PASS
+ok 26 - C01 successful proved cleanup is idempotent and permits final PASS
+  ---
+  duration_ms: 14.7351
+  type: 'test'
+  ...
+# Subtest: C01 failed stop rejects, retains evidence and suppresses final PASS
+ok 27 - C01 failed stop rejects, retains evidence and suppresses final PASS
+  ---
+  duration_ms: 1.7991
+  type: 'test'
+  ...
+# Subtest: C01 failed directory removal rejects after successful owned stack removal
+ok 28 - C01 failed directory removal rejects after successful owned stack removal
+  ---
+  duration_ms: 1.7743
+  type: 'test'
+  ...
+# Subtest: C01 primary and cleanup failures retain both origins and dispose signals
+ok 29 - C01 primary and cleanup failures retain both origins and dispose signals
+  ---
+  duration_ms: 1.8741
+  type: 'test'
+  ...
+# Subtest: C01 primary failure remains the original error when cleanup succeeds
+ok 30 - C01 primary failure remains the original error when cleanup succeeds
+  ---
+  duration_ms: 2.1965
+  type: 'test'
+  ...
+# Subtest: C01 surviving ps resources or absent proof blocks cleanup
+ok 31 - C01 surviving ps resources or absent proof blocks cleanup
+  ---
+  duration_ms: 1.5619
+  type: 'test'
+  ...
+# Subtest: C01 surviving volume resources or absent proof blocks cleanup
+ok 32 - C01 surviving volume resources or absent proof blocks cleanup
+  ---
+  duration_ms: 1.5427
+  type: 'test'
+  ...
+# Subtest: C01 unknown child containment blocks stop and preserves the sandbox
+ok 33 - C01 unknown child containment blocks stop and preserves the sandbox
+  ---
+  duration_ms: 1.9398
+  type: 'test'
+  ...
+# Subtest: C01 the unchanged 35-second cleanup deadline fails closed when a child never settles
+ok 34 - C01 the unchanged 35-second cleanup deadline fails closed when a child never settles
+  ---
+  duration_ms: 1.7863
+  type: 'test'
+  ...
+# Subtest: C01 actual contained timeout stop failure cannot produce PASS or leak a process
+ok 35 - C01 actual contained timeout stop failure cannot produce PASS or leak a process
+  ---
+  duration_ms: 544.2915
+  type: 'test'
+  ...
+# Subtest: C01 actual contained output-limit stop failure cannot produce PASS or leak a process
+ok 36 - C01 actual contained output-limit stop failure cannot produce PASS or leak a process
+  ---
+  duration_ms: 268.7174
+  type: 'test'
+  ...
+# Subtest: C01 actual contained aborted stop failure cannot produce PASS or leak a process
+ok 37 - C01 actual contained aborted stop failure cannot produce PASS or leak a process
+  ---
+  duration_ms: 270.2001
+  type: 'test'
+  ...
+# Subtest: C01 SIGTERM retains exit 143 on actual cleanup rejection
+ok 38 - C01 SIGTERM retains exit 143 on actual cleanup rejection
+  ---
+  duration_ms: 3.0879
+  type: 'test'
+  ...
+# Subtest: H01 identity diagnostics are allowlisted and every owner field remains mandatory
+    # Subtest: reject containerId
+    ok 1 - reject containerId
+      ---
+      duration_ms: 0.3251
+      type: 'test'
+      ...
+    # Subtest: reject containerName
+    ok 2 - reject containerName
+      ---
+      duration_ms: 0.1515
+      type: 'test'
+      ...
+    # Subtest: reject running
+    ok 3 - reject running
+      ---
+      duration_ms: 0.1342
+      type: 'test'
+      ...
+    # Subtest: reject cliProject
+    ok 4 - reject cliProject
+      ---
+      duration_ms: 0.1647
+      type: 'test'
+      ...
+    # Subtest: reject composeProject
+    ok 5 - reject composeProject
+      ---
+      duration_ms: 0.1335
+      type: 'test'
+      ...
+    # Subtest: reject cliWorkdir
+    ok 6 - reject cliWorkdir
+      ---
+      duration_ms: 0.1353
+      type: 'test'
+      ...
+    # Subtest: reject cliWorkdir
+    ok 7 - reject cliWorkdir
+      ---
+      duration_ms: 0.1318
+      type: 'test'
+      ...
+    # Subtest: reject imageMajor
+    ok 8 - reject imageMajor
+      ---
+      duration_ms: 0.1317
+      type: 'test'
+      ...
+    # Subtest: reject imageMajor
+    ok 9 - reject imageMajor
+      ---
+      duration_ms: 0.2448
+      type: 'test'
+      ...
+    # Subtest: reject imageDigest
+    ok 10 - reject imageDigest
+      ---
+      duration_ms: 0.2192
+      type: 'test'
+      ...
+    # Subtest: reject portBinding
+    ok 11 - reject portBinding
+      ---
+      duration_ms: 0.2121
+      type: 'test'
+      ...
+    # Subtest: reject portBinding
+    ok 12 - reject portBinding
+      ---
+      duration_ms: 0.2048
+      type: 'test'
+      ...
+    # Subtest: reject portBinding
+    ok 13 - reject portBinding
+      ---
+      duration_ms: 0.2052
+      type: 'test'
+      ...
+    # Subtest: reject portBinding
+    ok 14 - reject portBinding
+      ---
+      duration_ms: 0.2012
+      type: 'test'
+      ...
+    1..14
+ok 39 - H01 identity diagnostics are allowlisted and every owner field remains mandatory
+  ---
+  duration_ms: 5.2338
+  type: 'test'
+  ...
+# Subtest: H01 SQL observation rejects swapped immutable IDs and image digests before CLI acceptance
+    # Subtest: id
+    ok 1 - id
+      ---
+      duration_ms: 0.7831
+      type: 'test'
+      ...
+    # Subtest: image
+    ok 2 - image
+      ---
+      duration_ms: 0.5388
+      type: 'test'
+      ...
+    # Subtest: workdir
+    ok 3 - workdir
+      ---
+      duration_ms: 0.5353
+      type: 'test'
+      ...
+    # Subtest: port
+    ok 4 - port
+      ---
+      duration_ms: 0.4729
+      type: 'test'
+      ...
+    # Subtest: project
+    ok 5 - project
+      ---
+      duration_ms: 0.4943
+      type: 'test'
+      ...
+    # Subtest: major
+    ok 6 - major
+      ---
+      duration_ms: 0.5025
+      type: 'test'
+      ...
+    1..6
+ok 40 - H01 SQL observation rejects swapped immutable IDs and image digests before CLI acceptance
+  ---
+  duration_ms: 3.8197
+  type: 'test'
+  ...
+# Subtest: H01 diagnostic has a fixed bounded schema even for long sensitive inspect and expected values
+ok 41 - H01 diagnostic has a fixed bounded schema even for long sensitive inspect and expected values
+  ---
+  duration_ms: 45.8588
+  type: 'test'
+  ...
+# Subtest: successful pgTAP commands never echo summary suffixes or arbitrary output
+ok 42 - successful pgTAP commands never echo summary suffixes or arbitrary output
+  ---
+  duration_ms: 2.5454
+  type: 'test'
+  ...
+# Subtest: H01 changed Docker executable bytes reject before any command can run
+ok 43 - H01 changed Docker executable bytes reject before any command can run
+  ---
+  duration_ms: 1.0072
+  type: 'test'
+  ...
+# Subtest: H01 producer scrubs inherited registry overrides and secrets while preserving non-DB fallback
+ok 44 - H01 producer scrubs inherited registry overrides and secrets while preserving non-DB fallback
+  ---
+  duration_ms: 2.4698
+  type: 'test'
+  ...
+# Subtest: H01 canonical PostgreSQL preparation precedes startup without constraining non-DB registries
+ok 45 - H01 canonical PostgreSQL preparation precedes startup without constraining non-DB registries
+  ---
+  duration_ms: 0.2441
+  type: 'test'
+  ...
+# Subtest: H01 canonical preparation uses a bounded Docker pull of only the ECR PG image and binds its immutable identity
+ok 46 - H01 canonical preparation uses a bounded Docker pull of only the ECR PG image and binds its immutable identity
+  ---
+  duration_ms: 1.266
+  type: 'test'
+  ...
+# Subtest: H01 canonical preparation rejects unsupported major or architecture before a pull
+ok 47 - H01 canonical preparation rejects unsupported major or architecture before a pull
+  ---
+  duration_ms: 1.4281
+  type: 'test'
+  ...
+# Subtest: H01 canonical preparation explicitly pulls the native arm64 platform
+ok 48 - H01 canonical preparation explicitly pulls the native arm64 platform
+  ---
+  duration_ms: 0.723
+  type: 'test'
+  ...
+# Subtest: H01 unavailable canonical ECR PostgreSQL never falls back or continues
+ok 49 - H01 unavailable canonical ECR PostgreSQL never falls back or continues
+  ---
+  duration_ms: 4.1216
+  type: 'test'
+  ...
+# Subtest: H01 canonical image admission rejects malformed, foreign, mismatched-digest and wrong-platform responses without disclosure
+ok 50 - H01 canonical image admission rejects malformed, foreign, mismatched-digest and wrong-platform responses without disclosure
+  ---
+  duration_ms: 9.2804
+  type: 'test'
+  ...
+# Subtest: H01 rejects an ECR-named foreign or stale image and missing preparation before SQL
+ok 51 - H01 rejects an ECR-named foreign or stale image and missing preparation before SQL
+  ---
+  duration_ms: 1.0216
+  type: 'test'
+  ...
+# Subtest: SIGINT waits for one cleanup before exiting 130
+ok 52 - SIGINT waits for one cleanup before exiting 130
+  ---
+  duration_ms: 1.7422
+  type: 'test'
+  ...
+# Subtest: SIGTERM exits 143 even when cleanup reports an error
+ok 53 - SIGTERM exits 143 even when cleanup reports an error
+  ---
+  duration_ms: 0.3486
+  type: 'test'
+  ...
+# Subtest: allows only the expected explicitly local database command
+ok 54 - allows only the expected explicitly local database command
+  ---
+  duration_ms: 1.1452
+  type: 'test'
+  ...
+# Subtest: rejects split and equals remote-target flag forms
+ok 55 - rejects split and equals remote-target flag forms
+  ---
+  duration_ms: 0.4888
+  type: 'test'
+  ...
+# Subtest: rejects non-allowlisted commands and missing explicit local targeting
+ok 56 - rejects non-allowlisted commands and missing explicit local targeting
+  ---
+  duration_ms: 0.2324
+  type: 'test'
+  ...
+# Subtest: the PostgreSQL quality job binds the exact database and script
+ok 57 - the PostgreSQL quality job binds the exact database and script
+  ---
+  duration_ms: 1.0468
+  type: 'test'
+  ...
+# Subtest: renamed, removed, and duplicate rehearsal rows fail closed
+ok 58 - renamed, removed, and duplicate rehearsal rows fail closed
+  ---
+  duration_ms: 0.4169
+  type: 'test'
+  ...
+# Subtest: a detached or malformed here-document cannot satisfy the binding
+ok 59 - a detached or malformed here-document cannot satisfy the binding
+  ---
+  duration_ms: 0.2403
+  type: 'test'
+  ...
+# Subtest: actual PostgreSQL matrix retains both versions and the exact step environment binding
+ok 60 - actual PostgreSQL matrix retains both versions and the exact step environment binding
+  ---
+  duration_ms: 17.0591
+  type: 'test'
+  ...
+# Subtest: a changed image, matrix, misplaced environment or optional rehearsal cannot satisfy the matrix binding
+ok 61 - a changed image, matrix, misplaced environment or optional rehearsal cannot satisfy the matrix binding
+  ---
+  duration_ms: 49.3623
+  type: 'test'
+  ...
+# Subtest: ambiguous and malformed YAML cannot grant PostgreSQL matrix coverage
+ok 62 - ambiguous and malformed YAML cannot grant PostgreSQL matrix coverage
+  ---
+  duration_ms: 7.3449
+  type: 'test'
+  ...
+# Subtest: forward SQL admits only the exact old, interim, and current canonical quiz tuples
+ok 63 - forward SQL admits only the exact old, interim, and current canonical quiz tuples
+  ---
+  duration_ms: 1.8609
+  type: 'test'
+  ...
+# Subtest: forward constraint is non-validating, atomic, and never upgrades review status
+ok 64 - forward constraint is non-validating, atomic, and never upgrades review status
+  ---
+  duration_ms: 0.5881
+  type: 'test'
+  ...
+# Subtest: current policy contract keeps the unused authenticated update lane closed
+ok 65 - current policy contract keeps the unused authenticated update lane closed
+  ---
+  duration_ms: 0.2085
+  type: 'test'
+  ...
+1..65
+# tests 171
+# suites 0
+# pass 171
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15488.357
+DB-05 local Supabase contract: PASS

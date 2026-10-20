@@ -1,0 +1,30 @@
+
+> layerwell@0.1.0 typecheck
+> turbo run typecheck --force
+
+• turbo 2.9.18
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/types
+   • Running typecheck in 3 packages
+   • Remote caching disabled, using shared worktree cache
+
+@layerwell/types:typecheck: cache bypass, force executing 7d741b603cce4a37
+@layerwell/catalog-operator-console:typecheck: cache bypass, force executing 389c733007c191e1
+@layerwell/types:typecheck: 
+@layerwell/types:typecheck: > @layerwell/types@0.1.0 typecheck
+@layerwell/types:typecheck: > tsc --noEmit
+@layerwell/types:typecheck: 
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/catalog-operator-console:typecheck: > @layerwell/catalog-operator-console@0.1.0 typecheck
+@layerwell/catalog-operator-console:typecheck: > tsc --noEmit
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/mobile:typecheck: cache bypass, force executing 58581f0e42eba9bc
+@layerwell/mobile:typecheck: 
+@layerwell/mobile:typecheck: > @layerwell/mobile@0.1.0 typecheck
+@layerwell/mobile:typecheck: > tsc --noEmit
+@layerwell/mobile:typecheck: 
+
+ Tasks:    3 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    36.976s 
+

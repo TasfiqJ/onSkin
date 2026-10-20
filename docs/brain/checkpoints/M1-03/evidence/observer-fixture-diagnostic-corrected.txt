@@ -1,0 +1,22 @@
+unchanged-control exit 0
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103-observer-fixture-v2
+
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  19:16:53
+   Duration  775ms (transform 188ms, setup 0ms, import 373ms, tests 213ms, environment 0ms)
+
+
+observer-flush-fixture exit 0
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103-observer-fixture-v2
+
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  19:16:54
+   Duration  813ms (transform 190ms, setup 0ms, import 374ms, tests 253ms, environment 0ms)
+
+

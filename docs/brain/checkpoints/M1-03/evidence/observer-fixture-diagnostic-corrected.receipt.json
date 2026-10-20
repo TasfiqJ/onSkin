@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/probe_m103_observer.py",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+  "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/evidence/observer-fixture-diagnostic-corrected.txt",
+    "sha256": "9201ffac62b7c315b4c0eb399eb29f6a8edb18024dc9dcd4f8863c078c587c35"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T23:16:38.186914+00:00",
+  "finished_at_utc": "2026-10-20T23:16:55.533319+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "python",
+    "-B",
+    "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/probe_m103_observer.py"
+  ]
+}
