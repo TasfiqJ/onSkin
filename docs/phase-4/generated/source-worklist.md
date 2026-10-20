@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-20T15:44:27.887Z
+Generated: 2026-10-20T16:01:06.203Z
 Status: pass
-Git SHA: 4abe52d61ee187aca75e5992f74fb3b6175ed587
+Git SHA: cf6e3169edaee5102a95a7da7d8f67760108980f
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -437,7 +437,7 @@ Sources:
 - `apps/mobile/src/features/shelf/shelfScanOutboxMigration.test.ts` - 4755 bytes - sha256 `45e1dfa21c1ec493bf6663da5ff0af17bd17748596c7d4c2fd8cd3375a32ad6d`
 - `apps/mobile/src/features/shelf/shelfStressFixture.test.ts` - 3999 bytes - sha256 `ae29eead217c5a96acec1a07314cd92592f5cf3fef910e197b2b1a998e60a755`
 - `apps/mobile/src/features/shelf/shelfStressFixture.ts` - 3821 bytes - sha256 `f23f1ceb1e4af3cae17a19a4c35a931a71cfe7fc8cf3ecc39bcff173c34d81a0`
-- `apps/mobile/src/features/shelf/store.test.ts` - 59111 bytes - sha256 `5d3f84a612f1ca4fbed27527f32873359e198667a88649889b5bdf44c6fc555b`
+- `apps/mobile/src/features/shelf/store.test.ts` - 57439 bytes - sha256 `ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2`
 - `apps/mobile/src/features/shelf/store.ts` - 58718 bytes - sha256 `b1c78581d5984f3c1f05efe56a320b28ec01453bb74fd97d4d121657d8d96f5a`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 5075 bytes - sha256 `2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9`
 - `apps/mobile/src/features/shelf/useShelf.ts` - 10723 bytes - sha256 `89267a8478de7ee0dfc8f45f48d455b792e4621174df94c48108779660f423c8`
@@ -527,7 +527,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66906 bytes - sha256 `a83cbda544e062d873a8f3905923e35fca2e72a0213c33b0d6f6d79d8d40ca02`
-- `docs/USER_FLOW_TREE.md` - 498562 bytes - sha256 `4987ec3b9c9fd6ef5d602f0485f4a2b52cf233cb9e57b5432ffffdc403998581`
+- `docs/USER_FLOW_TREE.md` - 495811 bytes - sha256 `6bc98a100ba2ebe66c7eb55a92729e2c9ee73eee16cfdb35e6a0a7ab845bc39a`
 - `apps/mobile/src/app/onboarding/products.tsx` - 16181 bytes - sha256 `7f525652378ce533185cf40a3cf4a79cddfb5fb24ea6cb30e1721a844e9539f4`
 - `apps/mobile/src/app/shelf/[id].tsx` - 47290 bytes - sha256 `fe2e986307ee439a7d462ed3a02f5873523b569d933f6fda3ea0c68a626d1105`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18282 bytes - sha256 `1e7108e64c4b12f462a51745f1e15d465990ed2dc8f7cf0b76f027afbc677c85`
@@ -550,7 +550,7 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 511 bytes - sha256 `a9688d11fda1c37ac1aae3d66426d82f470ba7a04252d7b4558cb9e361c90910`
 - `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
 - `apps/mobile/src/features/shelf/store.ts` - 58718 bytes - sha256 `b1c78581d5984f3c1f05efe56a320b28ec01453bb74fd97d4d121657d8d96f5a`
-- `apps/mobile/src/features/shelf/store.test.ts` - 59111 bytes - sha256 `5d3f84a612f1ca4fbed27527f32873359e198667a88649889b5bdf44c6fc555b`
+- `apps/mobile/src/features/shelf/store.test.ts` - 57439 bytes - sha256 `ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2`
 - `apps/mobile/src/lib/offline/shelfMirrorQueue.ts` - 8443 bytes - sha256 `e03000a6c457814ce75e7ccd62375bc6fe4bd0681185a86885d8292e7a274f61`
 - `apps/mobile/src/lib/offline/shelfMirrorQueue.test.ts` - 11914 bytes - sha256 `994b92f546d3b3cdfafbab14a52a1ddbb82d4a4bd5d793fa9b14ce7ac6a52b38`
 - `apps/mobile/src/lib/offline/OfflineSync.tsx` - 12198 bytes - sha256 `195b824f021d91e8b27c36f796576744c1c7a6574d86a6b7995bcaf55412964c`

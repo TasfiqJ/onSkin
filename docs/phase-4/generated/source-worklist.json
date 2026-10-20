@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-20T15:44:27.887Z",
+  "generatedAt": "2026-10-20T16:01:06.203Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "4abe52d61ee187aca75e5992f74fb3b6175ed587",
+  "gitSha": "cf6e3169edaee5102a95a7da7d8f67760108980f",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1782,8 +1782,8 @@
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 59111,
-          "sha256": "5d3f84a612f1ca4fbed27527f32873359e198667a88649889b5bdf44c6fc555b"
+          "bytes": 57439,
+          "sha256": "ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
@@ -2218,8 +2218,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 498562,
-          "sha256": "4987ec3b9c9fd6ef5d602f0485f4a2b52cf233cb9e57b5432ffffdc403998581"
+          "bytes": 495811,
+          "sha256": "6bc98a100ba2ebe66c7eb55a92729e2c9ee73eee16cfdb35e6a0a7ab845bc39a"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -2356,8 +2356,8 @@
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 59111,
-          "sha256": "5d3f84a612f1ca4fbed27527f32873359e198667a88649889b5bdf44c6fc555b"
+          "bytes": 57439,
+          "sha256": "ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2"
         },
         {
           "path": "apps/mobile/src/lib/offline/shelfMirrorQueue.ts",

@@ -1,0 +1,23 @@
+{
+  "source_commit": "cf6e3169edaee5102a95a7da7d8f67760108980f",
+  "generator_sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+  "clean_source_status": true,
+  "commands": [
+    {
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "exit_code": 0
+    }
+  ],
+  "all_item_meanings_unchanged": true,
+  "all_414_fingerprints_match_Git_blobs": true,
+  "unique_paths_verified": 244,
+  "changed_fingerprint_paths": [
+    "apps/mobile/src/features/shelf/store.test.ts",
+    "docs/USER_FLOW_TREE.md"
+  ],
+  "limits": "No generator or Security inventory change. Earlier dirty regeneration warned and was not committed; index stat refresh confirmed the normalized files already equal their Git blobs before the final clean generation."
+}
