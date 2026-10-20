@@ -157,6 +157,24 @@ describe('minimal notification startup', () => {
     expect(await configureNotifications()).toBe('ready');
   });
 
+  it('drains already-started category work when another native wrapper throws synchronously', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    mocks.setNotificationCategoryAsync.mockImplementationOnce(() => gate)
+      .mockImplementationOnce(() => { throw new Error('sync partial bridge failure'); });
+    const { configureNotifications } = await import('./startup');
+    const first = configureNotifications();
+    let settled = false;
+    void first.then(() => { settled = true; });
+    await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
+    expect(settled).toBe(false);
+    expect(configureNotifications()).toBe(first);
+    release();
+    expect(await first).toBe('unavailable');
+    expect(await configureNotifications()).toBe('ready');
+    expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(8);
+  });
+
   it('keeps the root notification import graph at the two-platform-module boundary', () => {
     const startup = readFileSync(`${SRC_DIR}/features/notifications/startup.ts`, 'utf8');
     const root = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');

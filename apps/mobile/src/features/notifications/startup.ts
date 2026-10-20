@@ -28,7 +28,7 @@ async function configureNotificationRuntime(): Promise<NotificationRuntimeConfig
   // before registering the exact local/future-remote category allowlist.
   if (!(await Notifications.setBadgeCountAsync(0).catch(() => false))) ready = false;
   const categoryResults = await Promise.allSettled(
-    Object.values(NOTIFICATION_CATEGORY).map((identifier) =>
+    Object.values(NOTIFICATION_CATEGORY).map(async (identifier) =>
       Notifications.setNotificationCategoryAsync(identifier, []),
     ),
   );
