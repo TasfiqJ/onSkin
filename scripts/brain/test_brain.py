@@ -296,7 +296,7 @@ class InstalledControls(unittest.TestCase):
         result = run(copy.deepcopy(report), observation)
         self.assertEqual(result.returncode, 0, result.stderr)
         # Valid pending, skipped and cancelled observations remain available without green conclusions.
-        for status, conclusion in [('in_progress', 'pending'), ('completed', 'skipped'), ('completed', 'cancelled')]:
+        for status, conclusion in [('in_progress', 'pending'), ('pending', 'pending'), ('completed', 'skipped'), ('completed', 'cancelled')]:
             value, record = copy.deepcopy(report), copy.deepcopy(observation)
             value['ci'][0].update(status=status, conclusion=conclusion)
             record['runs'][0].update(status=status, conclusion=conclusion)

@@ -499,7 +499,7 @@ def ci_consistency(root, row, artifacts):
     for key in ['head_commit', 'name', 'workflow_id', 'run_id', 'status', 'conclusion']:
         require(type(recorded.get(key)) is type(row[key]) and recorded[key] == row[key], 'CI binding mismatch: ' + key)
     require(type(row['workflow_id']) is int and row['workflow_id'] > 0, 'Invalid CI workflow ID')
-    require(row['status'] in ['queued', 'in_progress', 'completed'], 'Invalid CI status')
+    require(row['status'] in ['queued', 'pending', 'in_progress', 'completed'], 'Invalid CI status')
     if row['status'] != 'completed':
         require(row['conclusion'] == 'pending', 'Unfinished CI cannot have a completed conclusion')
     else:

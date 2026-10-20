@@ -275,7 +275,8 @@
             "enum": [
               "queued",
               "in_progress",
-              "completed"
+              "completed",
+              "pending"
             ]
           },
           "conclusion": {
