@@ -873,7 +873,9 @@ async function crossOwnerFlow(client, products) {
     };
     const result = p => p.then(() => 'UNEXPECTED_SUCCESS', e => String(e.code ?? e.message));
     const read = result(kv.getPrivateItem('layerwell.shelf.v1'));
-    const write = result(kv.setPrivateItem('layerwell.shelf.v1', raw));
+    const lateValue = JSON.parse(raw);
+    lateValue.products[0].name = 'late-owner-a';
+    const write = result(kv.setPrivateItem('layerwell.shelf.v1', JSON.stringify(lateValue)));
     const callback = result(gen.runAccountGenerationOperation(async lease => {
       await callbackGate; lease.assertCurrent(); query.setQueryData(['late-owner-a'], 'late-owner-a');
     }));
@@ -2046,6 +2048,7 @@ async function run() {
     if (client) {
       await captureStep(client, 'FAILURE', { assertClean: false }).catch(() => undefined);
       writeJson('FAILURE-runtime-events.json', collectProblemLogs(client.events));
+      writeJson('FAILURE-race-state.json', await evaluate(client, `globalThis.__crossOwnerRace ? { readEntered: __crossOwnerRace.readEntered, writeEntered: __crossOwnerRace.writeEntered, results: __crossOwnerRace.results } : null`).catch(() => null));
     }
     writeJson('ERROR.json', { status: 'FAIL', message: String(error.message), viewport });
     throw error;
