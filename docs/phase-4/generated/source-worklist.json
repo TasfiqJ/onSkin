@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-20T16:01:06.203Z",
+  "generatedAt": "2026-10-20T17:14:42.097Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "cf6e3169edaee5102a95a7da7d8f67760108980f",
+  "gitSha": "56c4b2d6ea3684a49c3fe0d765f10df3a82b8823",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -2218,8 +2218,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 495811,
-          "sha256": "6bc98a100ba2ebe66c7eb55a92729e2c9ee73eee16cfdb35e6a0a7ab845bc39a"
+          "bytes": 496597,
+          "sha256": "2462ed9abd590e732741a61f3f2bcb0542ded04cfdb70128e91e41050ab5203f"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
