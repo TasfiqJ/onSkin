@@ -1,0 +1,47 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/lib/auth/AuthProvider.lifecycle.test.ts -t synthetic transport has no commerce resume hook
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+stderr | src/lib/auth/AuthProvider.lifecycle.test.ts > AuthProvider cold restore and foreground publication lifecycle > retries the pending cross-owner boundary when the synthetic transport has no commerce resume hook
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/lib/auth/AuthProvider.lifecycle.test.ts (66 tests | 1 failed | 65 skipped) 26ms
+     × retries the pending cross-owner boundary when the synthetic transport has no commerce resume hook 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/auth/AuthProvider.lifecycle.test.ts > AuthProvider cold restore and foreground publication lifecycle > retries the pending cross-owner boundary when the synthetic transport has no commerce resume hook
+AssertionError: expected undefined to be 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' // Object.is equality
+
+- Expected:
+"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"
+
++ Received:
+undefined
+
+ ❯ src/lib/auth/AuthProvider.lifecycle.test.ts:834:43
+    832|     await act(async () => currentAuth?.retrySessionBoundary());
+    833|     await flush();
+    834|     expect(currentAuth?.session?.user.id).toBe(USER_B);
+       |                                           ^
+    835|     expect(currentAuth?.sessionBoundaryError).toBe(false);
+    836|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 65 skipped (66)
+   Start at  15:03:35
+   Duration  569ms (transform 197ms, setup 0ms, import 357ms, tests 26ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run src/lib/auth/AuthProvider.lifecycle.test.ts -t ^^^"synthetic^^^ transport^^^ has^^^ no^^^ commerce^^^ resume^^^ hook^^^"

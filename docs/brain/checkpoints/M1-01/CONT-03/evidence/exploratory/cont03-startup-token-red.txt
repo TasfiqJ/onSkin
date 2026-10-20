@@ -1,0 +1,67 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/lib/auth/accountIsolationE2E.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/lib/auth/accountIsolationE2E.test.ts (6 tests | 2 failed) 31ms
+   × accepts a canonical Request from the real gate and rejects a stale candidate bearer 24ms
+   × starts cross-owner with a candidate the real session claims parser can bind 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/auth/accountIsolationE2E.test.ts > accepts a canonical Request from the real gate and rejects a stale candidate bearer
+AssertionError: expected { Object (error) } to deeply equal { status: 'clear', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "ownerSubject": "00000000-0000-4000-8000-0000000000a1",
+-   "status": "clear",
++   "error": "ACCOUNT_DELETION_SESSION_REJECTED",
+  }
+
+ ❯ src/lib/auth/accountIsolationE2E.test.ts:83:67
+     81|       body: JSON.stringify({ action: 'preflight' }),
+     82|     });
+     83|   expect(await (await transport(request(a.access_token))).json()).toEq…
+       |                                                                   ^
+     84|     status: 'clear',
+     85|     ownerSubject: a.user.id,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/auth/accountIsolationE2E.test.ts > starts cross-owner with a candidate the real session claims parser can bind
+AssertionError: expected undefined to be '00000000-0000-4000-8000-0000000000a1' // Object.is equality
+
+- Expected:
+"00000000-0000-4000-8000-0000000000a1"
+
++ Received:
+undefined
+
+ ❯ src/lib/auth/accountIsolationE2E.test.ts:101:82
+     99|   process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'cross_owner';
+    100|   const fixture = getAccountIsolationE2EFixture(true, 'development', f…
+    101|   expect(parseSupabaseAccessTokenClaims(fixture.session!.access_token)…
+       |                                                                                  ^
+    102|   process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'signout_clear_retry…
+    103|   expect(getAccountIsolationE2EFixture(true, 'development', false, 'we…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  15:08:46
+   Duration  352ms (transform 55ms, setup 0ms, import 133ms, tests 31ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run src/lib/auth/accountIsolationE2E.test.ts

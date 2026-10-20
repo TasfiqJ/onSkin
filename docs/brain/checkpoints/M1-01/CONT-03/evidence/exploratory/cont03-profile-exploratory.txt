@@ -1,0 +1,17 @@
+test_cont02_manifest_review_and_overlay_remain_bound_to_the_external_digest (test_m1_profile.M1Profile) ... ok
+test_cont03_manifest_review_and_overlay_remain_bound_to_external_digest (test_m1_profile.M1Profile) ... ok
+test_explicit_successor_and_historical_profile_both_validate (test_m1_profile.M1Profile) ... ok
+test_refuses_changed_successor_review (test_m1_profile.M1Profile) ... ok
+test_refuses_mutable_spec_and_replacement_manifest (test_m1_profile.M1Profile) ... ok
+test_refuses_self_acceptance_extra_task_writer_and_expiry_extension (test_m1_profile.M1Profile) ... ok
+test_refuses_wrong_branch (test_m1_profile.M1Profile) ... ok
+test_ci_exact_head_run_workflow_and_pending_semantics (test_m1_report_cli.M1ReportCLI) ... ok
+test_cont02_report_binds_iteration_location_and_reviewed_base (test_m1_report_cli.M1ReportCLI) ... ok
+test_cont03_report_binds_exact_issued_base_and_location (test_m1_report_cli.M1ReportCLI) ... ok
+test_future_execution_and_dirty_untracked_committed_runtime_drift (test_m1_report_cli.M1ReportCLI) ... ok
+test_positive_partial_and_failure_then_evidence_and_type_attacks (test_m1_report_cli.M1ReportCLI) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 117.695s
+
+OK

@@ -835,6 +835,7 @@ async function crossOwnerFlow(client, products) {
   const aMarkers = [
     ...products.map((p) => p.name),
     'tas.account-a.e2e@example.com',
+    '00000000-0000-4000-8000-0000000000a1',
     'late-owner-a',
   ];
   const bName = 'Owner B manual moisturizer';
@@ -912,6 +913,20 @@ async function crossOwnerFlow(client, products) {
   );
   await waitForText(client, 'Securing account data');
   await captureStep(client, 'CO-02-draining-old-owner');
+  const closed = await evaluate(
+    client,
+    `(() => {
+    const mod = ${moduleExpression};
+    return { healthClosed: mod('/lib/consent/healthProcessingEpoch.ts').activeHealthProcessingOwnerUserId() === null,
+      remoteClosed: mod('/lib/supabase/remoteRequestGate.ts').supabaseRemoteRequestSnapshot().state !== 'active',
+      commerceClosed: mod('/lib/iap/revenuecat.ts').accountPublicationSnapshot().state !== 'active' };
+  })()`,
+  );
+  writeJson('CO-immediate-authority-closure.json', closed);
+  assert(
+    Object.values(closed).every((v) => v === true),
+    'Old authority stayed open while A operations drained',
+  );
   await evaluate(client, '__crossOwnerRace.release()');
   await waitForText(client, 'Account access paused');
   const refused = await captureStep(client, 'CO-03-cleanup-refused');
@@ -986,7 +1001,7 @@ async function crossOwnerFlow(client, products) {
       const health = mod('/lib/consent/healthProcessingEpoch.ts');
       const queries = mod('/lib/query/queryClient.ts').queryClient.getQueryCache().getAll();
       const shelf = await mod('/lib/storage/privateKV.ts').getPrivateItem('layerwell.shelf.v1');
-      const markers = ${JSON.stringify(aMarkers)};
+      const markers = [...${JSON.stringify(aMarkers)}, await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000a1')];
       return { exactB: proof.kind === 'owned' && proof.ownerBinding === await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000b2'),
         healthOwnerB: health.activeHealthProcessingOwnerUserId() === '00000000-0000-4000-8000-0000000000b2',
         noAInCache: !markers.some(x => JSON.stringify(queries.map(q => [q.queryKey, q.state.data])).includes(x)),
