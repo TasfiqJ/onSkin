@@ -1,0 +1,21 @@
+# M0-01 — Fresh-main baseline, Quality diagnosis and bounded repair
+## Objective
+Establish the exact real starting line for the authorized V2 migration and resolve the current Quality failure only when a narrow safe correction is demonstrated. This is not a request for a rewrite, general cleanup, J05 implementation, commercial activation or a full new roadmap.
+
+## Baseline evidence to verify
+Supplied Oct19 pin `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`; tree `a7e406303c0c865a2563a0d6f1ab1db80e3bb653`. Latest main Actions head observed at bootstrap agrees. Quality39330376557 fails; job 118333051806 is credential-free Supabase reset/database tests. Security39330376548 succeeds via source-only automated acceptance; iOS39330376531 succeeds. Exact root cause of Quality is not known from public logs. Source security proposal's expiry is2026-10-21T00:00:00Z; not permission to mechanically extend it. Re-observe current state rather than assuming these old runs are still latest.
+
+## Work
+Inspect root AGENTS.md/CLAUDE.md and applicable nested instructions, actual main/remote/dirty state and installed toolchain. Fetch main without overwriting local work. Capture exact SHA/tree, compare ancestry/diffs since the pack pin, list which baseline claims have changed and read current launch/task/security/replay contracts. Do not reset to a historical SHA.
+Obtain authenticated CI artifacts/logs if available in your authorized environment. Identify first causally relevant failure, reproduce with the workflow's pinned commands and environment, and distinguish a new regression from unrelated stale status. The runner/Node migration warnings are hypotheses only. Current package scripts/workflow are authoritative for reproduction commands; don't invent a successful command or replace the lockfile wholesale.
+Classify: ordinary source defect; reproducibility/toolchain problem; protected DB06/DB08/R2B/custody issue; or unavailable access/evidence. Fix only the first two when the scope is small, reversible and does not bypass protected authority. Add a focused regression test and run relevant broader checks. If protected or unknown, prepare exact evidence and a proposed targeted next task; do not perform protected replay/acceptance changes or drift hashes/counts. The report may close diagnosis while leaving the baseline repair explicitly blocked.
+Return a sanitized exact-head report and evidence bundle. Commit/push only justified narrow source/test fixes and a concise non-sensitive audit record if repository conventions permit. No doc-only changes pretending to fix the failed runtime. Broader plan installation and full crosswalk integration are M0-02, not this task. A no-change diagnosis is an acceptable honest outcome when changes are unsafe/unnecessary.
+
+## Required verification and audit record
+Record baseline/head/tree/remote IDs, dirty state, current applicable CI IDs/results, replay/protected authority actually found, reproduced failing command/environment/exit and log excerpt, reasoned root cause or precise unknown, changed paths/decisions, before-and-after test commands/exits, security acceptance scope/time state, and every remaining source/device/expert/provider blocker. If a command cannot run, return NOT_RUN/BLOCKED with prerequisite—not PASS. Confirm no clinical/legacy closed admission, SKU, provider account, production data or paid service changed.
+
+## Acceptance
+Exact fresh repository truth; root-cause evidence or tightly delimited blocker; any fix is causally relevant, tested and within ordinary authority; no unrelated churn; normal fast-forward main push; structured completion report and sanitized evidence ZIP. Brain checks diff and exact artifacts before acceptance. Failure to reach green CI must remain visible and block dependent schema work, not be hidden behind a generated snapshot.
+
+## Non-goals and forbidden shortcuts
+No whole-app rewrite or V2 schema implementation, no old all-features scope resurrection, no clinical output display/model training/data downloads, no personal JANUS PDFs or images, no new vendor costs, no deployment/public release, no forced push, no destructive reset, no altering protected counters/expiry/issuer/scanner policy solely for PASS, and no fake professional or device signoff.

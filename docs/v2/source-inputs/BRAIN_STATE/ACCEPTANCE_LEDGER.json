@@ -1,0 +1,61 @@
+{
+  "generated_at_utc": "2026-10-20T04:11:45+00:00",
+  "class": "BRAIN_ACCEPTANCE_LEDGER",
+  "tasks": [
+    {
+      "task_id": "M0-01",
+      "state": "ACCEPTED_DIAGNOSTIC_CHECKPOINT_BASELINE_BLOCKED",
+      "decision": "ACCEPTED",
+      "base_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "current_observed_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "new_commits": [
+        "dc6c42dfcf796cbddb94b510d30ecf277fa13112",
+        "b9a6b093f392ced340c156f2e7dcaefc72ed58e1"
+      ],
+      "fix_status": "NO_RUNTIME_FIX; JUSTIFIED_DIAGNOSIS_WITH_BLOCKER",
+      "evidence_pending": [
+        "Quality exact-source CI repair",
+        "Security original source/scanner/advisory/custody acceptance",
+        "Protected replay authority",
+        "Physical-device/provider/qualified evidence"
+      ],
+      "decision_scope": "Exact baseline/diagnosis, fail-closed regression test and sanitized checkpoint only. NOT baseline repair, runtime admission, G97 BRAIN source GO, merge, replay or release.",
+      "accepted_checkpoint_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "accepted_checkpoint_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "evidence_record": "REVIEW_OBSERVATIONS.json",
+      "review_report": "AUDIT_M0-01.md",
+      "open_blockers": [
+        "BLK-01",
+        "BLK-02",
+        "BLK-03",
+        "BLK-08",
+        "BLK-09"
+      ]
+    },
+    {
+      "task_id": "M0-02",
+      "state": "ISSUED_AWAITING_CODEX",
+      "decision": null,
+      "base_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "base_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "branch": "stage/m0-baseline",
+      "runtime_scope": "NONE",
+      "dependency_decision": "M0-01 diagnostic acceptance is sufficient for independent non-runtime plan installation; does not satisfy database/CI/security gates."
+    }
+  ],
+  "axes": {
+    "source": "DIAGNOSTIC_TEST_ACCEPTED; QUALITY_AND_SECURITY_FAILED",
+    "integration": "BLOCKED_NOT_AUTHORIZED",
+    "physical_device": "NOT_RUN",
+    "qualified_review": "NOT_RUN",
+    "live_provider": "NOT_RUN",
+    "public_release": "BLOCKED",
+    "clinical_single_scan": "NOT_ADMITTED",
+    "clinical_change": "NOT_ADMITTED",
+    "commercial": "NO_GO"
+  },
+  "sourcepack": {
+    "integrity": "PASS_OFFLINE",
+    "clinical_admissions": 0
+  }
+}

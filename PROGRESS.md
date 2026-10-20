@@ -7909,3 +7909,8 @@ workflow digest in the generated catalog worklist and adds adversarial link
 regressions. No worklist disposition, expired exception, proposal window,
 SDK/native/backport, Component A, DB06 or release gate is relaxed. Fresh local
 verification and exact-source review remain required before any further push.
+
+
+## M0-02 — additive V2 planning controls (2026-10-20)
+
+The adopted planning entrypoint is [docs/v2/README.md](docs/v2/README.md); durable approved Brain state and Codex observations are indexed in [docs/brain/README.md](docs/brain/README.md). M0-02 is submitted for independent review, not self-accepted. Runtime/protected/external statuses are unchanged; the baseline remains blocked. Detailed measured checks and submission live under docs/brain/checkpoints/M0-02. No M1 work is issued.

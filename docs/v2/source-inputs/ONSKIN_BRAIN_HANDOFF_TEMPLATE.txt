@@ -1,0 +1,46 @@
+onSkin — BRAIN HANDOFF / STAGE BRANCH CHECKPOINT
+================================================
+ATTENTION: This is a Codex implementation checkpoint, NOT Brain acceptance.
+Handoff protocol: stage-branch-v1, founder supersession 2026-10-20 UTC.
+
+STAGE: M0
+TASK: M0-01
+STATUS: <FIXED_AWAITING_REVIEW | PARTIAL | BLOCKED | NO_SAFE_FIX>
+BRAIN_REVIEW: REQUIRED / NOT YET ACCEPTED
+BRANCH: stage/m0-baseline
+STAGE_ORIGINAL_BASE_SHA: <40-hex fetched ancestor at stage creation>
+LATEST_OBSERVED_MAIN_SHA: <40-hex fetched main sha>
+STAGE_LIVE_HEAD_SHA: read GitHub ref stage/m0-baseline AFTER push (self-SHA cannot be written in same commit)
+
+AT A GLANCE
+<1-3 factual sentences: objective, what changed, what is still broken>
+
+ROOT CAUSE / EVIDENCE CLASS
+<observed vs independently reproduced, exact failing command and output>
+
+CODE/FILES
+<list relevant commits before final handoff commit and changed paths; no secrets>
+
+EXACT TESTS (command | environment | exit/status | evidence)
+<list each; NOT_RUN/BLOCKED when true, no invented passes>
+
+CI STATUS
+<main workflow URL/ID/SHA vs stage branch/draft PR workflow URL/ID/SHA; if absent NOT_RUN>
+
+PROTECTED BOUNDARIES / DATA / SPEND
+<DB06/DB08/R2B authorization, Security scope+expiry, consent/owner/privacy, no sensitive data/real spend>
+
+BLOCKERS / RISKS / SAFE NEXT STEPS
+<unresolved items, severity, reproducible next action, rollback/next task proposal>
+
+DIRTY / UNPUSHED / NOT SAFE FOR GITHUB
+<paths or NONE; reason; never disclose sensitive contents>
+
+DETAILS / SANITIZED EVIDENCE PATHS
+<docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md or NONE>
+
+CONTEXT HEALTH
+<low/medium/high/unknown; compaction yes/no; one writer; freshness>
+
+PUSH OUTCOME
+<PUSHED_STAGE_BRANCH | BLOCKED_NOT_PUSHED>

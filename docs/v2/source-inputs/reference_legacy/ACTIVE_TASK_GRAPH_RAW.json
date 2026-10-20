@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
+  "nodeCount": 25,
+  "nodes": [
+    {
+      "id": "H-01",
+      "owner": "Founder",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Complete Apple Account/Developer/App Store Connect identity, MFA, membership, truthful seller/legal entity, agreements, tax/banking and required payment steps.",
+      "acceptance": "Redacted membership/team/role/agreement/tax-banking-status evidence exists; no secrets are retained."
+    },
+    {
+      "id": "H-02",
+      "owner": "Founder + trademark counsel",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Obtain written clearance for the exact final public name in the actual launch territory/classes, approve that exact spelling, and authorize/pay any domain/filing/reservation spend.",
+      "acceptance": "Written clearance/conditions plus founder selection and authenticated reservation receipt exist."
+    },
+    {
+      "id": "H-03",
+      "owner": "Qualified reviewers",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Review the exact V1 release facts/corpora that require professional judgment: privacy/consumer-health/regulatory claims, conflict/routine/cycle clinical meaning, cosmetic-chemistry/application copy, relevant IP/content rights and export classification.",
+      "acceptance": "Dated credentialed decisions bind the exact source/build hashes and list conditions or required changes."
+    },
+    {
+      "id": "H-04",
+      "owner": "Founder",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Create/approve/pay the minimum production services and complete any identity/MFA/terms challenge: Expo/EAS, Supabase, RevenueCat, transactional email for retained email OTP, final domain/DNS/hosting.",
+      "acceptance": "Authorized accounts exist with least-privilege access and approved budgets/renewals; vendor secrets stay outside chat/repo."
+    },
+    {
+      "id": "H-05",
+      "owner": "Founder/tester",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Provide supported physical iPhone access and perform real-only actions: camera/OCR labels, protected photo flows/biometric unlock where used, local notification delivery, accessibility checks, StoreKit sandbox purchase/restore/manage, signed-build install/relaunch/background scenarios.",
+      "acceptance": "Exact device/iOS/build evidence is retained and every P0/P1 is fixed/retested."
+    },
+    {
+      "id": "H-06",
+      "owner": "Founder",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve final US-first launch territory, App Store prices/offers, spending ceilings, tax/business choices, support owner and any material residual risk.",
+      "acceptance": "Dated decision record exists and production/store configuration matches it."
+    },
+    {
+      "id": "H-07",
+      "owner": "Founder",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: After reviewing the immutable release packet, explicitly authorize App Review submission and, separately, public availability.",
+      "acceptance": "Two dated authorizations exist; release remains manual until the second authorization."
+    },
+    {
+      "id": "H-08",
+      "owner": "Founder/testers",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Recruit genuine beta users: 3-5 internal/friendly testers first and 15-30 total target users before the first limited public-release decision.",
+      "acceptance": "Real feedback and triage outcomes exist; simulated sessions never substitute for user responses."
+    },
+    {
+      "id": "V-01",
+      "owner": "Apple",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Issue membership/capability/TestFlight/App Review/subscription/public-release outcomes.",
+      "acceptance": "Apple-issued state is retained; no approval is predicted or fabricated."
+    },
+    {
+      "id": "V-02",
+      "owner": "Vendors",
+      "prerequisites": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Issue production account/limit/contract approvals where the selected minimum services require them.",
+      "acceptance": "Vendor-issued production state/limits are retained and reflected in release configuration."
+    },
+    {
+      "id": "C-01",
+      "owner": "C",
+      "prerequisites": [],
+      "nextAction": "Complete and capture acceptance evidence: Cut the repository from the superseded all-features launch contract to this lean V1 contract; rebuild validators, feature/task/status artifacts, active docs and legacy-task disposition.",
+      "acceptance": "Launch contract/validators agree on the 10 required features, zero optional Phase 7/8 surfaces, and every legacy task has a disposition."
+    },
+    {
+      "id": "C-02",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Apply the full iOS UI/UX overhaul for Welcome, onboarding, native system tabs, Today, Shelf and shared design primitives.",
+      "acceptance": "Typecheck/lint/tests pass and human-simulated supported-size UI evidence shows no overlap/dead-end/regression."
+    },
+    {
+      "id": "C-03",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Hard-close and unlink deferred product/growth surfaces.",
+      "acceptance": "Cloud Ask, recommendations, community, trend, commerce/public share, widgets/Live Activities, review prompts, creator links and paid measurement cannot become user-visible from V1 flags/navigation."
+    },
+    {
+      "id": "C-04",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Preserve guest-first onboarding and existing Apple/email account portability; defer Google sign-in in ordinary V1 navigation.",
+      "acceptance": "Existing Apple/email entry, owner-scoped anonymous sessions, cancellation and data-rights protections remain intact. Google sign-in is not a V1 requirement."
+    },
+    {
+      "id": "C-05",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Make Shelf V1 manual-entry and local ingredient parsing first (optional local-label OCR); remove catalog/search/barcode as launch dependencies and ordinary entry points.",
+      "acceptance": "Empty/populated Shelf has obvious Add + label OCR paths, manual fallback always works, unknowns stay unknown, remote catalog routes are not linked by V1 navigation."
+    },
+    {
+      "id": "C-06",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Preserve/finish fail-closed reviewed guidance source boundary and produce exact professional-review packets for conflict/routine/cycle.",
+      "acceptance": "No unreviewed positive guidance is admitted; hashes/copy/citations/reviewer scopes are deterministic and ready for H-03."
+    },
+    {
+      "id": "C-07",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish the owned-product routine/Today/cycle persistence and recovery source path.",
+      "acceptance": "Check-offs/order/cycle state are durable, owner-bound, offline-safe, non-punitive, and pass focused + human E2E."
+    },
+    {
+      "id": "C-08",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish private Progress V1 source path without trend/score claims.",
+      "acceptance": "Encrypted/local photo lifecycle, thumbnails, timeline, compare, notes, deletion, app-lock boundaries and no-content-flash source contracts pass; trend issuer remains false."
+    },
+    {
+      "id": "C-09",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish local reminders V1 and make remote push non-required.",
+      "acceptance": "On-device reminder permission/schedule/reschedule/quiet-hour/cleanup behavior passes source tests; no APNs server dependency is needed for V1."
+    },
+    {
+      "id": "C-10",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish subscription source path for normal monthly/annual StoreKit + RevenueCat only.",
+      "acceptance": "Paywall, localized pricing, purchase, restore, entitlement fail-closed logic and free fallback are source-complete; custom reverse trial/win-back stays disabled."
+    },
+    {
+      "id": "C-11",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish V1 privacy/data-rights source path for the guest-first model with optional Apple/email accounts.",
+      "acceptance": "Consent/withdrawal, export, deletion, photo-local-only disclosure, temporary-file cleanup and owner/session isolation pass source/adversarial tests."
+    },
+    {
+      "id": "C-12",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Produce final-brand-ready public web/policy/support source packet with placeholders that fail closed until H-02/H-04 values exist.",
+      "acceptance": "Home, Privacy, Terms, consumer-health privacy, support, deletion and export pages/copy are internally consistent and production URL validators reject placeholders."
+    },
+    {
+      "id": "C-13",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish production infrastructure scripts/config/runbooks for the minimum stack.",
+      "acceptance": "Clean local migrations/RLS, environment guards, deploy manifests, backup/restore/rollback, EAS/App Store/RevenueCat/Supabase setup instructions and secret boundaries are source-verified and ready for authorized accounts."
+    },
+    {
+      "id": "C-14",
+      "owner": "C",
+      "prerequisites": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish release QA/security/performance/TestFlight/App Store packet source work for lean V1.",
+      "acceptance": "Scope-aware unit/contract/human-E2E/native checklists, privacy/network/security/supply-chain checks, App Review notes/metadata templates and internal TestFlight instructions are complete without deferred-feature gates."
+    },
+    {
+      "id": "C-15",
+      "owner": "C",
+      "prerequisites": [
+        "C-01",
+        "C-02",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-06",
+        "C-07",
+        "C-08",
+        "C-09",
+        "C-10",
+        "C-11",
+        "C-12",
+        "C-13",
+        "C-14"
+      ],
+      "nextAction": "Complete and capture acceptance evidence: Run final source verification after all C changes, incorporate H/V evidence as it arrives, fix regressions, and build the immutable submission/release packet.",
+      "acceptance": "Repository gates pass on a clean commit; all remaining blockers are exclusively H/V; packet is ready for H-07."
+    }
+  ]
+}

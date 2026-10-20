@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "issued_at_utc": "2026-10-20T00:00:00Z",
+  "timestamp_note": "issue date; not an exact observation-time claim",
+  "source_pack_pin": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "source_pack_tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+  "historical_v2_pin": "473bad3a7d7d434383b44fc102cd2666a79c06a0",
+  "live_main_status": "latest Actions head observed; fresh authenticated fetch required",
+  "ci_observed": {
+    "Quality": {
+      "run": 39330376557,
+      "status": "failure",
+      "failing_job": 118333051806,
+      "root_cause": "unknown public logs unavailable"
+    },
+    "Security": {
+      "run": 39330376548,
+      "status": "success_source_only_acceptance",
+      "release_authority": false,
+      "replay_authority": false,
+      "acceptance_expiry": "2026-10-21T00:00:00Z"
+    },
+    "iOS launch contract": {
+      "run": 39330376531,
+      "status": "success_source_contract_only"
+    }
+  },
+  "app_tests_run_by_bootstrap": false,
+  "device_tests_run_by_bootstrap": false,
+  "offline_source_identity": {
+    "blobs": 1753,
+    "git_objects": 139,
+    "errors": 0
+  },
+  "active_task_counts": {
+    "in_progress": 8,
+    "not_started": 7,
+    "external_pending": 10,
+    "complete": 0
+  },
+  "current_task": "M0-01",
+  "next_task": "M0-02",
+  "source_plan_adopted": true,
+  "repository_plan_integrated": false,
+  "research_packages_present": [
+    "J05"
+  ],
+  "commercial_investment_admission": "NO_GO_PENDING_NEW_EVIDENCE",
+  "internal_testflight": "BLOCKED_PENDING_M2-04",
+  "external_testflight": "BLOCKED_PENDING_M3-04",
+  "public_release": "BLOCKED",
+  "clinical_measurements_admitted": [],
+  "incremental_vendor_spend_authorized_usd": 0
+}

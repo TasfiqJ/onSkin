@@ -1,0 +1,5 @@
+{
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "scope": "Current repository JSON vs immutable supplied rows; no status substitution",
+  "deltas": []
+}

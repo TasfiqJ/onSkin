@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "programId": "ios-lean-v1-2026",
+  "effectiveDate": "2026-09-27",
+  "status": "active",
+  "release": {
+    "platforms": [
+      "ios"
+    ],
+    "mode": "lean-v1",
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false
+  },
+  "requiredFeatures": [
+    {
+      "id": 1,
+      "key": "brand_identity",
+      "name": "Final brand and public identity"
+    },
+    {
+      "id": 2,
+      "key": "onboarding_consent",
+      "name": "Onboarding, age gate, consent and data rights"
+    },
+    {
+      "id": 3,
+      "key": "shelf_intake",
+      "name": "Manual Shelf intake and local ingredient parsing; optional local label OCR"
+    },
+    {
+      "id": 5,
+      "key": "conflict_engine",
+      "name": "Reviewed conflict guidance"
+    },
+    {
+      "id": 6,
+      "key": "routine_builder",
+      "name": "Owned-product routine builder"
+    },
+    {
+      "id": 7,
+      "key": "today_adherence",
+      "name": "Today check-off and adherence"
+    },
+    {
+      "id": 8,
+      "key": "cycle_scheduler",
+      "name": "Reviewed cadence, cycle and recovery scheduler"
+    },
+    {
+      "id": 9,
+      "key": "photo_progress",
+      "name": "Private local photo progress"
+    },
+    {
+      "id": 10,
+      "key": "reminders",
+      "name": "Local routine reminders"
+    },
+    {
+      "id": 11,
+      "key": "subscriptions",
+      "name": "StoreKit and RevenueCat subscriptions"
+    }
+  ],
+  "deferredFeatures": [
+    {
+      "id": 4,
+      "key": "catalog"
+    },
+    {
+      "id": 12,
+      "key": "reverse_trial"
+    },
+    {
+      "id": 13,
+      "key": "recommendations"
+    },
+    {
+      "id": 14,
+      "key": "ask_advisor"
+    },
+    {
+      "id": 15,
+      "key": "conflict_share"
+    },
+    {
+      "id": 16,
+      "key": "commerce"
+    },
+    {
+      "id": 17,
+      "key": "community"
+    },
+    {
+      "id": 18,
+      "key": "trend_insights"
+    },
+    {
+      "id": 19,
+      "key": "widgets_live_activities"
+    },
+    {
+      "id": 20,
+      "key": "admin_tooling"
+    }
+  ],
+  "requiredSurfaces": [],
+  "evidenceLevels": [
+    "code_complete",
+    "locally_verified",
+    "live_staging_verified",
+    "physical_iphone_verified",
+    "external_professional_review_signed",
+    "production_verified",
+    "store_approved"
+  ],
+  "featureProfessionalReviewRequirements": {
+    "conflict_engine": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "H-03",
+        "scope": "exact_conflict_clinical_meaning_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "H-03",
+        "scope": "exact_ingredient_compatibility_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-03",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "routine_builder": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "H-03",
+        "scope": "clinical_order_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "H-03",
+        "scope": "formulation_order_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-03",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "cycle_scheduler": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "H-03",
+        "scope": "cadence_recovery_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "H-03",
+        "scope": "cadence_interaction_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-03",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "recommendations": [
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "clinical_order_eligibility_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "formulation_order_and_application_copy"
+      },
+      {
+        "reviewerRole": "regulatory_counsel",
+        "taskId": "H-07",
+        "scope": "claims_jurisdiction_and_market_clearance"
+      }
+    ],
+    "conflict_share": [
+      {
+        "reviewerRole": "regulatory_claims_counsel",
+        "taskId": "REV-02",
+        "scope": "exact_share_claims_copy_citations_and_market_positioning"
+      },
+      {
+        "reviewerRole": "privacy_security_reviewer",
+        "taskId": "REV-03",
+        "scope": "share_projection_destination_retention_revocation_and_data_flow"
+      },
+      {
+        "reviewerRole": "board_certified_dermatologist",
+        "taskId": "REV-04",
+        "scope": "exact_conflict_claim_clinical_meaning_and_user_copy"
+      },
+      {
+        "reviewerRole": "cosmetic_chemist",
+        "taskId": "REV-05",
+        "scope": "exact_ingredient_compatibility_claim_and_application_copy"
+      },
+      {
+        "reviewerRole": "ip_content_rights_counsel",
+        "taskId": "REV-06",
+        "scope": "exact_share_content_citations_images_trademarks_and_distribution_rights"
+      },
+      {
+        "reviewerRole": "release_signoff_operator",
+        "taskId": "REV-07",
+        "scope": "detached_exact_source_signoffs_credentials_and_release_binding"
+      }
+    ]
+  },
+  "conflictShareAdmission": {
+    "sharePublicationAdmitted": false,
+    "publicLinksAdmitted": false,
+    "shareReceiptIssuerAvailable": false,
+    "publicTokenServiceAvailable": false,
+    "sanitizedProjectionAllowlistRequired": true,
+    "exactPayloadConfirmationRequired": true,
+    "rawPrivateFieldsAllowed": false,
+    "analyticsAllowed": false
+  },
+  "trendInsightAdmission": {
+    "trendInsightAdmitted": false,
+    "validatedOnDeviceEngineAvailable": false,
+    "resultIssuerAvailable": false,
+    "calibrationAuthorityAvailable": false,
+    "fairnessAuthorityAvailable": false,
+    "simulatedMetricsAllowed": false,
+    "contentAnalyticsAllowed": false,
+    "disabledPathSideEffectsAllowed": false,
+    "cloudPhotoProcessingAllowed": false,
+    "scoreAgeGradePercentageAllowed": false
+  },
+  "iosWinBackOfferAdmission": {
+    "schemaVersion": 1,
+    "winBackOfferAdmitted": false,
+    "automaticInAppMessagesAllowed": false,
+    "winBackInAppMessageAllowed": false,
+    "disabledWinBackProviderCallsAllowed": false,
+    "eligibilityDerivedOfferRequired": true,
+    "localizedStorePricingRequired": true,
+    "hardcodedDiscountAllowed": false
+  },
+  "commerceAdmission": {
+    "commerceAdmitted": false,
+    "affiliateRailAvailable": false,
+    "publicationAuthorityAvailable": false,
+    "reviewedCatalogAvailable": false,
+    "reviewedStacksAvailable": false,
+    "partnerPollingAllowed": false,
+    "consentGrantAllowed": false,
+    "catalogReadsAllowed": false,
+    "clickRecordingAllowed": false,
+    "externalNavigationAllowed": false,
+    "analyticsAllowed": false,
+    "disabledPathSideEffectsAllowed": false
+  },
+  "safetyConstraints": {
+    "diagnosisTreatmentCurePreventionClaims": false,
+    "aiSkinScores": false,
+    "skinAgeClaims": false,
+    "percentageImprovementClaims": false,
+    "commissionInfluencedRecommendationRanking": false,
+    "unconsentedCloudPhotoAnalysis": false,
+    "publicBeforeAfterGallery": false,
+    "weakenOwnerScopedRls": false,
+    "photosLocalOnlyByDefault": true
+  }
+}

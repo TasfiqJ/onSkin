@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "source_pack_version": "2.1-bootstrap-2026-10-20",
+  "last_accepted_implementation_sha": null,
+  "latest_observed_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "in_flight_task": "M0-02",
+  "ready_task": null,
+  "accepted_tasks": [
+    "M0-01"
+  ],
+  "open_blockers": [
+    "Final Quality run 39366256422 job 118443688177 fails canonical ECR Postgres acquisition with Data limit exceeded before database startup. Local success does not close CI; exact quota cause and safe resolution remain unknown.",
+    "Protected DB06/DB08/R2B replay, deployment and custody gates remain ungranted. Codex local disposable verification is diagnostic evidence, not hosted replay or integration authorization.",
+    "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+    "Physical iOS/provider/qualified reviews not performed",
+    "No J05 single-scan or change claims validated",
+    "26 module research packs are missing; request only a ready next module when triggered",
+    "Commercial investment remains NO-GO; incremental spend authorized is $0",
+    "Final Security run 39366256806 static job 118443689708 rejects SOURCE_INVENTORY_DRIFT. Added handoff/evidence paths are outside the frozen reviewed inventory; existing edited source bytes also require exact review.",
+    "The same final static job independently reports braces and node-forge review date refusals, plus unreviewed OSV advisory mcp@1.29.0:GHSA-84m7-p3x7-pcfv."
+  ],
+  "research_requests": [],
+  "spend_authorizations": [],
+  "codex_instance": {
+    "previous_instance_accepted_substantive_tasks": 1,
+    "previous_reported_health": "medium",
+    "previous_handoff_requested": true,
+    "fresh_instance_required": true,
+    "next_instance_accepted_substantive_tasks": 0,
+    "reason": "Completed diagnostic checkpoint and new planning/tooling subsystem"
+  },
+  "evidence_ledger": [
+    {
+      "id": "BRAIN-INIT-01",
+      "evidence": "source-pack-verification",
+      "kind": "REPRODUCED_OFFLINE",
+      "outcome": "PASS",
+      "command": "python tools/verify_pack.py",
+      "working_dir": "extracted source root",
+      "files_verified": 117,
+      "module_count": 27,
+      "roadmap_tasks": 47,
+      "limitations": [
+        "No signature validation",
+        "No app/source test"
+      ]
+    },
+    {
+      "id": "BRAIN-INIT-02",
+      "evidence": "exact-git-main",
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE",
+      "outcome": "SHA_AND_TREE_MATCH_PIN",
+      "sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+      "repo": "https://github.com/TasfiqJ/onSkin"
+    },
+    {
+      "id": "BRAIN-INIT-03",
+      "evidence": "quality-failure-log",
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE",
+      "outcome": "FAILED",
+      "run_id": 39330376557,
+      "job_id": 118333051806,
+      "terminal_error": "toomanyrequests: Data limit exceeded",
+      "reproduction": "NOT_RUN"
+    },
+    {
+      "id": "BRAIN-INIT-04",
+      "evidence": "security-acceptance-proposal",
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE",
+      "outcome": "SOURCE_ONLY_NO_RELEASE_OR_REPLAY",
+      "expires_utc": "2026-10-21T00:00:00Z"
+    },
+    {
+      "id": "BRAIN-INIT-05",
+      "evidence": "M0-01-task-pack",
+      "kind": "REPRODUCED_OFFLINE",
+      "outcome": "BUILT_AND_CRC_CHECKED",
+      "sha256": "50030204ecbda0ae725c4e6afbf6e0be7c54335d70a788c8bd2ff5bab22b40e2",
+      "restricted_data_included": false
+    },
+    {
+      "id": "BRAIN-INIT-06",
+      "kind": "DECIDED_FOUNDER_DIRECT",
+      "outcome": "SUPERSEDED_DIRECT_MAIN_PUSH",
+      "description": "For each stage use a persistent stage branch; each Codex work session pushes safe work + ONSKIN_BRAIN_HANDOFF.txt; Brain audits full GitHub branch when founder says Codex is done.",
+      "branch": "stage/m0-baseline",
+      "main_push_authorized": false
+    },
+    {
+      "id": "BRAIN-INIT-07",
+      "kind": "REPRODUCED_OFFLINE",
+      "outcome": "REPLACEMENT_TASK_ZIP_BUILT_AND_CRC_VALIDATED",
+      "file": "onSkin_Codex_M0-01_STAGE_BRANCH_Context.zip",
+      "sha256": "d3760d4e061187600111b1df00897bbcf8ffa6fe11f67ec2cb42da61caa3d15b",
+      "original_task_zip_superseded": true
+    },
+    {
+      "id": "BRAIN-M0-01-REVIEW-01",
+      "kind": "INDEPENDENTLY_OBSERVED_AND_REPRODUCED_IN_PART",
+      "outcome": "DIAGNOSTIC_CHECKPOINT_ACCEPTED_BASELINE_BLOCKED",
+      "sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "record": "REVIEW_OBSERVATIONS.json"
+    },
+    {
+      "id": "BRAIN-M0-01-REVIEW-02",
+      "kind": "DECIDED_BRAIN",
+      "outcome": "M0-02_ISSUED_NON_RUNTIME_ONLY",
+      "adr": "ADR-023",
+      "protected_source_go": false,
+      "spend_authorized_usd": 0
+    }
+  ],
+  "state_version": "brain-m0-01-diagnostic-accepted-m0-02-issued-3",
+  "updated_at_utc": "2026-10-20T04:11:45+00:00",
+  "authority_source_pack_sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f",
+  "latest_observed_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+  "latest_observed_main_source": "GitHub connected read-only branch and git-commit REST, Oct20 UTC",
+  "in_flight_execution_status": "ISSUED_AWAITING_CODEX",
+  "in_flight_base_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "in_flight_head_sha": null,
+  "next_task_after_review": "Brain must audit M0-02; no subsequent task automatically authorized.",
+  "current_main_CI": {
+    "source_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "Quality": {
+      "run_id": 39330376557,
+      "conclusion": "failure",
+      "failing_job_id": 118333051806,
+      "failing_step": "Reset twice, test, lint, and prove zero drift",
+      "failing_command": "npm run phase2:db-local-verify",
+      "observed_terminal_error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+      "root_cause_classification": "LIKELY_DOCKER_IMAGE_RATE_LIMIT_REQUIRES_CODEX_REPRODUCTION",
+      "evidence_kind": "INDEPENDENTLY_OBSERVED_AUTHENTICATED_GITHUB_JOB_LOG",
+      "app_reproduction": "NOT_RUN_BY_BRAIN"
+    },
+    "Security": {
+      "run_id": 39330376548,
+      "conclusion": "success",
+      "authority": "SOURCE_ONLY",
+      "database_replay": false,
+      "integration": false,
+      "release": false,
+      "source_proposal_not_after": "2026-10-21T00:00:00Z"
+    },
+    "iOS_launch_contract": {
+      "run_id": 39330376531,
+      "conclusion": "success",
+      "scope": "SOURCE_CONTRACT_ONLY_NO_DEVICE_BUILD"
+    },
+    "observation_note": "Prior independently observed main runs retained as historical run identities; final stage runs are current_stage_CI. Not a new main-run acceptance."
+  },
+  "device_test_status": "NOT_RUN_BY_BRAIN",
+  "database_replay_status": "PROTECTED_HOSTED_REPLAY_NOT_AUTHORIZED; CODEX_LOCAL_DISPOSABLE_DIAGNOSTIC_REPORTED_PASS",
+  "clinical_validation_status": "NOT_PERFORMED",
+  "remote_desktop_connection": "AUTHORIZED_READS_AND_INDEPENDENT_SIX_TEST_RETRY_SUITE_EXECUTED; NO_REPOSITORY_WRITES",
+  "artifacts": {
+    "source_pack": {
+      "filename": "onSkin_Unified_MasterPlan_V2_SourcePack.zip",
+      "sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f"
+    },
+    "M0-01_context": {
+      "filename": "onSkin_Codex_M0-01_STAGE_BRANCH_Context.zip",
+      "bytes": 48346,
+      "sha256": "d3760d4e061187600111b1df00897bbcf8ffa6fe11f67ec2cb42da61caa3d15b",
+      "status": "EXECUTED_DIAGNOSTICALLY_ACCEPTED"
+    },
+    "M0-01_execution_prompt": {
+      "filename": "onSkin_Codex_M0-01_STAGE_BRANCH_PROMPT.txt",
+      "sha256": "4ea2b894dcc87038370c4033b2307c14663226d3e19bdd5cf56b8f03ca401299"
+    },
+    "M0-01_context_previous_superseded": {
+      "filename": "onSkin_Codex_M0-01_Context.zip",
+      "bytes": 38946,
+      "sha256": "50030204ecbda0ae725c4e6afbf6e0be7c54335d70a788c8bd2ff5bab22b40e2"
+    },
+    "M0-02_context": {
+      "filename": "onSkin_Codex_M0-02_STAGE_BRANCH_Context.zip",
+      "status": "ISSUED_NON_RUNTIME_ONLY",
+      "hash_location": "Companion ARTIFACTS.json and Codex measured intake hash; excluded here to avoid circular ZIP hashing."
+    }
+  },
+  "in_flight_branch": "stage/m0-baseline",
+  "workflow": {
+    "policy": "STAGE_BRANCH_ALWAYS_PUSH_SAFE_STATUS",
+    "decision_authority": "FOUNDER_USER_DIRECT_2026-10-20_UTC",
+    "active_stage": "M0",
+    "active_branch": "stage/m0-baseline",
+    "branch_creation_from": "REUSE_EXISTING_STAGE_BRANCH_AT_REVIEWED_HEAD; CREATE_ONLY_WHEN_SEPARATELY_AUTHORIZED",
+    "main_writable_by_codex": false,
+    "mandatory_root_handoff_file": "ONSKIN_BRAIN_HANDOFF.txt",
+    "mandatory_status_push_even_if_blocked_or_no_fix": true,
+    "safe_code_only_no_personal_or_protected_content": true,
+    "brain_audit": "LIVE_FULL_BRANCH_DIFF_AND_COMMIT_CHAIN_AGAINST_ACCEPTED_ANCESTOR_PLUS_CI",
+    "founder_completion_signal": "Codex is done",
+    "status": "M0-01_DIAGNOSTIC_ACCEPTED_M0-02_ISSUED",
+    "prior_context_zip": "SUPERSEDED",
+    "no_merge_until_separate_brain_promotion": true
+  },
+  "last_accepted_diagnostic_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "last_accepted_checkpoint_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "last_accepted_checkpoint_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+  "last_accepted_scope": "M0-01 diagnostic/regression checkpoint only; no runtime baseline or protected source GO",
+  "latest_observed_main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "latest_observed_main_tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+  "accepted_task_scopes": {
+    "M0-01": "DIAGNOSIS_AND_REGRESSION_CHECKPOINT_ONLY"
+  },
+  "in_flight_base_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+  "open_blocker_ids": [
+    "BLK-01",
+    "BLK-02",
+    "BLK-03",
+    "BLK-04",
+    "BLK-05",
+    "BLK-06",
+    "BLK-07",
+    "BLK-08",
+    "BLK-09"
+  ],
+  "current_stage_CI": [
+    {
+      "name": "Quality",
+      "run_id": 39366256422,
+      "status": "completed",
+      "conclusion": "failure",
+      "associated_head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "checkout_sha": "9c0bf2b3f928f96c80d620abc6da50bba0fca239",
+      "checkout_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "jobs": [
+        {
+          "id": 118443688177,
+          "name": "Credential-free Supabase reset and database tests",
+          "conclusion": "failure"
+        },
+        {
+          "id": 118443688345,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443688407,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443688496,
+          "name": "Repository quality gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118445281110,
+          "name": "Expo export (android)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118445281134,
+          "name": "Expo export (ios)",
+          "conclusion": "success"
+        }
+      ],
+      "failure_command": "npm run phase2:db-local-verify",
+      "failure_exit": 1,
+      "failure_timestamp_utc": "2026-10-20T03:50:17.4904138Z",
+      "failure_text": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+      "failure_site": "prepareCanonicalPostgresImage -> runHistoryDocker before local database startup/SQL replay",
+      "source_contract_tests": {
+        "passed": 171,
+        "failed": 0
+      },
+      "generated_types_artifact": "NOT_CREATED; upload step explicitly found no files",
+      "kind": "INDEPENDENTLY_OBSERVED_GITHUB_JOBS_AND_ORIGINAL_FAILURE_LOG"
+    },
+    {
+      "name": "Security",
+      "run_id": 39366256806,
+      "status": "completed",
+      "conclusion": "failure",
+      "associated_head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "checkout_sha": "9c0bf2b3f928f96c80d620abc6da50bba0fca239",
+      "jobs": [
+        {
+          "id": 118443689543,
+          "name": "Code security gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443689708,
+          "name": "Static analysis and OSV",
+          "conclusion": "failure"
+        },
+        {
+          "id": 118443689857,
+          "name": "Secret scanning",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443691081,
+          "name": "Live Supabase adversarial evidence",
+          "conclusion": "skipped"
+        },
+        {
+          "id": 118445333003,
+          "name": "Automated single-owner source-only Security acceptance",
+          "conclusion": "failure"
+        }
+      ],
+      "original_static_log_findings": [
+        {
+          "timestamp_utc": "2026-10-20T03:52:12.7388381Z",
+          "text": "contract.Rejected: SOURCE_INVENTORY_DRIFT",
+          "scope": "collect.py -> contract.py source inventory precondition; collection did not complete"
+        },
+        {
+          "timestamp_utc": "2026-10-20T03:52:14.6766420Z",
+          "text": "braces: review is expired or dates are invalid",
+          "scope": "OSV exception gate reported refusal"
+        },
+        {
+          "timestamp_utc": "2026-10-20T03:52:14.6767204Z",
+          "text": "node-forge: review is expired or dates are invalid",
+          "scope": "OSV exception gate reported refusal"
+        },
+        {
+          "timestamp_utc": "2026-10-20T03:52:14.6767731Z",
+          "text": "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv",
+          "scope": "CI-reported unreviewed dependency advisory; exploitability and remediation not independently assessed by this review"
+        }
+      ],
+      "contract_unit_tests": {
+        "passed": 70,
+        "note": "Passing contract tests do not make the failed collector or scanner gates pass."
+      },
+      "step_status_caution": "Some continue-on-error steps show API conclusion success although underlying outcomes and exit codes are failure. Preserve original exits and final enforcement.",
+      "owner_pins_observed_in_final_acceptance_job": {
+        "G97_REVIEWED_SOURCE_COMMIT": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "G97_REVIEWED_PROPOSAL_SHA256": "359ad8e7c0efb400c179a0a20cd26932c950ef05a3261db7f9502490f3371685"
+      },
+      "decision_artifact": {
+        "id": 12240151089,
+        "name": "g97-security-decision-39366256806",
+        "bytes": 249,
+        "sha256": "4eeb8b7236d76f721d4e276555ed3fb7215652a123fc14bc057e0ed48121189c",
+        "hash_kind": "OBSERVED_IN_GITHUB_UPLOAD_LOG_NOT_INDEPENDENTLY_REHASHED",
+        "contents_read": false
+      },
+      "kind": "INDEPENDENTLY_OBSERVED_GITHUB_JOBS_AND_ORIGINAL_STATIC_ACCEPTANCE_LOGS"
+    },
+    {
+      "name": "iOS launch contract",
+      "run_id": 39366256375,
+      "status": "completed",
+      "conclusion": "success",
+      "associated_head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "scope": "SOURCE_CONTRACT_ONLY; no physical iPhone or signed build evidence",
+      "kind": "INDEPENDENTLY_OBSERVED_GITHUB_RUN"
+    }
+  ],
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_vendor_spend_authorized_usd": 0,
+  "local_database_evidence_status": "ORIGINAL_CODEX_LOG_INSPECTED_AND_REHASHED; NOT_RERUN_BY_BRAIN",
+  "state_custody": {
+    "commit_approved_snapshot_on_next_task": true,
+    "destination": "docs/brain/state",
+    "record_immutable_review_under": "docs/brain/checkpoints/M0-01",
+    "codex_may_update_observations_but_not_self_accept": true,
+    "self_archive_hash": "External artifact index; never invent a self-referential embedded ZIP hash"
+  }
+}

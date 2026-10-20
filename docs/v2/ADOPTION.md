@@ -1,0 +1,15 @@
+# M0-02 installation record
+
+Authority: direct user issuance of M0-02 plus supplied ADR-022/023/024. This implements an approved planning migration; it is not a new Brain acceptance decision or a replacement ADR-025.
+
+Adopt the supplied executive blueprint, core/clinical/acceptance contracts, contract tables, finance rulings, 47-task roadmap and 27-module registry as the additive V2 planning namespace. Preserve the Oct19/V1 source and all original gate evidence. Current execution uses the approved Brain overlay, rather than bootstrap `known_state.json` or original roadmap statuses. The supplied Brain snapshot is immutable; Codex observations/submission are separate.
+
+The original direct-main sentences in the SourcePack operating contract and bootstrap prompts are historical. ADR-022 requires `stage/m0-baseline`, safe commits/pushes and the root TXT every session, even while blocked. Main stays read-only; draft PR #8 stays unmerged. Only the founder and subsequent independent Brain review can authorize later work or promotion.
+
+M0-01 acceptance applies to diagnosis, its fail-closed regression and sanitized checkpoint at `b9a6b093f392ced340c156f2e7dcaefc72ed58e1`, tree `ed42b889912e3fb383cfbafe413e7a66dd558221`. Quality/Security remain blocked. The approved roadmap's `M0-01.status=ACCEPTED` and inherited `brain_acceptance=NOT_REVIEWED` are preserved verbatim; its explicit `acceptance_scope`, acceptance ledger, ADR-023 and independent audit resolve the apparent bootstrap inconsistency. No generalized baseline or G97 source GO is inferred.
+
+Each evidence axis remains separate: source, integration, physical-device/surface, qualified review, live provider, public release, research and commercial. Unknown measurements remain null/unavailable. An unvalidated parent cannot supply a derived module. No clinical publication flag, commercial admission, spend authorization or protected owner gate changes in this installation.
+
+Compatibility preserves exact supplied fields and selected raw snapshots. Live-source observations are labeled separately. SourcePack provenance is the supplied manifest's attestation plus independently reproduced hashes of the included subset; the excluded original archives were not reread. `PROVENANCE.json` records the actual M0-02 ZIP identity. The validator anchors the issued manifest's SHA256 in code, then verifies every input and all 29 mapped source inputs. A future legitimate authority revision requires a separately reviewed snapshot/version, rather than rotating hashes to make drift pass.
+
+Standalone tooling uses Python 3.9+ standard library and writes only generated planning mirrors or an explicitly requested external context ZIP. It installs no packages, workflows, services or background tasks. It does not invoke supplied historical code. Existing Security inventory excludes these new files; that remains an explicit refusal pending separate exact-source/custody review.

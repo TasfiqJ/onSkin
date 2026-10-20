@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "task_id": "M0-02",
+  "submission_status": "IN_PROGRESS",
+  "approved_state_version": "brain-m0-01-diagnostic-accepted-m0-02-issued-3",
+  "accepted_tasks": [
+    "M0-01"
+  ],
+  "accepted_scope": {
+    "M0-01": "DIAGNOSIS_AND_REGRESSION_CHECKPOINT_ONLY"
+  },
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "next_task": null,
+  "research_requests": [],
+  "open_blocker_ids": [
+    "BLK-01",
+    "BLK-02",
+    "BLK-03",
+    "BLK-04",
+    "BLK-05",
+    "BLK-06",
+    "BLK-07",
+    "BLK-08",
+    "BLK-09"
+  ],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "axes": {
+    "source": "DIAGNOSTIC_TEST_ACCEPTED; QUALITY_AND_SECURITY_FAILED",
+    "integration": "BLOCKED_NOT_AUTHORIZED",
+    "qualified_review": "NOT_RUN",
+    "live_provider": "NOT_RUN",
+    "public_release": "BLOCKED",
+    "commercial": "NO_GO",
+    "physical_device_surface": "NOT_RUN",
+    "research": {
+      "single_scan": "NOT_ADMITTED",
+      "change": "NOT_ADMITTED"
+    }
+  },
+  "observations": [
+    {
+      "id": "M0-02-INTAKE",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "axis": "source",
+      "status": "OBSERVED",
+      "admission": "NONE",
+      "detail": "Clean existing stage b9a6b09; manifests verified. Source pack provenance is supplied, not a reread of the excluded original archive.",
+      "artifact": "docs/v2/PROVENANCE.json",
+      "sha256": "52b74d5030013226db2ef998df731a7086f44eb04e2b44dee8601b4708b5c71e"
+    }
+  ]
+}

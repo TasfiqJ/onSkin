@@ -1,73 +1,24 @@
-onSkin - BRAIN HANDOFF / STAGE BRANCH CHECKPOINT
-================================================
-ATTENTION: Codex implementation checkpoint, NOT Brain acceptance.
-Handoff protocol: stage-branch-v1, founder supersession 2026-10-20 UTC.
-
-STAGE: M0
-TASK: M0-01
-STATUS: BLOCKED
-BRAIN_REVIEW: REQUIRED / NOT YET ACCEPTED
-BRANCH: stage/m0-baseline
-STAGE_ORIGINAL_BASE_SHA: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
-LATEST_OBSERVED_MAIN_SHA: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
-STAGE_LIVE_HEAD_SHA: read GitHub ref stage/m0-baseline after push; self-SHA cannot be embedded.
-
-AT A GLANCE
-Fresh main equals the supplied historical pin; stage was absent and created from fetched main in an isolated clean worktree. Founder checkout remains separate and dirty.
-Authenticated main Quality attempt3 fails before stack startup during canonical ECR Postgres pull with Data limit exceeded. Draft PR8 independently reproduced that immediate failure in a new Linux job; upstream quota/account root cause and a remedy remain unverified.
-Added a passing regression for existing fail-closed handling; no runtime repair claimed. Stage Quality is red on ECR acquisition, Security is red on SOURCE_INVENTORY_DRIFT, iOS source contract is green. The complete pinned local verifier exited0 with current-chain/type parity and confirmed cleanup.
-
-ROOT CAUSE / EVIDENCE CLASS
-OBSERVED: run 39330376557/job 118333051806, npm run phase2:db-local-verify, exit 1, H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded.
-OBSERVED: stack is prepareCanonicalPostgresImage -> runWithCanonicalPostgresPullRetry -> runHistoryDocker; no SQL/reset/type generation reached in that job.
-REPRODUCED CI BEHAVIOR: run39363061096/job118433459142 repeats the same error/exit1 on Node20.20.2 before SQL; not a proven/fixed upstream quota root cause.
-INFERRED: consistent with ECR Public's anonymous data allowance, distinct from per-second throttling. Runner quota/auth/egress state is UNKNOWN. Existing short throttling retry already refuses this text.
-OBSERVED LOCALLY: canonical pull/admission succeeded with empty Docker auth config; the entire verifier exited0 after both97-migration resets, structural tests, lint, empty drift, revocation, type parity and awaited cleanup. This is local diagnostic evidence, not a CI availability repair or protected approval.
-
-CODE/FILES
-scripts/phase2/canonical-postgres-pull-retry.test.mjs: regression only, existing production behavior unchanged.
-PROGRESS.md: required source progress note; no task/release status promotion.
-docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md: sanitized investigation record.
-ONSKIN_BRAIN_HANDOFF.txt: mandatory checkpoint. Initial test/audit commit dc6c42dfcf796cbddb94b510d30ecf277fa13112; final handoff SHA via live branch.
-
-EXACT TESTS (command | environment | exit/status | evidence)
-node --test scripts/phase2/canonical-postgres-pull-retry.test.mjs | Windows/Node20.20.2 | 0, 6 pass | fixture/source, not provider reproduction.
-npm ci | Windows/Node20.20.2/npm11.20.0/Supabase2.117.0 lock | 0 | postinstall patches applied; lock unchanged.
-docker pull --platform linux/amd64 public.ecr.aws/supabase/postgres:15.8.1.085 | local Docker29.2.1/linux-amd64 | 0 | immutable identity in evidence.
-npm run phase2:db-local-contract | pinned local environment | 0,171 tests pass | source only.
-node --test scripts/phase2/canonical-postgres-pull-retry.test.mjs scripts/phase2/local-supabase-reset-retry.test.mjs scripts/phase2/schema-diff-evidence.test.mjs scripts/phase2/staging-deployment-evidence.test.mjs | Node20.20.2 | 0,60 pass | includes custody/refusal negatives.
-npm run typecheck; npm run lint; npm test | Windows/Node20.20.2, root npm11.20.0; Turbo subworkspace npm10.8.2 | each exit0;3/3 typecheck,3/3 lint, mobile5952+console24 tests | source only. Linux stage CI also passes the corresponding gates with workflow pins.
-npm run phase2:db-local-verify | Node20.20.2/npm11.20.0/Supabase2.117.0/Docker29.2.1 Linux-amd64, empty Docker auth config | 0, full local diagnostic PASS; both97-migration resets/history, all rehearsals, structural pgTAP, schema lint, empty shadow drift, CAT08 revocation and types already-current; own sandbox/containers confirmed gone.
-
-CI STATUS
-Main bbc28dc3d1f945191a81be56945b8bda7bb6ef73: Quality39330376557 attempt3 FAILURE (job118333051806); other Quality jobs succeeded.
-Security39330376548 attempt2 SUCCESS_SOURCE_ONLY; live adversarial job skipped. iOS39330376531 SUCCESS_SOURCE_CONTRACT_ONLY.
-Draft PR https://github.com/TasfiqJ/onSkin/pull/8 (open, draft, never merged).
-Tested stage dc6c42dfcf796cbddb94b510d30ecf277fa13112/tree406c7a77dabdb06d0e19edc2d5557ea2620c4a83; synthetic PR test ref d73facb3af12709dd7aa516307cbd33efe280b39 has identical tree, not a persistent branch merge.
-Quality39363061096 attempt1 FAILURE: DB job118433459142 reproduces ECR data-limit error; repository quality/PG15+17/iOS+Android exports all SUCCESS. iOS39363061034 SUCCESS_SOURCE_ONLY.
-Security39363061132 FAILURE: static job118433458700 and acceptance118434755528 reject SOURCE_INVENTORY_DRIFT; decision artifact12238014740 verified, acceptanceGranted=false. Live job skipped. No stage acceptance claimed.
-Final documentation checkpoint changes only records after this tested head. Any new final-head CI must be read via GitHub; no unobserved PASS inferred.
-
-PROTECTED BOUNDARIES / DATA / SPEND
-DB06 remains unconditional DB06_CURRENT_CHAIN_REPLAY_REQUIRED;97-migration source inventory/head/hash unchanged. Local DB08 parity is OBSERVED at7381 canonical lines/sha256 2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795, file already-current/unchanged. No hosted parity, task closure or promotion follows.
-No R2B custody/replay/acceptance issuance, hosted linking, live migration, V2 schema, J05, product activation, signing, deployment, or release.
-Security proposal SINGLE_OWNER_AUTOMATED_SOURCE_ONLY, notAfter2026-10-21T00:00:00Z; databaseReplayAuthority/integrationAuthority/releaseAuthority all false. No expiry, manifest, count/hash, scanner, policy or issuer changes.
-No vendor account, spending, patient data, photos, restricted JANUS material or credentials introduced.
-
-BLOCKERS / RISKS / SAFE NEXT STEPS
-No demonstrated ordinary-source root-cause repair of CI ECR refusal. Do not substitute a mirror, retag a foreign image, loosen H01 or retry monthly data exhaustion as a presumed fix.
-Brain must review the complete stage diff, reproduced CI failure and separate source-only acceptance rejection. Next bounded task: approve an actual zero-spend canonical acquisition/identity strategy and rerun unchanged DB gate; protected manifest/pin renewal is separate authority. No dependent V2 schema or stage promotion.
-Existing H01-H08/V01-V02 provider/account, exact-brand, professional, physical-device, pricing/spend, distribution/recruitment and release decisions remain external_pending; no new signoff recorded.
-
-DIRTY / UNPUSHED / NOT SAFE FOR GITHUB
-Founder original checkout ai-integration-v1 contains preexisting modifications/untracked work; not staged or copied. Only explicit safe stage files committed.
-Task tools/logs/artifact builder are intermediate files outside repository; user-facing report/evidence are exported separately. Run-owned sandbox and containers are gone; image cache remains. No unsafe task source pending.
-
-DETAILS / SANITIZED EVIDENCE PATHS
-docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md
-
-CONTEXT HEALTH
-Medium estimated pressure; no compaction; one stage writer; zero accepted tasks. Fresh bounded follow-up recommended after Brain review; all known state recorded.
-
-PUSH OUTCOME
-PUSHED_STAGE_BRANCH. Initial test checkpoint dc6c42dfcf796cbddb94b510d30ecf277fa13112; final handoff commit is the live stage ref after the normal push. Verify exact ref; no main push/merge/force/reset.
+ONSKIN BRAIN HANDOFF — M0-02 / M0
+Branch: stage/m0-baseline. IN_PROGRESS / REVIEW_REQUIRED; Codex cannot accept.
+Original stage/main base: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+Task base / last accepted diagnostic: b9a6b093f392ced340c156f2e7dcaefc72ed58e1
+Task base tree: ed42b889912e3fb383cfbafe413e7a66dd558221
+Observed origin/main: unchanged bbc28dc3d1f945191a81be56945b8bda7bb6ef73.
+Implementation: additive docs/v2; approved immutable docs/brain/state;
+identity-preserving compatibility; report v2; standalone validators/packer/tests.
+Development worktree checks: 28 governance tests, 27 pass / 1 symlink privilege skip;
+Windows junction and hard-link rejection ran. Check-mode mirrors and validators pass.
+These are pre-commit checks, not measured final-snapshot evidence.
+Next: commit implementation; measure clean SHA/tree; rerun acceptance and affected
+existing source checks; push and observe PR CI; add evidence-only submission.
+Root handoff/report commits will follow the measured snapshot. Resolve final tip with
+  git ls-remote origin refs/heads/stage/m0-baseline
+Evidence: docs/brain/checkpoints/M0-02/ (structured report/evidence to follow).
+Blockers: ECR Data limit exceeded; Security inventory drift; OSV date/advisory refusals;
+proposal expiry 2026-10-21T00:00:00Z unchanged. Baseline blocked, no source GO.
+Zero incremental spend. No runtime/schema/package/workflow/protected-custody changes.
+PR #8 stays draft/unmerged; main read-only; no M1/research request/public admission.
+Founder dirty ai-integration-v1 checkout preserved. One stage writer.
+Dirty/unpushed: allowed implementation namespaces, minimal progress pointer and handoff.
+Context health: medium estimate, no compaction, zero accepted tasks in this instance.
+Next safe action after final submission: independent Brain review; no automatic task.

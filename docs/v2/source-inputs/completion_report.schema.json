@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "onSkin Codex completion report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "base_commit",
+    "head_commit",
+    "head_tree",
+    "commits",
+    "changed_files",
+    "summary",
+    "decisions",
+    "tests",
+    "ci",
+    "evidence_artifacts",
+    "blockers",
+    "rollback",
+    "context_health",
+    "push_status",
+    "branch_name",
+    "main_commit_observed",
+    "stage_base_commit",
+    "handoff_file"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "base_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "head_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "head_tree": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "commits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{40}$"
+      }
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "summary": {
+      "type": "string"
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "decision",
+          "reason",
+          "scope_change"
+        ],
+        "properties": {
+          "decision": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "scope_change": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "command",
+          "environment",
+          "status",
+          "exit_code",
+          "evidence_class",
+          "artifact"
+        ],
+        "properties": {
+          "command": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_RUN",
+              "BLOCKED"
+            ]
+          },
+          "exit_code": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "evidence_class": {
+            "enum": [
+              "source",
+              "integration",
+              "device",
+              "expert",
+              "provider",
+              "research",
+              "commercial"
+            ]
+          },
+          "artifact": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ci": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "evidence_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sha256",
+          "scope"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "scope": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollback": {
+      "type": "string"
+    },
+    "context_health": {
+      "type": "object",
+      "required": [
+        "estimate",
+        "compaction_observed",
+        "accepted_tasks_in_instance",
+        "handoff_needed"
+      ],
+      "properties": {
+        "estimate": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "unknown"
+          ]
+        },
+        "compaction_observed": {
+          "type": "boolean"
+        },
+        "accepted_tasks_in_instance": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "handoff_needed": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "push_status": {
+      "enum": [
+        "PUSHED_STAGE_BRANCH",
+        "BLOCKED_NOT_PUSHED"
+      ]
+    },
+    "branch_name": {
+      "type": "string",
+      "const": "stage/m0-baseline"
+    },
+    "main_commit_observed": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "stage_base_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "handoff_file": {
+      "type": "string",
+      "const": "ONSKIN_BRAIN_HANDOFF.txt"
+    }
+  },
+  "description": "Superseding branch workflow schema; final stage HEAD SHA measured after pushed handoff commit. The repository TXT cannot embed its own commit SHA."
+}
