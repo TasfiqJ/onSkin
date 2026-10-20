@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   assertCompletedAccountRecovery,
+  assertCrossOwnerRaceOutcomes,
   assertNoUncaughtErrors,
   isDisallowedLog,
 } from './retained-safety-assertions.mjs';
@@ -50,5 +51,23 @@ test('a recovery summary cannot pass with obsolete or false completion flags', (
       () => assertCompletedAccountRecovery({ ...complete, [key]: false }),
       /Incomplete/,
     );
+  }
+});
+
+test('old-owner race refusal must be typed, complete, and attributable to authority closure', () => {
+  const complete = [
+    'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
+    'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    'ACCOUNT_GENERATION_CHANGED',
+  ];
+  assert.doesNotThrow(() => assertCrossOwnerRaceOutcomes(complete));
+  for (const wrong of [
+    null,
+    [],
+    complete.slice(1),
+    ['TypeError', ...complete.slice(1)],
+    [...complete.slice(0, 2), 'UNEXPECTED_SUCCESS'],
+  ]) {
+    assert.throws(() => assertCrossOwnerRaceOutcomes(wrong), /authority boundary/);
   }
 });

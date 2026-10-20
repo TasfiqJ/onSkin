@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   assertCompletedAccountRecovery,
+  assertCrossOwnerRaceOutcomes,
   assertNoUncaughtErrors,
   isDisallowedLog as disallowedLog,
 } from './retained-safety-assertions.mjs';
@@ -256,7 +257,13 @@ function startExpoServer() {
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
       ...(!accountIsolationMode ? { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner' } : {}),
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
-      ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: crossOwnerMode ? 'cross_owner' : 'signout_clear_retry' } : {}),
+      ...(accountIsolationMode
+        ? {
+            EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: crossOwnerMode
+              ? 'cross_owner'
+              : 'signout_clear_retry',
+          }
+        : {}),
       ...(deletionRecoveryMode
         ? { EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY: deletionRecoveryMode }
         : {}),
@@ -825,7 +832,11 @@ async function retainedRoute(client, pathname) {
 // Same portable runner and real UI. Only the Auth/preflight transport and
 // native-I/O settlement timing are synthetic; all authority is application code.
 async function crossOwnerFlow(client, products) {
-  const aMarkers = [...products.map(p => p.name), 'tas.account-a.e2e@example.com', 'late-owner-a'];
+  const aMarkers = [
+    ...products.map((p) => p.name),
+    'tas.account-a.e2e@example.com',
+    'late-owner-a',
+  ];
   const bName = 'Owner B manual moisturizer';
   const moduleExpression = `(suffix) => {
     const m = [...__r.getModules().values()].find(m => (m.verboseName ?? '').replaceAll('\\\\', '/').endsWith(suffix));
@@ -837,9 +848,11 @@ async function crossOwnerFlow(client, products) {
   await captureStep(client, 'CO-01-owner-a', { assertClean: false });
   // Observe rendered mutations and animation frames after the neutral boundary
   // first appears. Record booleans only, never private records or bearer values.
-  await evaluate(client, `(() => {
+  await evaluate(
+    client,
+    `(() => {
     const markers = ${JSON.stringify(aMarkers)};
-    const state = globalThis.__crossOwnerObserved = { closed: false, samples: 0, leaks: 0, healthLeaks: 0 };
+    const state = globalThis.__crossOwnerObserved = { closed: false, samples: 0, leaks: 0 };
     const sample = () => {
       const text = document.body.innerText;
       if (/Securing account data|Account access paused/.test(text)) state.closed = true;
@@ -847,8 +860,11 @@ async function crossOwnerFlow(client, products) {
     };
     new MutationObserver(sample).observe(document.body, { subtree: true, childList: true, characterData: true });
     const frame = () => { sample(); requestAnimationFrame(frame); }; requestAnimationFrame(frame);
-  })()`);
-  await evaluate(client, `(async () => {
+  })()`,
+  );
+  await evaluate(
+    client,
+    `(async () => {
     const mod = ${moduleExpression};
     const kv = mod('/lib/storage/privateKV.ts');
     const gen = mod('/lib/auth/accountGeneration.ts');
@@ -881,9 +897,19 @@ async function crossOwnerFlow(client, products) {
     }));
     Promise.all([read, write, callback]).then(results => { state.results = results; });
     state.release = () => { storage.getItem = originalGet; storage.setItem = originalSet; releaseRead(); releaseWrite(); releaseCallback(); };
-  })()`, true);
-  await waitForCondition(client, `__crossOwnerRace.readEntered && __crossOwnerRace.writeEntered`, 15_000, 'real A read/write entered native transport');
-  await evaluate(client, `(() => { __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); })()`);
+  })()`,
+    true,
+  );
+  await waitForCondition(
+    client,
+    `__crossOwnerRace.readEntered && __crossOwnerRace.writeEntered`,
+    15_000,
+    'real A read/write entered native transport',
+  );
+  await evaluate(
+    client,
+    `(() => { __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); })()`,
+  );
   await waitForText(client, 'Securing account data');
   await captureStep(client, 'CO-02-draining-old-owner');
   await evaluate(client, '__crossOwnerRace.release()');
@@ -891,12 +917,19 @@ async function crossOwnerFlow(client, products) {
   const refused = await captureStep(client, 'CO-03-cleanup-refused');
   assertInteractiveControl(refused, 'Try again');
   const races = await evaluate(client, '__crossOwnerRace.results');
-  assert(races?.length === 3 && races.every(x => x !== 'UNEXPECTED_SUCCESS'), 'Old-owner operation escaped its authority');
-  writeJson('cross-owner-races.json', { outcomes: races, interpretation: 'Delayed A read, committed-write settlement/rollback, and queued callback rejected by real boundaries.' });
+  assertCrossOwnerRaceOutcomes(races);
+  writeJson('cross-owner-races.json', {
+    outcomes: races,
+    interpretation:
+      'Delayed A read, committed-write settlement/rollback, and queued callback rejected by real boundaries.',
+  });
   await clickByText(client, 'Try again');
   await delay(1200);
   const repeated = await captureStep(client, 'CO-04-repeated-refusal');
-  assert(repeated.bodyText.includes('Account access paused'), 'Duplicate/retry escaped failed cleanup');
+  assert(
+    repeated.bodyText.includes('Account access paused'),
+    'Duplicate/retry escaped failed cleanup',
+  );
   assertInteractiveControl(repeated, 'Try again');
   await clickByText(client, 'Try again');
   await waitForText(client, 'First, your');
@@ -916,9 +949,10 @@ async function crossOwnerFlow(client, products) {
   await answerQuiz(client, 'CO-B-');
   await waitForText(client, "What's on your shelf?");
   const empty = await captureStep(client, 'CO-07-b-empty-shelf');
-  assert(!aMarkers.some(x => empty.bodyText.includes(x)), 'A content reached B onboarding');
+  assert(!aMarkers.some((x) => empty.bodyText.includes(x)), 'A content reached B onboarding');
   await addProduct(client, { category: 'Treatment', name: bName }, 'CO-08-b-manual-created');
-  await clickByText(client, 'Continue');
+  await scrollTextIntoView(client, 'Continue with 1 product');
+  await clickByText(client, 'Continue with 1 product');
   await waitForText(client, 'YOUR SKIN PROFILE', 45_000);
   await clickByText(client, 'Continue');
   await waitForPath(client, '/onboarding/notifications');
@@ -940,7 +974,9 @@ async function crossOwnerFlow(client, products) {
   await waitForText(client, 'tas.account-b.e2e@example.com');
   await captureStep(client, 'CO-11-b-identity', { assertClean: false });
   const inspect = async (name) => {
-    const state = await evaluate(client, `(async () => {
+    const state = await evaluate(
+      client,
+      `(async () => {
       const mod = ${moduleExpression};
       const owner = mod('/lib/auth/sessionOwner.ts');
       const proof = await owner.readLocalDataOwnerProof();
@@ -955,16 +991,38 @@ async function crossOwnerFlow(client, products) {
         ciphertextOnly: !(localStorage.getItem('layerwell.shelf.v1') ?? '').includes(${JSON.stringify(bName)}),
         noWidgetCapabilities: !localStorage.getItem('layerwell.widgetActionMap.v1') && !localStorage.getItem('layerwell.widgetActionMap.v2'),
         renderedObservation: globalThis.__crossOwnerObserved ?? null };
-    })()`, true);
+    })()`,
+      true,
+    );
     writeJson(name + '.json', state);
-    for (const [key, value] of Object.entries(state)) if (key !== 'renderedObservation') assert(value === true, `${name}: ${key}`);
+    for (const [key, value] of Object.entries(state))
+      if (key !== 'renderedObservation') assert(value === true, `${name}: ${key}`);
     return state;
   };
   const liveState = await inspect('CO-b-boundaries');
-  assert(liveState.renderedObservation.closed && liveState.renderedObservation.samples > 10 && liveState.renderedObservation.leaks === 0, 'Observed old A flash during B transition');
-  // Real browser visibility events exercise mounted app foreground gates.
-  await client.send('Page.setWebLifecycleState', { state: 'frozen' });
-  await client.send('Page.setWebLifecycleState', { state: 'active' });
+  assert(
+    liveState.renderedObservation.closed &&
+      liveState.renderedObservation.samples > 10 &&
+      liveState.renderedObservation.leaks === 0,
+    'Observed old A flash during B transition',
+  );
+  // Activate another real browser tab to deliver visibility/AppState events.
+  const backgroundTab = await client.send('Target.createTarget', { url: 'about:blank' });
+  await client.send('Target.activateTarget', { targetId: backgroundTab.targetId });
+  await waitForCondition(
+    client,
+    `document.visibilityState === 'hidden'`,
+    15_000,
+    'real browser background',
+  );
+  await client.send('Page.bringToFront');
+  await waitForCondition(
+    client,
+    `document.visibilityState === 'visible'`,
+    15_000,
+    'real browser foreground',
+  );
+  await client.send('Target.closeTarget', { targetId: backgroundTab.targetId });
   await navigateClientSide(client, '/shelf');
   await waitForText(client, bName);
   await client.send('Page.reload', { ignoreCache: true });
@@ -980,19 +1038,36 @@ async function crossOwnerFlow(client, products) {
   await clickByText(client, 'Try again');
   await waitForText(client, 'First, your');
   const returned = await captureStep(client, 'CO-13-return-a-age-closed');
-  assert(![...aMarkers, bName].some(x => returned.bodyText.includes(x)), 'Return transition resurrected private content');
+  assert(
+    ![...aMarkers, bName].some((x) => returned.bodyText.includes(x)),
+    'Return transition resurrected private content',
+  );
   await client.send('Page.reload', { ignoreCache: true });
   await waitForText(client, 'First, your', 60_000);
   await captureStep(client, 'CO-14-return-a-relaunch-closed');
-  assert(await evaluate(client, `!localStorage.getItem('layerwell.shelf.v1')`), 'Return A recovered old Shelf');
+  assert(
+    await evaluate(client, `!localStorage.getItem('layerwell.shelf.v1')`),
+    'Return A recovered old Shelf',
+  );
   const logs = collectProblemLogs(client.events);
   writeJson('browser-warn-error-logs.json', logs);
   assert(logs.filter(disallowedLog).length === 0, 'Unexpected cross-owner browser error/warning');
-  const summary = { verdict: 'pass', scenario: 'actual_cross_owner', viewport,
-    noAFlash: true, delayedAOperationsRejected: true, duplicateAndFailedCleanupRetry: true,
-    bOwnAdmission: true, bUsableManualShelfAndEdit: true, exactBOwnerCacheQueueHealth: true,
-    bDocumentRelaunch: true, returnAClosedWithoutResurrection: true, noUncaughtErrors: true,
-    limits: 'DEV/web/development/unconfigured synthetic identity and preflight transport; real Auth reconciliation, owner proof, cleanup, encrypted storage/query, age/consent and routing. No live provider, paid authority, native process death or device proof.' };
+  const summary = {
+    verdict: 'pass',
+    scenario: 'actual_cross_owner',
+    viewport,
+    noAFlash: true,
+    delayedAOperationsRejected: true,
+    duplicateAndFailedCleanupRetry: true,
+    bOwnAdmission: true,
+    bUsableManualShelfAndEdit: true,
+    exactBOwnerCacheQueueHealth: true,
+    bDocumentRelaunch: true,
+    returnAClosedWithoutResurrection: true,
+    noUncaughtErrors: true,
+    limits:
+      'DEV/web/development/unconfigured synthetic identity and preflight transport; real Auth reconciliation, owner proof, cleanup, encrypted storage/query, age/consent and routing. No live provider, paid authority, native process death or device proof.',
+  };
   writeJson('summary.json', summary);
   console.log(`Cross-owner E2E passed. Evidence: ${evidenceDir}`);
 }
@@ -2048,7 +2123,13 @@ async function run() {
     if (client) {
       await captureStep(client, 'FAILURE', { assertClean: false }).catch(() => undefined);
       writeJson('FAILURE-runtime-events.json', collectProblemLogs(client.events));
-      writeJson('FAILURE-race-state.json', await evaluate(client, `globalThis.__crossOwnerRace ? { readEntered: __crossOwnerRace.readEntered, writeEntered: __crossOwnerRace.writeEntered, results: __crossOwnerRace.results } : null`).catch(() => null));
+      writeJson(
+        'FAILURE-race-state.json',
+        await evaluate(
+          client,
+          `globalThis.__crossOwnerRace ? { readEntered: __crossOwnerRace.readEntered, writeEntered: __crossOwnerRace.writeEntered, results: __crossOwnerRace.results } : null`,
+        ).catch(() => null),
+      );
     }
     writeJson('ERROR.json', { status: 'FAIL', message: String(error.message), viewport });
     throw error;

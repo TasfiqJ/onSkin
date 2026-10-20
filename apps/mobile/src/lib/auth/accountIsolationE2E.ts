@@ -49,16 +49,20 @@ export function getAccountIsolationE2EFixture(
   supabaseConfigured = isSupabaseConfigured,
   platform = Platform.OS,
 ): AccountIsolationE2EFixture | null {
-  if (!isDev || platform !== 'web' || appEnvironment !== 'development' || supabaseConfigured) return null;
+  if (!isDev || platform !== 'web' || appEnvironment !== 'development' || supabaseConfigured)
+    return null;
   const mode = process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION?.trim().toLowerCase();
   if (mode !== 'signout_clear_retry' && mode !== 'cross_owner') return null;
   return {
     clearDelayMs: 700,
     clearFailures: 2,
     mode,
-    session: fixtureStorage()?.getItem(E2E_SIGNED_OUT_KEY) === '1' ? null : fixtureSession(
-      mode === 'cross_owner' && fixtureStorage()?.getItem(E2E_OWNER_KEY) === 'b' ? 'b' : 'a',
-    ),
+    session:
+      fixtureStorage()?.getItem(E2E_SIGNED_OUT_KEY) === '1'
+        ? null
+        : fixtureSession(
+            mode === 'cross_owner' && fixtureStorage()?.getItem(E2E_OWNER_KEY) === 'b' ? 'b' : 'a',
+          ),
   };
 }
 
@@ -85,17 +89,26 @@ export function accountIsolationE2EEvent(owner: 'a' | 'b'): Session {
   return fixtureSession(owner);
 }
 
-export function accountIsolationE2EPreflightTransport(): AccountDeletionBarrierTransport | undefined {
+export function accountIsolationE2EPreflightTransport():
+  | AccountDeletionBarrierTransport
+  | undefined {
   if (getAccountIsolationE2EFixture()?.mode !== 'cross_owner') return undefined;
   return async (input, init) => {
     const request = new Request(input, init);
     // Exercise the real permit and bounded response parser. This attests only
     // the local synthetic identity, never provider authentication or commerce.
     const candidate = getAccountIsolationE2EFixture()?.session;
-    if (!candidate || request.headers.get('Authorization') !== `Bearer ${candidate.access_token}` ||
-        await request.text() !== JSON.stringify({ action: 'preflight' })) {
-      return new Response(JSON.stringify({ error: 'ACCOUNT_DELETION_SESSION_REJECTED' }), { status: 401 });
+    if (
+      !candidate ||
+      request.headers.get('Authorization') !== `Bearer ${candidate.access_token}` ||
+      (await request.text()) !== JSON.stringify({ action: 'preflight' })
+    ) {
+      return new Response(JSON.stringify({ error: 'ACCOUNT_DELETION_SESSION_REJECTED' }), {
+        status: 401,
+      });
     }
-    return new Response(JSON.stringify({ status: 'clear', ownerSubject: candidate.user.id }), { status: 200 });
+    return new Response(JSON.stringify({ status: 'clear', ownerSubject: candidate.user.id }), {
+      status: 200,
+    });
   };
 }

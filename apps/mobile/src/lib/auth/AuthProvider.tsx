@@ -260,11 +260,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const accountIsolationE2EFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
   const firstSessionE2EFixture = useMemo(() => getFirstSessionE2EFixture(), []);
   const initialSession =
-    (accountIsolationE2EFixture?.mode === 'cross_owner' ? null : accountIsolationE2EFixture?.session) ??
+    (accountIsolationE2EFixture?.mode === 'cross_owner'
+      ? null
+      : accountIsolationE2EFixture?.session) ??
     getPublishedFirstSessionE2ESession(firstSessionE2EFixture);
   const [session, setSession] = useState<Session | null>(initialSession);
   const [initializing, setInitializing] = useState(
-    (isSupabaseConfigured && accountIsolationE2EFixture === null) || accountIsolationE2EFixture?.mode === 'cross_owner',
+    (isSupabaseConfigured && accountIsolationE2EFixture === null) ||
+      accountIsolationE2EFixture?.mode === 'cross_owner',
   );
   const [sessionBoundaryError, setSessionBoundaryError] = useState(false);
   const activeUserIdRef = useRef<string | null>(initialSession?.user.id ?? null);
@@ -1071,7 +1074,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   transitionSession.access_token,
                   transitionSession.user.id,
                   ...(accountIsolationE2EFixture?.mode === 'cross_owner'
-                    ? [accountIsolationE2EPreflightTransport()] as const : []),
+                    ? ([accountIsolationE2EPreflightTransport()] as const)
+                    : []),
                 );
               } catch (error: unknown) {
                 if (isAccountDeletionBarrierSessionRejected(error)) {
@@ -1271,9 +1275,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               targetUserId,
               latestPendingSession.access_token,
             );
-            retrySessionRestoreRef.current = publicationActive || accountIsolationE2EFixture
-              ? null
-              : () => resumeForegroundPublicationRef.current();
+            retrySessionRestoreRef.current =
+              publicationActive || accountIsolationE2EFixture
+                ? null
+                : () => resumeForegroundPublicationRef.current();
             publicationRecoveryNeededRef.current = !publicationActive;
             schedulePublicationRecoveryRef.current();
           } else if (!latestPendingSession) {

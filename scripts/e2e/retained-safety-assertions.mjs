@@ -39,3 +39,26 @@ export function assertCompletedAccountRecovery(result) {
     if (result[key] !== true) throw new Error(`Incomplete account recovery: ${key}`);
   }
 }
+
+export function assertCrossOwnerRaceOutcomes(results) {
+  const allowed = [
+    [
+      'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
+      'ACCOUNT_GENERATION_CHANGED',
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    ],
+    [
+      'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
+      'ACCOUNT_GENERATION_CHANGED',
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    ],
+    ['ACCOUNT_GENERATION_CHANGED'],
+  ];
+  if (
+    !Array.isArray(results) ||
+    results.length !== allowed.length ||
+    results.some((result, index) => !allowed[index].includes(result))
+  ) {
+    throw new Error('Old-owner operation did not reject at its authority boundary.');
+  }
+}

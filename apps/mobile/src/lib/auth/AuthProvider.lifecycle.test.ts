@@ -39,7 +39,12 @@ type LocalOwnerProof =
 
 const h = vi.hoisted(() => {
   const state = {
-    fixture: null as { mode: 'cross_owner'; session: Session; clearDelayMs: number; clearFailures: number } | null,
+    fixture: null as {
+      mode: 'cross_owner';
+      session: Session;
+      clearDelayMs: number;
+      clearFailures: number;
+    } | null,
     fixtureB: null as Session | null,
     admissionPaused: false,
     activeSessionId: null as string | null,
@@ -824,13 +829,18 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
     expect(currentAuth?.session?.user.id).toBe(USER_A);
     h.prepareLocalDataForSession.mockRejectedValueOnce(new Error('synthetic cleanup refusal'));
     await act(async () => {
-      (globalThis as typeof globalThis & { __LAYERWELL_E2E_ACCOUNT_EVENT__?: (owner: 'b') => void }).__LAYERWELL_E2E_ACCOUNT_EVENT__?.('b');
+      (
+        globalThis as typeof globalThis & { __LAYERWELL_E2E_ACCOUNT_EVENT__?: (owner: 'b') => void }
+      ).__LAYERWELL_E2E_ACCOUNT_EVENT__?.('b');
     });
     await flush();
     expect(currentAuth?.sessionBoundaryError).toBe(true);
     expect(currentAuth?.session).toBeNull();
-    await act(async () => currentAuth?.retrySessionBoundary());
+    await act(async () => {
+      await Promise.all([currentAuth!.retrySessionBoundary(), currentAuth!.retrySessionBoundary()]);
+    });
     await flush();
+    expect(h.prepareLocalDataForSession).toHaveBeenCalledTimes(3);
     expect(currentAuth?.session?.user.id).toBe(USER_B);
     expect(currentAuth?.sessionBoundaryError).toBe(false);
   });
