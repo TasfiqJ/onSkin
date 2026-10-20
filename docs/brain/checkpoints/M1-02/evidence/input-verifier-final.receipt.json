@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B docs/brain/checkpoints/M1-02/inputs/verify_context.py --expected-manifest-sha256 bf9706ffe185ea6287588204818e4ae25dcf017a7e823345aadd30fc79600b78",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "e03d8899ba38a234638114f854faf501f21205a0",
+  "source_tree": "9d1037acdb1f89c440385e30e6d594bf7c90bdeb",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.txt",
+    "sha256": "76ebcf1de12283c11f65b0683561b7779854e9492247df94b2baa35804287f6b"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T20:58:34.599790+00:00",
+  "finished_at_utc": "2026-10-20T20:58:34.682392+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "python",
+    "-B",
+    "docs/brain/checkpoints/M1-02/inputs/verify_context.py",
+    "--expected-manifest-sha256",
+    "bf9706ffe185ea6287588204818e4ae25dcf017a7e823345aadd30fc79600b78"
+  ]
+}

@@ -308,6 +308,20 @@
       }
     },
     {
+      "id": "input-verifier-final",
+      "status": "PASS",
+      "source_commit": "e03d8899ba38a234638114f854faf501f21205a0",
+      "source_tree": "9d1037acdb1f89c440385e30e6d594bf7c90bdeb",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.receipt.json",
+      "sha256": "327369f0c2a85939af4840afc29ccb74a8a2dcb27851ca6cea4753bb838d1a40",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.txt",
+        "sha256": "76ebcf1de12283c11f65b0683561b7779854e9492247df94b2baa35804287f6b"
+      }
+    },
+    {
       "id": "lint-second",
       "status": "PASS",
       "source_commit": "d9fb219e84f1d6e801004dff39bbed4ecc26fcf2",
@@ -583,6 +597,20 @@
       "output": {
         "path": "docs/brain/checkpoints/M1-02/evidence/stale-preference-cycle-red.txt",
         "sha256": "309bf1d50889c20418afc34985b92cbdc0a9b961975116de4ac7b0d412762676"
+      }
+    },
+    {
+      "id": "worklist-final",
+      "status": "PASS",
+      "source_commit": "e03d8899ba38a234638114f854faf501f21205a0",
+      "source_tree": "9d1037acdb1f89c440385e30e6d594bf7c90bdeb",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/worklist-final.receipt.json",
+      "sha256": "39c8a17598160e17612ee9b6581a2f4c74c001cbf78d23f085c0c680cb44ee3b",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/worklist-final.txt",
+        "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
       }
     },
     {

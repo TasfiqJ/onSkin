@@ -1,0 +1,2401 @@
+{
+  "schema_version": 2,
+  "task_id": "M1-02",
+  "branch": "stage/m1-retained-safety",
+  "status": "PARTIAL",
+  "measured": {
+    "commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+    "tree": "2f2617e6718c48213e483790d0272fdc978194c3"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "id": "root-tests-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd run test -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/root-tests-final.receipt.json",
+      "sha256": "d0a24149b7170ba28b3a9e6d31e7c96900019c7e11ea7e4f62240e46811dc3ba"
+    },
+    {
+      "id": "root-typecheck-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd run typecheck -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-final.receipt.json",
+      "sha256": "98ee99a2fe5d4a62146830e35b7610bc3e20715262b7ea7f1f3098cfb81ca098"
+    },
+    {
+      "id": "root-lint-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd run lint -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/root-lint-final.receipt.json",
+      "sha256": "f096abf6d371f601f62f94f6a6ee94d4f26af036607f2c614ed95711524966b8"
+    },
+    {
+      "id": "governance-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/governance-final.receipt.json",
+      "sha256": "d942dfd555cbca3b354aa3cf2d6c425fed898ea1b38949b1dbe54f5d0a071c7b"
+    },
+    {
+      "id": "source-contracts-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "FAIL",
+      "exit_code": 1,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/source-contracts-final.receipt.json",
+      "sha256": "837258b21e04a53ef33bf70d26cb2cf78d313f6a62deeddaa6d1f76e72c90fb9"
+    },
+    {
+      "id": "focused-final",
+      "axis": "integration",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd --workspace apps/mobile exec -- vitest run src/features/today src/features/routine/orderStore.test.ts src/features/routine/reorder.g2.test.ts src/features/scheduler/cyclePersistence.regression.test.ts src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/notifications src/lib/storage/privateKV.test.ts src/lib/storage/plaintextStagingCore.test.ts src/lib/offline/completionQueue.test.ts src/lib/offline/OfflineSync.test.ts",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/focused-final.receipt.json",
+      "sha256": "c1aae635c5e563911b2db950cf77e910c6e5103bc418a87c9b64dae3bb6df1e5"
+    },
+    {
+      "id": "browser-daily-390",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102-daily-390 ONBOARDING_E2E_PORT=8356 ONBOARDING_E2E_DEBUG_PORT=9456 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390.receipt.json",
+      "sha256": "bfdfb92f47639abbe6c335fc330eaa7f9d2799410eeff1fdfa2ce29665555af7"
+    },
+    {
+      "id": "browser-daily-375",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102-browser-daily-375 ONBOARDING_E2E_PORT=8357 ONBOARDING_E2E_DEBUG_PORT=9457 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375.receipt.json",
+      "sha256": "06b938d85d25423fdce8f0dac8f8971b48666db1a73c00d942323219e6b58120"
+    },
+    {
+      "id": "browser-daily-430",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102-browser-daily-430 ONBOARDING_E2E_PORT=8358 ONBOARDING_E2E_DEBUG_PORT=9458 ONBOARDING_E2E_VIEWPORT_WIDTH=430 ONBOARDING_E2E_VIEWPORT_HEIGHT=932 node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430.receipt.json",
+      "sha256": "cb9bff7a9865a495e8fb35182cd22e7d8b886314563c99364abda48cef221eab"
+    },
+    {
+      "id": "browser-cross-daily-390-final",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102-browser-cross-daily-390-final ONBOARDING_E2E_PORT=8360 ONBOARDING_E2E_DEBUG_PORT=9460 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 node scripts/e2e/onboarding-first-session.mjs --daily-loop --cross-owner",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final.receipt.json",
+      "sha256": "d42921f4b36e4bd06df3931aa81f70b7705076d572ee82c777e066d7333383a4"
+    },
+    {
+      "id": "browser-signout-390",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102-browser-signout-390 ONBOARDING_E2E_PORT=8361 ONBOARDING_E2E_DEBUG_PORT=9461 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 node scripts/e2e/onboarding-first-session.mjs --account-isolation",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390.receipt.json",
+      "sha256": "9d72de90a60c99ac5e3617f5903f041a4d9f3c22faedb89ea787b485bf9aeb06"
+    },
+    {
+      "id": "browser-retained-390",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102-browser-retained-390 ONBOARDING_E2E_PORT=8362 ONBOARDING_E2E_DEBUG_PORT=9462 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 node scripts/e2e/onboarding-first-session.mjs --retained-safety",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390.receipt.json",
+      "sha256": "2898a7a29a67f3b7f902a3a1c7f51136570767de4752ff0038a0a0f0c81d6638"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md",
+      "sha256": "c8d00a3e4efee4901fdd451bc3aad14eed701796e369b547a525aa82208e1e1b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ci-initial.json",
+      "sha256": "0774d1dc253d651b827cd67056a367fff4819284024a39a491b5b31d54a66031"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ci-review.json",
+      "sha256": "031eb9bd4f99c130aaf9a345a61060bfe40c20eb0bc343bfd849c16fb9df4da0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-01-owner-a.json",
+      "sha256": "3b7d3119b80708e33f08608044f8fe0a67d266c821f184957023c3fd4c995ef4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-01-owner-a.png",
+      "sha256": "3d92df7a4089e6ab83b76bd4d803bde50f52665b4f93f7bb067a7bb7d2e3fa43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-02-draining-old-owner.json",
+      "sha256": "bd313051a44f30de13b3294909d48e24d41e6714868cc4cc59a1def7da62e22d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-02-draining-old-owner.png",
+      "sha256": "6464b8ca3e577a4923025dbcafcb03e0f0f517927f93a82dd2aac72e3727ce90"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-03-cleanup-refused.json",
+      "sha256": "9dfa5af03b74014ca34c70999c001577813e19e208f7e7113826d13f10850d8d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-03-cleanup-refused.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-04-repeated-refusal.json",
+      "sha256": "9dfa5af03b74014ca34c70999c001577813e19e208f7e7113826d13f10850d8d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-04-repeated-refusal.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-05-b-age-required.json",
+      "sha256": "e1f56d93a00bd138ae90d0ac5db4aa82f91b093c2e086da7aa84c2a88c16da0a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-05-b-age-required.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-06-b-consent-required.json",
+      "sha256": "5d6456d22448cb2e776a9c91a6b2d0333db4bd28a8ca550897fed0eae4595df0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-06-b-consent-required.png",
+      "sha256": "022cc0f3b7c023d559198841a66f21e9deae50ee268105b690eb0f84d6bec7d2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-07-b-empty-shelf.json",
+      "sha256": "17c1bd2ae1017f146ab34f5e210f16b719ddb27483dfacdd13052b52bd5c1979"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-07-b-empty-shelf.png",
+      "sha256": "24e58cb927b74276d0dacad78283b8417e3c7fff0cdb54d39b399fae7010095c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-08-b-manual-created.json",
+      "sha256": "e04f71fdeda557687d91ae226a01ef7c8db1dc5b303cbf90f38309d207e51bcc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-08-b-manual-created.png",
+      "sha256": "0cf3305eafe608a595f25c12f25ccc78122561a03938d9c405238c013ff4c367"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-09-b-usable-shelf.json",
+      "sha256": "3963073b79d64d3fd892fc13b080df1b2f41f71bb53841eda723d75515adecf1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-09-b-usable-shelf.png",
+      "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-09b-b-product-detail.json",
+      "sha256": "99daa1b41e3e7790790caf7e49a17ab4680e3c36006945b7f906ccb1451fae44"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-09b-b-product-detail.png",
+      "sha256": "2c86630570c766a3abd4d1a0930635d8872485cf428ae090f36b32e473a8fd2b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-10-b-usable-edit.json",
+      "sha256": "379ba81d6a0deafd5b53be83880e4042cbc79f6db614d613a01bd5218501c2d2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-10-b-usable-edit.png",
+      "sha256": "33017483671a207c84be3d5a6e04d519b50da547f97e44219c696daf27b26ef9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-11-b-identity.json",
+      "sha256": "daa5d53c2bab80df8919331cbe44e5bb6faf4a6acac6c09ce9bc602721d6d334"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-11-b-identity.png",
+      "sha256": "bddfe25b2870b51ee25b35dc686b4eff058869378533fa843bfebeb185aa74cd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-07-quiz-01.json",
+      "sha256": "2a781d766680296db38eae8684e9cd2a1eb01b7972979c8e1c2104be97ab71b0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-07-quiz-01.png",
+      "sha256": "eec4d60e8c36dab3420369238104014a0f5ad6ed0bd43a1d8ef9ff2a612e7c60"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-08-quiz-after-04.json",
+      "sha256": "25a47453a952e57764c744bb46279e96bec158c85a333e67fa854bb0eece68d5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-08-quiz-after-04.png",
+      "sha256": "9819af847ebed96207d4561162bde9e2b69cabd1106a24fdbe3477f1bf386e0b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-08-quiz-after-09.json",
+      "sha256": "966c8f71d4c9c370d9140338573b28a6e5581772507a16ec02d46c04e7fe4736"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-08-quiz-after-09.png",
+      "sha256": "92d9bdfbc0c5af50b8861f2a0677f227bf4e9d09c845983e169e22642a95e8c3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-08-quiz-after-11.json",
+      "sha256": "3745ca7ddfeafc7eb33489a97de6d69ab0c4c66bbe8850ff83d682a3c5818065"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-B-08-quiz-after-11.png",
+      "sha256": "5ef81c21282fdd8b420f6b34eb1403b31c97c4133cec1bae2cf92cc7c49d11bf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-b-boundaries.json",
+      "sha256": "67ea45352e68ce15a46a1fec2f627eb4c4bc3a28e2e3367113fd09f686e4547a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/CO-immediate-authority-closure.json",
+      "sha256": "ef0352c2d189d05058bfad0553ab4eb0721d861e27dac55d275177b678be5889"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/FAILURE-race-state.json",
+      "sha256": "d900fb493409bdd3d2e2ffdab88594c5e172934c3a8eef5523d08c4bf4fe7ead"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/FAILURE-runtime-events.json",
+      "sha256": "810a34bd7dab6e17ae19060a8711e8341de9d9f701770f213982679fb4c344e0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/FAILURE.json",
+      "sha256": "8a8110aadb69314338b912e9dac28a80127004f65c51865825b79e0f1f93fc05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/FAILURE.png",
+      "sha256": "413e96f3ccf1436ea70a16feb74656c31128624e273a3e9ce890099b749ca77e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-00-manual-plan-input.json",
+      "sha256": "7f121f23fa7eb98d80e1c3f7bd3f5f6a03ff751a60a33b503da2177041345e3e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-00-manual-plan-input.png",
+      "sha256": "f5752202bebc0c9bd8ad8b71fe7e2df44bba681e2a13bfae812dcad21f2a8ee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-01-am-ready.json",
+      "sha256": "6df5a4e30809648ae21bc0077130d6c97f90f3c941478d0f35843be408b9b1ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-01-am-ready.png",
+      "sha256": "deceed7daf7455a5bb31e7370b70bcc9d3d6dea0728fafe3f747a2be051f964c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-02-rejected-write-recovery.json",
+      "sha256": "39f1f9dfda7e8ff901d5189dca7296a68e83007144e6879fc5f46d2380fd7c12"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-03-offline-duplicate-append-only.json",
+      "sha256": "29b3c7abe8aeb0424c413a6bb37f4fb2bcc3839c8a28b34c076f0b7cc5cd4253"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-03-offline-duplicate-append-only.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04-offline-timing.json",
+      "sha256": "8f92650d739fd5a71f5c31034fb1aefc85e6a30869aa63c8b5f3128f859796a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04-offline-timing.png",
+      "sha256": "b02280ba70d355c340a47b99c65639dce7189f48accdc578226b37d15e9440db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04a-offline-reminder-recovery.json",
+      "sha256": "cde6a3bf55ecaf420b3829ad19a3d1f3a164efcf2234f439d3d00cb78291bbb2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04b-cycle-paid-boundary.json",
+      "sha256": "1cf939e973b41d0daf2f56898106bda446c6f78f4a9a9c2514208bb066ab7d17"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04b-cycle-paid-boundary.png",
+      "sha256": "24ccf1a801290573ee435dbed8e43e37230f57ed43c1a621d633072f977fb2e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04c-reorder-paid-boundary.json",
+      "sha256": "9f44f0bf99bde6f72ab1467b24030883a5908e59e00976960a0794f69eae2a84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-04c-reorder-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-05-reloaded-am.json",
+      "sha256": "29b3c7abe8aeb0424c413a6bb37f4fb2bcc3839c8a28b34c076f0b7cc5cd4253"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-05-reloaded-am.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-06-pm.json",
+      "sha256": "f1cfe3c29baf1b39f604b3159aafce86389b21ff2e75063b00e432a98e07a838"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-06-pm.png",
+      "sha256": "440b3fcde59b72454bd823f916ebefaeeb60e42992e06101b9555f889e5d99ea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-07-plan-paid-boundary.json",
+      "sha256": "9f44f0bf99bde6f72ab1467b24030883a5908e59e00976960a0794f69eae2a84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-07-plan-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-09-web-reminder-availability.json",
+      "sha256": "cd3289527de6de5815cb3654eb1f37894ad914736a069e5604f5807053df096e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-09-web-reminder-availability.png",
+      "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390/M102-daily-loop.json",
+      "sha256": "3b823e5d347437cf43d38e1b51476caabd7e6d3e247fe530dbda05e87c1b7278"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/browser-warn-error-logs.json",
+      "sha256": "f3c9adaf48bcccb20a5b60383ef9c02db8f7a536dcbf0382d380cbdc5b38244c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-01-owner-a.json",
+      "sha256": "0c333bc985767e45187ac09519a52f5eab3945a1a9b9adeaf3887adba8b59e01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-01-owner-a.png",
+      "sha256": "3d92df7a4089e6ab83b76bd4d803bde50f52665b4f93f7bb067a7bb7d2e3fa43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-02-draining-old-owner.json",
+      "sha256": "9a5de140334abc9c8c70b99ce780ede05a3d4f07c571d0a5b980d035287f6e72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-02-draining-old-owner.png",
+      "sha256": "6464b8ca3e577a4923025dbcafcb03e0f0f517927f93a82dd2aac72e3727ce90"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-03-cleanup-refused.json",
+      "sha256": "b6ab2a60befb49e570ced043594443aaa0f1cd693e1a2c6ec09e26c268bad8ff"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-03-cleanup-refused.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-04-repeated-refusal.json",
+      "sha256": "b6ab2a60befb49e570ced043594443aaa0f1cd693e1a2c6ec09e26c268bad8ff"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-04-repeated-refusal.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-05-b-age-required.json",
+      "sha256": "7a304f04322b9a605e52b7de0a8093244abf534edb921ac748d315356ec6103b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-05-b-age-required.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-06-b-consent-required.json",
+      "sha256": "6b1d9fe2d2c14cecb5c6c1781eaa73cec4e4548cb2e8e9807d2b9d5050367f9a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-06-b-consent-required.png",
+      "sha256": "022cc0f3b7c023d559198841a66f21e9deae50ee268105b690eb0f84d6bec7d2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-07-b-empty-shelf.json",
+      "sha256": "95af5dfb0ac88ee1115249eefbfe3c39c4d040bb7282d1765d94200a6e01bc73"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-07-b-empty-shelf.png",
+      "sha256": "24e58cb927b74276d0dacad78283b8417e3c7fff0cdb54d39b399fae7010095c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-08-b-manual-created.json",
+      "sha256": "7ba895fe3f0ad0106de173d9b30fec6b8518628a0cbd344e6825e23c395d8fae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-08-b-manual-created.png",
+      "sha256": "0cf3305eafe608a595f25c12f25ccc78122561a03938d9c405238c013ff4c367"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-09-b-usable-shelf.json",
+      "sha256": "4325dff2cc2adda5e1667c5b3a87d95c32c4d919edb872007f8ebac37e55d712"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-09-b-usable-shelf.png",
+      "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-09b-b-product-detail.json",
+      "sha256": "a05fb665651310a99a4cfbec5d9baf3f8e34d4df831febf53021ea30509fbb6f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-09b-b-product-detail.png",
+      "sha256": "2c86630570c766a3abd4d1a0930635d8872485cf428ae090f36b32e473a8fd2b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-10-b-usable-edit.json",
+      "sha256": "d96e4ac8766d148ae9657938e3bc6f9d2d18422dd62aaf5dc9793c5b797c4d6f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-10-b-usable-edit.png",
+      "sha256": "33017483671a207c84be3d5a6e04d519b50da547f97e44219c696daf27b26ef9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-11-b-identity.json",
+      "sha256": "89fd5860cc526c691d7b8f9db24bd42fe6be36f2148f0a4c3fa3c68d783a4a14"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-11-b-identity.png",
+      "sha256": "80a0f9b31706b7b9e19d7e7ee340354b03ba2c9c8db514bb4a07e423e2defad9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-12-b-document-relaunch.json",
+      "sha256": "3683e980c39730567d9df5b3cfb735397aca591641cb664cb2a003f7489dd301"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-12-b-document-relaunch.png",
+      "sha256": "00bbfbfda552039348b0358159430ca1ff03a3ae4c6375764728438a71b3c912"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-13-return-a-age-closed.json",
+      "sha256": "7a304f04322b9a605e52b7de0a8093244abf534edb921ac748d315356ec6103b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-13-return-a-age-closed.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-14-return-a-relaunch-closed.json",
+      "sha256": "7a304f04322b9a605e52b7de0a8093244abf534edb921ac748d315356ec6103b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-14-return-a-relaunch-closed.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-07-quiz-01.json",
+      "sha256": "5c869291408dc55c144309190ccbbc48f1d8b9183f281cd7a17a04f381575fc0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-07-quiz-01.png",
+      "sha256": "eec4d60e8c36dab3420369238104014a0f5ad6ed0bd43a1d8ef9ff2a612e7c60"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-08-quiz-after-04.json",
+      "sha256": "bcfe848377248109dbcf063ee67c7f1dacc76b15697f448e4abed256f0f46ba6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-08-quiz-after-04.png",
+      "sha256": "9819af847ebed96207d4561162bde9e2b69cabd1106a24fdbe3477f1bf386e0b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-08-quiz-after-09.json",
+      "sha256": "cd217868db79b25974a14cee495804b10a147d5faf033e25b13e770dc3f52324"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-08-quiz-after-09.png",
+      "sha256": "92d9bdfbc0c5af50b8861f2a0677f227bf4e9d09c845983e169e22642a95e8c3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-08-quiz-after-11.json",
+      "sha256": "edcbfbe506d3aa45e9daa649d9a20f036bfb2d0fb5a4b051f05592e8250b538e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-B-08-quiz-after-11.png",
+      "sha256": "5ef81c21282fdd8b420f6b34eb1403b31c97c4133cec1bae2cf92cc7c49d11bf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-b-boundaries.json",
+      "sha256": "8880b507be6120ccc2b3b38cba1f93e0e88a724ad99c6448e21d1e83ec0b0692"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-b-relaunch-boundaries.json",
+      "sha256": "03d8acf695827fe49c4f503db2b672da68bac8d9b6540b18346ea42517fe9a47"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/CO-immediate-authority-closure.json",
+      "sha256": "ef0352c2d189d05058bfad0553ab4eb0721d861e27dac55d275177b678be5889"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-00-manual-plan-input.json",
+      "sha256": "2eaae36642e1599e4e06ea87e96c4a5959dffcd4ffdba3460a70a25d35e6ac97"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-00-manual-plan-input.png",
+      "sha256": "f5752202bebc0c9bd8ad8b71fe7e2df44bba681e2a13bfae812dcad21f2a8ee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-01-am-ready.json",
+      "sha256": "6701bec8cd9488d18e22d6875d679e1d1c632c233c425679ed76aacdb73cd379"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-01-am-ready.png",
+      "sha256": "deceed7daf7455a5bb31e7370b70bcc9d3d6dea0728fafe3f747a2be051f964c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-02-rejected-write-recovery.json",
+      "sha256": "2bf688acd825db0a8eccbfa8900ef893193bc0f0757046bb5738de8a950bf6cb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-03-offline-duplicate-append-only.json",
+      "sha256": "03d47f0b880655a2f1439d7f2fefff85bf5324b219ec9025370cc5ec2ab1664a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-03-offline-duplicate-append-only.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04-offline-timing.json",
+      "sha256": "19de55f9b31624210e6ba08dc5cc54a3042c63402ccdb7bd92d1fe1533969ee6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04-offline-timing.png",
+      "sha256": "b02280ba70d355c340a47b99c65639dce7189f48accdc578226b37d15e9440db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04a-offline-reminder-recovery.json",
+      "sha256": "cd4ad10b35a111808bf816430e82507e498802284233d74dff4610b52e5c8380"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04b-cycle-paid-boundary.json",
+      "sha256": "e8702b8af64c010fb822535c0a0e6eb94b427abc50a6a1b688286dc1495c4935"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04b-cycle-paid-boundary.png",
+      "sha256": "24ccf1a801290573ee435dbed8e43e37230f57ed43c1a621d633072f977fb2e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04c-reorder-paid-boundary.json",
+      "sha256": "42773386a98b914e3e92fd381702e0afff5936bf7e9f545c2ab4f2dd4707b170"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-04c-reorder-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-05-reloaded-am.json",
+      "sha256": "03d47f0b880655a2f1439d7f2fefff85bf5324b219ec9025370cc5ec2ab1664a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-05-reloaded-am.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-06-pm.json",
+      "sha256": "51e073704b79bcb47f300e0fad7020e0785e7e511796374314e2d698a8cd7013"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-06-pm.png",
+      "sha256": "388fe1a09a49baaf28ba0c3c29d08d79d952008b634cf24af5c685a686bf012c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-07-plan-paid-boundary.json",
+      "sha256": "42773386a98b914e3e92fd381702e0afff5936bf7e9f545c2ab4f2dd4707b170"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-07-plan-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-09-web-reminder-availability.json",
+      "sha256": "84729e45e7584b03c35b5328e184d18b7d5f9e4e978db8bd5f83c1ca53694e0e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-09-web-reminder-availability.png",
+      "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/M102-daily-loop.json",
+      "sha256": "3b823e5d347437cf43d38e1b51476caabd7e6d3e247fe530dbda05e87c1b7278"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final/summary.json",
+      "sha256": "fb3edecb5b981f80375e4082b4b6636bc040006afedc469be10bde7d71e33bf2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final.receipt.json",
+      "sha256": "d42921f4b36e4bd06df3931aa81f70b7705076d572ee82c777e066d7333383a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final.txt",
+      "sha256": "c93204000ad8ebf4ce93e5fc16fc3865c29a40728ab0c760e964863eb0579636"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390.receipt.json",
+      "sha256": "3956548ec3fe792d8b22b5e8bb5c3dc6e575fea6ce6fee4527429423db4b27bb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390.txt",
+      "sha256": "1ab4076656d8aadd74f28de862a2961ef82c5c6c6cbafcd326558f18830e1b1f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/browser-warn-error-logs.json",
+      "sha256": "d49df31c5fcaaed7149541d1130a970284cf1c272d9e5468cdc108b35cf31217"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-00-manual-plan-input.json",
+      "sha256": "692724ac60c9cfd41123a7975f1af2146801072c8ddf9e1c5a57c1fea57618ae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-00-manual-plan-input.png",
+      "sha256": "ec0573d3f5884990f5b297bc856b491384fae60ec2b76da4451b12a3baa3a7ea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-01-am-ready.json",
+      "sha256": "aebc6624eb87c1385c5d17141e708f9e93eb247e4fec7e33c5ce4bc1b8e0e4c3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-01-am-ready.png",
+      "sha256": "4065951773ed8ee53fc17bdc38d0ab7b2fc1be81a4ee004042bf6bc95d018782"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-02-rejected-write-recovery.json",
+      "sha256": "6508c3b7cb1a96aa6ac6b5bafe40efa3c68124d95f6abc0ac97d3333ca5cfa21"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-02-rejected-write-recovery.png",
+      "sha256": "88246d2a5e35e60241f4923378d0a4341d690bc9455c67f54724f7153982658b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-03-offline-duplicate-append-only.json",
+      "sha256": "faa15998be717fa5cf78a48d5f1f53a195bf6eb531924b74e390406f07df0779"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-03-offline-duplicate-append-only.png",
+      "sha256": "1746cc81991c769699c093485ff2debfe2dca52a7abb07c4c6e809a5e0ac5a66"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04-offline-timing.json",
+      "sha256": "1e3c459bddf8b51c95d488ff4073d185643f1a9f5150e68f18b1e488cba72476"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04-offline-timing.png",
+      "sha256": "030faa42c107d41b967c78372f51b9f0b0a61ef02a5494b60ac69c7cbe9b1b5b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04a-offline-reminder-recovery.json",
+      "sha256": "39309ab47b180415a8e437fcca26f1471b74c070dd2a76c521a87cb223f9567d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04a-offline-reminder-recovery.png",
+      "sha256": "7b11e67608a72a47be77835880c6cf5de79912f0af7c0268629605b72441908c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04b-cycle-paid-boundary.json",
+      "sha256": "26b5b13e62ed4a32358eb775bdebf8ad5e2763d27190b287b528d410c61b61bf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04b-cycle-paid-boundary.png",
+      "sha256": "c2d884509519a270170ee20531eb84e4d18c93a39c9b5036e266c5062182e805"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04c-reorder-paid-boundary.json",
+      "sha256": "fa9234ecef106449dd9cdeda0fb734c4287c388d293dcfb920e9563999709620"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-04c-reorder-paid-boundary.png",
+      "sha256": "2b16889e54f5e11476a6c95a6df0c2ed4442e0ca1647d7c353d1e298e31a885a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-05-reloaded-am.json",
+      "sha256": "faa15998be717fa5cf78a48d5f1f53a195bf6eb531924b74e390406f07df0779"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-05-reloaded-am.png",
+      "sha256": "1746cc81991c769699c093485ff2debfe2dca52a7abb07c4c6e809a5e0ac5a66"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-06-pm.json",
+      "sha256": "1d8e41807154b5596d336f5f9e374481dbc9e4a7d7737482ca63d60d98863114"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-06-pm.png",
+      "sha256": "f0a5bb3b5e3edc177a7101f69721ff8df69e3c44c491fa126c49eab70d6af81e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-07-plan-paid-boundary.json",
+      "sha256": "fa9234ecef106449dd9cdeda0fb734c4287c388d293dcfb920e9563999709620"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-07-plan-paid-boundary.png",
+      "sha256": "2b16889e54f5e11476a6c95a6df0c2ed4442e0ca1647d7c353d1e298e31a885a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-09-web-reminder-availability.json",
+      "sha256": "e4562e38eedfad31ed0a268c78db8d548821293488924a54d8b4e65c3742a033"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-09-web-reminder-availability.png",
+      "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/M102-daily-loop.json",
+      "sha256": "3b823e5d347437cf43d38e1b51476caabd7e6d3e247fe530dbda05e87c1b7278"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/report.md",
+      "sha256": "408a61c102e3961348fc18e5a3115640b06e7f8b26f7bc2f10280d9671daba2f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375/summary.json",
+      "sha256": "082b257d05b944bf934505915cc5a5bd63555fac52f5f13973d375d2b29278be"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375.receipt.json",
+      "sha256": "06b938d85d25423fdce8f0dac8f8971b48666db1a73c00d942323219e6b58120"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375.txt",
+      "sha256": "bd8c0c2068406ee61fd8e754e3e1f7dc6f7957a032ca0b4235872bd5ef2a531e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/browser-warn-error-logs.json",
+      "sha256": "cacd7ddfe59fde0535d3e487c18220fdd650f2491cec48edebcc2fffc4e5c8d7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-00-manual-plan-input.json",
+      "sha256": "ed169ff8831f7e7eedddd8733954d8d840240891bd035377802962c74f9c6f20"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-00-manual-plan-input.png",
+      "sha256": "f5752202bebc0c9bd8ad8b71fe7e2df44bba681e2a13bfae812dcad21f2a8ee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-01-am-ready.json",
+      "sha256": "921f548f5ab4db8599cef59d569ebcbd420b2a833905c0176a77ec4f47156f24"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-01-am-ready.png",
+      "sha256": "deceed7daf7455a5bb31e7370b70bcc9d3d6dea0728fafe3f747a2be051f964c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-02-rejected-write-recovery.json",
+      "sha256": "61937e322b4569ef25fa224d38757b628f926587c817bee12ed8171cbda8e281"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-03-offline-duplicate-append-only.json",
+      "sha256": "d1919f893ecfa42e08ef94a7e0a174d1405096ddd534a83f08a535b51029cad1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-03-offline-duplicate-append-only.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04-offline-timing.json",
+      "sha256": "b5dad2ab57a45d247c0eb3f53696d97727d7e5b476191a968b4dece98807d5a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04-offline-timing.png",
+      "sha256": "b02280ba70d355c340a47b99c65639dce7189f48accdc578226b37d15e9440db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04a-offline-reminder-recovery.json",
+      "sha256": "3ca7dc42e0983669518d5e0560b3c0c3b9ce30757800e4d0cce07a6be7d9f62b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04b-cycle-paid-boundary.json",
+      "sha256": "0a44bf419fe75b2a787d4779c1868890f48d8ad8be97d7f19cb588031bb4cae1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04b-cycle-paid-boundary.png",
+      "sha256": "24ccf1a801290573ee435dbed8e43e37230f57ed43c1a621d633072f977fb2e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04c-reorder-paid-boundary.json",
+      "sha256": "0051f7713587f4c1c3602c179485010384186a7beab91358b572234066ba596d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-04c-reorder-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-05-reloaded-am.json",
+      "sha256": "d1919f893ecfa42e08ef94a7e0a174d1405096ddd534a83f08a535b51029cad1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-05-reloaded-am.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-06-pm.json",
+      "sha256": "23261bfa3da42eca50b7c9deb06860d7851c9974663d8ba2c901712ead51a54d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-06-pm.png",
+      "sha256": "eca0e8cbf84b8bdab6a53a4c6297cf360b1cb59eff2fb6491a7920faba44d24b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-07-plan-paid-boundary.json",
+      "sha256": "0051f7713587f4c1c3602c179485010384186a7beab91358b572234066ba596d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-07-plan-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-09-web-reminder-availability.json",
+      "sha256": "696f4dd136bbf4e8287567c4b2856104ad61c2e30d0d91ff49b5cee0bab8e858"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-09-web-reminder-availability.png",
+      "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/M102-daily-loop.json",
+      "sha256": "3b823e5d347437cf43d38e1b51476caabd7e6d3e247fe530dbda05e87c1b7278"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/report.md",
+      "sha256": "6a2c398e325c0de7360026fbf6279b487a7a15a3736e5f193321d481bd0c8227"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390/summary.json",
+      "sha256": "93de9b738efafa6063ddf41728ff788c82f658fff761966c5888b9b171b93769"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/expo-web.log",
+      "sha256": "29a746ef3a3394021c381eed8d9ed0382ab2242be2282194a524c64fa46124c4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/FAILURE-race-state.json",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/FAILURE-runtime-events.json",
+      "sha256": "9d7a766bd29fe9c956eb540f18be41a8f1c0e9e067cf2455a7ce012ddd29ec8c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/FAILURE.json",
+      "sha256": "75fb527e6025a0d3f12f05b0b0468f4381e65ac0c932b07cf81783618836fc3e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/FAILURE.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-01-am-ready.json",
+      "sha256": "eb6ff2ba38283c84cb576a368ae74a52c8938e72db6f4d78db2669a383033d8a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-01-am-ready.png",
+      "sha256": "7dfa4624ad4848e9faccc65215a5952c5c1c43779b5615e1e6e04e6fb42ab588"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-02-rejected-write-recovery.json",
+      "sha256": "bea6fdea6a3b62366caf1769376e72e27ce3c00d9e2028ba6944f8ad15ba443c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-03-offline-duplicate-append-only.json",
+      "sha256": "a931d45e126427d53f79ba3be78b9f3dec75f9b17ca0eadef6cd8c7b366ab602"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-03-offline-duplicate-append-only.png",
+      "sha256": "fa3a1f160761114e4c9efdc9123e413900006b9f2929d4fa3bf59a2dcc44174d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-04a-offline-reminder-recovery.json",
+      "sha256": "75fb527e6025a0d3f12f05b0b0468f4381e65ac0c932b07cf81783618836fc3e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2.receipt.json",
+      "sha256": "77f3387c9cf422e77d95a7aba99139f782c08657bbeb20870e43866ce5ac0ad0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2.txt",
+      "sha256": "350920b461e4e6b59bdf7c49ddd3baa74eea8325e7a49aad2853488facc1d7b3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3/FAILURE-race-state.json",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3/FAILURE-runtime-events.json",
+      "sha256": "1ccdbf32a0a4a66269a8fee840bc33d1c72ccff592dad1465461998263689929"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3/FAILURE.json",
+      "sha256": "59c900257876efa830a8b82e6493b008d0f8d76bb136283abd7c85464f37da10"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3/FAILURE.png",
+      "sha256": "10702c82100523690b7f8fd4f73644a6a34db807e1cc81141bc987658732ec5d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3.receipt.json",
+      "sha256": "f170c13ee533d9140ba9ffc89c872f082f9a290ae5a2ac2d6418a4fa5f194d8d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3.txt",
+      "sha256": "a320a9448e741dd7ff6bab7260d786fb08ed8d6c603dfc05dbac3e5d23e9e53d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/FAILURE-race-state.json",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/FAILURE-runtime-events.json",
+      "sha256": "bc7710c1211dc13387d70dad36c2d58369d571c7f5a2e6bb97c46fa7bf91941f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/FAILURE.json",
+      "sha256": "56930cff498e6a7d871ac579aee386a66fb9087db23ed7a49b17c2ea13fc7a71"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/FAILURE.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-00-manual-plan-input.json",
+      "sha256": "31bfddbd52e73adbc744d1f95c63c6a45c55e523f11bf85daef2d686fce664a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-00-manual-plan-input.png",
+      "sha256": "f5752202bebc0c9bd8ad8b71fe7e2df44bba681e2a13bfae812dcad21f2a8ee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-01-am-ready.json",
+      "sha256": "49530b87697e55e2008f766bdedc11b7ac361df4834bbe7d44bf49a054453748"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-01-am-ready.png",
+      "sha256": "deceed7daf7455a5bb31e7370b70bcc9d3d6dea0728fafe3f747a2be051f964c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-02-rejected-write-recovery.json",
+      "sha256": "02795e8cb718c3e0f0697a9d9dd9a2731496c4e100384fc379bc1c1de7c40e28"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-03-offline-duplicate-append-only.json",
+      "sha256": "68542a921b3617028fd20bb8b25a7587f5ed1dcb79bb224c0410577f2056da50"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-03-offline-duplicate-append-only.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-04-offline-timing.json",
+      "sha256": "2ccff78c10c9816d01eb5ead9d3951a1cdc442e4db68258ed61f6480199c64d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-04-offline-timing.png",
+      "sha256": "b02280ba70d355c340a47b99c65639dce7189f48accdc578226b37d15e9440db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-04a-offline-reminder-recovery.json",
+      "sha256": "5fb71be6bf39383915094a8150cb666d978e9e0a616d92c096d83d49d2c0acec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4.receipt.json",
+      "sha256": "3472f2b979d260277197e3e54bb42a10d0c24c6ee76777569490a4fccdff93a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4.txt",
+      "sha256": "c88bb841c151051b346ddd7ccc96ad89607438a082fb013ffcf7c5261ab089a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/FAILURE-race-state.json",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/FAILURE-runtime-events.json",
+      "sha256": "03586b22e38d1d976e8dddb5afe3b4bde8de5d0ff2ff3beccddc451010c86497"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/FAILURE.json",
+      "sha256": "1330949c6b56fa3127c7b6c3102d099e647cd87b3e7e19280f68f93e9a88667b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/FAILURE.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-00-manual-plan-input.json",
+      "sha256": "da709b0fd8d8838880d74dd76ed16ac9d4ad81416f2d49615432f97b3fc3cf43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-00-manual-plan-input.png",
+      "sha256": "f5752202bebc0c9bd8ad8b71fe7e2df44bba681e2a13bfae812dcad21f2a8ee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-01-am-ready.json",
+      "sha256": "a7d6ec602d10aa485f251ec1e08748b8134cdea0bb1d13612438302cbbbbd138"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-01-am-ready.png",
+      "sha256": "deceed7daf7455a5bb31e7370b70bcc9d3d6dea0728fafe3f747a2be051f964c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-02-rejected-write-recovery.json",
+      "sha256": "82eab5b1c64654782f0bf0fc6d186851334b199687470acb20646b5cf811044a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-03-offline-duplicate-append-only.json",
+      "sha256": "16b592b176a2814461fe7198a28225f8b0d3892c2811a5b41f6726b3cf603350"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-03-offline-duplicate-append-only.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04-offline-timing.json",
+      "sha256": "a863ec50e73c96f6f1f446a3da379a190b74883aa84ae5ceef989509bcdce4cd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04-offline-timing.png",
+      "sha256": "b02280ba70d355c340a47b99c65639dce7189f48accdc578226b37d15e9440db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04a-offline-reminder-recovery.json",
+      "sha256": "3baffbf4f9a20b7ee0234cb14b4809a77f0b36f2d9e46d5bc717fa9e45f78f3d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04b-cycle-paid-boundary.json",
+      "sha256": "1e7b257057a9a9a4139442cd27a73ec5a3c4b9888a19c40c6f15c5c4b3c7c6ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04b-cycle-paid-boundary.png",
+      "sha256": "24ccf1a801290573ee435dbed8e43e37230f57ed43c1a621d633072f977fb2e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04c-reorder-paid-boundary.json",
+      "sha256": "ff7fd2afe8a58a6d7f45a0d64f7b61cd3e84ec4e8bf333ddf6f08273418bb0e3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-04c-reorder-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-05-reloaded-am.json",
+      "sha256": "16b592b176a2814461fe7198a28225f8b0d3892c2811a5b41f6726b3cf603350"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5/M102-05-reloaded-am.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5.receipt.json",
+      "sha256": "b68833d0af4255dfd8b9cce46894a24a0b32414e694d77c9f3ba33333e0cf713"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5.txt",
+      "sha256": "df59ba6ab44f9253172257a4d62c583a0a37df854d8c9366edb0f0c0e6e9e99e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/browser-warn-error-logs.json",
+      "sha256": "d07e535b2b8e1c62554a72d4051a3d4730ed533868b2ff3f066fff61f51879b9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/FAILURE-race-state.json",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/FAILURE-runtime-events.json",
+      "sha256": "d07e535b2b8e1c62554a72d4051a3d4730ed533868b2ff3f066fff61f51879b9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/FAILURE.json",
+      "sha256": "c227672d3188e859dca15b6074047350c43c629d99b2350eff0a4545e81856aa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/FAILURE.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-00-manual-plan-input.json",
+      "sha256": "dd8dbd1658b5b17b8e98d82fdaff63046c3d68b9d7468d7fb4ee7eae2e3ccdec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-00-manual-plan-input.png",
+      "sha256": "f5752202bebc0c9bd8ad8b71fe7e2df44bba681e2a13bfae812dcad21f2a8ee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-01-am-ready.json",
+      "sha256": "175a968541e7e33de36f18ef2be7152d5e65b4b7586dae6a6d1922e912975067"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-01-am-ready.png",
+      "sha256": "9b8d75aaad4da077bec8a37a3fb3d6df6b4901221036637490521c035ad09ea0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-02-rejected-write-recovery.json",
+      "sha256": "3d807fb4bfa3c936db4453fe0671bc26063c6dd82db6bbd1978ccc1ce5607000"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-03-offline-duplicate-append-only.json",
+      "sha256": "83d71a95422430cdffc5479387ff6214e601a4a8d37c3c2b767a3600e96e6257"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-03-offline-duplicate-append-only.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04-offline-timing.json",
+      "sha256": "0f64f0f83724423688fc315cb93420d515c6c33f2eda5aff4f6affb7e4fff29c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04-offline-timing.png",
+      "sha256": "b02280ba70d355c340a47b99c65639dce7189f48accdc578226b37d15e9440db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04a-offline-reminder-recovery.json",
+      "sha256": "e27a61d69544c273bc83a407612e69989d4585c97e370a049ce341f088876b8d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04b-cycle-paid-boundary.json",
+      "sha256": "5d64ca387447720f3f966d95d5d2e49d798ba1c52effb3536a7c9896a1b61097"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04b-cycle-paid-boundary.png",
+      "sha256": "24ccf1a801290573ee435dbed8e43e37230f57ed43c1a621d633072f977fb2e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04c-reorder-paid-boundary.json",
+      "sha256": "20bfc487699c462c08a66532de56aa198539790faf13306fc9dbd148c82f5fbc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-04c-reorder-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-05-reloaded-am.json",
+      "sha256": "83d71a95422430cdffc5479387ff6214e601a4a8d37c3c2b767a3600e96e6257"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-05-reloaded-am.png",
+      "sha256": "703700992c3ab51518ad909c82be818eb0b7d617512544133a2c9a5f3c5470ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-06-pm.json",
+      "sha256": "fb55f12354b267e6afa0372648789b12df8e2aa9a8255ca10073db85f9e0df75"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-06-pm.png",
+      "sha256": "a0f183c3cd8a20d9baae85a524a8ee91bc20e19ac4b9097cd30daaf6af36acb4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-07-plan-paid-boundary.json",
+      "sha256": "20bfc487699c462c08a66532de56aa198539790faf13306fc9dbd148c82f5fbc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-07-plan-paid-boundary.png",
+      "sha256": "2da757b443caf75f553e9182f973711ff23dcec2ce78510ba04578b569c9042e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-09-web-reminder-availability.json",
+      "sha256": "d03e1a270e6590348cbe2a29f059e5a32727ff9add67d2dd7473b2e7992c8492"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-09-web-reminder-availability.png",
+      "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6/M102-daily-loop.json",
+      "sha256": "3b823e5d347437cf43d38e1b51476caabd7e6d3e247fe530dbda05e87c1b7278"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6.receipt.json",
+      "sha256": "8a80129e8d73df737f36571d70564bfee9030c47ebe911149d7f2f05bedf758d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6.txt",
+      "sha256": "529432f5b1f4b39ebcd3a81f61ce70f94e25f2b21b269a371b82c557b4fa5bce"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390.receipt.json",
+      "sha256": "bfdfb92f47639abbe6c335fc330eaa7f9d2799410eeff1fdfa2ce29665555af7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390.txt",
+      "sha256": "db6db8036d791267c3f2f7d48c8659e8d48a4529c6a8e0fc8154a7e0452cdf91"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/browser-warn-error-logs.json",
+      "sha256": "665a6c6cb611f66b446c24db4c8cf941d438c92c9ba45d909b0db7a154a60ce4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-00-manual-plan-input.json",
+      "sha256": "873848a5aae1d92a7e5361d77f59dc400837e58c20f08ef61b188d83a24fd7bd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-00-manual-plan-input.png",
+      "sha256": "15c589dcd0deaf78931dc4d19beef6a3c35943f130d1ad484d2a1ea80467188b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-01-am-ready.json",
+      "sha256": "68d6727f997bd5deba1c7c9dfb84aca021d9b9b9289e4400c2bb06386f2cc263"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-01-am-ready.png",
+      "sha256": "f941723b526320fdc87966d0f36a499c3e43535d8032050de8137c5f9f6e2f7e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-02-rejected-write-recovery.json",
+      "sha256": "0517aad649ae5606d1857030e34c329023fa8c02e14b6b092fd089137bd1f942"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-02-rejected-write-recovery.png",
+      "sha256": "629a25a5148c4876566d2d0ea45cb1c8ec7771e3dcb7e9b63fbca4313a8c3d3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-03-offline-duplicate-append-only.json",
+      "sha256": "aa8839bee2f541098bd5216c84abc87e464d9a50761887045b15e041c0ce14f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-03-offline-duplicate-append-only.png",
+      "sha256": "570ea22ddd7e2214eda67f41fe7bb456dbe5760a35aac9594bfb8c45052f79f6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04-offline-timing.json",
+      "sha256": "f6305f970272dab370cf60ed35c89b3a4825cf917fa53a84c1e45ac09533e00b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04-offline-timing.png",
+      "sha256": "06f3ad697316d48ff6e5da619325654e258d84ee6bdbed1b1228069989463400"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04a-offline-reminder-recovery.json",
+      "sha256": "c9b4a623363f478f3d3039695207460a83159db7de50fbc64b2a256eb6fa7acf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04a-offline-reminder-recovery.png",
+      "sha256": "47d3cd893839e689e0769d1c246b57669835d1bfc31ab0b46dcae6ed5eef3966"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04b-cycle-paid-boundary.json",
+      "sha256": "340c4ff9d5d4afe8dfeac27c160dafa334b0be8df9287fd73a0fc2cda11d7cdb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04b-cycle-paid-boundary.png",
+      "sha256": "40aa9321499e25644596cdbc124fcc7f89e65e01b0cd452fbc175344816afc84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04c-reorder-paid-boundary.json",
+      "sha256": "424cdd3b47e7747908efd333c9c4f8bc25fefcfe2ac514579ef1396d35ee1259"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-04c-reorder-paid-boundary.png",
+      "sha256": "55ffb77af027cf7c370fd5a94efd0ab6404e2dda8a3e7f6d42a727ead5eebdfb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-05-reloaded-am.json",
+      "sha256": "aa8839bee2f541098bd5216c84abc87e464d9a50761887045b15e041c0ce14f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-05-reloaded-am.png",
+      "sha256": "570ea22ddd7e2214eda67f41fe7bb456dbe5760a35aac9594bfb8c45052f79f6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-06-pm.json",
+      "sha256": "d43b4e44eca2b4f79c3a2ee7456131796edaf8e2bb8061e362d71d41cb81de48"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-06-pm.png",
+      "sha256": "77ef1a31967db493ef180214d7d46b1b55c2b6f9a58f3154c4e77518a2474fa4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-07-plan-paid-boundary.json",
+      "sha256": "424cdd3b47e7747908efd333c9c4f8bc25fefcfe2ac514579ef1396d35ee1259"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-07-plan-paid-boundary.png",
+      "sha256": "55ffb77af027cf7c370fd5a94efd0ab6404e2dda8a3e7f6d42a727ead5eebdfb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-09-web-reminder-availability.json",
+      "sha256": "60132f0f0941b3a9ef5faafebe7b65898c9468086e1bd113fc1b220238a75b92"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-09-web-reminder-availability.png",
+      "sha256": "0644a6b8a611d44c6df09ade0f2219cdc2e60266e1636604aad09df4d3e60950"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/M102-daily-loop.json",
+      "sha256": "3b823e5d347437cf43d38e1b51476caabd7e6d3e247fe530dbda05e87c1b7278"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/report.md",
+      "sha256": "68e4a14f4d6e4616c449beaa033b46a7f49a3a707f213d179ddb80051e4f6db0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430/summary.json",
+      "sha256": "eff1d2d76b6d43bcb75f425ec95c96afa1536cf2c463373c2c833915284eeee3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430.receipt.json",
+      "sha256": "cb9bff7a9865a495e8fb35182cd22e7d8b886314563c99364abda48cef221eab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430.txt",
+      "sha256": "2cef10f1ec499486493dc2edae1933d2853af0f727e399281fc986e7dc95ea6c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/expo-web.log",
+      "sha256": "78bf54d9c36f9ff80eb343f88aa9f9b4e2eb0991f857e8b16a3379107e6d8ff9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/FAILURE-race-state.json",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/FAILURE-runtime-events.json",
+      "sha256": "01208441e517dbcac7029d6d0afe2afe1e3ab8c659bd2b972e259ae1065410f9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/FAILURE.json",
+      "sha256": "277fd3701906f776531a82f18216b299ee051afedfd3e7f13f0228831ff053a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/FAILURE.png",
+      "sha256": "269c9972cb8083520088eeb2ecfb0879977c412069103500df4138190e7ab666"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/M102-01-am-ready.json",
+      "sha256": "6fd9caf782be310aa5cd5087dedffcfcd872765224742ce079da8dc817760135"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/M102-01-am-ready.png",
+      "sha256": "7dfa4624ad4848e9faccc65215a5952c5c1c43779b5615e1e6e04e6fb42ab588"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/M102-02-rejected-write-recovery.json",
+      "sha256": "deeb314268cd7e0637e8ef3334af2c0b5c088dc21d6d1028cdafa6d4b136d572"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/M102-03-offline-duplicate-append-only.json",
+      "sha256": "3cce7c26c13c86b58b39abfb942b229483a2c1de5e22f83034f3acedad80e3dd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390/M102-03-offline-duplicate-append-only.png",
+      "sha256": "fa3a1f160761114e4c9efdc9123e413900006b9f2929d4fa3bf59a2dcc44174d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390.receipt.json",
+      "sha256": "0e38477273d282800c5cbd4a76a7a47072acb25b4725925567332ffd09a5b167"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390.txt",
+      "sha256": "d7d5ba43d5cce4e5f7d1d2d3eb054a572fe4ce0d2d65acd655574daf3e171ed5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/browser-warn-error-logs.json",
+      "sha256": "758d94a2dafee850a72a623cbb44b1cc86cba05535e39950512960b0f7508690"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-01-manual-fallback.json",
+      "sha256": "ac6d659bdf8426b586cb6a133d217eb452f99fc4c8c4e55c7f5e857928abbd21"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-01-manual-fallback.png",
+      "sha256": "033664adcb16915b489ffa3b8ddb9c7aa76bd1c2f268eec015770cbe549068f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-01b-manual-ready.json",
+      "sha256": "abfce3c70eae4e1ec5c329c8ebf1a85ae069acff0978f33849baaa34b041c466"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-01b-manual-ready.png",
+      "sha256": "1f79370abce5d69b441abddccea07eb92f49b5fc7db4503c0c0c89b7a328f673"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-01c-after-double-submit.json",
+      "sha256": "96e67402ccc5de6ad04846b563306ad6da8ac34fa7c0b0eb095e9dd31db3e849"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-01c-after-double-submit.png",
+      "sha256": "29ff3e44051bf4af72ec4a7c3c6f2a8aba2b2fea7e238f17e8ae0f790274c69f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-02-offline-double-save.json",
+      "sha256": "6968e1eebe528b258a23110313defe8a3f2fc29b6daddafba90b55bc6240f489"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-02-offline-double-save.png",
+      "sha256": "978c7a82c3141e5c864fd5949f3221caf6a0edf123961d35a447de21a84cf8ea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-03-offline-edit.json",
+      "sha256": "a6351c516e9085752775181527a07ef8ec6b3e532a1d2e158bedd88ee4f4aa55"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-03-offline-edit.png",
+      "sha256": "c859eaf0c2dd1f3e1ea6a7e36cf1342719af015442ec21145c6b656191de2e39"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-03b-write-failure-intent-retained.json",
+      "sha256": "1b45cf8c4cf5c0d036480c3d9c851e8dc6a49157f0138d56b126c53f8df3627b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-03b-write-failure-intent-retained.png",
+      "sha256": "32c7f9e4a3077c4507d4ad903ebd6daa4ba72f4a0b72e69359682d3e6c9cb6d7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-03c-write-retry.json",
+      "sha256": "c465d7c9b99c3027521486b10c00211633a747e8b50bbe6a44986feb64791459"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-03c-write-retry.png",
+      "sha256": "1bc7c3a301d93dd752956dac30916f2d16a967d7182a829927b86241ab1edca6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-04-offline-archive.json",
+      "sha256": "f5a002b91c59a2f52f80ebfe414afa5f39eb1469ac917d89ed24397e065f5962"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-04-offline-archive.png",
+      "sha256": "5bf2955dfb12c2d498c2ed5286d19a5b713b17f372f6f85f906ce81621a20891"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-05-archive-relaunch.json",
+      "sha256": "f5a002b91c59a2f52f80ebfe414afa5f39eb1469ac917d89ed24397e065f5962"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-05-archive-relaunch.png",
+      "sha256": "5bf2955dfb12c2d498c2ed5286d19a5b713b17f372f6f85f906ce81621a20891"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-05b-remove-failure.json",
+      "sha256": "6b9050eb23a2efb1c825e7f1861f7c1f69eb9b9bf9ce4eec6406b9c7cd1ecb30"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-05b-remove-failure.png",
+      "sha256": "877445627a1d1cf9464820e7ab2f910ef0d22ceae721d661263e025052a25bc4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-06-remove.json",
+      "sha256": "932f2aab749e76dc25d1fa6ed0607abe4745ab372d4a4d3e3e9517564e132ad0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-06-remove.png",
+      "sha256": "54d4b9236fcc989de3d090506f33e466c244a2ed7ad6aaace9087999c0b6e421"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-07-corruption-preserved.json",
+      "sha256": "628f85fc6e67a17e6e8fb3e822038926736e0e1d9094c0a3d820f0863e4af80a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-07-corruption-preserved.png",
+      "sha256": "1fc5ee6fc9fe90ee7cab020bc682351c716d9d8e683c91fa94a7c9079633204c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-08-storage-recovered.json",
+      "sha256": "060e5610c8d68b2378c528fa38dfeb58e22b10934bd6245ec9124a30f5a3be5b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-08-storage-recovered.png",
+      "sha256": "41b01abd048ce66759fd8ad81197b8918281cc8d2786b75407e22b8c24b663c9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-09-verified-owner-rights.json",
+      "sha256": "2d20c7c09851a16419696390def1510eaaebc0eb0855399757dbe485498f6c7b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-09-verified-owner-rights.png",
+      "sha256": "0a04dc6ec9299337d01ef89a223fafc5ff6ae9cae868845700dac65bc2495b1c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-10-delete-cancel.json",
+      "sha256": "de1a53680cda3b301731ab7f791c843fcc5ce7f2c1bf8f8b4d3bd0740052ed23"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-10-delete-cancel.png",
+      "sha256": "5a37095d5530205a353a318171682bd5a4b2273abcac8bc2c07c54ba0759571e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11-age-closed-withdrawal.json",
+      "sha256": "e003991b1c0aef02f2e7d98938da744f43c2f0ce2034b7fe22b6d87780ab67ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11-age-closed-withdrawal.png",
+      "sha256": "af3c3d770602ded791804a2fa7188b68af9354c88a7bcd85082ea48d60115e3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11a-withdrawal-cleanup-refused.json",
+      "sha256": "1939527f3eb8b75e30a0a200742834ecfae6179b70a8909e0f35e6e2d2a70be5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11a-withdrawal-cleanup-refused.png",
+      "sha256": "992b56ed043b40ad92435b421b4ffffe81ef218e0277a30ce135b22719f677ff"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11b-withdrawal-repeated-refusal.json",
+      "sha256": "09cd1522806306f589a0118639463413a7b2898f4a4c90edc64ecd0d8f8dfd1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11b-withdrawal-repeated-refusal.png",
+      "sha256": "ef9487f1da978af6f39cf620c23266da0bb82f5b834ce2f18522b4c06c497cf3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11c-withdrawal-relaunch-paused.json",
+      "sha256": "fc55a95ee88f391f8067a6c4847506f37d101ca41490b3c8dcb091fd14c655b8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-11c-withdrawal-relaunch-paused.png",
+      "sha256": "e84a99e8e0bacb265d045426550e91e16aebb7453dbe2c170495f81d86542ded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/M1-offline-durable-read.json",
+      "sha256": "1b7a4e9535bb6e240769324f7db4c95f7f2ed63886e6ed8355d356f4be9f9899"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/report.md",
+      "sha256": "cba095a191007a197ee4e61bc240be61d038c04297f4b201b505cfd70bee3c62"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390/summary.json",
+      "sha256": "2acf00a8cf44e54858ff777fafb3e2f9f1458960364e0a507e5cf37899307b88"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390.receipt.json",
+      "sha256": "2898a7a29a67f3b7f902a3a1c7f51136570767de4752ff0038a0a0f0c81d6638"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390.txt",
+      "sha256": "84741126fdb1800815945348309f96e644522e11a8ac3933d9f3878ff9ebe0d6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/25-account-before-signout.json",
+      "sha256": "0119c0931d01e01135fbb7d0b944afa39d23e13364335a3e8fd4a748533ed2e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/25-account-before-signout.png",
+      "sha256": "ec3c3b462807e6a65d4670549b16998d43e4f6d84a847a0bec9b18b7a19086ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/26-account-boundary-clear-failure.json",
+      "sha256": "cb888307e3cd144a218f6d53865bb804851eac2267804b6ef94f0397dd8055f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/26-account-boundary-clear-failure.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/27-account-boundary-repeated-failure.json",
+      "sha256": "cb888307e3cd144a218f6d53865bb804851eac2267804b6ef94f0397dd8055f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/27-account-boundary-repeated-failure.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/28-signed-out-welcome.json",
+      "sha256": "bae83e3f1ef59557fc2c124feb38d2368e9ed44f60a247941aa779da4152dd08"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/28-signed-out-welcome.png",
+      "sha256": "e84a99e8e0bacb265d045426550e91e16aebb7453dbe2c170495f81d86542ded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/29-signed-out-shelf-age-closed.json",
+      "sha256": "4dc833deb913fe6429ad786a7030a2188884f9a4e78e5911506708230f23dfe1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/29-signed-out-shelf-age-closed.png",
+      "sha256": "a6f109e25847242c89419ae60bfc31f6241ede7f9431807db2feeaec07a92fe4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/30-signed-out-today-age-closed.json",
+      "sha256": "4dc833deb913fe6429ad786a7030a2188884f9a4e78e5911506708230f23dfe1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/30-signed-out-today-age-closed.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/browser-warn-error-logs.json",
+      "sha256": "6253e3eff5d6dd49956d26157be0d6f8267a624684d7bed5d233b2bb435eea90"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/report.md",
+      "sha256": "e825c7cb456955bbdc70cdcbd1faa2d270a274e6eeac8cbf3f329af289abbd22"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390/summary.json",
+      "sha256": "4815c0b830a515fe58dee0070db7419db509730b426b18df1312f56fe0b6ffc2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390.receipt.json",
+      "sha256": "9d72de90a60c99ac5e3617f5903f041a4d9f3c22faedb89ea787b485bf9aeb06"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390.txt",
+      "sha256": "0e6b56de055b8bc8ad1c3cd48a50a2ec957e57d5892d32a11429e36897c93083"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/causal-red.receipt.json",
+      "sha256": "3ad2d9b372177dffd3819756f063d56f5f48ee9d46e56fb1a3ddfaaede68c47b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/causal-red.txt",
+      "sha256": "8628cc6e2d0219c7b16bbd595c3e4db7ca6963b30e7b57c5a26fc627ef4d4049"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/ci-candidate-canonical-db-118879596971.txt",
+      "sha256": "2402b549be36ed6f459b25ef09cc29e0c05dac6aea7cd26e0cb7ebf9b1d02fb3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/ci-candidate-static-118879595375.txt",
+      "sha256": "e705e8e751b4dcf8fd2f49c8bcbe21812298d4753fc2f359a60a4eaf815344dc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/focused-final.receipt.json",
+      "sha256": "c1aae635c5e563911b2db950cf77e910c6e5103bc418a87c9b64dae3bb6df1e5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/focused-final.txt",
+      "sha256": "68604a07a61d0d47acafd9df9b7e413c08c05a0324ee873da831edcc4744ce48"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/focused-second.receipt.json",
+      "sha256": "ae38dfd8b275e74be65717aaa9f0739d6d24f98033a75f6ef2f959bcf87cd184"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/focused-second.txt",
+      "sha256": "8ad65882e6170cd4973777cfcc4eb7514911b2ed4e9b77251353db14a51c1a19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/focused.receipt.json",
+      "sha256": "7e2d4d1e2d0f3a6b35baa6d1bc4597f7d4595d7222e7e8f7cfdf149832c73665"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/focused.txt",
+      "sha256": "3b00e37307ed6f0b31980dd2eda5ca85c61b9570d03b543220a75b56c90af222"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/governance-final.receipt.json",
+      "sha256": "d942dfd555cbca3b354aa3cf2d6c425fed898ea1b38949b1dbe54f5d0a071c7b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/governance-final.txt",
+      "sha256": "fae9faa4b2b68252c9f55d28bf5dd242e3b7ff108d6bb91082682fd04813fa7f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/governance-first.receipt.json",
+      "sha256": "5b4407698f04d94c9df86a5e63bc2b5e8a96bd28e4950f296ee682f4ac48f00a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/governance-first.txt",
+      "sha256": "0d7b66788979c81fe94197fabd67c54d969d7d88968033e4d197be63a6b85e15"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/governance.receipt.json",
+      "sha256": "9d65a4568d4addce61a3e6b92320c2fbb04f66fbfb680b51eefffbd9085f812d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/governance.txt",
+      "sha256": "a13dcf90cbe9b1fbf5220dbaefe566ec2b018e73f835ce5272ee5ed8f48a265d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.receipt.json",
+      "sha256": "327369f0c2a85939af4840afc29ccb74a8a2dcb27851ca6cea4753bb838d1a40"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.txt",
+      "sha256": "76ebcf1de12283c11f65b0683561b7779854e9492247df94b2baa35804287f6b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/lint-second.receipt.json",
+      "sha256": "b5ac9a0b56d7d148b2f826dfc1aad64a23183702f7a753abc4e880ba24df046f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/lint-second.txt",
+      "sha256": "d0193c6c29f7a0413aea4e603f506f447c65cac2bf2d5ffbc522aba31a91913f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/order-and-permission-red.receipt.json",
+      "sha256": "9bace028f2ecf5c006e5fea418fe55cad949323a601e262a4d6418ef4eb19edf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/order-and-permission-red.txt",
+      "sha256": "1a8955ac819e7e13ab8a46443b30106fcf0f7d7276202f1b1f20a76f266ccb3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/permission-last-schedule-red.receipt.json",
+      "sha256": "683fd6d36eb56c6897ab2d38cf7107d5c5d7398e1a26406e461739710047d731"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/permission-last-schedule-red.txt",
+      "sha256": "4fa8a39009e6b8896b2909914ffd49d2c14cd7ea484160889a891118d25bb6c2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/response-and-parallel-red.receipt.json",
+      "sha256": "87ec81bfe1eeb7c3ab27b68be6f21219867b33f537b9db01cd0721cb8decf5df"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/response-and-parallel-red.txt",
+      "sha256": "c458b52a45aa63580a8cf54116e2915a2dd6c4231db7171fe78001f78c2034a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-final.receipt.json",
+      "sha256": "f096abf6d371f601f62f94f6a6ee94d4f26af036607f2c614ed95711524966b8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-final.txt",
+      "sha256": "bed4a0ffea85c65de3bff713956af351463301d3468df4d739f117e9bc7e146c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-first.receipt.json",
+      "sha256": "9377951c38cfb01bf43e7b7db48bfee31958b322aea19bfac08b031ccca3090a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-first.txt",
+      "sha256": "d6bb36ea5525d8b7f41cabe6cedc682a3f391ac6de32896ddc737ca928157a92"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-lint.receipt.json",
+      "sha256": "f4987ca2b8e719c588ff56b675d60f0db36810df371a3e4f4bcd5451ec325de8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-lint.txt",
+      "sha256": "ea45478ddbe21669eeab0db42ede9418a99a22566f091c83df08bda1c2c6f2c0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-tests-final.receipt.json",
+      "sha256": "d0a24149b7170ba28b3a9e6d31e7c96900019c7e11ea7e4f62240e46811dc3ba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-tests-final.txt",
+      "sha256": "66126b509baa1e3595a0f4497e21af0b589ee4e343d79e37e06732afd84b105d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-tests-first.receipt.json",
+      "sha256": "7dd7ff6ede946e204f884c4d01066ca574fa16bb121cbc4a785387697fb9dcde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-tests-first.txt",
+      "sha256": "3b0bd6a58e628bb2397da505a7019c696acd63a2872cf8ff70b3848c31293a7c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-tests.receipt.json",
+      "sha256": "ce9fa8e258e33ef8e5280af7501ad02d44e71e5558e9d6c2699f17890388dec5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-tests.txt",
+      "sha256": "22c024e94c9e9d8a8c0636dc990a524589374e37661add38e2d3d57978fc7548"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-final.receipt.json",
+      "sha256": "98ee99a2fe5d4a62146830e35b7610bc3e20715262b7ea7f1f3098cfb81ca098"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-final.txt",
+      "sha256": "ab4eaa454223d2e6e878e00828306a119bff02b9565af5547cb6ac4a9288af06"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-first.receipt.json",
+      "sha256": "06ea8469a2876bb74ca1d570707b3e37590517d47b4df353f5ecd158242dd0de"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-first.txt",
+      "sha256": "568be9d5b8baa9d076a99ae928e3c04cd5635b01631a0c07896ce60dfd03f854"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck.receipt.json",
+      "sha256": "60b754434ad8c4b3c0d00857841c50bd842ee694d3900bc1510952eae0b3fa81"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck.txt",
+      "sha256": "eaac0b7f1666c3239f3aa5f26c956495fe5af17ed455cff0c1e15b7caae4ee7c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts-final.receipt.json",
+      "sha256": "837258b21e04a53ef33bf70d26cb2cf78d313f6a62deeddaa6d1f76e72c90fb9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts-final.txt",
+      "sha256": "437fcebd328ee11603990c16cf4c4e9b3774bcfc7127ab98904c19e6ad6d7003"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts-first.receipt.json",
+      "sha256": "b3f7e60a355895d4a6725842f2c31fe0b9abb0b71d4467bd06829fff82918749"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts-first.txt",
+      "sha256": "7bf5c26e6f7c4c73479e20f5637b7e35a64bbb402c005164868405f28b81d318"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts.receipt.json",
+      "sha256": "1a2f25eba2c6e23fe8cd5e5fdb32522e31f8aa80107d1831bd85601271c4056d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts.txt",
+      "sha256": "5ce497fa1d7c802fc4585d5705e3ffff66057249aafd29cbb4685e03040a17bf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/stale-preference-cycle-red.receipt.json",
+      "sha256": "61524fb73ae4a373690a9fe61cfaad5941d8c02b39c5e8499c0430369d4d5093"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/stale-preference-cycle-red.txt",
+      "sha256": "309bf1d50889c20418afc34985b92cbdc0a9b961975116de4ac7b0d412762676"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/worklist-final.receipt.json",
+      "sha256": "39c8a17598160e17612ee9b6581a2f4c74c001cbf78d23f085c0c680cb44ee3b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/worklist-final.txt",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/worklist.receipt.json",
+      "sha256": "ed5256588d35802927a604abbf6d2f0294094bde38c706152d95c511fddb81c9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence/worklist.txt",
+      "sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/execution-inventory.json",
+      "sha256": "1fd0dcfcca71bc122f9e41a35fa90b3a3425138f6aa76de93fc07739fb4dfd19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md",
+      "sha256": "d4f39dd23ae8029fbcf3004749726fbbfdae6252ed5325f4e7e6d8f7654e38cf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/historical-references.json",
+      "sha256": "ae3b37a37c5bdb3cd717c97416cd56bf082e6595eef8572c1c662c60096c4d58"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/00_READ_FIRST.md",
+      "sha256": "b04cb4863e032760310626520267795265eaed82e0846d0992d11eb2b258dcc6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/ACCEPTANCE_MATRIX.md",
+      "sha256": "1b48d0331b23e60256b8da297bef08fb359ccadbbb2aa94967282ec530fe0966"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/ACCEPTANCE_LEDGER.json",
+      "sha256": "b662ef5edf0baaf8f1ed2257ceaf9e93e23c8bd9e7282a8db2faa3bd6a3ee89e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/ACCEPTANCE_SCOPE.md",
+      "sha256": "14ce084de84e0115b725e7733b2e8b372f6f87dd7c1a12c5bbdc0f71ddeba4d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+      "sha256": "0e13a9bd6a5d1010cf8fa85489d175f7be29f4433258eb8ec1920652523277cd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/AUDIT_M1-01_ACCEPTANCE.md",
+      "sha256": "1f7a3c6f3dae79d5caf691c6ed7d24e68ea6790e3328343b7059708d846be99e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/BLOCKERS.json",
+      "sha256": "31e4f68773028753af3ec8835096840a9360c1fb81a0a26fc1f25e11b64213a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/BLOCKERS.md",
+      "sha256": "fe0215ffa919648f54c78c39d9117acd03f9ebed38dbe3b7678bd6a992514985"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/BRAIN_RESUME_PROMPT.md",
+      "sha256": "a7f1e4dc62a63ad6a3571a21e443aab2681bac310a2af970fcddffb2f2c46b65"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/brain_state.json",
+      "sha256": "a48af5e13b9acda73079730001d712005676450f0999843dc7c3b4b02482a0e0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/CI_OBSERVATIONS.md",
+      "sha256": "64e22d957b92c2c2c686f26c0dd7d0642b73fe10bab1e5d84eedf0ebf600aee8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/DECISIONS_DELTA.md",
+      "sha256": "c8f095f64690e0714e9641191c530f821ee21f28601380b152666073c9e1e8bb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/REVIEW_OBSERVATIONS.md",
+      "sha256": "489f9d5e1217cd7639a2cb5df9646ba9ee87898b823ad01bf7e6507c2284543d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/roadmap.json",
+      "sha256": "ae6f090e6ab87eb48bb644fa4372cf1cfeb2060a59aa12c4bd8b0743d8b6f34d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/STATE_AT_GLANCE.md",
+      "sha256": "aa19bc98cc55c347999132e7fdc3cfe70625c8e0a62ae70de1187dcc5eb443be"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/BRAIN_STATE/STATE_MANIFEST.json",
+      "sha256": "c0653d9b34a939f62c417b6aa59cfeb5bb21a87cd22e35b18f2fc3dc5f597451"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/contracts/ACCEPTANCE_AND_MIGRATION.md",
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/contracts/AUTHORITY_AND_DECISIONS.md",
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/contracts/CLINICAL_PLATFORM_CONTRACT.md",
+      "sha256": "d08ccb978726e8f8204ff794011a34b42a6efa8beb3d574acf2ed38d52eac47d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/contracts/CORE_CONTRACT.md",
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/contracts/EXECUTIVE_BLUEPRINT.md",
+      "sha256": "409fc5d899463238c38debc819ae9b5c5fe0523f11ba7b7c32582ab26a361627"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/GOVERNANCE_TRANSITION.md",
+      "sha256": "c4187cda126506607a73337611e4275ffd1a20a5983b7e81587cb16f5ba2fdb6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/ONSKIN_BRAIN_HANDOFF_TEMPLATE.md",
+      "sha256": "5cea2de176ad0314f1de34ef67ed4552abd4c85dbeb2f9d2b32a1eae77b8003a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/PRIVACY_AND_EXTERNAL_LIMITS.md",
+      "sha256": "9b2f24091371fe3de9ed417bfe09ad2f0569f4293726cb8f3ea6dfab7f341be7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/REPORT_CONTRACT.md",
+      "sha256": "275232c5b1e1fa3a3c98635c77cdf188e9db0b254ca70f5308b68043a6bbeb4a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/SOURCE_ORIENTATION.md",
+      "sha256": "31d91bc734ade3741d316524a2f99bf9efbf80bca1a3fffe105dcece8478e835"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/STAGE_BRANCH_PROTOCOL.md",
+      "sha256": "bb2c741d1bfbc5385f7c400f09f1ad25c1bb6e28b0a8d7c1a17175fcca8887a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/TASK.md",
+      "sha256": "650e984d20f1580e723ba94c4246e450bf3726c6fb6b0e2b39d002f6866b65be"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/TASK_MANIFEST.json",
+      "sha256": "bf9706ffe185ea6287588204818e4ae25dcf017a7e823345aadd30fc79600b78"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs/verify_context.py",
+      "sha256": "879f044e349aa758b78869b60f675df2c4dc43e067984a9c152581775e7eb00c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/README.md",
+      "sha256": "79c1e367b290c88256183fba8a5471ffb329115904cb2a790a31d4fdd7dacd32"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/source-custody.json",
+      "sha256": "94beb41a777622155e4c66ae0bf74f007396f667f8e01f020c370a38451b453c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/surface-impact.json",
+      "sha256": "37a87c6501dc4b251e4ae4a49e8c11fd3954cabe5626c2f496cad6e560b33d92"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/visual-inspections.json",
+      "sha256": "b56c7a111e8749499d68a09d492b51b30906957081a0d2ddeea5e24ed3239eac"
+    }
+  ],
+  "scope_matrix": [
+    {
+      "id": "M102-TODAY",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "focused-final",
+        "browser-daily-390",
+        "browser-daily-375",
+        "browser-daily-430"
+      ],
+      "source_paths": [
+        "apps/mobile/src/features/today",
+        "apps/mobile/src/lib/offline/completionQueue.ts"
+      ],
+      "tests": [
+        "features/photos/photoDeleteR3.integration.test.ts",
+        "scripts/e2e/retained-daily-loop.mjs"
+      ],
+      "limitation": "Real durable check/retry/duplicates/reload pass. Undo is unavailable in existing immutable retained model; no new ledger/SQL authorized. Brain adjudication required."
+    },
+    {
+      "id": "M102-CYCLE",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "focused-final",
+        "browser-daily-390"
+      ],
+      "source_paths": [
+        "apps/mobile/src/features/routine/orderStore.ts",
+        "apps/mobile/src/app/routine/reorder.tsx",
+        "apps/mobile/src/features/scheduler/useCycle.ts"
+      ],
+      "tests": [
+        "orderStore.test.ts",
+        "reorder.g2.test.ts",
+        "cyclePersistence.regression.test.ts",
+        "photoDeleteR3.integration.test.ts"
+      ],
+      "limitation": "Source/core parallel CAS/offline/date cases pass; actual paid reorder/cycle UI remains correctly closed. Device timezone change NOT_RUN."
+    },
+    {
+      "id": "M102-REPLAY",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "focused-final",
+        "browser-retained-390"
+      ],
+      "source_paths": [
+        "apps/mobile/src/lib/offline",
+        "apps/mobile/src/features/today"
+      ],
+      "tests": [
+        "completionQueue.test.ts",
+        "OfflineSync.test.ts",
+        "photoDeleteR3.integration.test.ts"
+      ],
+      "limitation": "Real encrypted local authority with controlled external transport; hosted/provider outcome NOT_RUN."
+    },
+    {
+      "id": "M102-DIARY",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "focused-final",
+        "browser-retained-390"
+      ],
+      "source_paths": [
+        "apps/mobile/src/features/photos/encryptedStorage.ts",
+        "apps/mobile/src/features/photos",
+        "apps/mobile/src/lib/storage/plaintextStagingCore.ts"
+      ],
+      "tests": [
+        "encryptedStorage.test.ts",
+        "photoDeleteR3.integration.test.ts",
+        "plaintextStagingCore.test.ts"
+      ],
+      "limitation": "Actual crypto/core through controlled native ports. Camera/Keychain/device process death/export recipient and positive paid diary UI NOT_RUN."
+    },
+    {
+      "id": "M102-REMIND",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "focused-final",
+        "browser-daily-390",
+        "browser-daily-375",
+        "browser-daily-430"
+      ],
+      "source_paths": [
+        "apps/mobile/src/features/notifications",
+        "apps/mobile/src/app/settings/timing.tsx",
+        "apps/mobile/src/app/settings/notifications.tsx"
+      ],
+      "tests": [
+        "applyPreferences.test.ts",
+        "deliver.test.ts",
+        "NotificationResponseHost.test.ts",
+        "preferenceOffline.m102.test.ts",
+        "scripts/e2e/retained-daily-loop.mjs"
+      ],
+      "limitation": "Actual local preferences useful offline; OS scheduling/delivery/permission UI/device date travel NOT_RUN. Web unavailability is explicit."
+    },
+    {
+      "id": "M102-BOUNDARY",
+      "status": "PASS",
+      "evidence": [
+        "focused-final",
+        "browser-cross-daily-390-final",
+        "browser-signout-390",
+        "browser-retained-390"
+      ],
+      "source_paths": [
+        "apps/mobile/src/lib/storage",
+        "apps/mobile/src/features/auth",
+        "apps/mobile/src/features/privacy"
+      ],
+      "tests": [
+        "scripts/e2e/onboarding-first-session.mjs",
+        "scripts/e2e/retained-daily-loop.mjs",
+        "photoDeleteR3.integration.test.ts"
+      ],
+      "limitation": "PASS is limited to supported synthetic local client boundary; no authentic provider/native admission."
+    },
+    {
+      "id": "M102-CLAIMS-MONEY",
+      "status": "PASS",
+      "evidence": [
+        "root-tests-final",
+        "browser-daily-390",
+        "browser-cross-daily-390-final"
+      ],
+      "source_paths": [
+        "apps/mobile/src/features/billing",
+        "apps/mobile/src/features/notifications",
+        "apps/mobile/src/app/routine/reorder.tsx"
+      ],
+      "tests": [
+        "root-tests-final",
+        "scripts/e2e/retained-daily-loop.mjs"
+      ],
+      "limitation": "Preserved policy and truthful denied gates only; no paid authority, cloud activation, clinical/commercial or release admission."
+    },
+    {
+      "id": "M102-EVIDENCE",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "governance-final",
+        "root-tests-final"
+      ],
+      "source_paths": [
+        "scripts/brain/m102_profile.py",
+        "scripts/brain/m1_profile.py",
+        "docs/brain/m102-active.json"
+      ],
+      "tests": [
+        "test_m102_profile.py",
+        "test_m1_report_cli.py",
+        "test_brain.py"
+      ],
+      "limitation": "Report and custody checks are supporting evidence-tail receipts, not relabelled measured-source executions. Inherited source and current CI failures remain open."
+    }
+  ],
+  "axes": {
+    "source": "FAIL",
+    "integration": "PASS",
+    "surface": "PARTIAL_TESTED_NOT_COMPLETE",
+    "physical_device": "NOT_RUN",
+    "live_provider": "NOT_RUN",
+    "qualified_review": "NOT_RUN",
+    "clinical": "NOT_ADMITTED",
+    "commercial": "NOT_ADMITTED",
+    "release": "BLOCKED"
+  },
+  "blockers": [
+    {
+      "id": "M102-UNDO",
+      "status": "BLOCKED",
+      "reason": "Matrix undo has no compatible retained immutable API; no new correction ledger or SQL authorized."
+    },
+    {
+      "id": "M102-PAID-NATIVE",
+      "status": "NOT_RUN",
+      "reason": "Positive paid UI and actual native OS/camera/Keychain/device lifecycle require independently authorized existing sandbox/device; no fabricated entitlement."
+    },
+    {
+      "id": "CORE05-INHERITED",
+      "status": "FAIL",
+      "reason": "Unchanged94-vs97migration-text source refusal; protected baseline resolution remains M1-03."
+    },
+    {
+      "id": "CI-SECURITY",
+      "status": "BLOCKED",
+      "reason": "Candidate static Security fails expired review and unreviewed Vite/certifi/mcp advisories; no protected controls changed."
+    },
+    {
+      "id": "CI-CANONICAL-DB",
+      "status": "FAIL",
+      "reason": "Candidate canonical image pull refused by registry data limit before SQL. No authentication or image bypass authorized."
+    },
+    {
+      "id": "CI-CURRENT-DELIVERY",
+      "status": "BLOCKED",
+      "reason": "Recorded candidate runs are attributed to5957; final evidence-only delivery needs independent exact-head readback, never older green."
+    }
+  ],
+  "context_health": {
+    "level": "HIGH",
+    "compaction_observed": true,
+    "observed_compactions": 1,
+    "closing_reconciliation": "Re-read direct founder request, exact report guards, actual command receipts, current local/remote source and provider CI metadata after compaction. One writer. No inferred acceptance.",
+    "claim_origin": "CODEX_REPORTED_CONTEXT"
+  },
+  "ci": [
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/ci-review.json",
+      "run_id": 39495561871,
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/ci-review.json",
+      "run_id": 39495561749,
+      "name": "Security",
+      "workflow_id": 308213475,
+      "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/ci-review.json",
+      "run_id": 39495562156,
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "head_commit": "5957a9617136a95c63b049db86d6b73f20c59c6f",
+      "status": "in_progress",
+      "conclusion": "pending"
+    }
+  ]
+}
