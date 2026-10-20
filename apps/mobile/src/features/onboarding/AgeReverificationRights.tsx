@@ -3,6 +3,7 @@ import { AppState, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { PausedHealthDataShell } from '@/features/healthConsent/HealthDataLifecycleGate';
+import { LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER } from '@/features/healthConsent/lifecycle';
 import {
   readHealthDataLifecycle,
   verificationRequiredRecord,
@@ -15,13 +16,14 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { readLocalDataOwnership } from '@/lib/auth/sessionOwner';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+import { isSupabaseConfigured } from '@/lib/env';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 
 /** Mounted directly below Auth/App Lock, never inside the health provider tree. */
 export function AgeReverificationRights() {
   const { user, initializing, signOut } = useAuth();
-  const owner = user?.id ?? null;
+  const owner = user?.id ?? (!isSupabaseConfigured ? LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER : null);
   const identity = captureAccountIdentityGeneration();
   const [revision, setRevision] = useState(0);
   const proofVersion = useRef(0);

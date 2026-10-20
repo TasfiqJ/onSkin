@@ -7,6 +7,7 @@ import { AgePolicyGate } from './AgePolicyGate';
 import { AgeReverificationRights } from './AgeReverificationRights';
 import { AGE_POLICY_RECEIPT_KEY } from './ageGate';
 import { setPrivateItem } from '@/lib/storage/privateKV';
+import { LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER } from '@/features/healthConsent/lifecycle';
 import { claimLocalDataOwnership } from '@/lib/auth/sessionOwner';
 import {
   beginAccountGenerationBoundary,
@@ -18,7 +19,8 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 const ports = vi.hoisted(() => ({
-  owner: 'owner-a',
+  owner: 'owner-a' as string | null,
+  configured: false,
   state: 'active',
   unavailable: false,
   bytes: new Map<string, string>(),
@@ -70,7 +72,20 @@ vi.mock('expo-router', () => ({
 }));
 vi.mock('@/components/ui', () => ({ Button: 'Button', Screen: 'Screen', Text: 'Text' }));
 vi.mock('@/lib/auth/AuthProvider', () => ({
-  useAuth: () => ({ user: { id: ports.owner }, initializing: false, signOut: vi.fn() }),
+  useAuth: () => ({
+    user: ports.owner ? { id: ports.owner } : null,
+    initializing: false,
+    signOut: vi.fn(),
+  }),
+}));
+vi.mock('@/features/healthConsent/lifecycle', () => ({
+  LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER: 'local-device-unclaimed',
+}));
+vi.mock('@/lib/env', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/env')>()),
+  get isSupabaseConfigured() {
+    return ports.configured;
+  },
 }));
 vi.mock('@/features/healthConsent/HealthDataLifecycleGate', () => ({
   // A view port, not authority: real owner proof, crypto, receipt and account
@@ -112,6 +127,7 @@ beforeEach(async () => {
   ).IS_REACT_ACT_ENVIRONMENT = true;
   ports.bytes.clear();
   ports.owner = 'owner-a';
+  ports.configured = false;
   ports.unavailable = false;
   ports.state = 'active';
   clearActiveHealthProcessingEpoch();
@@ -183,3 +199,37 @@ it('closes rights synchronously for A to B, foreground recheck and unavailable s
   await act(async () => oldPublication({ ownerUserId: 'owner-a' }));
   expect(view.root.findAllByProps({ testID: 'rights' })).toHaveLength(0);
 });
+
+it('restores the proven local-only owner rights after a guest cold relaunch without granting health access', async () => {
+  ports.bytes.clear();
+  await claimLocalDataOwnership(LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER);
+  ports.owner = null;
+  await act(async () => {
+    view = create(render());
+  });
+  await flush();
+  await act(async () => view.root.findByProps({ label: 'Privacy & account' }).props.onPress());
+  await flush();
+  expect(view.root.findByProps({ testID: 'rights' }).props.owner).toBe(
+    LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER,
+  );
+  expect(view.root.findAllByProps({ testID: 'health' })).toHaveLength(0);
+  expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
+});
+
+it.each([true, false])(
+  'does not adopt a retained account owner into signed-out rights (configured=%s)',
+  async (configured) => {
+    ports.configured = configured;
+    ports.owner = null;
+    await act(async () => {
+      view = create(render());
+    });
+    await flush();
+    await act(async () => view.root.findByProps({ label: 'Privacy & account' }).props.onPress());
+    await flush();
+    expect(view.root.findAllByProps({ testID: 'rights' })).toHaveLength(0);
+    expect(view.root.findAllByProps({ testID: 'health' })).toHaveLength(0);
+    expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
+  },
+);
