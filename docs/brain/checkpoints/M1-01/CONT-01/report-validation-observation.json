@@ -1,0 +1,23 @@
+{
+  "kind": "CODEX_REPORT_SELF_VALIDATION",
+  "command": [
+    "python",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-01",
+    "report",
+    "docs/brain/checkpoints/M1-01/CONT-01/completion-report.json"
+  ],
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "source_commit": "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+  "source_tree": "cb99e875b03fb364979a38197d37e24ec3d9e2e4",
+  "recorded_at_utc": "2026-10-20T16:22:40.630927+00:00",
+  "exit_code": 0,
+  "report_sha256": "4e0715b3c3129ee6baa2d9840e67d74db6c9e0386952e49484d18bb405e83519",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-01/report-validation.txt",
+    "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+  },
+  "limits": "This validates report consistency, not app execution or independent Brain acceptance. The report and its validation sidecars are excluded from its own artifact inventory to avoid circular hashes."
+}

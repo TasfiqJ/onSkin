@@ -1,0 +1,158 @@
+
+> @layerwell/mobile@0.1.0 web
+> expo start --web --port 8350 --host localhost
+
+[33m› [1m[@sentry/react-native/expo][22m Missing config for [1morganization, project[22m. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/[0m
+Starting project at C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8350
+
+Logs for your project will appear below.
+| (node:15268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:15268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:15268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+λ Bundled 3534ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (2623 modules)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 4400ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (2560 modules)
+λ Bundled 85ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 467ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 959ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (2417 modules)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+λ Bundled 120ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 622ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 99ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+λ Bundled 101ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 555ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 116ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web Bundled 203ms apps\mobile\src\features\notifications\NotificationPreferenceScheduleReconciler.tsx (398 modules)
+λ Bundled 89ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 490ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 88ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web Bundled 32ms apps\mobile\src\features\notifications\NotificationPreferenceScheduleReconciler.tsx (1 module)
+λ Bundled 89ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 522ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 96ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+λ Bundled 80ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 456ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 79ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web Bundled 34ms apps\mobile\src\features\notifications\NotificationPreferenceScheduleReconciler.tsx (1 module)
+λ Bundled 79ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 482ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 93ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+λ Bundled 76ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 443ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 81ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+λ Bundled 81ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 463ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 77ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.

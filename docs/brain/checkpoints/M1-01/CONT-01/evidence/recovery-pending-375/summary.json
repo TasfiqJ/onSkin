@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "mode": "pending_then_completed_manual",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "scope": "Actual pre-Auth web fixture UI only; no destructive request, server capability, native persistence, provider or release proof."
+}

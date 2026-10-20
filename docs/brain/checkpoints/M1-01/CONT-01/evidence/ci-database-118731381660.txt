@@ -1,0 +1,21 @@
+Source: GitHub connector fetched job 118731381660; head query 8f0980e5c1262257ef3fb0ffa4611dc2a9827d0e. Minimized failure excerpt; not a local execution.
+2026-10-20T15:55:36.2172461Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded
+2026-10-20T15:55:36.2173860Z     at runHistoryDocker (file:///home/runner/work/onSkin/onSkin/scripts/phase2/local-supabase-reset.mjs:526:13)
+2026-10-20T15:55:36.2175281Z     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2026-10-20T15:55:36.2176648Z     at async runWithCanonicalPostgresPullRetry (file:///home/runner/work/onSkin/onSkin/scripts/phase2/local-supabase-reset-retry.mjs:11:14)
+2026-10-20T15:55:36.2178268Z     at async prepareCanonicalPostgresImage (file:///home/runner/work/onSkin/onSkin/scripts/phase2/local-supabase-reset.mjs:544:18)
+2026-10-20T15:55:36.2179643Z     at async file:///home/runner/work/onSkin/onSkin/scripts/phase2/local-supabase-reset.mjs:840:3 {
+2026-10-20T15:55:36.2180445Z   [cause]: ContainedCommandError: exit-nonzero
+2026-10-20T15:55:36.2181429Z       at settleFailure (file:///home/runner/work/onSkin/onSkin/scripts/phase2/contained-command.mjs:307:9)
+2026-10-20T15:55:36.2182622Z       at handleNormalClose (file:///home/runner/work/onSkin/onSkin/scripts/phase2/contained-command.mjs:438:9)
+2026-10-20T15:55:36.2183717Z       at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+2026-10-20T15:55:36.2185093Z     reason: 'exit-nonzero',
+2026-10-20T15:55:36.2185405Z     originReason: 'exit-nonzero',
+2026-10-20T15:55:36.2185683Z     exitCode: 1,
+2026-10-20T15:55:36.2185987Z     containment: 'posix-process-group-empty',
+2026-10-20T15:55:36.2186497Z     diagnostic: 'Error response from daemon: toomanyrequests: Data limit exceeded'
+2026-10-20T15:55:36.2186912Z   }
+2026-10-20T15:55:36.2187115Z }
+2026-10-20T15:55:36.2187260Z 
+2026-10-20T15:55:36.2187365Z Node.js v20.20.2
+2026-10-20T15:55:36.2332734Z ##[error]Process completed with exit code 1.

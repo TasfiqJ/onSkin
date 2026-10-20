@@ -1,0 +1,21 @@
+{
+  "kind": "CODEX_STAGING_CORRECTION",
+  "initial_result": "Staged blob verification rejected an inventory path absent from index.",
+  "cause": "Global *.log ignore omitted declared synthetic Expo logs from ordinary git add.",
+  "correction": "Stage only these exact declared localhost logs; no artifact bytes modified.",
+  "paths": [
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/recovery-expired-430/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/recovery-invalid-390/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/recovery-pending-375/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-375/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-375-retry/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-390/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-430/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-isolation/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-isolation-adapted/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-isolation-v2/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-isolation-v3-final/expo-web.log",
+    "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-upgrade/expo-web.log"
+  ],
+  "limits": "Delivery packaging correction only, not an app or test pass."
+}

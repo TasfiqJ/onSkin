@@ -1,0 +1,13 @@
+Source: GitHub connector fetched job 118731382244; head query 8f0980e5c1262257ef3fb0ffa4611dc2a9827d0e. Minimized failure excerpt; not a local execution.
+2026-10-20T15:56:12.7696561Z # duration_ms 81.305367
+2026-10-20T15:56:12.8476101Z 
+2026-10-20T15:56:12.8476705Z > layerwell@0.1.0 phase4:source-worklist:check
+2026-10-20T15:56:12.8477377Z > node scripts/phase4/build-source-worklist.mjs --strict --check
+2026-10-20T15:56:12.8477659Z 
+2026-10-20T15:56:12.9232970Z FAIL docs/phase-4/generated/source-worklist.json is stale. Run npm run phase4:source-worklist.
+2026-10-20T15:56:12.9236720Z FAIL docs/phase-4/generated/source-worklist.md is stale. Run npm run phase4:source-worklist.
+2026-10-20T15:56:12.9325245Z ##[error]Process completed with exit code 1.
+2026-10-20T15:56:12.9404006Z Post job cleanup.
+2026-10-20T15:56:13.0145069Z Caching is not enabled. Caching is skipped.
+2026-10-20T15:56:13.0285809Z Post job cleanup.
+2026-10-20T15:56:13.0867254Z [command]/usr/bin/git version
