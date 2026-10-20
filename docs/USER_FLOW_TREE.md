@@ -2754,3 +2754,9 @@ source tests, or fixture-only screenshots.
 
 - At 390x844, then 375x667 and 430x932: complete retained-owner age/consent onboarding, populate Shelf, open You and sign out. First and repeated cleanup failures keep private children closed and expose a usable Try again without an uncaught overlay. Successful retry reaches durable signed-out state; direct Shelf/Today and document relaunch remain age-closed. Capture failure before teardown; never force-click recovery.
 - Source lifecycle coverage: duplicate sign-out/retry, background/foreground, persisted recovery after Auth remount and delayed foreign-owner publication. Same-owner guest upgrade and age-closed withdrawal/deletion remain separate fixtures and source invariants. Web synthetic transport does not prove native/provider effects.
+
+## M1-01 CONT-03 actual cross-owner acceptance
+
+- Critical, synthetic Expo web transport on 390x844, then 375x667 and 430x932. Complete A age/consent onboarding and create distinct Shelf products through UI. Emit B through the same Auth event reconciliation callback and real bounded preflight parser; no receipt/lease injection.
+- Delay A read/write/callback settlement; duplicate B event; first and repeated cleanup refusal expose usable recovery. Observe rendered boundary states for A flashes and uncaught overlays. Retry until B reaches its own age and consent forms, completes onboarding, creates/edits its own manual Shelf and displays B identity.
+- Verify exact durable B owner, health owner, cache/queue isolation and ciphertext; remount/navigation and document reload preserve usable B. Replacement back to A requires age/consent and cannot restore A or B data. Sign-out, same-owner upgrade and retained age-closed withdrawal/deletion remain separate regression scenarios. Native process death/provider authentication remain external.

@@ -89,6 +89,8 @@ import {
   waitForAccountGenerationOperationsToSettle,
 } from './accountGeneration';
 import {
+  accountIsolationE2EEvent,
+  accountIsolationE2EPreflightTransport,
   completeAccountIsolationE2ESignOut,
   getAccountIsolationE2EFixture,
 } from './accountIsolationE2E';
@@ -169,6 +171,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 type AccountIsolationE2EGlobal = typeof globalThis & {
+  __LAYERWELL_E2E_ACCOUNT_EVENT__?: (owner: 'a' | 'b') => void;
   __LAYERWELL_E2E_NAVIGATE__?: (href: string) => void;
 };
 
@@ -257,11 +260,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const accountIsolationE2EFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
   const firstSessionE2EFixture = useMemo(() => getFirstSessionE2EFixture(), []);
   const initialSession =
-    accountIsolationE2EFixture?.session ??
+    (accountIsolationE2EFixture?.mode === 'cross_owner' ? null : accountIsolationE2EFixture?.session) ??
     getPublishedFirstSessionE2ESession(firstSessionE2EFixture);
   const [session, setSession] = useState<Session | null>(initialSession);
   const [initializing, setInitializing] = useState(
-    isSupabaseConfigured && accountIsolationE2EFixture === null,
+    (isSupabaseConfigured && accountIsolationE2EFixture === null) || accountIsolationE2EFixture?.mode === 'cross_owner',
   );
   const [sessionBoundaryError, setSessionBoundaryError] = useState(false);
   const activeUserIdRef = useRef<string | null>(initialSession?.user.id ?? null);
@@ -1067,6 +1070,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 barrierState = await fetchAccountDeletionBarrierState(
                   transitionSession.access_token,
                   transitionSession.user.id,
+                  ...(accountIsolationE2EFixture?.mode === 'cross_owner'
+                    ? [accountIsolationE2EPreflightTransport()] as const : []),
                 );
               } catch (error: unknown) {
                 if (isAccountDeletionBarrierSessionRejected(error)) {
@@ -1493,43 +1498,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    if (accountIsolationE2EFixture) {
-      const globalLike = globalThis as AccountIsolationE2EGlobal;
-      globalLike.__LAYERWELL_E2E_NAVIGATE__ = (href) => router.replace(href as Href);
-      return () => {
-        shutdownPublication();
-        mounted = false;
-        unsubscribePublicationClosed();
-        unsubscribeDeletionIntakeHold();
-        delete globalLike.__LAYERWELL_E2E_NAVIGATE__;
-        applySessionBoundaryRef.current = async () => {};
-        showSessionBoundaryRef.current = () => {};
-        retrySessionRestoreRef.current = null;
-        handleAppleCredentialInvalidRef.current = async () => {};
-        handleAppleCredentialCheckBlockedRef.current = async () => {};
-        handleRejectedSessionRef.current = async () => {};
-        releaseSessionBoundaryWriteLock();
-      };
-    }
-
-    if (!isSupabaseConfigured) {
-      activeUserIdRef.current = null;
-      return () => {
-        shutdownPublication();
-        mounted = false;
-        unsubscribePublicationClosed();
-        unsubscribeDeletionIntakeHold();
-        applySessionBoundaryRef.current = async () => {};
-        showSessionBoundaryRef.current = () => {};
-        retrySessionRestoreRef.current = null;
-        handleAppleCredentialInvalidRef.current = async () => {};
-        handleAppleCredentialCheckBlockedRef.current = async () => {};
-        handleRejectedSessionRef.current = async () => {};
-        releaseSessionBoundaryWriteLock();
-      };
-    }
-
-    const { data: sub } = supabase.auth.onAuthStateChange((event, nextSession) => {
+    function onAuthStateChange(event: string, nextSession: Session | null): void {
       if (accountDeletionIntakeBoundaryActiveRef.current) {
         observeAuthStateDuringAccountDeletionIntake(event, nextSession);
         return;
@@ -1573,7 +1542,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       void applySessionBoundary(nextSession);
-    });
+    }
+
+    if (accountIsolationE2EFixture) {
+      const globalLike = globalThis as AccountIsolationE2EGlobal;
+      globalLike.__LAYERWELL_E2E_NAVIGATE__ = (href) => router.replace(href as Href);
+      if (accountIsolationE2EFixture.mode === 'cross_owner') {
+        initialSessionRestorePendingRef.current = false;
+        globalLike.__LAYERWELL_E2E_ACCOUNT_EVENT__ = (owner) =>
+          onAuthStateChange('SIGNED_IN', accountIsolationE2EEvent(owner));
+        void applySessionBoundary(accountIsolationE2EFixture.session, true);
+      }
+      return () => {
+        shutdownPublication();
+        mounted = false;
+        unsubscribePublicationClosed();
+        unsubscribeDeletionIntakeHold();
+        delete globalLike.__LAYERWELL_E2E_NAVIGATE__;
+        delete globalLike.__LAYERWELL_E2E_ACCOUNT_EVENT__;
+        applySessionBoundaryRef.current = async () => {};
+        showSessionBoundaryRef.current = () => {};
+        retrySessionRestoreRef.current = null;
+        handleAppleCredentialInvalidRef.current = async () => {};
+        handleAppleCredentialCheckBlockedRef.current = async () => {};
+        handleRejectedSessionRef.current = async () => {};
+        releaseSessionBoundaryWriteLock();
+      };
+    }
+
+    if (!isSupabaseConfigured) {
+      activeUserIdRef.current = null;
+      return () => {
+        shutdownPublication();
+        mounted = false;
+        unsubscribePublicationClosed();
+        unsubscribeDeletionIntakeHold();
+        applySessionBoundaryRef.current = async () => {};
+        showSessionBoundaryRef.current = () => {};
+        retrySessionRestoreRef.current = null;
+        handleAppleCredentialInvalidRef.current = async () => {};
+        handleAppleCredentialCheckBlockedRef.current = async () => {};
+        handleRejectedSessionRef.current = async () => {};
+        releaseSessionBoundaryWriteLock();
+      };
+    }
+
+    const { data: sub } = supabase.auth.onAuthStateChange(onAuthStateChange);
     // Subscribe first so no Auth mutation can land between taking the initial
     // singleton snapshot and installing the invalidation listener.
     void restoreSession();
