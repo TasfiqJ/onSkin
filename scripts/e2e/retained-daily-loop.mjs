@@ -25,7 +25,7 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   })()`, true);
   const readCompletions = async () => JSON.parse(await privateRead('layerwell.completions.v1'));
   await route('/shelf/manual');
-  await waitForText(client, 'Product name');
+  await waitForCondition(client, `document.querySelector('input[aria-label="Product name"]') !== null`, 30_000, 'manual name input');
   await fillByLabel(client, 'Product name', 'M102 synthetic moisturizer');
   await clickByText(client, 'Category');
   await clickByText(client, 'Category, Moisturiser (tube)');
@@ -111,6 +111,8 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   await capture('04b-offline-cycle-saved');
 
   await network(false);
+  await route('/settings/timing');
+  await waitForText(client, 'Timing');
   await client.send('Page.reload', { ignoreCache: true });
   await waitForText(client, 'Timing', 60_000);
   assert.equal(JSON.parse(await privateRead('layerwell.notifPrefs.v1')).prefs.amTime, '08:00');
