@@ -14,7 +14,7 @@ import { getPermissionStatus, rescheduleReminders } from './deliver';
 import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
 
 // Reads/writes the local-first notification preferences and reschedules the
-// utility reminders whenever they change (docs/07 §3.4). Visible state updates
+// utility reminders whenever they change (docs/07 Â§3.4). Visible state updates
 // only after local private persistence succeeds.
 const KEY = ['notifPrefs'] as const;
 const AUTHORIZATION_KEY = ['notificationAuthorization'] as const;
@@ -31,6 +31,7 @@ export function useNotificationAuthorization() {
   }, [qc]);
   return useQuery({
     queryKey: AUTHORIZATION_KEY,
+    networkMode: 'always',
     queryFn: async () => {
       const state = await getPermissionStatus();
       // Reconcile on every settings mount/foreground read. Revocation cancels
@@ -47,6 +48,7 @@ export function useNotificationAuthorization() {
 export function useNotifPrefs() {
   return useQuery({
     queryKey: KEY,
+    networkMode: 'always',
     queryFn: async () => {
       const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
       if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
@@ -63,6 +65,7 @@ export function useNotifPrefs() {
 export function useUpdateNotifPrefs() {
   const qc = useQueryClient();
   return useMutation({
+    networkMode: 'always',
     mutationFn: async (patch: Partial<NotifPrefs>) => {
       const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
       if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);

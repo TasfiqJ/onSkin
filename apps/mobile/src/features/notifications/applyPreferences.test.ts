@@ -71,6 +71,40 @@ describe('notification preference application', () => {
     deps.reschedule.mockResolvedValue(undefined);
   });
 
+  it('serializes saved purposes with scheduling so parallel saves cannot reorder native intent', async () => {
+    let release!: () => void;
+    let started!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const entered = new Promise<void>((resolve) => { started = resolve; });
+    deps.reschedule.mockImplementationOnce(async () => { started(); await gate; });
+    const first = applyNotificationPreferencePatch({ amEnabled: true }, deps);
+    await entered;
+    const second = applyNotificationPreferencePatch({ amEnabled: false }, deps);
+    await Promise.resolve();
+    const countBeforeRelease = deps.save.mock.calls.length;
+    release();
+    await Promise.all([first, second]);
+    expect(countBeforeRelease).toBe(1);
+    expect(deps.save).toHaveBeenNthCalledWith(2, { amEnabled: false });
+    expect(deps.reschedule.mock.invocationCallOrder[0]).toBeLessThan(deps.save.mock.invocationCallOrder[1]!);
+  });
+
+  it('never starts a queued save after withdrawal closes the calling lease', async () => {
+    let release!: () => void;
+    let started!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const entered = new Promise<void>((resolve) => { started = resolve; });
+    deps.reschedule.mockImplementationOnce(async () => { started(); await gate; });
+    const first = applyNotificationPreferencePatch({ amEnabled: true }, deps).catch((error: unknown) => error);
+    await entered;
+    const queued = applyNotificationPreferencePatch({ amEnabled: false }, deps).catch((error: unknown) => error);
+    leaseState.current = false;
+    release();
+    expect(await first).toBeInstanceOf(Error);
+    expect(await queued).toBeInstanceOf(Error);
+    expect(deps.save).toHaveBeenCalledOnce();
+  });
+
   it('saves local private prefs before rescheduling reminders', async () => {
     const patch = { amEnabled: false };
 
