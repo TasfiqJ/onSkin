@@ -1,48 +1,19 @@
-TASK M0-02 / ITERATION FIX-01 | STAGE M0 | SUBMITTED_REVIEW_REQUIRED
-Branch: stage/m0-baseline. Last Brain verdict: FIX_REQUIRED (not self-accepted).
-Original stage/main base and observed main: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
-Original task base: b9a6b093f392ced340c156f2e7dcaefc72ed58e1
-Repair base: da9fa04759164b402ee3b2abd1c80e14261614fb / e18f73771b5f440613a7e7cd339889949a8ae72a
-Measured implementation: 3daa1f38007f2a512b9af0f4132a8f0b2feb6720
-Measured tree: bd89efae1701642e3cb14f731346be173b6614de
-Earlier repair commits:64dd095a4b50b2ba2791ad8a49b3caef3d3af545,d68d8712518098cd727ed2b42decd5d75f1538c5
-Measured source was normally PUSHED. Final report/handoff commit is later; resolve actual tip:
-git ls-remote origin refs/heads/stage/m0-baseline
-No embedded future/self-referential delivery SHA. New delivery CI is separate.
-
-F1: strict integer exits and bound structured execution receipts/output/source tuples.
-F2: report v3 binds CI artifacts/run/workflow/head/states, Git objects/trees/ancestry;
-real pending stays pending; offline JSON is not provider authenticity. Git reads stay local.
-F3: fixed-code issuance anchor rejects mutable spec+manifest+payload substitution;
-legitimate original context still builds identically. No future task fabricated.
-F4: all mirror outputs/ancestors checked before creation/write; exclusive new files,
-checked existing handles; actual junction/hard-link rejection leaves targets untouched.
-
-Final measured suites:Python3.9.13 and3.12.14 each36 considered,34 PASS,2 true Windows
-file-symlink privilege SKIPs. No full Linux governance-suite/CLI claim.
-Validate,mirror generation/check,context build twice/verify and v3 report check passed.
-Original context:49 entries,860347 input bytes,876597 ZIP bytes; cross-runtime equality,
-SHA256 b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547.
-Affected existing source checks at64dd:canonical6,workflow27,advisory7 passed;
-release inventory1 passed/12 filtered; source-packet and25-item baseline valid.
-Root typecheck/lint/test exit0 through existing caches; no fresh app test count claimed.
-Historical v2 report remains unchanged and is rejected as current format (expected exit1).
-
-Base CI:Quality39371600842/Security39371600769 failed;iOS39371600772 source-only success.
-First repair DB118471393010 failed canonical ECR Data limit exceeded before SQL after
-171 source tests; later overall workflow cancellation did not erase that failed job.
-Latest measured CI:Quality39375482099/Security39375482113 in progress (not PASS),
-iOS39375482217 source-only success. Static118472552612 failed inventory/OSV dates/advisory;
-secret scanning passed,live skipped. Exact observations/read times are in FIX-01 evidence.
-
-Brain review overlay:docs/brain/reviews/M0-02/REVIEW-01/ (immutable,25 ADRs,13 OPEN blockers).
-New detailed evidence/report:docs/brain/checkpoints/M0-02/FIX-01/
-Current schema3 observations:docs/brain/current.json. Legacy current v2 archived verbatim.
-Original source-inputs/state/submitted report/logs preserved. All47 tasks/27 modules,
-376 items+20 families+12 surfaces,202 dispositions,25 gates,38 feature rows preserved.
-Main read-only; PR8 draft/unmerged. No source GO,Security/DB06/DB08/R2B/runtime/package/
-workflow/date/pin changes,spend,auth,M1,J05,research request,signing/deployment/release.
-Expiry2026-10-21T00:00:00Z unchanged; full baseline and all external gates remain blocked.
-One writer; founder/other dirty checkouts preserved. Safe tail normally committed/pushed;
-verify live ref and clean stage after delivery. No safe work intentionally left unpushed.
-Context health:medium estimate,no compaction,zero accepted tasks. Stop for Brain review.
+TASK M1-01 — PARTIAL / NOT ACCEPTED
+Branch: stage/m1-retained-safety
+Original main: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+Accepted task base: 6aa01995f6dcb94fd28d358badc9f8d1e0273d39; tree3a75ea56f12f9422affc6e09936993ffa9252c05
+Observed remote main/M0 match original main/accepted task base; M1 branch was absent before creation.
+Isolated worktree: C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety
+All other dirty worktrees preserved; reconciliation in docs/brain/checkpoints/M1-01/evidence/worktree-reconciliation.json.
+Implemented source: adult18 semantic policy/reverification; private read owner fence; strict Shelf read failures; age gate health lease closure.
+Governance: unchanged approved REVIEW-02 + immutable issued M1 input; explicit active profile; historical M0 preserved. No self-acceptance.
+Measured source/test SHA/tree: pending first source commit; will be bound in final checkpoint report.
+Final delivery: resolve origin refs/heads/stage/m1-retained-safety live; the handoff commit cannot measure itself.
+Initial affected tests:971 pass; governance39 pass/2 Windows symlink skips. Dirty exploratory runs only; fresh committed measurements pending.
+Baseline CI: accepted M0 Quality success, Security failure, iOS source-only success are supplied historical observations, not M1 CI.
+M1 CI: NOT_RUN yet. No protected inventory/date/workflow/dependency/SQL changes authorized or made.
+Open M1: safe data-rights/privacy/deletion exits during age re-verification; complete integrated race and manual Shelf surface matrix.
+External: native iPhone/provider/qualified/clinical/release unperformed; no launch/main promotion; $0 incremental spend.
+Evidence/report: docs/brain/checkpoints/M1-01/
+Push/dirty state: source checkpoint preparing; final report will supersede this preparation state.
+Context health: elevated; no compaction observed; fresh rotation required before further broad subsystem work.

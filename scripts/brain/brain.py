@@ -23,6 +23,13 @@ REVIEW = 'docs/brain/reviews/M0-02/REVIEW-01'
 REPAIR_INPUT = 'docs/brain/checkpoints/M0-02/FIX-01/inputs'
 REPAIR_MANIFEST_HASH = '5778db7e2a1f6eb8b76018c44f110f40047ca867eb9c74facf294bddeddd8e35'
 ISSUANCES = {'M0-02': {'path': INPUT + '/TASK_MANIFEST.json', 'sha256': MANIFEST_HASH, 'input_prefix': INPUT}}
+# Human-provided issuance digest, deliberately independent of the mutable task spec.
+ISSUANCES['M1-01'] = {
+    'path': 'docs/brain/checkpoints/M1-01/inputs/TASK_MANIFEST.json',
+    'sha256': '48c0e58f00ce54910d640738debfd273a534403ec30aa980277977852f354656',
+    'input_prefix': 'docs/brain/checkpoints/M1-01/inputs',
+    'current_path': 'docs/brain/active.json',
+}
 ORIGINAL_BASE = 'bbc28dc3d1f945191a81be56945b8bda7bb6ef73'
 TASK_BASE = 'b9a6b093f392ced340c156f2e7dcaefc72ed58e1'
 REPAIR_BASE = 'da9fa04759164b402ee3b2abd1c80e14261614fb'
@@ -575,7 +582,7 @@ def pack_spec(root, task):
     authority = ISSUANCES[task]
     spec = load(root, 'docs/brain/task-specs/' + task + '.json')
     require(spec['task_id'] == task and spec['issued'] is True and spec['issued_by'] == 'onSkin Brain', 'Unissued task')
-    current = load(root, 'docs/brain/current.json')
+    current = load(root, authority.get('current_path', 'docs/brain/current.json'))
     require(current['task_id'] == task and current['active_writers'] == 1 and current['next_task'] is None, 'Task/writer conflict')
     approval = spec['approval']
     require(approval == {'path': authority['path'], 'sha256': authority['sha256']} and
@@ -706,6 +713,8 @@ def ready(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=ROOT)
+    parser.add_argument('--profile', choices=['M0-02', 'M1-01'], default='M0-02',
+                        help='M0 is historical; active M1 requires its independently anchored issuance')
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('validate')
     mirror = commands.add_parser('mirrors')
@@ -720,6 +729,24 @@ def main():
     args = parser.parse_args()
     root = args.root.absolute()
     try:
+        if args.profile == 'M1-01':
+            import m1_profile
+            if args.command == 'report':
+                m1_profile.report(root, args.path)
+            else:
+                current = m1_profile.validate(root)
+                if args.command == 'ready':
+                    print(encoded({'active_task': current['task_id'], 'automatic_issue': False,
+                                   'next_issued_task': None, 'active_writers': 1}).decode('utf-8'), end='')
+                elif args.command in ['pack', 'verify-pack']:
+                    require(args.task == 'M1-01', 'Profile/task mismatch')
+                    result = build_pack(root, args.task, args.output) if args.command == 'pack' else verify_pack(root, args.task, args.output)
+                    print(encoded(result).decode('utf-8'), end='')
+                else:
+                    require(args.command == 'validate' or (args.command == 'mirrors' and args.check),
+                            'M1 preserves historical mirrors; only non-writing checks are supported')
+            print('PASS: M1 issued profile; evidence binding is not independent acceptance')
+            return 0
         if args.command == 'validate':
             verify_inputs(root)
             validate_state(root)
@@ -734,6 +761,7 @@ def main():
         elif args.command == 'ready':
             print(encoded(ready(root)).decode('utf-8'), end='')
         else:
+            require(args.task == 'M0-02', 'Historical profile/task mismatch')
             verify_inputs(root)
             validate_state(root)
             result = build_pack(root, args.task, args.output) if args.command == 'pack' else verify_pack(root, args.task, args.output)

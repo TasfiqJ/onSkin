@@ -163,7 +163,7 @@ describe('shelf local store recovery', () => {
     const original = '{not-json';
     mocks.storage.set(KEY, original);
 
-    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
@@ -171,7 +171,7 @@ describe('shelf local store recovery', () => {
     const original = JSON.stringify({ id: 'not-an-array' });
     mocks.storage.set(KEY, original);
 
-    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
@@ -190,9 +190,7 @@ describe('shelf local store recovery', () => {
     ]);
     mocks.storage.set(KEY, original);
 
-    const shelf = await loadShelf();
-
-    expect(shelf).toEqual([]);
+    await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
@@ -1109,7 +1107,7 @@ describe('shelf local store recovery', () => {
     });
     mocks.storage.set(KEY, original);
 
-    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
     await expect(addProduct({ name: 'Must not overwrite', addedVia: 'manual' })).rejects.toThrow(
       SHELF_STATE_INVALID,
     );
@@ -1151,7 +1149,7 @@ describe('shelf local store recovery', () => {
 
     for (const raw of noncanonical) {
       mocks.storage.set(KEY, raw);
-      await expect(loadShelf()).resolves.toEqual([]);
+      await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
       await expect(updateProduct(product.id, { brand: 'Must not write' })).rejects.toThrow(
         SHELF_STATE_INVALID,
       );
@@ -1163,7 +1161,7 @@ describe('shelf local store recovery', () => {
     const original = JSON.stringify({ version: 4, products: [] });
     mocks.storage.set(KEY, original);
 
-    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(loadShelf()).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
     await expect(addProduct({ name: 'Cleanser', addedVia: 'manual' })).rejects.toThrow(
       SHELF_STATE_UNSUPPORTED_VERSION,
     );
@@ -1424,7 +1422,7 @@ describe('shelf local store recovery', () => {
     ]) {
       const malformed = JSON.stringify({ ...parsed, terminal });
       mocks.storage.set(KEY, malformed);
-      await expect(loadShelf()).resolves.toEqual([]);
+      await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
       await expect(getPendingShelfMirrorOperations()).rejects.toThrow(SHELF_STATE_INVALID);
       expect(mocks.storage.get(KEY)).toBe(malformed);
     }
@@ -1594,7 +1592,7 @@ describe('shelf local store recovery', () => {
     const malformed = JSON.stringify(parsed);
     mocks.storage.set(KEY, malformed);
 
-    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(loadShelf()).rejects.toThrow(SHELF_STATE_INVALID);
     await expect(getPendingShelfMirrorOperations()).rejects.toThrow(SHELF_STATE_INVALID);
     await expect(updateProduct(operationId(750), { brand: 'Must not overwrite' })).rejects.toThrow(
       SHELF_STATE_INVALID,

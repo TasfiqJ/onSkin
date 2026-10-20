@@ -31,7 +31,7 @@ function sharedResponse(overrides: Record<string, unknown> = {}): Record<string,
     availability: 'available',
     regulatoryEligibility: 'eligible',
     sharingStatus: 'shared',
-    ageRange: { lowerBound: 16, upperBound: null },
+    ageRange: { lowerBound: 18, upperBound: null },
     declaration: 'payment_checked',
     parentalControls: {
       anyEnabled: false,
@@ -77,7 +77,7 @@ describe('native declared age range response contract', () => {
     }
   });
 
-  it('grants only from a shared lower bound at or above 16', () => {
+  it('grants only from a shared lower bound at or above 18', () => {
     const adult = decode(sharedResponse());
     expect(evaluateNativeAgeAssuranceMinimumAge(adult)).toEqual({
       allowed: true,
@@ -85,6 +85,8 @@ describe('native declared age range response contract', () => {
     });
 
     for (const ageRange of [
+      { lowerBound: 16, upperBound: 17 },
+      { lowerBound: 17, upperBound: null },
       { lowerBound: 15, upperBound: 17 },
       { lowerBound: null, upperBound: 15 },
     ]) {
@@ -155,8 +157,8 @@ describe('native declared age range response contract', () => {
       { lowerBound: 18, upperBound: 17 },
       { lowerBound: 15.5, upperBound: 17 },
       { lowerBound: -1, upperBound: 15 },
-      { lowerBound: 16, upperBound: 151 },
-      { lowerBound: 16, upperBound: 17, exactAge: 16 },
+      { lowerBound: 18, upperBound: 151 },
+      { lowerBound: 18, upperBound: 17, exactAge: 16 },
     ]) {
       expectInvalid(sharedResponse({ ageRange }));
     }
@@ -173,7 +175,7 @@ describe('native declared age range response contract', () => {
         availability: 'not_available',
       }),
       unavailableResponse({
-        ageRange: { lowerBound: 16, upperBound: null },
+        ageRange: { lowerBound: 18, upperBound: null },
       }),
       unavailableResponse({ declaration: 'self_declared' }),
       unavailableResponse({

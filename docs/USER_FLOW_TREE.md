@@ -2736,3 +2736,13 @@ source tests, or fixture-only screenshots.
 - Keep main's account-generation, health and private-data admission boundaries. Navigate Today, Progress, Shelf and You at all supported sizes, hover/focus/press tabs, scroll and allow motion to settle; repeat with Reduce Motion.
 - Old scan/search/catalog-recovery links resolve to manual entry within the mounted Shelf navigator. Deferred Ask/community/recommendation children never mount and return to Today.
 - Accepted evidence: `test-results/human-e2e/2026-09-27/main-integration/navigation-accepted/`, `navigation-reduced/`, and `onboarding-375/`, `onboarding-390/`, `onboarding-430/`. This is Expo web fixture evidence, not native release approval.
+
+## M1-01 adult18 re-verification (2026-10-20)
+
+- Priority: Critical. Persona: retained guest or account owner with prior16+ proof.
+- Start: welcome or direct protected route, real Expo web development fixture.
+- Old16+ receipt, boolean, unknown or malformed proof never mounts protected providers; owner data stays intact. Confirm new DOB transiently; just-under18 stays closed, eighteenth birthday admits current minimized receipt. No stored DOB or DOB analytics.
+- Invalid calendar date: inline correction; no receipt grant. Storage failure: honest retry, no reset. Background/foreground requires a fresh receipt read and closes the health-processing lease immediately.
+- Happy path: welcome → age → separate draft consent → supported guest/manual Shelf → Today; reload preserves only durable permitted state. Manual/closed catalog links remain manual fallbacks.
+- Run compact375x667 and modern390x844/430x932; capture screenshots and logs. Web fixtures prove navigation/state only. Native storage/provider behavior remains unperformed.
+- Open M1 audit item: safe privacy/withdrawal/deletion/export and subscription management access during age re-verification. Existing root deletion recovery remains outside the age gate; normal settings routes are protected. Do not mark this exit-path audit complete from an age test.

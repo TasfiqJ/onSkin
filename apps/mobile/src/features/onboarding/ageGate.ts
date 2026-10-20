@@ -1,9 +1,8 @@
 // Neutral age gate (docs/01 section 4): pure age math with no storage imports.
-// The current 16+ behavior remains a draft launch assumption, not an approved
-// legal conclusion. The exact threshold and any parental-consent path remain
-// blocked on the documented founder/counsel decision.
+// ADR-005/029 adopt an adult-only product. This source policy is still blocked
+// on legal review; it does not establish legal sufficiency or a parental path.
 
-export const MINIMUM_AGE = 16;
+export const MINIMUM_AGE = 18;
 export const INVALID_DOB_MESSAGE = 'Enter a real birth date that is not in the future.';
 export const AGE_POLICY_REVIEW_STATUS = 'draft_blocked' as const;
 export const AGE_POLICY_RECEIPT_KEY = 'layerwell.ageVerified' as const;
@@ -14,7 +13,7 @@ export const AGE_POLICY_RECEIPT_KEY = 'layerwell.ageVerified' as const;
  */
 export const AGE_POLICY_TUPLE = Object.freeze([
   'policy=neutral_dob_eligibility',
-  'version=draft-v1',
+  'version=draft-v2-adult18',
   'scope=global',
   `minimum_years=${MINIMUM_AGE}`,
   'parental_consent_path=none',
@@ -23,7 +22,7 @@ export const AGE_POLICY_TUPLE = Object.freeze([
 
 export const AGE_POLICY_CANONICAL = AGE_POLICY_TUPLE.join('\n');
 export const AGE_POLICY_SHA256 =
-  '213a9fa27a479d336ca74edb858d780d568abf4166a43b586dd8bdc48f62fb1e' as const;
+  '1b8bee5f09f3c367416ac9bb2381ba9e777b38ceeca9a68fc31e4a10d615f1a6' as const;
 
 export type Dob = { year: number; month: number; day: number };
 

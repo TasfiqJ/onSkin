@@ -1,0 +1,21 @@
+{
+  "id": "M1-01",
+  "phase": "P1",
+  "title": "Retained identity, consent and storage safety",
+  "depends_on": [
+    "M0-02"
+  ],
+  "status": "PLANNED",
+  "deliverables": [
+    "Owner/session/withdrawal/deletion barriers",
+    "Adult18+ alignment",
+    "Manual Shelf and recovery regression fixes"
+  ],
+  "acceptance": [
+    "Owner-switch/no-content-flash negative tests",
+    "No forced login or loss of existing account data"
+  ],
+  "external_gates": [],
+  "spend_trigger": "NONE",
+  "owner": "Codex implementation; Brain review; named external owners where gated"
+}

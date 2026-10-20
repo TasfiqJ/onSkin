@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-01",
+  "branch": "stage/m1-retained-safety",
+  "submission_status": "PARTIAL",
+  "approved_state_version": "brain-m0-02-accepted-m1-01-issued-5",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02"
+  ],
+  "review_overlay": "docs/brain/reviews/M0-02/REVIEW-02",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z"
+}

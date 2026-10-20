@@ -1,0 +1,70 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/storage/privateKV.test.ts -t non-health receipt
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/lib/storage/privateKV.test.ts (55 tests | 2 failed | 53 skipped) 17ms
+     × rejects a delayed single non-health receipt read across an owner boundary 13ms
+     × rejects a delayed batch non-health receipt read across an owner boundary 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/storage/privateKV.test.ts > private KV encrypted storage > rejects a delayed single non-health receipt read across an owner boundary
+AssertionError: promise resolved "'owner-a-receipt'" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+"owner-a-receipt"
+
+ ❯ src/lib/storage/privateKV.test.ts:762:39
+    760|       }
+    761|       const pending = kind === 'single' ? getPrivateItem(key) : getPri…
+    762|       const rejected = expect(pending).rejects.toThrow(PRIVATE_KV_WRIT…
+       |                                       ^
+    763|       await reading;
+    764|       beginPrivateKVAccountBoundary();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/storage/privateKV.test.ts > private KV encrypted storage > rejects a delayed batch non-health receipt read across an owner boundary
+AssertionError: promise resolved "Map{ 'layerwell.ageVerified' => 'own…' }" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+Map {
+  "layerwell.ageVerified" => "owner-a-receipt",
+}
+
+ ❯ src/lib/storage/privateKV.test.ts:762:39
+    760|       }
+    761|       const pending = kind === 'single' ? getPrivateItem(key) : getPri…
+    762|       const rejected = expect(pending).rejects.toThrow(PRIVATE_KV_WRIT…
+       |                                       ^
+    763|       await reading;
+    764|       beginPrivateKVAccountBoundary();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 53 skipped (55)
+   Start at  09:56:10
+   Duration  491ms (transform 151ms, setup 0ms, import 280ms, tests 17ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/lib/storage/privateKV.test.ts -t ^^^"non-health^^^ receipt^^^"

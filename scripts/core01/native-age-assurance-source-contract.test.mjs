@@ -128,7 +128,7 @@ test('CORE01 pod has no third-party or bundled executable dependency', () => {
   assert.doesNotMatch(podspec, /vendored_|resource|PrivacyInfo|script_phase/iu);
 });
 
-test('CORE01 native method is SDK- and runtime-guarded and uses the fixed 16 gate', () => {
+test('CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate', () => {
   const swift = read(swiftPath);
   matches(swift, /Name\("NativeAgeAssurance"\)/u, 'Native module name drifted.');
   const constants = [
@@ -166,8 +166,8 @@ test('CORE01 native method is SDK- and runtime-guarded and uses the fixed 16 gat
       'Declared age range request is not bound to the fixed minimum and presenter.',
     ],
     [
-      /ageAssuranceMinimumAge\s*=\s*16/u,
-      'The product minimum must remain 16 pending policy review.',
+      /ageAssuranceMinimumAge\s*=\s*18/u,
+      'The product minimum must match the adopted adult18 policy; legal review remains closed.',
     ],
     [
       /appContext\?\.utilities\?\.currentViewController\(\)/u,
@@ -285,7 +285,7 @@ test('CORE01 TypeScript bridge pins the native contract but remains literally la
     'ageAssuranceContractVersion: 1',
     "ageAssuranceReviewStatus: 'launch_blocked'",
     "ageAssuranceProvider: 'apple_declared_age_range'",
-    'ageAssuranceMinimumAge: 16',
+    'ageAssuranceMinimumAge: 18',
     "ageAssuranceMinimumRuntime: 'iOS 26.2'",
     "ageAssuranceMinimumSdk: 'iOS 26.2'",
     'ageAssuranceExactBirthDateCollected: false',

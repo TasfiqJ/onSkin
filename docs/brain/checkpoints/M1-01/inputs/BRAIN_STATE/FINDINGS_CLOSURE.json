@@ -1,0 +1,65 @@
+{
+  "review": "M0-02 REVIEW-02 / FIX-01 acceptance",
+  "findings": [
+    {
+      "finding": "M002-R1-F1",
+      "blocker_id": "BLK-10",
+      "decision": "RESOLVED_FOR_REVIEWED_HEAD",
+      "head": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "repair": "Typed execution receipts bind observations to command, environment, actual commit/tree, result and hashed output. Unsupported PASS and boolean exit substitutions are rejected.",
+      "test": "test_f1_observation_cli_positive_and_bound_negative_cases",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "evidence": [
+        "EVIDENCE/check-0.txt",
+        "EVIDENCE/linux-check-0.txt"
+      ],
+      "limit": "Evidence-consistency and filesystem-safety contract only; not hostile concurrent-filesystem transactional security or external approval."
+    },
+    {
+      "finding": "M002-R1-F2",
+      "blocker_id": "BLK-11",
+      "decision": "RESOLVED_FOR_REVIEWED_HEAD",
+      "head": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "repair": "Report v3 verifies base/main/test/pushed identities and ancestry, bound CI artifacts, exact run/source relationships and pending/final outcome consistency. Offline consistency is not represented as independent provider authentication.",
+      "test": "test_f2_report_cli_ci_relationships_and_git_identities",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "evidence": [
+        "EVIDENCE/check-0.txt",
+        "EVIDENCE/linux-check-0.txt"
+      ],
+      "limit": "Evidence-consistency and filesystem-safety contract only; not hostile concurrent-filesystem transactional security or external approval."
+    },
+    {
+      "finding": "M002-R1-F3",
+      "blocker_id": "BLK-12",
+      "decision": "RESOLVED_FOR_REVIEWED_HEAD",
+      "head": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "repair": "M0-02 issuance is anchored outside the mutable task spec. Repointing to a same-task self-authored approval is rejected; the legitimate original context still rebuilds byte-identically.",
+      "test": "test_f3_pack_cli_cannot_repoint_its_own_issuance",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "evidence": [
+        "EVIDENCE/check-0.txt",
+        "EVIDENCE/linux-check-0.txt"
+      ],
+      "limit": "Evidence-consistency and filesystem-safety contract only; not hostile concurrent-filesystem transactional security or external approval."
+    },
+    {
+      "finding": "M002-R1-F4",
+      "blocker_id": "BLK-13",
+      "decision": "RESOLVED_FOR_REVIEWED_HEAD",
+      "head": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "repair": "All mirror targets and ancestors are checked before writes. Real dangling/existing file symlinks, hardlinks and Windows junctions are rejected without altering outside targets or earlier valid destinations.",
+      "test": "test_f4_real_dangling_mirror_file_and_existing_symlink_no_side_effects",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "evidence": [
+        "EVIDENCE/check-0.txt",
+        "EVIDENCE/linux-check-0.txt"
+      ],
+      "limit": "Evidence-consistency and filesystem-safety contract only; not hostile concurrent-filesystem transactional security or external approval."
+    }
+  ]
+}

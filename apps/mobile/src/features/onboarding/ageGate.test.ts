@@ -18,13 +18,13 @@ const today = new Date(2026, 5, 25); // 2026-06-25 (local)
 
 describe('neutral age gate (docs/01 §4)', () => {
   it('pins the current draft-blocked semantic policy tuple', () => {
-    expect(MINIMUM_AGE).toBe(16);
+    expect(MINIMUM_AGE).toBe(18);
     expect(AGE_POLICY_REVIEW_STATUS).toBe('draft_blocked');
     expect(AGE_POLICY_TUPLE).toEqual([
       'policy=neutral_dob_eligibility',
-      'version=draft-v1',
+      'version=draft-v2-adult18',
       'scope=global',
-      'minimum_years=16',
+      'minimum_years=18',
       'parental_consent_path=none',
       'review_status=draft_blocked',
     ]);
@@ -45,6 +45,15 @@ describe('neutral age gate (docs/01 §4)', () => {
     const exactly = { year: today.getFullYear() - MINIMUM_AGE, month: 1, day: 1 };
     expect(meetsMinimumAge(justUnder, today)).toBe(false);
     expect(meetsMinimumAge(exactly, today)).toBe(true);
+  });
+
+  it('requires the eighteenth birthday, including leap-day birthday edges', () => {
+    expect(meetsMinimumAge({ year: 2010, month: 6, day: 25 }, today)).toBe(false);
+    expect(meetsMinimumAge({ year: 2009, month: 6, day: 25 }, today)).toBe(false);
+    expect(meetsMinimumAge({ year: 2008, month: 6, day: 26 }, today)).toBe(false);
+    expect(meetsMinimumAge({ year: 2008, month: 6, day: 25 }, today)).toBe(true);
+    expect(meetsMinimumAge({ year: 2008, month: 2, day: 29 }, new Date(2026, 1, 28))).toBe(false);
+    expect(meetsMinimumAge({ year: 2008, month: 2, day: 29 }, new Date(2026, 2, 1))).toBe(true);
   });
 
   it('rejects impossible, future, and absurdly old dates', () => {

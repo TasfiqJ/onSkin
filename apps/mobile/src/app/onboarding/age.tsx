@@ -27,7 +27,7 @@ import { BRAND } from '@/lib/brand';
 // over X?", which invites falsification) BEFORE any health-data collection, and
 // block under-threshold users. We never persist the DOB: storage contains only
 // the exact affirmative receipt or a generic re-verification tombstone.
-// Final threshold / parental-consent path: counsel.
+// Adult18 is adopted; legal sufficiency remains under review. No parental path.
 function DobField({
   label,
   accessibilityLabel,

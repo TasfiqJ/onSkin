@@ -1,0 +1,74 @@
+[
+  {
+    "path": "check-0.txt",
+    "original_sha256": "bbbb06061acbbe0d10c3b45d7d22ef1fc7a23a789eb512c968592010b7731e82",
+    "sha256": "07a532ff62e728c3e99681c1f28a5ca73443c0a7b155cfd36b18b38238fa21f7",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "check-1.txt",
+    "original_sha256": "4196e65a3e0d80f9f794448503a6e9d31e1b7fdde3735a3016c1e91ba0b76a17",
+    "sha256": "87170bce4dad1246e6082c4e3f66155669212a9d95032bc9b835ea83c5793866",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "check-2.txt",
+    "original_sha256": "54134535fb8850c2f1da7f176356e5bfe8bb1dc7a546bb9388ed0766900bff41",
+    "sha256": "562ee96355377f0aa17839b878e00a6875f59c08d504fbcb2244832eb1131f32",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "check-3.txt",
+    "original_sha256": "2350684438d3951c6ed7cf6d51d9e98619b1a1b4a133c4cb150ccee830cb9cfd",
+    "sha256": "b0b0e8dc3895ee38d5ebaf274e066db1162bac942eb3e8cefca354e57aaf040f",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "check-4.txt",
+    "original_sha256": "c5a496abf20a47ce36836ba670710410b892ff489815e2666b2e53a94ecdd0bc",
+    "sha256": "4c26a7cb3d22d0369b89ebb5064e4072f982e21f2ca2d99bf5d969fb420f3168",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "check-5.txt",
+    "original_sha256": "c5a496abf20a47ce36836ba670710410b892ff489815e2666b2e53a94ecdd0bc",
+    "sha256": "4c26a7cb3d22d0369b89ebb5064e4072f982e21f2ca2d99bf5d969fb420f3168",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "linux-check-0.txt",
+    "original_sha256": "08c361ffb8590b6430788ce860e7b48f8087a789cec76efea7fe445f8b7f0aa4",
+    "sha256": "08c361ffb8590b6430788ce860e7b48f8087a789cec76efea7fe445f8b7f0aa4",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "linux-check-1.txt",
+    "original_sha256": "87170bce4dad1246e6082c4e3f66155669212a9d95032bc9b835ea83c5793866",
+    "sha256": "87170bce4dad1246e6082c4e3f66155669212a9d95032bc9b835ea83c5793866",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "linux-check-2.txt",
+    "original_sha256": "562ee96355377f0aa17839b878e00a6875f59c08d504fbcb2244832eb1131f32",
+    "sha256": "562ee96355377f0aa17839b878e00a6875f59c08d504fbcb2244832eb1131f32",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "linux-check-3.txt",
+    "original_sha256": "b0b0e8dc3895ee38d5ebaf274e066db1162bac942eb3e8cefca354e57aaf040f",
+    "sha256": "b0b0e8dc3895ee38d5ebaf274e066db1162bac942eb3e8cefca354e57aaf040f",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "linux-check-4.txt",
+    "original_sha256": "4c26a7cb3d22d0369b89ebb5064e4072f982e21f2ca2d99bf5d969fb420f3168",
+    "sha256": "4c26a7cb3d22d0369b89ebb5064e4072f982e21f2ca2d99bf5d969fb420f3168",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  },
+  {
+    "path": "scope-audit.json",
+    "original_sha256": "66eac7461f9b9e6468726c903c0c999d8eed1646bfcb142406b5669c6a7c43c6",
+    "sha256": "a4a6fe22893cffd7fdfbef65b71b7564e562005d49e9af1b19b383c4a75b4453",
+    "sanitization": "UTF8 line ending normalization; local home path and random test-directory identifier replaced. No result removed."
+  }
+]

@@ -1149,7 +1149,7 @@ async function run() {
       await fillByLabel(client, 'Year of birth', String(new Date().getFullYear()));
       ageReverificationBefore = await captureStep(client, '25-age-reverification-before-submit');
       await clickByText(client, 'Continue');
-      await waitForText(client, 'You need to be at least 16', 30_000);
+      await waitForText(client, 'You need to be at least 18', 30_000);
       ageReverificationBlocked = await captureStep(client, '26-age-reverification-blocked');
       assert(
         !ageReverificationBlocked.bodyText.includes('Morning routine') &&

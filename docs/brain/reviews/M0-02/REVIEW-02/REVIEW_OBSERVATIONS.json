@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "review_id": "M0-02-REVIEW-02",
+  "reviewer": "onSkin Brain",
+  "decision": "ACCEPTED",
+  "accepted_scope": "PLANNING_AUTHORITY_AND_GOVERNANCE_TOOLING_ONLY",
+  "observed_at_utc": "2026-10-20T11:04:47+00:00",
+  "head": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+  "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+  "reported_measured_implementation": {
+    "sha": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+    "tree": "bd89efae1701642e3cb14f731346be173b6614de"
+  },
+  "independent_test_snapshot": {
+    "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+    "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+    "clean_before_and_after": true
+  },
+  "review_method": [
+    "Read root handoff, detailed report and repository instructions",
+    "Inspect each repair commit and cumulative stage changes",
+    "Inspect complete changed governance implementation and tests",
+    "Verify every original input and all 53 report artifacts against Git blobs",
+    "Independently run full governance suite and real CLI on Windows and Linux",
+    "Read live final Quality/DB and Security static job evidence and verify PR synthetic-tree identity"
+  ],
+  "scope_evidence": "EVIDENCE/scope-audit.json",
+  "tests": [
+    {
+      "id": "BRAIN-WINDOWS-GOVERNANCE",
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "environment": "Windows, Python 3.9.13; clean existing stage checkout",
+      "status": "PASS_WITH_DISCLOSED_SKIPS",
+      "exit_code": 0,
+      "counts": {
+        "considered": 36,
+        "passed": 34,
+        "failed": 0,
+        "skipped": 2
+      },
+      "skip_reason": "Windows symlink-creation privilege unavailable; real junction and hardlink cases pass.",
+      "artifact": "EVIDENCE/check-0.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-LINUX-GOVERNANCE",
+      "command": "python3 -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "environment": "Linux WSL onskin-r6-verification, Python 3.12.3, git 2.43.0; clean independent sparse local clone at exact delivery SHA",
+      "status": "PASS_WITH_DISCLOSED_SKIPS",
+      "exit_code": 0,
+      "counts": {
+        "considered": 36,
+        "passed": 34,
+        "failed": 0,
+        "skipped": 2
+      },
+      "skip_reason": "Two Windows-only junction cases; real Linux dangling/existing symbolic-link and hardlink cases pass.",
+      "artifact": "EVIDENCE/linux-check-0.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-WINDOWS-CLI-1",
+      "command": "python -B scripts/brain/brain.py validate",
+      "environment": "Windows Python3.9.13",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/check-1.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-WINDOWS-CLI-2",
+      "command": "python -B scripts/brain/brain.py mirrors --check",
+      "environment": "Windows Python3.9.13",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/check-2.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-WINDOWS-CLI-3",
+      "command": "python -B scripts/brain/brain.py report docs/brain/checkpoints/M0-02/FIX-01/completion-report.json",
+      "environment": "Windows Python3.9.13",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/check-3.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-WINDOWS-CLI-4",
+      "command": "python -B scripts/brain/brain.py pack --task M0-02 --output <new external ZIP>",
+      "environment": "Windows Python3.9.13",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/check-4.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-LINUX-CLI-1",
+      "command": "python -B scripts/brain/brain.py validate",
+      "environment": "Linux Python3.12.3",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/linux-check-1.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-LINUX-CLI-2",
+      "command": "python -B scripts/brain/brain.py mirrors --check",
+      "environment": "Linux Python3.12.3",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/linux-check-2.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-LINUX-CLI-3",
+      "command": "python -B scripts/brain/brain.py report docs/brain/checkpoints/M0-02/FIX-01/completion-report.json",
+      "environment": "Linux Python3.12.3",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/linux-check-3.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "id": "BRAIN-LINUX-CLI-4",
+      "command": "python -B scripts/brain/brain.py pack --task M0-02 --output <new external ZIP>",
+      "environment": "Linux Python3.12.3",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "source_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "EVIDENCE/linux-check-4.txt",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    }
+  ],
+  "cli_checks": {
+    "validate": "PASS_BOTH",
+    "mirrors_check": "PASS_BOTH_NONWRITING",
+    "FIX01_report_v3": "PASS_BOTH",
+    "original_context_build": "PASS_BOTH_IDENTICAL",
+    "windows_verify_pack": "PASS"
+  },
+  "context_rebuild": {
+    "task": "M0-02",
+    "files": 49,
+    "input_bytes": 860347,
+    "archive_bytes": 876597,
+    "sha256": "b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547"
+  },
+  "platform_coverage_note": "Both platforms execute the same 36 named tests; do not add pass counts as unique tests. Complementary real platform checks cover each named test on at least one platform.",
+  "not_run_by_brain": [
+    "Full app test suite locally during this governance-only review",
+    "Physical iPhone or native signed build",
+    "Hosted DB replay or live provider mutations",
+    "Qualified expert review",
+    "Clinical validation or commercial experiment"
+  ],
+  "other_attempts": [
+    {
+      "operation": "Clone public repository into ChatGPT container",
+      "outcome": "BLOCKED_DNS_RESOLUTION",
+      "disposition": "Used authorized desktop local source and GitHub connector; no unseen clone audit claimed"
+    },
+    {
+      "operation": "Start existing WSL Ubuntu-22.04",
+      "outcome": "BLOCKED_MISSING_VHD",
+      "disposition": "Did not repair machine; used existing functioning onskin-r6-verification distro"
+    }
+  ],
+  "data_safety": "Only selected governance/source inputs and synthetic fixtures inspected. No restricted reports or patient imagery accessed. No source files, branch refs, policies, keys, cloud accounts or original dirty founder checkout modified by Brain.",
+  "prior_review": "docs/brain/reviews/M0-02/REVIEW-01",
+  "full_logs": "EVIDENCE/ (explicitly sanitized, original raw SHA256 retained in index.json)",
+  "main_promotion_authorized": false,
+  "protected_source_go": false,
+  "next_issued_task": "M1-01",
+  "next_branch": "stage/m1-retained-safety"
+}

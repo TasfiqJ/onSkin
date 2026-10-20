@@ -1,5 +1,7 @@
 # Adopted onSkin V2 planning authority
 
+Active successor: [Brain REVIEW-02](../brain/reviews/M0-02/REVIEW-02/README.md) accepts M0-02 governance only and explicitly issues M1-01 on `stage/m1-retained-safety`. Use [active.json](../brain/active.json) and the [M1 profile](../brain/README.md). Original snapshots and generated M0 mirrors are preserved; the historical submission text below is not the current task status. Main promotion and all protected/external admissions stay closed.
+
 Version: SourcePack 2.1 bootstrap, installed by **M0-02**. This namespace adopts the supplied plan for future scoped tasks. It grants no runtime, database, clinical, commercial or release admission. M0-02 is submitted to the Brain for independent review; installation is not self-acceptance.
 
 Current Brain decision is [FIX_REQUIRED / REVIEW-01](../brain/reviews/M0-02/REVIEW-01/README.md). Active work is the same M0-02 task, iteration FIX-01. The approved roadmap mirror now carries that review overlay; all original task/module identities, dependencies, inputs and evidence remain preserved. See [v3 evidence contracts](../brain/contracts/FIX-01-v3.md) and the separate FIX-01 checkpoint. No later task or main promotion is issued.

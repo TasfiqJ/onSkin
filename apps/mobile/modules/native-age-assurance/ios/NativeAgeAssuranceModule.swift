@@ -9,7 +9,7 @@ import DeclaredAgeRange
 private let ageAssuranceContractVersion = 1
 private let ageAssuranceReviewStatus = "launch_blocked"
 private let ageAssuranceProvider = "apple_declared_age_range"
-private let ageAssuranceMinimumAge = 16
+private let ageAssuranceMinimumAge = 18
 private let ageAssuranceMinimumRuntime = "iOS 26.2"
 private let ageAssuranceMinimumSdk = "iOS 26.2"
 

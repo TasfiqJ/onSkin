@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { AppState, Pressable, View, type AppStateStatus } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import { queryClient } from '@/lib/query/queryClient';
 import { colors } from '@/theme/tokens';
 
@@ -49,7 +50,10 @@ export function AgePolicyGate({
 
   const readActiveReceipt = useCallback(async (preserveUnavailableView = false) => {
     const readGeneration = ++readGenerationRef.current;
-    if (!preserveUnavailableView) setReceiptStatus('checking');
+    if (!preserveUnavailableView) {
+      clearActiveHealthProcessingEpoch();
+      setReceiptStatus('checking');
+    }
 
     let nextStatus: AgePolicyReceiptStatus;
     try {
@@ -88,6 +92,7 @@ export function AgePolicyGate({
         // Invalidate every pending read and synchronously close protected
         // providers before the app can later foreground with a stale receipt.
         readGenerationRef.current += 1;
+        clearActiveHealthProcessingEpoch();
         setRetrying(false);
         setReceiptStatus('checking');
         return;
@@ -123,6 +128,7 @@ export function AgePolicyGate({
       // while that overwrite is pending or has failed. Incrementing the
       // generation also prevents an older receipt read from reopening them.
       readGenerationRef.current += 1;
+      if (publishedStatus !== 'current') clearActiveHealthProcessingEpoch();
       setRetrying(false);
       setReceiptStatus(publishedStatus);
     });

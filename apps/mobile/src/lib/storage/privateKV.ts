@@ -382,9 +382,10 @@ export async function getPrivateItem(key: string): Promise<string | null> {
     if (healthReadLease !== null) assertHealthDataWriteLease(healthReadLease);
   };
   return withOperationTiming('private_kv_read', () =>
-    runAccountScopedPrivateOperation(async () => {
+    runAccountScopedPrivateOperation(async (generation) => {
       assertPrivateDataKey(key);
       const raw = await AsyncStorage.getItem(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
       if (!raw) {
         failedReadSnapshots.delete(key);
@@ -409,6 +410,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
         rememberFailedRead(key, raw);
         throw error;
       }
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
       if (!contentKey) {
         rememberFailedRead(key, raw);
@@ -444,10 +446,11 @@ async function readPrivateItems(
   };
   assertHealthReadsCurrent();
   return withOperationTiming('private_kv_batch_read', () =>
-    runAccountScopedPrivateOperation(async () => {
+    runAccountScopedPrivateOperation(async (generation) => {
       assertHealthReadsCurrent();
       for (const key of keys) assertPrivateDataKey(key);
       const entries = await AsyncStorage.multiGet([...keys]);
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
       const result = new Map<string, string | null>();
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
@@ -481,6 +484,7 @@ async function readPrivateItems(
         for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
         throw error;
       }
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
       if (!contentKey) {
         for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);

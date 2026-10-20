@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/lib/storage/privateKV.test.ts src/features/shelf/store.test.ts src/features/onboarding src/features/healthConsent src/features/settings src/lib/auth
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+
+ Test Files  88 passed (88)
+      Tests  971 passed (971)
+   Start at  09:56:51
+   Duration  3.84s (transform 9.95s, setup 0ms, import 21.02s, tests 4.44s, environment 15ms)
+

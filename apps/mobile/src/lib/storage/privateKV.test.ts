@@ -741,6 +741,38 @@ describe('private KV encrypted storage', () => {
     );
   });
 
+  it.each(['single', 'batch'] as const)(
+    'rejects a delayed %s non-health receipt read across an owner boundary',
+    async (kind) => {
+      const key = 'layerwell.ageVerified';
+      await setPrivateItem(key, 'owner-a-receipt');
+      const raw = mocks.asyncStorage.get(key);
+      let release!: () => void;
+      let started!: () => void;
+      const held = new Promise<void>((resolve) => { release = resolve; });
+      const reading = new Promise<void>((resolve) => { started = resolve; });
+      if (kind === 'single') {
+        mocks.getItemGate = held;
+        mocks.getItemStarted = started;
+      } else {
+        mocks.multiGetGate = held;
+        mocks.multiGetStarted = started;
+      }
+      const pending = kind === 'single' ? getPrivateItem(key) : getPrivateItems([key]);
+      const rejected = expect(pending).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      await reading;
+      beginPrivateKVAccountBoundary();
+      release();
+      try {
+        await rejected;
+        expect(mocks.asyncStorage.get(key)).toBe(raw);
+      } finally {
+        endPrivateKVAccountBoundary();
+      }
+      await expect(getPrivateItem(key)).resolves.toBe('owner-a-receipt');
+    },
+  );
+
   it('keeps ordinary health reads closed while a verified data export can read them', async () => {
     await setPrivateItem('layerwell.skinprofile.v1', 'exportable-profile');
     clearActiveHealthProcessingEpoch();

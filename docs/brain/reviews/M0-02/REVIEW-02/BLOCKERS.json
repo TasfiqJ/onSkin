@@ -1,0 +1,193 @@
+{
+  "updated_at_utc": "2026-10-20T11:04:47+00:00",
+  "blockers": [
+    {
+      "id": "BLK-01",
+      "status": "OPEN_AVAILABILITY_RISK",
+      "description": "ECR acquisition and the entire unchanged database CI gate succeeded at 6aa01995 in Quality39376189137. Earlier repeated Data limit exceeded failures remain historical evidence; permanent quota/account remediation is not established.",
+      "impact": "NOT_CURRENTLY_FAILING_AT_REVIEWED_HEAD; RECHECK_EACH_NEW_CI_BUILD; NO_HOSTED_OR_SCHEMA_AUTHORITY",
+      "latest_observation": {
+        "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+        "run_id": 39376189137,
+        "job_id": 118475132861,
+        "status": "EXACT_RUN_SUCCESS",
+        "upstream_root_cause": "UNKNOWN",
+        "permanent_repair": "NOT_ESTABLISHED"
+      },
+      "history": [
+        {
+          "description": "Final Quality run 39366256422 job 118443688177 fails canonical ECR Postgres acquisition with Data limit exceeded before database startup. Local success does not close CI; exact quota cause and safe resolution remain unknown.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600842,
+            "job_id": 118460482876,
+            "error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+            "status": "OPEN"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BLK-02",
+      "status": "OPEN",
+      "description": "Protected DB06/DB08/R2B replay, deployment and custody gates remain ungranted. Codex local disposable verification is diagnostic evidence, not hosted replay or integration authorization.",
+      "impact": "BLOCKS_PROTECTED_REPLAY_SCHEMA_DEPLOYMENT"
+    },
+    {
+      "id": "BLK-03",
+      "status": "OPEN",
+      "description": "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+      "impact": "BLOCKS_SECURITY_ADMISSION_AND_PROMOTION",
+      "latest_observation": {
+        "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+        "run_id": 39376189138,
+        "conclusion": "failure",
+        "static_job": 118474749883,
+        "acceptance_job": 118476384699,
+        "exact_static_log_read": true
+      },
+      "history": [
+        {
+          "description": "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600769,
+            "conclusion": "failure",
+            "static_job": 118460483010,
+            "acceptance_job": 118461695511,
+            "specific_final_static_diagnostics": "NOT_INDEPENDENTLY_REREAD_THIS_REVIEW; prior blockers retained"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BLK-04",
+      "status": "OPEN",
+      "description": "Physical iOS/provider/qualified reviews not performed"
+    },
+    {
+      "id": "BLK-05",
+      "status": "OPEN",
+      "description": "No J05 single-scan or change claims validated"
+    },
+    {
+      "id": "BLK-06",
+      "status": "OPEN",
+      "description": "26 module research packs are missing; request only a ready next module when triggered"
+    },
+    {
+      "id": "BLK-07",
+      "status": "OPEN",
+      "description": "Commercial investment remains NO-GO; incremental spend authorized is $0"
+    },
+    {
+      "id": "BLK-08",
+      "status": "OPEN",
+      "description": "Final Security39376189138 static job118474749883 rejects SOURCE_INVENTORY_DRIFT; independently read at exact delivery head. No frozen manifest, scanner coverage, owner pins or acceptance rebind authorized.",
+      "impact": "No source-only Security GO or branch promotion. M0-02 may document new inventory drift but must not hide or waive it.",
+      "required_resolution": "Separate exact-source review and actual authorized custody procedure; no mechanical rebinding.",
+      "latest_observation": {
+        "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+        "run_id": 39376189138,
+        "conclusion": "failure",
+        "static_job": 118474749883,
+        "acceptance_job": 118476384699,
+        "exact_static_log_read": true
+      },
+      "history": [
+        {
+          "description": "Final Security run 39366256806 static job 118443689708 rejects SOURCE_INVENTORY_DRIFT. Added handoff/evidence paths are outside the frozen reviewed inventory; existing edited source bytes also require exact review.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600769,
+            "conclusion": "failure",
+            "static_job": 118460483010,
+            "acceptance_job": 118461695511,
+            "specific_final_static_diagnostics": "NOT_INDEPENDENTLY_REREAD_THIS_REVIEW; prior blockers retained"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BLK-09",
+      "status": "OPEN",
+      "description": "Final Security39376189138 independently reports braces/node-forge review-date refusals and mcp@1.29.0:GHSA-84m7-p3x7-pcfv. Repairing inventory alone cannot establish Security acceptance.",
+      "impact": "Refreshing inventory alone would not establish Security acceptance.",
+      "evidence_kind": "Observed CI refusal; advisory applicability and safe remediation not yet independently assessed.",
+      "required_resolution": "Preserve original scanner reports/outcomes; separately review advisory applicability and governed remediation. No expiration extensions, allowlist growth or dependency updates in M1-01.",
+      "latest_observation": {
+        "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+        "run_id": 39376189138,
+        "conclusion": "failure",
+        "static_job": 118474749883,
+        "acceptance_job": 118476384699,
+        "exact_static_log_read": true
+      },
+      "history": [
+        {
+          "description": "The same final static job independently reports braces and node-forge review date refusals, plus unreviewed OSV advisory mcp@1.29.0:GHSA-84m7-p3x7-pcfv.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600769,
+            "conclusion": "failure",
+            "static_job": 118460483010,
+            "acceptance_job": 118461695511,
+            "specific_final_static_diagnostics": "NOT_INDEPENDENTLY_REREAD_THIS_REVIEW; prior blockers retained"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BLK-10",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "Full validate CLI accepts an unsupported PASS observation without a command, artifact/hash or source snapshot. It also accepts JSON false as exit code zero.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F1",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "BLK-11",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "Full report CLI accepts in_progress CI with success, nonexistent CI evidence, an all-zero CI head, and a nonexistent observed-main/original-stage-base tuple.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F2",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "BLK-12",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "Keeping original immutable inputs/anchor/current task intact, repointing only the mutable task spec at a self-authored matching manifest produces a successful M0-02 ZIP containing unapproved synthetic text.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F3",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "BLK-13",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "A dangling output-file symlink passes the exists-based precheck. touch() creates an empty file outside the root before safe_file rejects the link.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F4",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED_FOCUSED_FUNCTION_SLICE",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    }
+  ]
+}
