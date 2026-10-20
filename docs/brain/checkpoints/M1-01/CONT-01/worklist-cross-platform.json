@@ -1,0 +1,19 @@
+{
+  "cause": "The unchanged generator fingerprints raw worktree bytes. Two tracked source files retained CRLF in the Windows worktree while Git/CI uses LF. Local clean --check matched Windows bytes, not CI bytes.",
+  "proof": [
+    {
+      "path": "apps/mobile/src/features/shelf/store.test.ts",
+      "before_sha256": "5d3f84a612f1ca4fbed27527f32873359e198667a88649889b5bdf44c6fc555b",
+      "git_sha256": "ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2",
+      "only_crlf": true
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before_sha256": "4987ec3b9c9fd6ef5d602f0485f4a2b52cf233cb9e57b5432ffffdc403998581",
+      "git_sha256": "6bc98a100ba2ebe66c7eb55a92729e2c9ee73eee16cfdb35e6a0a7ab845bc39a",
+      "only_crlf": true
+    }
+  ],
+  "operation": "Write the already-committed exact Git blobs only in this stage checkout; zero Git source diff. No generator, dependency or other checkout mutation.",
+  "next": "Regenerate only the two ADR-031 outputs from a clean checkpoint, preserve semantic fields, and prove every source fingerprint equals its Git blob."
+}

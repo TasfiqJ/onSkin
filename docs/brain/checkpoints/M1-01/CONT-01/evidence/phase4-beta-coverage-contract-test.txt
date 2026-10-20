@@ -1,0 +1,86 @@
+
+> layerwell@0.1.0 phase4:beta-coverage-contract:test
+> node --test scripts/phase4/beta-coverage-packet-contract.test.mjs scripts/phase4/beta-coverage-committed-check.test.mjs scripts/phase9/upstream-packet-contract.test.mjs
+
+TAP version 13
+# Subtest: accepts the canonical committed beta pair at its unique governed publication
+ok 1 - accepts the canonical committed beta pair at its unique governed publication
+  ---
+  duration_ms: 6.1411
+  type: 'test'
+  ...
+# Subtest: rejects a backward governed prefix
+ok 2 - rejects a backward governed prefix
+  ---
+  duration_ms: 1.4373
+  type: 'test'
+  ...
+# Subtest: rejects JSON-only and widened publication commits
+ok 3 - rejects JSON-only and widened publication commits
+  ---
+  duration_ms: 3.2073
+  type: 'test'
+  ...
+# Subtest: rejects a later edit to either committed beta output
+ok 4 - rejects a later edit to either committed beta output
+  ---
+  duration_ms: 1.5949
+  type: 'test'
+  ...
+# Subtest: rejects noncanonical JSON, whitespace drift, and a dirty generatedAt
+ok 5 - rejects noncanonical JSON, whitespace drift, and a dirty generatedAt
+  ---
+  duration_ms: 1.7272
+  type: 'test'
+  ...
+# Subtest: rejects late mounted-input and source drift
+ok 6 - rejects late mounted-input and source drift
+  ---
+  duration_ms: 2.0043
+  type: 'test'
+  ...
+# Subtest: rejects late index and governed working-binding drift
+ok 7 - rejects late index and governed working-binding drift
+  ---
+  duration_ms: 1.5585
+  type: 'test'
+  ...
+# Subtest: pins launch-contract semantics before a swap-use-restore race window
+ok 8 - pins launch-contract semantics before a swap-use-restore race window
+  ---
+  duration_ms: 1.8525
+  type: 'test'
+  ...
+# Subtest: beta coverage evidence requires the exact six-key all-true inventory
+ok 9 - beta coverage evidence requires the exact six-key all-true inventory
+  ---
+  duration_ms: 1.0979
+  type: 'test'
+  ...
+# Subtest: accepts future-ready Phase 5, Phase 7, and beta packet roles at R when audited at F
+ok 10 - accepts future-ready Phase 5, Phase 7, and beta packet roles at R when audited at F
+  ---
+  duration_ms: 4.4638
+  type: 'test'
+  ...
+# Subtest: rejects reduced and extra canonical evidence inventories
+ok 11 - rejects reduced and extra canonical evidence inventories
+  ---
+  duration_ms: 5.7503
+  type: 'test'
+  ...
+# Subtest: rejects blocked upstream roles, foreign RCs, and false beta claims
+ok 12 - rejects blocked upstream roles, foreign RCs, and false beta claims
+  ---
+  duration_ms: 2.4179
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 138.5173

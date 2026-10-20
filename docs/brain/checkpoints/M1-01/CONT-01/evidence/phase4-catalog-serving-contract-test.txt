@@ -1,0 +1,35 @@
+
+> layerwell@0.1.0 phase4:catalog-serving-contract:test
+> deno test --no-config --quiet --allow-read=. --lock=supabase/functions/deno.lock --frozen=true supabase/functions/catalog-lookup/catalogContract.test.ts supabase/functions/catalog-lookup/scanMinimization.test.ts supabase/functions/catalog-search/catalogContract.test.ts supabase/functions/catalog-search/indexedSearchContract.test.ts
+
+running 8 tests from ./supabase/functions/catalog-lookup/catalogContract.test.ts
+catalog lookup uses the service-only production eligibility RPC ... ok (19ms)
+central catalog serving view requires positive source, product, and correction evidence ... ok (0ms)
+barcode and direct catalog lanes cannot launder held child evidence ... ok (0ms)
+every catalog lane requires one exact active CAT-03 curation head ... ok (24ms)
+source attribution is bounded and base review metadata stays sealed ... ok (11ms)
+untrusted correction intake cannot become a cross-user serving hold ... ok (0ms)
+catalog lookup Edge handler cannot bypass the atomic eligibility RPC ... ok (11ms)
+catalog lookup has no provider path and preserves manual fallback ... ok (0ms)
+running 8 tests from ./supabase/functions/catalog-lookup/scanMinimization.test.ts
+CAT-04 purges and seals legacy account-linked raw scan history ... ok (22ms)
+CAT-04 permanently disables the legacy external-contribution queue ... ok (0ms)
+server lookup analytics retain outcome buckets but no catalog identity ... ok (12ms)
+server barcode intake rejects lossy or non-string normalization ... ok (0ms)
+database serving lanes require checksum-valid canonical GTIN identity ... ok (0ms)
+mobile scan analytics cannot persist raw barcode or product identity ... ok (8ms)
+sealed scan history cannot re-enter the caller data-export registry ... ok (10ms)
+catalog correction identity has one canonical barcode lane ... ok (11ms)
+running 4 tests from ./supabase/functions/catalog-search/catalogContract.test.ts
+catalog search normalizes empty and short queries deterministically ... ok (0ms)
+catalog search neutralizes pattern grammar and keeps ordinary substring text ... ok (0ms)
+catalog search caps normalized query text at the reviewed length ... ok (0ms)
+catalog search limits are integral and bounded for every JSON input shape ... ok (0ms)
+running 4 tests from ./supabase/functions/catalog-search/indexedSearchContract.test.ts
+current catalog search preserves the CAT-03 serving gate after index optimization ... ok (9ms)
+catalog search migration aligns substring predicates with trigram indexes ... ok (9ms)
+catalog search RPC preserves visibility, response evidence, ranking, and limits ... ok (8ms)
+catalog search Edge handler uses only the reviewed parameterized RPC ... ok (0ms)
+
+ok | 24 passed | 0 failed (383ms)
+

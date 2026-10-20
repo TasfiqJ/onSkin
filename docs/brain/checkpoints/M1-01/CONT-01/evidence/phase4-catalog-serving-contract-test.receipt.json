@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd run phase4:catalog-serving-contract:test",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "8f0980e5c1262257ef3fb0ffa4611dc2a9827d0e",
+  "source_tree": "8487455d419d4b73af6be785b7a17295e8a7fefd",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-01/evidence/phase4-catalog-serving-contract-test.txt",
+    "sha256": "8d31e99f48118404ae9bf50fa09bbf9e561098f6ba7b8a19b0f388e3ebaf32d2"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T15:58:14.767261+00:00",
+  "finished_at_utc": "2026-10-20T15:58:16.453518+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "run",
+    "phase4:catalog-serving-contract:test"
+  ]
+}

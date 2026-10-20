@@ -1,0 +1,11 @@
+
+> layerwell@0.1.0 phase4:beta-coverage-report-smoke
+> node scripts/phase4/beta-coverage-report-smoke.mjs
+
+OK legacy beta coverage report never accepts self-attested evidence as authority
+OK beta coverage report strict mode blocks missing beta exports
+OK beta coverage template documents the export shape without passing evidence gates
+OK beta coverage report rejects placeholder evidence
+OK beta coverage report blocks high wrong-match and parser risk
+OK beta coverage report blocks recommendation use below usable quality
+OK beta coverage report rejects coercible, negative, fractional, and impossible counts

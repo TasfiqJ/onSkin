@@ -1,0 +1,194 @@
+
+> layerwell@0.1.0 phase4:curation-contract:test
+> node --test scripts/phase4/catalog-curation-contract.test.mjs scripts/phase4/catalog-coverage-quality-report.test.mjs
+
+TAP version 13
+# Subtest: envelope CLI exports an exact flag-only interface and operational help
+ok 1 - envelope CLI exports an exact flag-only interface and operational help
+  ---
+  duration_ms: 1.3769
+  type: 'test'
+  ...
+# Subtest: report CLI exports exact inputs, output naming, trust-root requirements, and exit semantics
+ok 2 - report CLI exports exact inputs, output naming, trust-root requirements, and exit semantics
+  ---
+  duration_ms: 0.2451
+  type: 'test'
+  ...
+# Subtest: both CLIs provide help without evidence files, network, or trust-root environment
+ok 3 - both CLIs provide help without evidence files, network, or trust-root environment
+  ---
+  duration_ms: 238.0806
+  type: 'test'
+  ...
+# Subtest: invalid or incomplete CLI invocations fail closed
+ok 4 - invalid or incomplete CLI invocations fail closed
+  ---
+  duration_ms: 133.4334
+  type: 'test'
+  ...
+# Subtest: malformed evidence cannot create even a partial quality report
+ok 5 - malformed evidence cannot create even a partial quality report
+  ---
+  duration_ms: 73.101
+  type: 'test'
+  ...
+# Subtest: builds a 2,000-record, six-category envelope and reserves clear for DB readback
+ok 6 - builds a 2,000-record, six-category envelope and reserves clear for DB readback
+  ---
+  duration_ms: 14515.8596
+  type: 'test'
+  ...
+# Subtest: validates independent signed CAT-02 membership and final DB readback authorities
+ok 7 - validates independent signed CAT-02 membership and final DB readback authorities
+  ---
+  duration_ms: 1892.4594
+  type: 'test'
+  ...
+# Subtest: full pre-holdout commitment rejects any authority-bearing record mutation
+ok 8 - full pre-holdout commitment rejects any authority-bearing record mutation
+  ---
+  duration_ms: 197.176
+  type: 'test'
+  ...
+# Subtest: append-only served-state mutation roots reject missing, tampered, and pre-record stale review authority
+ok 9 - append-only served-state mutation roots reject missing, tampered, and pre-record stale review authority
+  ---
+  duration_ms: 1847.5208
+  type: 'test'
+  ...
+# Subtest: activation operator is independent from every outcome reviewer
+ok 10 - activation operator is independent from every outcome reviewer
+  ---
+  duration_ms: 89.9212
+  type: 'test'
+  ...
+# Subtest: outcome reviewers seal first and activation authorization is strictly later
+ok 11 - outcome reviewers seal first and activation authorization is strictly later
+  ---
+  duration_ms: 6688.5434
+  type: 'test'
+  ...
+# Subtest: hard inventory floor cannot be satisfied by a token record or null priorities
+ok 12 - hard inventory floor cannot be satisfied by a token record or null priorities
+  ---
+  duration_ms: 68.3617
+  type: 'test'
+  ...
+# Subtest: every unsuppressed demand commitment maps once and to the same category
+ok 13 - every unsuppressed demand commitment maps once and to the same category
+  ---
+  duration_ms: 197.5472
+  type: 'test'
+  ...
+# Subtest: stratum Wilson gates expose a bad required category hidden by a passing aggregate
+ok 14 - stratum Wilson gates expose a bad required category hidden by a passing aggregate
+  ---
+  duration_ms: 0.7859
+  type: 'test'
+  ...
+# Subtest: contributors, bucket counts, overlap, and nonzero operational denominators fail closed
+ok 15 - contributors, bucket counts, overlap, and nonzero operational denominators fail closed
+  ---
+  duration_ms: 85.5556
+  type: 'test'
+  ...
+# Subtest: tampered or untrusted external timestamp/log receipt is rejected
+ok 16 - tampered or untrusted external timestamp/log receipt is rejected
+  ---
+  duration_ms: 2.4009
+  type: 'test'
+  ...
+# Subtest: CAT-02 proof requires production-integral batches, variable ingredient entities, and zero DB variance
+ok 17 - CAT-02 proof requires production-integral batches, variable ingredient entities, and zero DB variance
+  ---
+  duration_ms: 5376.0309
+  type: 'test'
+  ...
+# Subtest: database readback rejects subsets, extras, and current-serving mismatches
+ok 18 - database readback rejects subsets, extras, and current-serving mismatches
+  ---
+  duration_ms: 10239.3958
+  type: 'test'
+  ...
+# Subtest: CAT-03 review and readback reject pre-0062 schema authority
+ok 19 - CAT-03 review and readback reject pre-0062 schema authority
+  ---
+  duration_ms: 2299.707
+  type: 'test'
+  ...
+# Subtest: CAT-03 review binds the exact current migration and database-contract bytes
+ok 20 - CAT-03 review binds the exact current migration and database-contract bytes
+  ---
+  duration_ms: 173.4166
+  type: 'test'
+  ...
+# Subtest: target inventory declaration cannot weaken 2,000/six-category consistency
+ok 21 - target inventory declaration cannot weaken 2,000/six-category consistency
+  ---
+  duration_ms: 1.5922
+  type: 'test'
+  ...
+# Subtest: database eligibility policy canonical text and digest match the fixed JS/PostgreSQL golden vector
+ok 22 - database eligibility policy canonical text and digest match the fixed JS/PostgreSQL golden vector
+  ---
+  duration_ms: 0.2222
+  type: 'test'
+  ...
+# Subtest: 0058 and JS canonical bridges use identical mapping/auth/record-set vocabulary
+ok 23 - 0058 and JS canonical bridges use identical mapping/auth/record-set vocabulary
+  ---
+  duration_ms: 496.0515
+  type: 'test'
+  ...
+# Subtest: CAT-03 operator templates expose the current exact schema while remaining blocked
+ok 24 - CAT-03 operator templates expose the current exact schema while remaining blocked
+  ---
+  duration_ms: 1040.2623
+  type: 'test'
+  ...
+# Subtest: participant-level Wilson units, caps, reconciliation, and small cells fail closed
+ok 25 - participant-level Wilson units, caps, reconciliation, and small cells fail closed
+  ---
+  duration_ms: 139.834
+  type: 'test'
+  ...
+# Subtest: category ingredient and operational route/network strata cannot hide aggregate failures
+ok 26 - category ingredient and operational route/network strata cannot hide aggregate failures
+  ---
+  duration_ms: 1.1017
+  type: 'test'
+  ...
+# Subtest: below-usable recommendations require both zero observations and a Wilson upper bound
+ok 27 - below-usable recommendations require both zero observations and a Wilson upper bound
+  ---
+  duration_ms: 0.304
+  type: 'test'
+  ...
+# Subtest: missing strata and zero denominators are explicit unavailable evidence
+ok 28 - missing strata and zero denominators are explicit unavailable evidence
+  ---
+  duration_ms: 0.4374
+  type: 'test'
+  ...
+# Subtest: holdout access, reuse, build, HMAC, suppression, and registry receipt tampering fails closed
+ok 29 - holdout access, reuse, build, HMAC, suppression, and registry receipt tampering fails closed
+  ---
+  duration_ms: 398.1173
+  type: 'test'
+  ...
+# Subtest: Wilson calculation is conservative and parser remains bounded above a 2,000-row artifact
+ok 30 - Wilson calculation is conservative and parser remains bounded above a 2,000-row artifact
+  ---
+  duration_ms: 53.6643
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 54507.8447

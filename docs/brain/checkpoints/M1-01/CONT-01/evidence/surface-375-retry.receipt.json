@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_PORT=8352 ONBOARDING_E2E_DEBUG_PORT=9452 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-375-retry node scripts/e2e/onboarding-first-session.mjs --retained-safety",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "8f0980e5c1262257ef3fb0ffa4611dc2a9827d0e",
+  "source_tree": "8487455d419d4b73af6be785b7a17295e8a7fefd",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-375-retry.txt",
+    "sha256": "e28cd000656499e7329afdc49790aea628fa8b10217aff54ba55edfff7d2cf96"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T15:54:26.788816+00:00",
+  "finished_at_utc": "2026-10-20T15:55:42.175620+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_PORT": "8352",
+    "ONBOARDING_E2E_DEBUG_PORT": "9452",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+    "ONBOARDING_E2E_EVIDENCE_DIR": "C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/surface-375-retry"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--retained-safety"
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "bodyText": "Your change was not confirmed. Your choices are still here; try again when private storage is available. < Synthetic manual moisturizer data / Added by you CATALOG Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. barcode 4006381333931 category moisturiser_tube Report an issue Opened September 2026 · edit Exact opened date Save exact date Today 1 mo ago 3 mo ago 6 mo ago Not opened yet PAO unknown · edit Recorded package date not entered · set Date unknown ROUTINE ROLE Used in your Evening routine. Review the AM/PM plan before you check it off. Replace Mark finished 🗑︎",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 48
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "More options",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 358,
+      "y": 48
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Report an issue",
+      "role": "button",
+      "selected": false,
+      "width": 105.48,
+      "x": 43,
+      "y": 355
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit opened date",
+      "role": "button",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 435
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Exact opened date",
+      "role": "input",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 523
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Save exact date",
+      "role": "button",
+      "selected": false,
+      "width": 142.3,
+      "x": 43,
+      "y": 579
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Today",
+      "role": "button",
+      "selected": false,
+      "width": 73.31,
+      "x": 193.3,
+      "y": 579
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "1 mo ago",
+      "role": "button",
+      "selected": false,
+      "width": 95.8,
+      "x": 274.61,
+      "y": 579
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "3 mo ago",
+      "role": "button",
+      "selected": false,
+      "width": 95.8,
+      "x": 43,
+      "y": 635
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "6 mo ago",
+      "role": "button",
+      "selected": false,
+      "width": 95.8,
+      "x": 146.8,
+      "y": 635
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not opened yet",
+      "role": "button",
+      "selected": false,
+      "width": 138.3,
+      "x": 43,
+      "y": 691
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "role": "button",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 751
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Set date printed on this package",
+      "role": "button",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 819
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Replace",
+      "role": "button",
+      "selected": false,
+      "width": 155,
+      "x": 24,
+      "y": 882
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Mark finished",
+      "role": "button",
+      "selected": false,
+      "width": 157,
+      "x": 189,
+      "y": 882
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Remove or discard",
+      "role": "button",
+      "selected": false,
+      "width": 50,
+      "x": 356,
+      "y": 882
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8353/shelf/22322934-3528-4b8d-be88-8fe7392d3c8e",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

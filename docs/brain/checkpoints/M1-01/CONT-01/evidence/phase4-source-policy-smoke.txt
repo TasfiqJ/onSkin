@@ -1,0 +1,181 @@
+
+> layerwell@0.1.0 phase4:source-policy-smoke
+> node --test scripts/phase4/source-policy.test.mjs && node scripts/phase4/catalog-source-policy-audit.mjs
+
+TAP version 13
+# Subtest: CosIng authority normalization shares exact NFKC whitespace and uppercase semantics
+ok 1 - CosIng authority normalization shares exact NFKC whitespace and uppercase semantics
+  ---
+  duration_ms: 1.2912
+  type: 'test'
+  ...
+# Subtest: catalog GTIN authority requires exact checksums and one canonical padded identity
+ok 2 - catalog GTIN authority requires exact checksums and one canonical padded identity
+  ---
+  duration_ms: 0.381
+  type: 'test'
+  ...
+# Subtest: checked-in policy is fail-closed and fixed release/trust files remain pending
+ok 3 - checked-in policy is fail-closed and fixed release/trust files remain pending
+  ---
+  duration_ms: 5.0847
+  type: 'test'
+  ...
+# Subtest: mock trust registry and release scope satisfy the strict contracts
+ok 4 - mock trust registry and release scope satisfy the strict contracts
+  ---
+  duration_ms: 6.883
+  type: 'test'
+  ...
+# Subtest: release identity is derived from production Expo/EAS inputs and repository version
+ok 5 - release identity is derived from production Expo/EAS inputs and repository version
+  ---
+  duration_ms: 771.9262
+  type: 'test'
+  ...
+# Subtest: release build evidence binds signed EAS, archive, and App Store territory proof
+ok 6 - release build evidence binds signed EAS, archive, and App Store territory proof
+  ---
+  duration_ms: 4.8302
+  type: 'test'
+  ...
+# Subtest: release build verification cannot predate its fixed release authority
+ok 7 - release build verification cannot predate its fixed release authority
+  ---
+  duration_ms: 0.7466
+  type: 'test'
+  ...
+# Subtest: verified release build evidence loads with its exact release and trust bindings
+ok 8 - verified release build evidence loads with its exact release and trust bindings
+  ---
+  duration_ms: 5.1407
+  type: 'test'
+  ...
+# Subtest: build-source commit permits only the fixed post-build evidence descendants
+ok 9 - build-source commit permits only the fixed post-build evidence descendants
+  ---
+  duration_ms: 964.5167
+  type: 'test'
+  ...
+# Subtest: build-source commit cannot hide a source deletion as an evidence-path rename
+ok 10 - build-source commit cannot hide a source deletion as an evidence-path rename
+  ---
+  duration_ms: 577.14
+  type: 'test'
+  ...
+# Subtest: control JSON rejects duplicate security keys before JSON.parse canonicalization
+ok 11 - control JSON rejects duplicate security keys before JSON.parse canonicalization
+  ---
+  duration_ms: 0.4779
+  type: 'test'
+  ...
+# Subtest: transformed payload contract versions pre-snapshot records and rejects ambiguous enrichment
+ok 12 - transformed payload contract versions pre-snapshot records and rejects ambiguous enrichment
+  ---
+  duration_ms: 0.5332
+  type: 'test'
+  ...
+# Subtest: source policy rejects broadened hosts, paths, fields, limits, and legal invariants
+ok 13 - source policy rejects broadened hosts, paths, fields, limits, and legal invariants
+  ---
+  duration_ms: 0.8154
+  type: 'test'
+  ...
+# Subtest: active trust registry rejects absent root anchoring and unsigned mutation
+ok 14 - active trust registry rejects absent root anchoring and unsigned mutation
+  ---
+  duration_ms: 0.8786
+  type: 'test'
+  ...
+# Subtest: externally pinned registry epoch/hash rejects replay of an older valid root signature
+ok 15 - externally pinned registry epoch/hash rejects replay of an older valid root signature
+  ---
+  duration_ms: 0.9035
+  type: 'test'
+  ...
+# Subtest: trust registry enforces real Ed25519 keys, minimal DER, and role independence
+ok 16 - trust registry enforces real Ed25519 keys, minimal DER, and role independence
+  ---
+  duration_ms: 19.2317
+  type: 'test'
+  ...
+# Subtest: trust registry rejects stale/future attestations and non-current reviewer keys
+ok 17 - trust registry rejects stale/future attestations and non-current reviewer keys
+  ---
+  duration_ms: 1.5813
+  type: 'test'
+  ...
+# Subtest: checked-in fixture hashes are exactly denied by the production policy
+ok 18 - checked-in fixture hashes are exactly denied by the production policy
+  ---
+  duration_ms: 1.7924
+  type: 'test'
+  ...
+# Subtest: open_beauty_facts accepts an exact-scope approval signed by distinct trusted keys
+ok 19 - open_beauty_facts accepts an exact-scope approval signed by distinct trusted keys
+  ---
+  duration_ms: 3.1231
+  type: 'test'
+  ...
+# Subtest: open_beauty_facts rejects content tampering after signatures are issued
+ok 20 - open_beauty_facts rejects content tampering after signatures are issued
+  ---
+  duration_ms: 1.7114
+  type: 'test'
+  ...
+# Subtest: cosing accepts an exact-scope approval signed by distinct trusted keys
+ok 21 - cosing accepts an exact-scope approval signed by distinct trusted keys
+  ---
+  duration_ms: 2.2135
+  type: 'test'
+  ...
+# Subtest: cosing rejects content tampering after signatures are issued
+ok 22 - cosing rejects content tampering after signatures are issued
+  ---
+  duration_ms: 2.0842
+  type: 'test'
+  ...
+# Subtest: approval rejects transformed-output drift, stale-at-import snapshots, and bad chronology
+ok 23 - approval rejects transformed-output drift, stale-at-import snapshots, and bad chronology
+  ---
+  duration_ms: 6.5445
+  type: 'test'
+  ...
+# Subtest: production approval rejects known fixture bytes even if a trusted envelope names them
+ok 24 - production approval rejects known fixture bytes even if a trusted envelope names them
+  ---
+  duration_ms: 1.9755
+  type: 'test'
+  ...
+# Subtest: revocation and policy/transform drift invalidate an existing signed approval
+ok 25 - revocation and policy/transform drift invalidate an existing signed approval
+  ---
+  duration_ms: 1.9958
+  type: 'test'
+  ...
+# Subtest: evidence outputs reject junction escapes and atomically refuse clobber races
+ok 26 - evidence outputs reject junction escapes and atomically refuse clobber races
+  ---
+  duration_ms: 11.8833
+  type: 'test'
+  ...
+# Subtest: import CLI requires one explicit mode and explicit production paths
+ok 27 - import CLI requires one explicit mode and explicit production paths
+  ---
+  duration_ms: 0.3146
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2488.241
+OK catalog source policy catalog-source-policy-v1 (55c5ae5c64f52cd8a7d9e2ed94a6e878d9deeb42e8c6c16edc721e08bf8781a4)
+OK fixed trust registry catalog-source-trust-v1 (13a7f7ca9ac84b31351d1f343bd7e67117fec9b46fa66d60f6c3bdd98e70e824)
+OK fixed release scope catalog-release-scope-v1 (2d02ca4376b1e92ce37901ac67fd0b6dcb05c3a3f8525c881a6925bc68ffb0df)
+OK baseline release build evidence catalog-release-build-evidence-v1 (c0b7b51ad2e3e2fd864d25d2ae46b451d6cae1a1e1768d983c168c192dab4254)
+OK baseline production source authorization is offline-only, exact-byte bound, and fail-closed.
