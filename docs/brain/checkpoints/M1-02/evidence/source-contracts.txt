@@ -1,0 +1,2881 @@
+TAP version 13
+# Subtest: Metro watches both dependency targets, linked=false
+ok 1 - Metro watches both dependency targets, linked=false
+  ---
+  duration_ms: 3.7495
+  type: 'test'
+  ...
+# Subtest: Metro watches both dependency targets, linked=true
+ok 2 - Metro watches both dependency targets, linked=true
+  ---
+  duration_ms: 1.0663
+  type: 'test'
+  ...
+# Subtest: CORE01 local module inventory is exact and contains no binary or privacy manifest
+ok 3 - CORE01 local module inventory is exact and contains no binary or privacy manifest
+  ---
+  duration_ms: 6.2546
+  type: 'test'
+  ...
+# Subtest: CORE01 Expo registration is iOS-only and autolinks one first-party module
+ok 4 - CORE01 Expo registration is iOS-only and autolinks one first-party module
+  ---
+  duration_ms: 765.6506
+  type: 'test'
+  ...
+# Subtest: CORE01 native config declares the Apple age-range entitlement
+ok 5 - CORE01 native config declares the Apple age-range entitlement
+  ---
+  duration_ms: 0.5992
+  type: 'test'
+  ...
+# Subtest: CORE01 pod has no third-party or bundled executable dependency
+ok 6 - CORE01 pod has no third-party or bundled executable dependency
+  ---
+  duration_ms: 1.077
+  type: 'test'
+  ...
+# Subtest: CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+ok 7 - CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+  ---
+  duration_ms: 1.3669
+  type: 'test'
+  ...
+# Subtest: CORE01 maps every known declaration and communication-limit control
+ok 8 - CORE01 maps every known declaration and communication-limit control
+  ---
+  duration_ms: 1.6539
+  type: 'test'
+  ...
+# Subtest: CORE01 native response is deterministic, request-bound, and contains no exact age
+ok 9 - CORE01 native response is deterministic, request-bound, and contains no exact age
+  ---
+  duration_ms: 2.149
+  type: 'test'
+  ...
+# Subtest: CORE01 source performs no logging, networking, or persistence
+ok 10 - CORE01 source performs no logging, networking, or persistence
+  ---
+  duration_ms: 1.2042
+  type: 'test'
+  ...
+# Subtest: CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+ok 11 - CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+  ---
+  duration_ms: 3.2563
+  type: 'test'
+  ...
+# Subtest: the routine sequencing corpus is exact-hash bound and zero-admission
+ok 12 - the routine sequencing corpus is exact-hash bound and zero-admission
+  ---
+  duration_ms: 5.8273
+  type: 'test'
+  ...
+# Subtest: free-text review metadata and structural injection cannot publish sequencing
+ok 13 - free-text review metadata and structural injection cannot publish sequencing
+  ---
+  duration_ms: 1.8951
+  type: 'test'
+  ...
+# Subtest: cadence arithmetic rejects malformed numbers and avoids unsafe multiplication
+ok 14 - cadence arithmetic rejects malformed numbers and avoids unsafe multiplication
+  ---
+  duration_ms: 5.3918
+  type: 'test'
+  ...
+# Subtest: cadence publication has no Boolean or conservative numeric fallback
+ok 15 - cadence publication has no Boolean or conservative numeric fallback
+  ---
+  duration_ms: 7.1426
+  type: 'test'
+  ...
+# Subtest: executable cadence values and copy come from the exact admitted corpus
+ok 16 - executable cadence values and copy come from the exact admitted corpus
+  ---
+  duration_ms: 18.5352
+  type: 'test'
+  ...
+# Subtest: unavailable stop/refer authority cannot open recovery or irritation writes
+ok 17 - unavailable stop/refer authority cannot open recovery or irritation writes
+  ---
+  duration_ms: 2.4821
+  type: 'test'
+  ...
+# Subtest: unbound claim-bearing explainability copy remains production-closed
+ok 18 - unbound claim-bearing explainability copy remains production-closed
+  ---
+  duration_ms: 2.6487
+  type: 'test'
+  ...
+# Subtest: cycle and ramp mutations refuse before storage, cache, or analytics
+ok 19 - cycle and ramp mutations refuse before storage, cache, or analytics
+  ---
+  duration_ms: 1.8211
+  type: 'test'
+  ...
+# Subtest: real shelves cannot inherit the synthetic example profile
+ok 20 - real shelves cannot inherit the synthetic example profile
+  ---
+  duration_ms: 1.5011
+  type: 'test'
+  ...
+# Subtest: ramp state and cadence-derived notifications close before reads or side effects
+ok 21 - ramp state and cadence-derived notifications close before reads or side effects
+  ---
+  duration_ms: 6.6111
+  type: 'test'
+  ...
+# Subtest: plan and streak surfaces do not synthesize sequencing or cycle authority
+ok 22 - plan and streak surfaces do not synthesize sequencing or cycle authority
+  ---
+  duration_ms: 4.6752
+  type: 'test'
+  ...
+# Subtest: closed recovery publication preserves stored bytes while exposing only neutral state
+ok 23 - closed recovery publication preserves stored bytes while exposing only neutral state
+  ---
+  duration_ms: 0.9958
+  type: 'test'
+  ...
+# Subtest: every direct-entry cadence route closes before sensitive hooks or guidance analytics mount
+ok 24 - every direct-entry cadence route closes before sensitive hooks or guidance analytics mount
+  ---
+  duration_ms: 9.7911
+  type: 'test'
+  ...
+# Subtest: the CORE-03 source contract is mandatory in Phase 3 and launch verification
+ok 25 - the CORE-03 source contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.7626
+  type: 'test'
+  ...
+# Subtest: private persistence bounds one serialized guarded transform and verified rollback
+ok 26 - private persistence bounds one serialized guarded transform and verified rollback
+  ---
+  duration_ms: 7.4722
+  type: 'test'
+  ...
+# Subtest: malformed, future-version, read-failure, and write-failure state stays preserved
+ok 27 - malformed, future-version, read-failure, and write-failure state stays preserved
+  ---
+  duration_ms: 2.8609
+  type: 'test'
+  ...
+# Subtest: routine-order phase transactions merge independent concurrent edits
+ok 28 - routine-order phase transactions merge independent concurrent edits
+  ---
+  duration_ms: 1.0157
+  type: 'test'
+  ...
+# Subtest: routine-order success publishes cache, analytics, and navigation only after persistence
+ok 29 - routine-order success publishes cache, analytics, and navigation only after persistence
+  ---
+  duration_ms: 0.603
+  type: 'test'
+  ...
+# Subtest: custom-cycle cache and analytics publication follows the committed atomic value
+ok 30 - custom-cycle cache and analytics publication follows the committed atomic value
+  ---
+  duration_ms: 5.022
+  type: 'test'
+  ...
+# Subtest: relaunch loaders decode versioned state and never silently replace unsupported bytes
+ok 31 - relaunch loaders decode versioned state and never silently replace unsupported bytes
+  ---
+  duration_ms: 2.8939
+  type: 'test'
+  ...
+# Subtest: named Node/Vitest timezone cases remain explicit and bounded
+ok 32 - named Node/Vitest timezone cases remain explicit and bounded
+  ---
+  duration_ms: 7.2713
+  type: 'test'
+  ...
+# Subtest: routine and custom-cycle intent uses stable shelf-product identities
+ok 33 - routine and custom-cycle intent uses stable shelf-product identities
+  ---
+  duration_ms: 12.374
+  type: 'test'
+  ...
+# Subtest: cleanup and purpose-limited export register both current persistence records
+ok 34 - cleanup and purpose-limited export register both current persistence records
+  ---
+  duration_ms: 4.2009
+  type: 'test'
+  ...
+# Subtest: ordering preference cannot create cadence authority and custom-cycle writes cannot bypass it
+ok 35 - ordering preference cannot create cadence authority and custom-cycle writes cannot bypass it
+  ---
+  duration_ms: 1.3496
+  type: 'test'
+  ...
+# Subtest: the CORE-04 persistence contract is mandatory in Phase 3 and launch verification
+ok 36 - the CORE-04 persistence contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.8833
+  type: 'test'
+  ...
+# (node:36748) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile/src/features/streak/streak.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\apps\\mobile\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completion state is strict v3 and legacy versions never invent adherence or replay work
+ok 37 - completion state is strict v3 and legacy versions never invent adherence or replay work
+  ---
+  duration_ms: 4.0478
+  type: 'test'
+  ...
+# Subtest: only a complete projected PM or recovery routine creates an adherence day or remote work
+ok 38 - only a complete projected PM or recovery routine creates an adherence day or remote work
+  ---
+  duration_ms: 3.5804
+  type: 'test'
+  ...
+# Subtest: Today publishes success only after persistence and fails closed on unreadable state
+ok 39 - Today publishes success only after persistence and fails closed on unreadable state
+  ---
+  duration_ms: 2.9406
+  type: 'test'
+  ...
+# Subtest: completion replay uses exact dispositions and a durable Shelf dependency barrier
+ok 40 - completion replay uses exact dispositions and a durable Shelf dependency barrier
+  ---
+  duration_ms: 5.5906
+  type: 'test'
+  ...
+# Subtest: future tolerance rows cannot affect today and live clocks cross routine boundaries
+ok 41 - future tolerance rows cannot affect today and live clocks cross routine boundaries
+  ---
+  duration_ms: 7.2556
+  type: 'test'
+  ...
+# Subtest: streak and welcome-back routes do not turn load failures into fake zero or lapse states
+ok 42 - streak and welcome-back routes do not turn load failures into fake zero or lapse states
+  ---
+  duration_ms: 5.7209
+  type: 'test'
+  ...
+# Subtest: routine milestones describe verified check-offs without outcome claims
+ok 43 - routine milestones describe verified check-offs without outcome claims
+  ---
+  duration_ms: 0.5964
+  type: 'test'
+  ...
+# Subtest: notification opt-in is exact-time, authorization-aware, local-only, and cap-safe
+ok 44 - notification opt-in is exact-time, authorization-aware, local-only, and cap-safe
+  ---
+  duration_ms: 6.3933
+  type: 'test'
+  ...
+# Subtest: database adherence and atomic Shelf/completion sync remain server-owned at head 0078
+not ok 45 - database adherence and atomic Shelf/completion sync remain server-owned at head 0078
+  ---
+  duration_ms: 5.3728
+  type: 'test'
+  location: 'C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\scripts\\core05\\adherence-source-contract.test.mjs:630:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /exact 94-migration source history/u. Input:
+    
+    'begin;\n' +
+      '\n' +
+      'create extension if not exists pgtap with schema extensions;\n' +
+      'set local search_path = extensions, public, pg_catalog;\n' +
+      'select plan(82);\n' +
+      '\n' +
+      'create function pg_temp.core05_shelf_payload(\n' +
+      '  p_id text,\n' +
+      "  p_name text default 'CORE-05 mirror product'\n" +
+      ')\n' +
+      'returns jsonb\n' +
+      'language sql\n' +
+      'immutable\n' +
+      'as $$\n' +
+      '  select pg_catalog.jsonb_build_object(\n' +
+      "    'id', p_id,\n" +
+      "    'catalog_product_id', null,\n" +
+      "    'catalog_source_id', null,\n" +
+      "    'catalog_match_quality', 'manual',\n" +
+      "    'catalog_source_snapshot_date', null,\n" +
+      "    'manual_name', p_name,\n" +
+      "    'manual_brand', null,\n" +
+      "    'barcode', null,\n" +
+      "    'opened_at', null,\n" +
+      "    'pao_months', null,\n" +
+      "    'expiry_date', null,\n" +
+      "    'is_opened', false,\n" +
+      "    'pao_source', 'unknown',\n" +
+      "    'expiry_source', 'unknown',\n" +
+      "    'added_via', 'manual',\n" +
+      "    'source_disclosure_ack_at', null,\n" +
+      "    'status', 'active',\n" +
+      "    'finished_at', null\n" +
+      '  )\n' +
+      '$$;\n' +
+      '\n' +
+      'grant execute on function pg_temp.core05_shelf_payload(text, text)\n' +
+      '  to authenticated;\n' +
+      '\n' +
+      'select is(\n' +
+      '  (select count(*) from supabase_migrations.schema_migrations),\n' +
+      '  97::bigint,\n' +
+      "  'CORE-05 sync bridge runs against the exact 97-migration source history'\n" +
+      ');\n' +
+      'select is(\n' +
+      '  (select max(version) from supabase_migrations.schema_migrations),\n' +
+      "  '20261010000081'::text,\n" +
+      "  'the migration history retains the sync bridge through the current head'\n" +
+      ');\n' +
+      'select results_eq(\n' +
+      '  $$select column_name::text collate "C"\n' +
+      '      from information_schema.columns\n' +
+      "     where table_schema = 'public'\n" +
+      "       and table_name = 'shelf_product_identities'\n" +
+      '     order by ordinal_position$$,\n' +
+      '  $$values\n' +
+      `      ('id'::text collate "C"),\n` +
+      `      ('user_id'::text collate "C"),\n` +
+      `      ('created_at'::text collate "C"),\n` +
+      `      ('deleted_effective_at'::text collate "C"),\n` +
+      `      ('deleted_received_at'::text collate "C")$$,\n` +
+      "  'stable Shelf identity retains only owner, identity, and tombstone timing'\n" +
+      ');\n' +
+      'select results_eq(\n' +
+      '  $$select column_name::text collate "C"\n' +
+      '      from information_schema.columns\n' +
+      "     where table_schema = 'private'\n" +
+      "       and table_name = 'shelf_sync_operations'\n" +
+      '     order by ordinal_position$$,\n' +
+      '  $$values\n' +
+      `      ('operation_id'::text collate "C"),\n` +
+      `      ('user_id'::text collate "C"),\n` +
+      `      ('request_sha256'::text collate "C"),\n` +
+      `      ('state'::text collate "C"),\n` +
+      `      ('result_code'::text collate "C"),\n` +
+      `      ('created_at'::text collate "C"),\n` +
+      `      ('finalized_at'::text collate "C")$$,\n` +
+      "  'Shelf replay state is a minimized digest/outcome ledger without raw payload'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  pg_catalog.has_function_privilege(\n' +
+      "    'authenticated',\n" +
+      "    'public.sync_shelf_product(text,text,text,text,jsonb)',\n" +
+      "    'EXECUTE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_function_privilege(\n' +
+      "    'anon',\n" +
+      "    'public.sync_shelf_product(text,text,text,text,jsonb)',\n" +
+      "    'EXECUTE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_function_privilege(\n' +
+      "    'service_role',\n" +
+      "    'public.sync_shelf_product(text,text,text,text,jsonb)',\n" +
+      "    'EXECUTE'\n" +
+      '  ),\n' +
+      "  'Shelf sync is an authenticated-only scalar entrypoint'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  pg_catalog.has_function_privilege(\n' +
+      "    'authenticated',\n" +
+      "    'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)',\n" +
+      "    'EXECUTE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_function_privilege(\n' +
+      "    'anon',\n" +
+      "    'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)',\n" +
+      "    'EXECUTE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_function_privilege(\n' +
+      "    'service_role',\n" +
+      "    'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)',\n" +
+      "    'EXECUTE'\n" +
+      '  ),\n' +
+      "  'completion sync is an authenticated-only scalar entrypoint'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  (\n' +
+      '    select pg_catalog.bool_and(\n' +
+      '      pg_catalog.has_function_privilege(\n' +
+      "        'authenticated', procedure_identity, 'EXECUTE'\n" +
+      '      )\n' +
+      '      and not pg_catalog.has_function_privilege(\n' +
+      "        'anon', procedure_identity, 'EXECUTE'\n" +
+      '      )\n' +
+      '      and not pg_catalog.has_function_privilege(\n' +
+      "        'service_role', procedure_identity, 'EXECUTE'\n" +
+      '      )\n' +
+      '    )\n' +
+      '      from (\n' +
+      '        values\n' +
+      '          (\n' +
+      "            'public.export_shelf_product_identities_for_subject(timestamptz,uuid,integer)'\n" +
+      '          ),\n' +
+      '          (\n' +
+      "            'public.export_shelf_sync_receipts_for_subject(timestamptz,uuid,integer)'\n" +
+      '          ),\n' +
+      '          (\n' +
+      "            'public.export_routine_completion_sync_receipts_for_subject(timestamptz,uuid,integer)'\n" +
+      '          )\n' +
+      '      ) as exports(procedure_identity)\n' +
+      '  ),\n' +
+      "  'all health-sync exports are authenticated-only subject RPCs'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  pg_catalog.pg_get_function_result(\n' +
+      "    'public.export_shelf_product_identities_for_subject(timestamptz,uuid,integer)'::regprocedure\n" +
+      '  ) ilike\n' +
+      "    'TABLE(export_total_count bigint, id uuid, user_id uuid, created_at timestamp with time zone, deleted_effective_at timestamp with time zone, deleted_received_at timestamp with time zone)'\n" +
+      '  and pg_catalog.pg_get_function_result(\n' +
+      "    'public.export_shelf_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure\n" +
+      '  ) ilike\n' +
+      "    'TABLE(export_total_count bigint, operation_id uuid, user_id uuid, state text, result_code text, created_at timestamp with time zone, finalized_at timestamp with time zone)'\n" +
+      '  and pg_catalog.pg_get_function_result(\n' +
+      "    'public.export_routine_completion_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure\n" +
+      '  ) ilike\n' +
+      "    'TABLE(export_total_count bigint, event_id uuid, user_id uuid, state text, result_code text, created_at timestamp with time zone, finalized_at timestamp with time zone)'\n" +
+      '  and pg_catalog.pg_get_functiondef(\n' +
+      "    'public.export_shelf_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure\n" +
+      "  ) not ilike '%request_sha256%'\n" +
+      '  and pg_catalog.pg_get_functiondef(\n' +
+      "    'public.export_routine_completion_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure\n" +
+      "  ) not ilike '%request_sha256%',\n" +
+      "  'export projections are exact and omit internal request fingerprints'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  not pg_catalog.has_table_privilege(\n' +
+      "    'authenticated', 'public.user_products', 'INSERT, UPDATE, DELETE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_table_privilege(\n' +
+      "    'authenticated', 'public.shelf_product_identities', 'INSERT, UPDATE, DELETE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_table_privilege(\n' +
+      "    'authenticated', 'public.routines', 'INSERT, UPDATE, DELETE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_table_privilege(\n' +
+      "    'authenticated', 'public.routine_steps', 'INSERT, UPDATE, DELETE'\n" +
+      '  )\n' +
+      '  and not pg_catalog.has_table_privilege(\n' +
+      "    'authenticated', 'public.routine_completions', 'INSERT, UPDATE, DELETE'\n" +
+      '  ),\n' +
+      "  'authenticated callers cannot bypass either sync authority with direct DML'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  pg_catalog.obj_description(\n' +
+      "    'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)'::regprocedure,\n" +
+      "    'pg_proc'\n" +
+      "  ) ilike '%user%s routine-complete attestation%'\n" +
+      '  and pg_catalog.obj_description(\n' +
+      "    'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)'::regprocedure,\n" +
+      "    'pg_proc'\n" +
+      "  ) ilike '%not objective proof%',\n" +
+      "  'the PM marker is explicitly documented as user attestation, not objective proof'\n" +
+      ');\n' +
+      'select ok(\n' +
+      '  pg_catalog.pg_get_functiondef(\n' +
+      "    'public.sync_shelf_product(text,text,text,text,jsonb)'::regprocedure\n" +
+      "  ) not ilike '%legacy_unverified_expiry_date%'\n" +
+      '  and pg_catalog.pg_get_functiondef(\n' +
+      "    'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)'::regprocedure\n" +
+      "  ) not ilike '%COMPLETION_DEPENDENCY_TERMINAL%',\n" +
+      "  'SQL neither trusts the legacy expiry quarantine nor contains the client-only code'\n" +
+      ');\n' +
+      '\n' +
+      'insert into auth.users (id)\n' +
+      'values\n' +
+      "  ('69000000-0000-4000-8000-000000000001'),\n" +
+      "  ('69000000-0000-4000-8000-000000000002'),\n" +
+      "  ('69000000-0000-4000-8000-000000000004');\n" +
+      'insert into auth.users (id, is_anonymous)\n' +
+      "values ('69000000-0000-4000-8000-000000000003', true);\n" +
+      'insert into auth.sessions (id, user_id)\n' +
+      'values\n' +
+      '  (\n' +
+      "    '69001000-0000-4000-8000-000000000001',\n" +
+      "    '69000000-0000-4000-8000-000000000001'\n" +
+      '  ),\n' +
+      '  (\n' +
+      "    '69001000-0000-4000-8000-000000000002',\n" +
+      "    '69000000-0000-4000-8000-000000000002'\n" +
+      '  ),\n' +
+      '  (\n' +
+      "    '69001000-0000-4000-8000-000000000003',\n" +
+      "    '69000000-0000-4000-8000-000000000003'\n" +
+      '  ),\n' +
+      '  (\n' +
+      "    '69001000-0000-4000-8000-000000000004',\n" +
+      "    '69000000-0000-4000-8000-000000000004'\n" +
+      '  );\n' +
+      '\n' +
+      'update public.health_processing_states\n' +
+      "   set state = 'active',\n" +
+      '       epoch = 1,\n' +
+      "       consent_version = 'draft-v1-2026-07-10',\n" +
+      '       consent_text_hash =\n' +
+      "         '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',\n" +
+      '       last_server_verified_at = pg_catalog.statement_timestamp()\n' +
+      " where user_id = '69000000-0000-4000-8000-000000000001';\n" +
+      'set local role authenticated;\n' +
+      'select pg_catalog.set_config(\n' +
+      "  'request.jwt.claims',\n" +
+      `  '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',\n` +
+      '  true\n' +
+      ');\n' +
+      'select pg_catalog.set_config(\n' +
+      "  'request.headers',\n" +
+      `  '{"x-health-processing-epoch":"1"}',\n` +
+      '  true\n' +
+      ');\n' +
+      'select throws_ok(\n' +
+      '  $$select public.sync_shelf_product(\n' +
+      "      '69010000-0000-4000-8000-000000000030',\n" +
+      "      'delete',\n" +
+      "      '2026-07-26T12:00:00.000Z',\n" +
+      "      '69020000-0000-4000-8000-000000000030',\n" +
+      '      null\n' +
+      '    )$$,\n' +
+      "  '55000',\n" +
+      "  'HEALTH_PROCESSING_CONSENT_STALE',\n" +
+      "  'Shelf sync rejects an exact draft-blocked health grant before retention'\n" +
+      ');\n' +
+      'select throws_ok(\n' +
+      '  $$select public.record_routine_completion(\n' +
+      "      '69030000-0000-4000-8000-000000000030',\n" +
+      "      '69040000-0000-4000-8000-000000000030',\n" +
+      "      'PM',\n" +
+      '      null,\n' +
+      '      null,\n' +
+      '      null,\n' +
+      "      '2026-07-26T12:00:00.000Z',\n" +
+      "      '2026-07-26',\n" +
+      "      'America/Toronto'\n" +
+      '    )$$,\n' +
+      "  '55000',\n" +
+      "  'HEALTH_PROCESSING_CONSENT_STALE',\n" +
+      "  'completion sync rejects an exact draft-blocked health grant before retention'\n" +
+      ');\n' +
+      'reset role;\n' +
+      'select is(\n' +
+      '  (\n' +
+      '    select pg_catalog.count(*) from private.shelf_sync_operations\n' +
+      '  ) + (\n' +
+      '    select pg_catalog.count(*)\n' +
+      '      from private.routine_completion_sync_operations\n' +
+      '  ) + (\n' +
+      '    select pg_catalog.count(*)\n' +
+      '      from public.shelf_product_identities\n' +
+      "     where user_id = '69000000-0000-4000-8000-000000000001'\n" +
+      '  ) + (\n' +
+      '    select pg_catalog.count(*)\n' +
+      '      from public.routine_completions\n' +
+      "     where user_id = '69000000-0000-4000-8000-000000000001'\n" +
+      '  ),\n' +
+      '  0::bigint,\n' +
+      "  'draft-blocked sync attempts leave"... 40474 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    begin;
+    
+    create extension if not exists pgtap with schema extensions;
+    set local search_path = extensions, public, pg_catalog;
+    select plan(82);
+    
+    create function pg_temp.core05_shelf_payload(
+      p_id text,
+      p_name text default 'CORE-05 mirror product'
+    )
+    returns jsonb
+    language sql
+    immutable
+    as $$
+      select pg_catalog.jsonb_build_object(
+        'id', p_id,
+        'catalog_product_id', null,
+        'catalog_source_id', null,
+        'catalog_match_quality', 'manual',
+        'catalog_source_snapshot_date', null,
+        'manual_name', p_name,
+        'manual_brand', null,
+        'barcode', null,
+        'opened_at', null,
+        'pao_months', null,
+        'expiry_date', null,
+        'is_opened', false,
+        'pao_source', 'unknown',
+        'expiry_source', 'unknown',
+        'added_via', 'manual',
+        'source_disclosure_ack_at', null,
+        'status', 'active',
+        'finished_at', null
+      )
+    $$;
+    
+    grant execute on function pg_temp.core05_shelf_payload(text, text)
+      to authenticated;
+    
+    select is(
+      (select count(*) from supabase_migrations.schema_migrations),
+      97::bigint,
+      'CORE-05 sync bridge runs against the exact 97-migration source history'
+    );
+    select is(
+      (select max(version) from supabase_migrations.schema_migrations),
+      '20261010000081'::text,
+      'the migration history retains the sync bridge through the current head'
+    );
+    select results_eq(
+      $$select column_name::text collate "C"
+          from information_schema.columns
+         where table_schema = 'public'
+           and table_name = 'shelf_product_identities'
+         order by ordinal_position$$,
+      $$values
+          ('id'::text collate "C"),
+          ('user_id'::text collate "C"),
+          ('created_at'::text collate "C"),
+          ('deleted_effective_at'::text collate "C"),
+          ('deleted_received_at'::text collate "C")$$,
+      'stable Shelf identity retains only owner, identity, and tombstone timing'
+    );
+    select results_eq(
+      $$select column_name::text collate "C"
+          from information_schema.columns
+         where table_schema = 'private'
+           and table_name = 'shelf_sync_operations'
+         order by ordinal_position$$,
+      $$values
+          ('operation_id'::text collate "C"),
+          ('user_id'::text collate "C"),
+          ('request_sha256'::text collate "C"),
+          ('state'::text collate "C"),
+          ('result_code'::text collate "C"),
+          ('created_at'::text collate "C"),
+          ('finalized_at'::text collate "C")$$,
+      'Shelf replay state is a minimized digest/outcome ledger without raw payload'
+    );
+    select ok(
+      pg_catalog.has_function_privilege(
+        'authenticated',
+        'public.sync_shelf_product(text,text,text,text,jsonb)',
+        'EXECUTE'
+      )
+      and not pg_catalog.has_function_privilege(
+        'anon',
+        'public.sync_shelf_product(text,text,text,text,jsonb)',
+        'EXECUTE'
+      )
+      and not pg_catalog.has_function_privilege(
+        'service_role',
+        'public.sync_shelf_product(text,text,text,text,jsonb)',
+        'EXECUTE'
+      ),
+      'Shelf sync is an authenticated-only scalar entrypoint'
+    );
+    select ok(
+      pg_catalog.has_function_privilege(
+        'authenticated',
+        'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)',
+        'EXECUTE'
+      )
+      and not pg_catalog.has_function_privilege(
+        'anon',
+        'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)',
+        'EXECUTE'
+      )
+      and not pg_catalog.has_function_privilege(
+        'service_role',
+        'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)',
+        'EXECUTE'
+      ),
+      'completion sync is an authenticated-only scalar entrypoint'
+    );
+    select ok(
+      (
+        select pg_catalog.bool_and(
+          pg_catalog.has_function_privilege(
+            'authenticated', procedure_identity, 'EXECUTE'
+          )
+          and not pg_catalog.has_function_privilege(
+            'anon', procedure_identity, 'EXECUTE'
+          )
+          and not pg_catalog.has_function_privilege(
+            'service_role', procedure_identity, 'EXECUTE'
+          )
+        )
+          from (
+            values
+              (
+                'public.export_shelf_product_identities_for_subject(timestamptz,uuid,integer)'
+              ),
+              (
+                'public.export_shelf_sync_receipts_for_subject(timestamptz,uuid,integer)'
+              ),
+              (
+                'public.export_routine_completion_sync_receipts_for_subject(timestamptz,uuid,integer)'
+              )
+          ) as exports(procedure_identity)
+      ),
+      'all health-sync exports are authenticated-only subject RPCs'
+    );
+    select ok(
+      pg_catalog.pg_get_function_result(
+        'public.export_shelf_product_identities_for_subject(timestamptz,uuid,integer)'::regprocedure
+      ) ilike
+        'TABLE(export_total_count bigint, id uuid, user_id uuid, created_at timestamp with time zone, deleted_effective_at timestamp with time zone, deleted_received_at timestamp with time zone)'
+      and pg_catalog.pg_get_function_result(
+        'public.export_shelf_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure
+      ) ilike
+        'TABLE(export_total_count bigint, operation_id uuid, user_id uuid, state text, result_code text, created_at timestamp with time zone, finalized_at timestamp with time zone)'
+      and pg_catalog.pg_get_function_result(
+        'public.export_routine_completion_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure
+      ) ilike
+        'TABLE(export_total_count bigint, event_id uuid, user_id uuid, state text, result_code text, created_at timestamp with time zone, finalized_at timestamp with time zone)'
+      and pg_catalog.pg_get_functiondef(
+        'public.export_shelf_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure
+      ) not ilike '%request_sha256%'
+      and pg_catalog.pg_get_functiondef(
+        'public.export_routine_completion_sync_receipts_for_subject(timestamptz,uuid,integer)'::regprocedure
+      ) not ilike '%request_sha256%',
+      'export projections are exact and omit internal request fingerprints'
+    );
+    select ok(
+      not pg_catalog.has_table_privilege(
+        'authenticated', 'public.user_products', 'INSERT, UPDATE, DELETE'
+      )
+      and not pg_catalog.has_table_privilege(
+        'authenticated', 'public.shelf_product_identities', 'INSERT, UPDATE, DELETE'
+      )
+      and not pg_catalog.has_table_privilege(
+        'authenticated', 'public.routines', 'INSERT, UPDATE, DELETE'
+      )
+      and not pg_catalog.has_table_privilege(
+        'authenticated', 'public.routine_steps', 'INSERT, UPDATE, DELETE'
+      )
+      and not pg_catalog.has_table_privilege(
+        'authenticated', 'public.routine_completions', 'INSERT, UPDATE, DELETE'
+      ),
+      'authenticated callers cannot bypass either sync authority with direct DML'
+    );
+    select ok(
+      pg_catalog.obj_description(
+        'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)'::regprocedure,
+        'pg_proc'
+      ) ilike '%user%s routine-complete attestation%'
+      and pg_catalog.obj_description(
+        'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)'::regprocedure,
+        'pg_proc'
+      ) ilike '%not objective proof%',
+      'the PM marker is explicitly documented as user attestation, not objective proof'
+    );
+    select ok(
+      pg_catalog.pg_get_functiondef(
+        'public.sync_shelf_product(text,text,text,text,jsonb)'::regprocedure
+      ) not ilike '%legacy_unverified_expiry_date%'
+      and pg_catalog.pg_get_functiondef(
+        'public.record_routine_completion(text,text,text,text,text,integer,text,text,text)'::regprocedure
+      ) not ilike '%COMPLETION_DEPENDENCY_TERMINAL%',
+      'SQL neither trusts the legacy expiry quarantine nor contains the client-only code'
+    );
+    
+    insert into auth.users (id)
+    values
+      ('69000000-0000-4000-8000-000000000001'),
+      ('69000000-0000-4000-8000-000000000002'),
+      ('69000000-0000-4000-8000-000000000004');
+    insert into auth.users (id, is_anonymous)
+    values ('69000000-0000-4000-8000-000000000003', true);
+    insert into auth.sessions (id, user_id)
+    values
+      (
+        '69001000-0000-4000-8000-000000000001',
+        '69000000-0000-4000-8000-000000000001'
+      ),
+      (
+        '69001000-0000-4000-8000-000000000002',
+        '69000000-0000-4000-8000-000000000002'
+      ),
+      (
+        '69001000-0000-4000-8000-000000000003',
+        '69000000-0000-4000-8000-000000000003'
+      ),
+      (
+        '69001000-0000-4000-8000-000000000004',
+        '69000000-0000-4000-8000-000000000004'
+      );
+    
+    update public.health_processing_states
+       set state = 'active',
+           epoch = 1,
+           consent_version = 'draft-v1-2026-07-10',
+           consent_text_hash =
+             '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+           last_server_verified_at = pg_catalog.statement_timestamp()
+     where user_id = '69000000-0000-4000-8000-000000000001';
+    set local role authenticated;
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select pg_catalog.set_config(
+      'request.headers',
+      '{"x-health-processing-epoch":"1"}',
+      true
+    );
+    select throws_ok(
+      $$select public.sync_shelf_product(
+          '69010000-0000-4000-8000-000000000030',
+          'delete',
+          '2026-07-26T12:00:00.000Z',
+          '69020000-0000-4000-8000-000000000030',
+          null
+        )$$,
+      '55000',
+      'HEALTH_PROCESSING_CONSENT_STALE',
+      'Shelf sync rejects an exact draft-blocked health grant before retention'
+    );
+    select throws_ok(
+      $$select public.record_routine_completion(
+          '69030000-0000-4000-8000-000000000030',
+          '69040000-0000-4000-8000-000000000030',
+          'PM',
+          null,
+          null,
+          null,
+          '2026-07-26T12:00:00.000Z',
+          '2026-07-26',
+          'America/Toronto'
+        )$$,
+      '55000',
+      'HEALTH_PROCESSING_CONSENT_STALE',
+      'completion sync rejects an exact draft-blocked health grant before retention'
+    );
+    reset role;
+    select is(
+      (
+        select pg_catalog.count(*) from private.shelf_sync_operations
+      ) + (
+        select pg_catalog.count(*)
+          from private.routine_completion_sync_operations
+      ) + (
+        select pg_catalog.count(*)
+          from public.shelf_product_identities
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ) + (
+        select pg_catalog.count(*)
+          from public.routine_completions
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ),
+      0::bigint,
+      'draft-blocked sync attempts leave operation, identity, and completion state empty'
+    );
+    
+    do $$
+    begin
+      perform *
+        from public.promote_health_consent_copy_for_release(
+          'health_data_collection',
+          'grant',
+          'draft-v1-2026-07-10',
+          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+          'PGTAP-CORE05-0069-SYNC-2026-07-26',
+          'pgtap.db-owner',
+          repeat('6', 64)
+        );
+    end;
+    $$;
+    update public.health_processing_states
+       set state = 'active',
+           epoch = 1,
+           consent_version = 'draft-v1-2026-07-10',
+           consent_text_hash =
+             '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+           last_server_verified_at = pg_catalog.statement_timestamp()
+     where user_id in (
+       '69000000-0000-4000-8000-000000000001',
+       '69000000-0000-4000-8000-000000000002',
+       '69000000-0000-4000-8000-000000000003',
+       '69000000-0000-4000-8000-000000000004'
+     );
+    
+    select pg_catalog.set_config(
+      'test.core05_completed_at',
+      pg_catalog.to_char(
+        pg_catalog.date_trunc(
+          'milliseconds',
+          pg_catalog.statement_timestamp() - interval '1 hour'
+        ) at time zone 'UTC',
+        'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
+      ),
+      true
+    );
+    select pg_catalog.set_config(
+      'test.core05_completed_date',
+      (
+        pg_catalog.current_setting('test.core05_completed_at')::timestamptz
+          at time zone 'America/Toronto'
+      )::date::text,
+      true
+    );
+    select pg_catalog.set_config(
+      'test.core05_enqueued_at',
+      pg_catalog.to_char(
+        pg_catalog.date_trunc(
+          'milliseconds',
+          pg_catalog.statement_timestamp() - interval '2 hours'
+        ) at time zone 'UTC',
+        'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
+      ),
+      true
+    );
+    select pg_catalog.set_config(
+      'test.core05_pre_delete_at',
+      pg_catalog.to_char(
+        pg_catalog.date_trunc(
+          'milliseconds',
+          pg_catalog.current_setting('test.core05_enqueued_at')::timestamptz
+            - interval '1 day'
+        ) at time zone 'UTC',
+        'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
+      ),
+      true
+    );
+    select pg_catalog.set_config(
+      'test.core05_pre_delete_date',
+      (
+        pg_catalog.current_setting('test.core05_pre_delete_at')::timestamptz
+          at time zone 'America/Toronto'
+      )::date::text,
+      true
+    );
+    
+    set local role authenticated;
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select pg_catalog.set_config(
+      'request.headers',
+      '{"x-health-processing-epoch":"1"}',
+      true
+    );
+    
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000003","role":"authenticated","is_anonymous":true,"session_id":"69001000-0000-4000-8000-000000000003"}',
+      true
+    );
+    select throws_ok(
+      $$select * from public.export_shelf_product_identities_for_subject(
+          null, null, 500
+        )$$,
+      '42501',
+      'HEALTH_SYNC_EXPORT_OWNER_REQUIRED',
+      'a signed anonymous session cannot use a health-sync export RPC'
+    );
+    reset role;
+    
+    set local role service_role;
+    select throws_ok(
+      $$select * from public.export_shelf_sync_receipts_for_subject(
+          null, null, 500
+        )$$,
+      '42501',
+      'permission denied for function export_shelf_sync_receipts_for_subject',
+      'service role cannot bypass the authenticated-subject export boundary'
+    );
+    reset role;
+    
+    set local role authenticated;
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select throws_ok(
+      $$select * from public.export_shelf_product_identities_for_subject(
+          pg_catalog.statement_timestamp(),
+          null,
+          500
+        )$$,
+      '22023',
+      'HEALTH_SYNC_EXPORT_INPUT_INVALID',
+      'a partial export cursor is rejected before any sealed read'
+    );
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000099"}',
+      true
+    );
+    select throws_ok(
+      $$select * from public.export_shelf_product_identities_for_subject(
+          null, null, 500
+        )$$,
+      '28000',
+      'HEALTH_CONSENT_SESSION_REJECTED',
+      'a stale or forged session cannot use a sealed export RPC'
+    );
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select pg_catalog.set_config(
+      'request.headers',
+      '{"x-health-processing-epoch":"2"}',
+      true
+    );
+    select throws_ok(
+      $$select * from public.export_shelf_product_identities_for_subject(
+          null, null, 500
+        )$$,
+      '55000',
+      'HEALTH_PROCESSING_EPOCH_STALE',
+      'an active subject export requires the exact current health-processing epoch'
+    );
+    select pg_catalog.set_config(
+      'request.headers',
+      '{"x-health-processing-epoch":"1"}',
+      true
+    );
+    
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000001',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        'not-a-uuid',
+        '{}'::jsonb
+      ),
+      pg_catalog.jsonb_build_object(
+        'version', 1,
+        'operation_id', '69010000-0000-4000-8000-000000000001',
+        'status', 'terminal',
+        'code', 'SHELF_PRODUCT_ID_INVALID'
+      ),
+      'invalid Shelf identity is an exact terminal response'
+    );
+    reset role;
+    select is(
+      (select count(*) from private.shelf_sync_operations),
+      0::bigint,
+      'structurally invalid Shelf input is rejected before replay-ledger retention'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000010',
+        'upsert',
+        '2026-99-99T99:99:99.999Z',
+        '69020000-0000-4000-8000-000000000010',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000010',
+          'Malformed instant'
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_PAYLOAD_INVALID',
+      'a syntactically shaped but impossible Shelf instant returns JSON, not an exception'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000011',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000011',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000011',
+          'Exponent PAO'
+        ) || '{"pao_months":1e1000}'::jsonb
+      ) ->> 'code',
+      'SHELF_PRODUCT_PAYLOAD_INVALID',
+      'an exponent-expanded PAO cannot reach an unsafe integer cast'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000012',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000012',
+        '"scalar"'::jsonb
+      ) ->> 'code',
+      'SHELF_PRODUCT_PAYLOAD_INVALID',
+      'a scalar Shelf payload returns exact terminal JSON without key enumeration'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000013',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000013',
+        '[]'::jsonb
+      ) ->> 'code',
+      'SHELF_PRODUCT_PAYLOAD_INVALID',
+      'an array Shelf payload returns exact terminal JSON without key enumeration'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000014',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000014',
+        null
+      ) ->> 'code',
+      'SHELF_PRODUCT_PAYLOAD_INVALID',
+      'a null upsert payload returns exact terminal JSON without key enumeration'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000010',
+        '69040000-0000-4000-8000-000000000010',
+        'PM',
+        null,
+        null,
+        null,
+        '2026-99-99T99:99:99.999Z',
+        '2026-99-99',
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_REQUEST_INVALID',
+      'malformed completion instant/date values return exact terminal JSON'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000011',
+        '69040000-0000-4000-8000-000000000011',
+        'PM',
+        null,
+        null,
+        null,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'Not/A_Real_Zone'
+      ) ->> 'code',
+      'COMPLETION_REQUEST_INVALID',
+      'an unknown timezone returns exact terminal JSON before AT TIME ZONE'
+    );
+    reset role;
+    select is(
+      (
+        select count(*) from private.shelf_sync_operations
+      ) + (
+        select count(*) from private.routine_completion_sync_operations
+      ) + (
+        select count(*)
+          from public.shelf_product_identities
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ) + (
+        select count(*)
+          from public.user_products
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ),
+      0::bigint,
+      'malformed time/date/timezone/PAO and non-object payloads retain no side effect'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000020',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000020',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000020',
+          'Terminal before delete'
+        ) || pg_catalog.jsonb_build_object(
+          'catalog_product_id',
+          '69021000-0000-4000-8000-000000000020'
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_PROVENANCE_INVALID',
+      'an incomplete catalog provenance upsert is terminal before identity creation'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000021',
+        'delete',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000020',
+        null
+      ),
+      pg_catalog.jsonb_build_object(
+        'version', 1,
+        'operation_id', '69010000-0000-4000-8000-000000000021',
+        'status', 'accepted',
+        'code', null
+      ),
+      'a missing-row delete wins and returns the exact accepted response'
+    );
+    reset role;
+    select results_eq(
+      $$select
+          identities.user_id,
+          identities.deleted_effective_at,
+          identities.deleted_received_at is not null,
+          exists (
+            select 1 from public.user_products where id = identities.id
+          )
+          from public.shelf_product_identities as identities
+         where identities.id = '69020000-0000-4000-8000-000000000020'$$,
+      $$values (
+          '69000000-0000-4000-8000-000000000001'::uuid,
+          pg_catalog.current_setting('test.core05_enqueued_at')::timestamptz,
+          true,
+          false
+        )$$,
+      'missing delete creates only a minimal owner tombstone and no active content'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000021',
+        'delete',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000020',
+        null
+      ) ->> 'status',
+      'idempotent',
+      'the deletion-wins operation is idempotent on exact replay'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000022',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000020',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000020',
+          'Forbidden after missing delete'
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+      'a later upsert cannot resurrect a deletion-wins tombstone'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000020',
+        '69040000-0000-4000-8000-000000000020',
+        'PM',
+        '69050000-0000-4000-8000-000000000020',
+        '69020000-0000-4000-8000-000000000020',
+        20,
+        pg_catalog.current_setting('test.core05_pre_delete_at'),
+        pg_catalog.current_setting('test.core05_pre_delete_date'),
+        'America/Toronto'
+      ) ->> 'status',
+      'accepted',
+      'a delayed step before a deletion-wins cutoff remains admissible'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000021',
+        '69040000-0000-4000-8000-000000000020',
+        'PM',
+        null,
+        null,
+        null,
+        pg_catalog.current_setting('test.core05_pre_delete_at'),
+        pg_catalog.current_setting('test.core05_pre_delete_date'),
+        'America/Toronto'
+      ) ->> 'status',
+      'accepted',
+      'the exact same-time PM attestation is accepted for a pre-cutoff delayed step'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000022',
+        '69040000-0000-4000-8000-000000000022',
+        'PM',
+        '69050000-0000-4000-8000-000000000022',
+        '69020000-0000-4000-8000-000000000020',
+        22,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_AFTER_PRODUCT_DELETION',
+      'a delayed step after a deletion-wins cutoff is terminal'
+    );
+    
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000002',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000001',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000001',
+          'Primary mirror'
+        )
+      ),
+      pg_catalog.jsonb_build_object(
+        'version', 1,
+        'operation_id', '69010000-0000-4000-8000-000000000002',
+        'status', 'accepted',
+        'code', null
+      ),
+      'a valid manual Shelf mirror is accepted with the exact response'
+    );
+    select ok(
+      (
+        select pg_catalog.jsonb_typeof(response) = 'object'
+          and (select count(*) from pg_catalog.jsonb_object_keys(response)) = 4
+          and pg_catalog.jsonb_typeof(response -> 'version') = 'number'
+          and pg_catalog.jsonb_typeof(response -> 'operation_id') = 'string'
+          and pg_catalog.jsonb_typeof(response -> 'status') = 'string'
+          and pg_catalog.jsonb_typeof(response -> 'code') = 'null'
+          from (
+            select public.sync_shelf_product(
+              '69010000-0000-4000-8000-000000000002',
+              'upsert',
+              pg_catalog.current_setting('test.core05_enqueued_at'),
+              '69020000-0000-4000-8000-000000000001',
+              pg_temp.core05_shelf_payload(
+                '69020000-0000-4000-8000-000000000001',
+                'Primary mirror'
+              )
+            ) as response
+          ) as replay
+      ),
+      'Shelf responses have exactly four keys and exact JSON scalar types'
+    );
+    reset role;
+    select ok(
+      exists (
+        select 1
+          from public.user_products as products
+          join public.shelf_product_identities as identities
+            on identities.id = products.id
+           and identities.user_id = products.user_id
+         where products.id = '69020000-0000-4000-8000-000000000001'
+           and products.user_id = '69000000-0000-4000-8000-000000000001'
+           and products.manual_name = 'Primary mirror'
+           and products.legacy_unverified_expiry_date is null
+      ),
+      'Shelf acceptance writes same-owner active content without trusting quarantine'
+    );
+    select ok(
+      exists (
+        select 1
+          from private.shelf_sync_operations as operations
+         where operations.operation_id = '69010000-0000-4000-8000-000000000002'
+           and operations.state = 'accepted'
+           and operations.result_code is null
+           and operations.request_sha256 ~ '^[0-9a-f]{64}$'
+           and operations.request_sha256 not like '%Primary mirror%'
+      ),
+      'the accepted Shelf ledger retains a digest and outcome, never the raw name'
+    );
+    
+    select pg_catalog.set_config(
+      'test.core05_identity_export_total',
+      (
+        select pg_catalog.count(*)::text
+          from public.shelf_product_identities as identity_row
+         where identity_row.user_id =
+           '69000000-0000-4000-8000-000000000001'
+      ),
+      true
+    );
+    set local role authenticated;
+    select ok(
+      (
+        select pg_catalog.bool_and(
+          exported.user_id = '69000000-0000-4000-8000-000000000001'
+          and exported.export_total_count =
+            pg_catalog.current_setting(
+              'test.core05_identity_export_total'
+            )::bigint
+        )
+          from public.export_shelf_product_identities_for_subject(
+            null, null, 500
+          ) as exported
+      ),
+      'identity export derives the caller and reports the exact owner total'
+    );
+    select ok(
+      (
+        with first_row as (
+          select exported.created_at, exported.operation_id,
+                 exported.export_total_count
+            from public.export_shelf_sync_receipts_for_subject(
+              null, null, 1
+            ) as exported
+        ),
+        remaining as (
+          select exported.*
+            from first_row
+            cross join lateral public.export_shelf_sync_receipts_for_subject(
+              first_row.created_at, first_row.operation_id, 500
+            ) as exported
+        )
+        select (select pg_catalog.count(*) from first_row) = 1
+          and (
+            select pg_catalog.count(*) from remaining
+          ) = (
+            select export_total_count - 1 from first_row
+          )
+          and (
+            select pg_catalog.bool_and(
+              (remaining.created_at, remaining.operation_id)
+                > (first_row.created_at, first_row.operation_id)
+              and remaining.export_total_count = first_row.export_total_count
+            )
+              from remaining
+              cross join first_row
+          )
+      ),
+      'receipt export keeps the pre-keyset total while advancing a strict keyset cursor'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000002',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000001',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000001',
+          'Primary mirror'
+        )
+      ) ->> 'status',
+      'idempotent',
+      'an exact accepted Shelf replay is idempotent'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000002',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000001',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000001',
+          'Changed replay'
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+      'an operation ID rebound to different bytes is terminal'
+    );
+    
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000001',
+        '69040000-0000-4000-8000-000000000001',
+        'PM',
+        '69050000-0000-4000-8000-000000000001',
+        '69020000-0000-4000-8000-000000000002',
+        1,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_PRODUCT_RETRY_LATER',
+      'a completion whose Shelf identity has not arrived is retryable'
+    );
+    reset role;
+    select results_eq(
+      $$select state, result_code
+          from private.routine_completion_sync_operations
+         where event_id = '69030000-0000-4000-8000-000000000001'$$,
+      $$values ('pending'::text, null::text)$$,
+      'retryable completion state remains pending without a fabricated terminal code'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000003',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000002',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000002',
+          'Arriving dependency'
+        )
+      ) ->> 'status',
+      'accepted',
+      'the missing Shelf dependency can arrive later'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000001',
+        '69040000-0000-4000-8000-000000000001',
+        'PM',
+        '69050000-0000-4000-8000-000000000001',
+        '69020000-0000-4000-8000-000000000002',
+        1,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'status',
+      'accepted',
+      'the exact pending completion succeeds after its Shelf dependency arrives'
+    );
+    reset role;
+    select ok(
+      exists (
+        select 1
+          from public.routine_completions as completions
+          join public.routines as routines
+            on routines.id = completions.routine_id
+           and routines.user_id = completions.user_id
+          join public.routine_steps as steps
+            on steps.id = completions.step_id
+           and steps.routine_id = completions.routine_id
+          join public.shelf_product_identities as identities
+            on identities.id = steps.user_product_id
+           and identities.user_id = completions.user_id
+         where completions.id = '69030000-0000-4000-8000-000000000001'
+      ),
+      'accepted step evidence preserves owner, routine, step, and product identity'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000002',
+        '69040000-0000-4000-8000-000000000001',
+        'PM',
+        null,
+        null,
+        null,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'status',
+      'accepted',
+      'a PM attestation is admitted only after exact same-time step evidence'
+    );
+    reset role;
+    select ok(
+      exists (
+        select 1
+          from public.routine_completions
+         where id = '69030000-0000-4000-8000-000000000002'
+           and step_id is null
+      ),
+      'the admitted user attestation is stored as a routine-level marker'
+    );
+    
+    select pg_catalog.set_config(
+      'test.core05_authority_before',
+      pg_catalog.jsonb_build_object(
+        'profile', (
+          select pg_catalog.to_jsonb(profiles)
+            from public.profiles
+           where profiles.id = '69000000-0000-4000-8000-000000000001'
+        ),
+        'freezes', (
+          select coalesce(
+            pg_catalog.jsonb_agg(
+              pg_catalog.to_jsonb(freezes) order by freezes.applied_for_date
+            ),
+            '[]'::jsonb
+          )
+            from public.streak_freezes as freezes
+           where freezes.user_id = '69000000-0000-4000-8000-000000000001'
+        )
+      )::text,
+      true
+    );
+    set local role authenticated;
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000003',
+        '69040000-0000-4000-8000-000000000099',
+        'PM',
+        null,
+        null,
+        null,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_REQUEST_INVALID',
+      'an orphan routine marker is terminal request-invalid'
+    );
+    reset role;
+    select is(
+      pg_catalog.jsonb_build_object(
+        'profile', (
+          select pg_catalog.to_jsonb(profiles)
+            from public.profiles
+           where profiles.id = '69000000-0000-4000-8000-000000000001'
+        ),
+        'freezes', (
+          select coalesce(
+            pg_catalog.jsonb_agg(
+              pg_catalog.to_jsonb(freezes) order by freezes.applied_for_date
+            ),
+            '[]'::jsonb
+          )
+            from public.streak_freezes as freezes
+           where freezes.user_id = '69000000-0000-4000-8000-000000000001'
+        )
+      ),
+      pg_catalog.current_setting('test.core05_authority_before')::jsonb,
+      'orphan-marker rejection leaves timezone, profile cache, and freezes byte-stable'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000004',
+        '69040000-0000-4000-8000-000000000001',
+        'AM',
+        '69050000-0000-4000-8000-000000000004',
+        '69020000-0000-4000-8000-000000000002',
+        4,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_IDENTITY_CONFLICT',
+      'rebinding an existing PM routine as AM is terminal identity conflict'
+    );
+    reset role;
+    select is(
+      pg_catalog.jsonb_build_object(
+        'profile', (
+          select pg_catalog.to_jsonb(profiles)
+            from public.profiles
+           where profiles.id = '69000000-0000-4000-8000-000000000001'
+        ),
+        'freezes', (
+          select coalesce(
+            pg_catalog.jsonb_agg(
+              pg_catalog.to_jsonb(freezes) order by freezes.applied_for_date
+            ),
+            '[]'::jsonb
+          )
+            from public.streak_freezes as freezes
+           where freezes.user_id = '69000000-0000-4000-8000-000000000001'
+        )
+      ),
+      pg_catalog.current_setting('test.core05_authority_before')::jsonb,
+      'routine-identity rejection leaves profile/cache/freeze bytes unchanged'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000005',
+        '69040000-0000-4000-8000-000000000001',
+        'PM',
+        '69050000-0000-4000-8000-000000000001',
+        '69020000-0000-4000-8000-000000000002',
+        1,
+        pg_catalog.to_char(
+          pg_catalog.current_setting('test.core05_completed_at')::timestamptz
+            + interval '1 second',
+          'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
+        ),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_EVENT_CONFLICT',
+      'a new event ID cannot bypass the null-safe semantic uniqueness key'
+    );
+    reset role;
+    select is(
+      pg_catalog.jsonb_build_object(
+        'profile', (
+          select pg_catalog.to_jsonb(profiles)
+            from public.profiles
+           where profiles.id = '69000000-0000-4000-8000-000000000001'
+        ),
+        'freezes', (
+          select coalesce(
+            pg_catalog.jsonb_agg(
+              pg_catalog.to_jsonb(freezes) order by freezes.applied_for_date
+            ),
+            '[]'::jsonb
+          )
+            from public.streak_freezes as freezes
+           where freezes.user_id = '69000000-0000-4000-8000-000000000001'
+        )
+      ),
+      pg_catalog.current_setting('test.core05_authority_before')::jsonb,
+      'semantic-conflict rejection cannot mutate adherence authority'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000004',
+        'delete',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000002',
+        null
+      ) ->> 'status',
+      'accepted',
+      'Shelf deletion accepts a regressed requested cutoff'
+    );
+    reset role;
+    select results_eq(
+      $$select
+          identities.deleted_effective_at,
+          identities.deleted_received_at is not null,
+          exists (
+            select 1 from public.user_products
+             where id = identities.id
+          ),
+          exists (
+            select 1 from public.routine_steps
+             where user_product_id = identities.id
+          )
+          from public.shelf_product_identities as identities
+         where identities.id = '69020000-0000-4000-8000-000000000002'$$,
+      $$values (
+          pg_catalog.current_setting('test.core05_completed_at')::timestamptz,
+          true,
+          false,
+          true
+        )$$,
+      'delete normalizes to accepted completion time, removes content, and retains identity'
+    );
+    
+    set local role authenticated;
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000006',
+        '69040000-0000-4000-8000-000000000006',
+        'PM',
+        '69050000-0000-4000-8000-000000000006',
+        '69020000-0000-4000-8000-000000000002',
+        6,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'status',
+      'accepted',
+      'historical evidence exactly at the tombstone cutoff remains admissible'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000007',
+        '69040000-0000-4000-8000-000000000007',
+        'PM',
+        '69050000-0000-4000-8000-000000000007',
+        '69020000-0000-4000-8000-000000000002',
+        7,
+        pg_catalog.to_char(
+          pg_catalog.current_setting('test.core05_completed_at')::timestamptz
+            + interval '1 second',
+          'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
+        ),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_AFTER_PRODUCT_DELETION',
+      'evidence after the normalized deletion cutoff is terminal'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000005',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000002',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000002',
+          'Forbidden resurrection'
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+      'a tombstoned stable identity cannot be resurrected by upsert'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000004',
+        'delete',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000002',
+        null
+      ) ->> 'status',
+      'idempotent',
+      'an exact accepted delete replay is idempotent'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000006',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000099',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000099',
+          'No legacy expiry key'
+        ) || pg_catalog.jsonb_build_object(
+          'legacy_unverified_expiry_date',
+          pg_catalog.current_setting('test.core05_completed_date')
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_PAYLOAD_INVALID',
+      'an attempted client legacy-expiry field is rejected as an extra payload key'
+    );
+    
+    select throws_ok(
+      $$insert into public.user_products (
+          id, user_id, manual_name, is_opened, pao_source, expiry_source
+        ) values (
+          '69020000-0000-4000-8000-000000000099',
+          '69000000-0000-4000-8000-000000000001',
+          'Direct bypass',
+          false,
+          'unknown',
+          'unknown'
+        )$$,
+      '42501',
+      'permission denied for table user_products',
+      'direct authenticated Shelf mutation is denied'
+    );
+    
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000002","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000002"}',
+      true
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000007',
+        'upsert',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000001',
+        pg_temp.core05_shelf_payload(
+          '69020000-0000-4000-8000-000000000001',
+          'Cross-owner takeover'
+        )
+      ) ->> 'code',
+      'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+      'a second owner cannot take over a globally stable product identity'
+    );
+    select is(
+      public.record_routine_completion(
+        '69030000-0000-4000-8000-000000000008',
+        '69040000-0000-4000-8000-000000000008',
+        'PM',
+        '69050000-0000-4000-8000-000000000008',
+        '69020000-0000-4000-8000-000000000001',
+        8,
+        pg_catalog.current_setting('test.core05_completed_at'),
+        pg_catalog.current_setting('test.core05_completed_date'),
+        'America/Toronto'
+      ) ->> 'code',
+      'COMPLETION_IDENTITY_CONFLICT',
+      'a second owner cannot complete against another owner product identity'
+    );
+    select is(
+      public.sync_shelf_product(
+        '69010000-0000-4000-8000-000000000023',
+        'delete',
+        pg_catalog.current_setting('test.core05_enqueued_at'),
+        '69020000-0000-4000-8000-000000000020',
+        null
+      ) ->> 'code',
+      'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+      'a second owner cannot claim or delete a deletion-wins tombstone'
+    );
+    reset role;
+    select pg_catalog.set_config(
+      'test.core05_user2_shelf_receipt_total',
+      (
+        select pg_catalog.count(*)::text
+          from private.shelf_sync_operations as receipts
+         where receipts.user_id =
+           '69000000-0000-4000-8000-000000000002'
+      ),
+      true
+    );
+    select pg_catalog.set_config(
+      'test.core05_user2_completion_receipt_total',
+      (
+        select pg_catalog.count(*)::text
+          from private.routine_completion_sync_operations as receipts
+         where receipts.user_id =
+           '69000000-0000-4000-8000-000000000002'
+      ),
+      true
+    );
+    set local role authenticated;
+    select ok(
+      (
+        select pg_catalog.bool_and(
+          exported.user_id = '69000000-0000-4000-8000-000000000002'
+          and exported.export_total_count =
+            pg_catalog.current_setting(
+              'test.core05_user2_shelf_receipt_total'
+            )::bigint
+        )
+          from public.export_shelf_sync_receipts_for_subject(
+            null, null, 500
+          ) as exported
+      )
+      and (
+        select pg_catalog.bool_and(
+          exported.user_id = '69000000-0000-4000-8000-000000000002'
+          and exported.export_total_count =
+            pg_catalog.current_setting(
+              'test.core05_user2_completion_receipt_total'
+            )::bigint
+        )
+          from public.export_routine_completion_sync_receipts_for_subject(
+            null, null, 500
+          ) as exported
+      ),
+      'a second subject can export only that subject''s own minimized receipts'
+    );
+    reset role;
+    
+    insert into public.account_deletion_operations (
+      id,
+      user_id,
+      idempotency_digest,
+      capability_digest,
+      expires_at
+    ) values (
+      '69060000-0000-4000-8000-000000000002',
+      '69000000-0000-4000-8000-000000000002',
+      repeat('a', 64),
+      repeat('b', 64),
+      pg_catalog.statement_timestamp() + interval '1 day'
+    );
+    insert into public.account_deletion_barriers (
+      user_id,
+      operation_id,
+      expires_at
+    ) values (
+      '69000000-0000-4000-8000-000000000002',
+      '69060000-0000-4000-8000-000000000002',
+      pg_catalog.statement_timestamp() + interval '1 day'
+    );
+    set local role authenticated;
+    select throws_ok(
+      $$select * from public.export_shelf_product_identities_for_subject(
+          null, null, 500
+        )$$,
+      '42501',
+      'ACCOUNT_ACCESS_DENIED',
+      'an account-deletion barrier denies sealed health-sync export'
+    );
+    reset role;
+    delete from public.account_deletion_operations
+     where id = '69060000-0000-4000-8000-000000000002';
+    
+    set local role authenticated;
+    do $$
+    begin
+      perform *
+        from public.begin_health_data_consent_withdrawal(
+          1,
+          repeat('e', 64),
+          'draft-v1-2026-07-10',
+          '5200ef21982670cf73539d8a7d3e0f9c2219b40ee8d63be0a83d3e10043ba37f'
+        );
+    end;
+    $$;
+    select throws_ok(
+      $$select * from public.export_shelf_product_identities_for_subject(
+          null, null, 500
+        )$$,
+      '55000',
+      'HEALTH_SYNC_EXPORT_WITHDRAWAL_IN_PROGRESS',
+      'the export owner lock and lifecycle gate reject an in-progress withdrawal'
+    );
+    reset role;
+    select pg_catalog.set_config(
+      'test.core05_user2_withdrawal_operation',
+      (
+        select current_operation_id::text
+          from public.health_processing_states
+         where user_id = '69000000-0000-4000-8000-000000000002'
+      ),
+      true
+    );
+    set local role service_role;
+    do $$
+    begin
+      perform *
+        from public.claim_health_consent_withdrawal_for_owner(
+          '69000000-0000-4000-8000-000000000002',
+          pg_catalog.current_setting(
+            'test.core05_user2_withdrawal_operation'
+          )::uuid,
+          repeat('f', 64)
+        );
+      perform *
+        from public.prepare_health_data_consent_withdrawal(
+          pg_catalog.current_setting(
+            'test.core05_user2_withdrawal_operation'
+          )::uuid,
+          repeat('f', 64)
+        );
+      perform *
+        from public.complete_health_data_consent_withdrawal(
+          pg_catalog.current_setting(
+            'test.core05_user2_withdrawal_operation'
+          )::uuid,
+          repeat('f', 64)
+        );
+    end;
+    $$;
+    reset role;
+    insert into private.shelf_sync_operations (
+      operation_id,
+      user_id,
+      request_sha256,
+      state,
+      result_code,
+      finalized_at
+    ) values (
+      '69010000-0000-4000-8000-000000000099',
+      '69000000-0000-4000-8000-000000000002',
+      repeat('c', 64),
+      'terminal',
+      'SHELF_PRODUCT_OWNERSHIP_CONFLICT',
+      pg_catalog.statement_timestamp()
+    );
+    set local role authenticated;
+    select throws_ok(
+      $$select * from public.export_shelf_sync_receipts_for_subject(
+          null, null, 500
+        )$$,
+      '55000',
+      'HEALTH_SYNC_EXPORT_NONACTIVE_RESIDUE',
+      'a withdrawn lifecycle fails closed if a sealed source has synthetic residue'
+    );
+    reset role;
+    delete from private.shelf_sync_operations
+     where operation_id = '69010000-0000-4000-8000-000000000099';
+    set local role authenticated;
+    select is(
+      (
+        select pg_catalog.count(*)
+          from public.export_shelf_sync_receipts_for_subject(
+            null, null, 500
+          )
+      ),
+      0::bigint,
+      'a withdrawn lifecycle exports an exact verified zero for a clean sealed source'
+    );
+    reset role;
+    
+    -- Synchronous withdrawal clears replay authority; the established service
+    -- worker path then proves identities and relational health data reach zero.
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select lives_ok(
+      $$select * from public.begin_health_data_consent_withdrawal(
+          1,
+          repeat('8', 64),
+          'draft-v1-2026-07-10',
+          '5200ef21982670cf73539d8a7d3e0f9c2219b40ee8d63be0a83d3e10043ba37f'
+        )$$,
+      'health consent withdrawal begins through the canonical owner RPC'
+    );
+    reset role;
+    select is(
+      (
+        select count(*)
+          from private.shelf_sync_operations
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ) + (
+        select count(*)
+          from private.routine_completion_sync_operations
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ),
+      0::bigint,
+      'withdrawal synchronously erases both minimized replay ledgers'
+    );
+    select pg_catalog.set_config(
+      'test.core05_withdrawal_operation',
+      (
+        select current_operation_id::text
+          from public.health_processing_states
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ),
+      true
+    );
+    set local role service_role;
+    select lives_ok(
+      $$select * from public.claim_health_consent_withdrawal_for_owner(
+          '69000000-0000-4000-8000-000000000001',
+          pg_catalog.current_setting('test.core05_withdrawal_operation')::uuid,
+          repeat('9', 64)
+        );
+        select * from public.prepare_health_data_consent_withdrawal(
+          pg_catalog.current_setting('test.core05_withdrawal_operation')::uuid,
+          repeat('9', 64)
+        );
+        select * from public.complete_health_data_consent_withdrawal(
+          pg_catalog.current_setting('test.core05_withdrawal_operation')::uuid,
+          repeat('9', 64)
+        )$$,
+      'the canonical service worker completes database health erasure'
+    );
+    reset role;
+    select ok(
+      not public._health_relational_data_exists(
+        '69000000-0000-4000-8000-000000000001'
+      )
+      and not exists (
+        select 1
+          from public.shelf_product_identities
+         where user_id = '69000000-0000-4000-8000-000000000001'
+      ),
+      'zero-attestation proves stable identities and all relational health data erased'
+    );
+    set local role authenticated;
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000001","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select is(
+      (
+        select pg_catalog.count(*)
+          from public.export_shelf_product_identities_for_subject(
+            null, null, 500
+          )
+      ) + (
+        select pg_catalog.count(*)
+          from public.export_shelf_sync_receipts_for_subject(
+            null, null, 500
+          )
+      ) + (
+        select pg_catalog.count(*)
+          from public.export_routine_completion_sync_receipts_for_subject(
+            null, null, 500
+          )
+      ),
+      0::bigint,
+      'all sealed health-sync exports verify exact zero after canonical withdrawal purge'
+    );
+    reset role;
+    do $$
+    begin
+      perform *
+        from public.close_health_consent_copy_for_emergency(
+          'health_data_collection',
+          'grant',
+          'draft-v1-2026-07-10',
+          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+          'PGTAP-CORE05-0069-STALE-GRANT',
+          'pgtap.db-owner',
+          repeat('d', 64)
+        );
+    end;
+    $$;
+    set local role authenticated;
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"69000000-0000-4000-8000-000000000004","role":"authenticated","session_id":"69001000-0000-4000-8000-000000000004"}',
+      true
+    );
+    select pg_catalog.set_config(
+      'request.headers',
+      '{"x-health-processing-epoch":"1"}',
+      true
+    );
+    select throws_ok(
+      $$select public.sync_shelf_product(
+          '69010000-0000-4000-8000-000000000040',
+          'delete',
+          '2026-07-26T12:00:00.000Z',
+          '69020000-0000-4000-8000-000000000040',
+          null
+        )$$,
+      '55000',
+      'HEALTH_PROCESSING_CONSENT_STALE',
+      'Shelf sync rejects a formerly active epoch after its exact grant closes'
+    );
+    select throws_ok(
+      $$select public.record_routine_completion(
+          '69030000-0000-4000-8000-000000000040',
+          '69040000-0000-4000-8000-000000000040',
+          'PM',
+          null,
+          null,
+          null,
+          '2026-07-26T12:00:00.000Z',
+          '2026-07-26',
+          'America/Toronto'
+        )$$,
+      '55000',
+      'HEALTH_PROCESSING_CONSENT_STALE',
+      'completion sync rejects a formerly active epoch after its exact grant closes'
+    );
+    reset role;
+    select is(
+      (
+        select pg_catalog.count(*)
+          from private.shelf_sync_operations
+         where user_id = '69000000-0000-4000-8000-000000000004'
+      ) + (
+        select pg_catalog.count(*)
+          from private.routine_completion_sync_operations
+         where user_id = '69000000-0000-4000-8000-000000000004'
+      ) + (
+        select pg_catalog.count(*)
+          from public.shelf_product_identities
+         where user_id = '69000000-0000-4000-8000-000000000004'
+      ) + (
+        select pg_catalog.count(*)
+          from public.routine_completions
+         where user_id = '69000000-0000-4000-8000-000000000004'
+      ),
+      0::bigint,
+      'closed-grant sync attempts leave operation, identity, and completion state empty'
+    );
+    
+    select * from finish();
+    rollback;
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/core05/adherence-source-contract.test.mjs:675:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: the hashed corpus executes the actual client streak implementation and binds SQL parity
+ok 46 - the hashed corpus executes the actual client streak implementation and binds SQL parity
+  ---
+  duration_ms: 67.911
+  type: 'test'
+  ...
+# Subtest: completion records remain registered for cleanup/export and this contract is mandatory
+ok 47 - completion records remain registered for cleanup/export and this contract is mandatory
+  ---
+  duration_ms: 2.2016
+  type: 'test'
+  ...
+# Subtest: uncaught errors fail even when their text includes a normally allowed environment warning
+ok 48 - uncaught errors fail even when their text includes a normally allowed environment warning
+  ---
+  duration_ms: 2.3832
+  type: 'test'
+  ...
+# Subtest: a visible overlay fails independently of DOM recovery copy and missing exception events
+ok 49 - a visible overlay fails independently of DOM recovery copy and missing exception events
+  ---
+  duration_ms: 0.4248
+  type: 'test'
+  ...
+# Subtest: a recovery summary cannot pass with obsolete or false completion flags
+ok 50 - a recovery summary cannot pass with obsolete or false completion flags
+  ---
+  duration_ms: 0.5296
+  type: 'test'
+  ...
+# Subtest: old-owner race refusal must be typed, complete, and attributable to authority closure
+ok 51 - old-owner race refusal must be typed, complete, and attributable to authority closure
+  ---
+  duration_ms: 2.6388
+  type: 'test'
+  ...
+# Subtest: current PAY-07 entitlement-admission source snapshot passes
+ok 52 - current PAY-07 entitlement-admission source snapshot passes
+  ---
+  duration_ms: 151.1137
+  type: 'test'
+  ...
+# Subtest: missing authority files fail closed
+ok 53 - missing authority files fail closed
+  ---
+  duration_ms: 153.3149
+  type: 'test'
+  ...
+# Subtest: positive entitlement fixtures are rejected from base and native modules
+ok 54 - positive entitlement fixtures are rejected from base and native modules
+  ---
+  duration_ms: 105.4161
+  type: 'test'
+  ...
+# Subtest: web fixture cannot grant outside development or leak into native resolution
+ok 55 - web fixture cannot grant outside development or leak into native resolution
+  ---
+  duration_ms: 99.9017
+  type: 'test'
+  ...
+# Subtest: runtime hook cannot regain a direct environment entitlement bypass
+ok 56 - runtime hook cannot regain a direct environment entitlement bypass
+  ---
+  duration_ms: 48.0059
+  type: 'test'
+  ...
+# Subtest: unconfigured Supabase cannot mint or persist a local reverse trial
+ok 57 - unconfigured Supabase cannot mint or persist a local reverse trial
+  ---
+  duration_ms: 69.9889
+  type: 'test'
+  ...
+# Subtest: server custom grant authority rejects hosted and bypassed admission
+ok 58 - server custom grant authority rejects hosted and bypassed admission
+  ---
+  duration_ms: 80.919
+  type: 'test'
+  ...
+# Subtest: success route cannot default or synthesize a purchase confirmation
+ok 59 - success route cannot default or synthesize a purchase confirmation
+  ---
+  duration_ms: 64.465
+  type: 'test'
+  ...
+# Subtest: success route requires both current Pro and exact expiry evidence
+ok 60 - success route requires both current Pro and exact expiry evidence
+  ---
+  duration_ms: 39.6619
+  type: 'test'
+  ...
+# Subtest: success admission rejects pre-mount cache and stale verification
+ok 61 - success admission rejects pre-mount cache and stale verification
+  ---
+  duration_ms: 71.8246
+  type: 'test'
+  ...
+# Subtest: success route forces a fresh exact-owner query after mount
+ok 62 - success route forces a fresh exact-owner query after mount
+  ---
+  duration_ms: 110.4628
+  type: 'test'
+  ...
+# Subtest: success claims separate non-billing grants from exact renewing store evidence
+ok 63 - success claims separate non-billing grants from exact renewing store evidence
+  ---
+  duration_ms: 66.9479
+  type: 'test'
+  ...
+# Subtest: app config and EAS profiles reject environment drift
+ok 64 - app config and EAS profiles reject environment drift
+  ---
+  duration_ms: 52.7266
+  type: 'test'
+  ...
+# Subtest: release JavaScript cannot accept a development public environment label
+ok 65 - release JavaScript cannot accept a development public environment label
+  ---
+  duration_ms: 37.9857
+  type: 'test'
+  ...
+# Subtest: RevenueCat NOT_REQUESTED cannot become active or legacy-positive evidence
+ok 66 - RevenueCat NOT_REQUESTED cannot become active or legacy-positive evidence
+  ---
+  duration_ms: 47.3513
+  type: 'test'
+  ...
+# Subtest: introductory-offer copy cannot bypass exact per-product eligibility
+ok 67 - introductory-offer copy cannot bypass exact per-product eligibility
+  ---
+  duration_ms: 64.7065
+  type: 'test'
+  ...
+# Subtest: Phase 6, Phase 9, and launch verification cannot drop PAY-07 contracts
+ok 68 - Phase 6, Phase 9, and launch verification cannot drop PAY-07 contracts
+  ---
+  duration_ms: 108.9933
+  type: 'test'
+  ...
+# Subtest: Phase 6 cannot drop the production Trusted Entitlements evidence gate
+ok 69 - Phase 6 cannot drop the production Trusted Entitlements evidence gate
+  ---
+  duration_ms: 58.5932
+  type: 'test'
+  ...
+# Subtest: the repository satisfies the aggregate PHOTO-01 source contract
+ok 70 - the repository satisfies the aggregate PHOTO-01 source contract
+  ---
+  duration_ms: 6.0906
+  type: 'test'
+  ...
+# Subtest: the contract rejects thumbnail network capability
+ok 71 - the contract rejects thumbnail network capability
+  ---
+  duration_ms: 3.5961
+  type: 'test'
+  ...
+# Subtest: the contract rejects raw deletion before metadata publication
+ok 72 - the contract rejects raw deletion before metadata publication
+  ---
+  duration_ms: 5.49
+  type: 'test'
+  ...
+# Subtest: the contract rejects omission of thumbnail deletion
+ok 73 - the contract rejects omission of thumbnail deletion
+  ---
+  duration_ms: 3.1173
+  type: 'test'
+  ...
+# Subtest: the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+ok 74 - the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+  ---
+  duration_ms: 243.8053
+  type: 'test'
+  ...
+# Subtest: rejects an additive Stack mounted before AppLockProvider
+ok 75 - rejects an additive Stack mounted before AppLockProvider
+  ---
+  duration_ms: 98.6429
+  type: 'test'
+  ...
+# Subtest: rejects additive children mounted before the loaded decision
+ok 76 - rejects additive children mounted before the loaded decision
+  ---
+  duration_ms: 88.4743
+  type: 'test'
+  ...
+# Subtest: rejects an early corrupt preference unlock
+ok 77 - rejects an early corrupt preference unlock
+  ---
+  duration_ms: 79.37
+  type: 'test'
+  ...
+# Subtest: rejects an early unsupported_version preference unlock
+ok 78 - rejects an early unsupported_version preference unlock
+  ---
+  duration_ms: 55.4175
+  type: 'test'
+  ...
+# Subtest: rejects unauthenticated preference disable
+ok 79 - rejects unauthenticated preference disable
+  ---
+  duration_ms: 51.0178
+  type: 'test'
+  ...
+# Subtest: rejects an additive unauthenticated setLocked(false)
+ok 80 - rejects an additive unauthenticated setLocked(false)
+  ---
+  duration_ms: 48.2738
+  type: 'test'
+  ...
+# Subtest: rejects usePhotos in the route component before PhotoTimelineLockGate
+ok 81 - rejects usePhotos in the route component before PhotoTimelineLockGate
+  ---
+  duration_ms: 53.9893
+  type: 'test'
+  ...
+# Subtest: rejects malformed-preference deletion moved before authentication
+ok 82 - rejects malformed-preference deletion moved before authentication
+  ---
+  duration_ms: 48.0779
+  type: 'test'
+  ...
+# Subtest: rejects native success publication without current-request revalidation
+ok 83 - rejects native success publication without current-request revalidation
+  ---
+  duration_ms: 43.3168
+  type: 'test'
+  ...
+# Subtest: rejects a preference authentication failure guard weakened with && false
+ok 84 - rejects a preference authentication failure guard weakened with && false
+  ---
+  duration_ms: 49.2683
+  type: 'test'
+  ...
+# Subtest: rejects a reset authentication failure guard weakened with && false
+ok 85 - rejects a reset authentication failure guard weakened with && false
+  ---
+  duration_ms: 45.4082
+  type: 'test'
+  ...
+# Subtest: rejects provider success dominance weakened with || true
+ok 86 - rejects provider success dominance weakened with || true
+  ---
+  duration_ms: 38.2527
+  type: 'test'
+  ...
+# Subtest: rejects timeline unlock predicate weakened with || true
+ok 87 - rejects timeline unlock predicate weakened with || true
+  ---
+  duration_ms: 48.2329
+  type: 'test'
+  ...
+# Subtest: rejects private readiness predicate weakened with || true
+ok 88 - rejects private readiness predicate weakened with || true
+  ---
+  duration_ms: 46.4496
+  type: 'test'
+  ...
+# Subtest: rejects an aliased photo hook call before the timeline gate
+ok 89 - rejects an aliased photo hook call before the timeline gate
+  ---
+  duration_ms: 48.1318
+  type: 'test'
+  ...
+# Subtest: rejects preference authentication failure falling through after its return is removed
+ok 90 - rejects preference authentication failure falling through after its return is removed
+  ---
+  duration_ms: 43.3602
+  type: 'test'
+  ...
+# Subtest: rejects reset authentication failure falling through after its return is removed
+ok 91 - rejects reset authentication failure falling through after its return is removed
+  ---
+  duration_ms: 38.6303
+  type: 'test'
+  ...
+# Subtest: repository satisfies aggregate PHOTO-03 AST/dataflow contract
+ok 92 - repository satisfies aggregate PHOTO-03 AST/dataflow contract
+  ---
+  duration_ms: 148.0612
+  type: 'test'
+  ...
+# Subtest: rejects enabling native face tracking
+ok 93 - rejects enabling native face tracking
+  ---
+  duration_ms: 48.4976
+  type: 'test'
+  ...
+# Subtest: rejects adding identity-capable face observation fields
+ok 94 - rejects adding identity-capable face observation fields
+  ---
+  duration_ms: 34.2674
+  type: 'test'
+  ...
+# Subtest: rejects matched framing without complete pose signals
+ok 95 - rejects matched framing without complete pose signals
+  ---
+  duration_ms: 89.3917
+  type: 'test'
+  ...
+# Subtest: rejects raw native face publication
+ok 96 - rejects raw native face publication
+  ---
+  duration_ms: 56.7861
+  type: 'test'
+  ...
+# Subtest: rejects lighting success before plaintext cleanup
+ok 97 - rejects lighting success before plaintext cleanup
+  ---
+  duration_ms: 28.4275
+  type: 'test'
+  ...
+# Subtest: rejects network egress added to capture analysis
+ok 98 - rejects network egress added to capture analysis
+  ---
+  duration_ms: 51.3641
+  type: 'test'
+  ...
+# Subtest: rejects production-accessible analysis fixtures
+ok 99 - rejects production-accessible analysis fixtures
+  ---
+  duration_ms: 26.5789
+  type: 'test'
+  ...
+# Subtest: rejects an object spread that overrides disabled detector options
+ok 100 - rejects an object spread that overrides disabled detector options
+  ---
+  duration_ms: 23.1263
+  type: 'test'
+  ...
+# Subtest: rejects pose completeness replaced with a true initializer
+ok 101 - rejects pose completeness replaced with a true initializer
+  ---
+  duration_ms: 24.1148
+  type: 'test'
+  ...
+# Subtest: rejects an effective 4096px lighting resize while the bounded constant remains
+ok 102 - rejects an effective 4096px lighting resize while the bounded constant remains
+  ---
+  duration_ms: 22.9547
+  type: 'test'
+  ...
+# Subtest: rejects cleanupOwnedSample returning before owned cleanup
+ok 103 - rejects cleanupOwnedSample returning before owned cleanup
+  ---
+  duration_ms: 22.6097
+  type: 'test'
+  ...
+# Subtest: rejects aliased expo fetch egress
+ok 104 - rejects aliased expo fetch egress
+  ---
+  duration_ms: 21.18
+  type: 'test'
+  ...
+# Subtest: repository satisfies aggregate PHOTO-04 AST/control-flow contract
+ok 105 - repository satisfies aggregate PHOTO-04 AST/control-flow contract
+  ---
+  duration_ms: 151.4701
+  type: 'test'
+  ...
+# Subtest: rejects background playback that remains active
+ok 106 - rejects background playback that remains active
+  ---
+  duration_ms: 72.4744
+  type: 'test'
+  ...
+# Subtest: rejects foreground auto-resume
+ok 107 - rejects foreground auto-resume
+  ---
+  duration_ms: 38.2455
+  type: 'test'
+  ...
+# Subtest: rejects playback admission without Reduce Motion protection
+ok 108 - rejects playback admission without Reduce Motion protection
+  ---
+  duration_ms: 17.7478
+  type: 'test'
+  ...
+# Subtest: rejects stale frame readiness starting playback
+ok 109 - rejects stale frame readiness starting playback
+  ---
+  duration_ms: 25.4689
+  type: 'test'
+  ...
+# Subtest: rejects dwell timers that do not require a ready displayed frame
+ok 110 - rejects dwell timers that do not require a ready displayed frame
+  ---
+  duration_ms: 21.8819
+  type: 'test'
+  ...
+# Subtest: rejects animated modal transitions
+ok 111 - rejects animated modal transitions
+  ---
+  duration_ms: 21.144
+  type: 'test'
+  ...
+# Subtest: rejects removal of accessibility escape
+ok 112 - rejects removal of accessibility escape
+  ---
+  duration_ms: 40.9491
+  type: 'test'
+  ...
+# Subtest: rejects direct network capability
+ok 113 - rejects direct network capability
+  ---
+  duration_ms: 28.5841
+  type: 'test'
+  ...
+# Subtest: rejects time-lapse content mounted outside the timeline lock
+ok 114 - rejects time-lapse content mounted outside the timeline lock
+  ---
+  duration_ms: 20.8333
+  type: 'test'
+  ...
+# Subtest: rejects an early active app-state branch that resumes playback
+ok 115 - rejects an early active app-state branch that resumes playback
+  ---
+  duration_ms: 20.0715
+  type: 'test'
+  ...
+# Subtest: rejects reversing frames after the checked oldest-first sort
+ok 116 - rejects reversing frames after the checked oldest-first sort
+  ---
+  duration_ms: 21.6937
+  type: 'test'
+  ...
+# Subtest: rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+ok 117 - rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+  ---
+  duration_ms: 22.9975
+  type: 'test'
+  ...
+# Subtest: rejects an early Reduce Motion branch that keeps playback active
+ok 118 - rejects an early Reduce Motion branch that keeps playback active
+  ---
+  duration_ms: 14.8585
+  type: 'test'
+  ...
+# Subtest: rejects aliased axios network capability
+ok 119 - rejects aliased axios network capability
+  ---
+  duration_ms: 18.2451
+  type: 'test'
+  ...
+# Subtest: real PHOTO-05A sources enforce immutable literal-zero Trend admission
+ok 120 - real PHOTO-05A sources enforce immutable literal-zero Trend admission
+  ---
+  duration_ms: 1987.0155
+  type: 'test'
+  ...
+# Subtest: the audit is deterministic, frozen, path-sorted, and inventory-complete
+ok 121 - the audit is deterministic, frozen, path-sorted, and inventory-complete
+  ---
+  duration_ms: 2223.3236
+  type: 'test'
+  ...
+# Subtest: missing checkpoint, runtime, contract, type, and database authority sources fail closed
+ok 122 - missing checkpoint, runtime, contract, type, and database authority sources fail closed
+  ---
+  duration_ms: 1092.7428
+  type: 'test'
+  ...
+# Subtest: capability and surface flags cannot be opened or made environment-driven
+ok 123 - capability and surface flags cannot be opened or made environment-driven
+  ---
+  duration_ms: 1576.2946
+  type: 'test'
+  ...
+# Subtest: every machine admission field is immutable false and extra keys are rejected
+ok 124 - every machine admission field is immutable false and extra keys are rejected
+  ---
+  duration_ms: 4319.2921
+  type: 'test'
+  ...
+# Subtest: simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+ok 125 - simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+  ---
+  duration_ms: 2717.6398
+  type: 'test'
+  ...
+# Subtest: isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+ok 126 - isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+  ---
+  duration_ms: 1723.9841
+  type: 'test'
+  ...
+# Subtest: disabled routes cannot load or invoke a dynamically required positive receipt factory
+ok 127 - disabled routes cannot load or invoke a dynamically required positive receipt factory
+  ---
+  duration_ms: 802.0067
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+ok 128 - ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+  ---
+  duration_ms: 763.0761
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+ok 129 - ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+  ---
+  duration_ms: 1084.1938
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+ok 130 - ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+  ---
+  duration_ms: 1670.4712
+  type: 'test'
+  ...
+# Subtest: photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+ok 131 - photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+  ---
+  duration_ms: 2026.7143
+  type: 'test'
+  ...
+# Subtest: caller, fixture, legacy, E2E, and development bypasses are rejected
+ok 132 - caller, fixture, legacy, E2E, and development bypasses are rejected
+  ---
+  duration_ms: 2668.9701
+  type: 'test'
+  ...
+# Subtest: positive consent grants and enabled consent-choice delegation are rejected
+ok 133 - positive consent grants and enabled consent-choice delegation are rejected
+  ---
+  duration_ms: 1385.1084
+  type: 'test'
+  ...
+# Subtest: direct route analytics and hidden enabled fairness or consent branches are rejected
+ok 134 - direct route analytics and hidden enabled fairness or consent branches are rejected
+  ---
+  duration_ms: 1391.2898
+  type: 'test'
+  ...
+# Subtest: Progress and any future production consumer cannot import disabled Trend runtime code
+ok 135 - Progress and any future production consumer cannot import disabled Trend runtime code
+  ---
+  duration_ms: 766.6104
+  type: 'test'
+  ...
+# Subtest: package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+ok 136 - package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+  ---
+  duration_ms: 754.1116
+  type: 'test'
+  ...
+# Subtest: repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+ok 137 - repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+  ---
+  duration_ms: 143.9253
+  type: 'test'
+  ...
+# Subtest: rejects absolute welcome no-egress copy that omits explicit sharing
+ok 138 - rejects absolute welcome no-egress copy that omits explicit sharing
+  ---
+  duration_ms: 63.8281
+  type: 'test'
+  ...
+# Subtest: rejects capture disclosure without device-loss risk
+ok 139 - rejects capture disclosure without device-loss risk
+  ---
+  duration_ms: 32.3141
+  type: 'test'
+  ...
+# Subtest: rejects capture disclosure without the explicit-share exception
+ok 140 - rejects capture disclosure without the explicit-share exception
+  ---
+  duration_ms: 40.9079
+  type: 'test'
+  ...
+# Subtest: rejects enabling Trend while no validated engine ships
+ok 141 - rejects enabling Trend while no validated engine ships
+  ---
+  duration_ms: 20.6466
+  type: 'test'
+  ...
+# Subtest: rejects photo bytes being included in local export
+ok 142 - rejects photo bytes being included in local export
+  ---
+  duration_ms: 19.3331
+  type: 'test'
+  ...
+# Subtest: rejects omission of encrypted photo cleanup
+ok 143 - rejects omission of encrypted photo cleanup
+  ---
+  duration_ms: 19.7292
+  type: 'test'
+  ...
+# Subtest: rejects deletion that hides partial cleanup failure
+ok 144 - rejects deletion that hides partial cleanup failure
+  ---
+  duration_ms: 23.0912
+  type: 'test'
+  ...
+# Subtest: rejects contradictory visible automatic-upload copy appended to welcome
+ok 145 - rejects contradictory visible automatic-upload copy appended to welcome
+  ---
+  duration_ms: 14.6426
+  type: 'test'
+  ...
+# Subtest: rejects visible automatic-backup copy with an intervening also
+ok 146 - rejects visible automatic-backup copy with an intervening also
+  ---
+  duration_ms: 17.9929
+  type: 'test'
+  ...
+# Subtest: rejects a spread overriding the literal disabled Trend flag
+ok 147 - rejects a spread overriding the literal disabled Trend flag
+  ---
+  duration_ms: 15.4169
+  type: 'test'
+  ...
+# Subtest: rejects local cleanup returning immediately at function entry
+ok 148 - rejects local cleanup returning immediately at function entry
+  ---
+  duration_ms: 13.5325
+  type: 'test'
+  ...
+# Subtest: rejects returning immediately before terminal partial-failure propagation
+ok 149 - rejects returning immediately before terminal partial-failure propagation
+  ---
+  duration_ms: 16.488
+  type: 'test'
+  ...
+1..149
+# tests 149
+# suites 0
+# pass 148
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29825.8574

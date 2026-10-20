@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+
+ Test Files  39 passed (39)
+      Tests  700 passed (700)
+   Start at  16:43:30
+   Duration  20.78s (transform 8.76s, setup 0ms, import 14.45s, tests 24.88s, environment 9ms)
+

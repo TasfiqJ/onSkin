@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+  "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts.txt",
+    "sha256": "5ce497fa1d7c802fc4585d5705e3ffff66057249aafd29cbb4685e03040a17bf"
+  },
+  "counts": {
+    "passed": 148,
+    "failed": 1,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T20:43:26.604324+00:00",
+  "finished_at_utc": "2026-10-20T20:43:56.505297+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "--test",
+    "scripts/core03/routine-guidance-source-contract.test.mjs",
+    "scripts/core04/persistence-source-contract.test.mjs",
+    "scripts/core05/adherence-source-contract.test.mjs",
+    "scripts/photo01/photo01-source-contract.test.mjs",
+    "scripts/photo02/photo02-source-contract.test.mjs",
+    "scripts/photo03/photo03-source-contract.test.mjs",
+    "scripts/photo04/photo04-source-contract.test.mjs",
+    "scripts/photo05/trend-admission-source-contract.test.mjs",
+    "scripts/photo07/photo07-source-contract.test.mjs",
+    "scripts/pay07/entitlement-admission-source-contract.test.mjs",
+    "scripts/core01/metro-linked-dependencies.test.cjs",
+    "scripts/core01/native-age-assurance-source-contract.test.mjs",
+    "scripts/e2e/retained-safety-assertions.test.mjs"
+  ]
+}

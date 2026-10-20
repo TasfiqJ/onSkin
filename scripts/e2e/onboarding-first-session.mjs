@@ -1007,7 +1007,9 @@ async function crossOwnerFlow(client, products) {
         .map(key => mod('/lib/storage/privateKV.ts').getPrivateItem(key)));
       const markers = [...${JSON.stringify(aMarkers)}, await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000a1')];
       return { exactB: proof.kind === 'owned' && proof.ownerBinding === await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000b2'),
-        noRetainedADailyState: daily.every(raw => raw === null),
+        noRetainedADailyState: daily[1] === null && daily[2] === null &&
+          daily[0] !== null && JSON.parse(daily[0]).prefs.amTime === '07:30' &&
+          JSON.parse(daily[0]).prefs.amEnabled === false && JSON.parse(daily[0]).prefs.pmEnabled === false,
         healthOwnerB: health.activeHealthProcessingOwnerUserId() === '00000000-0000-4000-8000-0000000000b2',
         noAInCache: !markers.some(x => JSON.stringify(queries.map(q => [q.queryKey, q.state.data])).includes(x)),
         noAInShelfOrQueue: !markers.some(x => (shelf ?? '').includes(x)), hasB: shelf?.includes(${JSON.stringify(bName)}) === true,
