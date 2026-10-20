@@ -1,0 +1,58 @@
+{
+  "bodyText": "Privacy & account Sign in and verify this device’s owner before using account data rights. Health features remain paused. Retry account access Sign out Support Back to age confirmation",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry account access",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 395.5
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Sign out",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 463.5
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Support",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 531.5
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to age confirmation",
+      "role": "button",
+      "selected": false,
+      "width": 430,
+      "x": 0,
+      "y": 876
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8402/",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

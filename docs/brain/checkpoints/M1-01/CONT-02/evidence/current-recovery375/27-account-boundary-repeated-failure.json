@@ -1,0 +1,25 @@
+{
+  "bodyText": "Account access paused We couldn't finish securing this account. Your account data is still locked. Try again to continue safely. Try again",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Try again",
+      "role": "button",
+      "selected": false,
+      "width": 319,
+      "x": 28,
+      "y": 395.5
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8391/onboarding/goals",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

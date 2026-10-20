@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: Metro watches both dependency targets, linked=false
+ok 1 - Metro watches both dependency targets, linked=false
+  ---
+  duration_ms: 3.9858
+  type: 'test'
+  ...
+# Subtest: Metro watches both dependency targets, linked=true
+ok 2 - Metro watches both dependency targets, linked=true
+  ---
+  duration_ms: 1.2273
+  type: 'test'
+  ...
+# Subtest: CORE01 local module inventory is exact and contains no binary or privacy manifest
+ok 3 - CORE01 local module inventory is exact and contains no binary or privacy manifest
+  ---
+  duration_ms: 6.945
+  type: 'test'
+  ...
+# Subtest: CORE01 Expo registration is iOS-only and autolinks one first-party module
+ok 4 - CORE01 Expo registration is iOS-only and autolinks one first-party module
+  ---
+  duration_ms: 614.6191
+  type: 'test'
+  ...
+# Subtest: CORE01 native config declares the Apple age-range entitlement
+ok 5 - CORE01 native config declares the Apple age-range entitlement
+  ---
+  duration_ms: 0.5899
+  type: 'test'
+  ...
+# Subtest: CORE01 pod has no third-party or bundled executable dependency
+ok 6 - CORE01 pod has no third-party or bundled executable dependency
+  ---
+  duration_ms: 0.9162
+  type: 'test'
+  ...
+# Subtest: CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+ok 7 - CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+  ---
+  duration_ms: 1.4427
+  type: 'test'
+  ...
+# Subtest: CORE01 maps every known declaration and communication-limit control
+ok 8 - CORE01 maps every known declaration and communication-limit control
+  ---
+  duration_ms: 1.7316
+  type: 'test'
+  ...
+# Subtest: CORE01 native response is deterministic, request-bound, and contains no exact age
+ok 9 - CORE01 native response is deterministic, request-bound, and contains no exact age
+  ---
+  duration_ms: 2.0631
+  type: 'test'
+  ...
+# Subtest: CORE01 source performs no logging, networking, or persistence
+ok 10 - CORE01 source performs no logging, networking, or persistence
+  ---
+  duration_ms: 1.0947
+  type: 'test'
+  ...
+# Subtest: CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+ok 11 - CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+  ---
+  duration_ms: 2.5523
+  type: 'test'
+  ...
+# Subtest: uncaught errors fail even when their text includes a normally allowed environment warning
+ok 12 - uncaught errors fail even when their text includes a normally allowed environment warning
+  ---
+  duration_ms: 1.688
+  type: 'test'
+  ...
+# Subtest: a visible overlay fails independently of DOM recovery copy and missing exception events
+ok 13 - a visible overlay fails independently of DOM recovery copy and missing exception events
+  ---
+  duration_ms: 0.418
+  type: 'test'
+  ...
+# Subtest: a recovery summary cannot pass with obsolete or false completion flags
+ok 14 - a recovery summary cannot pass with obsolete or false completion flags
+  ---
+  duration_ms: 0.5159
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 762.6597

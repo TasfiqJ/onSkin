@@ -1,0 +1,146 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 1 OF 3 PRODUCTS 2 more products gives your first insight more to work with. PRODUCT NAME CATEGORY · OPTIONAL Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm Add to shelf 1 ON YOUR SHELF Retinol 0.3% serum × Add 2 more Continue with 1 product",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 183
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cleanser",
+      "role": "button",
+      "selected": false,
+      "width": 98.92,
+      "x": 45,
+      "y": 277
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Toner",
+      "role": "button",
+      "selected": false,
+      "width": 75.45,
+      "x": 151.92,
+      "y": 277
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Serum",
+      "role": "button",
+      "selected": false,
+      "width": 80.89,
+      "x": 235.38,
+      "y": 277
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Treatment",
+      "role": "button",
+      "selected": false,
+      "width": 108.31,
+      "x": 45,
+      "y": 333
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Moisturiser",
+      "role": "button",
+      "selected": false,
+      "width": 116.33,
+      "x": 161.31,
+      "y": 333
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "SPF",
+      "role": "button",
+      "selected": false,
+      "width": 61.06,
+      "x": 285.64,
+      "y": 333
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Oil / balm",
+      "role": "button",
+      "selected": false,
+      "width": 104.95,
+      "x": 45,
+      "y": 389
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add to shelf",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 453
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 341,
+      "y": 587
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add 2 more",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 800
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue with 1 product",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 860
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8396/onboarding/products?addedProductId=b011e6b4-621c-4ecf-8833-2922ce8caa3f",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

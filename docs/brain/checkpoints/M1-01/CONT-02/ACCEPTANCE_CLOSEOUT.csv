@@ -1,0 +1,8 @@
+id,measured_status,evidence_scope
+M1-SIGNOUT-02,PASS,"Expected rejection, repeated failures/success, duplicate operations, no overlay and durable local completion."
+M1-OWNER-CLOSEOUT,PARTIAL_TESTED,"Mounted source A-to-B/delayed publication plus real web A-to-sign-out and same-owner upgrade. A-to-B browser replay NOT_RUN; no live provider identity claim."
+M1-RIGHTS-CLOSEOUT,PASS,"Local age-closed rights, withdrawal failure/relaunch/retry and deletion fixture branches; real provider effects NOT_RUN."
+M1-HARNESS-02,PASS,"Maintained portable runner, current policy, usable recovery/terminal checks, uncaught failures and fresh sanitized captures."
+M1-RETAINED-NONREGRESSION,PASS,"Retained private crypto/adult18/Shelf/offline/routine/Today/photos/reminders within measured source and web limits."
+M1-CHECKPOINT,PARTIAL_TESTED,"Bound source evidence; final delivery verification separate; CI and M1 acceptance still open."
+M1-PROTECTED,BLOCKED,"Security failed; canonical DB pending in current observation; native/provider/qualified/release unperformed. No protected changes or proposal renewal."

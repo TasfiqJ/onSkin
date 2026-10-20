@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node --test scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+  "source_tree": "4cea1646e99dcfde95b19a1a9596ae30c3917725",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/current-contracts.txt",
+    "sha256": "36bd5a2e4ed62db0bb5656e3142624a41bd69bfb98464fef8341e6040b48246b"
+  },
+  "counts": {
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T17:23:21.695912+00:00",
+  "finished_at_utc": "2026-10-20T17:23:22.531052+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "--test",
+    "scripts/core01/metro-linked-dependencies.test.cjs",
+    "scripts/core01/native-age-assurance-source-contract.test.mjs",
+    "scripts/e2e/retained-safety-assertions.test.mjs"
+  ]
+}

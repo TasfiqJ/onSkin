@@ -1,0 +1,1138 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "recorded_at_utc": "2026-10-20T17:46:36Z",
+  "repository": "TasfiqJ/onSkin",
+  "query_head": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+  "runs": [
+    {
+      "head_commit": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39467727134,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "head_commit": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39467726756,
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "head_commit": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39467726887,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "jobs": {
+    "Quality": {
+      "jobs": [
+        {
+          "id": 118783760111,
+          "name": "Credential-free Supabase reset and database tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39467726756,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Check local-only database contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Reset twice, test, lint, and prove zero drift",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Retain generated public types for parity diagnosis",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            }
+          ]
+        },
+        {
+          "id": 118783760291,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726756,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            }
+          ]
+        },
+        {
+          "id": 118783760294,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726756,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            }
+          ]
+        },
+        {
+          "id": 118783760894,
+          "name": "Repository quality gates",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726756,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Verify tooling security backports",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Verify installed iOS native sources",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Verify store-only client delivery",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Verify governed release provenance",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Verify iOS Simulator compile workflow contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Check Expo dependency compatibility",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Run Expo Doctor",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14
+            },
+            {
+              "name": "Check export statistics analyzer",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Check deterministic optimization fixtures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Check local Edge Function contracts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            },
+            {
+              "name": "Check catalog promotion, curation, and receipt contracts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18
+            },
+            {
+              "name": "Execute account service scrub migration rehearsal",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19
+            },
+            {
+              "name": "Typecheck",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20
+            },
+            {
+              "name": "Lint",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21
+            },
+            {
+              "name": "Test",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Check performance readiness docs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            },
+            {
+              "name": "Check device support source contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24
+            },
+            {
+              "name": "Check source packet",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25
+            },
+            {
+              "name": "Post Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 47
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 48
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 49
+            },
+            {
+              "name": "Stop containers",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 50
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 51
+            }
+          ]
+        },
+        {
+          "id": 118786134101,
+          "name": "Expo export (android)",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726756,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Export android with source maps",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Analyze android export",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Upload content-free export statistics",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        },
+        {
+          "id": 118786134106,
+          "name": "Expo export (ios)",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726756,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Export ios with source maps",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Analyze ios export",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Upload content-free export statistics",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        }
+      ]
+    },
+    "Security": {
+      "jobs": [
+        {
+          "id": 118783395341,
+          "name": "Code security gates",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726887,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Phase 9 verification",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Dependency SBOM with audit metadata",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Capture high or critical npm advisories",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Test reviewed security exceptions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Enforce reviewed npm advisory exceptions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Write code-gate evidence manifest",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Upload code-gate evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Enforce code-gate results",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14
+            },
+            {
+              "name": "Post Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 26
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 27
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 28
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 29
+            }
+          ]
+        },
+        {
+          "id": 118783395660,
+          "name": "Secret scanning",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467726887,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Gitleaks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Bind actual Gitleaks executable",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "TruffleHog verified secrets",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Write secret scanner evidence manifest",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Upload secret scanner evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Enforce secret scanner results",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        },
+        {
+          "id": 118783395780,
+          "name": "Static analysis and OSV",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_id": 39467726887,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Prepare exact Linux scanners and npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Semgrep OWASP/TypeScript/React/secrets",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Prepare OSV evidence directory",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "OSV scanner",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Enforce reviewed OSV advisory exceptions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Write static scanner evidence manifest",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Stage verified technical receipt after all source checks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Upload static scanner evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Enforce static scanner results",
+              "status": "completed",
+              "conclusion": "failure",
+              "number": 14
+            },
+            {
+              "name": "Post Setup Python",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 26
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 27
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 28
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 29
+            }
+          ]
+        },
+        {
+          "id": 118783398566,
+          "name": "Live Supabase adversarial evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 39467726887,
+          "logs_url": null,
+          "steps": null
+        },
+        {
+          "id": 118786389261,
+          "name": "Automated single-owner source-only Security acceptance",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_id": 39467726887,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Install exact application dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Download original code evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Download original secret evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Download original static evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Require complete original and exact-source technical evidence",
+              "status": "completed",
+              "conclusion": "failure",
+              "number": 10
+            },
+            {
+              "name": "Publish automated source-only decision descriptor",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Post Setup Python",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 20
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 21
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            }
+          ]
+        }
+      ]
+    },
+    "iOS": {
+      "jobs": [
+        {
+          "id": 118783396745,
+          "name": "iOS all-features contract",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39467727134,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Validate launch contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Validate execution baseline",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Run safe repository checks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "provider_readbacks": {
+    "runs": {
+      "workflow_runs": [
+        {
+          "id": 39467727134,
+          "name": "iOS launch contract",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 351,
+          "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39467727134/jobs",
+          "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39467727134/logs",
+          "workflow_id": 312030667
+        },
+        {
+          "id": 39467726756,
+          "name": "Quality",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_number": 351,
+          "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39467726756/jobs",
+          "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39467726756/logs",
+          "workflow_id": 312030668
+        },
+        {
+          "id": 39467726887,
+          "name": "Security",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_number": 883,
+          "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39467726887/jobs",
+          "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39467726887/logs",
+          "workflow_id": 308213475
+        }
+      ]
+    },
+    "pr": {
+      "url": "https://github.com/TasfiqJ/onSkin/pull/9",
+      "number": 9,
+      "state": "open",
+      "merged": false,
+      "mergeable": true,
+      "draft": true,
+      "body": "Encrypted age submission failed because Metro omitted the separately linked mobile dependency target; actual web consent then encountered unsupported native-only cleanup. This continuation repairs those demonstrated boundaries, current-to-current age navigation, an isolated verified-owner rights/withdrawal shell during age re-verification, and local offline Shelf refresh/retry behavior. It retains adult18 policy, owner/generation/epoch fences, ciphertext compatibility and independent private data safety. The M1 report profile now rejects unbound evidence, future measurements, source drift and CI mismatches with real CLI/Git regressions.\n\nValidation: 6,001 fresh root tests, forced lint/typecheck, 225 overlapping integration tests, 42 governance passes with 2 genuine Windows symlink skips, and 11 native-source/Metro contracts. Actual synthetic Expo web retained flows passed at 375×667, 390×844 and 430×932; guest upgrade and non-destructive deletion recovery fixtures also passed. Each execution records its real commit/tree. Broad runtime/governance code is unchanged from 1155128 to measured 034e459; later deltas are harness scrolls and the authorized worklist refresh. Only the two approved Phase4 worklist outputs were regenerated with the unchanged generator.\n\nPARTIAL / independent Brain review required: the sign-out injected clear-failure UI reaches the closed recovery screen, but retry times out with a blocked center hit; no completed sign-out retry/A-to-B surface pass is claimed. At measured 034e459, Quality repository checks and both Expo exports passed, while overall Quality failed before SQL on the protected canonical image registry data limit. Security failed protected inventory/review prerequisites; iOS launch contract passed source-only. Native/device, real provider, qualified review and release axes remain unperformed or blocked. Earlier failures are preserved. No protected inventory, exception, date, dependency, workflow or database changes.\n\nExact report, receipts, hashes, remaining matrix and CI observations: docs/brain/checkpoints/M1-01/CONT-01/. Session handoff: ONSKIN_BRAIN_HANDOFF.txt. Context HIGH with compaction observed; further implementation requires a fresh chat after Brain review. This PR stays draft/unmerged. Main promotion, merge, release and later tasks are not authorized; M0 stage and PR8 remain untouched.",
+      "title": "M1-01 partial: restore encrypted startup, owner rights and offline Shelf",
+      "base": "main",
+      "base_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "head": "stage/m1-retained-safety",
+      "head_sha": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+      "head_repo_id": 1267954179,
+      "head_repo_full_name": "TasfiqJ/onSkin",
+      "merge_commit_sha": "4a500bfc6d10cff0b33f6e3d2fcab6d4e526d9e5",
+      "user": {
+        "login": "TasfiqJ",
+        "name": "TasfiqJ",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/73043409?v=4",
+        "id": 73043409
+      },
+      "requested_reviewers": null,
+      "requested_team_reviewers": null,
+      "diff": null,
+      "comments": null,
+      "created_at": "2026-10-20T14:01:17Z",
+      "updated_at": "2026-10-20T17:37:35Z",
+      "closed_at": null,
+      "merged_at": null,
+      "commits": 31,
+      "changed_files": 1519,
+      "additions": 222029,
+      "deletions": 379,
+      "display_url": "https://github.com/TasfiqJ/onSkin/pull/9",
+      "display_title": "M1-01 partial: restore encrypted startup, owner rights and offline Shelf"
+    }
+  },
+  "security_log": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/ci-bb9-security-job.log",
+    "sha256": "9c4d882546f18728feaa480a097bf21eb63a90d1bfed7ea9cea94f92085585b1",
+    "kind": "Decoded provider tool log text; not uploaded scanner artifact bytes"
+  },
+  "findings": {
+    "security": [
+      "SOURCE_INVENTORY_DRIFT",
+      "braces/node-forge reviews expired or invalid dates",
+      "mcp@1.29.0 unreviewed GHSA-84m7-p3x7-pcfv"
+    ],
+    "quality": "Repository, PostgreSQL 15/17 rehearsals and Android/iOS exports succeeded. Canonical Supabase DB job is in_progress; no final DB result or cause inferred.",
+    "ios": "Source contract success only; no native execution."
+  },
+  "proposal": {
+    "notAfter": "2026-10-21T00:00:00Z",
+    "expired_at_observation": false,
+    "renewed": false
+  },
+  "limitations": [
+    "Head association is provider metadata returned for the exact query; actual PR job checkout uses a temporary merge tree.",
+    "Physical device, live account/provider operations and qualified reviews NOT_RUN.",
+    "Uploaded scanner artifact bytes not downloaded or independently validated.",
+    "Final delivery is a later evidence-only stage head; refresh its own workflow state after push, without borrowing this run."
+  ]
+}
+

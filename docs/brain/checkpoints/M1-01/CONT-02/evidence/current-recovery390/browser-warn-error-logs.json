@@ -1,0 +1,1962 @@
+[
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1792516811018.369,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "readSupabaseUrlEnv",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113230,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113266,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 101070,
+            "columnNumber": 16
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 99106,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54438,
+            "columnNumber": 50
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 159,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "get",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 53845,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "metroContext",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54402,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "loadRoute",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91435,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getLayoutNode",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91826,
+            "columnNumber": 24
+          },
+          {
+            "functionName": "getDirectoryTree",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91554,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91234,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91108,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "useStore",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 74908,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "ContextNavigator",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 95822,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateFunctionComponent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17554,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18123,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopConcurrentByScheduler",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20546,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "renderRootConcurrent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20530,
+            "columnNumber": 66
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 147
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1792516811018.659,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "readEnv",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113184,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113267,
+            "columnNumber": 28
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 101070,
+            "columnNumber": 16
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 99106,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54438,
+            "columnNumber": 50
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 159,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "get",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 53845,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "metroContext",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54402,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "loadRoute",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91435,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getLayoutNode",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91826,
+            "columnNumber": 24
+          },
+          {
+            "functionName": "getDirectoryTree",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91554,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91234,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91108,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "useStore",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 74908,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "ContextNavigator",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 95822,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateFunctionComponent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17554,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18123,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopConcurrentByScheduler",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20546,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "renderRootConcurrent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20530,
+            "columnNumber": 66
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 147
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1792516811031.644,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "addListener",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 156974,
+            "columnNumber": 16
+          },
+          {
+            "functionName": "addPushTokenListener",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 158687,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 157562,
+            "columnNumber": 43
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 157019,
+            "columnNumber": 43
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 156700,
+            "columnNumber": 31
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 156025,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 99109,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54438,
+            "columnNumber": 50
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 159,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "get",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 53845,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "metroContext",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54402,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "loadRoute",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91435,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getLayoutNode",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91826,
+            "columnNumber": 24
+          },
+          {
+            "functionName": "getDirectoryTree",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91554,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91234,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91108,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "useStore",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 74908,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "ContextNavigator",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 95822,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateFunctionComponent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17554,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18123,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopConcurrentByScheduler",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20546,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "renderRootConcurrent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20530,
+            "columnNumber": 66
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 147
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "props.pointerEvents is deprecated. Use style.pointerEvents"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1792516812705.401,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "warnOnce",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 11048,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "createDOMProps",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 7293,
+            "columnNumber": 29
+          },
+          {
+            "functionName": "createElement",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 6270,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "View",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 29017,
+            "columnNumber": 37
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateForwardRef",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17383,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18197,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopSync",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20445,
+            "columnNumber": 39
+          },
+          {
+            "functionName": "renderRootSync",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20430,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 183
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1792516850093.022,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "readSupabaseUrlEnv",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113230,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113266,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 101070,
+            "columnNumber": 16
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 99106,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54438,
+            "columnNumber": 50
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 159,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "get",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 53845,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "metroContext",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54402,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "loadRoute",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91435,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getLayoutNode",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91826,
+            "columnNumber": 24
+          },
+          {
+            "functionName": "getDirectoryTree",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91554,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91234,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91108,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "useStore",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 74908,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "ContextNavigator",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 95822,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateFunctionComponent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17554,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18123,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopConcurrentByScheduler",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20546,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "renderRootConcurrent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20530,
+            "columnNumber": 66
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 147
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1792516850093.218,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "readEnv",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113184,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 113267,
+            "columnNumber": 28
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 101070,
+            "columnNumber": 16
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 99106,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54438,
+            "columnNumber": 50
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 159,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "get",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 53845,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "metroContext",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54402,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "loadRoute",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91435,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getLayoutNode",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91826,
+            "columnNumber": 24
+          },
+          {
+            "functionName": "getDirectoryTree",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91554,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91234,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91108,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "useStore",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 74908,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "ContextNavigator",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 95822,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateFunctionComponent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17554,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18123,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopConcurrentByScheduler",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20546,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "renderRootConcurrent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20530,
+            "columnNumber": 66
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 147
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1792516850097.171,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 70323,
+            "columnNumber": 25
+          },
+          {
+            "functionName": "addListener",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 156974,
+            "columnNumber": 16
+          },
+          {
+            "functionName": "addPushTokenListener",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 158687,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 157562,
+            "columnNumber": 43
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 157019,
+            "columnNumber": 43
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 156700,
+            "columnNumber": 31
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 156025,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 99109,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 166,
+            "columnNumber": 13
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54438,
+            "columnNumber": 50
+          },
+          {
+            "functionName": "loadModuleImplementation",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 254,
+            "columnNumber": 33
+          },
+          {
+            "functionName": "guardedLoadModule",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 159,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "metroRequire",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 79,
+            "columnNumber": 74
+          },
+          {
+            "functionName": "get",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 53845,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "metroContext",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 54402,
+            "columnNumber": 14
+          },
+          {
+            "functionName": "loadRoute",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91435,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getLayoutNode",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91826,
+            "columnNumber": 24
+          },
+          {
+            "functionName": "getDirectoryTree",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91554,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91234,
+            "columnNumber": 26
+          },
+          {
+            "functionName": "getRoutes",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 91108,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "useStore",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 74908,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "ContextNavigator",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 95822,
+            "columnNumber": 46
+          },
+          {
+            "functionName": "react_stack_bottom_frame",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 25292,
+            "columnNumber": 19
+          },
+          {
+            "functionName": "renderWithHooks",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 16165,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "updateFunctionComponent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 17554,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 18123,
+            "columnNumber": 17
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 12642,
+            "columnNumber": 69
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20550,
+            "columnNumber": 94
+          },
+          {
+            "functionName": "workLoopConcurrentByScheduler",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20546,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "renderRootConcurrent",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20530,
+            "columnNumber": 66
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 20067,
+            "columnNumber": 147
+          },
+          {
+            "functionName": "performWorkOnRootViaSchedulerTask",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 21205,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "performWorkUntilDeadline",
+            "scriptId": "4",
+            "url": "http://localhost:8390/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+            "lineNumber": 27144,
+            "columnNumber": 47
+          }
+        ]
+      }
+    }
+  }
+]

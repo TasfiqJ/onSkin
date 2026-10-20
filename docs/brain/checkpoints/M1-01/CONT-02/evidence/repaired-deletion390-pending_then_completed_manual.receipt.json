@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_EVIDENCE_DIR=docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion390-pending_then_completed_manual ONBOARDING_E2E_PORT=8410 ONBOARDING_E2E_DEBUG_PORT=9510 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_DELETION_RECOVERY=pending_then_completed_manual node scripts/e2e/onboarding-first-session.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "7afde5aa763b766620f8882e30d858169dd790ff",
+  "source_tree": "2c85f1f25277fdcf1dfa15a69f14ffa32af8ed0d",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion390-pending_then_completed_manual.txt",
+    "sha256": "30c25a4fd87ce587fbffb220461e83be31dec31e2b5b00483b2b9b73c9194ef0"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T17:31:47.334230+00:00",
+  "finished_at_utc": "2026-10-20T17:32:57.670356+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_EVIDENCE_DIR": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion390-pending_then_completed_manual",
+    "ONBOARDING_E2E_PORT": "8410",
+    "ONBOARDING_E2E_DEBUG_PORT": "9510",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+    "ONBOARDING_E2E_DELETION_RECOVERY": "pending_then_completed_manual"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs"
+  ]
+}

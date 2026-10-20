@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node node_modules/turbo/bin/turbo run test --force",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "b3b61425e6380f986035bdadd30a37b88741556a",
+  "source_tree": "2ae193e7553c0bb070d4c5c08625bde50b3eb340",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-root-test.txt",
+    "sha256": "abae8f4e7f6a162c44938550cdb93de611db369a2e8c40ae54cdd230f53a1568"
+  },
+  "counts": {
+    "passed": 6003,
+    "failed": 4,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T17:15:07.723787+00:00",
+  "finished_at_utc": "2026-10-20T17:15:46.071493+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "node_modules/turbo/bin/turbo",
+    "run",
+    "test",
+    "--force"
+  ]
+}

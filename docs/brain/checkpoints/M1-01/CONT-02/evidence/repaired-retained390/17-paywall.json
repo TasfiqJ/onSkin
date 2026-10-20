@@ -1,0 +1,91 @@
+{
+  "bodyText": "Your plan for oily, sensitive skin is ready. Everything below is part of Layerwell Pro. Routine builder. Your products and missing steps Ingredient and shelf details, with source status Private photo timeline. On-device only Reminders and a forgiving streak Annual Monthly ANNUAL Subscribe for $49.99/year $4.16/mo Monthly option $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Subscribe to Pro Manage or cancel the subscription in App Store Continue with the free plan No purchase. Pro features stay locked until you choose a plan. › Terms · Privacy · Restore Payment is charged to your App Store account at confirmation. The annual plan auto-renews unless cancelled at least 24 hours before the current period ends. Manage or cancel in App Store. Health-related guidance requires independent professional review before availability · photos stay on your device · no data sales",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Annual subscription",
+      "role": "radio",
+      "selected": false,
+      "width": 165,
+      "x": 24,
+      "y": 296
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Monthly subscription",
+      "role": "radio",
+      "selected": false,
+      "width": 165,
+      "x": 201,
+      "y": 296
+    },
+    {
+      "disabled": true,
+      "height": 54,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 614
+    },
+    {
+      "disabled": false,
+      "height": 82,
+      "hitOk": true,
+      "label": "Continue with the free planNo purchase. Pro features stay locked until you choose a plan.›",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 710
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 96.89,
+      "y": 792
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "selected": false,
+      "width": 48.03,
+      "x": 170.25,
+      "y": 792
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "selected": false,
+      "width": 49.47,
+      "x": 243.64,
+      "y": 792
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8406/onboarding/paywall",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

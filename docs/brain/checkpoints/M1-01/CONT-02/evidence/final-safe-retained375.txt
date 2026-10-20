@@ -1,0 +1,1 @@
+Onboarding first-session E2E passed. Evidence: docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-retained375
