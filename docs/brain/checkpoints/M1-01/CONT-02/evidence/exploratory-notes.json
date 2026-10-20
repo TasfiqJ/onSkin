@@ -1,0 +1,17 @@
+{
+  "kind": "EXPLORATORY_NOT_EXACT_HEAD_ACCEPTANCE",
+  "widget_red": {
+    "base_commit": "968e0e490a82e50af18c3c9eddff4cffd0b15534",
+    "source_dirty": true,
+    "command": "npm --workspace apps/mobile run test -- --run src/lib/storage/privateKV.test.ts",
+    "result": "First attempt failed module mocking before execution; corrected reproducer ran 56 cases, 55 passed/1 failed PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY. Raw outputs retained."
+  },
+  "diagnostic360": {
+    "command": "node scripts/e2e/onboarding-first-session.mjs --account-isolation --diagnose-exceptions",
+    "source_commit": "968e0e490a82e50af18c3c9eddff4cffd0b15534",
+    "width": 360,
+    "height": 640,
+    "exit": 1,
+    "limits": "Accidental default environment, unsupported stress geometry; not an acceptance run. Only bounded sanitized failure/trace copied; owned processes closed by harness."
+  }
+}

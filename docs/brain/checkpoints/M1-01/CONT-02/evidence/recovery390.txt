@@ -1,0 +1,4 @@
+Error: Timed out waiting for text "Begin": condition false
+    at waitForCondition (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:413:9)
+    at async waitForText (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:421:3)
+    at async run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:1560:7)

@@ -8,6 +8,7 @@ import {
 
 import {
   ACCOUNT_GENERATION_CHANGED,
+  captureAccountIdentityGeneration,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
@@ -69,71 +70,6 @@ const mocks = vi.hoisted(() => ({
   setItemOutcomes: [] as ('resolve' | 'reject-before' | 'reject-after')[],
   setItemStarted: null as (() => void) | null,
 }));
-
-it('removes only widget action capabilities while the real account write boundary stays closed', async () => {
-  mocks.asyncStorage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'revoked-capability');
-  mocks.asyncStorage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, 'legacy-capability');
-  mocks.asyncStorage.set('layerwell.shelf.v1', 'retained-owner-ciphertext');
-  beginAccountGenerationBoundary();
-  beginPrivateKVAccountBoundary();
-  try {
-    await expect(clearRoutineWidgetActions()).resolves.toBeUndefined();
-    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
-    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
-    expect(mocks.asyncStorage.get('layerwell.shelf.v1')).toBe('retained-owner-ciphertext');
-    await expect(setPrivateItem('layerwell.shelf.v1', 'forbidden')).rejects.toThrow();
-  } finally {
-    endPrivateKVAccountBoundary();
-    endAccountGenerationBoundary();
-  }
-});
-
-it('orders widget revocation after an already-entered private write and its stale rollback', async () => {
-  let started!: () => void;
-  const entered = new Promise<void>((resolve) => {
-    started = resolve;
-  });
-  let release!: () => void;
-  mocks.setItemGate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  mocks.setItemStarted = started;
-  const write = setPrivateItem(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'late-token');
-  const rejectedWrite = expect(write).rejects.toThrow();
-  await entered;
-  beginAccountGenerationBoundary();
-  beginPrivateKVAccountBoundary();
-  try {
-    const purge = clearRoutineWidgetActions();
-    release();
-    await rejectedWrite;
-    await purge;
-    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
-  } finally {
-    release();
-    endPrivateKVAccountBoundary();
-    endAccountGenerationBoundary();
-  }
-});
-
-it('retains a failed widget revocation for retry while attempting the other capability key', async () => {
-  mocks.asyncStorage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'retry-token');
-  mocks.asyncStorage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, 'legacy-token');
-  mocks.removeItemOutcomeKey = ROUTINE_WIDGET_ACTION_REGISTRY_KEY;
-  mocks.removeItemOutcomes = ['reject-before'];
-  beginPrivateKVAccountBoundary();
-  try {
-    await expect(clearRoutineWidgetActions()).rejects.toThrow(
-      'ASYNC_STORAGE_REMOVE_REJECTED_BEFORE_COMMIT',
-    );
-    expect(mocks.asyncStorage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe('retry-token');
-    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
-    await clearRoutineWidgetActions();
-    expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
-  } finally {
-    endPrivateKVAccountBoundary();
-  }
-});
 
 vi.mock('react-native', () => ({
   Platform: {
@@ -1345,5 +1281,74 @@ describe('private KV encrypted storage', () => {
 
     const stored = await getPrivateItem('layerwell.conflict.overrides');
     expect(JSON.parse(stored ?? '{}')).toEqual({ first: true, second: true, third: true });
+  });
+  it('removes only widget action capabilities while the real account write boundary stays closed', async () => {
+    mocks.asyncStorage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'revoked-capability');
+    mocks.asyncStorage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, 'legacy-capability');
+    mocks.asyncStorage.set('layerwell.shelf.v1', 'retained-owner-ciphertext');
+    beginAccountGenerationBoundary();
+    beginPrivateKVAccountBoundary();
+    try {
+      await expect(clearRoutineWidgetActions()).resolves.toBeUndefined();
+      expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+      expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
+      expect(mocks.asyncStorage.get('layerwell.shelf.v1')).toBe('retained-owner-ciphertext');
+      await expect(setPrivateItem('layerwell.shelf.v1', 'forbidden')).rejects.toThrow();
+    } finally {
+      endPrivateKVAccountBoundary();
+      endAccountGenerationBoundary();
+    }
+  });
+
+  it('orders widget revocation after an already-entered private write and its stale rollback', async () => {
+    let started!: () => void;
+    const entered = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    let release!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    mocks.setItemStarted = started;
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: captureAccountIdentityGeneration(),
+      serverVerifiedAt: null,
+    });
+    const write = setPrivateItem(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'late-token');
+    const rejectedWrite = expect(write).rejects.toThrow();
+    await entered;
+    beginAccountGenerationBoundary();
+    beginPrivateKVAccountBoundary();
+    try {
+      const purge = clearRoutineWidgetActions();
+      release();
+      await rejectedWrite;
+      await purge;
+      expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+    } finally {
+      release();
+      endPrivateKVAccountBoundary();
+      endAccountGenerationBoundary();
+    }
+  });
+
+  it('retains a failed widget revocation for retry while attempting the other capability key', async () => {
+    mocks.asyncStorage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, 'retry-token');
+    mocks.asyncStorage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, 'legacy-token');
+    mocks.removeItemOutcomeKey = ROUTINE_WIDGET_ACTION_REGISTRY_KEY;
+    mocks.removeItemOutcomes = ['reject-before'];
+    beginPrivateKVAccountBoundary();
+    try {
+      await expect(clearRoutineWidgetActions()).rejects.toThrow(
+        'ASYNC_STORAGE_REMOVE_REJECTED_BEFORE_COMMIT',
+      );
+      expect(mocks.asyncStorage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe('retry-token');
+      expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
+      await clearRoutineWidgetActions();
+      expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
   });
 });
