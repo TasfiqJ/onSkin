@@ -1,0 +1,61 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+stderr | src/features/notifications/preferenceOffline.m102.test.ts > reads device preferences/permission and saves while the actual QueryClient is offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceOffline.m102.test.ts > reports a failed scheduler and retries the retained idempotent patch offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceOffline.m102.test.ts > refuses a retained owner-A permission continuation after unmount and B admission
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+······························xxx··························
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > reports cancel failure while retaining independent billing reconciliation
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > reports schedule failure while retaining independent billing reconciliation
+AssertionError: expected 'scheduled' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"scheduled"
+
+ ❯ src/features/notifications/deliver.test.ts:333:45
+    331|     await expect(rescheduleReminders(prefs)).rejects.toThrow(`${failur…
+    332|     expect(mocks.loadEntitlement).toHaveBeenCalledOnce();
+    333|     await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+       |                                             ^
+    334|   });
+    335|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > keeps web preference saves separate from unavailable native scheduling
+AssertionError: expected 'web_preferences_only' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"web_preferences_only"
+
+ ❯ src/features/notifications/deliver.test.ts:339:45
+    337|     const { rescheduleReminders } = await import('./deliver');
+    338|     mocks.platformOS = 'web';
+    339|     await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+       |                                             ^
+    340|     expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenC…
+    341|     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  3 failed | 56 passed (59)
+   Start at  17:37:26
+   Duration  553ms (transform 588ms, setup 0ms, import 889ms, tests 247ms, environment 1ms)
+

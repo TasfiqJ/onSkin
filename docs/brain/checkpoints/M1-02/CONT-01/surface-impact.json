@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "claim_origin": "CODEX_REPORTED_AVAILABLE_SURFACE_EXECUTION",
+  "matrix": [
+    {
+      "id": "daily390-sealed",
+      "command": "ONBOARDING_E2E_PORT=8365 ONBOARDING_E2E_DEBUG_PORT=9465 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily390-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "exit_code": 0,
+      "verdict": "pass"
+    },
+    {
+      "id": "daily375-sealed",
+      "command": "ONBOARDING_E2E_PORT=8366 ONBOARDING_E2E_DEBUG_PORT=9466 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily375-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "exit_code": 0,
+      "verdict": "pass"
+    },
+    {
+      "id": "daily430-sealed",
+      "command": "ONBOARDING_E2E_PORT=8367 ONBOARDING_E2E_DEBUG_PORT=9467 ONBOARDING_E2E_VIEWPORT_WIDTH=430 ONBOARDING_E2E_VIEWPORT_HEIGHT=932 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily430-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "exit_code": 0,
+      "verdict": "pass"
+    },
+    {
+      "id": "cross-daily390-sealed",
+      "command": "ONBOARDING_E2E_PORT=8368 ONBOARDING_E2E_DEBUG_PORT=9468 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-cross-daily390-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop --cross-owner",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "exit_code": 0,
+      "verdict": "pass"
+    },
+    {
+      "id": "signout390-sealed",
+      "command": "ONBOARDING_E2E_PORT=8369 ONBOARDING_E2E_DEBUG_PORT=9469 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-signout390-sealed node scripts/e2e/onboarding-first-session.mjs --account-isolation",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "exit_code": 0,
+      "verdict": "pass"
+    },
+    {
+      "id": "retained390-sealed",
+      "command": "ONBOARDING_E2E_PORT=8370 ONBOARDING_E2E_DEBUG_PORT=9470 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-retained390-sealed node scripts/e2e/onboarding-first-session.mjs --retained-safety",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "exit_code": 0,
+      "verdict": "pass"
+    }
+  ],
+  "phase_rows_before_final_cross_selector_commit": [
+    "daily390-sealed",
+    "daily375-sealed"
+  ],
+  "phase_equivalence": "The only 4e6804316..9f1409fb2 change is the Shelf-button-only cross-owner harness repair. Production runtime and retained-daily-loop.mjs blobs are identical; these earlier receipts are not relabelled as final-head runs.",
+  "all_offline_cold_start": "NOT_RUN_NATIVE; Metro reload after reconnect",
+  "undo": "UNAVAILABLE_RETAINED_APPEND_ONLY",
+  "paid_positive": "NOT_RUN; actual denial is denial",
+  "native_OS_camera_Keychain": "NOT_RUN",
+  "no_host_clock_or_timezone_mutation": true,
+  "no_force_click_or_timeout_increase": true
+}

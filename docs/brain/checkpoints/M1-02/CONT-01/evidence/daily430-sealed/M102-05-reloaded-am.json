@@ -1,0 +1,102 @@
+{
+  "bodyText": "TUESDAY, OCTOBER 20 Good morning. 1 step left in your morning routine. Morning routine 1 of 2 Recorded - cannot undo M102 synthetic moisturizer Seal everything in. Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT ✦ A few honest suggestions 1 thing we’d gently suggest › Tonight · Cycling night 1 Exfoliation night › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": true,
+      "height": 94,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 336,
+      "x": 47,
+      "y": 203
+    },
+    {
+      "disabled": false,
+      "height": 99,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "selected": false,
+      "width": 336,
+      "x": 47,
+      "y": 297
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 425
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 527
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 95.36,
+      "x": 24.82,
+      "y": 848.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 120,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 215,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 310,
+      "y": 849
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8367/today?routine=AM",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

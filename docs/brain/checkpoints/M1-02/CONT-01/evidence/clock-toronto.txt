@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/features/today/routineClock.cont01.test.ts src/features/today/useRoutineClock.test.ts src/features/today/useToday.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+
+ Test Files  3 passed (3)
+      Tests  19 passed (19)
+   Start at  17:49:58
+   Duration  447ms (transform 180ms, setup 0ms, import 351ms, tests 53ms, environment 0ms)
+

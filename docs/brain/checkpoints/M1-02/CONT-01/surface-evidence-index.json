@@ -1,0 +1,124 @@
+[
+  {
+    "id": "daily390-sealed",
+    "source": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m102c1-daily390-sealed",
+    "copied": [
+      "M102-01-am-ready.json",
+      "M102-01-am-ready.png",
+      "M102-02-rejected-write-recovery.json",
+      "M102-02-rejected-write-recovery.png",
+      "M102-03-offline-duplicate-append-only.json",
+      "M102-03-offline-duplicate-append-only.png",
+      "M102-04-offline-timing.json",
+      "M102-04-offline-timing.png",
+      "M102-04a-offline-reminder-recovery.json",
+      "M102-04a-offline-reminder-recovery.png",
+      "M102-05-reloaded-am.json",
+      "M102-05-reloaded-am.png",
+      "M102-06-pm.json",
+      "M102-06-pm.png",
+      "M102-daily-loop.json",
+      "browser-warn-error-logs.json",
+      "report.md",
+      "summary.json"
+    ],
+    "note": "Selected decisive safe evidence, not a copied harness. Full transient runner output remains in the recorded local directory."
+  },
+  {
+    "id": "daily375-sealed",
+    "source": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m102c1-daily375-sealed",
+    "copied": [
+      "M102-02-rejected-write-recovery.json",
+      "M102-02-rejected-write-recovery.png",
+      "M102-05-reloaded-am.json",
+      "M102-05-reloaded-am.png",
+      "M102-06-pm.json",
+      "M102-06-pm.png",
+      "M102-daily-loop.json",
+      "browser-warn-error-logs.json",
+      "report.md",
+      "summary.json"
+    ],
+    "note": "Selected decisive safe evidence, not a copied harness. Full transient runner output remains in the recorded local directory."
+  },
+  {
+    "id": "daily430-sealed",
+    "source": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m102c1-daily430-sealed",
+    "copied": [
+      "M102-02-rejected-write-recovery.json",
+      "M102-02-rejected-write-recovery.png",
+      "M102-05-reloaded-am.json",
+      "M102-05-reloaded-am.png",
+      "M102-06-pm.json",
+      "M102-06-pm.png",
+      "M102-daily-loop.json",
+      "browser-warn-error-logs.json",
+      "report.md",
+      "summary.json"
+    ],
+    "note": "Selected decisive safe evidence, not a copied harness. Full transient runner output remains in the recorded local directory."
+  },
+  {
+    "id": "cross-daily390-sealed",
+    "source": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m102c1-cross-daily390-sealed",
+    "copied": [
+      "CO-01-owner-a.json",
+      "CO-02-draining-old-owner.json",
+      "CO-09-b-usable-shelf.json",
+      "CO-09-b-usable-shelf.png",
+      "CO-09b-b-product-detail.json",
+      "CO-09b-b-product-detail.png",
+      "CO-11-b-identity.json",
+      "CO-11-b-identity.png",
+      "CO-12-b-document-relaunch.json",
+      "CO-14-return-a-relaunch-closed.json",
+      "CO-b-relaunch-boundaries.json",
+      "M102-daily-loop.json",
+      "browser-warn-error-logs.json",
+      "summary.json"
+    ],
+    "note": "Selected decisive safe evidence, not a copied harness. Full transient runner output remains in the recorded local directory."
+  },
+  {
+    "id": "signout390-sealed",
+    "source": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m102c1-signout390-sealed",
+    "copied": [
+      "26-account-boundary-clear-failure.json",
+      "26-account-boundary-clear-failure.png",
+      "27-account-boundary-repeated-failure.json",
+      "27-account-boundary-repeated-failure.png",
+      "28-signed-out-welcome.png",
+      "29-signed-out-shelf-age-closed.json",
+      "29-signed-out-shelf-age-closed.png",
+      "30-signed-out-today-age-closed.png",
+      "31-signed-out-cold-relaunch.png",
+      "browser-warn-error-logs.json",
+      "report.md",
+      "summary.json"
+    ],
+    "note": "Selected decisive safe evidence, not a copied harness. Full transient runner output remains in the recorded local directory."
+  },
+  {
+    "id": "retained390-sealed",
+    "source": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m102c1-retained390-sealed",
+    "copied": [
+      "26-age-reverification-blocked.png",
+      "27-age-reverification-direct-today-blocked.png",
+      "M1-03b-write-failure-intent-retained.png",
+      "M1-05b-remove-failure.png",
+      "M1-11-age-closed-withdrawal.json",
+      "M1-11-age-closed-withdrawal.png",
+      "M1-11a-withdrawal-cleanup-refused.json",
+      "M1-11a-withdrawal-cleanup-refused.png",
+      "M1-11b-withdrawal-repeated-refusal.json",
+      "M1-11b-withdrawal-repeated-refusal.png",
+      "M1-11c-withdrawal-relaunch-paused.json",
+      "M1-11c-withdrawal-relaunch-paused.png",
+      "M1-offline-durable-read.json",
+      "browser-warn-error-logs.json",
+      "report.md",
+      "summary.json"
+    ],
+    "note": "Selected decisive safe evidence, not a copied harness. Full transient runner output remains in the recorded local directory."
+  }
+]

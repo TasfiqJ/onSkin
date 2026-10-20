@@ -1,0 +1,42 @@
+
+> layerwell@0.1.0 typecheck
+> turbo run typecheck --force
+
+• turbo 2.9.18
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/types
+   • Running typecheck in 3 packages
+   • Remote caching disabled, using shared worktree cache
+
+@layerwell/types:typecheck: cache bypass, force executing 787e7d321087e6c3
+@layerwell/catalog-operator-console:typecheck: cache bypass, force executing 16d77290a62eca3a
+@layerwell/types:typecheck: 
+@layerwell/types:typecheck: > @layerwell/types@0.1.0 typecheck
+@layerwell/types:typecheck: > tsc --noEmit
+@layerwell/types:typecheck: 
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/catalog-operator-console:typecheck: > @layerwell/catalog-operator-console@0.1.0 typecheck
+@layerwell/catalog-operator-console:typecheck: > tsc --noEmit
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/mobile:typecheck: cache bypass, force executing f64c36ae9e4b41f6
+@layerwell/mobile:typecheck: 
+@layerwell/mobile:typecheck: > @layerwell/mobile@0.1.0 typecheck
+@layerwell/mobile:typecheck: > tsc --noEmit
+@layerwell/mobile:typecheck: 
+@layerwell/mobile:typecheck: src/features/notifications/startup.test.ts(163,69): error TS2322: Type 'Promise<void>' is not assignable to type 'Promise<undefined>'.
+@layerwell/mobile:typecheck:   Type 'void' is not assignable to type 'undefined'.
+@layerwell/mobile:typecheck: npm error Lifecycle script `typecheck` failed with error:
+@layerwell/mobile:typecheck: npm error code 2
+@layerwell/mobile:typecheck: npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+@layerwell/mobile:typecheck: npm error workspace @layerwell/mobile@0.1.0
+@layerwell/mobile:typecheck: npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+@layerwell/mobile:typecheck: npm error command failed
+@layerwell/mobile:typecheck: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit
+ ERROR  @layerwell/mobile#typecheck: command (C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run typecheck exited (2)
+
+ Tasks:    2 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    41.06s 
+Failed:    @layerwell/mobile#typecheck
+
+ ERROR  run failed: command  exited (2)

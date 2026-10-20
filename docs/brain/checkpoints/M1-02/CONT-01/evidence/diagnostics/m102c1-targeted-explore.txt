@@ -1,0 +1,53 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/features/today src/features/notifications src/features/routine/orderStore.test.ts src/features/photos/encryptedStorage.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+stderr | src/features/today/todayPersistence.t1.test.ts > T1-R4 same-authority remount gate lifetime regressions > reconciles current reads when an old write confirms after same-authority remount
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/today/todayPersistence.t1.test.ts > T1-R4 same-authority remount gate lifetime regressions > reconciles current reads when an old write confirms after same-authority remount
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/today/todayPersistence.t1.test.ts (72 tests | 1 failed) 18852ms
+     × reconciles current reads when an old write confirms after same-authority remount 248ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/today/todayPersistence.t1.test.ts > T1-R4 same-authority remount gate lifetime regressions > reconciles current reads when an old write confirms after same-authority remount
+AssertionError: Expected values to be strictly equal:
+
+true !== false
+
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/today/todayPersistence.t1.test.ts:1049:12
+    1047|     assert.ok(mocks.unsynced.mock.calls.length > unsyncedReads);
+    1048|     assert.equal(control('Test product').props['aria-checked'], true);
+    1049|     assert.equal(control('Test product').props.disabled, false);
+       |            ^
+    1050|     assert.equal(mocks.toggle.mock.calls.length, 1); noSuccess();
+    1051|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 33 passed (34)
+      Tests  1 failed | 525 passed (526)
+   Start at  17:43:16
+   Duration  20.20s (transform 5.40s, setup 0ms, import 9.13s, tests 23.02s, environment 6ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run src/features/today src/features/notifications src/features/routine/orderStore.test.ts src/features/photos/encryptedStorage.test.ts

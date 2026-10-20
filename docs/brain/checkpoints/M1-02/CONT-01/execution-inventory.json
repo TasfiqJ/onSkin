@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "claim_origin": "CODEX_REPORTED_EXECUTION_INVENTORY",
+  "count_semantics": "Per-command only. Root/focused/timezone counts overlap and are never added. Legacy report enums do not mean Brain reran these checks.",
+  "receipts": [
+    {
+      "id": "clock-auckland",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-auckland.receipt.json",
+      "sha256": "a1ea5ddc0b23a2cbb00bf18d7571c21fc5ab35cf505a979de96427651cd928f2",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 19,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "clock-toronto",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-toronto.receipt.json",
+      "sha256": "d3f64b4e3fbdebe23de0f06babe4d76943a8a8dc0f3c9ae8d690fb1961a9de0a",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 19,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "cross-daily390-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-final.receipt.json",
+      "sha256": "d8d0d76b67ed8598fafdf1d49d06bdf1436b12eb3d173521f0a80226f8e4155c",
+      "source_commit": "fd97c5ec36b93738b16d7e9428b271a8ebe15c65",
+      "source_tree": "3559bc9d9b1df1956a2648fa8fbbfe6ab64b03c8",
+      "status": "FAIL",
+      "exit_code": 1,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "cross-daily390-sealed",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed.receipt.json",
+      "sha256": "4c2f7d0313cf704966bc4c4c322e91baba757dbc138d2519c824fd53f6b834b6",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "daily-390",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily-390.receipt.json",
+      "sha256": "0c2a57b884061cca225b486c93ce88d71609f8a674c5fee16680b924f997a12d",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "daily375-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-final.receipt.json",
+      "sha256": "44004a744d7327cf9ed6d1e7554c97c423bbb1fa7299be56520f2294ec233972",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "daily375-sealed",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed.receipt.json",
+      "sha256": "33dfaeb424143a10f3d606bab7c9c200b4fb98c1251daa41f706ff702abd372f",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "daily390-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-final.receipt.json",
+      "sha256": "f0052cabab4cc9dc94cd37b82373c7869786590d186ed07c1ba34fe99d889e4b",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "daily390-sealed",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed.receipt.json",
+      "sha256": "79307aaa4b5e2a7e4c2ce298635be1e71269b89ce1b625e863fd162c676c8141",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "daily430-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-final.receipt.json",
+      "sha256": "69e6bac069070671100e8ccfe67d3ad3c3dabd0173b0425497541f02e720f860",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "daily430-sealed",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed.receipt.json",
+      "sha256": "ba343bc0484afaa8854a9c7155eb99d972f781674e772818a228ca5f0d016f28",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "final-root-lint",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-lint.receipt.json",
+      "sha256": "47563dbcc0b6f5994d103f0d1933d0d31fb7d90356b9465da706f948dc650b77",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "final-root-tests",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-tests.receipt.json",
+      "sha256": "11f89d14e9518013cfadaaebaa9bd7d3eb6759f5b2fc2de4052e0c10141172cf",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6067,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "final-root-typecheck",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-typecheck.receipt.json",
+      "sha256": "b4118fc51d2e2e1d0958c766cd82942e3021ad8ad3baf70416983fb1f0b9a193",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "focused",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/focused.receipt.json",
+      "sha256": "103b3e9e11617dec4cb7b74d5bf87767a2cdf108c3c5d895578c5112271e203c",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 718,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "governance",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/governance.receipt.json",
+      "sha256": "d77f8750a4bc65bb007582a58e02fa28755b61060d32d0fc78bf2abf43fc5421",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 53,
+        "failed": 0,
+        "skipped": 2
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "input-verifier",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/input-verifier.receipt.json",
+      "sha256": "8a67fbefcf501777f0bd021aa2326ff1c32168df9ba951a1ec3331148a961be5",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "measured-focused",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-focused.receipt.json",
+      "sha256": "9720d7dbd4cfc6a03846d91c32134db8bb36fdf9b24e4befb554857925b67628",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 719,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "measured-governance",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-governance.receipt.json",
+      "sha256": "c0ba5e4a71d7da247c7efebdcd2245b915af86a1c7e1116297fa9d4869633f0b",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 53,
+        "failed": 0,
+        "skipped": 2
+      },
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "measured-root-lint",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-lint.receipt.json",
+      "sha256": "17ed929a36f645d80659c5462e411a0a9e7eb585a5a7048d236b2c36f9ca9e8f",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "measured-root-tests",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-tests.receipt.json",
+      "sha256": "7de3b12d1f6ee73a7e9bd2615ff6d174e3a599650e5f45978853bb40c7a0255f",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6067,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "measured-root-typecheck",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-typecheck.receipt.json",
+      "sha256": "2eea4ec212ef7968b8d8116f1c6004e8cd6d63b0bd878abfb1ce90dd03f45f9a",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "measured-source-contracts",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-source-contracts.receipt.json",
+      "sha256": "6a718e696988b68289ead76c82cccd0e593e3f3a178664556a150472891e7652",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "FAIL",
+      "exit_code": 1,
+      "counts": {
+        "passed": 148,
+        "failed": 1,
+        "skipped": 0
+      },
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "retained390-sealed",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed.receipt.json",
+      "sha256": "8ee2047396ec33cbb6741dc327c0e5d21e1459342a673f9570832b6f5791ad03",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "root-lint-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-lint-final.receipt.json",
+      "sha256": "47e2af55869d775334e7bdb8c6710af6cfb9c04473f0d4477f07655aaa9d6c0f",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "root-lint",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-lint.receipt.json",
+      "sha256": "ac66b3fc119e9905253b6faabaaee97483a2a49c94a08846cd817223f253e7b8",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "FAIL",
+      "exit_code": 1,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "root-tests-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-tests-final.receipt.json",
+      "sha256": "add55666fc72788aa93394da637196b9fc4da1c0b8f3d9bf9c869694d5aa089c",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6066,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "root-tests",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-tests.receipt.json",
+      "sha256": "a9f44de852ff431e1d0505fa9e4f902bd6951028a48ac323fa14a9139b0778ee",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6066,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "root-typecheck-final",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-typecheck-final.receipt.json",
+      "sha256": "a6d68cc6bedc5cb4a7bb363f5a5bfbf5bf9ee5a50b57fdbbdaa53fc0e04cc3ac",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "root-typecheck",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-typecheck.receipt.json",
+      "sha256": "12e48bda3cb4f41c1514641c71b4f5ff3ed53301c8085d64d831ed875ab69a71",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "sealed-focused",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-focused.receipt.json",
+      "sha256": "56a3dc0449ec3e8c8df4125d0b7c7aaa6a5b2b05205ab70aa0072a5554e88e86",
+      "source_commit": "fd97c5ec36b93738b16d7e9428b271a8ebe15c65",
+      "source_tree": "3559bc9d9b1df1956a2648fa8fbbfe6ab64b03c8",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 719,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "sealed-root-lint",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-lint.receipt.json",
+      "sha256": "52a5fb85a7e64dae1c65cac65330aa1490af8191225a0dde87e0a3c9891291b2",
+      "source_commit": "fd97c5ec36b93738b16d7e9428b271a8ebe15c65",
+      "source_tree": "3559bc9d9b1df1956a2648fa8fbbfe6ab64b03c8",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "sealed-root-tests",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-tests.receipt.json",
+      "sha256": "3e5ea12186b7696bc3ef3c5f4d6c43c3da418e77aca3619b68a4572117773f27",
+      "source_commit": "fd97c5ec36b93738b16d7e9428b271a8ebe15c65",
+      "source_tree": "3559bc9d9b1df1956a2648fa8fbbfe6ab64b03c8",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6067,
+        "failed": 0,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "sealed-root-typecheck",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-typecheck.receipt.json",
+      "sha256": "185533408c144c1cc1f9b792ca3a864eb939aae152517ea853b241e7b5015e7b",
+      "source_commit": "fd97c5ec36b93738b16d7e9428b271a8ebe15c65",
+      "source_tree": "3559bc9d9b1df1956a2648fa8fbbfe6ab64b03c8",
+      "status": "FAIL",
+      "exit_code": 2,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "signout390-sealed",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed.receipt.json",
+      "sha256": "b4b8f43b1586e40546b5d3303df46c61a11999489fb6a29a2a53e70f923bf89d",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": null,
+      "use": "SELECTED_FINAL_OR_BOUND_SOURCE_EVIDENCE"
+    },
+    {
+      "id": "source-contracts",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/source-contracts.receipt.json",
+      "sha256": "7b567450395a4caf900eeea849a851ccc387033c3ae88dcdc0bdb28f5e777a65",
+      "source_commit": "1da8a2058559636e013bed4cc6ebd45323404760",
+      "source_tree": "6a9cb7aefaf19706a452bbeda505ce2d11af786e",
+      "status": "FAIL",
+      "exit_code": 1,
+      "counts": {
+        "passed": 148,
+        "failed": 1,
+        "skipped": 0
+      },
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    },
+    {
+      "id": "worklist-check",
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/worklist-check.receipt.json",
+      "sha256": "906ceab40c1bf03fa334725acd523e53679c3b274813841f8b03dd49107f7def",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "FAIL",
+      "exit_code": 1,
+      "counts": null,
+      "use": "PRESERVED_DIAGNOSTIC_OR_SUPERSEDED_MEASUREMENT"
+    }
+  ]
+}

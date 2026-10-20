@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 typecheck
+> tsc --noEmit
+
+src/features/notifications/transaction.cont01.test.ts(101,53): error TS2345: Argument of type '"Pressable"' is not assignable to parameter of type 'ElementType'.
+src/features/notifications/transaction.cont01.test.ts(105,53): error TS2345: Argument of type '"Pressable"' is not assignable to parameter of type 'ElementType'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

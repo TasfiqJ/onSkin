@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_PORT=8365 ONBOARDING_E2E_DEBUG_PORT=9465 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily390-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+  "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed.txt",
+    "sha256": "bfaa9533e27f1db5ee72c9024f16423c07a2cf1befebee638733dfb664eaf24c"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T21:54:37.536323+00:00",
+  "finished_at_utc": "2026-10-20T21:56:00.710519+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_PORT": "8365",
+    "ONBOARDING_E2E_DEBUG_PORT": "9465",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+    "ONBOARDING_E2E_EVIDENCE_DIR": "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily390-sealed"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "TZ=Pacific/Auckland npm.cmd --workspace apps/mobile run test -- --run src/features/today/routineClock.cont01.test.ts src/features/today/useRoutineClock.test.ts src/features/today/useToday.test.ts",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+  "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-auckland.txt",
+    "sha256": "1fb851fb5abc8d115b7e4dc4b5227feff58e0a8e5989d5f4d0499d0861de9cd6"
+  },
+  "counts": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T21:50:00.003977+00:00",
+  "finished_at_utc": "2026-10-20T21:50:01.733675+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "TZ": "Pacific/Auckland"
+  },
+  "argv": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "--run",
+    "src/features/today/routineClock.cont01.test.ts",
+    "src/features/today/useRoutineClock.test.ts",
+    "src/features/today/useToday.test.ts"
+  ]
+}
