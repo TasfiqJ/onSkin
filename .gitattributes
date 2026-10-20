@@ -11,3 +11,6 @@
 *.jks binary
 *.ttf binary
 *.otf binary
+
+# Exact issued inputs and hashed raw Windows observations for this continuation.
+docs/brain/checkpoints/M1-01/CONT-01/** -text
