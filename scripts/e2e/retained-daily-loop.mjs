@@ -113,7 +113,9 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   assert.deepEqual((await readCompletions()).sync, first.sync, 'Reload changed stable replay identities');
   await capture('05-reloaded-am');
   await route('/today?routine=PM');
-  await waitForText(client, 'Evening');
+  // The existing DEV phase selector is read when the clock hook mounts.
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Evening', 60_000);
   await waitForCondition(client, `${checkbox} !== undefined`, 30_000, 'admitted PM checklist');
   const pmCount = await evaluate(client, `document.querySelectorAll('[role="checkbox"]').length`);
   for (let i = 0; i < pmCount; i++) {
