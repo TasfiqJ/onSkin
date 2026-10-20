@@ -48,6 +48,8 @@ it('retains simulated completion and acknowledgement across a new transport read
   expect(readAccountDeletionFixturePhase({ ...storage })).toBe('completed');
   writeAccountDeletionFixturePhase('acknowledged', storage);
   expect(readAccountDeletionFixturePhase({ ...storage })).toBe('acknowledged');
+  writeAccountDeletionFixturePhase('completed', storage);
+  expect(readAccountDeletionFixturePhase({ ...storage })).toBe('acknowledged');
 });
 
 it('refuses corrupt or unavailable fixture state instead of inventing completion', () => {

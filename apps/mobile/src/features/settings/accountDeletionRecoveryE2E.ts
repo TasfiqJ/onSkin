@@ -40,5 +40,6 @@ export function writeAccountDeletionFixturePhase(
   phase: Exclude<Phase, 'pending'>,
   storage: FixtureStorage = globalThis.sessionStorage,
 ): void {
+  if (readAccountDeletionFixturePhase(storage) === 'acknowledged') return;
   storage.setItem(KEY, phase);
 }
