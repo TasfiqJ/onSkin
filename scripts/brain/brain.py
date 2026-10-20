@@ -428,7 +428,9 @@ def schema_check(value, schema, at='$'):
 
 
 def git(root, *args):
-    return subprocess.check_output(['git', '-C', str(root), *args], text=True, encoding='utf-8').strip()
+    environment = dict(os.environ, GIT_NO_LAZY_FETCH='1')
+    return subprocess.check_output(['git', '-c', 'core.fsmonitor=false', '-C', str(root), *args],
+                                   env=environment, text=True, encoding='utf-8').strip()
 
 
 def commit_identity(root, sha, label):
@@ -447,7 +449,8 @@ def git_snapshot(root, value, label):
 
 
 def ancestor(root, before, after, label):
-    result = subprocess.run(['git', '-C', str(root), 'merge-base', '--is-ancestor', before, after], capture_output=True)
+    result = subprocess.run(['git', '-c', 'core.fsmonitor=false', '-C', str(root), 'merge-base', '--is-ancestor', before, after],
+                            env=dict(os.environ, GIT_NO_LAZY_FETCH='1'), capture_output=True)
     require(result.returncode == 0, 'Invalid ancestry: ' + label)
 
 

@@ -660,6 +660,15 @@ class SyntheticPackaging(unittest.TestCase):
 
 
 class ReportContracts(unittest.TestCase):
+    def test_git_reads_disable_lazy_fetch_and_fsmonitor(self):
+        with mock.patch.dict(os.environ, {'GIT_NO_LAZY_FETCH': '0'}), mock.patch.object(brain.subprocess, 'check_output', return_value='commit\n') as call:
+            self.assertEqual(brain.git(brain.ROOT, 'cat-file', '-t', brain.REPAIR_BASE), 'commit')
+            self.assertEqual(call.call_args.kwargs['env']['GIT_NO_LAZY_FETCH'], '1')
+            self.assertIn('core.fsmonitor=false', call.call_args.args[0])
+        with mock.patch.object(brain.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as call:
+            brain.ancestor(brain.ROOT, brain.TASK_BASE, brain.REPAIR_BASE, 'synthetic')
+            self.assertEqual(call.call_args.kwargs['env']['GIT_NO_LAZY_FETCH'], '1')
+
     def test_schema_types_required_extra_unsupported_and_bounds(self):
         schema = {'type': 'object', 'additionalProperties': False, 'required': ['exit'],
                   'properties': {'exit': {'type': ['integer', 'null'], 'minimum': 0}}}
