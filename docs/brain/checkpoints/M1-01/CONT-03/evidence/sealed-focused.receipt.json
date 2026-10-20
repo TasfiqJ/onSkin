@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd --workspace apps/mobile run test -- --run src/lib/auth/AuthProvider.lifecycle.test.ts src/lib/auth/accountIsolationE2E.test.ts src/lib/auth/localAccountIsolation.test.ts src/lib/auth/sessionOwner.test.ts src/lib/auth/accountGeneration.test.ts src/lib/storage/privateKV.test.ts src/features/onboarding/AgeReverificationRights.integration.test.ts src/features/healthConsent/selectiveCleanup.test.ts src/lib/consent/withdrawal.test.ts src/lib/auth/accountDeletionPublication.integration.test.ts src/features/settings/accountDeletionForeignOwnerPreservation.test.ts src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts src/features/widgets/actionRegistry.test.ts src/lib/consent/healthProcessingEpoch.test.ts",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "d2916d79c2c04988649a5a8ed631baf67ed2851c",
+  "source_tree": "fa2d6e5697c0a89141bed17f47fd6e52964907d3",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-focused.txt",
+    "sha256": "d832d82634a9e21083279f7cea17a6b82386118fdeae85a79bf724ac0eca29f7"
+  },
+  "counts": {
+    "passed": 233,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T19:14:09.026221+00:00",
+  "finished_at_utc": "2026-10-20T19:14:11.603598+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "--run",
+    "src/lib/auth/AuthProvider.lifecycle.test.ts",
+    "src/lib/auth/accountIsolationE2E.test.ts",
+    "src/lib/auth/localAccountIsolation.test.ts",
+    "src/lib/auth/sessionOwner.test.ts",
+    "src/lib/auth/accountGeneration.test.ts",
+    "src/lib/storage/privateKV.test.ts",
+    "src/features/onboarding/AgeReverificationRights.integration.test.ts",
+    "src/features/healthConsent/selectiveCleanup.test.ts",
+    "src/lib/consent/withdrawal.test.ts",
+    "src/lib/auth/accountDeletionPublication.integration.test.ts",
+    "src/features/settings/accountDeletionForeignOwnerPreservation.test.ts",
+    "src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts",
+    "src/features/widgets/actionRegistry.test.ts",
+    "src/lib/consent/healthProcessingEpoch.test.ts"
+  ]
+}

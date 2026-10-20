@@ -1,0 +1,167 @@
+{
+  "kind": "HISTORICAL_EVIDENCE_REFERENCES",
+  "commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+  "report": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/completion-report.json",
+    "sha256": "8c760cd29deb8f993c055f7f99d7af8af9ae4dd04218735eb768bc07134ee6b8"
+  },
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/completed-upgrade375/summary.json",
+      "sha256": "7d4e8e3c9366845e6b2ffa0ddd2466ec52d6538e46f067669da93adfd632de44"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/completed-upgrade390/summary.json",
+      "sha256": "3aafaa227998678748a93903e08130095f66341c22752be398a73cee3df26c68"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/completed-upgrade430/summary.json",
+      "sha256": "a9a24cbe9d067c8c0881008d61806defa55d8921786051ebd3ce5f2ff7fcc0ab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/current-recovery375/summary.json",
+      "sha256": "b0d5169506c4e7df2faa39cbe9699f0ad4999bc4cc3858ea509ea456ee3d15f0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/current-recovery390/summary.json",
+      "sha256": "00a655256588a0bef144f2100717b229f5903cc10a0e47807444ae5bb8c95f43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/current-recovery430/summary.json",
+      "sha256": "d4a224f38c734347a0c041bb0f0c71959b0aa7100d554d4d59dc1c273a51c39d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-recovery390/summary.json",
+      "sha256": "cd157765d13b205dd5255ec56432d9ff6432bc9fd19ce836be13a997ab698946"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-expired/summary.json",
+      "sha256": "a43654f9e71fb80fa228ad377af7215e9630bd68a82a1cfb32379ab54b73d82f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-invalid/summary.json",
+      "sha256": "c188502677db231b6c3e000dd4a959850127d290ca857031d419c013bc6f95f0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-invalid_support_only/summary.json",
+      "sha256": "368cc8a24cb78c7bb33ae2c12b21888e5607433a889c37da0cd9d9a05948a734"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-pending_then_completed_manual/summary.json",
+      "sha256": "91e63c812586e51341104ff053545de861665dabc51de3f8edb6a73a3319db96"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion390-expired/summary.json",
+      "sha256": "203f5a1a54a97a57e3dd81fe7852d83625f68d4efc36b1498834d3e26f73d2a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion390-invalid/summary.json",
+      "sha256": "8182a9c7234ba966aec5a440f17307f24691e0729661e84ac76ea2d0a22ee098"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion390-invalid_support_only/summary.json",
+      "sha256": "06c26e93f45df8472d98515c18da972c98c484ac18e503dffcb334df6a7550a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion390-pending_then_completed_manual/summary.json",
+      "sha256": "ed46b5219d46e0cb406a38a665824db92a6aa0e568216bd2ca0918e0521875c0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion430-expired/summary.json",
+      "sha256": "f37a1919abf024bca8355466fdbb3d2ebfe334cc927b679db78b5612d7d06332"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion430-invalid/summary.json",
+      "sha256": "75a9bf60d9265dd6c4b43e7e0d60ac3e9aaa4cd46778431c2a5dbd5f9b6e4619"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion430-invalid_support_only/summary.json",
+      "sha256": "151089db07b2a5edb64f563ed570aae42b35966d972b8dd880808c09b6369e59"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion430-pending_then_completed_manual/summary.json",
+      "sha256": "757d7f80df73577a148b75c26eb943bfc3161c1ded36faa704f02729932e87fb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-retained375/summary.json",
+      "sha256": "400588063f40101c2cef5c177e99e238936b8b33957f1e5c8e1ad5f1d5a8234a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-retained390/summary.json",
+      "sha256": "eab02586804f7ab6b939a7c5b91a28c2bca101673ce01931373d0199812d5e44"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-retained430/summary.json",
+      "sha256": "965a2e90b78b373d5a70c413af5761ea82ef8ea24f358ed4e4be59b2e9680f9d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion375-expired/summary.json",
+      "sha256": "a43654f9e71fb80fa228ad377af7215e9630bd68a82a1cfb32379ab54b73d82f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion375-invalid/summary.json",
+      "sha256": "c188502677db231b6c3e000dd4a959850127d290ca857031d419c013bc6f95f0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion375-invalid_support_only/summary.json",
+      "sha256": "368cc8a24cb78c7bb33ae2c12b21888e5607433a889c37da0cd9d9a05948a734"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion390-expired/summary.json",
+      "sha256": "203f5a1a54a97a57e3dd81fe7852d83625f68d4efc36b1498834d3e26f73d2a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion390-invalid/summary.json",
+      "sha256": "8182a9c7234ba966aec5a440f17307f24691e0729661e84ac76ea2d0a22ee098"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion390-invalid_support_only/summary.json",
+      "sha256": "06c26e93f45df8472d98515c18da972c98c484ac18e503dffcb334df6a7550a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion430-expired/summary.json",
+      "sha256": "f37a1919abf024bca8355466fdbb3d2ebfe334cc927b679db78b5612d7d06332"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion430-invalid/summary.json",
+      "sha256": "75a9bf60d9265dd6c4b43e7e0d60ac3e9aaa4cd46778431c2a5dbd5f9b6e4619"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion430-invalid_support_only/summary.json",
+      "sha256": "151089db07b2a5edb64f563ed570aae42b35966d972b8dd880808c09b6369e59"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-retained390/summary.json",
+      "sha256": "cb1a12bfb33f56b079954a59ec7005d59b5b5e083afb8b3d5759be5e3ae62661"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/sealed-recovery375/summary.json",
+      "sha256": "8ef5b92675d4606645e110d637dfb4398001aceea9e78762ff8c5e92a9c88776"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/sealed-recovery390/summary.json",
+      "sha256": "31e79d2c849ec6411bdd5e50dcbc3036c5ef3b90fba073c16ef65debedddd523"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/sealed-recovery430/summary.json",
+      "sha256": "c7badc6917c65acc8ed04c72d47566d183025c4d7c2c9c7000d94cbd79a0979f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/sealed-upgrade375/summary.json",
+      "sha256": "b44dcecf1c491021024c68a30be852dc6a50a5908acbd9f9ae5e470bba172c5b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/sealed-upgrade430/summary.json",
+      "sha256": "7f90a04a835ffbd37349d11833d69d387535bdf896c800c812536de30667ac56"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/serial-upgrade390/summary.json",
+      "sha256": "1afa7b1d6f1b8fde0e65570a4b5240207d0679f0cd079d772f2ccde9b29b7aa8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/verified-recovery390/summary.json",
+      "sha256": "fec9a8986642b7b8877ecc03bdbae232a7f9d3162def4314fe464349a4381fa5"
+    }
+  ],
+  "limits": "Historical evidence only. New exact-source executions are recorded separately. Native/provider/qualified axes remain unperformed. Referenced files are accessible as Git blobs at this commit; raw outside-device Brain paths are not copied or claimed inspected."
+}

@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/lib/auth/AuthProvider.lifecycle.test.ts src/lib/auth/accountIsolationE2E.test.ts src/lib/auth/localAccountIsolation.test.ts src/lib/auth/sessionOwner.test.ts src/lib/auth/accountGeneration.test.ts src/lib/storage/privateKV.test.ts src/features/onboarding/AgeReverificationRights.integration.test.ts src/features/healthConsent/selectiveCleanup.test.ts src/lib/consent/withdrawal.test.ts src/lib/auth/accountDeletionPublication.integration.test.ts src/features/settings/accountDeletionForeignOwnerPreservation.test.ts src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts src/features/widgets/actionRegistry.test.ts src/lib/consent/healthProcessingEpoch.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+
+ Test Files  14 passed (14)
+      Tests  233 passed (233)
+   Start at  15:14:10
+   Duration  1.46s (transform 4.63s, setup 0ms, import 7.97s, tests 1.12s, environment 2ms)
+

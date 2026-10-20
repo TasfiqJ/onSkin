@@ -1,0 +1,37 @@
+{
+  "kind": "CODEX_VISUAL_INSPECTIONS",
+  "admission": "NONE",
+  "recorded_at_utc": "2026-10-20T19:24:06.933545+00:00",
+  "images": [
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/cross-owner390-replay4/CO-05-b-age-required.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/cross-owner390-replay4/CO-07-b-empty-shelf.png",
+      "sha256": "24e58cb927b74276d0dacad78283b8417e3c7fff0cdb54d39b399fae7010095c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/cross-owner390-replay7/CO-11-b-identity.png",
+      "sha256": "04849537d4583d28cb9ae41b6d81665c9ce53478ce2b6b77dfa3bf9cb207aed6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/cross-owner390-replay7/CO-12-b-document-relaunch.png",
+      "sha256": "e1aef16c95d89448d986beebabeaca650ef89a8d5504a5041e4f7cefd20f3b81"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-cross-owner375/CO-12-b-document-relaunch.png",
+      "sha256": "0d21b68e2febe872a20a43d361eb0533aa14009c10c69498de9ce50d73275c51"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-cross-owner430/CO-13-return-a-age-closed.png",
+      "sha256": "bdffff7c19cf44c638f4230f5d475e0e804b122a537afd827b5681b66d7ce4d4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-cross-owner390/CO-03-cleanup-refused.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    }
+  ],
+  "observations": "Inspected B age/empty intake, B identity/reloaded Shelf, compact B Shelf, returned A age closure and usable cleanup retry. No visible uncaught overlay or old A data in inspected states. Automated hit checks require 44px dimensions and center hit success; all three sizes pass.",
+  "limits": "Selected screenshots only, not a claim to visually inspect every artifact or native behavior."
+}

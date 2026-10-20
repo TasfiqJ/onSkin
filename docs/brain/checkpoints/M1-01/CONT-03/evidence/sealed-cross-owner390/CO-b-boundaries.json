@@ -1,0 +1,15 @@
+{
+  "exactB": true,
+  "healthOwnerB": true,
+  "noAInCache": true,
+  "noAInShelfOrQueue": true,
+  "hasB": true,
+  "bEditPersisted": true,
+  "ciphertextOnly": true,
+  "noWidgetCapabilities": true,
+  "renderedObservation": {
+    "closed": true,
+    "samples": 5888,
+    "leaks": 0
+  }
+}

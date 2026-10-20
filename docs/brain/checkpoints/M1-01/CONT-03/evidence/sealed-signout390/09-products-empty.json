@@ -1,0 +1,36 @@
+{
+  "bodyText": "What's on your shelf? 0 OF 3 PRODUCTS PRODUCT NAME Skip for now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 162
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Skip for now",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 772
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8433/onboarding/products",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

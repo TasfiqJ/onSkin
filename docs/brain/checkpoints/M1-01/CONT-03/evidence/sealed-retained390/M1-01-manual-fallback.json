@@ -1,0 +1,69 @@
+{
+  "bodyText": "? x Not found yet. S Search catalog Try name or brand instead I Add ingredients + Add it by hand Always works, even offline Report missing product",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 314,
+      "y": 513
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Search catalog. Try name or brand instead",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 608
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add the ingredient list. Take a label photo or type it",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 660
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add it by hand. Always works, even offline",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 712
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Report missing product",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 772
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8434/shelf/no-match?barcode=4006381333931",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

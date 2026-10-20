@@ -1,0 +1,261 @@
+{
+  "bodyText": "TUESDAY, OCTOBER 20 Good morning. Nothing is scheduled this morning. Morning routine 0 of 0 ✕ ☀ Your morning routine has no SPF It’s the highest-impact step you could add. Especially toward your goals. See why Not now ✦ A few honest suggestions 3 things we’d gently suggest › Tonight · Cycling night 1 Retinoid night. Keep it simple › Shelf 1 product ＋ Add All Actives Expiring Everything on your shelf, ordered by supported tracked dates. FIRST ROUTINE Your routine is ready to draft. Even one product can start an honest AM/PM draft. Missing steps stay visible, not invented. Build my routine Owner B manual moisturizer Retinol / retinoid serum · opened Oct · Date unknown Date unknown Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Dismiss SPF recommendation",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 345,
+      "y": 223
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "See why",
+      "role": "button",
+      "selected": false,
+      "width": 99.86,
+      "x": 41,
+      "y": 313
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Not now",
+      "role": "button",
+      "selected": false,
+      "width": 94,
+      "x": 156.86,
+      "y": 313
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": false,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 394
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": false,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 496
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 322.94,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Build my routine",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 317
+    },
+    {
+      "disabled": false,
+      "height": 90,
+      "hitOk": true,
+      "label": "Owner B manual moisturizer, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 348,
+      "x": 41,
+      "y": 423
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Add a product",
+      "role": "button",
+      "selected": false,
+      "width": 159.13,
+      "x": 135.44,
+      "y": 554
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 25,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 120,
+      "y": 849
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": true,
+      "width": 95.36,
+      "x": 214.82,
+      "y": 848.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 95,
+      "x": 310,
+      "y": 849
+    }
+  ],
+  "issueCount": 5,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Dismiss SPF recommendation",
+        "role": "button",
+        "selected": false,
+        "width": 48,
+        "x": 345,
+        "y": 223
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "See why",
+        "role": "button",
+        "selected": false,
+        "width": 99.86,
+        "x": 41,
+        "y": 313
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Not now",
+        "role": "button",
+        "selected": false,
+        "width": 94,
+        "x": 156.86,
+        "y": 313
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 86,
+        "hitOk": false,
+        "label": "See your recommendations",
+        "role": "button",
+        "selected": false,
+        "width": 382,
+        "x": 24,
+        "y": 394
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 88,
+        "hitOk": false,
+        "label": "See your cycle week ahead",
+        "role": "button",
+        "selected": false,
+        "width": 382,
+        "x": 24,
+        "y": 496
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8432/shelf",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

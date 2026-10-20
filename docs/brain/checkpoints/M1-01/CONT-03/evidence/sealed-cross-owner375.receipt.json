@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_EVIDENCE_DIR=docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-cross-owner375 ONBOARDING_E2E_PORT=8431 ONBOARDING_E2E_DEBUG_PORT=9531 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 node scripts/e2e/onboarding-first-session.mjs --cross-owner",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "d2916d79c2c04988649a5a8ed631baf67ed2851c",
+  "source_tree": "fa2d6e5697c0a89141bed17f47fd6e52964907d3",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-cross-owner375.txt",
+    "sha256": "c1d3d4ea4eff2a71019a8ffd2c2f33984c3e196b8e3a18ceb35bb9a7d0fb1f1f"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T19:15:44.594233+00:00",
+  "finished_at_utc": "2026-10-20T19:17:04.449799+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_EVIDENCE_DIR": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-cross-owner375",
+    "ONBOARDING_E2E_PORT": "8431",
+    "ONBOARDING_E2E_DEBUG_PORT": "9531",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--cross-owner"
+  ]
+}
