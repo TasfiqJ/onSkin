@@ -1,0 +1,17 @@
+{
+  "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run launch:execution-baseline:check",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "status": "PASS",
+  "exit_code": 0,
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/execution-baseline.log",
+    "sha256": "11edb10590113d2dcd7daf498d65409f6487277b119c8a83ee5f03d9ea70f014"
+  },
+  "counts": null
+}

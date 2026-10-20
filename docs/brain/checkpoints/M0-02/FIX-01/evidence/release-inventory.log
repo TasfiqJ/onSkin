@@ -1,0 +1,87 @@
+{
+  "name": "release-inventory",
+  "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test \"--test-name-pattern=central downstream inventory\" scripts/launch/governed-evidence-chain.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Node20.20.2",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "exit_code": 0,
+  "status": "PASS",
+  "expected_exit": 0,
+  "seconds": 0.175
+}
+TAP version 13
+# Subtest: canonical ledger builder/parser sorts and freezes exact evidence bindings
+ok 1 - canonical ledger builder/parser sorts and freezes exact evidence bindings # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.3635
+  ...
+# Subtest: central downstream inventory exactly covers every tracked docs generated output
+ok 2 - central downstream inventory exactly covers every tracked docs generated output
+  ---
+  duration_ms: 36.5787
+  ...
+# Subtest: rejects unsafe, colliding, wrongly classified, and duplicate-key ledger input
+ok 3 - rejects unsafe, colliding, wrongly classified, and duplicate-key ledger input # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1142
+  ...
+# Subtest: accepts S -> E and a strictly linear exact-allowlist generated tail
+ok 4 - accepts S -> E and a strictly linear exact-allowlist generated tail # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0827
+  ...
+# Subtest: validates an upstream packet at an exact R prefix when the fresh audit is at F
+ok 5 - validates an upstream packet at an exact R prefix when the fresh audit is at F # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0827
+  ...
+# Subtest: rejects adversarial lifecycle omissions, reversals, source edits, and forged S policy
+ok 6 - rejects adversarial lifecycle omissions, reversals, source edits, and forged S policy # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0679
+  ...
+# Subtest: binds a generated JSON/Markdown pair to its unique publication commit
+ok 7 - binds a generated JSON/Markdown pair to its unique publication commit # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0785
+  ...
+# Subtest: retained governed evidence bindings reject same-byte identity replacement
+ok 8 - retained governed evidence bindings reject same-byte identity replacement # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0945
+  ...
+# Subtest: rejects split, widened, repeated, and missing governed publication units
+ok 9 - rejects split, widened, repeated, and missing governed publication units # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1841
+  ...
+# Subtest: rejects S -> E path/hash/mode violations and evidence mutation after E
+ok 10 - rejects S -> E path/hash/mode violations and evidence mutation after E # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.1563
+  ...
+# Subtest: rejects merge topology while ignoring Git replace refs
+ok 11 - rejects merge topology while ignoring Git replace refs # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0977
+  ...
+# Subtest: rejects bounded-size, hardlink, dirty/index, and mid-audit race violations
+ok 12 - rejects bounded-size, hardlink, dirty/index, and mid-audit race violations # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0784
+  ...
+# Subtest: ignores inherited repository/config poisoning and rejects malformed arguments
+ok 13 - ignores inherited repository/config poisoning and rejects malformed arguments # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.0738
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 12
+# todo 0
+# duration_ms 128.8334

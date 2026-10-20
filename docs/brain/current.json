@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "task_id": "M0-02",
-  "submission_status": "IN_PROGRESS",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED",
   "approved_state_version": "brain-m0-02-review01-fix-required-fix01-issued-4",
   "accepted_tasks": [
     "M0-01"
@@ -55,6 +55,21 @@
       "artifact": "docs/brain/reviews/M0-02/REVIEW-01/AUDIT_M0-02_REVIEW01.md",
       "sha256": "d24e91fb6c719a2c46c9d7044a9e485bfa3f5d82ac3b2cfd69d6857134325dda",
       "detail": "Brain verdict FIX_REQUIRED; four findings. Prior execution claims remain in preserved legacy-current.v2.json and original report; no new PASS inferred."
+    },
+    {
+      "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.12.14",
+      "source_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "source_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "FIX01-MEASURED-EXECUTION",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.receipt.json",
+      "sha256": "54976a61fb1731f3346abd1492685f3ff88bd812b2784a80dbe4452c31aee0b8"
     }
   ],
   "iteration": "FIX-01",

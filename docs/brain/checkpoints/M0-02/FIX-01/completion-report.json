@@ -1,0 +1,857 @@
+{
+  "schema_version": 3,
+  "task_id": "M0-02",
+  "iteration": "FIX-01",
+  "last_brain_verdict": "FIX_REQUIRED",
+  "branch": "stage/m0-baseline",
+  "base_commit": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "repair_base": {
+    "commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+    "tree": "e18f73771b5f440613a7e7cd339889949a8ae72a"
+  },
+  "original_stage_base": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "observed_main": {
+    "commit": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653"
+  },
+  "implementation_snapshot": {
+    "commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+    "tree": "bd89efae1701642e3cb14f731346be173b6614de"
+  },
+  "delivery": {
+    "ref": "refs/heads/stage/m0-baseline",
+    "resolve_via": "git ls-remote origin refs/heads/stage/m0-baseline",
+    "last_observed_pushed_snapshot": {
+      "commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "tree": "bd89efae1701642e3cb14f731346be173b6614de"
+    },
+    "status": "PUSHED_STAGE_BRANCH"
+  },
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED",
+  "accepted_by_brain": false,
+  "admission": "NONE",
+  "summary": "Repair iteration FIX-01: strict execution evidence, CI/Git bindings, independently anchored task issuance and mirror preflight containment; resubmitted for independent review.",
+  "decisions": [
+    "Preserved original report/inputs/state; installed immutable REVIEW-01 overlay and archived legacy current v2 bytes.",
+    "Current report/state v3 reject unsupported execution PASS and bool/string exits; receipts bind metadata, source and output hashes.",
+    "CI tuples bind to listed structured observations; real pending remains pending. Existing Git identities/ancestry verified with no lazy network fetch. Offline consistency is not provider authenticity.",
+    "Production task issuance is independent of mutable specs; original M0-02 context rebuild remains identical.",
+    "Mirror targets preflight before effects; real dangling/existing Windows junction and hard-link regressions passed. File-symlink privilege skips remain open.",
+    "No runtime/protected controls/spend/main promotion or new task; last Brain verdict remains FIX_REQUIRED."
+  ],
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": 36,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py39.receipt.json",
+      "limitations": "36 considered,34 passed,2 Windows file-symlink skips; actual junction/hard-link cases passed. Synthetic fixtures do not authenticate real provider/owner work."
+    },
+    {
+      "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.12.14",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": 36,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.receipt.json",
+      "limitations": "36 considered,34 passed,2 Windows file-symlink skips; actual junction/hard-link cases passed. Synthetic fixtures do not authenticate real provider/owner work."
+    },
+    {
+      "command": "python -B scripts/brain/brain.py validate",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-validate.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "python -B scripts/brain/brain.py mirrors",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-generate.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "python -B scripts/brain/brain.py mirrors --check",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-check.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "python -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-fix01-measurements\\FIX01-measured-a.zip",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-a.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-fix01-measurements\\FIX01-measured-b.zip",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.12.14",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-b.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "python -B scripts/brain/brain.py verify-pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-fix01-measurements\\FIX01-measured-a.zip",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-verify.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "python -B scripts/brain/brain.py report docs/brain/checkpoints/M0-02/completion-report.json",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Python3.9.13",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "FAIL",
+      "exit_code": 1,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/historical-report-refusal.receipt.json",
+      "limitations": "Expected raw exit1: original v2 report preserved but no longer accepted as current. Negative assertion succeeded; exit is not relabeled zero."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase2/canonical-postgres-pull-retry.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": 6,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/canonical-regression.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": 27,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/workflow-contract.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase9/security-advisory-exceptions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": 7,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/advisory-contract.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test \"--test-name-pattern=central downstream inventory\" scripts/launch/governed-evidence-chain.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": 13,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/release-inventory.receipt.json",
+      "limitations": "1 selected test passed,12 intentionally filtered; no full release acceptance."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run docs:source-packet-audit:check",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/source-packet.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run launch:execution-baseline:check",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/execution-baseline.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run typecheck",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/typecheck.receipt.json",
+      "limitations": "Existing Turbo caches replayed; command exit is observed, no fresh app test count claimed."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run lint",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/lint.receipt.json",
+      "limitations": "Existing Turbo caches replayed; command exit is observed, no fresh app test count claimed."
+    },
+    {
+      "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run test",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+      "snapshot_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "snapshot_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/test.receipt.json",
+      "limitations": "Existing Turbo caches replayed; command exit is observed, no fresh app test count claimed."
+    },
+    {
+      "command": "git diff --exit-code da9fa04759164b402ee3b2abd1c80e14261614fb 3daa1f38007f2a512b9af0f4132a8f0b2feb6720 -- apps packages supabase .github package.json package-lock.json scripts/phase2 scripts/phase9 docs/phase-9 docs/v2/source-inputs docs/brain/state docs/brain/checkpoints/M0-02/completion-report.json docs/brain/checkpoints/M0-02/evidence docs/brain/checkpoints/M0-02/REVIEW_EVIDENCE.md",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Git",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/protected-preservation.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "git diff --name-only da9fa04759164b402ee3b2abd1c80e14261614fb 3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Git",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/repair-scope.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "git diff --name-only b9a6b093f392ced340c156f2e7dcaefc72ed58e1 3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Git",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/task-scope.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "git diff --name-only origin/main 3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Git",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/cumulative-scope.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "git -c core.whitespace=cr-at-eol diff --check da9fa04759164b402ee3b2abd1c80e14261614fb 3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "Windows x64; Git",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "PASS",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "count": null,
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/authored-whitespace.receipt.json",
+      "limitations": "Source-only execution; no baseline or external gate admission."
+    },
+    {
+      "command": "Full local database reset",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "integration",
+      "count": null,
+      "artifact": null,
+      "limitations": "NOT_RUN: non-runtime repair; unchanged CI acquisition blocker remains separate."
+    },
+    {
+      "command": "Physical/device and UI E2E",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "physical_device_surface",
+      "count": null,
+      "artifact": null,
+      "limitations": "NOT_RUN: no UI change. No real-device/build/signing claim."
+    },
+    {
+      "command": "Real file-symlink cases on Windows",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "source",
+      "count": null,
+      "artifact": null,
+      "limitations": "NOT_RUN: WinError1314; real junction/hard-link tests executed. Supplied Linux function-slice proof is attributed historical evidence, not a new Linux CLI run."
+    },
+    {
+      "command": "Qualified review",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "qualified_review",
+      "count": null,
+      "artifact": null,
+      "limitations": "NOT_RUN: no expert signoff supplied."
+    },
+    {
+      "command": "Live provider/hosted replay",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "live_provider",
+      "count": null,
+      "artifact": null,
+      "limitations": "NOT_RUN: no protected/provider mutation or authentication."
+    },
+    {
+      "command": "Research/J05 measurement",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "research",
+      "count": null,
+      "artifact": null,
+      "limitations": "NOT_RUN: no research request or implementation authorized."
+    },
+    {
+      "command": "Commercial admission",
+      "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+      "environment": "NOT_RUN",
+      "snapshot_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "snapshot_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+      "status": "BLOCKED",
+      "exit_code": null,
+      "evidence_class": "UNKNOWN",
+      "axis": "commercial",
+      "count": null,
+      "artifact": null,
+      "limitations": "BLOCKED: NO-GO and zero incremental vendor spend."
+    }
+  ],
+  "ci": [
+    {
+      "head_commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39371600772,
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Source-specific observation at its recorded read time; historical/pending results do not establish another head pass.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39371600769,
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Source-specific observation at its recorded read time; historical/pending results do not establish another head pass.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39371600842,
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Source-specific observation at its recorded read time; historical/pending results do not establish another head pass.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39375107087,
+      "status": "completed",
+      "conclusion": "cancelled",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Source-specific observation at its recorded read time; historical/pending results do not establish another head pass.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39375106927,
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Source-specific observation at its recorded read time; historical/pending results do not establish another head pass.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39375106934,
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Source-specific observation at its recorded read time; historical/pending results do not establish another head pass.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39375482113,
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Latest exact measured-head observation; in-progress workflow is pending, not PASS. Static failure and skipped live checks retained separately.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation-latest.json"
+    },
+    {
+      "head_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39375482099,
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Latest exact measured-head observation; in-progress workflow is pending, not PASS. Static failure and skipped live checks retained separately.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation-latest.json"
+    },
+    {
+      "head_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39375482217,
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "scope": "Latest exact measured-head observation; in-progress workflow is pending, not PASS. Static failure and skipped live checks retained separately.",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "artifact": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation-latest.json"
+    }
+  ],
+  "evidence_artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/advisory-contract.log",
+      "sha256": "cc1de1828883c169ad765598e77554a75af3c32b9e32824c6de4f3b8b82b89b7",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/advisory-contract.receipt.json",
+      "sha256": "360607a9aac40b71fc947312f86b630213736c1e001753e5b60c1118a0edf5d7",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/authored-whitespace.log",
+      "sha256": "ac213da076e6f3d6e88f9c1c47df5ddd582abf7d71c9c535c538dec6bbc76833",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/authored-whitespace.receipt.json",
+      "sha256": "06c6c19427803d8d22d9f96767ce9f91ee22046fdea0a3c1a89d5409dbd2fe86",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/base-reproductions.json",
+      "sha256": "0e209334c41ea92a23fbebf2f74116076a5d6d9a82de896c103403ed4326489c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/canonical-regression.log",
+      "sha256": "c6956964433869aed1913f5593d2dd8104ac039ace93149097335d2eeeb98019",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/canonical-regression.receipt.json",
+      "sha256": "5b701a5f91c4804965b3924ffbcc8f9fb4a146b65b0942880b680deefe4f2c1e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation-latest.json",
+      "sha256": "53c26dccbdf97166970775a62a30d646fc3dd1bd8cfabf465bb21bdba58c0c0e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json",
+      "sha256": "68d98e22f9182c941b4b9b71874bd2f33fb0f4ef0bebb09bf0126150c558b0a1",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/cumulative-scope.log",
+      "sha256": "247980b2d908cdf4df2cbd599775b14c1fd403efefc12ba150e3d76be40067dc",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/cumulative-scope.receipt.json",
+      "sha256": "998c5b4502276faba68c6015cfa72c9fc11477f335db0df628bc73e20c62b08c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/execution-baseline.log",
+      "sha256": "11edb10590113d2dcd7daf498d65409f6487277b119c8a83ee5f03d9ea70f014",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/execution-baseline.receipt.json",
+      "sha256": "856716c0d9c1eddf548aa6a15e5f7ffa17bff8db98871ae40d0cab99cc701d91",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/historical-report-refusal.log",
+      "sha256": "cf335a606b9c6f912c29efb176a9eac5a93e7507b3cbdaae5d1366b0aaf0e93d",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/historical-report-refusal.receipt.json",
+      "sha256": "acee80fb9b6d52af30bdf63bb6dc4ac8776baf64e6fa61a5207ab612fec4944e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/lint.log",
+      "sha256": "c7c91131994267f449797513a151dff4b32e25f75e5e96f387f5c8ac0ffe887f",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/lint.receipt.json",
+      "sha256": "b3c249a0710228bf80e4cceef8b45a736a83a003a2d1e8f39f3b3c3e7c709585",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.log",
+      "sha256": "843ecc008b98908e025c943e1ced3a89444135e32090a5ab3db14e5d8bb7caee",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.receipt.json",
+      "sha256": "54976a61fb1731f3346abd1492685f3ff88bd812b2784a80dbe4452c31aee0b8",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py39.log",
+      "sha256": "3d6ad5a5796c22cc6052026309c2301a4567dfcecd6acc4d902b9cc3b6ef2989",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py39.receipt.json",
+      "sha256": "d7396d0c23f4c173bc9fb06850a3020649a2a54da5988665f67c872d539844fb",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-check.log",
+      "sha256": "ae25b4e7ac59fa5eb62a65435160a46068eb344f7113f535d66f10c4a382472c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-check.receipt.json",
+      "sha256": "a22463c664815ab6cebe784b4e88eb74b8f3001ca9b1207bb4ca46cf610a842e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-generate.log",
+      "sha256": "7711a8c58ab7d792699ca78b531a2a7f8037e1a9e787ad4d4c5ab79aa9dbfd11",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-generate.receipt.json",
+      "sha256": "5d3eeead81eb4e8ea4b5a447f23e7c83521b720ddb8101fed2ebbc3a28e3f162",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-a.log",
+      "sha256": "2a9a390e7bbdf481d6b3822c485cd24870d45efb539a061c08b4e41a3cf1886a",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-a.receipt.json",
+      "sha256": "94a4ba7374deca174ac18873ba55af044f194ec0916db69d78fb17546c8939f6",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-b.log",
+      "sha256": "84a6b5709486f5c03f23cda64951c90fe0384d94143b17bb5c227c987be0bcd2",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-b.receipt.json",
+      "sha256": "a3057863337a8a3436d7679edee61a8e825ea61f86e783249643c9bfd7826176",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-validate.log",
+      "sha256": "d5bb91c760b75dac8770fa87b065cd5ee655a69e174e5d8361c77731b30b29b6",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-validate.receipt.json",
+      "sha256": "12e33976b8ddacf01f569bf6fc56614c24027fa5cb00da0c07d9b4facaf54751",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-verify.log",
+      "sha256": "c559bfe15a5bee34408d33343699f741d5e7ed723028e4b72c4f519301089157",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-verify.receipt.json",
+      "sha256": "4e1a6c10a846f3d8bf90cfa441e0c4dfec7445ff3d1f66c7a44b5ab199ada1ea",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/protected-preservation.log",
+      "sha256": "dc36485e9364dda3c799ddbcd6c1e3dea8673f77314afa914b84ba3ccca3334a",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/protected-preservation.receipt.json",
+      "sha256": "0d38ade6868d0348959804703b1abd41aa3ded1406f85ac6f027d7cbddb6c7e0",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/release-inventory.log",
+      "sha256": "1a7e536987206333732bccb5f8526eaa6cf03f8040d97bcc9db8fcb87e1aec8f",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/release-inventory.receipt.json",
+      "sha256": "486f96ee33d7d3c9a6b76ef587d421ed348b5dbceb21e86c54d7511f29949e9d",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/repair-scope.log",
+      "sha256": "b55148f7b1a021af6eb3301a4b44d318173031c89b4621d4049f6f078aea0d87",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/repair-scope.receipt.json",
+      "sha256": "7b70fe1b9c09188ca34d20af5602c8ef9649574f5fd5c14d9b6e4ff9c92326f2",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/source-packet.log",
+      "sha256": "99468956731705dfe2ec553774d2ab8f4a2f63d74831f8675d96cc60ca72f13e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/source-packet.receipt.json",
+      "sha256": "661a2039dc823b82b1829fd87b172ed2f517c6290c1660dbd0a28db7fe67405b",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/task-scope.log",
+      "sha256": "0e88a14b8e19ee22a39a90b05556f740df0b76e5527194cef9283f34cee69738",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/task-scope.receipt.json",
+      "sha256": "9267e9bb3a6da0196ad9f2adce246777776cc59cf1f76cfd13868557cea2344c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/test.log",
+      "sha256": "7fff75552e6f51361ce090c134fbacb9b888724ebe47a59ee5cb6fdbc50ecc9d",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/test.receipt.json",
+      "sha256": "ebd31afd5c4b14e4da348b528000eb65230955c519adcf70fe51fc3f837abf0e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/typecheck.log",
+      "sha256": "6e3a40d0d6717767f2b3f536e54aeacfb27550b5e263f117c756d2d46a947696",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/typecheck.receipt.json",
+      "sha256": "127256fa8056b40738955e80c6ff36b956d38b19b007b21612fbe547df890f89",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/workflow-contract.log",
+      "sha256": "d383ca23cb36b69d1da50ea7302d4735e5894de5d78efe18ca57a4969cfc4492",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/workflow-contract.receipt.json",
+      "sha256": "4a5312b796c11faaaa0e4fc0bc508416d1054a0cb0ffde86d9cf58e0bb34200a",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/REVIEW_EVIDENCE.md",
+      "sha256": "c7d81c1875514fa7ad6be877f9469f6d09f3ea2da241728080ec907326ce29b4",
+      "scope": "Repair narrative/provenance; historical claims not upgraded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/INTAKE.json",
+      "sha256": "d4f468be6fc298d63b7bac6d24fbdff8ebaa908aee82f5ddf56b5c4c263fe0c5",
+      "scope": "Repair narrative/provenance; historical claims not upgraded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/legacy-current.v2.json",
+      "sha256": "f969c92ea47d1aa97f9d1ae9b29e0defd71f75468d5ba12f9f0ec6565334d8fb",
+      "scope": "Repair narrative/provenance; historical claims not upgraded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/index.json",
+      "sha256": "2f59e0c296a85e002f2c3eb6ddd094628f81c800d3a6e604f45b02f8202a82f0",
+      "scope": "Artifact index"
+    }
+  ],
+  "blockers": [
+    "Last independent Brain verdict FIX_REQUIRED; only Brain may close F1-F4 or accept this resubmission.",
+    "BLK-01/02/03/08/09 and protected Security/database/owner-custody/OSV/date restrictions remain open. Canonical ECR again failed at first repair source before SQL; final CI outcomes remain source-specific.",
+    "Proposal expiry remains2026-10-21T00:00:00Z, never mechanically renewed. All device/provider/expert/research/commercial/public gates unchanged.",
+    "File symbolic-link tests unavailable on Windows; real junction/hard-link coverage ran. No full Linux governance run claimed.",
+    "Final report-only delivery HEAD and its new CI are distinct from measured source; resolve live branch."
+  ],
+  "rollback": "Normal separately reviewed stage correction preserving audit/history; no runtime/data rollback, force push, reset or main promotion.",
+  "context_health": {
+    "estimate": "medium",
+    "compaction_observed": false,
+    "accepted_tasks_in_instance": 0,
+    "handoff_needed": true,
+    "notes": "Same chat,one writer,first repair iteration. Stop for independent Brain review; no next task issued."
+  },
+  "handoff_file": "ONSKIN_BRAIN_HANDOFF.txt"
+}
