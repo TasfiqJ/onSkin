@@ -1,0 +1,82 @@
+{
+  "task_id": "M1-01",
+  "review": "REVIEW-02",
+  "decision": "FIX_REQUIRED",
+  "findings": [
+    {
+      "id": "M1-WEB-01",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_REVIEWED_WEB390_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Metro app-linked dependency visibility and unconfigured cold lifecycle corrections pass the independent actual390x844 retained flow; no encryption weakening. Native remains unrun.",
+      "previous_description": "Valid age submit fails in real web app at encrypted key creation: randomBytes export is not a function. Baseline reaches consent URL but independently fails into paused health shell. Complete both boundaries without weakening privacy or treating Node tests as Metro proof.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-RIGHTS-01",
+      "severity": "HIGH",
+      "status": "IMPLEMENTED_SOURCE_AND_LOCAL_WEB390_VERIFIED",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Isolated verified-owner age re-verification rights shell, no health children or reconsent, local confirmed withdrawal and cancellation path observed. Native export/billing/provider claims remain unverified; sign-out usability is separately blocked.",
+      "previous_description": "AgePolicyGate admits only welcome/age without receipt and its unavailable UI only offers retry; existing account/data-rights shell is nested inside that gate. Legacy16+ re-verification needs safe rights access without health processing or broad protected route mounting.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-MATRIX-01",
+      "severity": "HIGH",
+      "status": "OPEN_PARTIAL",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Substantial source coverage225 and actual retained390 flow pass; Codex other sizes/guest upgrade/deletion fixtures remain attributed. Actual sign-out failed-cleanup retry/A-to-B closure is not complete.",
+      "previous_description": "Integrated owner switch/sign-out/guest upgrade, withdrawal/deletion pending/retry/non-resurrection, and manual Shelf offline/CRUD/corruption matrix remains unfinished.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-GOV-01",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Real CLI regressions now reject empty-evidence PASS, wrong measurement order and dirty/untracked/committed runtime drift. Suite42 passes plus2 genuine platform skips; no new governance rewrite warranted.",
+      "previous_description": "M1 report profile regressed previously established evidence requirements: accepts empty evidence with PASS, tests newer than declared measurement, and unmeasured source drift. Extend real-CLI tests; preserve M0 guards.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-CI-WORKLIST-01",
+      "severity": "MEDIUM",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Unchanged generator strict check passes;14 item non-fingerprint definitions unchanged,413 to414 source references; current repository CI source job succeeds. This is not catalog/Security acceptance.",
+      "previous_description": "Derived Phase4 worklist fingerprints stale after Shelf source changes. Narrow generator-only refresh of two derived files authorized, without changing any gate/policy/owner acceptance.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-SIGNOUT-02",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Injected sign-out cleanup refusal leaves correct closed account state but uncaught EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE triggers Expo overlay and blocks Try again. Fix both compact/regular You callers and retry boundary error ownership, while preserving core fail-closed assertions.",
+      "source_pointers": [
+        "apps/mobile/src/app/(tabs)/you.tsx:678,706",
+        "apps/mobile/src/lib/auth/SessionBoundaryGate.tsx:77",
+        "apps/mobile/src/lib/auth/AuthProvider.tsx:2298-2310"
+      ],
+      "evidence": "REVIEW_OBSERVATIONS.json / BRAIN-WEB-ISOLATION-390"
+    },
+    {
+      "id": "M1-HARNESS-02",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "evidence_class": "INDEPENDENTLY_OBSERVED_SOURCE_AND_REPRODUCED_SURFACE",
+      "description": "Primary account-isolation mode retains old age/route expectations; latest partly repaired evidence runner is a copied script with workstation-specific root. Consolidate a portable maintained runner; assert actual visible recovery/terminal state and uncaught-error absence, not transient text or force-clicking an occluded button. Preserve historical failed evidence.",
+      "evidence": "REPRODUCERS.md"
+    }
+  ],
+  "head": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+  "tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+  "iteration_reviewed": "CONT-01",
+  "next_iteration": "CONT-02"
+}

@@ -10,18 +10,26 @@ VERSION = 'brain-m0-02-accepted-m1-01-issued-5'
 CONT_INPUT = 'docs/brain/checkpoints/M1-01/CONT-01/inputs'
 CONT_REVIEW = 'docs/brain/reviews/M1-01/REVIEW-01'
 CONT_DIGEST = '18555ec3257fb4c60fdf0f6de47ccc62403b39cf17d9d838cafd8f19b81585fa'
+CONT02_INPUT = 'docs/brain/checkpoints/M1-01/CONT-02/inputs'
+CONT02_REVIEW = 'docs/brain/reviews/M1-01/REVIEW-02'
+CONT02_DIGEST = '4a5812eaac01c099c831a5f445898c1bd101d6a754aac497e67dfe50d966fcd1'
+CONT02_BASE = '6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a'
 
 
 def validate_continuation(root):
-    raw = brain.read(root, CONT_INPUT + '/TASK_MANIFEST.json')
-    brain.require(brain.digest(raw) == CONT_DIGEST, 'Continuation independently anchored manifest differs')
-    manifest = brain.decode(raw)
-    brain.require(manifest['task_id'] == 'M1-01' and manifest['iteration'] == 'CONT-01', 'Wrong continuation')
-    for row in manifest['files']:
-        blob = brain.read(root, CONT_INPUT + '/' + row['path'])
-        brain.require(len(blob) == row['bytes'] and brain.digest(blob) == row['sha256'], 'Continuation input changed')
-        if row['path'].startswith('BRAIN_REVIEW/'):
-            brain.require(blob == brain.read(root, CONT_REVIEW + '/' + row['path'].split('/', 1)[1]), 'Continuation review changed')
+    for inputs, review, digest, iteration in [
+        (CONT_INPUT, CONT_REVIEW, CONT_DIGEST, 'CONT-01'),
+        (CONT02_INPUT, CONT02_REVIEW, CONT02_DIGEST, 'CONT-02'),
+    ]:
+        raw = brain.read(root, inputs + '/TASK_MANIFEST.json')
+        brain.require(brain.digest(raw) == digest, 'Continuation independently anchored manifest differs')
+        manifest = brain.decode(raw)
+        brain.require(manifest['task_id'] == 'M1-01' and manifest['iteration'] == iteration, 'Wrong continuation')
+        for row in manifest['files']:
+            blob = brain.read(root, inputs + '/' + row['path'])
+            brain.require(len(blob) == row['bytes'] and brain.digest(blob) == row['sha256'], 'Continuation input changed')
+            if row['path'].startswith('BRAIN_REVIEW/'):
+                brain.require(blob == brain.read(root, review + '/' + row['path'].split('/', 1)[1]), 'Continuation review changed')
 
 
 def validate(root):
@@ -45,7 +53,7 @@ def validate(root):
     brain.require(set(current) == {'schema_version', 'task_id', 'branch', 'submission_status',
                   'approved_state_version', 'accepted_tasks', 'review_overlay',
                   'protected_source_go', 'main_promotion_authorized', 'incremental_spend_usd',
-                  'active_writers', 'next_task', 'research_requests', 'proposal_expires_utc'},
+                  'active_writers', 'next_task', 'research_requests', 'proposal_expires_utc', 'continuation'},
                   'Unknown/missing active field')
     brain.require(type(current['schema_version']) is int and current['schema_version'] == 1,
                   'Invalid active schema')
@@ -55,6 +63,11 @@ def validate(root):
                   'Unissued active task/profile')
     brain.require(current['accepted_tasks'] == approved['accepted_tasks'] == ['M0-01', 'M0-02'],
                   'False acceptance')
+    brain.require(current['continuation'] == {
+        'iteration': 'CONT-02', 'input_manifest_sha256': CONT02_DIGEST,
+        'review_overlay': CONT02_REVIEW, 'base_commit': CONT02_BASE,
+        'state_version': 'brain-m1-01-partial-reviewed-cont02-issued-7',
+    }, 'Unissued continuation overlay')
     brain.require(current['submission_status'] in ['IN_PROGRESS', 'PARTIAL', 'BLOCKED',
                   'SUBMITTED_REVIEW_REQUIRED'], 'Codex cannot accept M1')
     brain.require(current['protected_source_go'] is False and
@@ -75,13 +88,17 @@ def report(root, name):
     fields = {'schema_version', 'task_id', 'branch', 'status', 'measured',
                   'delivery_ref', 'executions', 'artifacts', 'scope_matrix', 'axes', 'blockers',
                   'context_health'}
-    brain.require(set(value) == fields | ({'ci'} if value.get('schema_version') == 2 else set()), 'Unknown/missing M1 report field')
-    brain.require(type(value['schema_version']) is int and value['schema_version'] in [1, 2] and
+    brain.require(set(value) == fields | ({'ci'} if value.get('schema_version') in [2, 3] else set()) |
+                  ({'iteration'} if value.get('schema_version') == 3 else set()), 'Unknown/missing M1 report field')
+    brain.require(type(value['schema_version']) is int and value['schema_version'] in [1, 2, 3] and
                   value['task_id'] == 'M1-01' and value['branch'] == BRANCH and
                   value['status'] in ['PARTIAL', 'BLOCKED', 'SUBMITTED_REVIEW_REQUIRED'],
                   'Invalid M1 report authority/status')
     brain.require(value['delivery_ref'] == 'refs/heads/' + BRANCH, 'Invalid delivery ref')
     brain.git_snapshot(root, value['measured'], 'Measured M1 source')
+    if value['schema_version'] == 3:
+        brain.require(value['iteration'] == 'CONT-02' and name.startswith(CONT02_INPUT.rsplit('/', 1)[0] + '/'), 'Wrong continuation report binding')
+        brain.ancestor(root, CONT02_BASE, value['measured']['commit'], 'CONT-02 base -> measured')
     brain.ancestor(root, BASE, value['measured']['commit'], 'accepted base -> measured')
     brain.ancestor(root, value['measured']['commit'], brain.git(root, 'rev-parse', 'HEAD'),
                    'measured -> delivery')

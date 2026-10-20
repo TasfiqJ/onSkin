@@ -22,7 +22,7 @@ class M1ReportCLI(unittest.TestCase):
         alternate = self.root / '.git/objects/info/alternates'
         alternate.parent.mkdir(parents=True, exist_ok=True)
         alternate.write_bytes((common.as_posix() + '\n').encode('utf-8'))
-        self.command('update-ref', 'HEAD', 'c0d97372212fd94e168b1c598b603381ccb9f9cc')
+        self.command('update-ref', 'HEAD', m1_profile.CONT02_BASE)
         self.runtime = self.root / 'apps/mobile/src/synthetic.ts'
         self.runtime.parent.mkdir(parents=True, exist_ok=True)
         self.runtime.write_text('export const fixture = 1;\n', encoding='utf-8')

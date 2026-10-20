@@ -1,3 +1,5 @@
+Current continuation: [M1-01 CONT-02](checkpoints/M1-01/CONT-02/inputs/TASK.md), issued by [Brain REVIEW-02](reviews/M1-01/REVIEW-02/AUDIT_M1-01_REVIEW02.md). Original M1/CONT-01 records below remain historical. The active overlay binds the independently supplied CONT-02 digest; schema 3 reports bind this iteration without changing prior reports or accepting M1.
+
 # Durable Brain state and succession
 
 Current M1 continuation: [REVIEW-01](reviews/M1-01/REVIEW-01/AUDIT_M1-01_REVIEW01.md), **FIX_REQUIRED / PARTIAL**, and the independently anchored [CONT-01 input](checkpoints/M1-01/CONT-01/inputs/TASK.md). Its successor evidence/report lives under `checkpoints/M1-01/CONT-01/`; the original M1 report remains historical. Validate the new report with `python -B scripts/brain/brain.py --profile M1-01 report docs/brain/checkpoints/M1-01/CONT-01/completion-report.json`. This does not accept M1 or authorize promotion. The immutable M0 state and original M1 issuance remain intact.

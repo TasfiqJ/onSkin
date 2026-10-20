@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "reviewer": "onSkin Brain",
+  "recorded_at_utc": "2026-10-20T16:45:16.826679+00:00",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "method": "Live GitHub connector run/job reads plus full raw logs of final DB and static/OSV jobs; not a new execution by Brain.",
+  "repository": "TasfiqJ/onSkin",
+  "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+  "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+  "pr": 9,
+  "pr_draft": true,
+  "pr_merged": false,
+  "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "checkout_commit": "f932d4af9d32d5a15582ec4aae25cd1802a56019",
+  "checkout_note": "Temporary PR test merge identified in actual job checkout logs; not a persistent main merge.",
+  "runs": [
+    {
+      "name": "Quality",
+      "run_id": 39456975914,
+      "workflow_id": 312030668,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 118746291832,
+          "name": "Repository quality gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118746292267,
+          "name": "PG17 deletion rehearsals",
+          "conclusion": "success"
+        },
+        {
+          "id": 118746292329,
+          "name": "PG15 deletion rehearsals",
+          "conclusion": "success"
+        },
+        {
+          "id": 118746292501,
+          "name": "Credential-free Supabase reset/database tests",
+          "conclusion": "failure",
+          "observed_at": "2026-10-20T16:24:19Z",
+          "source_contract_tests": 171,
+          "failure": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+          "layer": "canonical ECR image preparation before startup/SQL",
+          "generated_types_artifact": "NO_FILE_FOUND_NO_UPLOAD"
+        },
+        {
+          "id": 118749235485,
+          "name": "Expo export ios",
+          "conclusion": "success"
+        },
+        {
+          "id": 118749235533,
+          "name": "Expo export android",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "run_id": 39456975959,
+      "workflow_id": 308213475,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 118746291358,
+          "name": "Static analysis and OSV",
+          "conclusion": "failure",
+          "observed_control_tests": 70,
+          "raw_refusals": [
+            "SOURCE_INVENTORY_DRIFT",
+            "braces: review is expired or dates are invalid",
+            "node-forge: review is expired or dates are invalid",
+            "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+          ],
+          "raw_refusal_timestamp": "2026-10-20T16:27:46Z",
+          "artifact_upload_id": 12281707076,
+          "artifact_zip_sha256_from_log": "c710417e2311190f41d6846b057d16d5927ec1ca91317ed36f2c3d38fdff9c36",
+          "artifact_download_verification": "NOT_PERFORMED_BY_BRAIN"
+        },
+        {
+          "id": 118746291878,
+          "name": "Secret scanning",
+          "conclusion": "success"
+        },
+        {
+          "id": 118746292205,
+          "name": "Code security gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118746294173,
+          "name": "Live Supabase adversarial evidence",
+          "conclusion": "skipped"
+        },
+        {
+          "id": 118748729150,
+          "name": "Automated source-only Security acceptance",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "name": "iOS launch contract",
+      "run_id": 39456975936,
+      "workflow_id": 312030667,
+      "status": "completed",
+      "conclusion": "success",
+      "scope": "SOURCE_CONTRACT_ONLY"
+    }
+  ],
+  "proposal_not_after": "2026-10-21T00:00:00Z",
+  "protected_source_go": false,
+  "database_replay_authorized": false,
+  "integration_authorized": false,
+  "release_authorized": false,
+  "limits": "Retained main historical CI is not relabelled. Source job/export success does not clear failed DB/Security, native/device or release gates."
+}

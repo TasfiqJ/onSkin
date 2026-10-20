@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "reviewer": "onSkin Brain",
+  "recorded_at_utc": "2026-10-20T16:45:16.826679+00:00",
+  "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+  "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+  "evidence_class": "INDEPENDENTLY_REPRODUCED",
+  "environment": "Windows x64; Python3.9.13; Node22.21.0; existing pinned dependencies; no install; browser tests used installed headless Chrome, local Expo dev, synthetic state only.",
+  "scope": {
+    "continuation_base": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+    "commits": [
+      "4abe52d61ee187aca75e5992f74fb3b6175ed587",
+      "b130b3f6bcbb7c21f29dc375c65ee2f41c228d34",
+      "5c8434bdef560c75a9fd95667cf0c5b7ca6b8781",
+      "1155128a71e0d2d91a38b85a0402f92c2970a70e",
+      "8f0980e5c1262257ef3fb0ffa4611dc2a9827d0e",
+      "cf6e3169edaee5102a95a7da7d8f67760108980f",
+      "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+      "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    ],
+    "continuation_changed_paths": 902,
+    "cumulative_main_changed_paths": 1257,
+    "review_depth": "All continuation executable/runtime/test/config diffs and relevant surrounding code; full cumulative path inventory, preserved-input and850 report-artifact Git-blob hashes; selected screenshot inspection, not every historical file/image reread.",
+    "immutable_original_m1_files_checked": 42,
+    "original_manifest_sha256": "48c0e58f00ce54910d640738debfd273a534403ec30aa980277977852f354656",
+    "immutable_cont01_files_checked": 29,
+    "cont01_manifest_sha256": "18555ec3257fb4c60fdf0f6de47ccc62403b39cf17d9d838cafd8f19b81585fa",
+    "manifest_self_inclusion_note": "Counts exclude the manifest itself; profile independently validates issuance anchors.",
+    "report_artifacts_checked": 850,
+    "hash_mismatches": [],
+    "protected_diff_paths": [],
+    "protected_paths": [
+      ".github",
+      "supabase",
+      "packages",
+      "package.json",
+      "package-lock.json",
+      "scripts/phase9",
+      "docs/phase-9",
+      "scripts/phase2",
+      "docs/hugeToDo/launch-contract.json",
+      ".gitignore"
+    ],
+    "protected_per_commit_drift": false,
+    "worklist_generator_sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+    "worklist_item_count": 14,
+    "worklist_non_fingerprint_item_fields_unchanged": true,
+    "worklist_source_references_before": 413,
+    "worklist_source_references_after": 414,
+    "worktree_after_review": "CLEAN",
+    "remote_main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "remote_m0": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+    "remote_m1": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+  },
+  "executions": [
+    {
+      "id": "BRAIN-CONT01-0",
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-0.log",
+      "raw_output_sha256": "c9921c34aa734c1117aa309a712dc8835614c09d8415b1ca5ebf4097356edd94",
+      "counts": {
+        "passed": 42,
+        "failed": 0,
+        "skipped": 2
+      },
+      "limitations": "Windows Python3.9.13; real symlink privilege skips; total44; no Linux rerun."
+    },
+    {
+      "id": "BRAIN-CONT01-1",
+      "command": "python -B scripts/brain/brain.py --profile M1-01 report docs/brain/checkpoints/M1-01/CONT-01/completion-report.json",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-1.log",
+      "raw_output_sha256": "541c8017bb7fd21a866d855fe5fda85fc611681400b90b57d960d104b9d21bff",
+      "counts": null,
+      "limitations": "Offline consistency validation, not provider authentication or Brain acceptance."
+    },
+    {
+      "id": "BRAIN-CONT01-2",
+      "command": "node node_modules/vitest/vitest.mjs run --root apps/mobile --reporter verbose src/features/onboarding/AgePolicyGate.lifecycle.test.ts src/features/onboarding/AgeReverificationRights.integration.test.ts src/features/shelf/retainedSafety.integration.test.ts src/lib/auth/AuthProvider.lifecycle.test.ts src/lib/auth/accountDeletionPublication.integration.test.ts src/features/settings/accountDeletionRecovery.test.ts src/features/settings/accountDeletionForeignOwnerPreservation.test.ts src/features/healthConsent/lifecycle.test.ts src/features/healthConsent/pendingIntent.test.ts src/features/photos/photoDeleteReplayRetirement.c08b2.test.ts src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-2.log",
+      "raw_output_sha256": "b825f51beec8a585af0a8d02d7eb2a126cd111713971eb2a5c19234aff19f1df",
+      "counts": {
+        "passed": 225,
+        "failed": 0,
+        "skipped": 0
+      },
+      "limitations": "11 test files; overlaps root suite, not225 additional distinct tests."
+    },
+    {
+      "id": "BRAIN-CONT01-3",
+      "command": "node --test scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-3.log",
+      "raw_output_sha256": "b777ecbc2efa2de238b4642a64008e69496240982c4ecfa8fbf79f7a6198eae4",
+      "counts": {
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0
+      },
+      "limitations": "2 Metro +9 native source-contract tests, not native runtime/device proof."
+    },
+    {
+      "id": "BRAIN-CONT01-4",
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-4.log",
+      "raw_output_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "counts": null,
+      "limitations": "Current generated worklist, no catalog or source-policy approval."
+    },
+    {
+      "id": "BRAIN-CONT01-5",
+      "command": "cmd.exe /d /s /c \"npm run test -- --force\"",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-5.log",
+      "raw_output_sha256": "758bdec08b93eb2f664f5ca8bad6d2423b0deafee032423890305ab3d9b1b6cb",
+      "counts": {
+        "passed": 6001,
+        "failed": 0,
+        "skipped": 0
+      },
+      "limitations": "5977 mobile in460 files +24 console in7 files;2 task executions,0 cache hits."
+    },
+    {
+      "id": "BRAIN-CONT01-6",
+      "command": "cmd.exe /d /s /c \"npm run typecheck -- --force\"",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-6.log",
+      "raw_output_sha256": "74f7b198575b650539bafb6e8453fe9792225192e68f4c40d6be852da78379a0",
+      "counts": null,
+      "limitations": "3 actual workspace executions,0 cache hits."
+    },
+    {
+      "id": "BRAIN-CONT01-7",
+      "command": "cmd.exe /d /s /c \"npm run lint -- --force\"",
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+      "raw_output_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/check-7.log",
+      "raw_output_sha256": "ec3f0563525005e7e87d7fcebd5eae35226d6b38d7213a22f30bdadc3e2303c4",
+      "counts": null,
+      "limitations": "3 task executions,0 cache hits; mobile ESLint, console TypeScript; types explicitly has no lint."
+    }
+  ],
+  "browser_executions": [
+    {
+      "id": "BRAIN-WEB-RETAINED-390",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --retained-safety",
+      "status": "PASS",
+      "exit_code": 0,
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "viewport": [
+        390,
+        844
+      ],
+      "ports": {
+        "app": 8371,
+        "debug": 9471
+      },
+      "evidence_directory": "<OWNER_TEMP>/onskin-brain-cont01-web-_3unujdb/retained390",
+      "script_sha256": "f943571c1d7fce1a77f162431af03d62d8422712498772985786e12af1e427dc",
+      "raw_output_sha256": "6b3e44379dcca91193e337536e1cbb9c190471b52b9150bdfe9501e0cc124b3a",
+      "summary_sha256": "7dfd0fc158d1e2161b3f818518c8109423b0d1345fcd4fdaf074371a360bb257",
+      "limits": "Exact retained flow only; not native, real auth/provider, qualified, commercial or release validation.375/430 remain Codex-reported runs whose artifacts were hash-checked, not Brain-replayed."
+    },
+    {
+      "id": "BRAIN-WEB-ISOLATION-390",
+      "command": "node docs/brain/checkpoints/M1-01/CONT-01/evidence/isolation-ui-harness-v3.mjs --account-isolation",
+      "status": "FAIL",
+      "exit_code": 1,
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "viewport": [
+        390,
+        844
+      ],
+      "ports": {
+        "app": 8372,
+        "debug": 9472
+      },
+      "evidence_directory": "<OWNER_TEMP>/onskin-brain-cont01-web-_3unujdb/isolation390",
+      "script_sha256": "a2712eaa3820eac48f945847b74aa7e3d4220475cb950ae007a2e1d344b680fc",
+      "raw_output_sha256": "c28137aee5044b745902383136d53a6db7682a7f81f499076e29ca238100258d",
+      "failure_json_sha256": "40f83ee256f21f818b4bb8d91970b52a9ffadb9581a7dab6e7552e033670431b",
+      "failure_png_sha256": "774af467562cbdaa341de891642a1d667cb56678b311df840e7c92a2814a6f44",
+      "error_json_sha256": "22513102f42621ade59dec7fc97628303b8c42a36a600fb2fd3c62fe3fea1e7a",
+      "observed": "DOM shows Account access paused,56px Try again control with hitOk false. Screenshot visibly shows Expo Uncaught Error overlay: EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE, AuthProvider.tsx2310, completeExplicitSignOut. Harness times out waiting for Securing account data...",
+      "limits": "Expected injected cleanup refusal is correct fail-closed behavior; uncaught propagation prevents usable recovery. This failed run does not prove final signed-out/A-to-B recovery."
+    }
+  ],
+  "visual_observations": [
+    {
+      "file": "retained390/M1-02-offline-double-save.png",
+      "sha256": "978c7a82c3141e5c864fd5949f3221caf6a0edf123961d35a447de21a84cf8ea",
+      "observed": "Shelf four products; synthetic manual moisturizer visible; interaction guidance unavailable."
+    },
+    {
+      "file": "retained390/M1-11-age-closed-withdrawal.png",
+      "sha256": "e559f77ed7088a2a32be6bebda02e4c9693c1b612f26b74370be9aece14b38a8",
+      "observed": "Local withdrawn/cleanup-complete shell, account/billing/rights actions and back-to-age control; synthetic local-only, not server deletion verification."
+    }
+  ],
+  "record_custody": {
+    "this_file": "Brain-authored normalized audit record transcribed from actual tools; not raw stdout or a cryptographic provider attestation. Raw check and browser outputs remain at named owner-device temp directories. Sanitized durable replay evidence must be linked from the next checkpoint after hash verification.",
+    "full_remote_summary_sha256": "ae9e119839476978e37818cdebecb81f4a88ecc5a2b874b9944bcc4d2075f384",
+    "full_remote_summary_bytes": 39282,
+    "remote_summary_path": "<OWNER_TEMP>/onskin-brain-m1-cont01-review-w3hldru5/review-summary.json"
+  }
+}

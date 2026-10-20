@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "issued_by": "onSkin Brain",
+  "task_id": "M1-01",
+  "iteration": "CONT-02",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+  "base_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+  "original_accepted_base": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+  "observed_main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "state_version": "brain-m1-01-partial-reviewed-cont02-issued-7",
+  "main_promotion_authorized": false,
+  "protected_source_go": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "max_input_bytes": 1048576,
+  "actual_input_bytes": 265611,
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1170,
+      "sha256": "0089b5c67896cb144f8253cc7d4bf8ef52d66c78affb5a389780af0123f880cf"
+    },
+    {
+      "path": "ACCEPTANCE_MATRIX.csv",
+      "bytes": 1926,
+      "sha256": "40b1f0efeb3288ebc3971d7d3635c20b6fbc8e33b823c3169d883dd0cae784ab"
+    },
+    {
+      "path": "BRAIN_REVIEW/ACCEPTANCE_LEDGER.json",
+      "bytes": 8503,
+      "sha256": "0be8cec0722d3ee28a3ec38fbfeb16bb88f104b36e1fc34616ded6127ef12824"
+    },
+    {
+      "path": "BRAIN_REVIEW/ADR_REGISTRY.json",
+      "bytes": 16244,
+      "sha256": "6734adf76f5d131b2da6bffec5489483605cb64a80d48da930d1a23b7aff79ec"
+    },
+    {
+      "path": "BRAIN_REVIEW/AUDIT_M1-01_REVIEW02.md",
+      "bytes": 8879,
+      "sha256": "762c560f78e5caaad89655778fa1efbcbc5617001d929253379eb1c925eab4fd"
+    },
+    {
+      "path": "BRAIN_REVIEW/BLOCKERS.json",
+      "bytes": 14778,
+      "sha256": "eff4abab7f63b09c507fe8b268a0b689edfd4b54a09cd2a6aea22b900a75a88c"
+    },
+    {
+      "path": "BRAIN_REVIEW/BRAIN_RESUME_PROMPT.txt",
+      "bytes": 1144,
+      "sha256": "a3fbf79bf1dd45fc9058f83d915d177c89db74a63a0f42f40b438c7894acca4a"
+    },
+    {
+      "path": "BRAIN_REVIEW/CI_OBSERVATIONS.json",
+      "bytes": 4080,
+      "sha256": "837abb19e0c1d9b5e88ad6b60cf9baf1714021d8079acc01483fa552b13cd57d"
+    },
+    {
+      "path": "BRAIN_REVIEW/DECISIONS_DELTA.md",
+      "bytes": 1249,
+      "sha256": "833ee049b94c12b1fc68ecd9e23a2840d5cabe54a61eb470e8f7e0ff661aa597"
+    },
+    {
+      "path": "BRAIN_REVIEW/FINDINGS.json",
+      "bytes": 5521,
+      "sha256": "675ef07a4dd79404c49b800ac5f4267c005d82e4b913dc33f24b79a12fa0f43a"
+    },
+    {
+      "path": "BRAIN_REVIEW/README.md",
+      "bytes": 623,
+      "sha256": "064a5b3a3ca922c8a19b0f23345a64b73168ae7c56e50c93d5ed098f001dba0f"
+    },
+    {
+      "path": "BRAIN_REVIEW/REPRODUCERS.md",
+      "bytes": 3837,
+      "sha256": "f180fff145fe1a4391bb8c6a6e3ce73f2216a9b04f885aedd5105bb36e473fad"
+    },
+    {
+      "path": "BRAIN_REVIEW/REVIEW_OBSERVATIONS.json",
+      "bytes": 12203,
+      "sha256": "c854b482a329a3d86197e48fea63b49e61587e9c7b81ce428502a806961a6273"
+    },
+    {
+      "path": "BRAIN_REVIEW/STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 1795,
+      "sha256": "0839fadb389f856b357abda932225f73e73a25239d6d0b301e5fbd484634f76c"
+    },
+    {
+      "path": "BRAIN_REVIEW/STATE_MANIFEST.json",
+      "bytes": 2350,
+      "sha256": "70df89bb2fbebb15df3685b2d64e36a09ff4f0ccc17f814e43aef39c836bded0"
+    },
+    {
+      "path": "BRAIN_REVIEW/brain_state.json",
+      "bytes": 42617,
+      "sha256": "060e50bddeb0626d57b642d59c421b285bb465b5d5f91425591093d7a41d4f87"
+    },
+    {
+      "path": "BRAIN_REVIEW/roadmap.json",
+      "bytes": 45885,
+      "sha256": "736e4e2cf22e938daefac08fc775f6de40e3b370d87764aa73b9950709d680a8"
+    },
+    {
+      "path": "ORIGINAL_M1-01_TASK.md",
+      "bytes": 10354,
+      "sha256": "f6f68c2b85dc089ed117f650b7452e91522dafc061f427ff2bd7485e796771ce"
+    },
+    {
+      "path": "ORIGINAL_SOURCE_ORIENTATION.md",
+      "bytes": 4022,
+      "sha256": "c4504e580efb941b5f60ce9afd745aad4abdeb87f5f13ef06921eeb794e898fa"
+    },
+    {
+      "path": "REPRODUCERS.md",
+      "bytes": 3837,
+      "sha256": "f180fff145fe1a4391bb8c6a6e3ce73f2216a9b04f885aedd5105bb36e473fad"
+    },
+    {
+      "path": "STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 1795,
+      "sha256": "0839fadb389f856b357abda932225f73e73a25239d6d0b301e5fbd484634f76c"
+    },
+    {
+      "path": "TASK.md",
+      "bytes": 9650,
+      "sha256": "331dd8b86d217709fba5b3078f9020107975fb634d2fea8c6ff18628b7cbc163"
+    },
+    {
+      "path": "contracts/ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "path": "contracts/AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "path": "contracts/CLINICAL_PLATFORM_CONTRACT.md",
+      "bytes": 9151,
+      "sha256": "d08ccb978726e8f8204ff794011a34b42a6efa8beb3d574acf2ed38d52eac47d"
+    },
+    {
+      "path": "contracts/CORE_CONTRACT.md",
+      "bytes": 11753,
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+    },
+    {
+      "path": "contracts/EXECUTIVE_BLUEPRINT.md",
+      "bytes": 15762,
+      "sha256": "409fc5d899463238c38debc819ae9b5c5fe0523f11ba7b7c32582ab26a361627"
+    },
+    {
+      "path": "contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "bytes": 9856,
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d"
+    },
+    {
+      "path": "verify_context.py",
+      "bytes": 2744,
+      "sha256": "5d0e2b50629db443bbc69997b1ae3d1b62ecb5b57b373c8be310448f55086ac8"
+    }
+  ]
+}

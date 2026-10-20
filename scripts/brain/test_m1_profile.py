@@ -54,3 +54,20 @@ class M1Profile(unittest.TestCase):
         self.git.return_value = 'main'
         with self.assertRaisesRegex(ValueError, 'Wrong M1 branch'):
             m1_profile.validate(self.root)
+
+    def test_cont02_manifest_review_and_overlay_remain_bound_to_the_external_digest(self):
+        for name, message in [
+            (m1_profile.CONT02_INPUT + '/TASK_MANIFEST.json', 'anchored manifest'),
+            (m1_profile.CONT02_REVIEW + '/brain_state.json', 'review changed'),
+        ]:
+            path = self.root / name
+            original = path.read_bytes()
+            path.write_bytes(original + b'\n')
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, message):
+                m1_profile.validate(self.root)
+            path.write_bytes(original)
+        current = brain.load(self.root, 'docs/brain/active.json')
+        current['continuation']['input_manifest_sha256'] = '0' * 64
+        self.save('docs/brain/active.json', current)
+        with self.assertRaisesRegex(ValueError, 'Unissued continuation'):
+            m1_profile.validate(self.root)

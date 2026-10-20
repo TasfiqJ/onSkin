@@ -10,11 +10,11 @@ describe('account isolation E2E fixture', () => {
   it('provides a permanent synthetic session only in the explicit development mode', () => {
     process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION = 'signout_clear_retry';
 
-    const fixture = getAccountIsolationE2EFixture(true);
+    const fixture = getAccountIsolationE2EFixture(true, 'development', false);
 
     expect(fixture).toMatchObject({
       clearDelayMs: 700,
-      failFirstClear: true,
+      clearFailures: 2,
       mode: 'signout_clear_retry',
       session: {
         user: {
@@ -25,6 +25,8 @@ describe('account isolation E2E fixture', () => {
       },
     });
     expect(getAccountIsolationE2EFixture(false)).toBeNull();
+    expect(getAccountIsolationE2EFixture(true, 'production', false)).toBeNull();
+    expect(getAccountIsolationE2EFixture(true, 'development', true)).toBeNull();
   });
 
   it('stays disabled for missing or unknown values', () => {

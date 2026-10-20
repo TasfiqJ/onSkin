@@ -1,13 +1,14 @@
 import type { Session } from '@supabase/supabase-js';
+import { env, isSupabaseConfigured } from '@/lib/env';
 
 const E2E_USER_ID = '00000000-0000-4000-8000-0000000000a1';
 const E2E_EMAIL = 'tas.account-a.e2e@example.com';
 
 export type AccountIsolationE2EFixture = {
   clearDelayMs: number;
-  failFirstClear: boolean;
+  clearFailures: number;
   mode: 'signout_clear_retry';
-  session: Session;
+  session: Session | null;
 };
 
 function isDevRuntime(): boolean {
@@ -38,14 +39,31 @@ function fixtureSession(): Session {
 
 export function getAccountIsolationE2EFixture(
   isDev = isDevRuntime(),
+  appEnvironment = env.appEnvironment,
+  supabaseConfigured = isSupabaseConfigured,
 ): AccountIsolationE2EFixture | null {
-  if (!isDev) return null;
+  if (!isDev || appEnvironment !== 'development' || supabaseConfigured) return null;
   const mode = process.env.EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION?.trim().toLowerCase();
   if (mode !== 'signout_clear_retry') return null;
   return {
     clearDelayMs: 700,
-    failFirstClear: true,
+    clearFailures: 2,
     mode,
-    session: fixtureSession(),
+    session:
+      fixtureStorage()?.getItem('onskin.e2e.isolation.signed-out') === '1'
+        ? null
+        : fixtureSession(),
   };
+}
+
+// The synthetic transport must retain its terminal logout across document
+// reloads. This state is reachable only behind the same DEV/unconfigured gate.
+function fixtureStorage() {
+  return (globalThis as { localStorage?: Pick<Storage, 'getItem' | 'setItem'> }).localStorage;
+}
+
+export function completeAccountIsolationE2ESignOut(): void {
+  if (getAccountIsolationE2EFixture()) {
+    fixtureStorage()?.setItem('onskin.e2e.isolation.signed-out', '1');
+  }
 }

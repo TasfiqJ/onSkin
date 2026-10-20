@@ -1,34 +1,8 @@
-M1-01 / CONT-01 — SAFE PARTIAL CHECKPOINT / INDEPENDENT BRAIN REVIEW REQUIRED
-Branch: stage/m1-retained-safety. PR9 remains draft/unmerged. Main and M0/PR8 untouched. Stop after the final normal stage push; no main promotion, merge or next task is authorized.
-Context: HIGH. Compaction was OBSERVED during final packet preparation. Use a fresh chat for further implementation after Brain review; do not silently continue this session.
-
-Independent continuation TASK_MANIFEST SHA256: 18555ec3257fb4c60fdf0f6de47ccc62403b39cf17d9d838cafd8f19b81585fa
-Exact successor Brain review: docs/brain/reviews/M1-01/REVIEW-01. Exact continuation inputs: docs/brain/checkpoints/M1-01/CONT-01/inputs. Original inputs/reports/refusal guards preserved.
-Report: docs/brain/checkpoints/M1-01/CONT-01/completion-report.json
-Human review guide and scope matrix: same directory README.md and TRACEABILITY.md.
-
-Measured snapshot: 034e459a5f6df4b5b597385be2cf883da9ecfda6
-Measured tree: cb99e875b03fb364979a38197d37e24ec3d9e2e4
-Broad app/governance test snapshot: 1155128a71e0d2d91a38b85a0402f92c2970a70e
-Broad tree: 6d0c1bd36cbd17821f729273b1db62e9a300acee
-App/runtime/governance bytes are identical between those commits. Later non-evidence changes were two compact-viewport harness scrolls and authorized derived worklist freshness. Every execution retains its own exact source identity; no retroactive exact-head test attribution.
-Final delivery is refs/heads/stage/m1-retained-safety. This file cannot name its containing commit; resolve actual final SHA using git ls-remote origin refs/heads/stage/m1-retained-safety and the final tool transcript. Report self-validation and stage blob verification are separate observations, not runtime acceptance.
-
-Implemented: demonstrated Metro linked dependency watch defect repaired; actual bundle loads mobile ciphers2.3 randomBytes. No algorithm, randomness or ciphertext downgrade. Native-only cleanup calls on web now prove absence and retain unexpected ciphertext. Durable current-to-current age publication consumes navigation. Verified-owner rights shell stays outside health providers, rechecks foreground/owner/epoch, and exposes no reconsent. Explicit paused withdrawal uses existing durable intent/retry/cleanup. Shelf local projection refreshes offline; encrypted/query regression reproduced persisted4/visible3 before repair; writes serialize, preserve errors/retry and fence late UI publication. M1 report profile binds inventories, execution ancestry, source drift, typed axes and actual CI observations with real CLI/Git adversarial tests.
-
-Fresh measured local results: root 6,001 passed (5,977 mobile +24 console), zero failed/skipped/cache hits; forced lint/typecheck passed. Integration 225 passed/11 files overlaps root, never added. Governance 42 passed/2 genuine Windows symlink privilege skips/0 failures (44 total); junction/hardlink executed, no Linux rerun claimed. Native source/Metro contracts11 pass, not native execution. Eight catalog/source checks passed separately. Exact commands/environment/exits/count semantics/output hashes in evidence/*.receipt.json. All are CODEX_REPORTED_EXECUTION, not independently rerun Brain evidence. Earlier failures retained.
-
-Real Expo development web/Chrome retained-flow passes at375x667,390x844,430x932: durable age, visible consent, products/Today/tabs, no-match manual Shelf, rapid duplicate save, offline edit/archive, failed write and remove retry, archive relaunch, corrupt ciphertext preserved/recovered, isolated rights/cancel deletion/local withdrawal under closed age. Guest upgrade UI passed. Pending/invalid/expired non-destructive deletion fixtures passed at375/390/430. Loaded-app network was actually disabled; Metro was re-enabled for browser reload. This is not installed-native offline cold start or real identity/provider/deletion proof.
-
-TOP OPEN CLIENT ROW: surface-isolation-v3-final at034e/390x844 reached account controls and sign-out, then the injected clear-failure closed recovery screen. Retry timed out before Securing account data; retry center hit was blocked in retained snapshots. Cause unresolved. No old Shelf names visible in closed screen, but sign-out retry and A-to-B actual surface completion are NOT established. Source integration passes do not erase this surface failure. Inspect evidence/surface-isolation-v3-final/{ERROR.json,FAILURE.json,FAILURE.png,26-account-clear-failure.json} in a fresh chat. Prior isolation startup/selector/paywall failures are preserved and separately described; billing entitlement was never fabricated.
-
-CI at measured034e (actual head/run/workflow bound in report and ci-measured-final.json):
-Quality39453849149 FAILURE overall. Repository118735411182 PASS (including strict derived worklist); PostgreSQL15/17 PASS, iOS/Android Expo exports PASS. Canonical DB118735410666 failed BEFORE SQL: H01_SQL_PROBE_FAILED, toomanyrequests: Data limit exceeded pulling the protected canonical image.
-Security39453848883 FAILURE: static118735408995 reports SOURCE_INVENTORY_DRIFT; braces/node-forge review expired or invalid dates; unreviewed mcp@1.29.0:GHSA-84m7-p3x7-pcfv. Secret/code jobs PASS; live Supabase SKIPPED; dependent source-only acceptance FAILURE. No scanner, inventory, pin, exception, date, auth or canonical-image edit is authorized.
-iOS launch contract39453848876 SUCCESS, source-only. These are measured-head observations; final evidence-only head CI may still be pending. Never borrow old green or turn skipped/pending into PASS.
-
-Authorized worklist: ONLY docs/phase-4/generated/source-worklist.json and .md regenerated with unchanged reviewed generator SHA256 b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e. All14 status/gate/owner/evidence meanings retained; all414 fingerprints equal canonical Git bytes. Strict clean check passed; Windows CRLF mismatch and correction preserved. Historical PROGRESS mirror binding restored byte-for-byte; no frozen inventory renewal.
-
-Remaining axes: physical iPhone/Keychain/process death and native camera/reminders/private files NOT_RUN/BLOCKED; real provider deletion/billing/restore/export/share and capability persistence NOT_RUN/BLOCKED; qualified legal/privacy/clinical review and clinical/commercial/release NOT_ADMITTED. Existing source mocks/fixtures are not these proofs. Independent routine/Today/photos/billing safety source checks pass but device/provider continuity remains unperformed.
-Proposal expiry stays2026-10-21T00:00:00Z. Dependencies/lockfile/shared node_modules preserved; no install or new vendor. No SQL/schema/RLS/DB types/Edge Function/workflow/protected Security or DB06/DB08/R2B change. No spend, real-data mutation, signing, TestFlight, deployment, release, next roadmap or research work.
-Submit PARTIAL for Brain review. Do not self-accept or mark M1 complete. Final normal push and remote SHA readback belong in the tool transcript; failed push would mean PUSH_BLOCKED, never force.
+M1-01 / CONT-02 - IN PROGRESS / INDEPENDENT REVIEW REQUIRED
+Branch stage/m1-retained-safety; PR9 remains draft/unmerged. No main promotion authorized.
+Baseline 6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a. Issuance digest 4a5812eaac01c099c831a5f445898c1bd101d6a754aac497e67dfe50d966fcd1.
+Inputs docs/brain/checkpoints/M1-01/CONT-02/inputs; Brain review docs/brain/reviews/M1-01/REVIEW-02 unchanged.
+Implemented expected UI rejection ownership and concurrent sign-out joining; core completion assertion preserved. Maintained runner checks repeated failure, current age-closed routes and uncaught overlays. DEV transport isolation and deletion fixtures stay closed with configured providers.
+Exploratory focused tests: 70 passed. Full source, browser matrix, governance, worklist and final CI pending. No completion or external acceptance claimed.
+Delivery identity is live refs/heads/stage/m1-retained-safety; resolve after final push.
+Context MODERATE; no compaction observed. One writer; shared dependencies unchanged.

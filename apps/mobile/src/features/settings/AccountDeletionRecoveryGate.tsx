@@ -3,6 +3,7 @@ import { Platform, ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
+import { env, isSupabaseConfigured } from '@/lib/env';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 
 import {
@@ -81,6 +82,7 @@ const COPY = {
 
 function accountDeletionRecoveryFixture(): AccountDeletionRecoveryFixture | null {
   if (Platform.OS !== 'web' || typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  if (env.appEnvironment !== 'development' || isSupabaseConfigured) return null;
   const value = process.env.EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY;
   if (
     value === 'pending_then_completed_manual' ||

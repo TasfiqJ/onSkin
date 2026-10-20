@@ -5,6 +5,11 @@ import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
+import {
+  assertNoUncaughtErrors,
+  isDisallowedLog as disallowedLog,
+} from './retained-safety-assertions.mjs';
+
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 const today = new Date().toISOString().slice(0, 10);
@@ -702,6 +707,7 @@ async function captureStep(client, name, { assertClean = true } = {}) {
   const snapshot = await evaluate(client, auditExpression());
   writeJson(`${name}.json`, snapshot);
   await screenshot(client, name);
+  assertNoUncaughtErrors(snapshot, client.events);
   if (assertClean) {
     assert(snapshot.overflowX <= 1, `${name} has horizontal overflow: ${snapshot.overflowX}px`);
     assert(
@@ -737,20 +743,6 @@ function collectProblemLogs(events) {
       method: event.method,
       params: event.params,
     }));
-}
-
-function disallowedLog(log) {
-  const serialized = JSON.stringify(log);
-  return !(
-    serialized.includes('EXPO_PUBLIC_SUPABASE') ||
-    serialized.includes('Notifications') ||
-    serialized.includes('expo-notifications') ||
-    serialized.includes('placeholder') ||
-    serialized.includes('403') ||
-    serialized.includes('supabase.co') ||
-    serialized.includes('shadow') ||
-    serialized.includes('props.pointerEvents is deprecated')
-  );
 }
 
 async function answerQuiz(client) {
@@ -1071,23 +1063,29 @@ async function run() {
     await client.send('Emulation.setTouchEmulationEnabled', { enabled: true });
 
     await client.send('Page.navigate', { url: `${baseUrl}/?e2eReset=local` });
-    await waitForText(client, 'Begin', 60_000);
-    const welcome = await captureStep(client, '01-welcome');
-
-    await client.send('Page.navigate', { url: `${baseUrl}/today` });
-    await waitForPath(client, '/onboarding/age', 30_000);
-    await waitForText(client, 'First, your', 30_000);
-    const directProtectedAgeGate = await captureStep(client, '01a-direct-protected-age-gate');
-    assert(
-      !directProtectedAgeGate.bodyText.includes('Morning routine'),
-      'A direct protected route mounted Today content before age eligibility.',
-    );
-    await client.send('Page.navigate', { url: baseUrl });
-    await waitForPath(client, '/', 30_000);
-    await waitForText(client, 'Begin', 30_000);
-
-    await scrollTextIntoView(client, 'Begin');
-    await clickByText(client, 'Begin');
+    let welcome;
+    let directProtectedAgeGate;
+    if (accountIsolationMode) {
+      // The retained signed-in fixture correctly requires current 18+ proof.
+      await waitForText(client, 'First, your', 60_000);
+      welcome = await captureStep(client, '01-retained-owner-age-closed');
+      directProtectedAgeGate = welcome;
+    } else {
+      await waitForText(client, 'Begin', 60_000);
+      welcome = await captureStep(client, '01-welcome');
+      await client.send('Page.navigate', { url: `${baseUrl}/today` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      directProtectedAgeGate = await captureStep(client, '01a-direct-protected-age-gate');
+      assert(
+        !directProtectedAgeGate.bodyText.includes('Morning routine'),
+        'Today mounted before age proof.',
+      );
+      await client.send('Page.navigate', { url: baseUrl });
+      await waitForText(client, 'Begin', 30_000);
+      await scrollTextIntoView(client, 'Begin');
+      await clickByText(client, 'Begin');
+    }
     await waitForText(client, 'First, your', 30_000);
     await captureStep(client, '02-age-empty');
     await fillByLabel(client, 'Day of birth', '01');
@@ -1449,6 +1447,7 @@ async function run() {
       await waitForPath(client, '/you', 30_000);
       await waitForText(client, 'tas.account-a.e2e@example.com', 30_000);
       await waitForText(client, 'Sign out', 30_000);
+      await scrollTextIntoView(client, 'Sign out');
       accountBeforeSignOut = await captureStep(client, '25-account-before-signout', {
         assertClean: false,
       });
@@ -1459,43 +1458,45 @@ async function run() {
       assertInteractiveControl(accountBeforeSignOut, 'Sign out');
 
       await clickByText(client, 'Sign out');
-      await waitForText(client, 'Account change paused', 30_000);
+      await waitForText(client, 'Account access paused', 30_000);
       accountBoundaryFailure = await captureStep(client, '26-account-boundary-clear-failure');
       assertPrivateNamesHidden(accountBoundaryFailure, 'Failed account boundary');
       assertInteractiveControl(accountBoundaryFailure, 'Try again');
       assert(
-        accountBoundaryFailure.bodyText.includes('The next account is still locked out.'),
-        'Account boundary failure did not explain that the next account remained locked out.',
+        accountBoundaryFailure.bodyText.includes('Your account data is still locked.'),
+        'Missing recovery explanation.',
       );
-
       await clickByText(client, 'Try again');
-      await waitForText(client, 'Securing account data...', 10_000);
-      accountBoundaryRetry = await captureStep(client, '27-account-boundary-retry');
-      assertPrivateNamesHidden(accountBoundaryRetry, 'Retrying account boundary');
-
+      // Wait beyond the injected cleanup delay, then assert the stable repeated
+      // refusal. A transient spinner is not evidence of completed recovery.
+      await delay(1_200);
+      await waitForText(client, 'Account access paused', 30_000);
+      accountBoundaryRetry = await captureStep(client, '27-account-boundary-repeated-failure');
+      assertPrivateNamesHidden(accountBoundaryRetry, 'Repeated failed account boundary');
+      assertInteractiveControl(accountBoundaryRetry, 'Try again');
+      await clickByText(client, 'Try again');
       await waitForPath(client, '/', 30_000);
       await waitForText(client, 'Begin', 30_000);
       signedOutWelcome = await captureStep(client, '28-signed-out-welcome');
       assertPrivateNamesHidden(signedOutWelcome, 'Signed-out welcome');
 
       await navigateClientSide(client, '/shelf');
-      await waitForPath(client, '/shelf', 30_000);
-      await waitForText(client, 'empty for now', 30_000);
-      signedOutShelf = await captureStep(client, '29-signed-out-shelf');
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      signedOutShelf = await captureStep(client, '29-signed-out-shelf-age-closed');
       assertPrivateNamesHidden(signedOutShelf, 'Signed-out Shelf');
-
       await navigateClientSide(client, '/today?routine=AM');
-      await waitForPath(client, '/today', 30_000);
-      await waitForText(client, 'NO ROUTINE YET', 30_000);
-      signedOutToday = await captureStep(client, '30-signed-out-today', {
-        assertClean: false,
-      });
-      assert(
-        signedOutToday.overflowX <= 1,
-        `Signed-out Today has horizontal overflow: ${signedOutToday.overflowX}px.`,
-      );
-      assertInteractiveControl(signedOutToday, 'Add products');
+      await waitForPath(client, '/onboarding/age', 30_000);
+      signedOutToday = await captureStep(client, '30-signed-out-today-age-closed');
       assertPrivateNamesHidden(signedOutToday, 'Signed-out Today');
+      await client.send('Page.reload', { ignoreCache: true });
+      await waitForText(client, 'First, your', 60_000);
+      const relaunched = await captureStep(client, '31-signed-out-cold-relaunch');
+      assertPrivateNamesHidden(relaunched, 'Signed-out cold relaunch');
+      assert(
+        !relaunched.bodyText.includes('tas.account-a.e2e@example.com'),
+        'Synthetic transport resurrected signed-out identity.',
+      );
     }
 
     const problemLogs = collectProblemLogs(client.events);
@@ -1545,8 +1546,8 @@ async function run() {
                   !signedOutShelf.bodyText.includes(product.name) &&
                   !signedOutToday.bodyText.includes(product.name),
               ),
-            reachedEmptyShelf: signedOutShelf?.bodyText.includes('empty for now') ?? false,
-            reachedEmptyToday: signedOutToday?.bodyText.includes('NO ROUTINE YET') ?? false,
+            reachedEmptyShelf: signedOutShelf?.bodyText.includes('First, your') ?? false,
+            reachedEmptyToday: signedOutToday?.bodyText.includes('First, your') ?? false,
             retryShowedTransitionGate:
               accountBoundaryRetry?.bodyText.includes('Securing account data...') ?? false,
           }
@@ -1600,17 +1601,17 @@ async function run() {
           ? [
               '25-account-before-signout.png',
               '26-account-boundary-clear-failure.png',
-              '27-account-boundary-retry.png',
+              '27-account-boundary-repeated-failure.png',
               '28-signed-out-welcome.png',
-              '29-signed-out-shelf.png',
-              '30-signed-out-today.png',
+              '29-signed-out-shelf-age-closed.png',
+              '30-signed-out-today-age-closed.png',
             ]
           : []),
       ],
       flowResult: accountUpgradeMode
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then continued honestly to Today on the free plan.'
         : accountIsolationMode
-          ? 'Completed onboarding on the free plan, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
+          ? 'Completed onboarding on the free plan, failed two account cleanups behind usable recovery, retried successfully, signed out, and proved direct Shelf and Today routes could not expose account A data.'
           : 'Completed onboarding through the truthful free-plan path to Today without granting Pro, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
@@ -1676,9 +1677,9 @@ async function run() {
           (ageReverificationReloadedToday?.url.includes('/onboarding/age') === true &&
             !ageReverificationReloadedToday.bodyText.includes('Morning routine')),
         signedOutShelfIsEmpty:
-          !accountIsolationMode || signedOutShelf?.bodyText.includes('empty for now') === true,
+          !accountIsolationMode || signedOutShelf?.bodyText.includes('First, your') === true,
         signedOutTodayIsEmpty:
-          !accountIsolationMode || signedOutToday?.bodyText.includes('NO ROUTINE YET') === true,
+          !accountIsolationMode || signedOutToday?.bodyText.includes('First, your') === true,
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
       },
@@ -1701,7 +1702,7 @@ async function run() {
         ...(accountIsolationMode
           ? [
               'Opened the signed-in account surface and initiated sign-out with account A private queries already populated.',
-              'Verified a forced first cleanup failure exposed only the recovery gate, then retried through the transition state.',
+              'Verified first and repeated cleanup failures exposed usable recovery with no uncaught overlay, then retried successfully.',
               'Verified Welcome, direct Shelf, and direct Today routes contain no account A product names after cleanup.',
             ]
           : []),
@@ -1725,6 +1726,7 @@ async function run() {
     // fixture only: never inspect storage, keys, cookies or network bodies.
     if (client) {
       await captureStep(client, 'FAILURE', { assertClean: false }).catch(() => undefined);
+      writeJson('FAILURE-runtime-events.json', collectProblemLogs(client.events));
     }
     writeJson('ERROR.json', { status: 'FAIL', message: String(error.message), viewport });
     throw error;

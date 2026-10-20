@@ -14,3 +14,7 @@
 
 # Exact issued inputs and hashed raw Windows observations for this continuation.
 docs/brain/checkpoints/M1-01/CONT-01/** -text
+
+# Exact CONT-02 issuance, review and raw observations.
+docs/brain/checkpoints/M1-01/CONT-02/** -text
+docs/brain/reviews/M1-01/REVIEW-02/** -text

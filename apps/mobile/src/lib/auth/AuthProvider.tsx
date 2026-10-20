@@ -88,7 +88,10 @@ import {
   endAccountGenerationBoundary,
   waitForAccountGenerationOperationsToSettle,
 } from './accountGeneration';
-import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
+import {
+  completeAccountIsolationE2ESignOut,
+  getAccountIsolationE2EFixture,
+} from './accountIsolationE2E';
 import {
   clearPublishedFirstSessionE2ESession,
   getFirstSessionE2EFixture,
@@ -273,8 +276,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     promise: Promise<void>;
     targetUserId: string | null;
   } | null>(null);
-  const boundaryClearFailureConsumedRef = useRef(false);
+  const boundaryClearFailuresRef = useRef(0);
   const explicitSignOutPendingRef = useRef(false);
+  const explicitSignOutInFlightRef = useRef<Promise<void> | null>(null);
   const retrySessionRestoreRef = useRef<(() => Promise<void>) | null>(null);
   const publicationDrainPromiseRef = useRef<Promise<void> | null>(null);
   const remoteRequestDrainPromiseRef = useRef<Promise<void>>(Promise.resolve());
@@ -1150,10 +1154,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                       setTimeout(resolve, accountIsolationE2EFixture.clearDelayMs),
                     );
                     if (
-                      accountIsolationE2EFixture.failFirstClear &&
-                      !boundaryClearFailureConsumedRef.current
+                      boundaryClearFailuresRef.current < accountIsolationE2EFixture.clearFailures
                     ) {
-                      boundaryClearFailureConsumedRef.current = true;
+                      boundaryClearFailuresRef.current += 1;
                       throw new Error('E2E_ACCOUNT_ISOLATION_CLEAR_FAILED');
                     }
                   }
@@ -1248,6 +1251,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               closeRemoteRequestAuthority();
             }
           }
+          if (!targetUserId && accountIsolationE2EFixture) completeAccountIsolationE2ESignOut();
           setSession(latestPendingSession);
           publishedSessionRef.current = latestPendingSession;
           activeUserIdRef.current = targetUserId;
@@ -2239,91 +2243,100 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
     };
-    const completeExplicitSignOut = async (): Promise<void> => {
-      authBoundaryEpochRef.current += 1;
-      // Invalidate every account-publication continuation before its next
-      // request. Closing admission aborts transport leases; this sequence
-      // fence also stops an already-settled refresh result from reaching the
-      // deletion preflight or provider activation path.
-      sessionChangeSeqRef.current += 1;
-      pendingEmailCodeRef.current = null;
-      freshAuthenticationPendingRef.current = false;
-      explicitSignOutPendingRef.current = true;
-      const signOutSession =
-        publishedSessionRef.current ??
-        session ??
-        pendingBoundarySessionRef.current?.session ??
-        null;
-      let signOutBinding: SupabaseRemoteSessionBinding | null = null;
-      if (signOutSession) {
-        try {
-          signOutBinding = requireSupabaseRemoteSessionBinding(
-            signOutSession.access_token,
-            signOutSession.user.id,
-          );
-        } catch {
-          // A malformed cached bearer cannot authorize a remote logout. Local
-          // durable cleanup remains authoritative and still proceeds.
-        }
-      }
-      showSessionBoundaryRef.current(null);
-
-      if (isSupabaseConfigured && !accountIsolationE2EFixture) {
-        try {
-          // The marker is the crash-recovery authority. Never remove the
-          // encrypted session until this commit succeeds; once it does, a cold
-          // launch must finish cleanup instead of republishing the account.
-          await markAuthDerivedCleanupRequired();
-          await clearPersistedSessionAfterRemoteDrainRef.current();
-        } catch (error: unknown) {
-          devWarn('[auth] local sign-out durability failed closed', error);
-          retrySessionRestoreRef.current = completeExplicitSignOut;
-          setInitializing(false);
-          setSessionBoundaryError(true);
-          throw error;
-        }
-
-        if (signOutBinding) {
+    const completeExplicitSignOut = (): Promise<void> => {
+      // A second press (including recovery re-entry) must not invalidate the
+      // sequence of the cleanup it is already waiting for.
+      if (explicitSignOutInFlightRef.current) return explicitSignOutInFlightRef.current;
+      const completion = (async () => {
+        authBoundaryEpochRef.current += 1;
+        // Invalidate every account-publication continuation before its next
+        // request. Closing admission aborts transport leases; this sequence
+        // fence also stops an already-settled refresh result from reaching the
+        // deletion preflight or provider activation path.
+        sessionChangeSeqRef.current += 1;
+        pendingEmailCodeRef.current = null;
+        freshAuthenticationPendingRef.current = false;
+        explicitSignOutPendingRef.current = true;
+        const signOutSession =
+          publishedSessionRef.current ??
+          session ??
+          pendingBoundarySessionRef.current?.session ??
+          null;
+        let signOutBinding: SupabaseRemoteSessionBinding | null = null;
+        if (signOutSession) {
           try {
-            // Global refresh-token revocation is best-effort and bounded. The
-            // local session and recovery marker are already durable, so a
-            // provider outage cannot resurrect the account on this device.
-            await revokeSupabaseRefreshTokens(signOutBinding);
-          } catch (error: unknown) {
-            devWarn('[auth] remote sign-out failed; completing local sign-out', error);
+            signOutBinding = requireSupabaseRemoteSessionBinding(
+              signOutSession.access_token,
+              signOutSession.user.id,
+            );
+          } catch {
+            // A malformed cached bearer cannot authorize a remote logout. Local
+            // durable cleanup remains authoritative and still proceeds.
           }
         }
-      }
+        showSessionBoundaryRef.current(null);
 
-      await applySessionBoundaryRef.current(null);
-      const localBoundaryCommitted =
-        !sessionBoundaryActiveRef.current &&
-        pendingBoundarySessionRef.current === null &&
-        publishedSessionRef.current === null &&
-        activeUserIdRef.current === null &&
-        !explicitSignOutPendingRef.current;
-      if (!localBoundaryCommitted) {
-        retrySessionRestoreRef.current = completeExplicitSignOut;
-        setInitializing(false);
-        setSessionBoundaryError(true);
-        throw new Error('EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE');
-      }
+        if (isSupabaseConfigured && !accountIsolationE2EFixture) {
+          try {
+            // The marker is the crash-recovery authority. Never remove the
+            // encrypted session until this commit succeeds; once it does, a cold
+            // launch must finish cleanup instead of republishing the account.
+            await markAuthDerivedCleanupRequired();
+            await clearPersistedSessionAfterRemoteDrainRef.current();
+          } catch (error: unknown) {
+            devWarn('[auth] local sign-out durability failed closed', error);
+            retrySessionRestoreRef.current = completeExplicitSignOut;
+            setInitializing(false);
+            setSessionBoundaryError(true);
+            throw error;
+          }
 
-      if (isSupabaseConfigured && !accountIsolationE2EFixture) {
-        try {
-          await clearAuthDerivedCleanupRequired();
-        } catch (error: unknown) {
-          // Retaining the marker is fail-closed: a cold launch repeats the
-          // idempotent cleanup rather than trusting an unproven sign-out.
-          devWarn('[auth] sign-out recovery marker clear failed closed', error);
-          showSessionBoundaryRef.current(null);
+          if (signOutBinding) {
+            try {
+              // Global refresh-token revocation is best-effort and bounded. The
+              // local session and recovery marker are already durable, so a
+              // provider outage cannot resurrect the account on this device.
+              await revokeSupabaseRefreshTokens(signOutBinding);
+            } catch (error: unknown) {
+              devWarn('[auth] remote sign-out failed; completing local sign-out', error);
+            }
+          }
+        }
+
+        await applySessionBoundaryRef.current(null);
+        const localBoundaryCommitted =
+          !sessionBoundaryActiveRef.current &&
+          pendingBoundarySessionRef.current === null &&
+          publishedSessionRef.current === null &&
+          activeUserIdRef.current === null &&
+          !explicitSignOutPendingRef.current;
+        if (!localBoundaryCommitted) {
           retrySessionRestoreRef.current = completeExplicitSignOut;
           setInitializing(false);
           setSessionBoundaryError(true);
-          throw error;
+          throw new Error('EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE');
         }
-      }
-      retrySessionRestoreRef.current = null;
+
+        if (isSupabaseConfigured && !accountIsolationE2EFixture) {
+          try {
+            await clearAuthDerivedCleanupRequired();
+          } catch (error: unknown) {
+            // Retaining the marker is fail-closed: a cold launch repeats the
+            // idempotent cleanup rather than trusting an unproven sign-out.
+            devWarn('[auth] sign-out recovery marker clear failed closed', error);
+            showSessionBoundaryRef.current(null);
+            retrySessionRestoreRef.current = completeExplicitSignOut;
+            setInitializing(false);
+            setSessionBoundaryError(true);
+            throw error;
+          }
+        }
+        retrySessionRestoreRef.current = null;
+      })().finally(() => {
+        explicitSignOutInFlightRef.current = null;
+      });
+      explicitSignOutInFlightRef.current = completion;
+      return completion;
     };
     return {
       session,
