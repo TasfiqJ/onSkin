@@ -98,6 +98,17 @@ class M1ReportCLI(unittest.TestCase):
         output.write_bytes(output.read_bytes() + b'DRIFT')
         self.assertNotEqual(self.cli(self.value).returncode, 0)
 
+    def test_cont02_report_binds_iteration_location_and_reviewed_base(self):
+        self.name = 'docs/brain/checkpoints/M1-01/CONT-02/synthetic-report.json'
+        self.value.update(schema_version=3, iteration='CONT-02')
+        result = self.cli(self.value)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.value['iteration'] = 'CONT-03'
+        self.assertNotEqual(self.cli(self.value).returncode, 0)
+        self.value['iteration'] = 'CONT-02'
+        self.name = 'docs/brain/checkpoints/M1-01/CONT-01/synthetic-report.json'
+        self.assertNotEqual(self.cli(self.value).returncode, 0)
+
     def test_future_execution_and_dirty_untracked_committed_runtime_drift(self):
         self.assertEqual(self.cli(self.value).returncode, 0)
         self.runtime.write_text('export const fixture = 2;\n', encoding='utf-8')

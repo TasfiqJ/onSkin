@@ -21,6 +21,15 @@ const accountUpgradeMode =
 const accountIsolationMode =
   process.argv.includes('--account-isolation') ||
   process.env.ONBOARDING_E2E_ACCOUNT_ISOLATION?.trim().toLowerCase() === 'signout_clear_retry';
+const deletionRecoveryMode = process.env.ONBOARDING_E2E_DELETION_RECOVERY;
+if (
+  deletionRecoveryMode &&
+  !['pending_then_completed_manual', 'invalid', 'invalid_support_only', 'expired'].includes(
+    deletionRecoveryMode,
+  )
+) {
+  throw new Error('Unknown deletion recovery fixture.');
+}
 assertSingleMode();
 function assertSingleMode() {
   if (accountUpgradeMode && accountIsolationMode) {
@@ -245,6 +254,9 @@ function startExpoServer() {
       ...(!accountIsolationMode ? { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner' } : {}),
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
       ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: 'signout_clear_retry' } : {}),
+      ...(deletionRecoveryMode
+        ? { EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY: deletionRecoveryMode }
+        : {}),
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
       EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '__BLOCKED_PLACEHOLDER__',
       EXPO_PUBLIC_SUPABASE_URL: 'https://blocked-supabase-url.invalid',
@@ -1062,6 +1074,66 @@ async function run() {
     });
     await client.send('Emulation.setTouchEmulationEnabled', { enabled: true });
 
+    if (deletionRecoveryMode) {
+      await client.send('Page.navigate', { url: `${baseUrl}/today` });
+      const terminalText =
+        deletionRecoveryMode === 'pending_then_completed_manual'
+          ? 'Deleting your account'
+          : deletionRecoveryMode === 'expired'
+            ? 'Deletion receipt needs support'
+            : 'Deletion status could not be verified';
+      await waitForText(client, terminalText, 60_000);
+      const initial = await captureStep(client, 'deletion-01-closed', { assertClean: false });
+      assertInteractiveControl(initial, 'Check status now');
+      assert(
+        !initial.bodyText.includes('Morning routine') &&
+          !initial.bodyText.includes('Account deletion completed'),
+        'Deletion opened protected content or claimed premature completion.',
+      );
+      if (deletionRecoveryMode === 'invalid') {
+        await scrollTextIntoView(client, 'Retry deletion request');
+        await clickByText(client, 'Retry deletion request');
+        await waitForText(client, terminalText);
+        await captureStep(client, 'deletion-02-retry-still-closed', { assertClean: false });
+      } else if (deletionRecoveryMode === 'pending_then_completed_manual') {
+        await clickByText(client, 'Check status now');
+        await waitForText(client, 'Account deletion completed');
+        await scrollTextIntoView(client, 'Continue');
+        const notice = await captureStep(client, 'deletion-02-synthetic-completion-manual', {
+          assertClean: false,
+        });
+        assertInteractiveControl(notice, 'Continue');
+        await clickByText(client, 'Continue');
+        await waitForText(client, 'Begin');
+        await captureStep(client, 'deletion-03-acknowledged');
+      } else {
+        assert(
+          !initial.controls.some((control) => control.label === 'Retry deletion request'),
+          'Unavailable retry was exposed.',
+        );
+        await clickByText(client, 'Check status now');
+        await waitForText(client, terminalText);
+      }
+      await client.send('Page.navigate', { url: `${baseUrl}/shelf` });
+      await waitForText(client, terminalText, 60_000);
+      await client.send('Page.reload', { ignoreCache: true });
+      await waitForText(client, terminalText, 60_000);
+      const reloaded = await captureStep(client, 'deletion-04-relaunch-closed', {
+        assertClean: false,
+      });
+      assert(
+        !reloaded.bodyText.includes('Morning routine'),
+        'Deletion relaunch reopened health content.',
+      );
+      writeJson('summary.json', {
+        verdict: 'pass',
+        viewport,
+        deletionRecoveryMode,
+        limits:
+          'Synthetic gate transport only; no real provider deletion, persisted Keychain or Apple revocation evidence.',
+      });
+      return;
+    }
     await client.send('Page.navigate', { url: `${baseUrl}/?e2eReset=local` });
     let welcome;
     let directProtectedAgeGate;
@@ -1312,17 +1384,26 @@ async function run() {
 
     await clickByText(client, 'Progress', { exact: false });
     await waitForPath(client, '/progress', 30_000);
-    await waitForText(client, 'Unlock your private photo timeline.', 30_000);
+    await waitForText(
+      client,
+      accountIsolationMode
+        ? 'We will keep Pro-only screens hidden'
+        : 'Unlock your private photo timeline.',
+      30_000,
+    );
     await delay(750);
     const progressAfterOnboarding = await captureStep(client, '21-progress-after-onboarding', {
       assertClean: false,
     });
     assert(
-      progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
-        progressAfterOnboarding.bodyText.includes('Subscribe to Pro'),
+      accountIsolationMode
+        ? progressAfterOnboarding.bodyText.includes('subscription status is confirmed') &&
+            !progressAfterOnboarding.bodyText.includes('PRO ACTIVE')
+        : progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
+            progressAfterOnboarding.bodyText.includes('Subscribe to Pro'),
       'Progress tab did not render the truthful free-plan feature gate.',
     );
-    await clickByText(client, 'Maybe later');
+    if (!accountIsolationMode) await clickByText(client, 'Maybe later');
     await delay(750);
 
     await clickByText(client, 'You');
