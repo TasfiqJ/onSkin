@@ -1,0 +1,4 @@
+Error: Unexpected browser warn/error logs: 6
+    at assert (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:78:25)
+    at run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:1927:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

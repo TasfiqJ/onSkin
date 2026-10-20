@@ -7919,3 +7919,8 @@ The adopted planning entrypoint is [docs/v2/README.md](docs/v2/README.md); durab
 ## M0-02 / FIX-01 (2026-10-20)
 
 Brain REVIEW-01 is FIX_REQUIRED. Repair scope is governance evidence, CI/Git bindings, anchored task issuance and mirror write containment only. Versioned review: docs/brain/reviews/M0-02/REVIEW-01; separate repair evidence/report: docs/brain/checkpoints/M0-02/FIX-01. Original submitted report/inputs/state are preserved. No runtime, protected gate, M1 or main promotion is authorized.
+
+
+## M1-02 retained continuity checkpoint (2026-10-20)
+
+Source repairs cover offline local cycle/preferences, stale routine-order conflicts, queued reminder/response authority, native reminder error/permission recovery, and ambiguous encrypted-photo restore cleanup. The retained append-only completion contract and verified billing gates are preserved. Exact fresh executions, failures, supported browser flows and closed device/provider/protected axes are recorded under `docs/brain/checkpoints/M1-02/`; this is partial work submitted for independent Brain review, not task acceptance or main/release promotion.

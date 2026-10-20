@@ -1,0 +1,91 @@
+{
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ BARCODE (OPTIONAL) INGREDIENTS · optional, we’ll find the actives On the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Brand",
+      "role": "input",
+      "selected": false,
+      "width": 157.14,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Category",
+      "role": "button",
+      "selected": false,
+      "width": 172.86,
+      "x": 193.14,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Barcode, optional",
+      "role": "input",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 66,
+      "hitOk": true,
+      "label": "Ingredients",
+      "role": "textarea",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 414
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 776
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8352/shelf/manual",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

@@ -193,9 +193,9 @@ export function nowHHMM(d = new Date()): string {
  * are scheduled as repeating DAILY local notifications at the user's chosen times
  * (no server round-trip, content on-device, §3.6 discretion). Behavioural triggers
  * go through the frequency-cap engine before firing. Everything is guarded. On
- * Expo Go / emulators / unsupported devices it degrades to a no-op rather than
- * throwing (real on-device behaviour + Android-14 exact-alarm acceptance is
- * B-NOTIF-VERIFY). NO health-revealing content is placed in any push payload; these
+ * unsupported native runtimes it reports scheduling failure for retry; web
+ * remains preference-only. Real device behaviour and Android exact-alarm
+ * acceptance remain B-NOTIF-VERIFY. NO health-revealing content is placed in any push payload; these
  * are LOCAL notifications (§8).
  */
 

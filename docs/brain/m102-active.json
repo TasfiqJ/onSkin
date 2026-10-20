@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "M1-02",
   "branch": "stage/m1-retained-safety",
-  "submission_status": "IN_PROGRESS",
+  "submission_status": "PARTIAL",
   "approved_state_version": "brain-m1-01-accepted-m1-02-issued-9",
   "accepted_tasks": [
     "M0-01",
