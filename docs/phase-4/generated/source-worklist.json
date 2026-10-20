@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-20T19:12:56.591Z",
+  "generatedAt": "2026-10-20T19:13:03.775Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "7cb800fbc14046284bb610e2c4e2e46303d7a423",
-  "gitStatus": "M .gitattributes\n M docs/USER_FLOW_TREE.md\n M docs/brain/README.md\n M docs/brain/active.json\n M scripts/brain/m1_profile.py\n M scripts/brain/test_m1_profile.py\n M scripts/brain/test_m1_report_cli.py",
+  "gitSha": "e5005a4f7bdab781782252eb6f07bae97ebb9d7b",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 414,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -3088,7 +3088,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }
