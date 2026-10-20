@@ -1,0 +1,53 @@
+import datetime,hashlib,json,subprocess
+from pathlib import Path
+r=Path.cwd();e=r/'docs/brain/checkpoints/M1-03/evidence'
+base='2de9ef75a1a1d539b0520ca22160abd6171c9c3b'; tested='fc6541adadb9abcdea725cfeee34923a3902f2f0'
+def git(*a):return subprocess.check_output(['git','-C',str(r),*a])
+def text(*a):return git(*a).decode('utf-8').rstrip('\r\n')
+def sha(x):return hashlib.sha256(x).hexdigest()
+head=text('rev-parse','HEAD');branch=text('branch','--show-current');assert branch=='stage/m1-retained-safety'
+for ref in [base,'origin/main','origin/stage/m1-retained-safety']:
+ assert subprocess.run(['git','merge-base','--is-ancestor',ref,head]).returncode==0
+allowed={'.gitattributes','ONSKIN_BRAIN_HANDOFF.txt','docs/brain/README.md','docs/brain/m103-active.json',
+ 'docs/phase-4/generated/source-worklist.json','docs/phase-4/generated/source-worklist.md',
+ 'scripts/brain/brain.py','scripts/brain/m103_profile.py','scripts/brain/test_m103_profile.py','scripts/core05/adherence-source-contract.test.mjs'}
+changed=text('diff','--name-only',base,head).splitlines()
+assert all(p in allowed or p.startswith(('docs/brain/checkpoints/M1-03/','docs/brain/reviews/M1-02/ACCEPTANCE/')) for p in changed)
+dirty=text('status','--porcelain','--untracked-files=all').splitlines()
+assert all(p[3:].startswith('docs/brain/checkpoints/M1-03/') or p[3:]=='ONSKIN_BRAIN_HANDOFF.txt' for p in dirty)
+inputs='docs/brain/checkpoints/M1-03/inputs/'
+manifest=git('show',head+':'+inputs+'TASK_MANIFEST.json');assert sha(manifest)=='e580ae55c3aa97fe18a8b4e8782b1887ee503b3fec88df0034aa82cc2edee95f'
+m=json.loads(manifest)
+for row in m['files']:
+ raw=git('show',head+':'+inputs+row['path']);assert len(raw)==row['bytes'] and sha(raw)==row['sha256']
+ if row['path'].startswith('BRAIN_STATE/'):
+  assert raw==git('show',head+':docs/brain/reviews/M1-02/ACCEPTANCE/'+row['path'].split('/',1)[1])
+modules='docs/v2/mirrors/modules.json';assert git('show',base+':'+modules)==git('show',head+':'+modules)
+module_rows=json.loads(git('show',head+':'+modules))['modules'];assert len(module_rows)==27
+old=json.loads(git('show',base+':docs/brain/state/roadmap.json'))['tasks']
+new=json.loads(git('show',head+':docs/brain/reviews/M1-02/ACCEPTANCE/roadmap.json'))['tasks']
+assert len(new)==47 and [(v['id'],v['depends_on']) for v in old]==[(v['id'],v['depends_on']) for v in new]
+work='docs/phase-4/generated/source-worklist.json';before=json.loads(git('show',base+':'+work));after=json.loads(git('show',head+':'+work))
+assert len(after['items'])==14
+assert before['items']==after['items'], 'Worklist meanings or414 fingerprints changed'
+code=['scripts/core05/adherence-source-contract.test.mjs','scripts/brain/brain.py','scripts/brain/m103_profile.py','scripts/brain/test_m103_profile.py']
+codeproof=[]
+for p in code:
+ raw=git('show',head+':'+p);assert raw==git('show',tested+':'+p)
+ codeproof.append(dict(path=p,sha256=sha(raw),matches_tested_commit=True))
+protected=[p for p in text('ls-tree','-r','--name-only',base).splitlines() if p.startswith(('supabase/','scripts/phase2/','scripts/phase9/','.github/workflows/','packages/types/')) or p in ['package.json','package-lock.json','docs/phase-9/security-advisory-exceptions.json']]
+protected_changes=text('diff','--name-only',base,head,'--',*protected).splitlines();assert not protected_changes
+snapshot=dict(recorded_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),branch=branch,
+ base=dict(commit=base,tree=text('rev-parse',base+'^{tree}')),measured=dict(commit=head,tree=text('rev-parse',head+'^{tree}')),
+ observed_main=dict(commit=text('rev-parse','origin/main'),tree=text('rev-parse','origin/main^{tree}')),
+ remote_tracking_stage=text('rev-parse','origin/stage/m1-retained-safety'),dirty_checkpoint_tail=dirty,
+ original_intake_dirty_paths=[],original_intake_attribution='Codex tool observation at accepted base, not a rerun of historical cleanliness',
+ changed_paths_since_accepted_base=changed,protected_paths_unchanged=len(protected),protected_changes=protected_changes,
+ prior_report_input_state_changes=[],issued_payload_files_verified=len(m['files']),manifest_sha256=sha(manifest),acceptance_copy_matches=True,
+ roadmap_task_count=47,module_count=27,worklist_items=14,worklist_source_fingerprints=after['summary']['sourcePathCount'],worklist_meanings_and_fingerprints_unchanged=True,
+ tested_implementation=tested,active_test_source_equivalence=codeproof,
+ worktrees=text('worktree','list','--porcelain'),other_worktree_dirty_state='UNKNOWN_UNINSPECTED_PRESERVED',active_codex_writers=1,
+ main_promotion_authorized=False,protected_source_go=False,incremental_spend_usd=0,
+ limits='Hash/custody/source proofs do not establish hosted, qualified, native, provider, clinical, commercial or release admission.')
+target=e/'final-source-custody.json';assert not target.exists();target.write_bytes((json.dumps(snapshot,indent=2)+'\n').encode())
+print(json.dumps({k:snapshot[k] for k in ['branch','measured','protected_paths_unchanged','roadmap_task_count','module_count','worklist_source_fingerprints','issued_payload_files_verified']}))

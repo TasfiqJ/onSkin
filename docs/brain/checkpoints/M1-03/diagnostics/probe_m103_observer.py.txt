@@ -1,0 +1,37 @@
+"""Bounded disposable test-only hypothesis; never changes repository source/deps."""
+from pathlib import Path
+import hashlib, json, os, shutil, subprocess, sys
+r=Path(r'C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety')
+w=Path(__file__).parent/'m103-observer-fixture-v2'
+assert not w.exists(), 'Fresh disposable fixture required'
+w.mkdir()
+shutil.copytree(r/'apps/mobile/src',w/'src')
+shutil.copyfile(r/'apps/mobile/package.json',w/'package.json')
+shutil.copyfile(r/'apps/mobile/vitest.config.ts',w/'vitest.config.ts')
+deps=w/'node_modules';deps.mkdir()
+for source in (r/'node_modules').iterdir():
+ if source.name.startswith('.') or not source.is_dir():continue
+ result=subprocess.run(['cmd.exe','/d','/c','mklink','/J',str(deps/source.name),str(source.resolve())],stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ assert result.returncode==0, (source.name,result.stdout)
+test=w/'src/features/notifications/transaction.cont01.test.ts'
+original=test.read_bytes()
+assert original==(r/'apps/mobile/src/features/notifications/transaction.cont01.test.ts').read_bytes()
+argv=['node',str(r/'node_modules/vitest/vitest.mjs'),'run','src/features/notifications/transaction.cont01.test.ts','--cache=false','--maxWorkers=1']
+results=[]
+for variant in ['unchanged-control','observer-flush-fixture']:
+ if variant=='observer-flush-fixture':
+  text=original.decode()
+  for value in ['permission_denied','disabled']:
+   needle="  expect(mutation.data?.scheduling).toBe('"+value+"');"
+   assert text.count(needle)==1
+   text=text.replace(needle,"  await flush();\n"+needle)
+  test.write_bytes(text.encode())
+ process=subprocess.run(argv,cwd=w,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ raw=process.stdout; out=r/'docs/brain/checkpoints/M1-03/evidence'/('observer-v2-'+variant+'.txt');out.write_bytes(raw)
+ results.append(dict(variant=variant,fixture_test_sha256=hashlib.sha256(test.read_bytes()).hexdigest(),command=subprocess.list2cmdline(argv),cwd=str(w),exit_code=process.returncode,output_path=out.relative_to(r).as_posix(),output_sha256=hashlib.sha256(raw).hexdigest()))
+ print(variant,'exit',process.returncode);print(raw.decode(errors='replace')[-1800:])
+assert original==(r/'apps/mobile/src/features/notifications/transaction.cont01.test.ts').read_bytes()
+manifest=dict(kind='DISPOSABLE_TEST_SOURCE_MUTATION_NOT_PRODUCT_ACCEPTANCE',original_test_sha256=hashlib.sha256(original).hexdigest(),
+ original_repository_source_unchanged=True,shared_dependencies='Read-only individual directory junctions; caches and .vite-temp remain real directories inside disposable fixture.',results=results)
+(r/'docs/brain/checkpoints/M1-03/evidence/observer-probe.json').write_bytes((json.dumps(manifest,indent=2)+'\n').encode())
+sys.exit(0 if results[-1]['exit_code']==0 else 1)

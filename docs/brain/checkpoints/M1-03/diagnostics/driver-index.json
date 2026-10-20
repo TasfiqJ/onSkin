@@ -1,0 +1,22 @@
+[
+  {
+    "path": "docs/brain/checkpoints/M1-03/diagnostics/run_m103.py.txt",
+    "sha256": "8551f94372687f4e3eb173c1d8b3daeac521f9df80d748b87df6d8c2e2642263",
+    "purpose": "Inert copy of actual diagnostic driver; not execution authority"
+  },
+  {
+    "path": "docs/brain/checkpoints/M1-03/diagnostics/probe_m103_observer.py.txt",
+    "sha256": "cddb3a0a8c8ed0c11228ef9cf3462953798d8222144b346df77442d08df6620c",
+    "purpose": "Inert copy of actual diagnostic driver; not execution authority"
+  },
+  {
+    "path": "docs/brain/checkpoints/M1-03/diagnostics/custody_m103.py.txt",
+    "sha256": "57f9583c46977a391c7c8e84d4a2950e2c570395d659fe9ed70f0393e5e60bcd",
+    "purpose": "Inert copy of actual diagnostic driver; not execution authority"
+  },
+  {
+    "path": "docs/brain/checkpoints/M1-03/diagnostics/listener_m103.py.txt",
+    "sha256": "4a42febeb719e096adbece407b86917386a46de6f639732cfd06d250031f50d3",
+    "purpose": "Inert copy of actual diagnostic driver; not execution authority"
+  }
+]

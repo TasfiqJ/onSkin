@@ -1,0 +1,34 @@
+test_SAST_engine_substitution_or_skipped_rules_rejects (__main__.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) ... 
+  test_SAST_engine_substitution_or_skipped_rules_rejects (__main__.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) (field='engine_requested') ... FAIL
+  test_SAST_engine_substitution_or_skipped_rules_rejects (__main__.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) (field='skipped_rules') ... FAIL
+
+======================================================================
+FAIL: test_SAST_engine_substitution_or_skipped_rules_rejects (__main__.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) (field='engine_requested')
+----------------------------------------------------------------------
+contract.Rejected: CURRENT_SOURCE_PREFIX_INVALID
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\scripts\phase9\security_acceptance\test_contract.py", line 405, in test_SAST_engine_substitution_or_skipped_rules_rejects
+    with self.assertRaisesRegex(c.Rejected,'SEMGREP_INCOMPLETE'):c.records(v,self.policy)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "SEMGREP_INCOMPLETE" does not match "CURRENT_SOURCE_PREFIX_INVALID"
+
+======================================================================
+FAIL: test_SAST_engine_substitution_or_skipped_rules_rejects (__main__.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) (field='skipped_rules')
+----------------------------------------------------------------------
+contract.Rejected: CURRENT_SOURCE_PREFIX_INVALID
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\scripts\phase9\security_acceptance\test_contract.py", line 405, in test_SAST_engine_substitution_or_skipped_rules_rejects
+    with self.assertRaisesRegex(c.Rejected,'SEMGREP_INCOMPLETE'):c.records(v,self.policy)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "SEMGREP_INCOMPLETE" does not match "CURRENT_SOURCE_PREFIX_INVALID"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.411s
+
+FAILED (failures=2)

@@ -14,6 +14,7 @@ Start with [baseline and custody](BASELINE_AND_CUSTODY.md), then [Security cause
 | Forced typecheck/lint |Both passed with0 cached tasks; types package lint is its existing no-lint placeholder, not an additional linter |
 | Existing local DB source/target guards |171 pass /0 fail /0 skip; read-only contract also passed |
 | Existing tooling mitigation / exception regressions |20 pass and7 pass respectively; separate overlapping source diagnostics, not current scanner acceptance |
+| Retained Security regressions on Windows |Python3.9 import failure; existing Python3.12.14 completed70 cases:51 top-level OK and19 nonpassing, with21 failure entries/8 error entries including subtests. Overall FAIL,0 skips; Linux70-pass CI is a separate execution |
 | Original accepted-head CI refresh |Quality39506203149 SUCCESS including canonical DB118915844992; Security39506203186 FAILURE; iOS39506203634 source-only SUCCESS |
 | New disposable canonical verification |PENDING at this intermediate entry; final receipt/closeout governs, progress never counts as PASS |
 | DB06 / Security source refusals |Actually reproduced nonzero `DB06_CURRENT_CHAIN_REPLAY_REQUIRED` and `SOURCE_INVENTORY_DRIFT`; no gate removed |

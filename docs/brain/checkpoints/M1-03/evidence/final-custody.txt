@@ -1,0 +1,1 @@
+{"branch": "stage/m1-retained-safety", "measured": {"commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07", "tree": "dc188e496bfb7335604cf0beabf55b247a362a6a"}, "protected_paths_unchanged": 503, "roadmap_task_count": 47, "module_count": 27, "worklist_source_fingerprints": 414, "issued_payload_files_verified": 35}

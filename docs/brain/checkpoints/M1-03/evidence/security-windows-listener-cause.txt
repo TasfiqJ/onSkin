@@ -1,0 +1,2 @@
+{"case": "expected TCP refusal", "exit_code": 1, "stdout": "", "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 9, in <module>\r\n  File \"<string>\", line 6, in g97_scanner_audit\r\nPermissionError: G97_SCANNER_INTERNET_LISTENER_FORBIDDEN\r\n"}
+{"case": "Unix-domain positive fixture", "exit_code": 1, "stdout": "", "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 9, in <module>\r\nAttributeError: module 'socket' has no attribute 'AF_UNIX'\r\n"}

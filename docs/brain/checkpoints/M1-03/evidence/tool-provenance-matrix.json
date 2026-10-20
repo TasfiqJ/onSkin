@@ -1,0 +1,253 @@
+{
+  "kind": "READ_ONLY_TOOL_PROVENANCE_MATRIX",
+  "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+  "policy_status": "INACTIVE_NO_NEW_SOURCE_GO",
+  "declared_linux_tool_byte_pins": {
+    "gitleaks": [
+      "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad"
+    ],
+    "osv": [
+      "bc98e15319ed0d515e3f9235287ba53cdc5535d576d24fd573978ecfe9ab92dc"
+    ],
+    "trufflehog": [
+      "aba71aa8cee0ef87f4adddafbcd778a112b740bfba4a81a2de299d1a8e15f074"
+    ]
+  },
+  "declared_npm_tool_tree": "b941f37688799d749409b6449dce4721c5e2ed96e9bfe43eaab79850fa11b7cd",
+  "declared_semgrep_package_tree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
+  "declared_semgrep_build": {
+    "archiveSha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9",
+    "label": "CUSTOM1.181.0 G97 finite2s taint budget; nonallocated symbol removal and relative RPATH packaging; NOT an official release binary",
+    "maxRuleSeconds": 30,
+    "members": {
+      "libs/libbrotlicommon.so.1": {
+        "bytes": 141640,
+        "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b"
+      },
+      "libs/libbrotlidec.so.1": {
+        "bytes": 51512,
+        "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5"
+      },
+      "libs/libbz2.so.1.0": {
+        "bytes": 78944,
+        "sha256": "cc08c9f50a8009ffd6391e0116a100369b11ca9238fa52392c019e6645b122a1"
+      },
+      "libs/libcom_err.so.2": {
+        "bytes": 18504,
+        "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08"
+      },
+      "libs/libcrypto.so.3": {
+        "bytes": 5309400,
+        "sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a"
+      },
+      "libs/libcurl-gnutls.so.4": {
+        "bytes": 765856,
+        "sha256": "83f783be410435ef15c7f0d30de9f0d11f2fc64b9ca0567fb956ab29842214c8"
+      },
+      "libs/libdw.so.1": {
+        "bytes": 737696,
+        "sha256": "989dc9873f358a5af7d18d6100cf5fd66531d7990dc47d69068b3c6c96588867"
+      },
+      "libs/libelf.so.1": {
+        "bytes": 121560,
+        "sha256": "248c989360783cdc52f3659921de852c2efcc2097253ce58e34443f856412814"
+      },
+      "libs/libev.so.4": {
+        "bytes": 67584,
+        "sha256": "b267e48c7fb097e722f1b704a59389cc5ff9689a08a780a1b8e8b33b7c7e2eec"
+      },
+      "libs/libffi.so.8": {
+        "bytes": 47672,
+        "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153"
+      },
+      "libs/libgcc_s.so.1": {
+        "bytes": 183024,
+        "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb"
+      },
+      "libs/libgmp.so.10": {
+        "bytes": 534896,
+        "sha256": "0ccdfb6d6f5c039465f6d002cf7e4c072d48ac6a2cffc8dd6c748dec31592804"
+      },
+      "libs/libgnutls.so.30": {
+        "bytes": 2065824,
+        "sha256": "ddbae2995750875c07bc218d12a062d73f8250678f54dedda7e9be5068781c98"
+      },
+      "libs/libgssapi_krb5.so.2": {
+        "bytes": 338696,
+        "sha256": "6c1b81696044d79a47d6f0f494ee60aaf641c525c46a11da0c6e4a041a782d3c"
+      },
+      "libs/libhogweed.so.6": {
+        "bytes": 288920,
+        "sha256": "c3c606139d4f7776efa4dbd4a6b62e30c916b07a0cafd8c3ef173d6f093607e3"
+      },
+      "libs/libidn2.so.0": {
+        "bytes": 133192,
+        "sha256": "6e632fd9a3125db60bbc623719bbc17b0470330321c5b1c57f1ff7190e5551ad"
+      },
+      "libs/libk5crypto.so.3": {
+        "bytes": 178648,
+        "sha256": "73bc9d72c0c684d6149a3c38f96aab891d178375415c05954fdda587685936f5"
+      },
+      "libs/libkeyutils.so.1": {
+        "bytes": 22600,
+        "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe"
+      },
+      "libs/libkrb5.so.3": {
+        "bytes": 823488,
+        "sha256": "9615a2841f0783c410eec7fae005a951282551cfedd377737ad8431c8c8cde64"
+      },
+      "libs/libkrb5support.so.0": {
+        "bytes": 47904,
+        "sha256": "0aa43578471faecbd642ed2ee6ab92b6682a2b676644193e956fc59d18ca24bb"
+      },
+      "libs/liblber.so.2": {
+        "bytes": 59888,
+        "sha256": "ddf14275b1fb70ba06510094071adcc1462e675f15ae6cdcadbf40c1dabe5a03"
+      },
+      "libs/libldap.so.2": {
+        "bytes": 372400,
+        "sha256": "a9829b999c95452eb0a34cc7b5349427b76dbf3e5d5c8672a5ca69e454c1b151"
+      },
+      "libs/liblzma.so.5": {
+        "bytes": 202904,
+        "sha256": "696e868dd0700a19a6d65fc01608ec2d70d3cb91f65710e89180cd2e688f30cb"
+      },
+      "libs/libnettle.so.8": {
+        "bytes": 342280,
+        "sha256": "a245ed916229583d6fe0b07657b3ed945bc148c28cc08b5266295f620d2b91cc"
+      },
+      "libs/libnghttp2.so.14": {
+        "bytes": 170352,
+        "sha256": "46764ab5b6ca7e353a322054f0bee45d9158a27f3e6a82a2fa4447f2ba9ba268"
+      },
+      "libs/libp11-kit.so.0": {
+        "bytes": 1714008,
+        "sha256": "a59efd4792d3343dedea1d26a28f5597abfe3369082deb504c4802a31b014897"
+      },
+      "libs/libpcre2-8.so.0": {
+        "bytes": 625344,
+        "sha256": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b"
+      },
+      "libs/libpsl.so.5": {
+        "bytes": 75768,
+        "sha256": "ae6c5a9aecc249fc66e03c16ec6c4385d09d7e12e0ea7694bb831ab4fee8133c"
+      },
+      "libs/librtmp.so.1": {
+        "bytes": 121848,
+        "sha256": "15a2a75e8c437b9c99971b5ee10278ab110beef1a56d1d9e5d6759ea140e98ac"
+      },
+      "libs/libsasl2.so.2": {
+        "bytes": 101200,
+        "sha256": "a0f410ad093236856eee59c4ff2838dc04d932ea0993400f23ed77d67d85af34"
+      },
+      "libs/libssh.so.4": {
+        "bytes": 462360,
+        "sha256": "b82bd54edb908605b8142be1a6d242df65501af0e9bb7581cc36ebf4d8a5ecfd"
+      },
+      "libs/libstdc++.so.6": {
+        "bytes": 2592224,
+        "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11"
+      },
+      "libs/libtasn1.so.6": {
+        "bytes": 88216,
+        "sha256": "59994414d0cdec4f678ef91eaaafc44b26b00bca507e4cc7978caaf79f584173"
+      },
+      "libs/libtree-sitter.so.0.26": {
+        "bytes": 254848,
+        "sha256": "3e362a4de8a3de47f9dd5b2cac3e6661e9d9ab7fb2bd05b05ed2789875571532"
+      },
+      "libs/libunistring.so.5": {
+        "bytes": 1755312,
+        "sha256": "7bcf825cd449892db5105ad2aed91dcf94a27b796426600c765720c584c54dd1"
+      },
+      "libs/libunwind.so.8": {
+        "bytes": 63776,
+        "sha256": "28e77a498f2f17f8cb883c91303f9901343ea0d8e34959d138dd462fcc9b201f"
+      },
+      "libs/libz.so.1": {
+        "bytes": 113000,
+        "sha256": "86200da370f20476a2507e9097a789b5ef97269b4ca8d5e164ad82dab9d99892"
+      },
+      "libs/libzstd.so.1": {
+        "bytes": 755864,
+        "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb"
+      },
+      "provenance/SEMGREP-LICENSE": {
+        "bytes": 26526,
+        "sha256": "20c17d8b8c48a600800dfd14f95d5cb9ff47066a9641ddeab48dc54aec96e331"
+      },
+      "provenance/allocated-sections-before.json": {
+        "bytes": 5025,
+        "sha256": "0be52926fce22549eb2a4005309670b6eb50d91bbc5cfbc770fe2fc012be86f7"
+      },
+      "provenance/finite-taint-budget.patch": {
+        "bytes": 426,
+        "sha256": "ebe9034889511c8f8e97eaa76cfac327c1887776db39bca4e23d9fb6f6904d51"
+      },
+      "provenance/ldd-build-host.txt": {
+        "bytes": 3330,
+        "sha256": "8f09f440a8b5402d4c7a4a5dfbaa351d1011c5a6327acfe450d117c3ff16f5e6"
+      },
+      "provenance/ldd-portable.txt": {
+        "bytes": 5051,
+        "sha256": "d39fd1c86fdcc123e46b9169710ff7182c9b39811ec7edcde0808b463b74aa53"
+      },
+      "provenance/runtime-build.json": {
+        "bytes": 13292,
+        "sha256": "670423876e5bf42c3c0fb25691a2ecd195f687fbe52c1dfca15ebbc0a7da4573"
+      },
+      "semgrep-core": {
+        "bytes": 225443048,
+        "sha256": "187283dcd737cf34fde16b99e440c44236b63c47d4db107bfe15b188080238b7"
+      }
+    },
+    "originalCoreSha256": "14f4b18720d881156bc0cc507b19130aa8d8db0882a5a479fb3919aadefca857",
+    "originalPackageTree": "dabde8c684374b57d6f9b3093dff0fa020169d9d9a99d266ad810e1504b2774f",
+    "portableCoreSha256": "187283dcd737cf34fde16b99e440c44236b63c47d4db107bfe15b188080238b7",
+    "requirementsSha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+    "sourcePatchSha256": "ebe9034889511c8f8e97eaa76cfac327c1887776db39bca4e23d9fb6f6904d51",
+    "taintCpuSeconds": 2.0,
+    "upstreamSourceCommit": "72d3525fe7e02f486428386078f192f8c4756804",
+    "upstreamSourceTree": "2349a2dea620b47fccd248bd84e9ff90a660d3ce"
+  },
+  "actual_original_gitleaks": {
+    "exit": 0,
+    "sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+    "version": "8.24.3"
+  },
+  "gitleaks_pin_matches": true,
+  "actual_original_trufflehog": {
+    "action_commit": "00155c9dc586f34d189adc83d3ac2698c2ec551f",
+    "image": "ghcr.io/trufflesecurity/trufflehog:latest",
+    "image_digest": "sha256:63b6120f410beb64aea4e421f1ed277248e14b2942d124df289422b623f610d8",
+    "reported_binary_version": "3.99.3",
+    "individual_executable_sha256": null,
+    "collector_expected_version": "3.99.2",
+    "collector_execution": "NOT_RUN"
+  },
+  "actual_semgrep": {
+    "execution": "NOT_RUN",
+    "reason": "SOURCE_INVENTORY_DRIFT before collector scanner execution",
+    "complete_coverage": "NOT_PROVEN"
+  },
+  "actual_osv": {
+    "executable_intent": "RUNNER_TEMP/g97-tools/scanners/osv",
+    "declared_version": "2.3.8",
+    "source_bootstrap_download_sha256": "bc98e15319ed0d515e3f9235287ba53cdc5535d576d24fd573978ecfe9ab92dc",
+    "bootstrap_step": "SUCCESS",
+    "raw_exit": 1,
+    "raw_report": "original-static/osv-scan.json",
+    "independent_post_bootstrap_execution_byte_receipt": null
+  },
+  "locks": [
+    {
+      "path": "package-lock.json",
+      "sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f"
+    }
+  ],
+  "limits": "Declared reviewed-profile hashes are not new owner approval or proof of an unexecuted tool; raw findings/exits and unknown executable identities remain explicit."
+}
