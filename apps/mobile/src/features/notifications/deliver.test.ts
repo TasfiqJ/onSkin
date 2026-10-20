@@ -303,6 +303,34 @@ describe('rescheduleReminders', () => {
     mocks.scheduleNotificationAsync.mockResolvedValue('notification-id');
   });
 
+  it('rejects queued owner-A scheduling after a completed account boundary', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    let release!: () => void;
+    let started!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const entered = new Promise<void>((resolve) => { started = resolve; });
+    mocks.loadNotifPrefs.mockImplementationOnce(async () => { started(); await gate; return prefs; });
+    const lifecycle = { isCurrent: () => true, signal: new AbortController().signal };
+    const first = rescheduleReminders(undefined, lifecycle).catch((error: unknown) => error);
+    await entered;
+    const queued = rescheduleReminders(prefs, lifecycle).catch((error: unknown) => error);
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    release();
+    expect(await first).toBeInstanceOf(Error);
+    expect(await queued).toBeInstanceOf(Error);
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it.each(['cancel', 'schedule'])('reports %s failure while retaining independent billing reconciliation', async (failure) => {
+    const { rescheduleReminders } = await import('./deliver');
+    if (failure === 'cancel') mocks.cancelAllScheduledNotificationsAsync.mockRejectedValueOnce(new Error('cancel failed'));
+    else mocks.scheduleNotificationAsync.mockRejectedValueOnce(new Error('schedule failed'));
+    await expect(rescheduleReminders(prefs)).rejects.toThrow(`${failure} failed`);
+    expect(mocks.loadEntitlement).toHaveBeenCalledOnce();
+    await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+  });
+
   it('shifts scheduled reminders inside quiet hours to the quiet-hours end', async () => {
     const { rescheduleReminders } = await import('./deliver');
 
