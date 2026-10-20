@@ -1460,7 +1460,34 @@ async function run() {
         await scrollTextIntoView(client, 'Withdraw health-data consent');
         await clickByText(client, 'Withdraw health-data consent');
         await scrollTextIntoView(client, 'Confirm withdrawal');
+        // Refuse a real local cleanup mutation without changing lifecycle or
+        // gate state. The durable withdrawal intent must remain retryable.
+        await evaluate(
+          client,
+          `(() => {
+          const original = Storage.prototype.removeItem;
+          Storage.prototype.removeItem = function(key) {
+            if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic withdrawal cleanup refusal', 'QuotaExceededError');
+            return original.call(this, key);
+          };
+        })()`,
+        );
         await clickByText(client, 'Confirm withdrawal');
+        await waitForText(client, 'Withdrawal has not finished.');
+        await captureStep(client, 'M1-11a-withdrawal-cleanup-refused', { assertClean: false });
+        await scrollTextIntoView(client, 'Retry / check status');
+        await clickByText(client, 'Retry / check status');
+        await waitForText(client, 'Status: withdrawing.');
+        await scrollTextIntoView(client, 'Retry / check status');
+        await clickByText(client, 'Retry / check status');
+        await waitForText(client, 'Could not finish the privacy request.');
+        await captureStep(client, 'M1-11b-withdrawal-repeated-refusal', { assertClean: false });
+        await client.send('Page.reload', { ignoreCache: true });
+        await waitForText(client, 'First, your', 60_000);
+        await clickByText(client, 'Privacy & account');
+        await waitForText(client, 'Status: withdrawing.');
+        await scrollTextIntoView(client, 'Retry / check status');
+        await clickByText(client, 'Retry / check status');
         await waitForText(client, 'Status: withdrawn.');
         await captureStep(client, 'M1-11-age-closed-withdrawal');
         assert(

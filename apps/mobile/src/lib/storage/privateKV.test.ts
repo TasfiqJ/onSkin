@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-vi.mock('expo-crypto', () => ({ randomUUID: vi.fn() }));
 import {
   clearRoutineWidgetActions,
   ROUTINE_WIDGET_ACTION_REGISTRY_KEY,
@@ -45,6 +44,8 @@ import {
   updatePrivateItem,
   waitForPrivateKVWritesToSettle,
 } from './privateKV';
+
+vi.mock('expo-crypto', () => ({ randomUUID: vi.fn() }));
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),

@@ -3,6 +3,7 @@ import { env, isSupabaseConfigured } from '@/lib/env';
 
 const E2E_USER_ID = '00000000-0000-4000-8000-0000000000a1';
 const E2E_EMAIL = 'tas.account-a.e2e@example.com';
+const E2E_SIGNED_OUT_KEY = 'routinekind.e2e.accountIsolationSignedOut.v1';
 
 export type AccountIsolationE2EFixture = {
   clearDelayMs: number;
@@ -49,10 +50,7 @@ export function getAccountIsolationE2EFixture(
     clearDelayMs: 700,
     clearFailures: 2,
     mode,
-    session:
-      fixtureStorage()?.getItem('onskin.e2e.isolation.signed-out') === '1'
-        ? null
-        : fixtureSession(),
+    session: fixtureStorage()?.getItem(E2E_SIGNED_OUT_KEY) === '1' ? null : fixtureSession(),
   };
 }
 
@@ -64,6 +62,6 @@ function fixtureStorage() {
 
 export function completeAccountIsolationE2ESignOut(): void {
   if (getAccountIsolationE2EFixture()) {
-    fixtureStorage()?.setItem('onskin.e2e.isolation.signed-out', '1');
+    fixtureStorage()?.setItem(E2E_SIGNED_OUT_KEY, '1');
   }
 }
