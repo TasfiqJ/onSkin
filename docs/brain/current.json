@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "task_id": "M0-02",
-  "submission_status": "IN_PROGRESS",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED",
   "approved_state_version": "brain-m0-01-diagnostic-accepted-m0-02-issued-3",
   "accepted_tasks": [
     "M0-01"
@@ -50,6 +50,32 @@
       "detail": "Clean existing stage b9a6b09; manifests verified. Source pack provenance is supplied, not a reread of the excluded original archive.",
       "artifact": "docs/v2/PROVENANCE.json",
       "sha256": "52b74d5030013226db2ef998df731a7086f44eb04e2b44dee8601b4708b5c71e"
+    },
+    {
+      "id": "M0-02-MEASURED-TOOLS",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "status": "PASS",
+      "exit_code": 0,
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M0-02/evidence/measured-governance-py312.log",
+      "sha256": "4bf38b567f77f9a5828f9efbda18e2d256d471eab1cab272b322048e6954294e",
+      "source_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+      "source_tree": "d60d4a591653b141964680f153a8d82937d2984f",
+      "detail": "27 governance passes plus 1 unavailable symlink case"
+    },
+    {
+      "id": "M0-02-MEASURED-CI",
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "axis": "source",
+      "status": "FAIL",
+      "exit_code": 1,
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M0-02/evidence/measured-ci-database.json",
+      "sha256": "173b97e651074115b54da0b9421800755c19f91feab802b48c1d0bdd913fdd81",
+      "source_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+      "source_tree": "d60d4a591653b141964680f153a8d82937d2984f",
+      "detail": "Actual failed CI database job; baseline remains blocked"
     }
   ]
 }

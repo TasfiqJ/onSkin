@@ -1,0 +1,151 @@
+command: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\tools\node-v20.20.2-win-x64\node.exe --test scripts/phase9/security_acceptance/workflow_contract.test.mjs
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: 8fd48286e0ad65e7797588d7cd88edde27fe4a5f
+snapshot_tree: f7772abe39325075b8a9231b0c98bbbd79c9c769
+exit_code: 0
+expected_exit: 0
+TAP version 13
+# Subtest: actual Security includes mandatory automated single-owner source-only admission
+ok 1 - actual Security includes mandatory automated single-owner source-only admission
+  ---
+  duration_ms: 14.9351
+  ...
+# Subtest: cannot omit an original job or its mandatory automated admission dependency
+ok 2 - cannot omit an original job or its mandatory automated admission dependency
+  ---
+  duration_ms: 31.9953
+  ...
+# Subtest: cannot skip decision after a scanner or ignore a failed acceptance
+ok 3 - cannot skip decision after a scanner or ignore a failed acceptance
+  ---
+  duration_ms: 26.7285
+  ...
+# Subtest: unrelated checks remain hard gates
+ok 4 - unrelated checks remain hard gates
+  ---
+  duration_ms: 21.2856
+  ...
+# Subtest: expired original policy execution is retained
+ok 5 - expired original policy execution is retained
+  ---
+  duration_ms: 15.921
+  ...
+# Subtest: automated admission cannot regain an external approval dependency or ignore failure
+ok 6 - automated admission cannot regain an external approval dependency or ignore failure
+  ---
+  duration_ms: 22.5697
+  ...
+# Subtest: all three raw original artifacts are mandatory
+ok 7 - all three raw original artifacts are mandatory
+  ---
+  duration_ms: 7.0901
+  ...
+# Subtest: full reviewed collector cannot be replaced by a version-only scanner
+ok 8 - full reviewed collector cannot be replaced by a version-only scanner
+  ---
+  duration_ms: 14.5187
+  ...
+# Subtest: manual technical workflow supplies no automated acceptance route
+ok 9 - manual technical workflow supplies no automated acceptance route
+  ---
+  duration_ms: 8.8614
+  ...
+# Subtest: actual source-generated audited SBOM has only the two unchanged expired-policy refusals
+ok 10 - actual source-generated audited SBOM has only the two unchanged expired-policy refusals
+  ---
+  duration_ms: 36.2288
+  ...
+# Subtest: original audited command, raw exit, packet capture and mandatory structural decision cannot be omitted
+ok 11 - original audited command, raw exit, packet capture and mandatory structural decision cannot be omitted
+  ---
+  duration_ms: 26.8772
+  ...
+# Subtest: audited SBOM cannot add or hide a non-policy blocker or substitute an execution exit
+ok 12 - audited SBOM cannot add or hide a non-policy blocker or substitute an execution exit
+  ---
+  duration_ms: 92.7008
+  ...
+# Subtest: SBOM provenance cannot claim an offline, missing or incomplete registry audit
+ok 13 - SBOM provenance cannot claim an offline, missing or incomplete registry audit
+  ---
+  duration_ms: 20.6417
+  ...
+# Subtest: audited SBOM preserves exact typed advisory counts and every summary record
+ok 14 - audited SBOM preserves exact typed advisory counts and every summary record
+  ---
+  duration_ms: 44.3059
+  ...
+# Subtest: audited SBOM preserves every source-lock package and install-script provenance
+ok 15 - audited SBOM preserves every source-lock package and install-script provenance
+  ---
+  duration_ms: 55.2228
+  ...
+# Subtest: SBOM cannot fabricate signoff, omit fields or change the expired policy
+ok 16 - SBOM cannot fabricate signoff, omit fields or change the expired policy
+  ---
+  duration_ms: 33.3716
+  ...
+# Subtest: audited SBOM rejects future, stale, malformed timestamps and changed raw findings
+ok 17 - audited SBOM rejects future, stale, malformed timestamps and changed raw findings
+  ---
+  duration_ms: 27.9775
+  ...
+# Subtest: original OSV uses the verified exact binary and captures its real numeric exit
+ok 18 - original OSV uses the verified exact binary and captures its real numeric exit
+  ---
+  duration_ms: 26.9959
+  ...
+# Subtest: actual original exception CLI refusals bind source-bound scanner bytes and no approval
+ok 19 - actual original exception CLI refusals bind source-bound scanner bytes and no approval
+  ---
+  duration_ms: 36.6705
+  ...
+# Subtest: legacy fetch errors, newer releases, crashes, missing errors or invented stdout cannot be waived
+ok 20 - legacy fetch errors, newer releases, crashes, missing errors or invented stdout cannot be waived
+  ---
+  duration_ms: 688.6532
+  ...
+# Subtest: Gitleaks actual executable identity remains a mandatory original-job artifact
+ok 21 - Gitleaks actual executable identity remains a mandatory original-job artifact
+  ---
+  duration_ms: 14.4323
+  ...
+# Subtest: automated admission cannot omit exact commit/run or actual original outcomes
+ok 22 - automated admission cannot omit exact commit/run or actual original outcomes
+  ---
+  duration_ms: 41.8425
+  ...
+# Subtest: automated admission cannot be replaced by a separate green collection job
+ok 23 - automated admission cannot be replaced by a separate green collection job
+  ---
+  duration_ms: 13.3278
+  ...
+# Subtest: single-owner route contains no protected reviewer, signer, key or receipt dependency
+ok 24 - single-owner route contains no protected reviewer, signer, key or receipt dependency
+  ---
+  duration_ms: 0.1559
+  ...
+# Subtest: collection stays outside source until verified and then stages the full original artifact
+ok 25 - collection stays outside source until verified and then stages the full original artifact
+  ---
+  duration_ms: 20.0964
+  ...
+# Subtest: reviewed source pins must come from owner repository configuration, never the current commit itself
+ok 26 - reviewed source pins must come from owner repository configuration, never the current commit itself
+  ---
+  duration_ms: 13.5062
+  ...
+# Subtest: missing or self-computed source pin arguments cannot replace owner-configured pins
+ok 27 - missing or self-computed source pin arguments cannot replace owner-configured pins
+  ---
+  duration_ms: 13.879
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2501.0939

@@ -1,0 +1,5 @@
+command: git -c core.whitespace=cr-at-eol diff --check b9a6b093f392ced340c156f2e7dcaefc72ed58e1 8fd48286e0ad65e7797588d7cd88edde27fe4a5f
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: 8fd48286e0ad65e7797588d7cd88edde27fe4a5f
+snapshot_tree: f7772abe39325075b8a9231b0c98bbbd79c9c769
+exit_code: 0

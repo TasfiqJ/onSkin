@@ -1,0 +1,11 @@
+command: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\tools\node-v20.20.2-win-x64\node.exe C:\Users\jasim\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js run launch:execution-baseline:check
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: 8fd48286e0ad65e7797588d7cd88edde27fe4a5f
+snapshot_tree: f7772abe39325075b8a9231b0c98bbbd79c9c769
+exit_code: 0
+expected_exit: 0
+
+> layerwell@0.1.0 launch:execution-baseline:check
+> node scripts/launch/validate-execution-baseline.mjs
+
+Execution baseline valid: 25 plan items, 20 features, 12 grouped gated surfaces (14 contract keys); repository root C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage.

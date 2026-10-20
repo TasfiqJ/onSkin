@@ -1,0 +1,13 @@
+command: python -B scripts/brain/brain.py pack --task M0-02 --output C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\m0-02-measurements-final\M0-02-py39.zip
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c
+snapshot_tree: d60d4a591653b141964680f153a8d82937d2984f
+exit_code: 0
+expected_exit: 0
+{
+  "task_id": "M0-02",
+  "files": 49,
+  "input_bytes": 860347,
+  "archive_bytes": 876597,
+  "sha256": "b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547"
+}
