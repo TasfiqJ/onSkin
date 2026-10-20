@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+stderr | src/features/shelf/retainedSafety.integration.test.ts > retained encrypted Shelf with real account and health fences > publishes a durable offline save through the actual Shelf query cache
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/shelf/retainedSafety.integration.test.ts (5 tests | 1 failed) 409ms
+     × publishes a durable offline save through the actual Shelf query cache 386ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/shelf/retainedSafety.integration.test.ts > retained encrypted Shelf with real account and health fences > publishes a durable offline save through the actual Shelf query cache
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/features/shelf/retainedSafety.integration.test.ts:93:28
+     91|       });
+     92|       expect((await d.shelf.loadShelf())).toHaveLength(2);
+     93|       expect(visibleCount).toBe(2);
+       |                            ^
+     94|     } finally {
+     95|       onlineManager.setOnline(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  11:36:06
+   Duration  705ms (transform 202ms, setup 0ms, import 118ms, tests 409ms, environment 0ms)
+

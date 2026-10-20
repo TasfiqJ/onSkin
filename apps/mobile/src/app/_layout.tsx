@@ -13,6 +13,7 @@ import { NotificationResponseHost } from '@/features/notifications/NotificationR
 import { startLabelPhotoStartupScavenge } from '@/features/native/camera/labelPhotoStartup';
 import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLifecycleGate';
 import { AgePolicyGate } from '@/features/onboarding/AgePolicyGate';
+import { AgeReverificationRights } from '@/features/onboarding/AgeReverificationRights';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { prepareSensitiveImageDiskCacheMigration } from '@/features/photos/sensitiveImageDiskCache';
@@ -78,6 +79,7 @@ export default function RootLayout() {
                   <StoreTransactionNoticeHost />
                   <PrivateDataAvailabilityGate>
                     <AgePolicyGate
+                      recovery={<AgeReverificationRights />}
                       bootstrap={
                         <>
                           <StatusBar style="dark" />

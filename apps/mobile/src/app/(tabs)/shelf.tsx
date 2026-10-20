@@ -18,6 +18,7 @@ import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligen
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import type { ShelfMirrorIncompatibility } from '@/features/shelf/store';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
+import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { readReadyCatalogLookups, type ReadyCatalogLookup } from '@/lib/offline/catalogLookupQueue';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -302,10 +303,7 @@ function EmptyShelf({
         {splitShort ? (
           <>Add products you already own.</>
         ) : (
-          <>
-            Add products you already own. We&apos;ll handle freshness
-            and clashes.
-          </>
+          <>Add products you already own. We&apos;ll handle freshness and clashes.</>
         )}
       </Text>
       <View
@@ -419,7 +417,12 @@ function SkeletonCard() {
 // flash of "0 products" while the local-first store reads).
 function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }) {
   return (
-    <ScrollView onScroll={reportDockScroll} scrollEventThrottle={32} showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
+    <ScrollView
+      onScroll={reportDockScroll}
+      scrollEventThrottle={32}
+      showsVerticalScrollIndicator={false}
+      contentContainerClassName="pb-32"
+    >
       <View className="mt-2">
         <Text variant="title" className="text-[38px] leading-[40px]">
           Shelf
@@ -446,6 +449,14 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
 }
 
 export default function ShelfScreen() {
+  return (
+    <ShelfDataAvailabilityGate>
+      <ShelfScreenContent />
+    </ShelfDataAvailabilityGate>
+  );
+}
+
+function ShelfScreenContent() {
   const { data, isLoading } = useShelf();
   const catalogRecovery = useQuery({
     enabled: false,
@@ -490,7 +501,12 @@ export default function ShelfScreen() {
         <SkeletonShelf compactFilterLabels={compactFilterLabels} />
       ) : isEmpty ? (
         recoverySurface || repairSurface ? (
-          <ScrollView onScroll={reportDockScroll} scrollEventThrottle={32} showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
+          <ScrollView
+            onScroll={reportDockScroll}
+            scrollEventThrottle={32}
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="pb-32"
+          >
             <View className="mt-2">
               <Text variant="title" className="text-[38px] leading-[40px]">
                 Shelf
@@ -527,7 +543,12 @@ export default function ShelfScreen() {
           </>
         )
       ) : (
-        <ScrollView onScroll={reportDockScroll} scrollEventThrottle={32} showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
+        <ScrollView
+          onScroll={reportDockScroll}
+          scrollEventThrottle={32}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-32"
+        >
           <View className="mt-2 flex-row items-start justify-between gap-4">
             <View className="flex-1">
               <Text variant="title" className="text-[38px] leading-[40px]">

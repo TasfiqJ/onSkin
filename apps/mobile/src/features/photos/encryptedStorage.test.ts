@@ -988,11 +988,16 @@ describe('encrypted photo storage', () => {
 
   it('clears web photo authorities without calling unavailable SecureStore', async () => {
     mocks.platformOS = 'web';
+    mocks.getInfoAsync.mockImplementationOnce(() => {
+      throw new Error('Expo file API synchronously unavailable on web');
+    });
     mocks.asyncStorage.set(CONTENT_KEY_MARKER, '1');
 
     await expect(clearEncryptedPhotoStorage()).resolves.toBeUndefined();
 
     expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
+    expect(mocks.getInfoAsync).not.toHaveBeenCalled();
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 

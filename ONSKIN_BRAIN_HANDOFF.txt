@@ -1,33 +1,13 @@
-TASK M1-01 — PARTIAL / NOT ACCEPTED / FRESH CHAT REQUIRED
-Branch: stage/m1-retained-safety
-Repository: https://github.com/TasfiqJ/onSkin
-Original/observed remote main: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
-Accepted M0 task base:6aa01995f6dcb94fd28d358badc9f8d1e0273d39; tree3a75ea56f12f9422affc6e09936993ffa9252c05
-M0 branch preserved; PR8 unmerged. PR9 is draft/nonmerging, main promotion NOT AUTHORIZED.
-Sole writer used isolated worktree C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety. All original dirty worktrees preserved; evidence/worktree-reconciliation.json.
-
-MEASURED SOURCE AND EXECUTION
-71f313ddce12b618ecae2ade5402358c53c6f378; tree75963b8d0c0a538ba46a594bd98d9304badc7db1. Pushed and remote readback matched. Client/governance implementation stayed unchanged throughout subsequent measurements; later commits are evidence/handoff only.
-Root typecheck/lint/test forced fresh, zero cache hits, exit0. Tests:5956 mobile+24 console=5980 pass/0 fail/0 skip. Native-age source9/0/0. Governance39 pass/0 fail/2 actual Windows symlink skips; original fixed refusal tests retained. Active M1 profile and report validation pass. No M1 Linux/native/provider run. Exact commands/environments/receipts/log hashes:docs/brain/checkpoints/M1-01/completion-report.json.
-
-CHANGES AND DECISIONS
-Adult18 semantic tuple draft-v2-adult18/hash1b8bee5f09f3c367416ac9bb2381ba9e777b38ceeca9a68fc31e4a10d615f1a6. Receipt schema1 shape/minimization retained; former16+ proof requires fresh eligibility. No DOB persistence/telemetry/automatic purge; legal review stays draft_blocked. Native constants align; invocation stays closed.
-PrivateKV non-health single/batch reads now reject delayed continuations at account boundaries. Two prior red regressions retained. Shelf read/parse failures propagate rather than return empty success. Age gate closes global health-processing authority as it closes eligibility. Existing stable owner/consent/deletion/billing/store logic preserved and source-tested; full M1 audit remains incomplete.
-Immutable approved REVIEW-02 + issued M1 snapshot installed. Independent human digest48c0e58f00ce54910d640738debfd273a534403ec30aa980277977852f354656 anchored in source; active.json/M1 profile separate from unchanged historical M0 current/state/mirrors/reports/schemas. No self-issued task or acceptance.
-
-TOP BLOCKERS / NEXT SAME-TASK WORK
-M1-WEB-01: real390x844 Expo web first-session run showed Welcome/direct-Today age denial/valid synthetic DOB, then timed out reaching consent after Continue. Surface FAIL; no completed onboarding/manual Shelf pass. Last pre-submit screenshot, process log and timeout retained. App/fixture/harness cause unknown. Fresh writer must capture failure state before teardown, reproduce/compare accepted baseline, fix demonstrated cause, rerun exact flow and remaining supported sizes.
-M1-RIGHTS-01: finish safe withdrawal/export/account-deletion/subscription exits while adult proof needs re-verification. No automatic destructive deletion authorized.
-M1-MATRIX-01: finish full owner switch/sign-out/guest upgrade, consent/deletion pending/retry/non-resurrection and manual Shelf add/edit/archive/remove/offline/retry/double-submission surface matrix. No founder implementation choice or live mutation required for independent client work.
-Native iPhone/provider/qualified/clinical/commercial/release axes remain unperformed/blocked. No G97 GO.
-
-CI / PROTECTED BOUNDARIES
-Measured source PR9 test commit7b59865e155a874d4bc04dde95c89443081b083f has main+source parents and same source tree. Quality39435502258 repository job118671307055 failed stale docs/phase-4/generated/source-worklist.{json,md}; database job in progress in recorded snapshot, no M1 DB pass claimed. Security39435502255 failed source inventory plus OSV date/advisory checks; iOS39435502274 source-only success. Full sanitized relevant logs/metadata retained. Accepted M0 Quality recovery is historical, not borrowed.
-No changes to workflows, Supabase/SQL/schema/RLS/Edge, packages/package-lock, protected Security inventory/coverage/pins/exceptions/date. Source-only proposal expiry remains2026-10-21T00:00:00Z. No spend, signing, deployment, live account/data mutation, main merge/push or release.
-
-DELIVERY AND REF RESOLUTION
-Detailed report/evidence:docs/brain/checkpoints/M1-01/. TRACEABILITY.md and M1-WEB-01.md explain exact coverage and remaining work. All safe source/evidence/handoff payloads are committed to the stage; no safe work is intentionally excluded. Ignored dependency junctions/caches remain local, with no dependency install/upgrade.
-The report/handoff commit cannot measure or name its own SHA. Resolve the final delivery from live origin refs/heads/stage/m1-retained-safety and verify local HEAD matches; final closing tool transcript records push outcome, actual ref and clean tracked/untracked status. If this file is read from that remote ref, its containing commit was pushed. CI on that later exact ref must be observed separately; do not substitute the measured source runs above.
-
-CONTEXT HEALTH
-HIGH; no compaction observed. Mandatory fresh-chat rotation under issued TASK.md before further source work. This is a reviewable partial checkpoint, not M1 completion/acceptance. Stop for independent Brain review; no new task or main promotion.
+M1-01 / CONT-01 — IMPLEMENTATION CHECKPOINT / PARTIAL / REVIEW REQUIRED
+Branch stage/m1-retained-safety; continuation base c0d97372212fd94e168b1c598b603381ccb9f9cc. Main and M0/PR8 untouched. PR9 stays draft/unmerged.
+Independent continuation manifest SHA256:18555ec3257fb4c60fdf0f6de47ccc62403b39cf17d9d838cafd8f19b81585fa.
+Exact Brain review:docs/brain/reviews/M1-01/REVIEW-01. Original M0/M1 inputs, reports and refusal tests preserved.
+Candidate fixes: both Metro linked targets watched; actual mobile ciphers2.3 randomBytes restored; web native-only photo cleanup avoids unsupported APIs but preserves unexpected vault ciphertext; current-to-current age publication navigates after durable owner commit.
+Verified-owner rights shell sits outside health providers; no reconsent or broad route exception. Paused withdrawal keeps exact-owner/epoch durable intents. Foreground/owner/stale callback fences remain.
+Shelf reads show honest recovery; detail writes retain feedback/retry and fence publication; local Shelf query refreshes offline. Real encrypted/query regression reproduced persisted4/visible3 before the fix.
+M1 profile now checks evidence inventory, measured ancestry, runtime drift, typed outcomes and exact CI metadata; new CLI fixtures use real Git.
+Source checkpoint precedes unchanged-generator worklist regeneration and final exact-head measurements. Do not attribute exploratory dirty runs to this commit. Formal report/evidence is being prepared under docs/brain/checkpoints/M1-01/CONT-01.
+Baseline CI refreshed: Quality39440004766 repository failure, DB118687176281 success; PG15/17 success. Security39440004524 failure; iOS39440004457 source-only success. These are historical c0 results, not new source CI.
+Protected Security inventory/pins/dates/workflows/packages/DB paths unchanged. Proposal expiry2026-10-21T00:00:00Z unchanged. No spend, deployment, live mutations, merge/main push or release. Native/provider/qualified evidence remains NOT_RUN/BLOCKED.
+Resolve actual delivery from live origin/stage/m1-retained-safety and local HEAD; this file cannot name its containing commit. Final handoff will name the measured source after tests.
+Context:MODERATE; no compaction observed at this source checkpoint. One writer; remaining task is final measurements, available surface matrix, derived freshness and review packet, not a new task.

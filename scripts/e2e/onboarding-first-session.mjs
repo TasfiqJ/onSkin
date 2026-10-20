@@ -60,6 +60,10 @@ function assert(condition, message) {
 }
 
 function clearPreviousEvidence() {
+  assert(
+    readdirSync(evidenceDir).length === 0,
+    'Use a fresh evidence directory; prior evidence is immutable.',
+  );
   for (const entry of readdirSync(evidenceDir, { withFileTypes: true })) {
     if (!entry.isFile()) continue;
     if (!/\.(?:json|log|md|png)$/i.test(entry.name)) continue;
@@ -306,6 +310,26 @@ class CdpClient {
       return;
     }
 
+    if (message.method === 'Debugger.paused') {
+      const rows = this.events.filter((event) => event.method === 'diagnostic.exception');
+      this.events.push({
+        method: 'diagnostic.exception',
+        params: {
+          description: message.params.data?.description?.slice(0, 2000),
+          frames: message.params.callFrames.slice(0, 8).map((frame) => ({
+            functionName: frame.functionName,
+            location: frame.location,
+          })),
+        },
+      });
+      if (rows.length < 100)
+        writeJson(
+          'exceptions.json',
+          this.events.filter((e) => e.method === 'diagnostic.exception'),
+        );
+      void this.send('Debugger.resume');
+      return;
+    }
     if (message.method) this.events.push(message);
   }
 
@@ -782,6 +806,170 @@ async function addProduct(client, product, evidenceName) {
   return await captureStep(client, evidenceName);
 }
 
+async function retainedRoute(client, pathname) {
+  // Normal web router history event; no provider, lease or consent injection.
+  await evaluate(
+    client,
+    `(() => { history.pushState({}, '', ${JSON.stringify(pathname)}); dispatchEvent(new PopStateEvent('popstate')); })()`,
+  );
+  await waitForPath(client, pathname.split('?')[0]);
+}
+
+async function retainedShelfFlow(client) {
+  await retainedRoute(client, '/shelf/no-match?barcode=4006381333931');
+  await waitForText(client, 'Add it by hand');
+  await captureStep(client, 'M1-01-manual-fallback');
+  await clickByText(client, 'Add it by hand', { exact: false });
+  await waitForPath(client, '/shelf/manual');
+  await fillByLabel(client, 'Product name', 'Synthetic manual moisturizer');
+  await clickByText(client, 'Category');
+  await clickByText(client, 'Category, Moisturiser (tube)');
+  await clickByText(client, 'Continue');
+  await waitForText(client, 'Not opened yet');
+  await clickByText(client, 'Not opened yet');
+  await scrollTextIntoView(client, 'Add to shelf');
+  const manualReady = await captureStep(client, 'M1-01b-manual-ready', { assertClean: false });
+  // The modal intentionally occludes its mounted background form. Check the
+  // actionable modal control, retaining the full audit (including occlusion).
+  assertInteractiveControl(manualReady, 'Add to shelf');
+  assert(manualReady.overflowX <= 1, 'Manual modal overflowed horizontally.');
+  await client.send('Network.emulateNetworkConditions', {
+    offline: true,
+    latency: 0,
+    downloadThroughput: -1,
+    uploadThroughput: -1,
+  });
+  const rect = await evaluate(client, rectByTextExpression('Add to shelf', true));
+  assert(rect && !rect.disabled, 'Manual save must be reachable offline.');
+  for (let n = 0; n < 2; n++) {
+    await client.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
+      touchPoints: [{ x: rect.x, y: rect.y, id: 1 }],
+    });
+    await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  }
+  await captureStep(client, 'M1-01c-after-double-submit', { assertClean: false });
+  writeJson(
+    'M1-offline-durable-read.json',
+    await evaluate(
+      client,
+      `(async () => {
+    const module = [...__r.getModules().values()].find(m => /lib[\\\\/]storage[\\\\/]privateKV\\.ts$/.test(m.verboseName ?? ''));
+    if (!module) return { available: false };
+    const raw = await module.publicModule.exports.getPrivateItem('layerwell.shelf.v1');
+    const shelf = JSON.parse(raw);
+    return { available: true, version: shelf.version, productCount: shelf.products.length,
+      containsSyntheticManual: shelf.products.some(p => p.name === 'Synthetic manual moisturizer') };
+  })()`,
+      true,
+    ),
+  );
+  await waitForPath(client, '/shelf');
+  await waitForText(client, 'Synthetic manual moisturizer');
+  await captureStep(client, 'M1-02-offline-double-save');
+  const matches = await evaluate(
+    client,
+    `Array.from(document.querySelectorAll('[role="button"]')).filter(n => n.getAttribute('aria-label')?.startsWith('Synthetic manual moisturizer')).length`,
+  );
+  assert(matches === 1, `Double save rendered ${matches} manual rows.`);
+  await clickByText(client, 'Synthetic manual moisturizer', { exact: false });
+  await clickByText(client, 'Edit opened date');
+  await clickByText(client, '1 mo ago');
+  await captureStep(client, 'M1-03-offline-edit');
+  await evaluate(
+    client,
+    `(() => { const original = Storage.prototype.setItem;
+    globalThis.__M1_RESTORE_SYNTHETIC_WRITE__ = () => { Storage.prototype.setItem = original; delete globalThis.__M1_RESTORE_SYNTHETIC_WRITE__; };
+    Storage.prototype.setItem = function(key, value) { if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic local write failure', 'QuotaExceededError'); return original.call(this, key, value); };
+  })()`,
+  );
+  await clickByText(client, 'Edit opened date');
+  await clickByText(client, 'Today');
+  await waitForText(client, 'Your change was not confirmed.');
+  await captureStep(client, 'M1-03b-write-failure-intent-retained', { assertClean: false });
+  await evaluate(client, 'globalThis.__M1_RESTORE_SYNTHETIC_WRITE__()');
+  await clickByText(client, 'Today');
+  await waitForCondition(
+    client,
+    `!document.body.innerText.includes('Your change was not confirmed.')`,
+    30_000,
+    'write retry success',
+  );
+  await captureStep(client, 'M1-03c-write-retry', { assertClean: false });
+  await clickByText(client, 'Mark finished');
+  await waitForPath(client, '/shelf');
+  await retainedRoute(client, '/shelf/archive');
+  await waitForText(client, 'Synthetic manual moisturizer');
+  await captureStep(client, 'M1-04-offline-archive');
+  await client.send('Network.emulateNetworkConditions', {
+    offline: false,
+    latency: 0,
+    downloadThroughput: -1,
+    uploadThroughput: -1,
+  });
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Synthetic manual moisturizer', 60_000);
+  await captureStep(client, 'M1-05-archive-relaunch');
+  await retainedRoute(client, '/shelf');
+  await scrollTextIntoView(client, 'Retinol 0.3% serum', { exact: false });
+  await clickByText(client, 'Retinol 0.3% serum', { exact: false });
+  await clickByText(client, 'More options');
+  await evaluate(
+    client,
+    `(() => { const original = Storage.prototype.setItem;
+    globalThis.__M1_RESTORE_SYNTHETIC_WRITE__ = () => { Storage.prototype.setItem = original; delete globalThis.__M1_RESTORE_SYNTHETIC_WRITE__; };
+    Storage.prototype.setItem = function(key, value) { if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic local write failure', 'QuotaExceededError'); return original.call(this, key, value); };
+  })()`,
+  );
+  await clickByText(client, 'Remove completely', { exact: false });
+  await waitForText(client, 'Your change was not confirmed.');
+  await captureStep(client, 'M1-05b-remove-failure', { assertClean: false });
+  await evaluate(client, 'globalThis.__M1_RESTORE_SYNTHETIC_WRITE__()');
+  await clickByText(client, 'Remove completely', { exact: false });
+  await waitForPath(client, '/shelf');
+  assert(
+    !(await evaluate(client, 'document.body.innerText')).includes('Retinol 0.3% serum'),
+    'Removed product remains visible.',
+  );
+  await captureStep(client, 'M1-06-remove');
+  const retainedCiphertext = await evaluate(client, `localStorage.getItem('layerwell.shelf.v1')`);
+  assert(
+    retainedCiphertext && !retainedCiphertext.includes('Synthetic manual moisturizer'),
+    'Shelf was not encrypted.',
+  );
+  await evaluate(
+    client,
+    `localStorage.setItem('layerwell.shelf.v1', '{"version":"xchacha20poly1305:v99"}')`,
+  );
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Your private data could not open.', 60_000);
+  await captureStep(client, 'M1-07-corruption-preserved');
+  assert(
+    await evaluate(
+      client,
+      `localStorage.getItem('layerwell.shelf.v1') === '{"version":"xchacha20poly1305:v99"}'`,
+    ),
+    'Corrupt bytes were silently changed.',
+  );
+  await evaluate(
+    client,
+    `localStorage.setItem('layerwell.shelf.v1', ${JSON.stringify(retainedCiphertext)})`,
+  );
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Shelf', 60_000);
+  await captureStep(client, 'M1-08-storage-recovered');
+  // The dev anonymous fixture has no persisted Auth session. Publish its owner
+  // through the actual eligible age form again before testing owner rights.
+  await retainedRoute(client, '/onboarding/age');
+  await waitForText(client, 'First, your');
+  await fillByLabel(client, 'Day of birth', '01');
+  await fillByLabel(client, 'Month of birth', '01');
+  await fillByLabel(client, 'Year of birth', '1990');
+  await clickByText(client, 'Continue');
+  await waitForPath(client, '/onboarding/consent');
+  await waitForText(client, 'Before the quiz');
+}
+
 function writeReport(summary) {
   const taskLabel = summary.accountUpgradeMode
     ? 'Anonymous account-upgrade recovery run'
@@ -904,6 +1092,25 @@ async function run() {
     await fillByLabel(client, 'Month of birth', '01');
     await fillByLabel(client, 'Year of birth', '1990');
     await captureStep(client, '03-age-filled');
+    if (process.argv.includes('--diagnose-exceptions')) {
+      await client.send('Debugger.enable');
+      await client.send('Debugger.setPauseOnExceptions', { state: 'all' });
+    }
+    writeJson(
+      'bundle-crypto-provenance.json',
+      await evaluate(
+        client,
+        `(() => {
+      const modules = globalThis.__r?.getModules?.();
+      if (!modules) return { available: false };
+      return { available: true, modules: [...modules.values()]
+        .filter(m => /ciphers/i.test(m.verboseName ?? ''))
+        .map(m => ({ path: m.verboseName, initialized: m.isInitialized,
+          randomBytes: typeof m.publicModule?.exports?.randomBytes,
+          xchacha20poly1305: typeof m.publicModule?.exports?.xchacha20poly1305 })) };
+    })()`,
+      ),
+    );
     await clickByText(client, 'Continue');
 
     await waitForPath(client, '/onboarding/consent', 30_000);
@@ -1135,13 +1342,16 @@ async function run() {
     const todayAfterTabRoundTrip = await captureStep(client, '23-today-after-tab-round-trip', {
       assertClean: false,
     });
+    if (process.argv.includes('--retained-safety')) await retainedShelfFlow(client);
 
     let ageReverificationBefore = null;
     let ageReverificationBlocked = null;
     let ageReverificationDirectToday = null;
     let ageReverificationReloadedToday = null;
     if (!accountUpgradeMode && !accountIsolationMode) {
-      await client.send('Page.navigate', { url: `${baseUrl}/onboarding/age` });
+      if (process.argv.includes('--retained-safety'))
+        await retainedRoute(client, '/onboarding/age');
+      else await client.send('Page.navigate', { url: `${baseUrl}/onboarding/age` });
       await waitForPath(client, '/onboarding/age', 30_000);
       await waitForText(client, 'First, your', 30_000);
       await fillByLabel(client, 'Day of birth', '01');
@@ -1151,6 +1361,34 @@ async function run() {
       await clickByText(client, 'Continue');
       await waitForText(client, 'You need to be at least 18', 30_000);
       ageReverificationBlocked = await captureStep(client, '26-age-reverification-blocked');
+      if (process.argv.includes('--retained-safety')) {
+        await clickByText(client, 'Privacy & account');
+        await waitForText(client, 'Export my data');
+        const rights = await captureStep(client, 'M1-09-verified-owner-rights');
+        assert(
+          !rights.bodyText.includes('Review fresh consent') &&
+            !rights.bodyText.includes('Morning routine'),
+          'Rights shell reopened health admission.',
+        );
+        await scrollTextIntoView(client, 'Delete account');
+        await clickByText(client, 'Delete account');
+        await waitForText(client, 'Delete the whole account');
+        await captureStep(client, 'M1-10-delete-cancel');
+        await scrollTextIntoView(client, 'Cancel');
+        await clickByText(client, 'Cancel');
+        await scrollTextIntoView(client, 'Withdraw health-data consent');
+        await clickByText(client, 'Withdraw health-data consent');
+        await scrollTextIntoView(client, 'Confirm withdrawal');
+        await clickByText(client, 'Confirm withdrawal');
+        await waitForText(client, 'Status: withdrawn.');
+        await captureStep(client, 'M1-11-age-closed-withdrawal');
+        assert(
+          !(await evaluate(client, 'document.body.innerText')).includes('Review fresh consent'),
+          'Rights shell offered health activation.',
+        );
+        await scrollTextIntoView(client, 'Back to age confirmation');
+        await clickByText(client, 'Back to age confirmation');
+      }
       assert(
         !ageReverificationBlocked.bodyText.includes('Morning routine') &&
           !ageReverificationBlocked.bodyText.includes('Evening routine'),
@@ -1291,6 +1529,7 @@ async function run() {
     }
 
     const summary = {
+      retainedSafetyMode: process.argv.includes('--retained-safety'),
       accountIsolationMode,
       accountIsolation: accountIsolationMode
         ? {
@@ -1479,6 +1718,14 @@ async function run() {
     writeJson('summary.json', summary);
     writeReport(summary);
     console.log(`Onboarding first-session E2E passed. Evidence: ${evidenceDir}`);
+  } catch (error) {
+    // Capture the actual failed surface before closing Chrome/Metro. Synthetic
+    // fixture only: never inspect storage, keys, cookies or network bodies.
+    if (client) {
+      await captureStep(client, 'FAILURE', { assertClean: false }).catch(() => undefined);
+    }
+    writeJson('ERROR.json', { status: 'FAIL', message: String(error.message), viewport });
+    throw error;
   } finally {
     client?.close();
     await stopProcess(browser);

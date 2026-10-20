@@ -12,11 +12,18 @@ const path = require('path');
 const projectRoot = __dirname;
 const monorepoRoot = path.resolve(projectRoot, '../..');
 const hoistedNodeModules = path.resolve(monorepoRoot, 'node_modules');
-const resolvedHoistedNodeModules = fs.realpathSync(hoistedNodeModules);
-const linkedDependencyWatchFolders =
-  path.relative(hoistedNodeModules, resolvedHoistedNodeModules) === ''
-    ? []
-    : [resolvedHoistedNodeModules];
+const appNodeModules = path.resolve(projectRoot, 'node_modules');
+// Metro's file map must contain each junction target before the resolver can
+// honor the app-first search path. The hoisted target does not contain the
+// separately installed app dependencies (including @noble/ciphers 2.x).
+const linkedDependencyWatchFolders = [
+  ...new Set(
+    [appNodeModules, hoistedNodeModules]
+      .filter((folder) => fs.existsSync(folder))
+      .map((folder) => fs.realpathSync(folder))
+      .filter((folder) => !folder.startsWith(`${monorepoRoot}${path.sep}`)),
+  ),
+];
 
 const config = getSentryExpoConfig(projectRoot);
 const repoTempPattern = new RegExp(
@@ -31,7 +38,7 @@ const repoTempPattern = new RegExp(
 config.watchFolders = [monorepoRoot, ...linkedDependencyWatchFolders];
 
 // 2. Resolve modules from the app first, then the hoisted root.
-config.resolver.nodeModulesPaths = [path.resolve(projectRoot, 'node_modules'), hoistedNodeModules];
+config.resolver.nodeModulesPaths = [appNodeModules, hoistedNodeModules];
 config.resolver.blockList = [
   ...(Array.isArray(config.resolver.blockList)
     ? config.resolver.blockList

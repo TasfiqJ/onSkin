@@ -19,6 +19,7 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { SHELF_PRODUCT_NAME_MAX_LENGTH } from '@/features/shelf/limits';
 import { useShelf } from '@/features/shelf/useShelf';
+import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
 import {
   motionAllowed,
   useReduceMotionPreference,
@@ -125,7 +126,11 @@ function CategoryPickerSheet({
 export default function ProductsScreen() {
   const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
 
-  return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;
+  return (
+    <ShelfDataAvailabilityGate>
+      <ProductsScreenContent key={addedProductId ?? 'initial-add'} />
+    </ShelfDataAvailabilityGate>
+  );
 }
 
 function ProductsScreenContent() {

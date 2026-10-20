@@ -1,4 +1,5 @@
 import { Redirect, Stack } from 'expo-router';
+import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
 
 import {
   shouldReduceMotion,
@@ -13,9 +14,11 @@ export default function ShelfLayout() {
   return (
     <Stack
       screenLayout={({ route, children }) =>
-        ['scan', 'search', 'catalog-recovery'].includes(route.name)
-          ? <Redirect href="/shelf/manual" />
-          : children
+        ['scan', 'search', 'catalog-recovery'].includes(route.name) ? (
+          <Redirect href="/shelf/manual" />
+        ) : (
+          <ShelfDataAvailabilityGate>{children}</ShelfDataAvailabilityGate>
+        )
       }
       screenOptions={{ headerShown: false }}
     >

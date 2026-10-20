@@ -1,5 +1,7 @@
 # Durable Brain state and succession
 
+Current M1 continuation: [REVIEW-01](reviews/M1-01/REVIEW-01/AUDIT_M1-01_REVIEW01.md), **FIX_REQUIRED / PARTIAL**, and the independently anchored [CONT-01 input](checkpoints/M1-01/CONT-01/inputs/TASK.md). Its successor evidence/report lives under `checkpoints/M1-01/CONT-01/`; the original M1 report remains historical. Validate the new report with `python -B scripts/brain/brain.py --profile M1-01 report docs/brain/checkpoints/M1-01/CONT-01/completion-report.json`. This does not accept M1 or authorize promotion. The immutable M0 state and original M1 issuance remain intact.
+
 Active authority is now [REVIEW-02](reviews/M0-02/REVIEW-02/README.md): M0-02 accepted for governance only; M1-01 explicitly issued. [active.json](active.json) is the M1 execution overlay. The unchanged `current.json`, state, REVIEW-01, original reports, schemas and mirrors below remain the historical M0 profile. They do not describe the active task. M1 source work cannot accept itself or promote main.
 
 Use `python -B scripts/brain/brain.py --profile M1-01 validate` for the active profile, and `--profile M1-01 report docs/brain/checkpoints/M1-01/completion-report.json` for its report. The default profile remains M0-02 for historical verification. M1 input bytes and the human-provided issuance digest are checked independently of its mutable task spec. Run `python -B -m unittest discover -s scripts/brain -p "test_*.py" -v` for both profiles and the original refusal cases. See [M1 checkpoint](checkpoints/M1-01/README.md).

@@ -149,10 +149,9 @@ describe('onboarding route contracts', () => {
     expect(gate).toContain("router.replace('/onboarding/age')");
     expect(gate).toContain("receiptStatus === 'unavailable'");
     expect(gate).toContain("receiptStatus === 'current'");
-    expect(gate).toContain('return <>{bootstrap}</>');
-    expect(gate.indexOf("receiptStatus === 'current'")).toBeLessThan(
-      gate.indexOf('return <>{bootstrap}</>'),
-    );
+    expect(gate).toContain('{bootstrap}');
+    expect(layout).toContain('recovery={<AgeReverificationRights />}');
+    expect(gate.indexOf("receiptStatus === 'current'")).toBeLessThan(gate.indexOf('{bootstrap}'));
     expect(gate).toContain("AppState.addEventListener('change'");
     expect(gate).toContain("if (nextState !== 'active')");
     expect(gate).toContain("setReceiptStatus('checking')");
@@ -217,9 +216,8 @@ describe('onboarding route contracts', () => {
     const source = readAppRoute('onboarding/products.tsx');
 
     expect(source).toContain('useLocalSearchParams<{ addedProductId?: string }>()');
-    expect(source).toContain(
-      "return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;",
-    );
+    expect(source).toContain("<ProductsScreenContent key={addedProductId ?? 'initial-add'} />");
+    expect(source).toContain('<ShelfDataAvailabilityGate>');
     expect(source).toContain('function ProductsScreenContent()');
     expect(source).toContain("const [name, setName] = useState('');");
     expect(source).toContain(
@@ -238,7 +236,9 @@ describe('onboarding route contracts', () => {
 
     expect(age).toContain('useWindowDimensions');
     expect(age).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
-    expect(age).toMatch(/<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1"\s+showsVerticalScrollIndicator/);
+    expect(age).toMatch(
+      /<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1"\s+showsVerticalScrollIndicator/,
+    );
     expect(age).toContain('className="bg-paper pb-4 pt-2"');
     expect(age).toContain('confirms your age before skin-health data');
 
@@ -246,7 +246,9 @@ describe('onboarding route contracts', () => {
       expect(source).toContain(
         '<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>',
       );
-      expect(source).toMatch(/<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1"\s+showsVerticalScrollIndicator/);
+      expect(source).toMatch(
+        /<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1"\s+showsVerticalScrollIndicator/,
+      );
       expect(source).toContain('contentContainerClassName="pb-28"');
       expect(source).toContain('className="bg-paper pb-4 pt-2"');
       expect(source).not.toContain("style={{ width: '48%' }}");
@@ -480,7 +482,9 @@ describe('onboarding route contracts', () => {
     expect(source).toMatch(
       /<ScrollView\s+ref={scrollRef}\s+className="flex-1"\s+showsVerticalScrollIndicator/,
     );
-    expect(source).not.toMatch(/<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1 overflow-hidden"/);
+    expect(source).not.toMatch(
+      /<ScrollView(?:\s+key=\{question.id\})?\s+className="flex-1 overflow-hidden"/,
+    );
     expect(source).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(source).toContain(
       'scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) })',

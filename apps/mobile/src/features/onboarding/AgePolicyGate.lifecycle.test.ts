@@ -180,6 +180,17 @@ afterEach(async () => {
 });
 
 describe('AgePolicyGate foreground receipt lifecycle', () => {
+  it('consumes a fresh durable publication even when the receipt was already current', async () => {
+    mocks.segments = ['onboarding', 'age'];
+    mocks.getReceiptStatus.mockResolvedValueOnce('current');
+    await renderGate();
+    await flush();
+    expect(protectedMounted()).toBe(true);
+    stagePostAgeConsentRoute();
+    await act(async () => mocks.setQueryData(['agePolicyReceiptStatus', 'policy-hash'], 'current'));
+    await flush();
+    expect(mocks.replace).toHaveBeenCalledExactlyOnceWith('/onboarding/consent');
+  });
   it('closes protected providers on background and keeps them closed through a fresh missing read', async () => {
     const initial = deferred<AgePolicyReceiptStatus>();
     mocks.getReceiptStatus.mockReturnValueOnce(initial.promise);

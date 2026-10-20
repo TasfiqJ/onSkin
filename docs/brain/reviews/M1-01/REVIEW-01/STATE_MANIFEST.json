@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "state_version": "brain-m1-01-partial-reviewed-cont01-issued-6",
+  "scope": "BRAIN_REVIEW_ONLY_NO_M1_ACCEPTANCE_OR_MAIN_PROMOTION",
+  "files": [
+    {
+      "path": "ACCEPTANCE_LEDGER.json",
+      "bytes": 6489,
+      "sha256": "0ba2f2c8b78dc71798effc66581cb9b17fff6079e2077df6a634c44fa5b61c86"
+    },
+    {
+      "path": "ADR_REGISTRY.json",
+      "bytes": 15489,
+      "sha256": "c5f03a3284d1d8114d247f186252100ccedca642ff02f0cd06fd6bcbe90bad13"
+    },
+    {
+      "path": "AUDIT_M1-01_REVIEW01.md",
+      "bytes": 8873,
+      "sha256": "86030065c38d1dbd6df6d82370f736a02cf9a740edd1b52ddfd1e943024ec229"
+    },
+    {
+      "path": "BLOCKERS.json",
+      "bytes": 11600,
+      "sha256": "48b946d1d756d910c3362769c62eb22081f21eed3321ecbf15fcfe2e7c319ffe"
+    },
+    {
+      "path": "BRAIN_RESUME_PROMPT.txt",
+      "bytes": 927,
+      "sha256": "a4a4708808af7142d986bc0bad473b840400dd11a17f24f4a705813da0a59326"
+    },
+    {
+      "path": "CI_OBSERVATIONS.json",
+      "bytes": 1984,
+      "sha256": "181194699c4caacd05217355203e43f0af610d3c1474955b93f575bb3333c6cd"
+    },
+    {
+      "path": "DECISIONS_DELTA.md",
+      "bytes": 830,
+      "sha256": "0bc34a979be9dfe0170d1844612d2cc44b49eb83da8d2ded6a59215d4fc1737a"
+    },
+    {
+      "path": "FINDINGS.json",
+      "bytes": 2080,
+      "sha256": "c07d053d777154579ea93633a5801418cbb71c3bc2f204f08554e275f5179093"
+    },
+    {
+      "path": "README.md",
+      "bytes": 695,
+      "sha256": "534c9a05f0c9b5fb5dd3579047d818fde3095d9dfe46093610502e99ff23f43b"
+    },
+    {
+      "path": "REPRODUCED_CASES.json",
+      "bytes": 1274,
+      "sha256": "ab82d4e4622015b82f5683d2520167584a4151d02b746f4f3b66623c7b2fbad5"
+    },
+    {
+      "path": "REVIEW_OBSERVATIONS.json",
+      "bytes": 8176,
+      "sha256": "e1c47951ad78af8f3ce987be8862f2286ad8afc239ef476c05c64a04dcda32a1"
+    },
+    {
+      "path": "STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 1719,
+      "sha256": "9804659fb9f8a7f6482cb8ecff251c6a51960d46db967c07b877b67db6e1d2bd"
+    },
+    {
+      "path": "brain_state.json",
+      "bytes": 27436,
+      "sha256": "ab781aad2a246d42a546325c21cf9850e1b71b26d31a8ba44b74de0282d18f8e"
+    },
+    {
+      "path": "roadmap.json",
+      "bytes": 45854,
+      "sha256": "8452afa6db291dedd7a0ad1d1f74ce552d901542be996a0df53ae0618ec768a9"
+    }
+  ]
+}

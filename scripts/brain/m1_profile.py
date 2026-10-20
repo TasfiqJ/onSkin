@@ -7,6 +7,21 @@ BASE = '6aa01995f6dcb94fd28d358badc9f8d1e0273d39'
 TREE = '3a75ea56f12f9422affc6e09936993ffa9252c05'
 BRANCH = 'stage/m1-retained-safety'
 VERSION = 'brain-m0-02-accepted-m1-01-issued-5'
+CONT_INPUT = 'docs/brain/checkpoints/M1-01/CONT-01/inputs'
+CONT_REVIEW = 'docs/brain/reviews/M1-01/REVIEW-01'
+CONT_DIGEST = '18555ec3257fb4c60fdf0f6de47ccc62403b39cf17d9d838cafd8f19b81585fa'
+
+
+def validate_continuation(root):
+    raw = brain.read(root, CONT_INPUT + '/TASK_MANIFEST.json')
+    brain.require(brain.digest(raw) == CONT_DIGEST, 'Continuation independently anchored manifest differs')
+    manifest = brain.decode(raw)
+    brain.require(manifest['task_id'] == 'M1-01' and manifest['iteration'] == 'CONT-01', 'Wrong continuation')
+    for row in manifest['files']:
+        blob = brain.read(root, CONT_INPUT + '/' + row['path'])
+        brain.require(len(blob) == row['bytes'] and brain.digest(blob) == row['sha256'], 'Continuation input changed')
+        if row['path'].startswith('BRAIN_REVIEW/'):
+            brain.require(blob == brain.read(root, CONT_REVIEW + '/' + row['path'].split('/', 1)[1]), 'Continuation review changed')
 
 
 def validate(root):
@@ -14,6 +29,7 @@ def validate(root):
     brain.verify_inputs(root)
     brain.validate_state(root)
     brain.mirrors(root)
+    validate_continuation(root)
     _, manifest = brain.package_data(root, 'M1-01')
     issued = brain.load(root, INPUT + '/TASK_MANIFEST.json')
     brain.require(issued['branch'] == BRANCH and issued['base_commit'] == BASE and
@@ -56,10 +72,11 @@ def validate(root):
 def report(root, name):
     validate(root)
     value = brain.load(root, name)
-    brain.require(set(value) == {'schema_version', 'task_id', 'branch', 'status', 'measured',
+    fields = {'schema_version', 'task_id', 'branch', 'status', 'measured',
                   'delivery_ref', 'executions', 'artifacts', 'scope_matrix', 'axes', 'blockers',
-                  'context_health'}, 'Unknown/missing M1 report field')
-    brain.require(type(value['schema_version']) is int and value['schema_version'] == 1 and
+                  'context_health'}
+    brain.require(set(value) == fields | ({'ci'} if value.get('schema_version') == 2 else set()), 'Unknown/missing M1 report field')
+    brain.require(type(value['schema_version']) is int and value['schema_version'] in [1, 2] and
                   value['task_id'] == 'M1-01' and value['branch'] == BRANCH and
                   value['status'] in ['PARTIAL', 'BLOCKED', 'SUBMITTED_REVIEW_REQUIRED'],
                   'Invalid M1 report authority/status')
@@ -70,17 +87,61 @@ def report(root, name):
                    'measured -> delivery')
     brain.require(isinstance(value['executions'], list) and isinstance(value['artifacts'], list),
                   'Invalid evidence lists')
-    for entry in value['executions']:
-        brain.validate_execution(root, entry)
+    artifacts = {item['path']: item for item in value['artifacts']}
+    brain.require(len(artifacts) == len(value['artifacts']), 'Duplicate report artifact')
+    brain.require(name not in artifacts and 'ONSKIN_BRAIN_HANDOFF.txt' not in artifacts, 'Self-referential report artifact')
     for item in value['artifacts']:
         brain.require(set(item) == {'path', 'sha256'} and
                       brain.digest(brain.read(root, item['path'])) == item['sha256'],
                       'Report artifact hash differs')
+    ids = set()
+    for entry in value['executions']:
+        brain.require(isinstance(entry.get('id'), str) and entry['id'] and entry['id'] not in ids, 'Duplicate/missing execution id')
+        ids.add(entry['id'])
+        brain.require(entry.get('axis') in ['source', 'integration', 'surface'] and entry.get('admission') == 'NONE', 'Invalid execution axis/admission')
+        brain.require(entry['artifact'] in artifacts and artifacts[entry['artifact']]['sha256'] == entry['sha256'], 'Execution receipt not listed')
+        receipt = brain.validate_execution(root, entry)
+        brain.require(receipt['output']['path'] in artifacts, 'Execution output not listed')
+        brain.ancestor(root, entry['source_commit'], value['measured']['commit'], 'execution -> measured')
+    # The evidence-only tail cannot silently substitute unmeasured runtime,
+    # test, configuration, tooling, or authority changes, including dirty files.
+    changed = brain.git(root, 'diff', '--name-only', value['measured']['commit']).splitlines()
+    changed += brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()
+    allowed = lambda path: path == 'ONSKIN_BRAIN_HANDOFF.txt' or path.startswith('docs/brain/checkpoints/M1-01/')
+    brain.require(all(allowed(path) for path in changed), 'Implementation differs from measured snapshot: ' + ', '.join(path for path in changed if not allowed(path)))
     # Evidence dimensions stay independent; no M1 report grants external admission.
     brain.require(set(value['axes']) == {'source', 'integration', 'surface', 'physical_device',
                   'live_provider', 'qualified_review', 'clinical', 'commercial', 'release'},
                   'Missing evidence axis')
     brain.require(all(value['axes'][k] in ['NOT_RUN', 'BLOCKED', 'NOT_ADMITTED'] for k in
-                  ['integration', 'physical_device', 'live_provider', 'qualified_review',
+                  ['physical_device', 'live_provider', 'qualified_review',
                    'clinical', 'commercial', 'release']), 'Unissued external admission')
+    for axis in ['source', 'integration', 'surface']:
+        status = value['axes'][axis]
+        brain.require(status in ['PASS', 'FAIL', 'PARTIAL_TESTED_NOT_COMPLETE', 'NOT_RUN', 'BLOCKED',
+                      'FAILED_EXPO_WEB_390_ONBOARDING_TIMEOUT'], 'Invalid typed evidence outcome')
+        entries = [entry for entry in value['executions'] if entry['axis'] == axis]
+        # The original schema attributed its failed surface runner to source.
+        if value['schema_version'] == 1 and axis == 'surface':
+            entries = [e for e in value['executions'] if e['id'].startswith('surface-')]
+        if status in ['PASS', 'PARTIAL_TESTED_NOT_COMPLETE']:
+            brain.require(entries and any(e['status'] == 'PASS' for e in entries), 'Unsupported axis PASS/partial evidence')
+            if status == 'PASS':
+                brain.require(all(e['status'] == 'PASS' for e in entries) and all(e['source_commit'] == value['measured']['commit'] for e in entries), 'PASS requires exact measured executions without failures')
+        if status in ['FAIL', 'FAILED_EXPO_WEB_390_ONBOARDING_TIMEOUT']:
+            brain.require(any(e['status'] == 'FAIL' for e in entries), 'Unsupported axis failure')
+    brain.require(isinstance(value['scope_matrix'], list) and isinstance(value['blockers'], list), 'Invalid scope/blockers')
+    for row in value['scope_matrix']:
+        brain.require(isinstance(row, dict) and isinstance(row.get('evidence'), list) and all(e in ids for e in row['evidence']), 'Unbound scope evidence')
+        brain.require(row.get('status') in ['PASS', 'FAIL', 'PARTIAL_TESTED', 'SOURCE_TESTED_SURFACE_FAILED', 'NOT_RUN', 'BLOCKED'], 'Invalid scope outcome')
+        if row['status'] in ['PASS', 'PARTIAL_TESTED', 'SOURCE_TESTED_SURFACE_FAILED']:
+            brain.require(row['evidence'] and any(next(e for e in value['executions'] if e['id'] == ref)['status'] == 'PASS' for ref in row['evidence']), 'Unsupported tested scope')
+        if row.get('status') == 'PASS':
+            brain.require(row['evidence'] and all(next(e for e in value['executions'] if e['id'] == ref)['status'] == 'PASS' for ref in row['evidence']), 'Unsupported scope PASS')
+    seen_ci = set()
+    brain.require(isinstance(value.get('ci', []), list), 'Invalid CI inventory')
+    for row in value.get('ci', []):
+        brain.require(row['run_id'] not in seen_ci, 'Duplicate CI run')
+        seen_ci.add(row['run_id'])
+        brain.ci_consistency(root, row, artifacts)
     return value

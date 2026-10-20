@@ -1,0 +1,9 @@
+area,minimum_cases,required_evidence,invariants
+STORAGE,Cold encrypted write/read/relaunch; unavailable/corrupt/missing key; actual bundled API; retained ciphertext,Fresh focused tests + actual synthetic app,No weak randomness/plaintext fallback/key replacement or erased bytes
+ONBOARDING,Adult submit -> current exact owner -> visible consent; decline/invalid/under18/storage failure; late callback/remount,Integrated boundaries + real390/375/430 flows,No receipt/consent fixture bypass or URL-only PASS
+RIGHTS,"Legacy16/missing/corrupt/unavailable eligibility: verified-owner rights shell, pending privacy/deletion, billing exit",Integrated negative controls + available real UI,No health subtree mount/new consent requirement/cross-owner export
+OWNER,"A->B, signout, same-owner guest upgrade, delayed private reads/writes, stale auth/UI, relaunch",Composed integration tests + compatible actual app,No content flash/migration loss/stale success
+CONSENT_DELETE,"withdrawal/deletion pending, repeated request/retry, offline/failure/restart, late old-epoch callback",Composed integration tests + compatible actual app,No resurrection/false deletion completion/billing safety loss
+SHELF,Manual no-match/add/edit/archive/remove/offline relaunch; double submit; old/corrupt/versioned envelopes,Integration + actual UI and durable outcomes,No false empty cabinet/destructive reset/unauthorized mirror replay
+REPORT,Valid partial/failure evidence; empty success; unlisted/missing/hash drift; future test; source drift; CI binding,Actual CLI positive/adversarial tests with real Git fixtures,Old M0 guards preserved; no offline provider authenticity inference
+WORKLIST_CI,Two derived worklist outputs current after clean source commit; statuses/gates unchanged; fresh CI read,Unchanged generator strict check + affected checks,No Security inventory/pin/date/coverage change or skipped=pass

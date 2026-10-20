@@ -1062,8 +1062,8 @@ export async function clearEncryptedPhotoStorage(): Promise<void> {
   const clearPhotoDirectory = async () => {
     if (Platform.OS === 'web') {
       // Expo's legacy file API has no web backend, so web cannot own photo files.
-      const info = await FileSystem.getInfoAsync(PHOTO_DIR).catch(() => null);
-      if (!info?.exists) return;
+      // Its unavailable-method stub throws synchronously, before .catch exists.
+      return;
     }
     await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true });
   };

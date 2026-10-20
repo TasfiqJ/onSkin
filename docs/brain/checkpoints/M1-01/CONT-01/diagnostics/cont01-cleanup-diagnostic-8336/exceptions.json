@@ -1,0 +1,242 @@
+[
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "TypeError: ExpoSecureStore.default.getValueWithKeyAsync is not a function\n    at Object.getItemAsync (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:109063:42)\n    at getPrivateSecureStoreItemAsync (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126825:24)\n    at readSecureValue (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126637:85)\n    at http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126758:30\n    at async runSerializedStorageOperation (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126629:14)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:215263:7",
+      "frames": [
+        {
+          "functionName": "getItemAsync",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 109062,
+            "columnNumber": 41
+          }
+        },
+        {
+          "functionName": "getPrivateSecureStoreItemAsync",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126824,
+            "columnNumber": 23
+          }
+        },
+        {
+          "functionName": "readSecureValue",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126636,
+            "columnNumber": 84
+          }
+        },
+        {
+          "functionName": "",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126757,
+            "columnNumber": 29
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "Error: LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE\n    at readSecureValue (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126639:13)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126758:24\n    at async runSerializedStorageOperation (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126629:14)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:215263:7",
+      "frames": [
+        {
+          "functionName": "readSecureValue",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126638,
+            "columnNumber": 6
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "Error: HEALTH_PURPOSE_LOCAL_CLEAR_FAILED\n    at clearHealthPurposeLocalData (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:235493:29)\n    at async clearHealthPurposeLocalDataForFence (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:233236:5)\n    at async reconcileUnconfigured (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:233198:9)\n    at async reconcileHealthDataLifecycleForFence (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:233255:49)\n    at async reconcile (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:239499:20)",
+      "frames": [
+        {
+          "functionName": "clearHealthPurposeLocalData",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 235492,
+            "columnNumber": 22
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "SyntaxError: Unexpected non-whitespace character after JSON at position 2 (line 1 column 3)\n    at JSON.parse (<anonymous>)\n    at classifyEnvelope (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:105915:21)\n    at http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:106198:32\n    at async runAccountScopedPrivateOperation (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:105805:14)\n    at async withOperationTiming (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:109892:22)\n    at async validatePrivateItemsWithoutRetainingPlaintext (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:106186:5)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:106252:7\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:109383:27",
+      "frames": [
+        {
+          "functionName": "classifyEnvelope",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 105914,
+            "columnNumber": 20
+          }
+        },
+        {
+          "functionName": "",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 106197,
+            "columnNumber": 31
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "TypeError: ExpoSecureStore.default.getValueWithKeyAsync is not a function\n    at Object.getItemAsync (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:109063:42)\n    at getPrivateSecureStoreItemAsync (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126825:24)\n    at readSecureValue (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126637:85)\n    at http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126758:30\n    at async runSerializedStorageOperation (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126629:14)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:215263:7",
+      "frames": [
+        {
+          "functionName": "getItemAsync",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 109062,
+            "columnNumber": 41
+          }
+        },
+        {
+          "functionName": "getPrivateSecureStoreItemAsync",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126824,
+            "columnNumber": 23
+          }
+        },
+        {
+          "functionName": "readSecureValue",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126636,
+            "columnNumber": 84
+          }
+        },
+        {
+          "functionName": "",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126757,
+            "columnNumber": 29
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "Error: LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE\n    at readSecureValue (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126639:13)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126758:24\n    at async runSerializedStorageOperation (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:126629:14)\n    at async http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:215263:7",
+      "frames": [
+        {
+          "functionName": "readSecureValue",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 126638,
+            "columnNumber": 6
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "Error: HEALTH_PURPOSE_LOCAL_CLEAR_FAILED\n    at clearHealthPurposeLocalData (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:235493:29)\n    at async clearHealthPurposeLocalDataForFence (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:233236:5)\n    at async reconcileUnconfigured (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:233149:9)\n    at async reconcileHealthDataLifecycleForFence (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:233255:49)\n    at async reconcile (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:239499:20)",
+      "frames": [
+        {
+          "functionName": "clearHealthPurposeLocalData",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 235492,
+            "columnNumber": 22
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "diagnostic.exception",
+    "params": {
+      "description": "Error: experimental_prefetchInRender feature flag is not enabled\n    at Object.get (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:101096:105)\n    at Object.assign (<anonymous>)\n    at useEntitlement (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:220907:19)\n    at PausedHealthDataShell (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:239023:80)\n    at Object.react_stack_bottom_frame (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:24476:20)\n    at renderWithHooks (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:15349:22)\n    at updateFunctionComponent (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:16738:19)\n    at beginWork (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:17307:18)\n    at runWithFiberInDEV (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:11826:70)\n    at performUnitOfWork (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true:19734:95)\n    at workLoopSync (http://localhost:8336/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=fal",
+      "frames": [
+        {
+          "functionName": "thenable.reject",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 100782,
+            "columnNumber": 6
+          }
+        },
+        {
+          "functionName": "get",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 101095,
+            "columnNumber": 97
+          }
+        },
+        {
+          "functionName": "useEntitlement",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 220906,
+            "columnNumber": 18
+          }
+        },
+        {
+          "functionName": "PausedHealthDataShell",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 239022,
+            "columnNumber": 79
+          }
+        },
+        {
+          "functionName": "react_stack_bottom_frame",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 24475,
+            "columnNumber": 19
+          }
+        },
+        {
+          "functionName": "renderWithHooks",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 15348,
+            "columnNumber": 21
+          }
+        },
+        {
+          "functionName": "updateFunctionComponent",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 16737,
+            "columnNumber": 18
+          }
+        },
+        {
+          "functionName": "beginWork",
+          "location": {
+            "scriptId": "4",
+            "lineNumber": 17306,
+            "columnNumber": 17
+          }
+        }
+      ]
+    }
+  }
+]

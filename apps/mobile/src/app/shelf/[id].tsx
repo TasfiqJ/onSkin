@@ -57,6 +57,7 @@ import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 // Product detail. The management hub (design screen 06, docs/04 §5.6). Freshness
 // with provenance, the actives it contributes, the conflicts it's part of, where
@@ -279,6 +280,26 @@ export default function ProductDetailScreen() {
   const plan = usePlan();
   const { data: cycleData } = useCycle();
   const m = useShelfMutations();
+  const mutationInFlight = useRef(false);
+  const [mutationFeedback, setMutationFeedback] = useState<string | null>(null);
+  async function saveMutation(change: () => Promise<void>, onSaved: () => void = () => {}) {
+    if (mutationInFlight.current) return;
+    mutationInFlight.current = true;
+    setMutationFeedback(null);
+    try {
+      await runCurrentHealthDataOperation(async (lease) => {
+        await change();
+        lease.assertCurrent();
+        onSaved();
+      });
+    } catch {
+      setMutationFeedback(
+        'Your change was not confirmed. Your choices are still here; try again when private storage is available.',
+      );
+    } finally {
+      mutationInFlight.current = false;
+    }
+  }
   const reportSubmissionInFlight = useRef(false);
   const [catalogReportOperations, setCatalogReportOperations] = useState(
     () => new Map<string, CatalogReportOperation>(),
@@ -384,26 +405,33 @@ export default function ProductDetailScreen() {
   }
 
   const setOpened = async (monthsAgo: number) => {
-    await m.setOpened(id, { openedAt: monthsAgoISO(monthsAgo), isOpened: true });
-    setEditOpen(false);
+    await saveMutation(
+      () => m.setOpened(id, { openedAt: monthsAgoISO(monthsAgo), isOpened: true }),
+      () => setEditOpen(false),
+    );
   };
 
   const setUnopened = async () => {
-    await m.setOpened(id, { openedAt: null, isOpened: false });
-    setEditOpen(false);
+    await saveMutation(
+      () => m.setOpened(id, { openedAt: null, isOpened: false }),
+      () => setEditOpen(false),
+    );
   };
 
   const setLabelPao = async (months: number) => {
-    await m.edit(id, {
-      paoMonths: months,
-      paoSource: editedPaoSource({
-        currentMonths: p.paoMonths,
-        currentSource: p.paoSource,
-        nextMonths: months,
-        confirmedFromLabel: true,
-      }),
-    });
-    setPaoOpen(false);
+    await saveMutation(
+      () =>
+        m.edit(id, {
+          paoMonths: months,
+          paoSource: editedPaoSource({
+            currentMonths: p.paoMonths,
+            currentSource: p.paoSource,
+            nextMonths: months,
+            confirmedFromLabel: true,
+          }),
+        }),
+      () => setPaoOpen(false),
+    );
   };
 
   const catalogSourceLabel =
@@ -543,6 +571,11 @@ export default function ProductDetailScreen() {
 
   return (
     <Screen edges={['top', 'bottom']}>
+      {mutationFeedback ? (
+        <Text accessibilityRole="alert" variant="bodySm" tone="clay">
+          {mutationFeedback}
+        </Text>
+      ) : null}
       <View className="mt-2 flex-row items-center justify-between">
         <RouteIconButton accessibilityLabel="Back" onPress={closeToShelf} />
         <Pressable
@@ -699,8 +732,10 @@ export default function ProductDetailScreen() {
                   disabled={exactOpenedDate == null}
                   onPress={async () => {
                     if (!exactOpenedDate) return;
-                    await m.setOpened(id, { openedAt: exactOpenedDate, isOpened: true });
-                    setEditOpen(false);
+                    await saveMutation(
+                      () => m.setOpened(id, { openedAt: exactOpenedDate, isOpened: true }),
+                      () => setEditOpen(false),
+                    );
                   }}
                   className={cn(
                     'min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2',
@@ -836,9 +871,13 @@ export default function ProductDetailScreen() {
                 <Pressable
                   accessibilityRole="button"
                   onPress={async () => {
-                    await m.edit(id, { paoMonths: null, paoSource: 'unknown' });
-                    setCustomPaoText('');
-                    setPaoOpen(false);
+                    await saveMutation(
+                      () => m.edit(id, { paoMonths: null, paoSource: 'unknown' }),
+                      () => {
+                        setCustomPaoText('');
+                        setPaoOpen(false);
+                      },
+                    );
                   }}
                   className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
                 >
@@ -903,7 +942,9 @@ export default function ProductDetailScreen() {
                       <Pressable
                         accessibilityRole="button"
                         onPress={async () => {
-                          await m.edit(id, { legacyUnverifiedExpiryDate: null });
+                          await saveMutation(() =>
+                            m.edit(id, { legacyUnverifiedExpiryDate: null }),
+                          );
                         }}
                         className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
                       >
@@ -931,8 +972,10 @@ export default function ProductDetailScreen() {
                     disabled={exactExpiryDate == null}
                     onPress={async () => {
                       if (!exactExpiryDate) return;
-                      await m.edit(id, { expiryDate: exactExpiryDate });
-                      setBestOpen(false);
+                      await saveMutation(
+                        () => m.edit(id, { expiryDate: exactExpiryDate }),
+                        () => setBestOpen(false),
+                      );
                     }}
                     className={cn(
                       'min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2',
@@ -950,10 +993,13 @@ export default function ProductDetailScreen() {
                     <Pressable
                       accessibilityRole="button"
                       onPress={async () => {
-                        await m.edit(id, {
-                          expiryDate: null,
-                        });
-                        setBestOpen(false);
+                        await saveMutation(
+                          () =>
+                            m.edit(id, {
+                              expiryDate: null,
+                            }),
+                          () => setBestOpen(false),
+                        );
                       }}
                       className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
                     >
@@ -1060,8 +1106,7 @@ export default function ProductDetailScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={async () => {
-              await m.markFinished(id);
-              closeToShelf();
+              await saveMutation(() => m.markFinished(id), closeToShelf);
             }}
             className="h-[50px] flex-1 items-center justify-center rounded-[14px] border border-hairline-strong bg-paper-raised"
           >
@@ -1087,7 +1132,10 @@ export default function ProductDetailScreen() {
       {activeSheet === 'manage' ? (
         <ProductDetailActionSheet
           title="Remove from shelf?"
-          body={`Choose what should happen to ${p.name}. Discarding keeps your history; removing deletes this local shelf entry.`}
+          body={
+            mutationFeedback ??
+            `Choose what should happen to ${p.name}. Discarding keeps your history; removing deletes this local shelf entry.`
+          }
           viewportHeight={height}
           bottomInset={insets.bottom}
           onClose={() => setActiveSheet(null)}
@@ -1096,9 +1144,13 @@ export default function ProductDetailScreen() {
             label="Mark discarded"
             description="Archive it and keep freshness and repurchase history."
             onPress={async () => {
-              await m.markDiscarded(id);
-              setActiveSheet(null);
-              closeToShelf();
+              await saveMutation(
+                () => m.markDiscarded(id),
+                () => {
+                  setActiveSheet(null);
+                  closeToShelf();
+                },
+              );
             }}
           />
           <SheetAction
@@ -1106,9 +1158,13 @@ export default function ProductDetailScreen() {
             description="Delete this local shelf entry. This cannot be undone."
             tone="destructive"
             onPress={async () => {
-              await m.remove(id);
-              setActiveSheet(null);
-              closeToShelf();
+              await saveMutation(
+                () => m.remove(id),
+                () => {
+                  setActiveSheet(null);
+                  closeToShelf();
+                },
+              );
             }}
           />
         </ProductDetailActionSheet>

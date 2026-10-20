@@ -1053,7 +1053,51 @@ async function completePurposeLimitedLocalCleanup(params: {
 export async function beginHealthDataConsentWithdrawal(
   ownerUserId: string,
 ): Promise<HealthDataLifecycleRecord> {
-  const { fence, ownerBinding, processingEpoch } = beginConfirmedWithdrawalInterlock(ownerUserId);
+  return continueConfirmedWithdrawal(beginConfirmedWithdrawalInterlock(ownerUserId));
+}
+
+/** Data rights do not require reopening health processing or confirming age. */
+export async function beginPausedHealthDataConsentWithdrawal(
+  ownerUserId: string,
+): Promise<HealthDataLifecycleRecord> {
+  const fence = captureOwnerWorkflowFence(ownerUserId, true);
+  await closeProcessingEpochImmediately(fence);
+  const ownerBinding = await runOwnerBoundLocalOperation(fence, async (lease, binding) => {
+    const ownership = await readLocalDataOwnership(ownerUserId);
+    lease.assertCurrent();
+    if (ownership !== 'match') throw new Error(HEALTH_DATA_LIFECYCLE_LOCAL_OWNER_UNAVAILABLE);
+    return binding;
+  });
+  const current = await readLocal(fence);
+  if (
+    !current ||
+    current.processingEpoch < 1 ||
+    !(
+      current.state === 'active' ||
+      (current.state === 'verification_required' && current.verificationResumeState === 'active')
+    )
+  )
+    throw new Error('HEALTH_DATA_WITHDRAWAL_NOT_ACTIVE');
+  return continueConfirmedWithdrawal({
+    fence,
+    ownerBinding,
+    processingEpoch: current.processingEpoch,
+    allowPaused: true,
+  });
+}
+
+async function continueConfirmedWithdrawal({
+  fence,
+  ownerBinding,
+  processingEpoch,
+  allowPaused = false,
+}: {
+  fence: OwnerWorkflowFence;
+  ownerBinding: string;
+  processingEpoch: number;
+  allowPaused?: boolean;
+}): Promise<HealthDataLifecycleRecord> {
+  const ownerUserId = fence.ownerUserId;
 
   // This is intentionally the first fallible/awaited operation. The active
   // lease carries the already-validated pseudonymous owner binding, so no
@@ -1067,7 +1111,12 @@ export async function beginHealthDataConsentWithdrawal(
 
   let current = await readLocal(fence);
   if (
-    current?.state !== 'active' ||
+    !(
+      current?.state === 'active' ||
+      (allowPaused &&
+        current?.state === 'verification_required' &&
+        current.verificationResumeState === 'active')
+    ) ||
     current.processingEpoch !== processingEpoch ||
     current.processingEpoch < 1
   ) {

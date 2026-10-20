@@ -1,0 +1,80 @@
+{
+  "bodyText": "HEALTH DATA PAUSED Your account is still here. We could not verify the current health-data permission. Personalized features stay locked until verification succeeds. Billing does not stop automatically; use Manage subscription below whenever you need it. PRIVACY REQUEST Status: verification required. Local cleanup pending. Retry / check status ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry / check status",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 318
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Manage subscription",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 460
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Restore purchases",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 524
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Export my data",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 588
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Sign out",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 652
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Delete account",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 716
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8334/onboarding/consent",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

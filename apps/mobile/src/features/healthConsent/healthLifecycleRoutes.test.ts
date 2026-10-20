@@ -157,7 +157,9 @@ describe('health lifecycle route contract', () => {
     expect(gate).toContain(
       "const terminal = record.state === 'withdrawn' && record.localCleanupComplete;",
     );
-    expect(gate).toContain('const mayReviewConsent = terminal || localOnlyVerificationReady;');
+    expect(gate).toContain(
+      'const mayReviewConsent = !rightsOnly && (terminal || localOnlyVerificationReady);',
+    );
     expect(gate).toContain('!isSupabaseConfigured &&');
     expect(gate).toContain('verificationRequiresLocalCleanup(record)');
     expect(gate).toContain(
