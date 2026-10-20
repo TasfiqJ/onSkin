@@ -1712,7 +1712,7 @@ async function run() {
     });
     if (process.argv.includes('--daily-loop')) {
       await dailyLoopFlow({ client, evaluate, retainedRoute, waitForText, waitForCondition,
-        clickByText, scrollTextIntoView, captureStep, writeJson });
+        clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson });
     }
     if (process.argv.includes('--retained-safety')) await retainedShelfFlow(client);
 

@@ -1,5 +1,5 @@
 import { toggleCompletion, getPendingCompletionSyncOperations, getCompletedSteps } from '@/features/today/completionsStore';
-import { localDateString } from '@/features/today/useToday';
+import { localDateString, currentRoutineType } from '@/features/today/useToday';
 import { flushCompletions } from '@/lib/offline/completionQueue';
 import { loadRoutineOrderOverrides, saveRoutineOrderOverrides } from '@/features/routine/orderStore';
 import { loadCycleConfig, updateCycleConfig, skipTonight } from '@/features/scheduler/cycleStore';
@@ -872,6 +872,31 @@ describe.sequential('C-08B2-R3 real encrypted deletion/file/sign-out recovery', 
     expect(live.files.map((uri) => mocks.files.get(uri))).toEqual(originals);
     await setPrivateItem(PHOTO_KEY, prior!);
     expect((await loadPhotos())[0]?.notes).toBe('synthetic edited note');
+  });
+
+  it.each([
+    ['2026-03-08T06:59:00.000Z', '2026-03-08', 'AM'],
+    ['2026-03-08T07:01:00.000Z', '2026-03-08', 'AM'],
+    ['2026-11-01T05:59:00.000Z', '2026-11-01', 'AM'],
+    ['2026-11-01T06:01:00.000Z', '2026-11-01', 'AM'],
+    ['2026-10-21T03:59:00.000Z', '2026-10-20', 'PM'],
+    ['2026-10-21T04:01:00.000Z', '2026-10-21', 'AM'],
+    ['2026-10-20T20:59:00.000Z', '2026-10-20', 'AM'],
+    ['2026-10-20T21:00:00.000Z', '2026-10-20', 'PM'],
+  ])('M102 binds real encrypted completion to local date/phase through DST and midnight at %s', async (instant, day, phase) => {
+    vi.stubEnv('TZ', 'America/Toronto');
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(instant!));
+    try {
+      expect(localDateString()).toBe(day);
+      expect(currentRoutineType()).toBe(phase);
+      await toggleCompletion(`${phase}:${PHOTO_A}`, day, undefined, {
+        source: 'real_plan', stepOrder: 1, timezone: 'America/Toronto',
+      });
+      expect(await getPendingCompletionSyncOperations()).toEqual([
+        expect.objectContaining({ completedAt: instant, completedDate: day, routineType: phase, timezone: 'America/Toronto' }),
+      ]);
+    } finally { vi.useRealTimers(); vi.unstubAllEnvs(); }
   });
 
   it('restarts from durable encrypted state after a partial prepared delete with both renditions missing', async () => {

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 // Runs inside the maintained fresh-profile onboarding harness. No authority,
 // consent, entitlement, corpus receipt, or local completion is fabricated here.
 export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForText,
-  waitForCondition, clickByText, scrollTextIntoView, captureStep, writeJson }) {
+  waitForCondition, clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson }) {
   const route = (path) => retainedRoute(client, path);
   const capture = (name) => captureStep(client, `M102-${name}`, { assertClean: false });
   const network = (offline) => client.send('Network.emulateNetworkConditions', {
@@ -24,6 +24,18 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
     return await m.publicModule.exports.getPrivateItem(${JSON.stringify(key)});
   })()`, true);
   const readCompletions = async () => JSON.parse(await privateRead('layerwell.completions.v1'));
+  await route('/shelf/manual');
+  await waitForText(client, 'Product name');
+  await fillByLabel(client, 'Product name', 'M102 synthetic moisturizer');
+  await clickByText(client, 'Category');
+  await clickByText(client, 'Category, Moisturiser (tube)');
+  await clickByText(client, 'Continue');
+  await waitForText(client, 'Not opened yet');
+  await clickByText(client, 'Not opened yet');
+  await scrollTextIntoView(client, 'Add to shelf');
+  await clickByText(client, 'Add to shelf');
+  await waitForText(client, 'M102 synthetic moisturizer');
+  await capture('00-manual-plan-input');
   await route('/today?routine=AM');
   await waitForCondition(client, `${checkbox} !== undefined`, 30_000, 'admitted real AM checklist');
   await capture('01-am-ready');
@@ -74,6 +86,21 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   assert.equal(prefs.prefs.liveActivityEnabled, false);
   await capture('04-offline-timing');
 
+  await route('/routine/reorder?phase=am');
+  await waitForText(client, 'Routine order');
+  const secondStep = await evaluate(client, `Array.from(document.querySelectorAll('[role="button"]')).map(n=>n.getAttribute('aria-label')).find(label=>label?.endsWith('Step 2 of 2'))`);
+  assert(secondStep, 'Two real Shelf products must support an authored order');
+  await clickByText(client, secondStep);
+  await clickByText(client, `Move ${secondStep.split('. Step ')[0]} earlier`);
+  await scrollTextIntoView(client, 'Keep mine');
+  await clickByText(client, 'Keep mine');
+  await scrollTextIntoView(client, 'Save');
+  await clickByText(client, 'Save');
+  await waitForCondition(client, `location.pathname !== '/routine/reorder'`, 30_000, 'offline routine order save');
+  const authoredOrder = JSON.parse(await privateRead('layerwell.routineOrder.v1'));
+  assert.equal(authoredOrder.am.length, 2);
+  await capture('04c-offline-authored-order');
+
   await route('/cycle/settings');
   await waitForText(client, 'Save cycle');
   await clickByText(client, 'Gentle. More recovery');
@@ -85,19 +112,30 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
 
   await network(false);
   await client.send('Page.reload', { ignoreCache: true });
-  await route('/settings/timing');
   await waitForText(client, 'Timing', 60_000);
   assert.equal(JSON.parse(await privateRead('layerwell.notifPrefs.v1')).prefs.amTime, '08:00');
+  assert.deepEqual(JSON.parse(await privateRead('layerwell.routineOrder.v1')), authoredOrder);
+  assert.equal(JSON.parse(await privateRead('layerwell.cycle.v2')).variant, 'gentle');
   await route('/today?routine=AM');
   await waitForCondition(client, `document.querySelector('[role="checkbox"][aria-checked="true"]') !== null`, 30_000, 'reloaded saved AM progress');
   assert.deepEqual((await readCompletions()).sync, first.sync, 'Reload changed stable replay identities');
   await capture('05-reloaded-am');
   await route('/today?routine=PM');
   await waitForText(client, 'Evening');
+  await waitForCondition(client, `${checkbox} !== undefined`, 30_000, 'admitted PM checklist');
+  const pmCount = await evaluate(client, `document.querySelectorAll('[role="checkbox"]').length`);
+  for (let i = 0; i < pmCount; i++) {
+    await tapCheckbox(true);
+    await waitForCondition(client, `document.querySelectorAll('[role="checkbox"][aria-checked="true"]').length === ${i + 1}`, 30_000, 'durable PM check');
+  }
+  const completedPM = await readCompletions();
+  assert.equal(completedPM.sync.journal.filter(e=>e.kind==='routine_day').length, 1, 'PM must create exactly one routine-day marker');
   await capture('06-pm');
   await route('/routine/plan');
-  await waitForText(client, 'routine');
+  await waitForText(client, 'Start today');
   await capture('07-plan');
+  await clickByText(client, 'Start today');
+  await waitForText(client, 'Today');
   await route('/cycle/settings');
   await waitForText(client, 'Save cycle');
   await capture('08-cycle');
@@ -107,6 +145,6 @@ export async function dailyLoopFlow({ client, evaluate, retainedRoute, waitForTe
   writeJson('M102-daily-loop.json', { verdict: 'pass', fixture: 'existing-development-corpus; real onboarding authority; synthetic local IO only',
     offlineMutation: true, rejectedWriteRetry: true, duplicateSingleEvent: true,
     undo: 'UNAVAILABLE_RETAINED_APPEND_ONLY', reloadStableIdentities: true,
-    offlineTimingPersistsWithoutOptIn: true, nativeOS: 'NOT_RUN',
+    offlineTimingPersistsWithoutOptIn: true, offlineReorderAndCycleSave: true, pmDayMarker: true, nativeOS: 'NOT_RUN',
     offlineReload: 'NOT_RUN: Metro reload performed after reconnect; no installed-native cold-start claim' });
 }

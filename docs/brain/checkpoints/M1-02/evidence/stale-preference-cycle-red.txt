@@ -1,0 +1,66 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+stderr | src/features/notifications/preferenceOffline.m102.test.ts > refuses a retained owner-A permission continuation after unmount and B admission
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/preferenceOffline.m102.test.ts (3 tests | 1 failed) 74ms
+   × refuses a retained owner-A permission continuation after unmount and B admission 21ms
+stderr | src/features/scheduler/cyclePersistence.regression.test.ts > cycle persistence baseline comparison > reads the local cycle and saves a variant while the actual QueryClient is offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/scheduler/cyclePersistence.regression.test.ts (27 tests | 1 failed) 1793ms
+     × reads the local cycle and saves a variant while the actual QueryClient is offline 1581ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/preferenceOffline.m102.test.ts > refuses a retained owner-A permission continuation after unmount and B admission
+AssertionError: promise resolved "{ amTime: '07:30', amEnabled: true }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "amEnabled": true,
++   "amTime": "07:30",
+  }
+
+ ❯ src/features/notifications/preferenceOffline.m102.test.ts:91:45
+     89|   const accountGeneration = await runAccountGenerationOperation((lease…
+     90|   setActiveHealthProcessingEpoch(2, { ownerUserId: 'synthetic-owner-b'…
+     91|   await expect(oldSave({ amEnabled: true })).rejects.toThrow('HEALTH_D…
+       |                                             ^
+     92|   expect(ports.save).not.toHaveBeenCalled();
+     93| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/features/scheduler/cyclePersistence.regression.test.ts > cycle persistence baseline comparison > reads the local cycle and saves a variant while the actual QueryClient is offline
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ flushUntil src/features/scheduler/cyclePersistence.regression.test.ts:171:19
+    169|     await act(async () => { await new Promise((resolve) => setTimeout(…
+    170|   }
+    171|   expect(check()).toBe(true);
+       |                   ^
+    172| }
+    173| async function mount() {
+ ❯ mount src/features/scheduler/cyclePersistence.regression.test.ts:175:3
+ ❯ src/features/scheduler/cyclePersistence.regression.test.ts:208:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 28 passed (30)
+   Start at  16:28:34
+   Duration  2.26s (transform 253ms, setup 0ms, import 538ms, tests 1.87s, environment 0ms)
+

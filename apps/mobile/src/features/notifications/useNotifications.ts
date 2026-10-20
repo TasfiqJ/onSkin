@@ -4,6 +4,8 @@ import { AppState } from 'react-native';
 
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  captureHealthDataWriteLease,
+  assertHealthDataWriteLease,
   runHealthDataOperation,
   runHealthDataWriteOperation,
 } from '@/lib/consent/healthDataWriteAdmission';
@@ -64,11 +66,15 @@ export function useNotifPrefs() {
 
 export function useUpdateNotifPrefs() {
   const qc = useQueryClient();
+  // A permission response may outlive this screen and its owner.
+  let expectedLease: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+  try { expectedLease = captureHealthDataWriteLease(); } catch { /* admission closed */ }
   return useMutation({
     networkMode: 'always',
     mutationFn: async (patch: Partial<NotifPrefs>) => {
-      const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
-      if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+      if (!expectedLease) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+      assertHealthDataWriteLease(expectedLease);
+      const expectedOwnerUserId = expectedLease.ownerUserId;
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
         const next = await applyNotificationPreferencePatch(
           patch,

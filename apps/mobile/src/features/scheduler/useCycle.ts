@@ -199,6 +199,7 @@ export function useCycleConfig() {
   const authority = useCycleConfigAuthority();
   const query = useQuery({
     queryKey: authority === null ? ['cycleConfig', 'closed'] : cycleConfigQueryKey(authority, today),
+    networkMode: 'always',
     queryFn: () => readCycleConfigForAuthority(authority, today),
     enabled: authority !== null,
     retry: false,
