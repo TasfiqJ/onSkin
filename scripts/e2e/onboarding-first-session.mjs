@@ -1484,7 +1484,20 @@ async function run() {
         await waitForText(client, 'Could not finish the privacy request.');
         await captureStep(client, 'M1-11b-withdrawal-repeated-refusal', { assertClean: false });
         await client.send('Page.reload', { ignoreCache: true });
-        await waitForText(client, 'First, your', 60_000);
+        await waitForCondition(
+          client,
+          `document.body.innerText.includes('Privacy & account') && (document.body.innerText.includes('First, your') || document.body.innerText.includes('Begin'))`,
+          60_000,
+          'safe public bootstrap with rights access',
+        );
+        const interrupted = await captureStep(client, 'M1-11c-withdrawal-relaunch-paused', {
+          assertClean: false,
+        });
+        assert(
+          !interrupted.bodyText.includes('Morning routine') &&
+            !interrupted.bodyText.includes('Review fresh consent'),
+          'Withdrawal relaunch reopened health admission.',
+        );
         await clickByText(client, 'Privacy & account');
         await waitForText(client, 'Status: withdrawing.');
         await scrollTextIntoView(client, 'Retry / check status');
