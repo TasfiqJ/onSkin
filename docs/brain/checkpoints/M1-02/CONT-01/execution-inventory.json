@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "claim_origin": "CODEX_REPORTED_EXECUTION_INVENTORY",
+  "supporting_delivery_receipts": "delivery-* are indexed separately by delivery-verification.json to avoid report self-hashing",
   "count_semantics": "Per-command only. Root/focused/timezone counts overlap and are never added. Legacy report enums do not mean Brain reran these checks.",
   "receipts": [
     {

@@ -224,11 +224,11 @@
   "artifacts": [
     {
       "path": "docs/brain/checkpoints/M1-02/CONT-01/ACCEPTANCE_CLOSEOUT.md",
-      "sha256": "2db5aa093549a79b88fe6c6f3f00a314dcd395fd9dd98cc7e0e4243db20e0366"
+      "sha256": "17556e18254173006a41a7118f32504b13df6de9a8734505475c3067805e04ad"
     },
     {
       "path": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
-      "sha256": "43f234c431506cc97138725b47b546b6b0b21c923609e4a36fbf4a233cab12c3"
+      "sha256": "d4e9cea68d19ab39de9dece635ff607bfab9e2cab40c3ae08f246e6266217941"
     },
     {
       "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/ci/candidate-39503019220-ios-lint-failure.log",
@@ -920,11 +920,11 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-02/CONT-01/execution-inventory.json",
-      "sha256": "219448788ab0f0c26aea57a0df3e62ac1bdfb61993fe90bfcf538de44434fd91"
+      "sha256": "1c913281e56b61ea5842e66d39c0d31f937aa93fb8115ee1244409c9f774d103"
     },
     {
       "path": "docs/brain/checkpoints/M1-02/CONT-01/README.md",
-      "sha256": "c1a7f768a48a9218482c3922c6ecf534f3f97d089290b44a9de73e0a7236b412"
+      "sha256": "19db6cb8a47c172288cb838e64aa1c43ce68ed20a9ca3e327fcafcb8617c9043"
     },
     {
       "path": "docs/brain/checkpoints/M1-02/CONT-01/source-custody.json",
@@ -1078,6 +1078,16 @@
     {
       "repository": "TasfiqJ/onSkin",
       "artifact": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
+      "run_id": 39504417954,
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
       "run_id": 39504417796,
       "name": "iOS launch contract",
       "workflow_id": 312030667,
@@ -1094,16 +1104,6 @@
       "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
       "status": "completed",
       "conclusion": "failure"
-    },
-    {
-      "repository": "TasfiqJ/onSkin",
-      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
-      "run_id": 39504417954,
-      "name": "Quality",
-      "workflow_id": 312030668,
-      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
-      "status": "in_progress",
-      "conclusion": "pending"
     }
   ]
 }

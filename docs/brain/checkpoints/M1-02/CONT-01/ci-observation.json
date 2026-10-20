@@ -3,7 +3,7 @@
   "kind": "CI_OBSERVATION",
   "evidence_class": "INDEPENDENTLY_OBSERVED",
   "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
-  "recorded_at_utc": "2026-10-20T22:06:28Z",
+  "recorded_at_utc": "2026-10-20T22:08:42Z",
   "repository": "TasfiqJ/onSkin",
   "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
   "checkout": {
@@ -26,6 +26,14 @@
   },
   "runs": [
     {
+      "run_id": 39504417954,
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
       "run_id": 39504417796,
       "name": "iOS launch contract",
       "workflow_id": 312030667,
@@ -40,14 +48,6 @@
       "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
       "status": "completed",
       "conclusion": "failure"
-    },
-    {
-      "run_id": 39504417954,
-      "name": "Quality",
-      "workflow_id": 312030668,
-      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
-      "status": "in_progress",
-      "conclusion": "pending"
     }
   ],
   "jobs": {
@@ -401,8 +401,8 @@
       {
         "id": 118912714480,
         "name": "Expo export (ios)",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "run_id": 39504417954,
         "logs_url": null,
         "steps": [
@@ -438,41 +438,47 @@
           },
           {
             "name": "Export ios with source maps",
-            "status": "in_progress",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 6
           },
           {
             "name": "Analyze ios export",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 7
           },
           {
             "name": "Upload content-free export statistics",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 8
           },
           {
             "name": "Post Setup Node",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 15
           },
           {
             "name": "Post Checkout",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
           }
         ]
       },
       {
         "id": 118912714650,
         "name": "Expo export (android)",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "run_id": 39504417954,
         "logs_url": null,
         "steps": [
@@ -514,27 +520,33 @@
           },
           {
             "name": "Analyze android export",
-            "status": "in_progress",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 7
           },
           {
             "name": "Upload content-free export statistics",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 8
           },
           {
             "name": "Post Setup Node",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 15
           },
           {
             "name": "Post Checkout",
-            "status": "pending",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "success",
             "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
           }
         ]
       }
@@ -960,7 +972,7 @@
   "limits": [
     "Codex observed provider metadata; no independent Brain rerun is claimed.",
     "Quality canonical DB failed ECR data limit in prepareCanonicalPostgresImage before SQL; no authentication/image bypass or protected edit.",
-    "Quality repository and PostgreSQL15/17 rehearsals succeeded; queued/unfinished exports are not passes.",
+    "Quality repository gates, PostgreSQL15/17 rehearsals and both Expo exports succeeded; canonical DB failure makes overall Quality fail.",
     "Security code/static/source-only acceptance failed; secret scanning succeeded and live Supabase was skipped. Raw safe logs preserve expired reviews and unreviewed advisories.",
     "iOS is source-only success, not device/build/signing/release evidence.",
     "Evidence-only delivery descendants require their own CI readback; this snapshot is never borrowed as new-head green."
