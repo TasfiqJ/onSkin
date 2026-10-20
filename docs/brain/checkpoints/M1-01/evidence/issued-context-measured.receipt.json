@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B verify_context.py --expected-manifest-sha256 48c0e58f00ce54910d640738debfd273a534403ec30aa980277977852f354656",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\docs\\brain\\checkpoints\\M1-01\\inputs",
+  "environment": "Windows x64; Python3.9.13",
+  "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+  "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/evidence/issued-context-measured.txt",
+    "sha256": "397d9b1b0116a176d6648cf81eabe7d100ed8be152a8e99bcc9c16ca1775acda"
+  }
+}

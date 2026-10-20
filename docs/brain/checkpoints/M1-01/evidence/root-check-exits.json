@@ -1,0 +1,20 @@
+[
+  {
+    "id": "root-typecheck",
+    "command": "npm.cmd run typecheck -- --force",
+    "exit_code": 0,
+    "output": "docs/brain/checkpoints/M1-01/evidence/root-typecheck.txt"
+  },
+  {
+    "id": "root-lint",
+    "command": "npm.cmd run lint -- --force",
+    "exit_code": 0,
+    "output": "docs/brain/checkpoints/M1-01/evidence/root-lint.txt"
+  },
+  {
+    "id": "root-test",
+    "command": "npm.cmd run test -- --force",
+    "exit_code": 0,
+    "output": "docs/brain/checkpoints/M1-01/evidence/root-test.txt"
+  }
+]

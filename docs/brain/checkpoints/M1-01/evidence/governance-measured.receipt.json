@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python3.9.13; real Windows junction/hardlink cases; two actual symlink-privilege skips",
+  "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+  "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/evidence/governance-measured.txt",
+    "sha256": "717f8bc393825124707e54b3cfbe583b6c4608ff8b687fb8b8c0ba73081f11f2"
+  },
+  "counts": {
+    "passed": 39,
+    "failed": 0,
+    "skipped": 2
+  }
+}

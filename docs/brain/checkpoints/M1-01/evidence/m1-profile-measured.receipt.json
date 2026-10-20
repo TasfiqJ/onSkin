@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B scripts/brain/brain.py --profile M1-01 validate",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python3.9.13",
+  "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+  "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/evidence/m1-profile-measured.txt",
+    "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+  }
+}
