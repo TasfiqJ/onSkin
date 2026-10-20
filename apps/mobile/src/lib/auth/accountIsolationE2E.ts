@@ -19,12 +19,14 @@ function isDevRuntime(): boolean {
   return typeof __DEV__ !== 'undefined' && __DEV__;
 }
 
-function fixtureSession(owner: 'a' | 'b' = 'a'): Session {
+function fixtureSession(owner: 'a' | 'b' = 'a', crossOwner = false): Session {
   const userId = owner === 'a' ? E2E_USER_ID : '00000000-0000-4000-8000-0000000000b2';
   const payload = btoa(JSON.stringify({ sub: userId, session_id: userId, exp: 4000000000 }));
   const createdAt = '2026-07-10T00:00:00.000Z';
   return {
-    access_token: `e30.${payload.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '')}.synthetic`,
+    access_token: crossOwner
+      ? `e30.${payload.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '')}.synthetic`
+      : 'e2e-account-a-access-token',
     expires_in: 3600,
     refresh_token: 'e2e-account-a-refresh-token',
     token_type: 'bearer',
@@ -86,7 +88,7 @@ export function accountIsolationE2EEvent(owner: 'a' | 'b'): Session {
     throw new Error('E2E_ACCOUNT_TRANSPORT_DISABLED');
   }
   fixtureStorage()?.setItem(E2E_OWNER_KEY, owner);
-  return fixtureSession(owner);
+  return fixtureSession(owner, true);
 }
 
 export function accountIsolationE2EPreflightTransport():

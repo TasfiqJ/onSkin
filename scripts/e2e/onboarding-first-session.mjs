@@ -964,9 +964,12 @@ async function crossOwnerFlow(client, products) {
   await waitForPath(client, '/today');
   await clickByText(client, 'Shelf');
   await waitForText(client, bName);
-  await captureStep(client, 'CO-09-b-usable-shelf', { assertClean: false });
+  const bShelf = await captureStep(client, 'CO-09-b-usable-shelf', { assertClean: false });
+  assertInteractiveControl(bShelf, bName);
   await clickByText(client, bName, { exact: false });
-  await waitForText(client, 'Edit opened date');
+  await scrollTextIntoView(client, 'Edit opened date');
+  const bDetail = await captureStep(client, 'CO-09b-b-product-detail', { assertClean: false });
+  assertInteractiveControl(bDetail, 'Edit opened date');
   await clickByText(client, 'Edit opened date');
   await clickByText(client, '1 mo ago');
   await captureStep(client, 'CO-10-b-usable-edit', { assertClean: false });
@@ -988,6 +991,7 @@ async function crossOwnerFlow(client, products) {
         healthOwnerB: health.activeHealthProcessingOwnerUserId() === '00000000-0000-4000-8000-0000000000b2',
         noAInCache: !markers.some(x => JSON.stringify(queries.map(q => [q.queryKey, q.state.data])).includes(x)),
         noAInShelfOrQueue: !markers.some(x => (shelf ?? '').includes(x)), hasB: shelf?.includes(${JSON.stringify(bName)}) === true,
+        bEditPersisted: Date.parse(JSON.parse(shelf).products.find(p => p.name === ${JSON.stringify(bName)}).openedAt) < Date.now() - 20 * 86400000,
         ciphertextOnly: !(localStorage.getItem('layerwell.shelf.v1') ?? '').includes(${JSON.stringify(bName)}),
         noWidgetCapabilities: !localStorage.getItem('layerwell.widgetActionMap.v1') && !localStorage.getItem('layerwell.widgetActionMap.v2'),
         renderedObservation: globalThis.__crossOwnerObserved ?? null };
