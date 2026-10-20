@@ -7919,32 +7919,3 @@ The adopted planning entrypoint is [docs/v2/README.md](docs/v2/README.md); durab
 ## M0-02 / FIX-01 (2026-10-20)
 
 Brain REVIEW-01 is FIX_REQUIRED. Repair scope is governance evidence, CI/Git bindings, anchored task issuance and mirror write containment only. Versioned review: docs/brain/reviews/M0-02/REVIEW-01; separate repair evidence/report: docs/brain/checkpoints/M0-02/FIX-01. Original submitted report/inputs/state are preserved. No runtime, protected gate, M1 or main promotion is authorized.
-
-
-## 2026-10-20 — M1-01 / CONT-01 candidate (review required)
-
-The continuation input is independently anchored to SHA256
-`18555ec3257fb4c60fdf0f6de47ccc62403b39cf17d9d838cafd8f19b81585fa`;
-exact Brain REVIEW-01 bytes are under docs/brain/reviews/M1-01/REVIEW-01.
-Work continues only on stage/m1-retained-safety. M0/PR8 and main are preserved;
-PR9 remains draft. No acceptance or main promotion.
-
-Browser module provenance established that the linked app dependency target
-was absent from Metro's file map. Watching both real targets restores the
-installed mobile ciphers 2.3 randomBytes export. Web health cleanup now avoids
-unavailable native-only photo APIs while refusing unexpected vault ciphertext.
-Cipher formats, randomness, native cleanup and protected admission are unchanged.
-
-Age re-verification has a separate verified-owner account/data-rights shell,
-without mounting health providers or offering reconsent. Closed-age withdrawal
-uses the existing durable owner/epoch intent; foreground and stale publication
-checks keep rights isolated. Shelf routes now show read recovery, detail writes
-retain retry feedback, and the local query refreshes offline. A real encryption/
-query-cache regression first reproduced a durable save with stale visible data.
-
-The M1 report profile rejects unsupported PASS, missing receipt/output inventory,
-future execution source, runtime drift and inconsistent CI metadata. New CLI
-regressions use disposable real Git stores. Original M0/M1 inputs and reports
-and the four refusal boundaries are retained. Exact final measurements, source
-identities, failures, remaining evidence gaps and CI belong in the continuation
-report and root handoff; this source checkpoint does not claim those future runs.
