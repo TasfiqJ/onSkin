@@ -6,6 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
 import {
+  assertCompletedAccountRecovery,
   assertNoUncaughtErrors,
   isDisallowedLog as disallowedLog,
 } from './retained-safety-assertions.mjs';
@@ -1541,6 +1542,7 @@ async function run() {
     let signedOutWelcome = null;
     let signedOutShelf = null;
     let signedOutToday = null;
+    let signedOutRelaunch = null;
     if (accountIsolationMode) {
       const assertPrivateNamesHidden = (snapshot, label) => {
         for (const product of productNames) {
@@ -1600,6 +1602,7 @@ async function run() {
       await client.send('Page.reload', { ignoreCache: true });
       await waitForText(client, 'First, your', 60_000);
       const relaunched = await captureStep(client, '31-signed-out-cold-relaunch');
+      signedOutRelaunch = relaunched;
       assertPrivateNamesHidden(relaunched, 'Signed-out cold relaunch');
       assert(
         !relaunched.bodyText.includes('tas.account-a.e2e@example.com'),
@@ -1646,7 +1649,7 @@ async function run() {
         ? {
             accountAEmail: 'tas.account-a.e2e@example.com',
             cleanupFailureStayedGated:
-              accountBoundaryFailure?.bodyText.includes('Account change paused') ?? false,
+              accountBoundaryFailure?.bodyText.includes('Account access paused') ?? false,
             privateNamesHiddenAfterSignOut:
               Boolean(signedOutShelf && signedOutToday) &&
               productNames.every(
@@ -1654,10 +1657,15 @@ async function run() {
                   !signedOutShelf.bodyText.includes(product.name) &&
                   !signedOutToday.bodyText.includes(product.name),
               ),
-            reachedEmptyShelf: signedOutShelf?.bodyText.includes('First, your') ?? false,
-            reachedEmptyToday: signedOutToday?.bodyText.includes('First, your') ?? false,
-            retryShowedTransitionGate:
-              accountBoundaryRetry?.bodyText.includes('Securing account data...') ?? false,
+            signedOutShelfAgeClosed: signedOutShelf?.bodyText.includes('First, your') ?? false,
+            signedOutTodayAgeClosed: signedOutToday?.bodyText.includes('First, your') ?? false,
+            repeatedFailureStayedGated:
+              accountBoundaryRetry?.bodyText.includes('Account access paused') ?? false,
+            signedOutReloadAgeClosed: signedOutRelaunch?.bodyText.includes('First, your') ?? false,
+            terminalWelcome: signedOutWelcome?.bodyText.includes('Begin') ?? false,
+            noUncaughtRuntimeExceptions: !client.events.some(
+              (event) => event.method === 'Runtime.exceptionThrown',
+            ),
           }
         : null,
       accountUpgradeMode,
@@ -1784,9 +1792,9 @@ async function run() {
           accountIsolationMode ||
           (ageReverificationReloadedToday?.url.includes('/onboarding/age') === true &&
             !ageReverificationReloadedToday.bodyText.includes('Morning routine')),
-        signedOutShelfIsEmpty:
+        signedOutShelfIsAgeClosed:
           !accountIsolationMode || signedOutShelf?.bodyText.includes('First, your') === true,
-        signedOutTodayIsEmpty:
+        signedOutTodayIsAgeClosed:
           !accountIsolationMode || signedOutToday?.bodyText.includes('First, your') === true,
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
@@ -1826,6 +1834,7 @@ async function run() {
       },
     };
 
+    if (accountIsolationMode) assertCompletedAccountRecovery(summary.accountIsolation);
     writeJson('summary.json', summary);
     writeReport(summary);
     console.log(`Onboarding first-session E2E passed. Evidence: ${evidenceDir}`);

@@ -24,3 +24,18 @@ export function isDisallowedLog(log) {
     'props.pointerEvents is deprecated',
   ].some((text) => serialized.includes(text));
 }
+
+export function assertCompletedAccountRecovery(result) {
+  for (const key of [
+    'cleanupFailureStayedGated',
+    'repeatedFailureStayedGated',
+    'privateNamesHiddenAfterSignOut',
+    'signedOutShelfAgeClosed',
+    'signedOutTodayAgeClosed',
+    'signedOutReloadAgeClosed',
+    'terminalWelcome',
+    'noUncaughtRuntimeExceptions',
+  ]) {
+    if (result[key] !== true) throw new Error(`Incomplete account recovery: ${key}`);
+  }
+}
