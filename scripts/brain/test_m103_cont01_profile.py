@@ -1,5 +1,5 @@
 """Disposable continuation controls; synthetic receipts grant no acceptance."""
-import copy, pathlib, subprocess, unittest
+import copy, pathlib, shutil, subprocess, unittest
 import brain
 import m103_profile as p
 import test_brain
@@ -14,6 +14,13 @@ class M103Continuation(unittest.TestCase):
     name = checkpoint + 'synthetic-report.json'
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
+        # Keep this historical fixture before the separately issued successor.
+        for name in [p.ON_INPUT.rsplit('/',1)[0],p.ON_REVIEW]:
+            target=self.root/name
+            if target.exists():
+                assert target.resolve().is_relative_to(self.root.resolve())
+                shutil.rmtree(target)
+        (self.root/p.ON_ACTIVE).unlink(missing_ok=True)
         (self.root/'docs/brain/current.json').write_bytes(brain.read(brain.ROOT,'docs/brain/current.json'))
         self.command('init','-q','-b',p.BRANCH)
         objects = pathlib.Path(brain.git(brain.ROOT,'rev-parse','--path-format=absolute','--git-common-dir'))/'objects'
