@@ -12,6 +12,7 @@ const LOCK_PATH = 'package-lock.json';
 const EVIDENCE_DIR = 'docs/phase-9/generated/ci-scanner-evidence';
 const GHSA = /^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$/u;
 const DATE = /^\d{4}-\d{2}-\d{2}$/u;
+const SEVERITIES = ['info', 'low', 'moderate', 'high', 'critical'];
 
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -106,13 +107,14 @@ export function validateNpmAudit({ report, lock, policy, scannerExitCode, today 
   function roots(name) {
     const pending = [name];
     const visited = new Set();
-    const result = new Set();
+    const result = new Map();
     while (pending.length > 0) {
       const current = pending.pop();
       if (visited.has(current)) continue;
       visited.add(current);
       const finding = report.vulnerabilities[current];
-      if (!isRecord(finding) || !Array.isArray(finding.via) || !Array.isArray(finding.nodes)) {
+      if (!isRecord(finding) || !SEVERITIES.includes(finding.severity) ||
+          !Array.isArray(finding.via) || !Array.isArray(finding.nodes)) {
         throw new Error(`npm audit finding is malformed: ${current}`);
       }
       for (const via of finding.via) {
@@ -121,26 +123,32 @@ export function validateNpmAudit({ report, lock, policy, scannerExitCode, today 
           continue;
         }
         const id = advisoryId(via);
-        if (!id || via.name !== current || !['high', 'critical'].includes(via.severity)) {
+        if (!id || via.name !== current || !SEVERITIES.includes(via.severity)) {
           throw new Error(`npm audit advisory is malformed: ${current}`);
         }
-        const versions = finding.nodes.map((path) => lock.packages?.[path]?.version);
+        const versions = finding.nodes.map((path) =>
+          typeof path === 'string' && (path === `node_modules/${current}` ||
+            path.endsWith(`/node_modules/${current}`)) ? lock.packages?.[path]?.version : undefined);
         if (versions.length === 0 || versions.some((version) => typeof version !== 'string')) {
           throw new Error(`npm audit advisory has unbound package paths: ${current}`);
         }
-        for (const version of versions)
-          result.add(keyOf({ package: current, version, advisory: id }));
+        for (const version of versions) {
+          const identity = keyOf({ package: current, version, advisory: id });
+          result.set(`${identity}:${via.severity}`, { identity, severity: via.severity });
+        }
       }
     }
     if (result.size === 0) throw new Error(`npm audit finding has no advisory root: ${name}`);
-    return result;
+    return result.values();
   }
   for (const [name, finding] of Object.entries(report.vulnerabilities)) {
-    if (!['high', 'critical'].includes(finding?.severity)) continue;
     try {
       for (const root of roots(name)) {
-        observed.add(root);
-        if (!approved.has(root)) errors.push(`unreviewed high/critical npm advisory: ${root}`);
+        observed.add(root.identity);
+        if (!approved.has(root.identity) || root.severity !== 'high') {
+          const label = ['high', 'critical'].includes(root.severity) ? 'high/critical' : root.severity;
+          errors.push(`unreviewed ${label} npm advisory: ${root.identity} (severity: ${root.severity})`);
+        }
       }
     } catch (error) {
       errors.push(error.message);

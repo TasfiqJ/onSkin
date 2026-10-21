@@ -193,3 +193,40 @@ test('fails when upstream lists a newer release or a patched advisory range', ()
   advisories['GHSA-86w9-cpqp-85rv'].affected[0].ranges[0].events.push({ fixed: '1.4.1' });
   assert.match(validateLiveReviewData({ registry, advisories }).join('\n'), /patched release/u);
 });
+
+test('retains the real Vite high aggregate with two moderate primary children', () => {
+  const value = fixture();
+  // Original preserved npm output, including every primary field and child.
+  const original = JSON.parse(readFileSync(resolve(ROOT,
+    'docs/brain/checkpoints/M1-03/evidence/original-code/npm-audit-high.json'), 'utf8'));
+  value.report.vulnerabilities.vite = structuredClone(original.vulnerabilities.vite);
+  value.lock.packages['node_modules/vite'] = { version: '8.1.3' };
+  value.report.metadata.vulnerabilities.high++;
+  const check = () => validateNpmAudit({ ...value, scannerExitCode: 1 });
+  const errors = check();
+  assert.equal(errors.filter(e => /unreviewed moderate npm advisory: vite@8.1.3/u.test(e)).length, 2);
+  assert.equal(errors.filter(e => /unreviewed high\/critical npm advisory: vite@8.1.3/u.test(e)).length, 1);
+  assert.equal(errors.some(e => /malformed/u.test(e)), false);
+  for (const child of original.vulnerabilities.vite.via) {
+    assert.ok(errors.some(e => e.includes(child.url.split('/').at(-1)) && e.includes(`severity: ${child.severity}`)));
+  }
+  value.report.vulnerabilities.vite.via.push(structuredClone(original.vulnerabilities.vite.via[0]));
+  assert.deepEqual(check(), errors); // Deduplicate identity+severity without dropping distinct children.
+  assert.ok(validateNpmAudit({ ...value, scannerExitCode: 2 }).some(e => /exit code is inconsistent/u.test(e)));
+  assert.equal(validateNpmAudit({ ...value, today: '2026-10-21', scannerExitCode: 1 })
+    .filter(e => /review is expired/u.test(e)).length, 2);
+  for (const change of [
+    v => delete v.report.vulnerabilities.vite.via,
+    v => v.report.vulnerabilities.vite.via.push('missing-root'),
+    v => v.report.vulnerabilities.vite.via[0].severity = 'unknown',
+    v => delete v.report.vulnerabilities.vite.via[0].severity,
+    v => v.report.vulnerabilities.vite.via[0].name = 'other-package',
+    v => v.report.vulnerabilities.vite.nodes = ['node_modules/braces'],
+    v => v.report.vulnerabilities.vite.severity = 'unknown',
+  ]) {
+    const bad = structuredClone(value); change(bad);
+    assert.ok(validateNpmAudit({ ...bad, scannerExitCode: 1 }).some(e => /malformed|unbound/u.test(e)));
+  }
+  value.report.vulnerabilities.vite.via[0].severity = 'critical';
+  assert.ok(check().some(e => /unreviewed high\/critical.*severity: critical/u.test(e)));
+});
