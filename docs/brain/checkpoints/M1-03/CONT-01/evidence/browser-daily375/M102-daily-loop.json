@@ -1,0 +1,24 @@
+{
+  "verdict": "pass",
+  "fixture": "existing-development-corpus; real onboarding authority; synthetic local IO only",
+  "offlineMutation": true,
+  "rejectedWriteRetry": true,
+  "duplicateSingleEvent": true,
+  "targets": {
+    "localDate": "2026-10-20",
+    "phases": [
+      "AM",
+      "PM"
+    ],
+    "binding": "rendered heading/date plus encrypted days and journal readback"
+  },
+  "undo": "UNAVAILABLE_RETAINED_APPEND_ONLY",
+  "reloadStableIdentities": true,
+  "offlineTimingPersistsWithoutOptIn": true,
+  "routineReorder": "BLOCKED_CURRENT_PAID_AUTHORITY",
+  "cycleSettings": "BLOCKED_CURRENT_PAID_AUTHORITY",
+  "routinePlan": "BLOCKED_CURRENT_PAID_AUTHORITY",
+  "pmDayMarker": true,
+  "nativeOS": "NOT_RUN",
+  "offlineReload": "NOT_RUN: Metro reload performed after reconnect; no installed-native cold-start claim"
+}

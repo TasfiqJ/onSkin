@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "surface": "Actual Chrome headless; Vite8.1.6 dev server; local synthetic publishable-format token; blocked local auth endpoint; no credentials or provider use",
+  "checks": [
+    "Auth screen rendered",
+    "Local memory-only environment",
+    "Existing-operator restriction visible",
+    "Invalid email through real keyboard/mouse",
+    "No uncaught exceptions"
+  ],
+  "body": "Catalog operations\n\nRestricted internal review. Sensitive detail reads and decisions are authorized and audited.\n\nEnter a valid operator email address.\nOperator emailExisting authorized accounts only; account creation is disabled.\nSend one-time code\n\nEnvironment: local. Sessions are in memory only.",
+  "errors": []
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd ci --no-audit --no-fund",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/baseline-install.txt",
+    "sha256": "5c2ec166fbe079a75c1cf3e341c9b0a6f17ff519f8e0df641438ca6b5c00bd00"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T01:06:27.760192+00:00",
+  "finished_at_utc": "2026-10-21T01:07:15.554836+00:00",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "ci",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

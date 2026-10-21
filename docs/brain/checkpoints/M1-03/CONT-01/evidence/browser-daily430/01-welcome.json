@@ -1,0 +1,47 @@
+{
+  "bodyText": "LAYERWELL · YOUR ROUTINE Better skin starts with a routine you can actually follow. Build around what you already own, know what to use today, and track progress privately. Your shelf, organized Add products once. Keep everything in one place. A clear AM/PM plan Open Today and see the next step—without re-researching. Progress stays private Photos stay encrypted on your phone unless you choose to share one. Begin I already have an account NO ADS · NO DATA SALES · PHOTOS STAY ON DEVICE Privacy & account",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Begin",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 728
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "I already have an account",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 792
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Privacy & account",
+      "role": "button",
+      "selected": false,
+      "width": 430,
+      "x": 0,
+      "y": 876
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8494/",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

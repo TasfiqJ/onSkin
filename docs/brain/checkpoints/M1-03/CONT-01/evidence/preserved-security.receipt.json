@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node --test scripts/phase9/security_acceptance/workflow_contract.test.mjs scripts/phase9/patch-tooling-security.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs scripts/phase9/dependency-sbom-contract.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "89c665880ef1bb23e7358fc0146429e525c76508",
+  "source_tree": "b33a680a38281a66e0b1f5f7119c176075916c37",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/preserved-security.txt",
+    "sha256": "21e511d159e8b9ef315eb1122b09080bdcf5aa7aeff031bd2268036754dac835"
+  },
+  "counts": {
+    "passed": 50,
+    "failed": 1,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-21T01:13:17.673011+00:00",
+  "finished_at_utc": "2026-10-21T01:13:19.461863+00:00",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "--test",
+    "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+    "scripts/phase9/patch-tooling-security.test.mjs",
+    "scripts/phase9/tooling-security-vulnerabilities.test.mjs",
+    "scripts/phase9/dependency-sbom-contract.test.mjs"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

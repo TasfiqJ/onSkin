@@ -1,0 +1,25 @@
+{
+  "bodyText": "Unavailable Your private data could not open. We couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available. Try again",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry opening private storage",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 468
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8497/shelf",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

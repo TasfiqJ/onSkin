@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node --test scripts/phase9/security-advisory-exceptions.test.mjs scripts/phase9/security_acceptance/workflow_contract.test.mjs scripts/phase9/patch-tooling-security.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs scripts/phase9/dependency-sbom-contract.test.mjs scripts/phase9/ios-archive-privacy-evidence.test.mjs scripts/phase9/ios-privacy-source-audit.test.mjs scripts/phase9/patch-react-native-view-shot-privacy.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "20cd7d8f95bf889362a56620f9945190c571d5a1",
+  "source_tree": "14cd401c53854f876293176c3b4a9225cc78f34c",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-security-regressions.txt",
+    "sha256": "8bb1728d2c463fc6147d0fe30e2976e3e36257f25c88a5b69499238d752ca486"
+  },
+  "counts": {
+    "passed": 400,
+    "failed": 1,
+    "skipped": 4
+  },
+  "started_at_utc": "2026-10-21T01:43:53.717608+00:00",
+  "finished_at_utc": "2026-10-21T01:44:00.547338+00:00",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "--test",
+    "scripts/phase9/security-advisory-exceptions.test.mjs",
+    "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+    "scripts/phase9/patch-tooling-security.test.mjs",
+    "scripts/phase9/tooling-security-vulnerabilities.test.mjs",
+    "scripts/phase9/dependency-sbom-contract.test.mjs",
+    "scripts/phase9/ios-archive-privacy-evidence.test.mjs",
+    "scripts/phase9/ios-privacy-source-audit.test.mjs",
+    "scripts/phase9/patch-react-native-view-shot-privacy.test.mjs"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

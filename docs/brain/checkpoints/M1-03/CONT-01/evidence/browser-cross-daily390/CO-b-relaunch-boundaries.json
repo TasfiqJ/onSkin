@@ -1,0 +1,12 @@
+{
+  "exactB": true,
+  "noRetainedADailyState": true,
+  "healthOwnerB": true,
+  "noAInCache": true,
+  "noAInShelfOrQueue": true,
+  "hasB": true,
+  "bEditPersisted": true,
+  "ciphertextOnly": true,
+  "noWidgetCapabilities": true,
+  "renderedObservation": null
+}

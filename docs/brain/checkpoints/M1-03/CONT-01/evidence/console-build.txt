@@ -1,0 +1,14 @@
+
+> @layerwell/catalog-operator-console@0.1.0 build
+> vite build
+
+vite v8.1.6 building client environment for production...
+[2Ktransforming...✓ 53 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/_headers                     0.65 kB
+dist/index.html                   0.65 kB │ gzip:  0.36 kB
+dist/assets/index-TtBF_KoD.css    4.16 kB │ gzip:  1.60 kB
+dist/assets/index-CU6En71V.js   238.79 kB │ gzip: 62.75 kB
+
+✓ built in 242ms

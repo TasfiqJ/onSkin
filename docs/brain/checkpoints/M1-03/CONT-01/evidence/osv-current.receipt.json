@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "wsl -d onskin-r6-verification -- python3 -B /mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/m103c1_linux_driver.py osv",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Existing credential-free Ubuntu24.04 WSL2 x86_64/glibc2.39; Python3.12.3; Linux Node24.19.0 for unittest Node subprocesses, exact npm11.20.0 JS CLI from read-only Windows global installation for independent Linux npm ci. This is diagnostic execution, not the frozen G97 Linux runtime acceptance. Gitleaks8.24.3/TruffleHog3.99.3 exact authorized bytes; OSV2.3.8 only where explicit. No Semgrep replacement/bootstrap execution.",
+  "source_commit": "f5061ef28731489d818a04e1102267b0c701569a",
+  "source_tree": "7a8ee67a54413b59a73d0cdeaed7fb6a255666e2",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current.txt",
+    "sha256": "6b582b450373717b537dca8e076e8ea3288bad9cfa47831af3fa199d366be376"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T01:39:19.459347+00:00",
+  "finished_at_utc": "2026-10-21T01:39:25.283879+00:00",
+  "extra_environment": {},
+  "argv": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--",
+    "python3",
+    "-B",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/m103c1_linux_driver.py",
+    "osv"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

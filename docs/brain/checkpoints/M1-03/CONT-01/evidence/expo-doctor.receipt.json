@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd --workspace apps/mobile exec --yes -- expo-doctor@1.21.5",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "6c8f5fc586bb6994370e78e0305a2445613fcb82",
+  "source_tree": "70548b3a5f22e73d63199435d4ce0db48b39368f",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-doctor.txt",
+    "sha256": "5c8d10c41f7c83d824b83c8fcd9cfaade4c534633584f4e93e6db3588a947bb1"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T01:26:52.073446+00:00",
+  "finished_at_utc": "2026-10-21T01:27:06.690696+00:00",
+  "extra_environment": {
+    "CI": "1",
+    "EXPO_NO_TELEMETRY": "1"
+  },
+  "argv": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--yes",
+    "--",
+    "expo-doctor@1.21.5"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

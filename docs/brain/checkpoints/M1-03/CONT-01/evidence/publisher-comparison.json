@@ -1,0 +1,9 @@
+{
+  "exact_version": "8.1.6",
+  "submitted_and_current_sri_equal": true,
+  "submitted_and_current_engines_equal": true,
+  "actual_node": "22.21.0",
+  "actual_vitest": "4.1.11",
+  "vitest_declares_vite": "^6.0.0 || ^7.0.0 || ^8.0.0",
+  "signature_limit": "Publisher HTTPS metadata, tarball SRI and existing package-manager integrity checks; no independent signer certification."
+}

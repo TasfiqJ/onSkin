@@ -1,0 +1,22 @@
+import sys,pathlib,subprocess,json,datetime,hashlib,platform
+root=pathlib.Path('/root/onskin-m103c1-source');sys.path.insert(0,str(root/'scripts/phase9/security_acceptance'))
+import secret_scan as s
+head=s.git(root,'rev-parse','HEAD').decode().strip()
+print(json.dumps(dict(source_commit=head,source_tree=s.git(root,'rev-parse','HEAD^{tree}').decode().strip(),python=platform.python_version(),platform=platform.platform(),node=subprocess.check_output(['node','--version']).decode().strip(),npm=subprocess.check_output(['node','/mnt/c/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js','--version']).decode().strip())),flush=True)
+if sys.argv[1]=='secrets':
+ code=subprocess.run(['python3','-B','-m','unittest','discover','-s','scripts/phase9/security_acceptance','-p','test_secret_scan.py','-v'],cwd=root).returncode
+ if code:sys.exit(code)
+ suffix=sys.argv[2] if len(sys.argv)>2 else 'final';run_id='2026102106' if suffix=='bound' else '2026102105'
+ out=pathlib.Path('/root/onskin-m103c1-secret-'+suffix)
+ s.scan(root,'/root/onskin-m103c1-tools-20261021','/root/onskin-m103c1-scan-'+suffix,out,run_id,head,'refs/heads/stage/m1-retained-safety')
+ proof=s.load(out/s.PROOF);print(json.dumps(dict(raw_exits={k:v['exit'] for k,v in proof['commands'].items()},reachable_commits=len(proof['source']['commits']),patch_commits=len(proof['source']['patch_commits']),snapshot_files=len(proof['source']['snapshot']))),flush=True)
+ try:s.validate_proof(out,root,head,run_id);print('DIAGNOSTIC_BOUND_NOT_G97_ACCEPTED',flush=True)
+ except ValueError as e:print(str(e),flush=True);sys.exit(1)
+elif sys.argv[1]=='osv':
+ tool=pathlib.Path('/root/g97-finish-r1-20261018/tools/scanners-linux/osv')
+ raw=tool.read_bytes();assert hashlib.sha256(raw).hexdigest()=='bc98e15319ed0d515e3f9235287ba53cdc5535d576d24fd573978ecfe9ab92dc'
+ out=pathlib.Path('/root/onskin-m103c1-osv');out.mkdir();version=subprocess.run([str(tool),'--version'],capture_output=True)
+ args=[str(tool),'scan','source','--format=json','--output='+str(out/'osv-scan.json'),'--recursive','.']
+ with (out/'stdout').open('wb') as stdout,(out/'stderr').open('wb') as stderr:p=subprocess.run(args,cwd=root,stdout=stdout,stderr=stderr,timeout=900)
+ receipt=dict(source_commit=head,source_tree=s.git(root,'rev-parse','HEAD^{tree}').decode().strip(),argv=args,cwd=str(root),version_stdout=version.stdout.decode(),version_stderr=version.stderr.decode(),version_exit=version.returncode,binary_sha256=hashlib.sha256(raw).hexdigest(),raw_exit=p.returncode,files={n:hashlib.sha256((out/n).read_bytes()).hexdigest() for n in ['stdout','stderr','osv-scan.json']})
+ (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt),flush=True);sys.exit(p.returncode)

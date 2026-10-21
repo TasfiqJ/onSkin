@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd audit --audit-level=high --json",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "207d7aadf828080a64f3a62fb655e6cba70d55c7",
+  "source_tree": "d56635ba563b5b1ef68cc94a7476dbf21840defc",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/npm-audit-high.txt",
+    "sha256": "f8a541a430514e190d5f0a54051ef2b49c46975ec16d95cb63909872d5a4a57c"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T01:29:29.401795+00:00",
+  "finished_at_utc": "2026-10-21T01:29:44.643386+00:00",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "audit",
+    "--audit-level=high",
+    "--json"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

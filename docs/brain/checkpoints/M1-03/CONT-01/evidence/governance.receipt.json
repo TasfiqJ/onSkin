@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "207d7aadf828080a64f3a62fb655e6cba70d55c7",
+  "source_tree": "d56635ba563b5b1ef68cc94a7476dbf21840defc",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/governance.txt",
+    "sha256": "0fa22e16d8fad710a471900b1af36133f797666004480d402dea37fb0d4c0e59"
+  },
+  "counts": {
+    "passed": 58,
+    "failed": 0,
+    "skipped": 2
+  },
+  "started_at_utc": "2026-10-21T01:29:22.069190+00:00",
+  "finished_at_utc": "2026-10-21T01:41:34.532301+00:00",
+  "extra_environment": {},
+  "argv": [
+    "python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained",
+  "source_attribution_note": "The Windows clone advanced from6c8f5fc to207d7aad and later20cd7d8 during independent long-running checks. Notification/app/E2E/dependency bytes and all governance code/authority bytes participating in these checks were unchanged across that advance; only secret helpers/fixtures and the additive review/governance overlay changed. The receipt preserves its start identity and is not exact final-head CI."
+}

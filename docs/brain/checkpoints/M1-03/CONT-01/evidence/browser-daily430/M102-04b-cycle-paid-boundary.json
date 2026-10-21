@@ -1,0 +1,69 @@
+{
+  "bodyText": "Terms · Privacy · Restore x Build and track your routine. Store pricing Checking price Subscribe to Pro",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 85.36,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 146.72,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Maybe later",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 358,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 237
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8494/cycle/disruption",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

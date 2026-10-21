@@ -1,0 +1,186 @@
+{
+  "bodyText": "TUESDAY, OCTOBER 20 · 9:32 PM Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Retin oid Reco ver Retin oid Reco ver Reco ver Reco ver Reco ver Evening routine 0 of 1 Owner B manual moisturizer Apply to dry skin · pea-sized · avoid the eye area. NEXT Shelf 1 product ＋ Add All Actives Expiring Everything on your shelf, ordered by supported tracked dates. FIRST ROUTINE Your routine is ready to draft. Even one product can start an honest AM/PM draft. Missing steps stay visible, not invented. Build my routine Owner B manual moisturizer Retinol / retinoid serum · opened Oct · Date unknown Date unknown Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": false,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 140
+    },
+    {
+      "disabled": false,
+      "height": 98,
+      "hitOk": false,
+      "label": "Owner B manual moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 302,
+      "x": 44,
+      "y": 347
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 282.94,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Build my routine",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 317
+    },
+    {
+      "disabled": false,
+      "height": 110,
+      "hitOk": true,
+      "label": "Owner B manual moisturizer, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 423
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Add a product",
+      "role": "button",
+      "selected": false,
+      "width": 159.13,
+      "x": 115.44,
+      "y": 574
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 25,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 194.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 2,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 139,
+        "hitOk": false,
+        "label": "See your cycle week ahead",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 140
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 98,
+        "hitOk": false,
+        "label": "Owner B manual moisturizer",
+        "role": "checkbox",
+        "selected": false,
+        "width": 302,
+        "x": 44,
+        "y": 347
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8495/shelf",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

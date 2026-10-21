@@ -1,0 +1,5 @@
+{
+  "status": "NOT_RUN",
+  "reason": "Outer runner REMAINDER parsed --env after the evidence ID as the executable; CreateProcess failed before browser launch. Empty maintained-daily390.txt is retained. All six later browser-* receipts are the real independently executed runs.",
+  "scanner_or_app_started": false
+}
