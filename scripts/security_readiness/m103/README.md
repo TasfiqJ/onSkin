@@ -1,5 +1,33 @@
 # M1-03 private diagnostics
 
+SECURITY-HARDEN-01 adds Linux inotify witnesses and a bubblewrap capsule. Every
+existing Python cache, launcher, venv link, installation/acquisition file, system
+interpreter import path and ELF dependency is measured. An external manifest
+SHA-256 is required by `source_scan.py --tool-manifest-sha256 DIGEST`; retain the
+prepare seal outside the candidate. `-I -B` prevents inherited imports and new
+bytecode writes; existing caches are measured, never assumed disabled by `-B`.
+
+Each rule-metadata parse and actual scan copies the validated source, venv,
+helpers, system imports and libraries into a private mount-namespace tmpfs.
+Copied bytes are verified, then a nested namespace mounts the image readonly,
+drops capabilities and exposes only measured runtime files, private tmp and
+proc/dev. The native CLI's trust file is projected from the pinned certifi bundle.
+The original sandbox seccomp policy and a separate network namespace both apply.
+Git object/byte/inode checks and inotify run before and after each execution;
+change-and-restore, rename, queue overflow, added files, links and hardlinks refuse.
+Timeouts kill and join the complete process group. The trusted kernel, verifier
+and independently retained manifest digest remain explicit trust inputs.
+
+`test_integrity.py` exercises real kernel denial, original-core vulnerable/benign
+scans, cache/link/FIFO tampering, host mutation during execution and final rehash.
+Set `ONSKIN_TEST_CANDIDATE` to a freshly verified private install to run every
+method. Missing Linux capabilities or candidate inputs remain explicit failures
+or documented skips. `prepare --wheel-cache DIR` reuses only exact hash-verified
+public wheels and still installs/resolves/checks the complete graph afresh.
+
+The issued `sandbox.py` preimage digest is malformed and differs from Git; that
+file is preserved. The additional capsule is in the issued new Python namespace.
+
 Every output is **NON_ADMITTING / UNREVIEWED**. Admission is always NONE. No runtime,
 package script, workflow, source acceptance policy or frozen scanner consumes this
 namespace. Original tools, rule hashes, exception dates and expiry remain unchanged.
@@ -20,7 +48,8 @@ seccomp denial of IPv4/IPv6 sockets, connect, bind and listen. No source upload,
 telemetry, credentials or found-credential validation is authorized.
 
 `source_scan.py --candidate DIR --repo REPO --commit FULL_SHA --work NEW_WORK
---rules EXACT_RULE_DIRECTORY --pins ISSUED_CANDIDATE_TOOL_INPUTS.json` materializes
+--rules EXACT_RULE_DIRECTORY --pins ISSUED_CANDIDATE_TOOL_INPUTS.json
+--tool-manifest-sha256 DIGEST` materializes
 committed UTF-8 Git blobs only. Every tracked path retains its object and content
 identity; nonregular/binary inputs remain explicit. All four exact bundles execute
 independently with finite timeouts. Coverage, errors, findings and raw exits remain

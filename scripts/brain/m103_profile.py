@@ -58,12 +58,23 @@ def _validate_initial(root):
 
 
 def validate(root):
+    if (root / SH_ACTIVE).exists():
+        return validate_security_harden01(root)
     if (root / ON_ACTIVE).exists():
         return validate_overnight01(root)
     return _validate_initial(root)
 
 
 def report(root, name):
+    if name.startswith(SH_INPUT.rsplit('/',1)[0]+'/'):
+        value=m1_profile.report(root,name,task='M1-03',base=SH_BASE,
+            validator=validate_security_harden01,checkpoint=SH_INPUT.rsplit('/',1)[0]+'/',
+            continuation_bindings={'SECURITY-HARDEN-01':(SH_INPUT,SH_BASE)})
+        brain.require(value['schema_version']==3 and value['iteration']=='SECURITY-HARDEN-01','Wrong hardening report iteration')
+        brain.identities(value['scope_matrix'],SH_SCOPE)
+        brain.require(bool(value['executions']),'Hardening requires actual executions')
+        committed_artifacts(root,value['artifacts'])
+        return value
     if name.startswith(ON_INPUT.rsplit('/', 1)[0] + '/'):
         value = m1_profile.report(root, name, task='M1-03', base=ON_BASE,
             validator=validate_overnight01, checkpoint=ON_INPUT.rsplit('/', 1)[0] + '/',
@@ -191,7 +202,7 @@ def committed_artifacts(root, rows):
                       'Committed artifact differs: ' + path)
 
 
-def validate_overnight01(root):
+def validate_overnight01(root, *, fixed=False):
     import pathlib, subprocess
     # The old allowlist is applied only to its independently fixed interval.
     _validate_cont01(root, fixed=True)
@@ -237,9 +248,10 @@ def validate_overnight01(root):
     admin = authority['administrative_paths']
     allowed.update(admin['existing_exact_scope']); allowed.update(admin['derived_outputs']); allowed.add(ON_ACTIVE)
     prefixes = [admin['new_review_overlay'], admin['new_checkpoint']]
-    changes = brain.git(root, 'diff','--name-only', ON_BASE).splitlines()
-    changes += brain.git(root, 'ls-files','--others','--exclude-standard').splitlines()
-    for commit in brain.git(root,'rev-list',ON_BASE+'..HEAD').splitlines():
+    endpoint=SH_BASE if fixed else 'HEAD'
+    changes = brain.git(root, 'diff','--name-only', ON_BASE, endpoint).splitlines() if fixed else brain.git(root,'diff','--name-only',ON_BASE).splitlines()
+    if not fixed:changes += brain.git(root, 'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',ON_BASE+'..'+endpoint).splitlines():
         changes += brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
     for path in set(changes):
         standalone = path.startswith('scripts/security_readiness/m103/')
@@ -250,4 +262,59 @@ def validate_overnight01(root):
             brain.require(absent.returncode != 0, 'OVERNIGHT-01 namespace overwrote existing source')
         brain.require(path in allowed or standalone or any(path.startswith(p) for p in prefixes),
                       'OVERNIGHT-01 path outside exact authorization: '+path)
+    return current
+
+
+SH_INPUT='docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs'
+SH_REVIEW='docs/brain/reviews/M1-03/OVERNIGHT-REVIEW01'
+SH_ACTIVE='docs/brain/m103-security-harden01-active.json'
+SH_BASE='8babdad11791496ad6e8c45154b3b173bdddd36e'
+SH_TREE='cf2ff58cc140956d8c3cda4a11c703733ebe6544'
+SH_DIGEST='9dc4ecaef5d2c074a57983906dec25ed59c8d6b3b23e36c66993ed63e87bf196'
+SH_SCOPE=['SH-1','SH-2','SH-3','SH-4','SH-5','SH-6','SH-7']
+
+
+def validate_security_harden01(root):
+    import pathlib,subprocess
+    validate_overnight01(root,fixed=True)
+    brain.git_snapshot(root,dict(commit=SH_BASE,tree=SH_TREE),'hardening reviewed base')
+    raw=brain.read(root,SH_INPUT+'/TASK_MANIFEST.json')
+    brain.require(brain.digest(raw)==SH_DIGEST,'Hardening independent manifest differs')
+    issued=brain.decode(raw)
+    brain.require((issued['task_id'],issued['iteration'],issued['base_commit'],issued['base_tree'],issued['branch'])==
+        ('M1-03','SECURITY-HARDEN-01',SH_BASE,SH_TREE,BRANCH),'Wrong hardening issuance')
+    for row in issued['files']:
+        blob=brain.read(root,SH_INPUT+'/'+row['path'])
+        brain.require(len(blob)==row['bytes'] and brain.digest(blob)==row['sha256'],'Hardening input differs')
+        if row['path'].startswith('REVIEW_STATE/'):
+            brain.require(blob==brain.read(root,SH_REVIEW+'/'+row['path'].split('/',1)[1]),'Hardening immutable review differs')
+    authority=brain.load(root,SH_REVIEW+'/SOURCE_EDIT_AUTHORIZATION.json')
+    expected=dict(schema_version=1,task_id='M1-03',iteration='SECURITY-HARDEN-01',branch=BRANCH,
+        base_commit=SH_BASE,base_tree=SH_TREE,input_manifest_sha256=SH_DIGEST,
+        authorization_id='M103-SECURITY-HARDEN01-SOURCE-EDIT-01',accepted_tasks=['M0-01','M0-02','M1-01','M1-02'],
+        protected_source_go=False,main_promotion_authorized=False,active_writers=1,incremental_spend_usd=0,
+        next_task=None,research_requests=[],proposal_expires_utc='2026-10-21T00:00:00Z')
+    current=brain.load(root,SH_ACTIVE)
+    brain.require(set(current)==set(expected)|{'submission_status'} and all(type(current[k]) is type(v) and current[k]==v for k,v in expected.items()),'Hardening unissued authority')
+    brain.require(current['submission_status'] in ['IN_PROGRESS','PARTIAL','BLOCKED','SUBMITTED_REVIEW_REQUIRED'],'Hardening cannot self-accept')
+    brain.require(brain.git(root,'branch','--show-current')==BRANCH,'Wrong hardening branch')
+    brain.ancestor(root,SH_BASE,brain.git(root,'rev-parse','HEAD'),'hardening base -> head')
+    approved=brain.load(root,SH_REVIEW+'/brain_state.json')
+    brain.require(approved['accepted_tasks']==current['accepted_tasks'],'Hardening accepted tasks differ')
+    old=brain.load(root,'docs/brain/state/roadmap.json')['tasks'];new=brain.load(root,SH_REVIEW+'/roadmap.json')['tasks']
+    brain.require(len(new)==47 and [(r['id'],r['depends_on']) for r in old]==[(r['id'],r['depends_on']) for r in new],'Hardening roadmap drift')
+    existing={r['path']:r['sha256'] for r in authority['allowed_existing_files']}
+    prefixes=[SH_REVIEW+'/',SH_INPUT.rsplit('/',1)[0]+'/']
+    exact=set(authority['allowed_derived_outputs'])|{SH_ACTIVE,'scripts/brain/test_m103_security_harden01_profile.py'}
+    changes=brain.git(root,'diff','--name-only',SH_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',SH_BASE+'..HEAD').splitlines():
+        changes+=brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
+    for path in set(changes):
+        prior=subprocess.run(['git','-C',str(root),'show',SH_BASE+':'+path],capture_output=True)
+        if path in existing:
+            brain.require(prior.returncode==0 and brain.digest(prior.stdout)==existing[path],'Hardening preimage mismatch: '+path)
+        elif path in authority['allowed_derived_outputs']:pass
+        else:
+            candidate=path.startswith('scripts/security_readiness/m103/') and pathlib.PurePosixPath(path).suffix in {'.py','.mjs','.md'}
+            brain.require(prior.returncode!=0 and (path in exact or candidate or any(path.startswith(p) for p in prefixes)),'Hardening path outside exact authorization: '+path)
     return current

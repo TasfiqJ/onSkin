@@ -1,10 +1,13 @@
-M1-03 / OVERNIGHT-01 — PARTIAL_SAFE_CONTEXT_STOP / SUBMITTED_REVIEW_REQUIRED.
-Branch stage/m1-retained-safety. Latest measured implementation 3c063dfe47d887e7aa3e27d05da41658b69a59dc / tree e626c1922c4e47d8033fcb598a492694396dcb01. Delivery is refs/heads/stage/m1-retained-safety; actual final SHA and clean-clone result are returned after the final safe push, not invented in advance.
-A implemented: exact native mappings/generated outputs, self-contained historical SBOM fixture, twelve safe late-published logs, fixed historical/new authority intervals and committed-artifact refusal controls. All829 original CONT-01 artifact bindings now match committed blobs; original report/status remains unchanged.
-B partial: maintained private candidate CLI and two fresh Linux/Python3.12 installations, 66 exact wheels with only MCP/certifi version changes, metadata-only Semgrep derivative, real graph checks/core/safety/adverse tests. Candidate Python-cache and post-export source-drift checks are not exhaustive; no adoption.
-C partial/red: four pinned actual SAST bundles, exact18782-path partition, three tooling findings, timeout/partial parsing/26 SQL coverage gaps retained. All5439 original secret records blob/range-bound and UNKNOWN; 68 npm/five OSV records retained, six graph paths unresolved. No raw secret output republished; proposed dispositions remain unreviewed.
-D traced: DB06 unconditional current-chain refusal, DB08 linked/local/repository parity, R2B supabase_admin default-ACL residual with unknown issuer/receipt. Latest measured-head original DB job119037719258 failed canonical acquisition: toomanyrequests/Data limit exceeded. No retry/login/image substitution or new local DB verifier. Older canonical job119000585680 passed and remains historical only.
-Fresh broad e356e8fba: root6067/0; forced typecheck/lint pass, zero cached; native/workflow407/0; DB source171/0; supported acceptance70/0, secret10/0, diagnostics3/0. Governance58pass/2error/2genuine skips retained; four bad fixture setup lines removed, affected tests2/0 at final head in both Windows and Linux. No result retagged.
-Packet docs/brain/checkpoints/M1-03/OVERNIGHT-01/README.md; completion-report.json; DATABASE_CUSTODY.md; WORK_REMAINING.md; RESUME.md. Exact issued state unchanged, all47 roadmap/27 module identities preserved. Current active overlay remains in-flight M1-03 pending independent review.
-Top residual: independent Brain review plus explicit candidate hardening, unresolved Security findings/coverage and canonical image availability. protected_source_go=false; main_promotion_authorized=false; original expiry2026-10-21T00:00:00Z remains expired. M2-01 unissued; ADR038 M2-01/M2-02 corrections remain due. Accepted privacy/owner/billing boundaries preserved. Main/M0/PR8/other worktrees/shared installations untouched; PR9 draft/unmerged. No SQL/schema/RLS/types/Edge/phase2, J05/research, found-credential testing, live provider mutation, accounts/spend, signing/TestFlight/deployment/submission/release or history rewrite.
-Context HIGH, no observed compaction. No hidden second writer. Push this finite checkpoint, verify actual pushed clone, then stop for independent Brain review. Founder returns only: Codex is done.
+TASK: M1-03 / SECURITY-HARDEN-01
+STATUS: PARTIAL_IMPLEMENTATION_CHECKPOINT; IN_PROGRESS; no acceptance
+BRANCH: stage/m1-retained-safety
+ISSUED_BASE: 8babdad11791496ad6e8c45154b3b173bdddd36e / cf2ff58cc140956d8c3cda4a11c703733ebe6544
+MEASURED: exploratory dirty overlay at reviewed base; exact committed reruns pending
+DELIVERY: resolve this checkpoint via refs/heads/stage/m1-retained-safety; normal push only
+IMPLEMENTED: isolated original fixture Git/process lifecycle; candidate full cache/link/runtime measurements; readonly tmpfs scans plus inotify/final Git rehash; additive digest-bound profile and adversarial tests
+EVIDENCE: docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/README.md
+CI: exact new-head original jobs pending push; prior Security failure remains real
+PROTECTED: G97 expired 2026-10-21T00:00:00Z; DB06/DB08/R2B closed; no main promotion/M2/J05/spend/release
+BLOCKERS: source scans/coverage/triage/final root/report/CI still pending; sandbox.py issued preimage mismatches and file is unchanged
+CONTEXT: MEDIUM; no observed compaction; continuing authorized checks
+NEXT: finish independent authorized source checks; stop for independent Brain review after final safe push

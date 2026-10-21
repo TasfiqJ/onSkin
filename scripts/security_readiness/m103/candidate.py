@@ -1,6 +1,7 @@
 """Private Linux/Python3.12 diagnostic candidate; never an admission producer."""
 import argparse, base64, csv, email, hashlib, io, json, os, pathlib, platform
 import re, stat, subprocess, sys, urllib.parse, urllib.request, zipfile
+from integrity import regular, tree
 
 SHA = lambda data: hashlib.sha256(data).hexdigest()
 HERE = pathlib.Path(__file__).resolve().parent
@@ -108,32 +109,38 @@ def derive(raw):
 
 
 def installed_tree(root):
+    # -B prevents writes, not reads. Every existing cache is an executable input.
+    return tree(root,venv=True)
+
+
+def acquisition_tree(root):
     rows=[]
-    for p in sorted(root.rglob('*')):
-        if '__pycache__' in p.parts or p.suffix == '.pyc': continue
-        # Venv interpreter links are platform launch inputs, recorded separately.
-        if p.is_symlink():
-            if p == root/'lib64':
-                require(os.readlink(p)=='lib' and (root/'lib').is_dir(), 'INSTALLED_LINK')
-                rows.append(dict(path='lib64',link='lib'));continue
-            require(p.parent == root/'bin' and p.name in {'python','python3','python3.12'}, 'INSTALLED_LINK')
-            rows.append(dict(path=p.relative_to(root).as_posix(),link=os.readlink(p),target_sha256=SHA(p.read_bytes())))
-        elif p.is_file(): rows.append(dict(path=p.relative_to(root).as_posix(),bytes=p.stat().st_size,sha256=SHA(p.read_bytes())))
+    for p in sorted(root.iterdir()):
+        if p.name in {'venv','candidate.json'}:continue
+        require(not p.is_symlink(),'ACQUISITION_LINK')
+        rows.append(dict(path=p.name,tree=tree(p)) if p.is_dir() else dict(path=p.name,sha256=SHA(regular(p))))
     return rows
 
 
-def verify(root):
-    manifest=json.loads((root/'candidate.json').read_bytes())
+def verify(root,expected_manifest=None):
+    from capsule import check_runtime
+    raw=regular(root/'candidate.json')
+    if expected_manifest is None:
+        expected_manifest=regular(root.with_name(root.name+'-seal.sha256')).decode().strip()
+    require(SHA(raw)==expected_manifest,'TOOL_MANIFEST_DRIFT')
+    manifest=json.loads(raw)
     require(manifest['admission']=='NONE' and manifest['classification']=='NON_ADMITTING_UNREVIEWED', 'CANDIDATE_AUTHORITY')
     require(installed_tree(root/'venv') == manifest['installed_tree'], 'INSTALLED_TREE_DRIFT')
+    require(acquisition_tree(root)==manifest['acquisition_tree'],'ACQUISITION_TREE_DRIFT')
+    check_runtime(manifest['runtime'])
     for row in manifest['wheels']:
-        require(SHA((root/'wheelhouse'/row['filename']).read_bytes())==row['install_sha256'], 'WHEEL_DRIFT')
-    result=subprocess.run([str(root/'venv/bin/python'),'-I','-B','-m','pip','check'],capture_output=True)
-    require(result.returncode==0, 'INSTALLED_REQUIREMENT_MISMATCH')
-    return manifest
+        require(SHA(regular(root/'wheelhouse'/row['filename']))==row['install_sha256'], 'WHEEL_DRIFT')
+    # Dependency resolution and pip check ran at installation. Verification must
+    # never execute an unverified import just to decide whether it is trusted.
+    return {**manifest,'manifest_sha256':SHA(raw)}
 
 
-def prepare(root):
+def prepare(root,cache=None):
     require(sys.platform=='linux' and platform.machine()=='x86_64' and sys.version_info[:2]==(3,12), 'LINUX_X86_64_PY312_REQUIRED')
     root=root.absolute()
     require(root.parent == pathlib.Path.home() and root.name.startswith('onskin-overnight01-'),
@@ -155,11 +162,12 @@ def prepare(root):
     rows=[]; requirements=[]; derivative=None
     for name,version,digest in pins:
         url='https://pypi.org/pypi/'+name+'/'+version+'/json'
-        raw=official(url); meta=json.loads(raw)
+        raw=regular(cache/'metadata'/(name+'.json')) if cache else official(url); meta=json.loads(raw)
         (root/'metadata'/(name+'.json')).write_bytes(raw)
         matches=[r for r in meta['urls'] if r['digests']['sha256']==digest and r['filename'].endswith('.whl')]
         require(len(matches)==1, 'EXACT_OFFICIAL_WHEEL_UNAVAILABLE:'+name)
-        item=matches[0]; data=official(item['url'])
+        item=matches[0]
+        data=regular(cache/('originals' if name=='semgrep' else 'wheelhouse')/item['filename']) if cache else official(item['url'])
         require(SHA(data)==digest and len(data)==item['size'], 'UPSTREAM_WHEEL_DRIFT:'+name)
         if name in overrides: require(len(data)==overrides[name]['wheel_bytes'], 'UPSTREAM_WHEEL_SIZE')
         wheel_members(data)
@@ -183,15 +191,20 @@ def prepare(root):
     result=subprocess.run([str(root/'venv/bin/python'),'-I','-B','-m','pip','check'],capture_output=True)
     (root/'pip-check.txt').write_bytes(result.stdout+result.stderr)
     require(result.returncode==0, 'INSTALLED_REQUIREMENT_MISMATCH')
+    from capsule import runtime_inputs
     write_json(root/'candidate.json',dict(admission='NONE',classification='NON_ADMITTING_UNREVIEWED',
         wheels=rows,derivative=derivative,argv=command,raw_exit=0,installed_tree=installed_tree(root/'venv'),
+        runtime=runtime_inputs(root/'venv'),acquisition_tree=acquisition_tree(root),
+        acquisition_origin='HASH_VERIFIED_PRIVATE_WHEEL_CACHE' if cache else 'OFFICIAL_PYPI_HTTPS',
         python=sys.version,platform=platform.platform(),requirements_sha256=SHA((root/'requirements.txt').read_bytes())))
+    root.with_name(root.name+'-seal.sha256').write_text(SHA(regular(root/'candidate.json'))+'\n')
     verify(root)
     print('Prepared and verified candidate; admission NONE.')
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('command',choices=['prepare','verify']);p.add_argument('private_root',type=pathlib.Path)
+    p.add_argument('--wheel-cache',type=pathlib.Path)
     a=p.parse_args()
-    if a.command=='prepare': prepare(a.private_root)
+    if a.command=='prepare': prepare(a.private_root,a.wheel_cache)
     else: verify(a.private_root);print('Candidate integrity only; admission NONE.')

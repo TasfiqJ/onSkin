@@ -22,6 +22,21 @@ def exercise(root):
         except ValueError:pass
         else:raise AssertionError('entrypoint drift accepted')
     finally:launcher.write_bytes(raw)
+    for path in [next((root/'venv').rglob('*.pyc')),root/'venv/pyvenv.cfg']:
+        raw=path.read_bytes()
+        try:
+            path.write_bytes(raw+b'\nsynthetic-drift\n')
+            try:verify(root)
+            except ValueError:pass
+            else:raise AssertionError('cache or launch policy drift accepted')
+        finally:path.write_bytes(raw)
+    interpreter=root/'venv/bin/python';link=interpreter.readlink()
+    try:
+        interpreter.unlink();interpreter.symlink_to('/bin/false')
+        try:verify(root)
+        except ValueError:pass
+        else:raise AssertionError('interpreter link drift accepted')
+    finally:interpreter.unlink();interpreter.symlink_to(link)
     semgrep=next(r for r in manifest['wheels'] if r['name']=='semgrep')
     original=(root/'originals'/semgrep['filename']).read_bytes()
     require(SHA(original)==semgrep['original_sha256'],'ORIGINAL_DRIFT')

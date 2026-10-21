@@ -1,0 +1,123 @@
+{
+  "allowed_derived_outputs": [
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md"
+  ],
+  "allowed_existing_files": [
+    {
+      "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+      "sha256": "296eac4dd887b3403eea2ac77f8ec4d3ad7299bc5b8063ce75bda0d873e07831"
+    },
+    {
+      "path": "scripts/security_readiness/m103/candidate.py",
+      "sha256": "9cfd2ac00de506e5d91514d844838d36d98952c1c95aeec1fd83ae28161d728f"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "sha256": "522ee67accc650ec85d79bed1ae20494bbeeae15334ed4933ea2883f2a1e4dcd"
+    },
+    {
+      "path": "scripts/security_readiness/m103/sandbox.py",
+      "sha256": "fe2c5580115c7f4b791edc7d72851044c0677e464bc53c467a42d9ce508b15"
+    },
+    {
+      "path": "scripts/security_readiness/m103/test_diagnostics.py",
+      "sha256": "1ff9b6a09c2324e3b948fe2492bd39fbec51f8b6946e356f53e306d6c73d51e5"
+    },
+    {
+      "path": "scripts/security_readiness/m103/reconcile.py",
+      "sha256": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde"
+    },
+    {
+      "path": "scripts/security_readiness/m103/dependencies.mjs",
+      "sha256": "270c289bca62e55448109121befe5f5209321b6cd359c449b15e8bc815ced54d"
+    },
+    {
+      "path": "scripts/security_readiness/m103/adverse_install.py",
+      "sha256": "4b8631ef4703ce16ffcc57f06973dbf7b91ab368c430020819480cb6374b7e16"
+    },
+    {
+      "path": "scripts/security_readiness/m103/compatibility.py",
+      "sha256": "1d735766f3e1dff45678d5ec9e47cc484990154ef464a5f881f2fd42b606321e"
+    },
+    {
+      "path": "scripts/security_readiness/m103/fixtures.py",
+      "sha256": "3abfad7815bed18b96ba6ce730ebd99b80697b4c80ffd67878867d354908cb3a"
+    },
+    {
+      "path": "scripts/security_readiness/m103/README.md",
+      "sha256": "9180181a46a2314736b255ac2ebd1934bc842b74c680df240444f982733ab69c"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "sha256": "872c999f716e758bafe88aaba8880c0d5a1e2f169908ca246ed8c731984f6f1a"
+    },
+    {
+      "path": "scripts/brain/test_m103_overnight01_profile.py",
+      "sha256": "bbd4d4e7a7dd41f7e4a32c3f865277d46afd42e329a137908814a855a59e83bb"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "a2fc959a7ee7c8a83df75f67028623327e0a78542a6f308801517b3b98420288"
+    },
+    {
+      "path": "docs/brain/README.md",
+      "sha256": "883df680dfb83f759fa87a2144eb1eafe6c48f86504f1a79a92f6fe1e8ced9bd"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "211fe7484a604f861afdfb42e60e1257452e1ab1d0bae937f771e05f484d82fc"
+    }
+  ],
+  "allowed_new_paths": [
+    "scripts/security_readiness/m103/ with .py/.mjs/.md only",
+    "scripts/brain/test_m103_security_harden01_profile.py",
+    "docs/brain/m103-security-harden01-active.json",
+    "docs/brain/reviews/M1-03/OVERNIGHT-REVIEW01/**",
+    "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/**"
+  ],
+  "allowed_semantics": {
+    "admin": "status/handoff and narrowly scoped review metadata",
+    "brain_profile": "additive profile and immutable prior interval; not shared governance redesign",
+    "candidate_namespace": "hash all executable/runtime inputs, post-export and post-scan source binding, restore actual SQL coverage if safe, typed raw outcomes and adversarial tests",
+    "test_secret_scan.py": "test-fixture subprocess/background-cleanup determinism only; no acceptance disable/omission/masking"
+  },
+  "authorization_id": "M103-SECURITY-HARDEN01-SOURCE-EDIT-01",
+  "base_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "base_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "branch": "stage/m1-retained-safety",
+  "constraints": {
+    "main_promotion_authorized": false,
+    "no_M2": true,
+    "no_live_replay": true,
+    "no_self_acceptance": true,
+    "one_writer": true,
+    "protected_source_go": false,
+    "review_expiry": "2026-10-21T00:00:00Z",
+    "spend_usd": 0
+  },
+  "iteration": "SECURITY-HARDEN-01",
+  "main_observed": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "never_change": [
+    ".github/workflows/**",
+    "scripts/phase9/security_acceptance/proposal.json",
+    "scripts/phase9/security_acceptance/source-manifest.json",
+    "scripts/phase9/security_acceptance/history.json.gz",
+    "scripts/phase9/security_acceptance/collect.py",
+    "scripts/phase9/security_acceptance/secret_scan.py",
+    "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+    "scripts/phase9/security_acceptance/**frozen**",
+    "supabase/**",
+    "packages/types/**",
+    "package-lock.json",
+    "package.json",
+    "apps/**",
+    "scripts/phase2/**",
+    "docs/phase-9/security-advisory-exceptions.json",
+    "docs/phase-9/ios-sdk-package-mapping.json",
+    "docs/phase-9/generated/ios-privacy-source-audit.*"
+  ],
+  "schema_version": 1,
+  "scope": "ordinary test-only original secret fixture + isolated non-admitting scanner diagnostics, no active Security/admission policy",
+  "task_id": "M1-03"
+}

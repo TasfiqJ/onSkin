@@ -3,6 +3,19 @@ import copy, datetime, io, json, os, pathlib, subprocess, tarfile, tempfile, uni
 from unittest import mock
 import secret_scan as s
 
+
+def fixture_environment():
+    # Git may detach auto-maintenance after a waited-for commit has exited.
+    # Command-scope config reaches *all* fixture Git calls, including s.git_scope.
+    values = {'GITHUB_ACTIONS': 'false', 'GIT_CONFIG_NOSYSTEM': '1',
+              'GIT_CONFIG_GLOBAL': os.devnull, 'GIT_CONFIG_COUNT': '5'}
+    for i, (key, value) in enumerate([('maintenance.auto', 'false'), ('gc.auto', '0'),
+            ('gc.autoDetach', 'false'), ('maintenance.autoDetach', 'false'),
+            ('core.hooksPath', os.devnull)]):
+        values['GIT_CONFIG_KEY_' + str(i)] = key
+        values['GIT_CONFIG_VALUE_' + str(i)] = value
+    return mock.patch.dict(os.environ, values)
+
 def synthetic_proof(scope, run_id='123987', history_results=None):
     """Unit data only; these tool paths are never acquired or executed."""
     now = s.stamp(); tools = {}
@@ -32,7 +45,7 @@ def synthetic_proof(scope, run_id='123987', history_results=None):
 
 class SecretScanTests(unittest.TestCase):
     def setUp(self):
-        environment=mock.patch.dict(os.environ,{'GITHUB_ACTIONS':'false'});environment.start();self.addCleanup(environment.stop)
+        environment=fixture_environment();environment.start();self.addCleanup(environment.stop)
         self.temp = tempfile.TemporaryDirectory(prefix='onskin-secret-unit-'); self.addCleanup(self.temp.cleanup)
         self.root = pathlib.Path(self.temp.name) / 'source'; self.root.mkdir()
         self.out = pathlib.Path(self.temp.name) / 'evidence'; self.out.mkdir()
@@ -148,5 +161,35 @@ class SecretScanTests(unittest.TestCase):
             for key,value in [('repository','other/repo'),('job','other-job'),('workflow','other-workflow'),('attempt','2')]:
                 self.proof=copy.deepcopy(original);self.proof['context'][key]=value;self.save()
                 with self.assertRaises(ValueError):self.validate()
+
+class FixtureLifecycleTests(unittest.TestCase):
+    def test_inherited_auto_maintenance_and_hooks_cannot_escape_fixture(self):
+        with tempfile.TemporaryDirectory(prefix='onskin-git-lifecycle-') as t:
+            root=pathlib.Path(t); repo=root/'repo';repo.mkdir()
+            config=root/'hostile-config'
+            config.write_text('[gc]\n auto = 1\n autoDetach = true\n[maintenance]\n auto = true\n autoDetach = true\n[core]\n hooksPath = '+str(root/'hooks').replace('\\','/')+'\n')
+            with mock.patch.dict(os.environ, {'GIT_CONFIG_GLOBAL': str(config)}), fixture_environment():
+                def git(*args):return subprocess.check_output(['git','-C',str(repo),*args],stderr=subprocess.PIPE)
+                git('init','-q')
+                for key, value in [('maintenance.auto','false'),('gc.auto','0'),('gc.autoDetach','false'),
+                                   ('maintenance.autoDetach','false'),('core.hooksPath',os.devnull)]:
+                    self.assertEqual(git('config','--get',key).decode().strip(),value)
+                (repo/'file').write_text('synthetic\n');git('add','.')
+                git('-c','user.name=Synthetic','-c','user.email=fixture@example.invalid','-c','commit.gpgsign=false','commit','-qm','synthetic')
+                self.assertEqual(git('rev-list','--count','HEAD').strip(),b'1')
+            # Immediate cleanup above is part of the assertion; no sleep/retry/ignore.
+
+    @unittest.skipUnless(os.name=='posix', 'Linux subprocess/pipe cleanup regression')
+    def test_owned_process_is_joined_before_git_directory_cleanup(self):
+        import sys
+        with tempfile.TemporaryDirectory(prefix='onskin-process-lifecycle-') as t:
+            root=pathlib.Path(t);(root/'.git').mkdir()
+            script="import pathlib,sys; p=pathlib.Path(sys.argv[1])/'.git'/'late'; print('ready',flush=True); sys.stdin.readline(); p.write_text('synthetic'); print('finished',flush=True)"
+            with subprocess.Popen([sys.executable,'-I','-B','-c',script,t],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True) as child:
+                self.assertEqual(child.stdout.readline().strip(),'ready')
+                output,_=child.communicate('release\n',timeout=10)
+                self.assertEqual(output.strip(),'finished');self.assertEqual(child.returncode,0)
+            self.assertEqual((root/'.git/late').read_text(),'synthetic')
+
 
 if __name__ == '__main__': unittest.main()

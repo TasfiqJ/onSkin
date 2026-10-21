@@ -1,0 +1,1539 @@
+{
+  "accepted_task_scopes": {
+    "M0-01": "DIAGNOSIS_AND_REGRESSION_CHECKPOINT_ONLY",
+    "M0-02": "PLANNING_AUTHORITY_AND_GOVERNANCE_TOOLING_ONLY",
+    "M1-01": "RETAINED_CLIENT_SOURCE_AND_SUPPORTED_LOCAL_WEB_SAFETY_ONLY",
+    "M1-02": "RETAINED_CLIENT_SOURCE_AND_SUPPORTED_LOCAL_SYNTHETIC_CONTINUITY; NOT_PROTECTED_BASELINE_NATIVE_PROVIDER_OR_RELEASE"
+  },
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "artifacts": {
+    "M0-01_context": {
+      "bytes": 48346,
+      "filename": "onSkin_Codex_M0-01_STAGE_BRANCH_Context.zip",
+      "sha256": "d3760d4e061187600111b1df00897bbcf8ffa6fe11f67ec2cb42da61caa3d15b",
+      "status": "EXECUTED_DIAGNOSTICALLY_ACCEPTED"
+    },
+    "M0-01_context_previous_superseded": {
+      "bytes": 38946,
+      "filename": "onSkin_Codex_M0-01_Context.zip",
+      "sha256": "50030204ecbda0ae725c4e6afbf6e0be7c54335d70a788c8bd2ff5bab22b40e2"
+    },
+    "M0-01_execution_prompt": {
+      "filename": "onSkin_Codex_M0-01_STAGE_BRANCH_PROMPT.txt",
+      "sha256": "4ea2b894dcc87038370c4033b2307c14663226d3e19bdd5cf56b8f03ca401299"
+    },
+    "M0-02_FIX-01_context": {
+      "filename": "onSkin_Codex_M0-02_FIX-01_Context.zip",
+      "hash_location": "Companion ARTIFACTS.json; outside archive to avoid self-reference.",
+      "sha256": "3e4c7425f67b9763e811b18677908de6623c12f1cca58540d303575de65a0354",
+      "status": "EXECUTED_ACCEPTED_GOVERNANCE_ONLY"
+    },
+    "M0-02_context": {
+      "filename": "onSkin_Codex_M0-02_STAGE_BRANCH_Context.zip",
+      "hash_location": "Companion ARTIFACTS.json and Codex measured intake hash; excluded here to avoid circular ZIP hashing.",
+      "sha256": "080676b8dc78fe4c4a427f6f2be89043441a7e7b8a6a0fe45bff84fc70282590",
+      "status": "EXECUTED_ACCEPTED_AFTER_FIX01"
+    },
+    "M1-01_CONT-03": {
+      "name": "onSkin_Codex_M1-01_CONT-03_Context.zip",
+      "sha256": "db828322457f3cbce4cb75ecf757d3d1c6aa456334fa6c984d7e7128e67c404f",
+      "status": "EXECUTED_SCOPED_ACCEPTANCE"
+    },
+    "M1-01_context": {
+      "filename": "onSkin_Codex_M1-01_STAGE_BRANCH_Context.zip",
+      "hash_location": "onSkin_M1-01_ARTIFACTS.json external companion; self-hashes are not embedded recursively.",
+      "status": "EXECUTED_PARTIALLY; ORIGINAL_IMMUTABLE"
+    },
+    "M1-02_CONT-01_context": {
+      "filename": "onSkin_Codex_M1-02_CONT-01_Context.zip",
+      "manifest_sha256": "a74f8d38924807eb7892a05f6ec9477bf9ee3936a456093279eecac183a903bc",
+      "status": "EXECUTED_ACCEPTED_SCOPED"
+    },
+    "M1-02_original_context": {
+      "filename": "onSkin_Codex_M1-02_Context.zip",
+      "manifest_sha256": "bf9706ffe185ea6287588204818e4ae25dcf017a7e823345aadd30fc79600b78",
+      "sha256": "a73b39cbaee47b99190e6d8dff12bbb063e18b90689ec5be89dc1fba66f7c9f1",
+      "status": "EXECUTED_PARTIAL_REVIEWED_FIX_REQUIRED; IMMUTABLE"
+    },
+    "M1-03_CONT-01_context": {
+      "manifest_sha256": "214f13a3406632c50f0c9eebc947c04bb11f56259c12d13f93744f866254508e",
+      "name": "onSkin_Codex_M1-03_CONT-01_Context.zip",
+      "status": "EXECUTED_PARTIALLY_ACCEPTED; PUBLICATION_AND_COHERENCE_FIX_REQUIRED"
+    },
+    "M1-03_CONT-02_context": {
+      "manifest_sha256": "838c0f416ddfa551fc2767419ed015f34c5b3329eeaa0b000938e80a3b72549f",
+      "name": "onSkin_Codex_M1-03_CONT-02_Context.zip",
+      "sha256": "e0a4883d5d2c7806b5de4e9d93dfa2954fd4fb27561ca99269898888116cebcf",
+      "status": "SUPERSEDED_BY_OVERNIGHT01; NOT_ACCEPTED_OR_COMPLETED"
+    },
+    "M1-03_INITIAL_context": {
+      "manifest_sha256": "e580ae55c3aa97fe18a8b4e8782b1887ee503b3fec88df0034aa82cc2edee95f",
+      "name": "onSkin_Codex_M1-03_Context.zip",
+      "status": "EXECUTED_PARTIALLY_ACCEPTED_NO_BASELINE_GO"
+    },
+    "M1-03_context": {
+      "filename": "onSkin_Codex_M1-03_Context.zip",
+      "hash_location": "External onSkin_M1-03_Artifact_Index.json; no self-referential hash",
+      "prior_status": "ISSUED",
+      "status": "EXECUTED_PARTIALLY_ACCEPTED_NO_BASELINE_GO"
+    },
+    "current_context": {
+      "identity_record": "External onSkin_M1-03_OVERNIGHT-01_Artifact_Index.json; independent TASK_MANIFEST digest. No circular self-hash.",
+      "name": "onSkin_Codex_M1-03_OVERNIGHT-01_Context.zip"
+    },
+    "current_review_observations": "AUDIT_M1-03_REVIEW02.md",
+    "previous_review_context": {
+      "identity_record": "External onSkin_M1-01_CONT-03_ARTIFACTS.json and independently supplied manifest digest; archive cannot hash itself.",
+      "name": "onSkin_Codex_M1-01_CONT-03_Context.zip"
+    },
+    "review02_delivery_hashes": "See external onSkin_M1-01_CONT-02_ARTIFACTS.json; ZIP hashes cannot be self-contained in their own archives.",
+    "review02_observation_record": "REVIEW_OBSERVATIONS.json",
+    "review03_delivery_hashes": "External onSkin_M1-01_CONT-03_ARTIFACTS.json",
+    "review03_observation_record": "REVIEW_OBSERVATIONS.json",
+    "source_pack": {
+      "filename": "onSkin_Unified_MasterPlan_V2_SourcePack.zip",
+      "sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f"
+    }
+  },
+  "authority_source_pack_sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f",
+  "bounded_source_edit_authorization": "SOURCE_EDIT_AUTHORIZATION.json",
+  "candidate_security_status": {
+    "active_gate": "UNCHANGED_FAILED",
+    "candidate_cache_proof": "INDEPENDENTLY_REPRODUCED_GAP",
+    "candidate_export_proof": "INDEPENDENTLY_REPRODUCED_GAP",
+    "credential_finding_triage": "UNKNOWN",
+    "diagnostic_admission": "NONE",
+    "engineering": "PARTIAL_EXECUTED_NON_ADMITTING",
+    "full_baseline_acceptance": false,
+    "scanner_coverage": "INCOMPLETE_26_SQL_AND_PARSER_TIMEOUT"
+  },
+  "clinical_validation_status": "NOT_PERFORMED",
+  "codex_instance": {
+    "fresh_instance_required": true,
+    "instruction": "Founder opens fresh Codex chat; one writer and stage branch only. Checkpoint/push on HIGH/compaction.",
+    "previous_compaction_count_reported": 0,
+    "previous_reported_health": "HIGH",
+    "reason": "Predecessor reported HIGH context; rotate before substantive security hardening",
+    "reported_not_independently_measured": true
+  },
+  "codex_instance_history": [
+    {
+      "fresh_instance_required": true,
+      "next_instance_accepted_substantive_tasks": 0,
+      "previous_handoff_requested": true,
+      "previous_instance_accepted_substantive_tasks": 1,
+      "previous_reported_health": "medium",
+      "reason": "Completed diagnostic checkpoint and new planning/tooling subsystem"
+    },
+    {
+      "accepted_substantive_tasks_in_instance": 1,
+      "compaction_observed": false,
+      "completed_iteration": "FIX-01",
+      "completed_task": "M0-02",
+      "last_reported_health": "medium",
+      "next_instance": "FRESH_REQUIRED",
+      "rotation_reason": "M0 governance to M1 retained client safety phase/subsystem transition"
+    },
+    {
+      "accepted_substantive_tasks": 0,
+      "compaction_observed": false,
+      "head": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "reported_health": "HIGH",
+      "rotation": "REQUIRED_BEFORE_CONTINUATION",
+      "task": "M1-01"
+    },
+    {
+      "compaction_observed": true,
+      "head": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "health": "HIGH",
+      "iteration": "CONT-01",
+      "reason": "Root handoff requires fresh rotation; no completed M1 acceptance.",
+      "task": "M1-01"
+    },
+    {
+      "compaction_observed": false,
+      "head": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "health": "HIGH",
+      "iteration": "CONT-02",
+      "reason": "Safe partial checkpoint pushed; fresh rotation required before remaining cross-owner verification.",
+      "task": "M1-01"
+    },
+    {
+      "compaction_observed": false,
+      "delivery": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "iteration": "CONT-03",
+      "outcome": "ACCEPTED_SCOPED",
+      "reported_context": "MEDIUM",
+      "rotation_reason": "Major subsystem boundary into retained Today/photo/reminder continuity",
+      "task_id": "M1-01"
+    },
+    {
+      "accepted_substantive_tasks_since_prior_rotation": 1,
+      "fresh_instance_required": true,
+      "instruction": "FOUNDER_CREATES_NEW_CHAT_OUTSIDE_EXECUTION_PROMPT",
+      "previous_compaction_observed": false,
+      "previous_reported_health": "MEDIUM",
+      "reason": "Major retained-subsystem boundary, not reported context exhaustion"
+    },
+    {
+      "accepted_substantive_tasks": 1,
+      "compaction_observed": false,
+      "head": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "health": "HIGH",
+      "iteration": "CONT-01",
+      "rotation": "REQUIRED",
+      "task": "M1-02"
+    },
+    {
+      "accepted_substantive_tasks_since_prior_rotation": 1,
+      "fresh_instance_required": true,
+      "instruction": "FOUNDER_CREATES_NEW_CHAT_OUTSIDE_EXECUTION_PROMPT",
+      "previous_compaction_count_reported": 0,
+      "previous_compaction_observed": false,
+      "previous_reported_health": "HIGH",
+      "reason": "Predecessor HIGH context; new protected-baseline subsystem; source safely pushed clean"
+    },
+    {
+      "fresh_instance_required": true,
+      "instruction": "FOUNDER_CREATES_NEW_CHAT_OUTSIDE_EXECUTION_PROMPT",
+      "previous_compaction_count_reported": 0,
+      "previous_reported_health": "HIGH",
+      "reason": "Reported HIGH context and transition from proposal-only diagnosis to narrow protected source repairs.",
+      "reported_not_independently_measured": true
+    }
+  ],
+  "continuation_base_sha": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "continuation_base_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "current_main_CI": {
+    "Quality": {
+      "app_reproduction": "NOT_RUN_BY_BRAIN",
+      "conclusion": "failure",
+      "evidence_kind": "INDEPENDENTLY_OBSERVED_AUTHENTICATED_GITHUB_JOB_LOG",
+      "failing_command": "npm run phase2:db-local-verify",
+      "failing_job_id": 118333051806,
+      "failing_step": "Reset twice, test, lint, and prove zero drift",
+      "observed_terminal_error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+      "root_cause_classification": "LIKELY_DOCKER_IMAGE_RATE_LIMIT_REQUIRES_CODEX_REPRODUCTION",
+      "run_id": 39330376557
+    },
+    "Security": {
+      "authority": "SOURCE_ONLY",
+      "conclusion": "success",
+      "database_replay": false,
+      "integration": false,
+      "release": false,
+      "run_id": 39330376548,
+      "source_proposal_not_after": "2026-10-21T00:00:00Z"
+    },
+    "freshness_note": "Historical main CI observations retained; current main ref independently reconfirmed. Do not use historical green for a new stage head.",
+    "iOS_launch_contract": {
+      "conclusion": "success",
+      "run_id": 39330376531,
+      "scope": "SOURCE_CONTRACT_ONLY_NO_DEVICE_BUILD"
+    },
+    "observation_note": "Retained historical main-run identities; not rerun/relabelled by this review. New success applies to stage6aa and its equal-tree temporary PR test ref, not to a merge or a new main run.",
+    "observation_status": "HISTORICAL_BOOTSTRAP_RUNS; MAIN_REF_RECONFIRMED_UNCHANGED; DO_NOT_BORROW_OLD_GREEN",
+    "source_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73"
+  },
+  "current_review": {
+    "accepted_subscope": [
+      "NATIVE_LOCK_MAPPING_AND_SOURCE_AUDIT_COHERENCE",
+      "TEST_ONLY_HISTORICAL_SBOM_FIXTURE",
+      "LATE_PUBLISHED_COMMITTED_EVIDENCE_AND_GUARD",
+      "NON_ADMITTING_CANDIDATE_ENGINEERING_AND_DIAGNOSTIC_CUSTODY_ONLY"
+    ],
+    "audit": "AUDIT_M1-03_OVERNIGHT01.md",
+    "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+    "head": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+    "id": "M1-03-OVERNIGHT-REVIEW01",
+    "new_source_edit_authorization": "SOURCE_EDIT_AUTHORIZATION.json",
+    "not_accepted": [
+      "WHOLE_M1-03",
+      "ACTIVE_SECURITY_ACCEPTANCE",
+      "B_C_CANDIDATE_HARDENING",
+      "CURRENT_FULL_SAST_COVERAGE",
+      "OPEN_SECRET_FINDING_ADMISSIONS",
+      "DB06_DB08_R2B_REPLAY_AUTHORITY",
+      "MAIN_PROMOTION"
+    ],
+    "tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+    "whole_task_accepted": false
+  },
+  "current_stage_CI": {
+    "head_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+    "observed_at_utc": "2026-10-21T11:10:53+00:00",
+    "runs": [
+      {
+        "conclusion": "success",
+        "database": "success",
+        "database_job": 119041893746,
+        "id": 39545262835,
+        "name": "Quality",
+        "scope": "credential-free disposable CI only",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "id": 39545262842,
+        "name": "Security",
+        "original_secret_job": 119041893805,
+        "original_secret_test": "FAIL_CLEANUP_TEMP_GIT_DIR",
+        "other_gates": [
+          "FROZEN_SOURCE_INVENTORY",
+          "EXPIRED_REVIEWS",
+          "UNREVIEWED_FINDINGS"
+        ],
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "id": 39545262853,
+        "name": "iOS launch contract",
+        "scope": "source-only",
+        "status": "completed"
+      }
+    ],
+    "source": "GitHub authenticated commit workflow and job results; source-only iOS separated"
+  },
+  "database_replay_status": "CURRENT_CANONICAL_CI_PENDING_AT_FINITE_OBSERVATION; NO_HOSTED_AUTHORITY",
+  "device_test_status": "NOT_RUN_BY_BRAIN",
+  "evidence_ledger": [
+    {
+      "command": "python tools/verify_pack.py",
+      "evidence": "source-pack-verification",
+      "files_verified": 117,
+      "id": "BRAIN-INIT-01",
+      "kind": "REPRODUCED_OFFLINE",
+      "limitations": [
+        "No signature validation",
+        "No app/source test"
+      ],
+      "module_count": 27,
+      "outcome": "PASS",
+      "roadmap_tasks": 47,
+      "working_dir": "extracted source root"
+    },
+    {
+      "evidence": "exact-git-main",
+      "id": "BRAIN-INIT-02",
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE",
+      "outcome": "SHA_AND_TREE_MATCH_PIN",
+      "repo": "https://github.com/TasfiqJ/onSkin",
+      "sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653"
+    },
+    {
+      "evidence": "quality-failure-log",
+      "id": "BRAIN-INIT-03",
+      "job_id": 118333051806,
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE",
+      "outcome": "FAILED",
+      "reproduction": "NOT_RUN",
+      "run_id": 39330376557,
+      "terminal_error": "toomanyrequests: Data limit exceeded"
+    },
+    {
+      "evidence": "security-acceptance-proposal",
+      "expires_utc": "2026-10-21T00:00:00Z",
+      "id": "BRAIN-INIT-04",
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE",
+      "outcome": "SOURCE_ONLY_NO_RELEASE_OR_REPLAY"
+    },
+    {
+      "evidence": "M0-01-task-pack",
+      "id": "BRAIN-INIT-05",
+      "kind": "REPRODUCED_OFFLINE",
+      "outcome": "BUILT_AND_CRC_CHECKED",
+      "restricted_data_included": false,
+      "sha256": "50030204ecbda0ae725c4e6afbf6e0be7c54335d70a788c8bd2ff5bab22b40e2"
+    },
+    {
+      "branch": "stage/m0-baseline",
+      "description": "For each stage use a persistent stage branch; each Codex work session pushes safe work + ONSKIN_BRAIN_HANDOFF.txt; Brain audits full GitHub branch when founder says Codex is done.",
+      "id": "BRAIN-INIT-06",
+      "kind": "DECIDED_FOUNDER_DIRECT",
+      "main_push_authorized": false,
+      "outcome": "SUPERSEDED_DIRECT_MAIN_PUSH"
+    },
+    {
+      "file": "onSkin_Codex_M0-01_STAGE_BRANCH_Context.zip",
+      "id": "BRAIN-INIT-07",
+      "kind": "REPRODUCED_OFFLINE",
+      "original_task_zip_superseded": true,
+      "outcome": "REPLACEMENT_TASK_ZIP_BUILT_AND_CRC_VALIDATED",
+      "sha256": "d3760d4e061187600111b1df00897bbcf8ffa6fe11f67ec2cb42da61caa3d15b"
+    },
+    {
+      "id": "BRAIN-M0-01-REVIEW-01",
+      "kind": "INDEPENDENTLY_OBSERVED_AND_REPRODUCED_IN_PART",
+      "outcome": "DIAGNOSTIC_CHECKPOINT_ACCEPTED_BASELINE_BLOCKED",
+      "record": "REVIEW_OBSERVATIONS.json",
+      "sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "tree": "ed42b889912e3fb383cfbafe413e7a66dd558221"
+    },
+    {
+      "adr": "ADR-023",
+      "id": "BRAIN-M0-01-REVIEW-02",
+      "kind": "DECIDED_BRAIN",
+      "outcome": "M0-02_ISSUED_NON_RUNTIME_ONLY",
+      "protected_source_go": false,
+      "spend_authorized_usd": 0
+    },
+    {
+      "id": "BRAIN-M0-02-REVIEW-01",
+      "kind": "INDEPENDENTLY_OBSERVED_AND_REPRODUCED_IN_PART",
+      "outcome": "FIX_REQUIRED",
+      "record": "REVIEW_OBSERVATIONS.json",
+      "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "tree": "e18f73771b5f440613a7e7cd339889949a8ae72a"
+    },
+    {
+      "base_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "id": "BRAIN-M0-02-FIX-01-ISSUANCE",
+      "iteration": "FIX-01",
+      "kind": "DECIDED_BRAIN",
+      "main_promotion_authorized": false,
+      "outcome": "CONTINUE_SAME_CODEX_GOVERNANCE_REPAIR_ONLY",
+      "spend_usd": 0,
+      "task_id": "M0-02"
+    },
+    {
+      "id": "BRAIN-M0-02-REVIEW-02",
+      "kind": "INDEPENDENTLY_OBSERVED_AND_REPRODUCED_IN_PART",
+      "outcome": "ACCEPTED_GOVERNANCE_ONLY",
+      "record": "REVIEW_OBSERVATIONS.json",
+      "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "tree": "3a75ea56f12f9422affc6e09936993ffa9252c05"
+    },
+    {
+      "id": "BRAIN-M0-02-QUALITY-RECOVERY",
+      "kind": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_LOG",
+      "outcome": "QUALITY_AND_FULL_DB_PASS_EXACT_RUN; SECURITY_STILL_FAILED",
+      "record": "CI_OBSERVATIONS.json",
+      "run_id": 39376189137
+    },
+    {
+      "adrs": [
+        "ADR-027",
+        "ADR-029"
+      ],
+      "base_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "branch": "stage/m1-retained-safety",
+      "id": "BRAIN-M1-01-ISSUANCE",
+      "kind": "DECIDED_BRAIN",
+      "main_promotion_authorized": false,
+      "outcome": "FRESH_CODEX_NEW_STAGE_RETAINED_CLIENT_SAFETY_ONLY"
+    },
+    {
+      "id": "BRAIN-M1-01-REVIEW-01",
+      "kind": "INDEPENDENTLY_OBSERVED_AND_REPRODUCED_IN_PART",
+      "new_adrs": [
+        "ADR-030",
+        "ADR-031"
+      ],
+      "outcome": "FIX_REQUIRED; SAME_TASK_CONTINUATION_ISSUED",
+      "record": "REVIEW_OBSERVATIONS.json",
+      "sha": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "tree": "ac442c8f6d00593b4e6fe4bde3fd060f7fe028fa"
+    },
+    {
+      "head": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "kind": "INDEPENDENTLY_REPRODUCED_SOURCE_AND_SIX_BROWSER_SCENARIOS",
+      "record": "REVIEW_OBSERVATIONS.json",
+      "review": "REVIEW-03",
+      "task_decision": "FIX_REQUIRED"
+    },
+    {
+      "id": "BRAIN-M1-01-ACCEPTANCE",
+      "kind": "INDEPENDENTLY_REPRODUCED_SOURCE_AND_FIVE_BROWSER_SCENARIOS",
+      "main_promotion_authorized": false,
+      "outcome": "ACCEPTED_SCOPED",
+      "record": "REVIEW_OBSERVATIONS.md",
+      "sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0"
+    },
+    {
+      "base_sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "branch": "stage/m1-retained-safety",
+      "id": "BRAIN-M1-02-ISSUANCE",
+      "kind": "DECIDED_BRAIN",
+      "new_adrs": [
+        "ADR-034",
+        "ADR-035",
+        "ADR-036"
+      ],
+      "outcome": "RETAINED_TODAY_DIARY_REMINDER_CONTINUITY_ONLY",
+      "spend_usd": 0
+    },
+    {
+      "artifact_hashes_checked": 491,
+      "governance": "49_PASS_2_WINDOWS_SKIPS",
+      "head": "8c1149116df00f34314357d10929b32f52f6d118",
+      "id": "BRAIN-M1-02-REVIEW-01",
+      "kind": "INDEPENDENTLY_REPRODUCED_AND_OBSERVED",
+      "main_promotion_authorized": false,
+      "modified_harness_diagnostic": "FAIL_LATER_AM_REENTRY",
+      "new_controlled_port_probes": "2_FAIL",
+      "outcome": "FIX_REQUIRED",
+      "record": "REVIEW_OBSERVATIONS.md",
+      "root_tests": "6048_PASS",
+      "source_contracts": "148_PASS_1_FAIL",
+      "tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+      "unmodified_daily_browser": "4_FAIL"
+    },
+    {
+      "adrs": [
+        "ADR-037",
+        "ADR-038",
+        "ADR-039"
+      ],
+      "base": "8c1149116df00f34314357d10929b32f52f6d118",
+      "id": "BRAIN-M1-02-CONT-01-ISSUANCE",
+      "iteration": "CONT-01",
+      "kind": "DECIDED_BRAIN",
+      "spend_usd": 0,
+      "task": "M1-02"
+    },
+    {
+      "artifact_hashes_checked": 180,
+      "browser_pass": 6,
+      "governance_pass": 53,
+      "governance_skips": 2,
+      "id": "BRAIN-M1-02-ACCEPTANCE",
+      "kind": "INDEPENDENTLY_REPRODUCED_SOURCE_SIX_BROWSER_AND_ADVERSE_PROBES",
+      "main_promotion_authorized": false,
+      "outcome": "ACCEPTED_SCOPED",
+      "record": "EXECUTION_EVIDENCE.json",
+      "reviewer_probe_pass": 2,
+      "root_tests": 6067,
+      "sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "source_contract_fail": 1,
+      "source_contract_pass": 148,
+      "tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0"
+    },
+    {
+      "adrs": [
+        "ADR-040",
+        "ADR-041"
+      ],
+      "base_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "branch": "stage/m1-retained-safety",
+      "id": "BRAIN-M1-03-ISSUANCE",
+      "kind": "DECIDED_BRAIN",
+      "outcome": "BASELINE_DIAGNOSIS_ORDINARY_SOURCE_REPAIR_AND_PROTECTED_REMEDIATION_PROPOSAL",
+      "protected_source_go": false,
+      "spend_usd": 0
+    },
+    {
+      "ci": "CI_OBSERVATIONS.json",
+      "core05_closed": true,
+      "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "id": "BRAIN-M1-03-REVIEW-01",
+      "kind": "INDEPENDENT_EXECUTION_AND_LIVE_SOURCE_CI_REVIEW",
+      "record": "EXECUTION_EVIDENCE.json",
+      "result": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+      "tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "whole_task_accepted": false
+    },
+    {
+      "head": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "id": "BRAIN-M1-03-REVIEW-02",
+      "kind": "INDEPENDENT_CLEAN_CLONE_TESTS_LIVE_ARTIFACTS_AND_PRIVATE_ADVERSE_CONTROLS",
+      "record": "EXECUTION_EVIDENCE.json",
+      "report_publication": "FAIL_12_IGNORED_ARTIFACTS_NOT_PUSHED",
+      "result": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+      "tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+      "whole_task_accepted": false
+    },
+    {
+      "authorization": "M103-CONT02-SOURCE-EDIT-01",
+      "base": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "id": "BRAIN-M1-03-CONT02-ISSUANCE",
+      "kind": "DECIDED_BRAIN",
+      "main_promotion_authorized": false,
+      "protected_source_go": false,
+      "spend_usd": 0
+    }
+  ],
+  "in_flight_base_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "in_flight_base_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "in_flight_branch": "stage/m1-retained-safety",
+  "in_flight_execution_status": "ISSUED_AWAITING_NEW_CODEX",
+  "in_flight_head_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "in_flight_iteration": "SECURITY-HARDEN-01",
+  "in_flight_task": "M1-03",
+  "incremental_vendor_spend_authorized_usd": 0,
+  "issuance_change": {
+    "continuation_on_success": "Continue between authorized components without waiting for carrier replies; stop at independent Brain acceptance boundary.",
+    "kind": "NEW_BRAIN_DECISION_NOT_ACCEPTANCE_OR_REAUDIT",
+    "live_read": "GitHub PR9 head/main/draft and read-only device Git status reconfirmed; stage clean at BASE.",
+    "observed_at_utc": "2026-10-21T03:10:12.084725+00:00",
+    "reason": "Founder explicitly requested substantially larger useful responsibility while asleep; Brain selected prerequisite security engineering, not later gated feature implementation.",
+    "single_task": "M1-03 only; multiple connected workstreams, no self-issued M2 task",
+    "superseded_manifest_sha256": "838c0f416ddfa551fc2767419ed015f34c5b3329eeaa0b000938e80a3b72549f",
+    "superseded_status": "NO_TRACKED_CONT02_CHANGES_OBSERVED_AT_ISSUANCE; NOT_COMPLETED",
+    "supersedes_unexecuted_context": "onSkin_Codex_M1-03_CONT-02_Context.zip"
+  },
+  "last_accepted_checkpoint_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "last_accepted_checkpoint_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "last_accepted_diagnostic_sha": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "last_accepted_implementation_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "last_accepted_runtime_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "last_accepted_scope": "M1-03 OVERNIGHT-01 integration/native mappings/historical fixture/evidence publication and bounded diagnostic tooling only; candidate source findings not admitted",
+  "last_submitted_implementation_sha": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+  "last_submitted_implementation_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+  "latest_observed_main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "latest_observed_main_source": "INDEPENDENT_GITHUB_PR_AND_GIT_LS_REMOTE",
+  "latest_observed_main_tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+  "latest_observed_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "latest_observed_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "latest_review_decision": "PARTIAL_ACCEPTED_INTEGRATION_AND_DIAGNOSTICS_SECURITY_BLOCKED",
+  "latest_reviewed_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "latest_reviewed_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "local_database_evidence_status": "NO_NEW_BRAIN_LOCAL_DB_REPLAY; CURRENT_CANONICAL_CI_PENDING",
+  "main_promotion_authorized": false,
+  "next_task_after_review": "M1-03",
+  "open_blocker_ids": [
+    "BLK-02",
+    "BLK-03",
+    "BLK-04",
+    "BLK-05",
+    "BLK-06",
+    "BLK-07",
+    "BLK-08",
+    "BLK-09",
+    "M1-RIGHTS-01",
+    "M102-UNDO-CORRECTION",
+    "M103-VITE",
+    "M103C2-NATIVE-MAPPING",
+    "M103C2-HISTORICAL-FIXTURE",
+    "M103C2-PUBLICATION"
+  ],
+  "open_blockers": [
+    "Three stale whole-lock iOS mappings and their two generated reports block current Quality; exact native package/source pins remain unchanged.",
+    "Historical SBOM positive test pairs retained packet with changed current lock; self-contained historical fixture repair required without production fallback.",
+    "Twelve declared artifact logs exist only ignored/local: clean pushed clone fails report. Exact late recovery plus CONT02 committed-artifact guard required.",
+    "Original secret coverage/runtime defects repaired at H, but real raw findings remain unresolved; no clean secret/source acceptance inferred.",
+    "Security remains failed and original G97 expiry2026-10-21T00:00:00Z unchanged; current SAST and separately reviewed tool/source closure are not accepted.",
+    "DB06/DB08/R2B and native/provider/qualified/clinical/commercial/release authorities remain closed; ADR038 corrections remain due in M2-01/M2-02."
+  ],
+  "prior_stage_ci_observations": [
+    {
+      "Quality": {
+        "conclusion": "failure",
+        "database_command": "npm run phase2:db-local-verify",
+        "database_exit": 1,
+        "database_job": 118460482876,
+        "error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+        "error_at_utc": "2026-10-20T04:50:33.2932477Z",
+        "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_LOG",
+        "note": "No stack startup/SQL reached by this failed verifier invocation. Registry quota/account root cause and remediation remain unknown.",
+        "repository_quality_job": 118460483057,
+        "run_id": 39371600842,
+        "source_contract_tests": {
+          "fail": 0,
+          "pass": 171
+        },
+        "status": "completed"
+      },
+      "Security": {
+        "acceptance_job": 118461695511,
+        "code_job": 118460482706,
+        "code_job_conclusion": "success",
+        "conclusion": "failure",
+        "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_JOB_SUMMARIES",
+        "exact_final_static_log_read": false,
+        "live_job": 118460483488,
+        "live_job_conclusion": "skipped",
+        "note": "Source inventory and OSV refusal reasons remain independently observed prior-history blockers and are reported at measured c0bd7c27b in the submitted evidence. Do not portray those reported final reasons as a newly read final-tip raw log.",
+        "run_id": 39371600769,
+        "secret_job": 118460482672,
+        "secret_job_conclusion": "success",
+        "static_job": 118460483010,
+        "status": "completed"
+      },
+      "head_commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "head_tree": "e18f73771b5f440613a7e7cd339889949a8ae72a",
+      "iOS_launch_contract": {
+        "conclusion": "success",
+        "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_STATUS",
+        "run_id": 39371600772,
+        "scope": "SOURCE_CONTRACT_ONLY",
+        "status": "completed"
+      },
+      "synthetic_pr_merge_commit": "8a122fde420b39bdad2c8998958ccfdd54a3e17e",
+      "synthetic_tree_binding": "Checkout commit observed in final DB log; tree identity not yet independently retrieved in this review."
+    },
+    {
+      "Quality": {
+        "conclusion": "success",
+        "created_at_utc": "2026-10-20T05:40:55Z",
+        "database_command": "npm run phase2:db-local-verify",
+        "database_evidence": "Full job log independently read; terminal full local verification PASS and successful step/job.",
+        "database_job": 118475132861,
+        "full_database_phases": [
+          "canonical ECR image admission",
+          "forward upgrade rehearsals 0067 through 0072",
+          "two clean 97-migration resets and unfiltered installed history",
+          "focused CORE-05 and full structural pgTAP",
+          "error-level schema lint",
+          "empty migration-shadow drift",
+          "CAT-08 two-connection revocation",
+          "7381-line generated-type parity, already current",
+          "awaited run-owned teardown"
+        ],
+        "generated_types_sha256": "2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795",
+        "image_config_id": "sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d",
+        "image_manifest_digest": "sha256:af083ef64d0408c8f098ee6f5c364a59b26f36fbc0f3a334a62c5c1d57362e9b",
+        "image_platform": "linux/amd64",
+        "limitation": "Exact-run success; no source correction of upstream quota established. Brain observed this CI execution and did not independently rerun the entire database verifier during this review. No hosted DB06/DB08/R2B authority.",
+        "repository_quality_job": 118475132708,
+        "run_attempt": 1,
+        "run_id": 39376189137,
+        "source_contract_tests": {
+          "failed": 0,
+          "passed": 171
+        },
+        "status": "completed",
+        "successful_jobs": [
+          118475132861,
+          118475132708,
+          118475132804,
+          118475132369,
+          118476245102,
+          118476245185
+        ],
+        "updated_at_utc": "2026-10-20T06:29:53Z",
+        "workflow_id": 312030668
+      },
+      "Security": {
+        "acceptance_job": 118476384699,
+        "code_job": 118474750208,
+        "code_job_conclusion": "success",
+        "conclusion": "failure",
+        "exact_final_static_log_read": true,
+        "limitation": "Continued green step summaries do not erase original nonzero exits. No source GO, independent human review, or acceptance renewal granted.",
+        "live_job": 118474751173,
+        "live_job_conclusion": "skipped",
+        "run_id": 39376189138,
+        "secret_job": 118474750137,
+        "secret_job_conclusion": "success",
+        "static_artifact": {
+          "bytes": 4598,
+          "evidence_kind": "UPLOAD_LOG_DESCRIPTOR_OBSERVED; ARCHIVE_NOT_DOWNLOADED_IN_THIS_REVIEW",
+          "id": 12243438868,
+          "sha256": "e09c4348eb0e1b5582de47c5d7b7207bec31dd1480730e524a1ed8431c773ed6"
+        },
+        "static_contract_tests": {
+          "failed": 0,
+          "passed": 70
+        },
+        "static_diagnostics": [
+          {
+            "at": "2026-10-20T05:45:20.6128695Z",
+            "text": "contract.Rejected: SOURCE_INVENTORY_DRIFT"
+          },
+          {
+            "at": "2026-10-20T05:45:22.6264281Z",
+            "text": "braces: review is expired or dates are invalid"
+          },
+          {
+            "at": "2026-10-20T05:45:22.6265123Z",
+            "text": "node-forge: review is expired or dates are invalid"
+          },
+          {
+            "at": "2026-10-20T05:45:22.6265926Z",
+            "text": "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+          }
+        ],
+        "static_job": 118474749883,
+        "status": "completed",
+        "workflow_id": 308213475
+      },
+      "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB",
+      "head_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "head_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "iOS_launch_contract": {
+        "conclusion": "success",
+        "run_id": 39376189040,
+        "scope": "SOURCE_CONTRACT_ONLY; NO_PHYSICAL_DEVICE_OR_SIGNED_BUILD",
+        "status": "completed",
+        "workflow_id": 312030667
+      },
+      "main": {
+        "ref_readback": "Fresh remote ls-remote; unchanged",
+        "sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653"
+      },
+      "main_promotion_authorized": false,
+      "observed_at_utc": "2026-10-20T11:04:47+00:00",
+      "proposal_not_after": "2026-10-21T00:00:00Z",
+      "repository": "TasfiqJ/onSkin",
+      "sources": {
+        "database_job": "https://github.com/TasfiqJ/onSkin/actions/runs/39376189137/job/118475132861",
+        "ios": "https://github.com/TasfiqJ/onSkin/actions/runs/39376189040",
+        "pr": "https://github.com/TasfiqJ/onSkin/pull/8",
+        "quality": "https://github.com/TasfiqJ/onSkin/actions/runs/39376189137",
+        "security": "https://github.com/TasfiqJ/onSkin/actions/runs/39376189138",
+        "static_job": "https://github.com/TasfiqJ/onSkin/actions/runs/39376189138/job/118474749883"
+      },
+      "synthetic_parent_commits": [
+        "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "6aa01995f6dcb94fd28d358badc9f8d1e0273d39"
+      ],
+      "synthetic_pr_merge_commit": "eb9699130b2eb94801a09b9b3f690b4a34aed0e7",
+      "synthetic_pr_merge_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "synthetic_tree_binding": "GitHub git-commit REST independently retrieved; exactly equal to delivery tree. Temporary test ref, not a main merge."
+    },
+    {
+      "checkout_commit": "f932d4af9d32d5a15582ec4aae25cd1802a56019",
+      "checkout_note": "Temporary PR test merge identified in actual job checkout logs; not a persistent main merge.",
+      "database_replay_authorized": false,
+      "evidence_class": "INDEPENDENTLY_OBSERVED",
+      "integration_authorized": false,
+      "limits": "Retained main historical CI is not relabelled. Source job/export success does not clear failed DB/Security, native/device or release gates.",
+      "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "method": "Live GitHub connector run/job reads plus full raw logs of final DB and static/OSV jobs; not a new execution by Brain.",
+      "pr": 9,
+      "pr_draft": true,
+      "pr_merged": false,
+      "proposal_not_after": "2026-10-21T00:00:00Z",
+      "protected_source_go": false,
+      "recorded_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "release_authorized": false,
+      "repository": "TasfiqJ/onSkin",
+      "reviewer": "onSkin Brain",
+      "runs": [
+        {
+          "conclusion": "failure",
+          "jobs": [
+            {
+              "conclusion": "success",
+              "id": 118746291832,
+              "name": "Repository quality gates"
+            },
+            {
+              "conclusion": "success",
+              "id": 118746292267,
+              "name": "PG17 deletion rehearsals"
+            },
+            {
+              "conclusion": "success",
+              "id": 118746292329,
+              "name": "PG15 deletion rehearsals"
+            },
+            {
+              "conclusion": "failure",
+              "failure": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+              "generated_types_artifact": "NO_FILE_FOUND_NO_UPLOAD",
+              "id": 118746292501,
+              "layer": "canonical ECR image preparation before startup/SQL",
+              "name": "Credential-free Supabase reset/database tests",
+              "observed_at": "2026-10-20T16:24:19Z",
+              "source_contract_tests": 171
+            },
+            {
+              "conclusion": "success",
+              "id": 118749235485,
+              "name": "Expo export ios"
+            },
+            {
+              "conclusion": "success",
+              "id": 118749235533,
+              "name": "Expo export android"
+            }
+          ],
+          "name": "Quality",
+          "run_id": 39456975914,
+          "status": "completed",
+          "workflow_id": 312030668
+        },
+        {
+          "conclusion": "failure",
+          "jobs": [
+            {
+              "artifact_download_verification": "NOT_PERFORMED_BY_BRAIN",
+              "artifact_upload_id": 12281707076,
+              "artifact_zip_sha256_from_log": "c710417e2311190f41d6846b057d16d5927ec1ca91317ed36f2c3d38fdff9c36",
+              "conclusion": "failure",
+              "id": 118746291358,
+              "name": "Static analysis and OSV",
+              "observed_control_tests": 70,
+              "raw_refusal_timestamp": "2026-10-20T16:27:46Z",
+              "raw_refusals": [
+                "SOURCE_INVENTORY_DRIFT",
+                "braces: review is expired or dates are invalid",
+                "node-forge: review is expired or dates are invalid",
+                "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+              ]
+            },
+            {
+              "conclusion": "success",
+              "id": 118746291878,
+              "name": "Secret scanning"
+            },
+            {
+              "conclusion": "success",
+              "id": 118746292205,
+              "name": "Code security gates"
+            },
+            {
+              "conclusion": "skipped",
+              "id": 118746294173,
+              "name": "Live Supabase adversarial evidence"
+            },
+            {
+              "conclusion": "failure",
+              "id": 118748729150,
+              "name": "Automated source-only Security acceptance"
+            }
+          ],
+          "name": "Security",
+          "run_id": 39456975959,
+          "status": "completed",
+          "workflow_id": 308213475
+        },
+        {
+          "conclusion": "success",
+          "name": "iOS launch contract",
+          "run_id": 39456975936,
+          "scope": "SOURCE_CONTRACT_ONLY",
+          "status": "completed",
+          "workflow_id": 312030667
+        }
+      ],
+      "schema_version": 1,
+      "source_commit": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "source_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066"
+    },
+    {
+      "checked_out_pr_merge": "22d4a84b459a0eda576975b4138e7561530c167b",
+      "checked_out_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "event": "pull_request",
+      "head_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "head_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "integration_authorized": false,
+      "kind": "BRAIN_OBSERVED_GITHUB_PROVIDER_METADATA_AND_LOGS",
+      "main_merge_performed": false,
+      "main_promotion_authorized": false,
+      "merge_parent_commits": [
+        "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0"
+      ],
+      "proposal_notAfter": "2026-10-21T00:00:00Z",
+      "protected_source_go": false,
+      "provider_final_quality_updated_at_utc": "2026-10-20T18:45:08Z",
+      "quality_history_this_review": [
+        {
+          "db_status": "in_progress",
+          "status": "in_progress",
+          "superseded_by": "Completed success observed on final refresh; provider updated2026-10-20T18:45:08Z"
+        }
+      ],
+      "recorded_at_utc": "2026-10-20T18:47:02+00:00",
+      "repository": "TasfiqJ/onSkin",
+      "runs": [
+        {
+          "conclusion": "success",
+          "interpretation": "Final observed success, including unchanged full canonical database verification. Point-in-time recovery, not permanent ECR availability remediation or protected replay authority.",
+          "jobs": [
+            {
+              "conclusion": "success",
+              "id": 118793353573,
+              "name": "Repository quality gates",
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "id": 118793353923,
+              "name": "PostgreSQL17 rehearsals",
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "id": 118793354179,
+              "name": "PostgreSQL15 rehearsals",
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "failure_only_type_artifact_step": "skipped",
+              "id": 118793354045,
+              "name": "Credential-free Supabase reset and database tests",
+              "status": "completed",
+              "step_7": "success"
+            },
+            {
+              "conclusion": "success",
+              "id": 118796007725,
+              "name": "Expo export android",
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "id": 118796007800,
+              "name": "Expo export ios",
+              "status": "completed"
+            }
+          ],
+          "name": "Quality",
+          "run_id": 39470402671,
+          "status": "completed",
+          "workflow_id": 312030668
+        },
+        {
+          "conclusion": "failure",
+          "jobs": [
+            {
+              "conclusion": "success",
+              "id": 118792629437,
+              "name": "Secret scanning"
+            },
+            {
+              "conclusion": "success",
+              "id": 118792630171,
+              "name": "Code security gates"
+            },
+            {
+              "conclusion": "failure",
+              "id": 118792630280,
+              "name": "Static analysis and OSV"
+            },
+            {
+              "conclusion": "skipped",
+              "id": 118792631904,
+              "name": "Live Supabase adversarial evidence"
+            },
+            {
+              "conclusion": "failure",
+              "id": 118795571191,
+              "name": "Automated source-only acceptance"
+            }
+          ],
+          "name": "Security",
+          "note": "Continued step badges do not erase underlying nonzero scanner/exception-gate exits. Source acceptance refused. Advisory applicability/remediation not assessed by this client task.",
+          "raw_refusals": [
+            "SOURCE_INVENTORY_DRIFT",
+            "braces: review is expired or dates are invalid",
+            "node-forge: review is expired or dates are invalid",
+            "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+          ],
+          "run_id": 39470402583,
+          "static_raw_log_read": true,
+          "status": "completed",
+          "workflow_id": 308213475
+        },
+        {
+          "conclusion": "success",
+          "name": "iOS launch contract",
+          "qualification": "Source-only, no physical device/signing/release evidence",
+          "run_id": 39470402549,
+          "status": "completed",
+          "workflow_id": 312030667
+        }
+      ],
+      "schema_version": 1,
+      "source": "Live GitHub connector read of exact-head workflow list/jobs, static job logs, and Git commit object."
+    },
+    {
+      "checkout_commit": "a54d9bd4d70fc1757f0828a8d69be48604941257",
+      "checkout_parents": [
+        "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "31307694ebb9895ed8cfb77fa6ac532b789d2810"
+      ],
+      "checkout_tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0",
+      "event": "pull_request",
+      "head_commit": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "head_tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0",
+      "historical_quality_recovery": {
+        "canonical_db_job": 118793354045,
+        "conclusion": "success",
+        "head": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+        "may_be_borrowed_for_new_head": false,
+        "run_id": 39470402671
+      },
+      "ios_launch_contract": {
+        "axis": "SOURCE_ONLY",
+        "conclusion": "success",
+        "run_id": 39483363534,
+        "status": "completed",
+        "workflow_id": 312030667
+      },
+      "main_promotion_authorized": false,
+      "observed_at_utc": "2026-10-20T19:45:14+00:00",
+      "proposal_notAfter": "2026-10-21T00:00:00Z",
+      "protected_source_go": false,
+      "quality": {
+        "canonical_database_job": {
+          "conclusion": null,
+          "id": 118837969766,
+          "status": "in_progress"
+        },
+        "conclusion": null,
+        "exports": [
+          {
+            "conclusion": "success",
+            "job_id": 118840780888,
+            "platform": "android"
+          },
+          {
+            "conclusion": "success",
+            "job_id": 118840781089,
+            "platform": "ios"
+          }
+        ],
+        "pg15_job": {
+          "conclusion": "success",
+          "id": 118837969712
+        },
+        "pg17_job": {
+          "conclusion": "success",
+          "id": 118837969992
+        },
+        "repository_job": {
+          "conclusion": "success",
+          "id": 118837969888
+        },
+        "run_id": 39483363359,
+        "status": "in_progress",
+        "workflow_id": 312030668
+      },
+      "refresh_rule": "Refresh actual source/head/run/checkout and results on next execution. Pending is not PASS; expiry must not be renewed mechanically.",
+      "security": {
+        "code_conclusion": "success",
+        "code_job": 118837379325,
+        "conclusion": "failure",
+        "interpretation": "Observed raw refusals, not an independent advisory applicability/exploitability assessment. Continued workflow steps do not erase nonzero raw results.",
+        "live_conclusion": "skipped",
+        "live_job": 118837383836,
+        "raw_observed_refusals": [
+          "SOURCE_INVENTORY_DRIFT",
+          "braces: review is expired or dates are invalid",
+          "node-forge: review is expired or dates are invalid",
+          "unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv",
+          "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+        ],
+        "run_id": 39483363438,
+        "secret_conclusion": "success",
+        "secret_job": 118837379015,
+        "source_acceptance_conclusion": "failure",
+        "source_acceptance_job": 118840279042,
+        "static_job": 118837379401,
+        "status": "completed",
+        "workflow_id": 308213475
+      },
+      "tree_equality_independently_verified": true
+    },
+    {
+      "checkout_commit": "444e3d7cec085637cebe442b4cad7c216a249c93",
+      "checkout_parents": [
+        "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "8c1149116df00f34314357d10929b32f52f6d118"
+      ],
+      "checkout_tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+      "event": "pull_request",
+      "head_commit": "8c1149116df00f34314357d10929b32f52f6d118",
+      "head_tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+      "ios_launch_contract": {
+        "axis": "SOURCE_ONLY",
+        "conclusion": "success",
+        "run_id": 39496960969,
+        "status": "completed",
+        "workflow_id": 312030667
+      },
+      "main_promotion_authorized": false,
+      "observed_at_utc": "2026-10-20T21:22:24+00:00",
+      "proposal_notAfter": "2026-10-21T00:00:00Z",
+      "protected_source_go": false,
+      "quality": {
+        "canonical_database_job": {
+          "conclusion": "failure",
+          "failure": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+          "id": 118884388306,
+          "phase": "prepareCanonicalPostgresImage; before SQL",
+          "status": "completed"
+        },
+        "conclusion": "failure",
+        "exports": [
+          {
+            "conclusion": "success",
+            "job_id": 118887076397,
+            "platform": "ios"
+          },
+          {
+            "conclusion": "success",
+            "job_id": 118887076412,
+            "platform": "android"
+          }
+        ],
+        "pg15_job": {
+          "conclusion": "success",
+          "id": 118884388339
+        },
+        "pg17_job": {
+          "conclusion": "success",
+          "id": 118884388004
+        },
+        "repository_job": {
+          "conclusion": "success",
+          "id": 118884388226
+        },
+        "run_id": 39496961034,
+        "status": "completed",
+        "workflow_id": 312030668
+      },
+      "refresh_rule": "Refresh exact head/run/checkout next execution. No historical green, pending-as-PASS, scanner waiver or mechanical expiry renewal.",
+      "security": {
+        "code_conclusion": "success",
+        "code_job": 118884388072,
+        "conclusion": "failure",
+        "interpretation": "Raw provider-log refusals observed. Individual continued step summaries do not erase nonzero raw outcomes. Advisory applicability/exploitability NOT independently assessed.",
+        "live_conclusion": "skipped",
+        "live_job": 118884391774,
+        "raw_observed_refusals": [
+          "SOURCE_INVENTORY_DRIFT",
+          "braces: review is expired or dates are invalid",
+          "node-forge: review is expired or dates are invalid",
+          "unreviewed OSV advisory: vite@8.1.3:GHSA-587h-7wmj-h5pm",
+          "unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv",
+          "unreviewed OSV advisory: vite@8.1.3:GHSA-r825-w8mm-5pxw",
+          "unreviewed OSV advisory: certifi@2026.10.18:GHSA-6q48-6c7w-9gw2",
+          "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+        ],
+        "run_id": 39496961082,
+        "secret_conclusion": "success",
+        "secret_job": 118884388439,
+        "source_acceptance_conclusion": "failure",
+        "source_acceptance_job": 118887473162,
+        "static_job": 118884388573,
+        "status": "completed",
+        "workflow_id": 308213475
+      },
+      "tree_equality_independently_verified": true
+    },
+    {
+      "checkout_commit": "ca62c6c05c40a88d29403c831173821348852512",
+      "checkout_parents": [
+        "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "2de9ef75a1a1d539b0520ca22160abd6171c9c3b"
+      ],
+      "checkout_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+      "event": "pull_request",
+      "head_commit": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "head_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+      "ios_launch_contract": {
+        "conclusion": "success",
+        "run_id": 39506203634,
+        "scope": "SOURCE_ONLY_NOT_DEVICE",
+        "status": "completed"
+      },
+      "main_promotion_authorized": false,
+      "observed_at_utc": "2026-10-20T22:35:24Z",
+      "pr": {
+        "draft": true,
+        "head": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+        "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "merged": false,
+        "number": 9
+      },
+      "protected_source_go": false,
+      "quality": {
+        "canonical_database_job": {
+          "conclusion": null,
+          "id": 118915844992,
+          "status": "in_progress"
+        },
+        "conclusion": null,
+        "expo_ios_android_exports": "success",
+        "note": "Unfinished canonical DB/overall Quality is NOT PASS. Prior candidate ECR failure remains historical, not asserted as this running job outcome.",
+        "postgres15_17_rehearsals": "success",
+        "repository_job": {
+          "conclusion": "success",
+          "id": 118915845232
+        },
+        "run_id": 39506203149,
+        "status": "in_progress"
+      },
+      "security": {
+        "conclusion": "failure",
+        "note": "Exact source Security refusal remains open. M1-03 must obtain all raw current scanner/gate results and distinguish finding, execution, inventory, expiry and approval failures; no positive Security claim.",
+        "run_id": 39506203186,
+        "status": "completed"
+      },
+      "source_proposal_not_after": "2026-10-21T00:00:00Z",
+      "tree_equality_independently_verified": true
+    },
+    {
+      "checkout_commit": "d36d00677be4536a0dc190fa64e1055f6bd307ec",
+      "checkout_parents": [
+        "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "c14a3105640034a9d7a47d34533f9bd40faa4cc4"
+      ],
+      "checkout_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "earlier_observation_this_review": {
+        "quality": "in_progress",
+        "superseded_by": "Completed success on final live refresh; no prior pending claim relabeled as an earlier pass."
+      },
+      "event": "pull_request",
+      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "head_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "ios_launch_contract": {
+        "conclusion": "success",
+        "run_id": 39517479335,
+        "scope": "SOURCE_ONLY_NOT_PHYSICAL_DEVICE",
+        "status": "completed"
+      },
+      "main_promotion_authorized": false,
+      "observation_method": "Direct live GitHub connector reads of exact-head original runs/jobs/logs and Git commit object; sanitized Brain transcription, not provider-signed evidence",
+      "observed_at_utc": "2026-10-21T00:39:50.362703+00:00",
+      "pr": {
+        "draft": true,
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "merged": false,
+        "number": 9
+      },
+      "protected_source_go": false,
+      "quality": {
+        "canonical_database_job": {
+          "conclusion": "success",
+          "id": 118953136136,
+          "status": "completed",
+          "step": "Reset twice, test, lint, and prove zero drift"
+        },
+        "conclusion": "success",
+        "exports": [
+          {
+            "conclusion": "success",
+            "id": 118955093703,
+            "platform": "android"
+          },
+          {
+            "conclusion": "success",
+            "id": 118955093961,
+            "platform": "ios"
+          }
+        ],
+        "limit": "Point-in-time credential-free CI success, not permanent ECR repair, hosted replay, DB06/DB08/R2B authority or release.",
+        "pg15_job": {
+          "conclusion": "success",
+          "id": 118953136477
+        },
+        "pg17_job": {
+          "conclusion": "success",
+          "id": 118953136510
+        },
+        "provider_updated_at_utc": "2026-10-21T00:35:43Z",
+        "repository_job": {
+          "conclusion": "success",
+          "id": 118953136459
+        },
+        "run_id": 39517479330,
+        "status": "completed"
+      },
+      "security": {
+        "acceptance_observations": [
+          "Actual first refusal SOURCE_INVENTORY_DRIFT. No source GO.",
+          "Stale owner pins and expired proposal are independent unmet prerequisites, not misreported as the first emitted refusal."
+        ],
+        "code_job": 118953012525,
+        "code_observations": [
+          "Linux Python3.12: 70 acceptance-contract tests pass; separate from Windows fixture failures.",
+          "Raw npm/SBOM/advisory gates nonzero. Expired braces/node-forge reviews and unreviewed Vite remain.",
+          "High aggregate Vite graph includes valid moderate child advisories; current classifier reports malformed high/critical entries."
+        ],
+        "conclusion": "failure",
+        "live_conclusion": "skipped",
+        "live_job": 118953013535,
+        "original_raw_logs_read": true,
+        "run_id": 39517479326,
+        "secret_job": 118953012568,
+        "secret_observations": {
+          "actual_trufflehog_reported_unverified": 0,
+          "actual_trufflehog_reported_verified": 0,
+          "gitleaks_binary_sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+          "gitleaks_version": "8.24.3",
+          "job_conclusion": "success",
+          "later_commits_omitted_through_reviewed_head": 56,
+          "limit": "No leak is inferred. Job success is not complete current-history coverage or execution of the separately pinned collector closure.",
+          "observed_commit_count": 30,
+          "observed_log_options": "--no-merges --first-parent dc6c42dfcf796cbddb94b510d30ecf277fa13112^..f0809923c4fe624329ebc215e7ead0d5b66874fd",
+          "omission_check": "git rev-list --count f0809923c4fe624329ebc215e7ead0d5b66874fd..HEAD",
+          "reported_leaks": 0,
+          "separate_collector_expected_version": "3.99.2",
+          "trufflehog_actual_version": "3.99.3",
+          "trufflehog_image_digest": "sha256:63b6120f410beb64aea4e421f1ed277248e14b2942d124df289422b623f610d8",
+          "trufflehog_image_tag": "latest"
+        },
+        "source_acceptance_job": 118955018092,
+        "static_job": 118953012218,
+        "static_observations": [
+          "SOURCE_INVENTORY_DRIFT refuses Semgrep before execution; complete current-source SAST not established.",
+          "Original OSV source scan executes and returns findings. Do not replace missing Semgrep output with zero findings."
+        ],
+        "status": "completed"
+      },
+      "source_proposal_not_after": "2026-10-21T00:00:00Z",
+      "source_proposal_status": "EXPIRED_UNCHANGED",
+      "tree_equality_independently_verified": true
+    }
+  ],
+  "protected_source_go": false,
+  "ready_task": "M1-03",
+  "remote_desktop_connection": "Independent clean Windows and Linux clones/installations, source/unit/contract/governance checks and private repair controls; no active source edits/pushes or new browser/device/provider tests.",
+  "research_requests": [],
+  "review_history": [
+    "AUDIT_M0-02_ACCEPTANCE.md",
+    {
+      "decision": "FIX_REQUIRED",
+      "head": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "iteration": "CONT-01",
+      "review_record": "docs/brain/reviews/M1-01/REVIEW-01",
+      "state_version": "brain-m1-01-partial-reviewed-cont01-issued-6"
+    },
+    {
+      "decision": "FIX_REQUIRED",
+      "head": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+      "iteration_issued": "CONT-02",
+      "iteration_reviewed": "CONT-01",
+      "review_record": "docs/brain/reviews/M1-01/REVIEW-02",
+      "state_version": "brain-m1-01-partial-reviewed-cont02-issued-7"
+    },
+    {
+      "closed_findings": [
+        "M1-SIGNOUT-02",
+        "M1-HARNESS-02"
+      ],
+      "head": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "id": "M1-01-REVIEW-03",
+      "new_main_authority": false,
+      "observations": "REVIEW_OBSERVATIONS.json",
+      "remaining_findings": [
+        "M1-MATRIX-01",
+        "M1-OWNER-BROWSER-03"
+      ],
+      "report": "AUDIT_M1-01_REVIEW03.md",
+      "tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "verdict": "FIX_REQUIRED"
+    },
+    {
+      "closed_findings": [
+        "M1-MATRIX-01",
+        "M1-OWNER-BROWSER-03"
+      ],
+      "external_gates_unchanged": true,
+      "head": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "id": "M1-01-ACCEPTANCE",
+      "new_main_authority": false,
+      "observations": "REVIEW_OBSERVATIONS.md",
+      "remaining_in_scope_findings": [],
+      "report": "AUDIT_M1-01_ACCEPTANCE.md",
+      "scope": "RETAINED_CLIENT_SOURCE_AND_SUPPORTED_LOCAL_WEB_SAFETY_ONLY",
+      "tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0",
+      "verdict": "ACCEPTED"
+    },
+    {
+      "external_gates_unchanged": true,
+      "head": "8c1149116df00f34314357d10929b32f52f6d118",
+      "id": "M1-02-REVIEW-01",
+      "new_main_authority": false,
+      "observations": "REVIEW_OBSERVATIONS.md",
+      "remaining_findings": [
+        "M102-R1-F1",
+        "M102-R1-F2",
+        "M102-R1-F3"
+      ],
+      "report": "AUDIT_M1-02_REVIEW01.md",
+      "tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+      "undo_disposition": "ADR-038: preserve append-only retained record; correction implementation in M2-01/M2-02 remains required before M2-03/M2-04 readiness; no undo PASS",
+      "verdict": "FIX_REQUIRED"
+    },
+    {
+      "accepted_subscope": [
+        "CORE05_SEMANTIC_REPAIR",
+        "BOUND_INITIAL_DIAGNOSTICS_AND_CUSTODY",
+        "PENDING_REVIEW_PACKET"
+      ],
+      "audit": "AUDIT_M1-03_REVIEW01.md",
+      "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+      "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "id": "M1-03-REVIEW-01",
+      "new_source_edit_authorization": "SOURCE_EDIT_AUTHORIZATION.json",
+      "tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "whole_task_accepted": false
+    },
+    {
+      "accepted_subscope": [
+        "OBSERVER_TEST_SETTLEMENT",
+        "MIXED_SEVERITY_CLASSIFICATION",
+        "ORIGINAL_SECRET_JOB_COVERAGE_AND_BYTE_PROVENANCE",
+        "VITE_MINIMAL_CLOSURE_COMPATIBILITY_ONLY"
+      ],
+      "audit": "AUDIT_M1-03_REVIEW02.md",
+      "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+      "head": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "id": "M1-03-REVIEW-02",
+      "new_source_edit_authorization": "SOURCE_EDIT_AUTHORIZATION.json",
+      "not_accepted": [
+        "WHOLE_M103_BASELINE",
+        "NATIVE_MAPPING_COHERENCE",
+        "HISTORICAL_SBOM_FIXTURE_COHERENCE",
+        "PUSHED_REPORT_ARTIFACT_COMPLETENESS",
+        "SECURITY_ACCEPTANCE"
+      ],
+      "tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+      "whole_task_accepted": false
+    },
+    {
+      "at_utc": "2026-10-21T11:10:53+00:00",
+      "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+      "head": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "review": "M1-03-OVERNIGHT-REVIEW01",
+      "scope": "A_INTEGRATION_ACCEPTED;B_C_DIAGNOSTIC_CHECKPOINT_NOT_SECURITY_ACCEPTANCE",
+      "source": "independent branch/source/CI and clean-clone tests"
+    }
+  ],
+  "schema_version": 1,
+  "source_pack_version": "2.1-bootstrap-2026-10-20",
+  "spend_authorizations": [],
+  "state_application": {
+    "historical_state_rewrite": false,
+    "mode": "ADDITIVE_INDEPENDENT_REVIEW_AND_ISSUANCE",
+    "next_input_path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs",
+    "path": "docs/brain/reviews/M1-03/OVERNIGHT-REVIEW01"
+  },
+  "state_custody": "Install this new issuance unchanged at docs/brain/reviews/M1-03/OVERNIGHT-AUTHORIZATION; preserve all historical authority and reports.",
+  "state_version": "brain-m1-03-security-harden01-issued-15",
+  "updated_at_utc": "2026-10-21T11:10:53+00:00",
+  "workflow": {
+    "active_branch": "stage/m1-retained-safety",
+    "active_stage": "M1",
+    "brain_audit": "LIVE_FULL_BRANCH_DIFF_AND_COMMIT_CHAIN_AGAINST_ACCEPTED_ANCESTOR_PLUS_CI",
+    "branch_creation_from": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+    "context_format": "MARKDOWN_FIRST; preserve typed JSON manifests/state and verification code. Use selective reading; never treat extension as evidence or authorization.",
+    "decision_authority": "FOUNDER_USER_DIRECT_2026-10-20_UTC",
+    "founder_completion_signal": "Codex is done",
+    "handoff_presentation": {
+      "step_1": "Tell founder to create new chat or continue; not inside execution prompt",
+      "step_2": "Download one current context ZIP and upload",
+      "step_3": "Copy exact engineer prompt",
+      "step_4": "Founder says Codex is done; Brain reads stage and decides promotion"
+    },
+    "main_promotion_decision_authority": "onSkin Brain after independent exact-source review and applicable gates; founder-only authorities remain separate",
+    "main_writable_by_codex": false,
+    "mandatory_root_handoff_file": "ONSKIN_BRAIN_HANDOFF.txt",
+    "mandatory_status_push_even_if_blocked_or_no_fix": true,
+    "no_merge_until_separate_brain_promotion": true,
+    "policy": "STAGE_BRANCH_ALWAYS_PUSH_SAFE_STATUS",
+    "previous_stage_branch": "stage/m0-baseline",
+    "previous_stage_frozen_at": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+    "prior_context_zip": "CONT02_SUPERSEDED_NOT_EXECUTED",
+    "safe_code_only_no_personal_or_protected_content": true,
+    "status": "M1-03_OVERNIGHT01_ISSUED_EXISTING_STAGE_ONLY"
+  }
+}
