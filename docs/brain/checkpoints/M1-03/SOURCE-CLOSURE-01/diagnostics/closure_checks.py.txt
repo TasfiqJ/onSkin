@@ -1,0 +1,46 @@
+import datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys
+
+WS=pathlib.Path(__file__).resolve().parent
+ROOT=WS/'overnight-delivery-clean'
+CP=ROOT/'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01'
+
+def run(name,command,root=ROOT):
+    out=CP/'evidence'/(name+'.log');receipt=out.with_suffix('.receipt.json')
+    assert not out.exists() and not receipt.exists(), 'Fresh evidence name required'
+    identity=lambda ref:subprocess.check_output(['git','-C',str(root),'rev-parse',ref]).decode().strip()
+    commit,tree=identity('HEAD'),identity('HEAD^{tree}')
+    start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    with out.open('wb') as output:
+        result=subprocess.run(command,cwd=root,stdout=output,stderr=subprocess.STDOUT)
+    raw=out.read_bytes();text=raw.decode(errors='replace')
+    counts=None
+    cases=re.search(r'Ran (\d+) tests?',text)
+    if cases:
+        total=int(cases[1]);end=text[text.rfind('\nRan '):]
+        failed=sum(int(n) for n in re.findall(r'(?:failures|errors)=(\d+)',end))
+        skipped=sum(int(n) for n in re.findall(r'skipped=(\d+)',end))
+        counts=dict(passed=total-failed-skipped,failed=failed,skipped=skipped)
+    value=dict(schema_version=1,kind='LOCAL_EXECUTION',claim_origin='CODEX_REPORTED_EXECUTION',
+        command=subprocess.list2cmdline(command),working_directory=str(root),environment='Windows; Python3.9.13; Node '+subprocess.check_output(['node','--version']).decode().strip(),
+        source_commit=commit,source_tree=tree,status='PASS' if result.returncode==0 else 'FAIL',exit_code=result.returncode,
+        started_at=start,finished_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        output=dict(path=out.relative_to(ROOT).as_posix(),sha256=hashlib.sha256(raw).hexdigest()),admission='NONE')
+    if counts is not None:value['counts']=counts
+    receipt.write_bytes((json.dumps(value,indent=2)+'\n').encode())
+    print(name,result.returncode,counts,text[-500:],flush=True)
+
+action=sys.argv[1]
+if action=='governance':
+    clone=WS/'closure-windows-measured'
+    assert not clone.exists()
+    subprocess.run(['git','clone','--quiet','--no-hardlinks','--single-branch','--branch','stage/m1-retained-safety',str(ROOT),str(clone)],check=True)
+    run('windows-governance-68',['python','-B','-m','unittest','discover','-s','scripts/brain','-p','test_*.py','-v'],clone)
+elif action=='root':
+    for name,command in [('forced-root-test',['npm.cmd','test','--','--force']),
+                         ('forced-root-typecheck',['npm.cmd','run','typecheck','--','--force']),
+                         ('forced-root-lint',['npm.cmd','run','lint','--','--force'])]:run(name,command)
+elif action=='profile':run('source-closure-profile',['python','-B','scripts/brain/brain.py','--profile','M1-03','validate'])
+elif action=='worklist':run('worklist-check',['npm.cmd','run','phase4:source-worklist:check'])
+elif action=='final':
+    run('worklist-check-final',['npm.cmd','run','phase4:source-worklist:check'])
+    run('source-closure-profile-final',['python','-B','scripts/brain/brain.py','--profile','M1-03','validate'])

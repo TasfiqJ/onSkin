@@ -1,0 +1,43 @@
+import datetime, hashlib, json, pathlib, shutil, subprocess
+
+WS = pathlib.Path(__file__).resolve().parent
+ROOT = WS / 'overnight-delivery-clean'
+CONTEXT = WS / 'onSkin_M1-03_SOURCE-CLOSURE-01_context'
+CHECKPOINT = ROOT / 'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01'
+REVIEW = ROOT / 'docs/brain/reviews/M1-03/SH01-REVIEW01'
+DIGEST = '0759147b5810936e79891852f1d4b490b1bf8c132c7d3e61d1b2716b6d82dcc5'
+
+def git(*args):
+    return subprocess.check_output(['git', '-C', str(ROOT), *args]).strip().decode()
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+assert git('status', '--porcelain') == ''
+assert sha((CONTEXT / 'TASK_MANIFEST.json').read_bytes()) == DIGEST
+auth = json.loads((CONTEXT / 'SOURCE_EDIT_AUTHORIZATION.json').read_bytes())
+assert git('rev-parse', 'HEAD') == auth['base_commit']
+assert git('rev-parse', 'HEAD^{tree}') == auth['base_tree']
+assert git('branch', '--show-current') == auth['branch']
+rows = []
+for item in auth['preimages']:
+    blob = subprocess.check_output(['git', '-C', str(ROOT), 'show', auth['base_commit'] + ':' + item['path']])
+    actual = (ROOT / item['path']).read_bytes()
+    rows.append(dict(path=item['path'], source_blob=git('rev-parse', auth['base_commit'] + ':' + item['path']),
+                     bytes=len(blob), sha256=sha(blob), expected_sha256=item['sha256'],
+                     authorized=sha(blob) == item['sha256'] == sha(actual), worktree_matches=blob == actual))
+assert not CHECKPOINT.exists() and not REVIEW.exists()
+shutil.copytree(CONTEXT, CHECKPOINT / 'inputs')
+shutil.copytree(CONTEXT / 'BRAIN_STATE', REVIEW)
+(CHECKPOINT / 'evidence').mkdir()
+receipt = dict(schema_version=1, observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               task_id='M1-03', iteration='SOURCE-CLOSURE-01', manifest_sha256=DIGEST,
+               source_commit=git('rev-parse', 'HEAD'), source_tree=git('rev-parse', 'HEAD^{tree}'),
+               branch=git('branch', '--show-current'), origin=git('remote', 'get-url', 'origin'),
+               preimages=rows, dirty_before=[], other_checkout='m103c1-isolated dirty dependency inventory preserved',
+               protected_source_go=False, main_promotion_authorized=False, admission='NONE')
+(CHECKPOINT / 'evidence/intake.json').write_bytes((json.dumps(receipt, indent=2)+'\n').encode())
+attributes = ROOT / '.gitattributes'
+attributes.write_bytes(attributes.read_bytes() + b'\n# Exact SOURCE-CLOSURE-01 independent review bytes.\ndocs/brain/reviews/M1-03/SH01-REVIEW01/** -text\n')
+print('Checked', len(rows), 'preimages; mismatches are NOT authorized:', [r['path'] for r in rows if not r['authorized']])
+print('Installed exact issuance and complete Brain review')

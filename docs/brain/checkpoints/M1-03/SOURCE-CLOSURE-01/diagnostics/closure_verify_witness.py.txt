@@ -1,0 +1,17 @@
+"""Read-only primary witness verification; does not claim complete hydration."""
+import datetime,gzip,hashlib,json,pathlib,subprocess
+ROOT=pathlib.Path(__file__).parent/'overnight-delivery-clean'
+rows=json.loads(gzip.decompress((ROOT/'scripts/phase9/security_acceptance/history.json.gz').read_bytes()))
+refs={r['commit']+':'+r['path']:(r['source_blob'],r['source_sha256']) for r in rows}
+verified=[]
+for ref,(oid,sha) in sorted(refs.items()):
+    raw=subprocess.check_output(['git','-c','core.fsmonitor=false','-C',str(ROOT),'cat-file','blob',ref])
+    assert hashlib.sha256(raw).hexdigest()==sha
+    assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==oid
+    verified.append(dict(reference=ref,git_blob=oid,sha256=sha,bytes=len(raw)))
+value=dict(schema_version=1,kind='PRIMARY_HISTORICAL_WITNESS_CUSTODY',admission='NONE',
+    observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),witnesses=len(rows),references=verified,
+    complete_hydration=False,linux_import='NOT_RUN; host disk full and WSL E_FAIL',
+    source_commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD']).decode().strip())
+(ROOT/'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/primary-history-witnesses.json').write_bytes((json.dumps(value,indent=2)+'\n').encode())
+print('Verified',len(rows),'primary witnesses across',len(verified),'real commit/blob references; complete hydration NOT established')

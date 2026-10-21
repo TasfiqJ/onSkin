@@ -1,0 +1,53 @@
+import datetime,hashlib,json,os,pathlib,re,subprocess,sys
+
+WS=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code')
+SOURCE=WS/'overnight-delivery-clean'
+ROOT=pathlib.Path('/root/onskin-source-closure01')
+PRIVATE=pathlib.Path('/root/onskin-source-closure01-private')
+CAND=pathlib.Path('/root/onskin-source-closure01-candidate')
+PRIVATE.mkdir(mode=0o700,exist_ok=True)
+
+def run(name,command,env=None):
+    output=PRIVATE/(name+'.log');receipt=PRIVATE/(name+'.receipt.json')
+    assert not output.exists() and not receipt.exists()
+    commit=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD']).decode().strip()
+    tree=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD^{tree}']).decode().strip()
+    start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    with output.open('wb') as out:result=subprocess.run(command,cwd=ROOT,stdout=out,stderr=subprocess.STDOUT,env=env)
+    raw=output.read_bytes();text=raw.decode(errors='replace');cases=re.search(r'Ran (\d+) tests?',text);counts=None
+    if cases:
+        end=text[text.rfind('\nRan '):];failed=sum(int(n) for n in re.findall(r'(?:failures|errors)=(\d+)',end));skipped=sum(int(n) for n in re.findall(r'skipped=(\d+)',end))
+        counts=dict(passed=int(cases[1])-failed-skipped,failed=failed,skipped=skipped)
+    value=dict(schema_version=1,kind='LOCAL_EXECUTION',claim_origin='CODEX_REPORTED_EXECUTION',command=' '.join(command),
+        working_directory=str(ROOT),environment='WSL2 onskin-r6-verification; Ubuntu22.04 Linux x86_64; Python3.12.3',
+        source_commit=commit,source_tree=tree,status='PASS' if result.returncode==0 else 'FAIL',exit_code=result.returncode,
+        started_at=start,finished_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),admission='NONE',
+        output=dict(path='docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/'+output.name,sha256=hashlib.sha256(raw).hexdigest()))
+    if counts is not None:value['counts']=counts
+    receipt.write_text(json.dumps(value,indent=2)+'\n')
+    print(name,result.returncode,counts,text[-700:],flush=True)
+    return result.returncode
+
+action=sys.argv[1]
+if action=='setup':
+    assert not ROOT.exists()
+    subprocess.run(['git','clone','--quiet','--no-hardlinks','--single-branch','--branch','stage/m1-retained-safety',str(SOURCE),str(ROOT)],check=True)
+    run('linux-npm-ci',['npm','ci','--no-audit','--no-fund'])
+elif action=='candidate':
+    run('candidate-prepare',['python3.12','-B','scripts/security_readiness/m103/candidate.py','prepare',str(CAND),'--wheel-cache','/root/onskin-overnight01-sh01-candidate04'])
+    run('candidate-nine',['python3.12','-B','-m','unittest','discover','-s','scripts/security_readiness/m103','-p','test_*.py','-v'],dict(os.environ,ONSKIN_TEST_CANDIDATE=str(CAND)))
+    run('candidate-adverse-install',['python3.12','-B','scripts/security_readiness/m103/adverse_install.py',str(CAND)])
+elif action=='hydrate':
+    run('linux-history-import',['python3.12','-B','scripts/security_readiness/m103/hydrate_history.py','--repo',str(ROOT),'--pack',str(WS/'closure-history-complete.pack'),'--receipt',str(PRIVATE/'history-import.json'),'--import-pack'])
+    run('linux-original-70',['python3.12','-B','-m','unittest','discover','-s','scripts/phase9/security_acceptance','-p','test_contract.py','-v'])
+    run('linux-original-secret-12',['python3.12','-B','-m','unittest','discover','-s','scripts/phase9/security_acceptance','-p','test_secret_scan.py','-v'])
+elif action=='scan':
+    sha=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD']).decode().strip()
+    seal=CAND.with_name(CAND.name+'-seal.sha256').read_text().strip()
+    run('four-bundle-source-scan',['python3.12','-B','scripts/security_readiness/m103/source_scan.py','--candidate',str(CAND),'--repo',str(ROOT),'--commit',sha,
+        '--work','/root/onskin-source-closure01-scan','--rules','/root/onskin-overnight01-source-scan02',
+        '--pins',str(ROOT/'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/CANDIDATE_TOOL_INPUTS.json'),'--tool-manifest-sha256',seal])
+elif action=='root':
+    run('linux-forced-root-test',['npm','test','--','--force'])
+    run('linux-forced-root-typecheck',['npm','run','typecheck','--','--force'])
+    run('linux-forced-root-lint',['npm','run','lint','--','--force'])
