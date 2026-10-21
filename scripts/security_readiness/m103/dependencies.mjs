@@ -32,7 +32,9 @@ for(const [from,row] of Object.entries(packages)){
     for(const [name,range] of Object.entries(row[group]??{}))edges.push({from,name,range,kind:group,to:resolveDependency(from,name)});
   }
 }
-const shortest=new Map([['',[]]]);const queue=[''];
+const workspaceRoots=Object.keys(packages).filter(path=>path&&!path.includes('node_modules/'));
+const shortest=new Map([['',[]],...workspaceRoots.map(path=>[path,[{from:'',to:path,kind:'WORKSPACE_ROOT'}]])]);
+const queue=['',...workspaceRoots];
 for(let i=0;i<queue.length;i++)for(const edge of edges.filter(e=>e.from===queue[i]&&e.to!==null)){
   if(!shortest.has(edge.to)){shortest.set(edge.to,[...shortest.get(edge.from),{from:edge.from,to:edge.to,name:edge.name,kind:edge.kind}]);queue.push(edge.to);}
 }
@@ -52,8 +54,11 @@ const npmRecords=Object.entries(audit.vulnerabilities).map(([name,row])=>({name,
 const osvRecords=[];
 for(const result of osv.results??[])for(const pkg of result.packages??[])for(const advisory of pkg.vulnerabilities??[]){
   const name=pkg.package?.name,version=pkg.package?.version;
+  const paths=inventory.filter(p=>p.name===name&&p.version===version).map(p=>p.path);
+  const requirement=execFileSync('git',['-C',repo,'show',`${commit}:scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt`]).toString().split('\n').find(line=>line.startsWith(`${name}==${version} `));
   osvRecords.push({name,version,source:result.source,raw_record:advisory,
-    source_paths:inventory.filter(p=>p.name===name&&p.version===version).map(p=>p.path),
+    source_paths:paths,exposure:paths.length?'APPLICATION_LOCK':requirement?'FROZEN_ORIGINAL_SCANNER_REQUIREMENT':'UNRESOLVED_SOURCE',
+    original_scanner_requirement:requirement??null,
     disposition:'UNRESOLVED_NO_NEW_EXCEPTION',admission:'NONE'});
 }
 const primaryUrls=[...new Set(npmRecords.flatMap(r=>r.direct_advisories.map(a=>a.url)).concat(osvRecords.flatMap(r=>r.raw_record.references?.map(x=>x.url)??[])))];
