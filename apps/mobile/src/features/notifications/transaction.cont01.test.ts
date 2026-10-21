@@ -192,6 +192,7 @@ it('permission revoked at native settlement compensates and cannot claim schedul
   await act(async () => { await expect(mutation.mutateAsync({ amEnabled: true })).rejects.toThrow('PREFERENCES_SAVED_REMINDERS_UNCONFIRMED'); });
   expect(ports.native.size).toBe(0);
   await act(async () => { await mutation.mutateAsync({ amEnabled: true }); });
+  await vi.waitFor(async () => { await flush(); expect(mutation.isSuccess).toBe(true); });
   expect(mutation.data?.scheduling).toBe('permission_denied');
   expect(ports.native.size).toBe(0);
 });
@@ -207,6 +208,7 @@ it('a saved failure Retry cannot restore an older opt-in after a later durable o
   const patch = notificationPreferenceRetryPatch(failed, { amEnabled: true });
   expect(patch).toEqual({});
   await act(async () => { await mutation.mutateAsync(patch); });
+  await vi.waitFor(async () => { await flush(); expect(mutation.isSuccess).toBe(true); });
   expect(mutation.data?.scheduling).toBe('disabled');
   expect(await loadNotifPrefs()).toMatchObject({ amEnabled: false });
   expect(ports.native.size).toBe(0);
