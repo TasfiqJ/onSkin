@@ -4,7 +4,7 @@ Acquire two exact Linux executables, scan all local refs and an object-derived
 current snapshot, and bind the actual processes to source/run/tool bytes.
 """
 import argparse, datetime, hashlib, io, json, os, pathlib, platform, re
-import shutil, subprocess, sys, tarfile, tempfile, urllib.request
+import shutil, subprocess, sys, tarfile, tempfile, urllib.request, urllib.parse, gzip
 
 PINS = {
     'gitleaks': dict(version='8.24.3',
@@ -122,6 +122,11 @@ def git_scope(root):
     refs = git(root, 'for-each-ref', '--format=%(refname) %(objectname)').decode().splitlines()
     commits = sorted(set(git(root, 'rev-list', '--all', 'HEAD').decode().splitlines()))
     require(head in commits and bool(refs), 'NEWEST_COMMIT_MISSING')
+    patch_commits = []; current_commit = None
+    for line in git(root, 'log', '--all', 'HEAD', '--full-history', '--diff-merges=first-parent',
+                    '--format=COMMIT%H', '--raw').decode().splitlines():
+        if line.startswith('COMMIT'): current_commit = line[6:]
+        elif line.startswith(':') and current_commit not in patch_commits: patch_commits.append(current_commit)
     rows = []
     for item in git(root, 'ls-tree', '-rz', '--full-tree', head).split(b'\0'):
         if not item: continue
@@ -135,14 +140,14 @@ def git_scope(root):
         row.update(bytes=len(blob), sha256=sha(blob))
     return dict(head=head, tree=git(root, 'rev-parse', 'HEAD^{tree}').decode().strip(),
         parents=git(root, 'show', '-s', '--format=%P', head).decode().split(),
-        refs=refs, commits=commits, snapshot=rows,
+        refs=refs, commits=commits, patch_commits=sorted(patch_commits), snapshot=rows,
         snapshot_sha256=sha(canon(rows)))
 
 def commands(tools, mirror, snapshot, sarif, current):
     gl = tools['gitleaks']['path']; th = tools['trufflehog']['path']
     common = ['--redact=100', '--exit-code=2', '--log-level=info']
     return {
-        'gitleaks-history': [gl, 'detect', '--source=' + mirror, '--log-opts=--all --full-history',
+        'gitleaks-history': [gl, 'detect', '--source=' + mirror, '--log-opts=--all --full-history --diff-merges=first-parent',
             *common, '--report-format=sarif', '--report-path=' + sarif],
         'gitleaks-current': [gl, 'detect', '--no-git', '--source=' + snapshot,
             *common, '--report-format=json', '--report-path=' + current],
@@ -169,7 +174,7 @@ def scan(root, tools_directory, work, output, run_id, expected_head, source_ref)
     require(not os.path.lexists(work), 'FRESH_SCAN_DIRECTORY_REQUIRED'); work.mkdir(parents=True)
     tools = verify_tools(tools_directory); started = stamp(); scope = git_scope(root)
     require(scope['head'] == expected_head and source_ref, 'SOURCE_IDENTITY')
-    mirror = work / 'history.git'; snapshot = work / 'current'; snapshot.mkdir()
+    mirror = work / 'history.git'; snapshot = work / 'current-source'; snapshot.mkdir()
     subprocess.run(['git', 'clone', '--mirror', '--no-hardlinks', '--no-local', str(root), str(mirror)],
                    check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     require(git_scope(mirror) == scope, 'MIRROR_SCOPE_DRIFT')
@@ -197,6 +202,19 @@ def scan(root, tools_directory, work, output, run_id, expected_head, source_ref)
         sarif_sha256=sha(regular(sarif)))
     write(output / PROOF, proof)
     return proof
+
+def current_disposition(root, records, prefix, commit):
+    """Reuse unchanged typed Git proofs; never refresh historical QA or policy."""
+    if not records: return dict(records=0, independentAcceptance=False)
+    try:
+        import history
+        here = pathlib.Path(__file__).parent
+        prior = json.loads(gzip.decompress(regular(here / 'history.json.gz')))
+        rules = load(here / 'proposal.json')['rules']
+        return history.verify_current(root, records, prefix, commit, prior,
+            regular(here / 'gitleaks.toml').decode(), rules)[0]
+    except (ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+        raise ValueError('SECRET_CURRENT_SOURCE_FINDINGS_UNREVIEWED') from error
 
 def validate_proof(directory, root, commit, run_id, now=None):
     directory = pathlib.Path(directory); proof = load(directory / PROOF)
@@ -235,10 +253,21 @@ def validate_proof(directory, root, commit, run_id, now=None):
         require(type(row['exit']) is int and row['exit'] in ((0, 2) if name.startswith('gitleaks') else (0, 183)), 'SCANNER_EXECUTION_ERROR')
         for stream in ('stdout', 'stderr'):
             require(sha(row[stream].encode()) == row[stream + '_sha256'], 'OUTPUT_BYTES')
-        require(re.search('scan completed|finished scanning', row['stderr'], re.I), 'TRUNCATED_OUTPUT')
+        clean_stderr = re.sub(r'\x1b\[[0-9;]*m', '', row['stderr'])
+        if name.startswith('gitleaks'):
+            require(re.search(r'scanned ~\d+ bytes .* in ', clean_stderr) and
+                    re.search(r'(?:no leaks found|leaks found: \d+)\s*$', clean_stderr), 'TRUNCATED_OUTPUT')
+        else:
+            events = [json.loads(line) for line in row['stderr'].splitlines() if line.strip()]
+            finished = [e for e in events if e.get('msg') == 'finished scanning']
+            require(len(finished) == 1 and events[-1] == finished[0] and
+                    finished[0].get('trufflehog_version') == '3.99.3' and
+                    finished[0].get('chunks', 0) > 0 and finished[0].get('bytes', 0) > 0 and
+                    finished[0].get('verified_secrets') == 0 and finished[0].get('unverified_secrets') == 0 and
+                    not any(e.get('level') == 'error' or 'error' in e for e in events), 'TRUNCATED_OR_FAILED_OUTPUT')
         if name == 'gitleaks-history':
-            counts = re.findall(r'(\d+) commits scanned', row['stderr'])
-            require(len(counts) == 1 and int(counts[0]) == len(proof['source']['commits']), 'HISTORY_COUNT_DRIFT')
+            counts = re.findall(r'(\d+) commits scanned', clean_stderr)
+            require(len(counts) == 1 and int(counts[0]) == len(proof['source']['patch_commits']), 'HISTORY_COUNT_DRIFT')
         if name.startswith('trufflehog'):
             require(row['exit'] == 0 and not row['stdout'].strip(), 'VERIFIED_FINDINGS')
     sarif = regular(directory / 'gitleaks-results.sarif')
@@ -249,7 +278,7 @@ def validate_proof(directory, root, commit, run_id, now=None):
     history = proof['commands']['gitleaks-history']; current = proof['commands']['gitleaks-current']
     require(bool(report['runs'][0]['results']) == (history['exit'] == 2) and
             isinstance(current['report'], list) and bool(current['report']) == (current['exit'] == 2), 'EXIT_REPORT_DRIFT')
-    require(not current['report'] and current['exit'] == 0, 'CURRENT_SOURCE_FINDINGS')
+    current_disposition(root, current['report'], proof['snapshot'], commit)
     return proof
 
 def main():

@@ -270,7 +270,7 @@ class ContractTests(unittest.TestCase):
   from unittest import mock
   from test_secret_scan import synthetic_proof
   scope=dict(head=commit,tree='b'*40,parents=[],refs=['refs/heads/synthetic '+commit],
-             commits=[commit],snapshot=[],snapshot_sha256=w.secret_scan.sha(b'[]'))
+             commits=[commit],patch_commits=[commit],snapshot=[],snapshot_sha256=w.secret_scan.sha(b'[]'))
   patch=mock.patch.object(w.secret_scan,'git_scope',return_value=scope);patch.start();self.addCleanup(patch.stop)
   proof,sarif=synthetic_proof(scope,run_id,findings)
   write('secret/gitleaks-results.sarif',sarif);write('secret/'+w.secret_scan.PROOF,proof)

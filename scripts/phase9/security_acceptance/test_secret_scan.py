@@ -20,7 +20,9 @@ def synthetic_proof(scope, run_id='123987', history_results=None):
         runs=[dict(tool=dict(driver=dict(name='gitleaks', semanticVersion='v8.0.0')), results=history_results or [])])
     proof['sarif_sha256'] = s.sha(s.canon(sarif))
     for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
-        stderr = (str(len(scope['commits'])) + ' commits scanned.\nscan completed\n') if name.startswith('gitleaks') else '{"msg":"finished scanning"}\n'
+        findings = len(history_results or []) if name == 'gitleaks-history' else 0
+        stderr = (str(len(scope['patch_commits'])) + ' commits scanned.\nscanned ~123 bytes (0.00 MB) in 1s\n' +
+                  ('leaks found: '+str(findings) if findings else 'no leaks found')+'\n') if name.startswith('gitleaks') else '{"msg":"finished scanning","trufflehog_version":"3.99.3","chunks":1,"bytes":1,"verified_secrets":0,"unverified_secrets":0}\n'
         proof['commands'][name] = dict(argv=argv, cwd='/synthetic', started=now, finished=now,
             exit=2 if name == 'gitleaks-history' and history_results else 0,
             stdout='', stderr=stderr, stdout_sha256=s.sha(b''), stderr_sha256=s.sha(stderr.encode()))
@@ -53,7 +55,7 @@ class SecretScanTests(unittest.TestCase):
         self.assertNotIn('Newest non-secret sentinel36', old)
         self.assertIn('Newest non-secret sentinel36', corrected)
         self.assertEqual(len(self.scope['commits']), 36); self.validate()
-        self.assertIn('--log-opts=--all --full-history', self.proof['commands']['gitleaks-history']['argv'])
+        self.assertIn('--log-opts=--all --full-history --diff-merges=first-parent', self.proof['commands']['gitleaks-history']['argv'])
         blob = self.git('cat-file', 'blob', self.scope['snapshot'][0]['object'])
         self.assertEqual(blob, b'Newest non-secret sentinel36\n')
     def test_omitted_newest_ref_source_run_or_snapshot_substitution_rejects(self):
@@ -99,6 +101,14 @@ class SecretScanTests(unittest.TestCase):
     def test_ref_drift_or_new_commit_invalidates_prior_receipt(self):
         self.git('tag','new-ref')
         with self.assertRaisesRegex(ValueError,'SOURCE_OR_RUN_DRIFT'):self.validate()
+    def test_merge_only_content_is_part_of_the_required_patch_scope(self):
+        self.git('checkout','-qb','synthetic-side','HEAD~1')
+        (self.root/'side.txt').write_text('Non-secret side content\n');self.git('add','.');self.git('-c','commit.gpgsign=false','commit','-qm','Synthetic side')
+        self.git('checkout','-q','synthetic-history');self.git('merge','--no-ff','--no-commit','synthetic-side')
+        (self.root/'merge-only.txt').write_text('Non-secret newest merge sentinel\n');self.git('add','.');self.git('-c','commit.gpgsign=false','commit','-qm','Synthetic merge')
+        scope=s.git_scope(self.root)
+        self.assertIn(scope['head'],scope['patch_commits'])
+        self.assertIn('Non-secret newest merge sentinel',self.git('log','--all','--full-history','--diff-merges=first-parent','-p').decode())
     def test_safe_archive_and_byte_substitution_refuse_before_execution(self):
         def archive(name,kind=tarfile.REGTYPE):
             out=io.BytesIO()
