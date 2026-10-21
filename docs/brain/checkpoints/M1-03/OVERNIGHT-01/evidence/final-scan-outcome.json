@@ -1,0 +1,27 @@
+{
+  "admission": "NONE",
+  "execution_complete": false,
+  "findings": 3,
+  "raw_outcomes": [
+    {
+      "bundle": "owasp-top-ten",
+      "raw_exit": 0,
+      "status": "EXECUTED"
+    },
+    {
+      "bundle": "react",
+      "raw_exit": 0,
+      "status": "EXECUTED"
+    },
+    {
+      "bundle": "secrets",
+      "raw_exit": 0,
+      "status": "EXECUTED"
+    },
+    {
+      "bundle": "typescript",
+      "raw_exit": 0,
+      "status": "EXECUTED"
+    }
+  ]
+}

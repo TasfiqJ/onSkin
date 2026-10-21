@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs scripts/phase9/ios-archive-privacy-evidence.test.mjs scripts/phase9/verification-wiring-contract.test.mjs scripts/phase9/security_acceptance/workflow_contract.test.mjs scripts/phase9/security-advisory-exceptions.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs scripts/phase9/patch-tooling-security.test.mjs scripts/core05/adherence-source-contract.test.mjs",
+  "working_directory": "/root/onskin-overnight01-native",
+  "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-workflow-mitigation.txt",
+    "sha256": "a3c7a9c6851b64464ac697c29f61774389bbd01cae05c1df4f02afb6d6bc13c6"
+  },
+  "counts": {
+    "passed": 407,
+    "failed": 0,
+    "skipped": 0
+  }
+}

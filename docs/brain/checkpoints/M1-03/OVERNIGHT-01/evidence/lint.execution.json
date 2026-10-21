@@ -1,0 +1,24 @@
+{
+  "name": "lint",
+  "argv": [
+    "npm",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:25:47.577180+00:00",
+  "finished": "2026-10-21T04:26:22.670052+00:00",
+  "exit": 0,
+  "log_sha256": "fb5f2190e9b5880ec35477383b19c829ca9b73b00db76b3447a7cf1747d824b2",
+  "bytes": 1161,
+  "admission": "NONE",
+  "environment": {
+    "CI": "true",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1"
+  }
+}

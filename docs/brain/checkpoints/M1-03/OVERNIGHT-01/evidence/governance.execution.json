@@ -1,0 +1,29 @@
+{
+  "name": "governance",
+  "argv": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:14:20.509731+00:00",
+  "finished": "2026-10-21T04:21:21.028723+00:00",
+  "exit": 1,
+  "log_sha256": "013018c35d3cfa7931660cc5d16cd34ed390eb137b60fb96b1af258ddd6d831c",
+  "bytes": 11246,
+  "admission": "NONE",
+  "environment": {
+    "CI": "true",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1"
+  }
+}

@@ -1,0 +1,8 @@
+test_complete_object_partition_wrong_blob_missing_duplicate_and_digest_lookalike (test_diagnostics.CandidateTests.test_complete_object_partition_wrong_blob_missing_duplicate_and_digest_lookalike) ... ok
+test_exact_deterministic_metadata_record_derivative_and_unchanged_core (test_diagnostics.CandidateTests.test_exact_deterministic_metadata_record_derivative_and_unchanged_core) ... ok
+test_typed_complete_results_timeout_missing_duplicate_stale_and_rule_drift (test_diagnostics.CandidateTests.test_typed_complete_results_timeout_missing_duplicate_stale_and_rule_drift) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.045s
+
+OK

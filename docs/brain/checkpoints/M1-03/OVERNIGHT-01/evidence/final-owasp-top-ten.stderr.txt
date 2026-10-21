@@ -1,0 +1,33 @@
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 12176 files with 560 Code rules:
+                                                                                                                        
+  Language      Rules   Files          Origin      Rules                                                                
+ ─────────────────────────────        ───────────────────                                                               
+  <multilang>       7   12176          Community     560                                                                
+  json              3    8204                                                                                           
+  ts               71    1255                                                                                           
+  js               65     353                                                                                           
+  python          147      40                                                                                           
+  swift             1      32                                                                                           
+  html              1       6                                                                                           
+  yaml             24       5                                                                                           
+  csharp           27       1                                                                                           
+                                                                                                                        
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 3 (3 blocking)
+ • Rules run: 281
+ • Targets scanned: 12176
+ • Parsed lines: ~99.9%
+ • Scan skipped: 
+   ◦ Files matching .semgrepignore patterns: 3
+ • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+Ran 281 rules on 12176 files: 3 findings.

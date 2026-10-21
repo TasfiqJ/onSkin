@@ -1,0 +1,29 @@
+{
+  "name": "native-workflow-mitigation",
+  "argv": [
+    "node",
+    "--test",
+    "scripts/phase9/ios-privacy-source-audit.test.mjs",
+    "scripts/phase9/ios-archive-privacy-evidence.test.mjs",
+    "scripts/phase9/verification-wiring-contract.test.mjs",
+    "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+    "scripts/phase9/security-advisory-exceptions.test.mjs",
+    "scripts/phase9/tooling-security-vulnerabilities.test.mjs",
+    "scripts/phase9/patch-tooling-security.test.mjs",
+    "scripts/core05/adherence-source-contract.test.mjs"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:14:16.966157+00:00",
+  "finished": "2026-10-21T04:14:20.509063+00:00",
+  "exit": 0,
+  "log_sha256": "a3c7a9c6851b64464ac697c29f61774389bbd01cae05c1df4f02afb6d6bc13c6",
+  "bytes": 28834,
+  "admission": "NONE",
+  "environment": {
+    "CI": "true",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1"
+  }
+}

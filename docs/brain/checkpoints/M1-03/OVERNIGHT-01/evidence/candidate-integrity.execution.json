@@ -1,0 +1,19 @@
+{
+  "name": "candidate-integrity",
+  "argv": [
+    "/usr/bin/python3.12",
+    "-B",
+    "/root/onskin-overnight01-native/scripts/security_readiness/m103/candidate.py",
+    "verify",
+    "/root/onskin-overnight01-candidate05"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:20:48.167498+00:00",
+  "finished": "2026-10-21T04:20:49.471159+00:00",
+  "exit": 0,
+  "bytes": 42,
+  "log_sha256": "6cbdf9a467c409378428f33418867dc38bebd9a3283d29dc02d3e948c7f448c3",
+  "admission": "NONE"
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm run lint -- --force",
+  "working_directory": "/root/onskin-overnight01-native",
+  "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/lint.txt",
+    "sha256": "fb5f2190e9b5880ec35477383b19c829ca9b73b00db76b3447a7cf1747d824b2"
+  }
+}

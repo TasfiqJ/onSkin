@@ -1,0 +1,1 @@
+PASS: deterministic derivative, unchanged installed native bytes, real pip mismatch refusal, metadata/launcher/wheel drift refusal; admission NONE.

@@ -1,0 +1,29 @@
+{
+  "name": "diagnostics",
+  "argv": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/security_readiness/m103",
+    "-p",
+    "test_diagnostics.py",
+    "-v"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:25:08.242297+00:00",
+  "finished": "2026-10-21T04:25:08.354501+00:00",
+  "exit": 0,
+  "log_sha256": "40eb1603caa20bf8cb7a8c82c8db618f710570a8fb7f05082ac42bfdec87cbda",
+  "bytes": 675,
+  "admission": "NONE",
+  "environment": {
+    "CI": "true",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1"
+  }
+}

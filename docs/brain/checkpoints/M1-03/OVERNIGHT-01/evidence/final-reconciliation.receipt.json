@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B /mnt/c/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/security_readiness/m103/reconcile.py --repo /mnt/c/Users/jasim/Desktop/onSkin --proof /mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-provider-7305/secret-scanner-evidence-39532208636/secret-scan-proof.json --sarif /mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-provider-7305/secret-scanner-evidence-39532208636/gitleaks-results.sarif --output /root/onskin-overnight01-final-reconciliation.json",
+  "working_directory": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code",
+  "environment": "Linux x86_64/Python3.12.3; local Git reads, no credential validation",
+  "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+  "source_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-reconciliation.txt",
+    "sha256": "b3788f33fb603bf36fc9887c4b8f83dad33e913691a52060280e34c32b3b6a0e"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "admission": "NONE",
+  "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+  "raw_count": 3,
+  "records": [
+    {
+      "id": "2b317dfec218d44e18d688d2ff00521ccdc3c0ec6efc5a8da650c10b7f288525",
+      "path": "scripts/security_readiness/m103/reconcile.py",
+      "git_blob": "d69576420d38f94b0eb0ac108b09da3294619724",
+      "content_sha256": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde",
+      "start": {
+        "col": 13,
+        "line": 12,
+        "offset": 574
+      },
+      "end": {
+        "col": 68,
+        "line": 12,
+        "offset": 629
+      },
+      "rule": "root.onskin-overnight01-source-final.python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+      "status": "UNREVIEWED_PROPOSAL",
+      "admission": "NONE",
+      "proposed_kind": "GIT_OBJECT_ID_COMPUTATION",
+      "proof": "git hash-object independently matches this exact committed blob; SHA256 retained separately",
+      "suppression_created": false
+    },
+    {
+      "id": "9a5aa2f7629fb2c7654c19f4439d4387a9eb6ce9fb1eaa5a2ebc3f392a79f6ed",
+      "path": "scripts/security_readiness/m103/sandbox.py",
+      "git_blob": "f48e4fe0187a5c1e5c484d291826fa63d79cb633",
+      "content_sha256": "fe2c5580115c7f4b791edc7f7a72851044c0677e464bc53c467a42d9ce508b15",
+      "start": {
+        "col": 20,
+        "line": 39,
+        "offset": 2260
+      },
+      "end": {
+        "col": 67,
+        "line": 39,
+        "offset": 2307
+      },
+      "rule": "root.onskin-overnight01-source-final.python.lang.security.audit.dangerous-os-exec-tainted-env-args.dangerous-os-exec-tainted-env-args",
+      "status": "UNREVIEWED_PROPOSAL",
+      "admission": "NONE",
+      "proposed_kind": "EXPLICIT_PRIVATE_SANDBOX_LAUNCH",
+      "proof": "candidate-lifecycle-tls-network demonstrates environment removal and inherited socket/listener denial; explicit local command launcher has no runtime/CI caller",
+      "suppression_created": false
+    },
+    {
+      "id": "fd1db645f3b4607ec59dae9ff90b8b6f8c34d6ddd1fa1d1c183f7fdd7dcd2a6e",
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "git_blob": "7e2e3531fd0ccc4219eaf8806879cdd60e3312f8",
+      "content_sha256": "522ee67accc650ec85d79bed1ae20494bbeeae15334ed4933ea2883f2a1e4dcd",
+      "start": {
+        "col": 28,
+        "line": 50,
+        "offset": 3353
+      },
+      "end": {
+        "col": 83,
+        "line": 50,
+        "offset": 3408
+      },
+      "rule": "root.onskin-overnight01-source-final.python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+      "status": "UNREVIEWED_PROPOSAL",
+      "admission": "NONE",
+      "proposed_kind": "GIT_OBJECT_ID_COMPUTATION",
+      "proof": "git hash-object independently matches this exact committed blob; SHA256 retained separately",
+      "suppression_created": false
+    }
+  ]
+}
