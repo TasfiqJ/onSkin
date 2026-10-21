@@ -1,5 +1,5 @@
 """Object-derived complete path inventory and exact-rule diagnostic execution."""
-import argparse, hashlib, json, pathlib, re, subprocess, sys
+import argparse, gzip, hashlib, json, pathlib, re, subprocess, sys
 from candidate import SHA, require, verify, write_json
 from integrity import regular, tree, MutationGuard
 from capsule import check_runtime
@@ -21,7 +21,7 @@ def validate_outcomes(value,source_commit,rule_pins):
         require(type(row['raw_exit']) is int or (row['raw_exit'] is None and row['status'].startswith(('BLOCKED','TIMEOUT'))),'UNTYPED_EXIT')
         if row.get('coverage_complete'):
             require(row['raw_exit']==0 and not row.get('errors') and not row.get('unscanned_targets') and
-                    row['status']=='EXECUTED' and not row.get('skipped_rules'), 'FALSE_COMPLETENESS')
+                    row['status']=='EXECUTED' and not row.get('skipped_rules') and not row.get('fixpoint_timeouts'), 'FALSE_COMPLETENESS')
     return value
 
 
@@ -157,6 +157,12 @@ def run(candidate,repo,commit,work,rules,rule_pins,expected_tool):
         # derivative with content hashes may be published after inspection.
         try:
             result=json.loads(raw);require(isinstance(result.get('results'),list) and isinstance(result.get('errors'),list),'TRUNCATED_REPORT')
+            # Preserve the entire ordered rule/file timing matrix once, without
+            # repeatedly expanding hundreds of MB of zero timings into summaries.
+            profile=work/(name+'.rule-file-profile.json.gz')
+            profile.write_bytes(gzip.compress(json.dumps(dict(source_commit=commit,bundle=name,
+                rule_sha256=digest,rules=result.get('time',{}).get('rules',[]),targets=result.get('time',{}).get('targets',[])),
+                sort_keys=True,separators=(',',':')).encode(),mtime=0))
             scanned=set(result.get('paths',{}).get('scanned',[]));scanned={x.removeprefix('./') for x in scanned}
             row.update(scanned_paths=sorted(scanned),unscanned_targets=sorted(applicable-scanned),
                 errors=[{k:v for k,v in e.items() if k in {'type','code','level','path','spans'}} for e in result['errors']],
@@ -166,9 +172,11 @@ def run(candidate,repo,commit,work,rules,rule_pins,expected_tool):
                 raw_finding_count=len(result['results']),raw_error_count=len(result['errors']),
                 skipped_rules=result.get('skipped_rules',[]),
                 profiled_rule_ids=result.get('time',{}).get('rules',[]),
-                rule_file_profile=result.get('time',{}).get('targets',[]),
+                rule_file_profile=dict(path=profile.name,sha256=SHA(regular(profile)),bytes=profile.stat().st_size),
+                fixpoint_timeouts=[{**{k:v for k,v in warning.items() if k in {'error_type','severity','location'}},
+                    'message_sha256':SHA(warning.get('message','').encode())} for warning in result.get('time',{}).get('fixpoint_timeouts',[])],
                 zero_timing_means='NO_POSITIVE_EXECUTION_PROOF; retain engine prefilter/language/path and error limits')
-            row['coverage_complete']=not row['unscanned_targets'] and not row['errors'] and row['raw_exit']==0 and not row['skipped_rules']
+            row['coverage_complete']=not row['unscanned_targets'] and not row['errors'] and row['raw_exit']==0 and not row['skipped_rules'] and not row['fixpoint_timeouts']
         except (ValueError,KeyError,TypeError):row.update(status='FAILED_OR_INVALID_REPORT',coverage_complete=False)
         row['command']=cmd;runs.append(row)
         write_json(work/'coverage.json',dict(admission='NONE',classification='NON_ADMITTING_UNREVIEWED',
@@ -183,7 +191,9 @@ def run(candidate,repo,commit,work,rules,rule_pins,expected_tool):
         if row['partition']=='PENDING':
             relevant=[r['bundle'] for r in runs if row['path'] in r.get('applicable_targets',targets)]
             covered=[r['bundle'] for r in runs if row['path'] in r.get('scanned_paths',[])]
-            failed=any(row['path'] in r.get('unscanned_targets',[]) or any(e.get('path','').removeprefix('./')==row['path'] or any(sp.get('file','').removeprefix('./')==row['path'] for sp in e.get('spans',[])) for e in r.get('errors',[])) for r in runs)
+            failed=any(row['path'] in r.get('unscanned_targets',[]) or
+                any(w.get('location',{}).get('path','').removeprefix('./')==row['path'] for w in r.get('fixpoint_timeouts',[])) or
+                any(e.get('path','').removeprefix('./')==row['path'] or any(sp.get('file','').removeprefix('./')==row['path'] for sp in e.get('spans',[])) for e in r.get('errors',[])) for r in runs)
             row.update(partition='SCANNED' if not failed and set(relevant)<=set(covered) else 'FAILED',
                        applicable_bundles=relevant,scanned_bundles=covered)
     write_json(work/'partition.json',inventory)

@@ -29,6 +29,7 @@ class CandidateTests(unittest.TestCase):
                        lambda v:v['runs'][0].update(unscanned_targets=['missing.py']),
                        lambda v:v['runs'][0].update(status='TIMEOUT',raw_exit=None),
                        lambda v:v['runs'][0].update(errors=[{'type':'ParseError'}]),
+                       lambda v:v['runs'][0].update(fixpoint_timeouts=[{'error_type':'Fixpoint timeout'}]),
                        lambda v:v['runs'][0].update(skipped_rules=['missing-rule'])]:
             value=copy.deepcopy(good);mutate(value)
             with self.assertRaises(ValueError):s.validate_outcomes(value,'b'*40,pins)

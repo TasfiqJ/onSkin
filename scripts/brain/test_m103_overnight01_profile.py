@@ -1,5 +1,5 @@
 """Real Git adverse controls. Synthetic evidence grants no acceptance."""
-import copy, pathlib, subprocess, unittest
+import copy, pathlib, shutil, subprocess, unittest
 import brain, m103_profile as p, test_brain
 import test_m1_report_cli as common
 
@@ -14,6 +14,13 @@ class Overnight(unittest.TestCase):
 
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
+        # This fixture measures only the historical OVERNIGHT-01 interval.
+        # The separately issued successor is exercised by its own test class.
+        for name in [p.SH_INPUT.rsplit('/',1)[0],p.SH_REVIEW,p.SH_ACTIVE]:
+            target=self.root/name
+            assert target.resolve().is_relative_to(self.root.resolve())
+            if target.is_dir():shutil.rmtree(target)
+            elif target.exists():target.unlink()
         (self.root/'docs/brain/current.json').write_bytes(brain.read(brain.ROOT,'docs/brain/current.json'))
         self.command('init','-q','-b',p.BRANCH)
         objects=pathlib.Path(brain.git(brain.ROOT,'rev-parse','--path-format=absolute','--git-common-dir'))/'objects'

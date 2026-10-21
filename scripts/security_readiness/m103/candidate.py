@@ -6,7 +6,7 @@ from integrity import regular, tree
 SHA = lambda data: hashlib.sha256(data).hexdigest()
 HERE = pathlib.Path(__file__).resolve().parent
 REPO = HERE.parents[2]
-INPUTS = REPO / 'docs/brain/checkpoints/M1-03/OVERNIGHT-01/inputs/BRAIN_STATE/CANDIDATE_TOOL_INPUTS.json'
+INPUTS = REPO / 'docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json'
 PINS = REPO / 'scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt'
 
 
@@ -167,6 +167,8 @@ def prepare(root,cache=None):
         matches=[r for r in meta['urls'] if r['digests']['sha256']==digest and r['filename'].endswith('.whl')]
         require(len(matches)==1, 'EXACT_OFFICIAL_WHEEL_UNAVAILABLE:'+name)
         item=matches[0]
+        require(pathlib.PurePosixPath(item['filename']).name==item['filename'] and
+                not any(c in item['filename'] for c in '\\:\0'), 'WHEEL_FILENAME')
         data=regular(cache/('originals' if name=='semgrep' else 'wheelhouse')/item['filename']) if cache else official(item['url'])
         require(SHA(data)==digest and len(data)==item['size'], 'UPSTREAM_WHEEL_DRIFT:'+name)
         if name in overrides: require(len(data)==overrides[name]['wheel_bytes'], 'UPSTREAM_WHEEL_SIZE')
