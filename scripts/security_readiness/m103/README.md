@@ -33,6 +33,11 @@ no new sandbox change has been justified. The sealed capsule remains private.
 commit/blob bytes and exports a private Git pack for isolated Linux import.
 Missing reachable objects can be read from an explicitly selected authorized
 local Git repository, rehashed and imported without changing any source ref.
+SC03 enumerates that authentic source before witness verification, including
+missing commit/tree descendants. Offline verification retains
+`GIT_NO_LAZY_FETCH=1`; blob SHA1/SHA256, endpoint types, full reachability and a
+fresh independent pack import must agree. `test_cloud_history_custody.py` uses
+the real issued history and deliberately incomplete/corrupt private pools.
 `history_custody.py` gives synthetic governance tests their own copied Git object
 pool and exact historical documents; successor issuances cannot contaminate
 an older interval. Missing objects always fail instead of becoming substitutes.

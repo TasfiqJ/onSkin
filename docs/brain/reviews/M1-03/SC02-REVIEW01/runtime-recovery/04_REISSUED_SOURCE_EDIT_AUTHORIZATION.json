@@ -1,0 +1,149 @@
+{
+  "allowed_new_paths": [
+    "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/** (new files only)",
+    "docs/brain/reviews/M1-03/SC02-REVIEW01/** (new immutable Brain-issued context only)",
+    "docs/brain/m103-source-closure03-active.json",
+    "scripts/brain/test_m103_source_closure03_profile.py",
+    "scripts/security_readiness/m103/test_cloud_history_*.py (new files only)"
+  ],
+  "authority": {
+    "accepted_tasks": [
+      "M0-01",
+      "M0-02",
+      "M1-01",
+      "M1-02"
+    ],
+    "active_writers": 1,
+    "host": "CODEX_CLOUD_ONLY",
+    "incremental_external_spend_usd": 0,
+    "main_promotion_authorized": false,
+    "no_paid_credit_purchase": true,
+    "no_phi": true,
+    "protected_source_go": false,
+    "security_proposal_expired_utc": "2026-10-21T00:00:00Z",
+    "source_only_non_admitting": true
+  },
+  "authorization_id": "M103-SC03-CLOUD-RUNTIME-RECOVERY-01",
+  "base_commit": "aa598d0c93fcc416ba02cbda9333953430bb2ede",
+  "base_tree": "6dd2010073d913ca400c201f6d58ed1212fa97d4",
+  "branch": "stage/m1-retained-safety",
+  "derived_existing_preimages": [
+    {
+      "git_blob_sha1": "54076386201e72ca6565d444108453b709696598",
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "sha256": "b80d83c31b1c37dc669a5498a7aed8307ee106b2608b8b1f904e2439866ec0df"
+    },
+    {
+      "git_blob_sha1": "10400d21172f7ba65c420e2ec0387693fca142b4",
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "sha256": "3bf6005551adc6884b05fea6a1f4c0f63124484a6c8f2d96b190b3164f3f71f7"
+    }
+  ],
+  "derived_only_condition": "Regenerate from unchanged generator, strictly when source-worklist check proves necessary; never hand-edit these two",
+  "forbidden_globs": [
+    "**/package.json",
+    "**/package-lock.json",
+    "package-lock.json",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock",
+    "**/.env*",
+    "**/credentials*",
+    "**/secrets*"
+  ],
+  "forbidden_prefixes": [
+    ".github/",
+    "supabase/",
+    "packages/types/",
+    "apps/mobile/",
+    "scripts/phase2/",
+    "scripts/phase9/security_acceptance/",
+    "docs/phase-9/",
+    "docs/brain/state/",
+    "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/",
+    "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/",
+    "docs/brain/reviews/M1-03/SH01-REVIEW01/",
+    "docs/brain/reviews/M1-03/SC01-REVIEW01/"
+  ],
+  "iteration": "SOURCE-CLOSURE-03",
+  "limits": {
+    ".gitattributes": "Additive freeze ONLY for new immutable SC03 input/review path; no override or weakening prior attributes",
+    "ONSKIN_BRAIN_HANDOFF.txt": "New accurate factual handoff with distinct commit/tree and axes; no acceptance claim",
+    "scripts/brain/m103_profile.py": "Additive SC03 profile; keep previous exact intervals disjoint, test unchanged historical refusals",
+    "scripts/brain/test_m103_cont01_profile.py": "Fix real historical copied fixture only if reproducibly necessary; no guards weakened",
+    "scripts/brain/test_m103_overnight01_profile.py": "Actual preimage is SHA256 9aee4fe9...; repair demonstrated historical context fixture only",
+    "scripts/brain/test_m103_security_harden01_profile.py": "Fix real historical copied fixture only if reproducibly necessary; no guards weakened",
+    "scripts/brain/test_m103_source_closure01_profile.py": "Do not weaken negative assertions or edit earlier delivery/evidence",
+    "scripts/security_readiness/m103/README.md": "Documentation of source-only diagnostics and exact no-admission limits",
+    "scripts/security_readiness/m103/history_custody.py": "Only authentic private no-hardlink/no-live-alternate historical Git fixture equivalence",
+    "scripts/security_readiness/m103/hydrate_history.py": "Real object acquisition-before-verification, exact cryptographic identity, completeness, no live git ref mutation"
+  },
+  "main_observed": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "mode": "CODEX_CLOUD_ONLY",
+  "preimages": [
+    {
+      "git_blob_sha1": "8977a37f9c6433abafe2471011cb7558d0b9a8c1",
+      "path": ".gitattributes",
+      "sha256": "e7cd8ec059be81997d8a55efa7ee5f5d22cdef79cb9df27cb3e12e7d71132cb1"
+    },
+    {
+      "git_blob_sha1": "9eda4311c3531a9048d48228380642aa0b62b9da",
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "efa3907d517c45386d7febb4adbbf98ca5d9a56ea2342d14a8b323b16812eb39"
+    },
+    {
+      "git_blob_sha1": "2bd25c668020562cf86e63b9149a949f6d05d190",
+      "path": "scripts/brain/m103_profile.py",
+      "sha256": "7b18bc06a9ac6daf4c9521703093e58e9c443c588117fb1f48d0e48cc4b4e2ce"
+    },
+    {
+      "git_blob_sha1": "f0c77180ca734db4be97afd7e7aaa6f000348804",
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "sha256": "ee9b0024d77535f0f482a7e8b8c6ac2f71bbf381d6947f51b7ed8579a0aeb109"
+    },
+    {
+      "git_blob_sha1": "95602ee0d8b1a71a6dfdfbe51854eee2ad4cf164",
+      "path": "scripts/brain/test_m103_overnight01_profile.py",
+      "sha256": "9aee4fe96c474edbc58fb3e63d48912b5eb6bc7718da51cdb4cf31f36fc3c46e"
+    },
+    {
+      "git_blob_sha1": "6f93ea9a1cb9bfe54e16265255eb8ed61452b051",
+      "path": "scripts/brain/test_m103_security_harden01_profile.py",
+      "sha256": "40c4f54b5c3145ba8187792c8ba9f8c27e79a73da19d475ed58e56fc6f7ef338"
+    },
+    {
+      "git_blob_sha1": "882638b973ca23425aa4702d781e1df7e0d4ad49",
+      "path": "scripts/brain/test_m103_source_closure01_profile.py",
+      "sha256": "547ded6bcfed8ecbad39dce3d77dd076ad5bd40cf8c6b03e7569956be6e75129"
+    },
+    {
+      "git_blob_sha1": "280f731be0c54f822b192dca5d1556dfc86738b3",
+      "path": "scripts/security_readiness/m103/README.md",
+      "sha256": "19a757c481dfba38b5fa1b48ee7817459aee37a056d316bd4882a2bc4404e61f"
+    },
+    {
+      "git_blob_sha1": "841528a08a696d8405db4e1fa2b67643c606e9bf",
+      "path": "scripts/security_readiness/m103/history_custody.py",
+      "sha256": "d64adaae00fd9a429946cf88eee223afcf20f5cc39fd863f0a4108985e4087b7"
+    },
+    {
+      "git_blob_sha1": "f9e7e466478db0f03a2c274a7ab3017dded84fe6",
+      "path": "scripts/security_readiness/m103/hydrate_history.py",
+      "sha256": "ad1962415ad9234405407510ec66803a08347816303c49d02b5ba6586e2f6473"
+    }
+  ],
+  "prior_completed_issuance": "SOURCE-CLOSURE-02 host-stop on aa598d0c (immutable, not reopened)",
+  "reissue": {
+    "admission": "NONE",
+    "allowed_path_scope": "Identical to original SC03 04_SOURCE_EDIT_AUTHORIZATION.json; reissue adds no source path",
+    "cumulative_permissions": false,
+    "immutable_old_inputs": "All previous SOURCE-CLOSURE-01/02 and SC03 original context/review bytes remain immutable",
+    "issuer": "New independent Brain",
+    "new_interpretation": "Native-runtime failure blocks sealed scanner K04/K05, but NOT independent historic Git custody/governance K02/K03 work, unless a separate global safety/authority gate blocks",
+    "new_permission": "Cloud-task-local supported runtime selection and official distro package manager installation of exactly required native libraries; never edit original scanner source/pins/capsule; no paid spend",
+    "reason": "Exact same stage source after native Tcl/Tk9/CasADi ambient-runtime closure stop; original Codex Cloud task no code edits",
+    "supersedes_prior_source_edit_authorization_for_this_turn": "M103-SOURCE-CLOSURE03-CLOUD-SOURCE-EDIT-01"
+  },
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

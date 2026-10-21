@@ -26,12 +26,6 @@ def hydrate(repo, pack, receipt, importing=False, object_source=None):
         if key in references:
             assert references[key] == expected, 'Conflicting historical witness'
         references[key] = expected
-    verified = []
-    for key, (oid, sha) in sorted(references.items()):
-        raw = git('cat-file', 'blob', key)
-        assert hashlib.sha256(raw).hexdigest() == sha, 'Historical SHA256 disagreement: ' + key
-        assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest() == oid, 'Historical blob disagreement: ' + key
-        verified.append(dict(reference=key, git_blob=oid, sha256=sha, bytes=len(raw)))
     # Include original governance endpoints and original current-scan fixture,
     # plus full reachable history so referenced secondary files remain real.
     sys.path.insert(0, str(repo/'scripts/brain'))
@@ -43,27 +37,46 @@ def hydrate(repo, pack, receipt, importing=False, object_source=None):
     commits.add(git('rev-parse', 'HEAD').decode().strip())
     acquired=[]
     if object_source is not None:
-        reachable=git('rev-list','--objects','--missing=print',*sorted(commits)).decode().splitlines()
-        for missing in sorted(line[1:] for line in reachable if line.startswith('?')):
-            source_command=['git','-C',str(object_source)]
+        source_command=['git','-C',str(object_source)]
+        # Enumerate the authentic source, not the incomplete destination: a
+        # missing commit/tree can hide further required objects from rev-list.
+        reachable=subprocess.check_output(source_command+[
+            'rev-list','--objects','--no-object-names',*sorted(commits)],env=env)
+        present=git('cat-file','--batch-check',input=reachable).decode().splitlines()
+        for missing in sorted(line.split()[0] for line in present if line.endswith(' missing')):
             kind=subprocess.check_output(source_command+['cat-file','-t',missing],env=env).decode().strip()
+            assert kind in {'commit','tree','blob','tag'}, 'Historical object type refused'
             raw=subprocess.check_output(source_command+['cat-file',kind,missing],env=env)
             assert hashlib.sha1(kind.encode()+b' '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==missing
             actual=git('hash-object','-w','-t',kind,'--stdin',input=raw).decode().strip()
             assert actual==missing
             acquired.append(dict(oid=missing,kind=kind,sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw),
                                  provenance='authorized local Git source',required_by_endpoints=sorted(commits)))
+    verified = []
+    for key, (oid, sha) in sorted(references.items()):
+        assert git('cat-file', '-t', key).strip() == b'blob', 'Historical witness is not a blob: ' + key
+        raw = git('cat-file', 'blob', key)
+        assert hashlib.sha256(raw).hexdigest() == sha, 'Historical SHA256 disagreement: ' + key
+        assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest() == oid, 'Historical blob disagreement: ' + key
+        verified.append(dict(reference=key, git_blob=oid, sha256=sha, bytes=len(raw)))
+    # No lazy fetch, missing descendants, or substituted endpoint types.
+    reachable=git('rev-list','--objects','--missing=print',*sorted(commits)).decode().splitlines()
+    assert not any(line.startswith('?') for line in reachable), 'Incomplete historical object closure'
+    for commit in commits:
+        assert git('cat-file','-t',commit).strip()==b'commit', 'Historical endpoint is not a commit'
     identities = [dict(commit=c, tree=git('rev-parse', c+'^{tree}').decode().strip()) for c in sorted(commits)]
     if not importing:
         assert not pack.exists(), 'New private export required'
         with pack.open('xb') as output:
             subprocess.run(['git', '-C', str(repo), 'pack-objects', '--stdout', '--revs'],
                            input=('\n'.join(sorted(commits))+'\n').encode(), stdout=output, env=env, check=True)
+    with pack.open('rb') as stream:
+        pack_sha256=hashlib.file_digest(stream, 'sha256').hexdigest()
     value = dict(schema_version=1, kind='LOCAL_GIT_OBJECT_CUSTODY', admission='NONE',
                  observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(), operation='IMPORT' if importing else 'EXPORT',
                  network='NO_LAZY_FETCH; local Git only', source_commit=git('rev-parse','HEAD').decode().strip(),
                  source_tree=git('rev-parse','HEAD^{tree}').decode().strip(),
-                 pack_sha256=hashlib.file_digest(pack.open('rb'), 'sha256').hexdigest() if hasattr(hashlib,'file_digest') else hashlib.sha256(pack.read_bytes()).hexdigest(),
+                 pack_sha256=pack_sha256,
                  pack_bytes=pack.stat().st_size, witnesses=len(witnesses), references=verified, endpoints=identities,
                  acquired_objects=acquired)
     receipt.write_bytes((json.dumps(value,indent=2)+'\n').encode())

@@ -58,6 +58,8 @@ def _validate_initial(root):
 
 
 def validate(root):
+    if (root / SC03_ACTIVE).exists():
+        return validate_source_closure03(root)
     if (root / SC_ACTIVE).exists():
         return validate_source_closure01(root)
     if (root / SH_ACTIVE).exists():
@@ -68,6 +70,15 @@ def validate(root):
 
 
 def report(root, name):
+    if name.startswith(SC03_INPUT.rsplit('/',1)[0]+'/'):
+        value=m1_profile.report(root,name,task='M1-03',base=SC03_BASE,
+            validator=validate_source_closure03,checkpoint=SC03_INPUT.rsplit('/',1)[0]+'/',
+            continuation_bindings={'SOURCE-CLOSURE-03':(SC03_INPUT,SC03_BASE)})
+        brain.require(value['schema_version']==3 and value['iteration']=='SOURCE-CLOSURE-03','Wrong SC03 report iteration')
+        brain.identities(value['scope_matrix'],SC03_SCOPE)
+        brain.require(bool(value['executions']),'SC03 requires actual executions')
+        committed_artifacts(root,value['artifacts'])
+        return value
     if name.startswith(SC_INPUT.rsplit('/',1)[0]+'/'):
         value=m1_profile.report(root,name,task='M1-03',base=SC_BASE,
             validator=validate_source_closure01,checkpoint=SC_INPUT.rsplit('/',1)[0]+'/',
@@ -343,7 +354,7 @@ SC_VERSION='brain-m1-03-sh01-review01-source-closure01-issued-16'
 SC_SCOPE=['C1','C2','C3','C4','C5','C6','C7']
 
 
-def validate_source_closure01(root):
+def validate_source_closure01(root, *, fixed=False):
     import pathlib, subprocess
     validate_security_harden01(root,fixed=True)
     brain.git_snapshot(root,dict(commit=SC_BASE,tree=SC_TREE),'source closure reviewed base')
@@ -377,8 +388,9 @@ def validate_source_closure01(root):
     existing={r['path']:r['sha256'] for r in authority['preimages']}
     new_exact={SC_ACTIVE,'scripts/brain/test_m103_source_closure01_profile.py'}
     prefixes=[SC_REVIEW+'/',SC_INPUT.rsplit('/',1)[0]+'/']
-    changes=brain.git(root,'diff','--name-only',SC_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
-    for commit in brain.git(root,'rev-list',SC_BASE+'..HEAD').splitlines():
+    endpoint='3600db9b5812acebd718111b6bf58efcb554487d' if fixed else 'HEAD'
+    changes=brain.git(root,'diff','--name-only',SC_BASE,endpoint).splitlines() if fixed else brain.git(root,'diff','--name-only',SC_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',SC_BASE+'..'+endpoint).splitlines():
         changes+=brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
     for path in set(changes):
         prior=subprocess.run(['git','-C',str(root),'show',SC_BASE+':'+path],capture_output=True)
@@ -390,4 +402,64 @@ def validate_source_closure01(root):
             candidate=path.startswith('scripts/security_readiness/m103/') and pathlib.PurePosixPath(path).suffix in {'.py','.mjs','.md'}
             brain.require(prior.returncode!=0 and (path in new_exact or candidate or any(path.startswith(p) for p in prefixes)),
                           'Source closure path outside exact authorization: '+path)
+    return current
+
+
+# The reissued grant begins at the exact SC02 delivery; no old grant expands.
+SC03_INPUT='docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/inputs'
+SC03_REVIEW='docs/brain/reviews/M1-03/SC02-REVIEW01'
+SC03_ACTIVE='docs/brain/m103-source-closure03-active.json'
+SC03_BASE='aa598d0c93fcc416ba02cbda9333953430bb2ede'
+SC03_TREE='6dd2010073d913ca400c201f6d58ed1212fa97d4'
+SC03_DIGEST='c86be8cb7055c5784b8739531cab897508708e61a23dc094a7b63262456e0a46'
+SC03_SCOPE=['K01','K02','K03','K04','K05','K06','K07']
+
+
+def validate_source_closure03(root):
+    import fnmatch, subprocess
+    validate_source_closure01(root,fixed=True)
+    brain.git_snapshot(root,dict(commit=SC03_BASE,tree=SC03_TREE),'SC03 exact reviewed base')
+    packet=SC03_INPUT+'/runtime-recovery'
+    raw=brain.read(root,packet+'/PACKET_MANIFEST.json')
+    brain.require(brain.digest(raw)==SC03_DIGEST,'SC03 independent manifest differs')
+    manifest=brain.decode(raw)
+    for row in manifest['files']+[dict(path='PACKET_MANIFEST.json',bytes=len(raw),sha256=SC03_DIGEST)]:
+        blob=brain.read(root,packet+'/'+row['path'])
+        brain.require(len(blob)==row['bytes'] and brain.digest(blob)==row['sha256'],'SC03 immutable packet differs')
+        brain.require(blob==brain.read(root,SC03_REVIEW+'/runtime-recovery/'+row['path']),'SC03 immutable review differs')
+    original=SC03_INPUT+'/original-context'
+    raw=brain.read(root,original+'/TASK_MANIFEST.json')
+    brain.require(brain.digest(raw)=='215d1176e5f3c6f15f514119339e2f786e953546be35d041e7c53c220ddbfc2f','SC03 original context differs')
+    for row in brain.decode(raw)['files']:
+        blob=brain.read(root,original+'/'+row['path'])
+        brain.require(len(blob)==row['bytes'] and brain.digest(blob)==row['sha256'],'SC03 original input differs')
+    authority=brain.load(root,packet+'/04_REISSUED_SOURCE_EDIT_AUTHORIZATION.json')
+    expected=dict(schema_version=1,task_id='M1-03',iteration='SOURCE-CLOSURE-03',branch=BRANCH,
+        base_commit=SC03_BASE,base_tree=SC03_TREE,input_manifest_sha256=SC03_DIGEST,
+        authorization_id='M103-SC03-CLOUD-RUNTIME-RECOVERY-01',accepted_tasks=['M0-01','M0-02','M1-01','M1-02'],
+        protected_source_go=False,main_promotion_authorized=False,active_writers=1,incremental_spend_usd=0,
+        next_task=None,research_requests=[],proposal_expires_utc='2026-10-21T00:00:00Z')
+    current=brain.load(root,SC03_ACTIVE)
+    brain.require(set(current)==set(expected)|{'submission_status'} and
+        all(type(current[k]) is type(v) and current[k]==v for k,v in expected.items()),'SC03 unissued authority')
+    brain.require(current['submission_status'] in ['IN_PROGRESS','PARTIAL','BLOCKED','SUBMITTED_REVIEW_REQUIRED'],'SC03 cannot self-accept')
+    brain.require(brain.git(root,'branch','--show-current')==BRANCH,'Wrong SC03 branch')
+    brain.ancestor(root,SC03_BASE,brain.git(root,'rev-parse','HEAD'),'SC03 base -> head')
+    existing={row['path']:row for row in authority['preimages']+authority['derived_existing_preimages']}
+    new=[path.split(' (',1)[0] for path in authority['allowed_new_paths']]
+    changes=brain.git(root,'diff','--name-only',SC03_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',SC03_BASE+'..HEAD').splitlines():
+        changes+=brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
+        brain.require(not brain.git(root,'diff-tree','--diff-filter=D','--no-commit-id','--name-only','-r',commit),'SC03 deletion refused')
+    for path in set(changes):
+        prior=subprocess.run(['git','-C',str(root),'show',SC03_BASE+':'+path],capture_output=True)
+        if path in existing:
+            row=existing[path]
+            brain.require(prior.returncode==0 and brain.digest(prior.stdout)==row['sha256'] and
+                brain.git(root,'rev-parse',SC03_BASE+':'+path)==row['git_blob_sha1'],'SC03 preimage mismatch: '+path)
+            if path=='.gitattributes':
+                brain.require(brain.read(root,path)==prior.stdout+b'\n# Immutable SC03 recovery Brain input.\n'+(SC03_REVIEW+'/** -text\n').encode(),'SC03 attributes must be additive exact freeze')
+        else:
+            brain.require(prior.returncode!=0 and any(fnmatch.fnmatchcase(path,pattern) for pattern in new),'SC03 path outside exact authorization: '+path)
+        brain.safe_file(root,path)
     return current

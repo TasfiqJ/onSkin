@@ -1,7 +1,9 @@
 """Real Git adverse controls. Synthetic evidence grants no acceptance."""
-import copy, pathlib, shutil, subprocess, unittest
+import copy, pathlib, shutil, subprocess, sys, unittest
 import brain, m103_profile as p, test_brain
 import test_m1_report_cli as common
+sys.path.insert(0, str(brain.ROOT/'scripts/security_readiness/m103'))
+from history_custody import fixture_history
 
 
 class Overnight(unittest.TestCase):
@@ -14,24 +16,14 @@ class Overnight(unittest.TestCase):
 
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
-        # This fixture measures only the historical OVERNIGHT-01 interval.
-        # The separately issued successor is exercised by its own test class.
-        for name in [p.SH_INPUT.rsplit('/',1)[0],p.SH_REVIEW,p.SH_ACTIVE]:
-            target=self.root/name
-            assert target.resolve().is_relative_to(self.root.resolve())
-            if target.is_dir():shutil.rmtree(target)
-            elif target.exists():target.unlink()
-        (self.root/'docs/brain/current.json').write_bytes(brain.read(brain.ROOT,'docs/brain/current.json'))
         self.command('init','-q','-b',p.BRANCH)
-        objects=pathlib.Path(brain.git(brain.ROOT,'rev-parse','--path-format=absolute','--git-common-dir'))/'objects'
-        alt=self.root/'.git/objects/info/alternates';alt.parent.mkdir(parents=True,exist_ok=True);alt.write_bytes((objects.as_posix()+'\n').encode())
-        self.command('update-ref','HEAD',p.ON_BASE);self.command('read-tree',p.ON_BASE)
+        # Exact final OVERNIGHT docs, before the hardening successor issuance.
+        fixture_history(self.root, brain.ROOT, p.SH_BASE)
         names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
         subprocess.run(['git','-C',str(self.root),'update-index','--skip-worktree','-z','--stdin'],input=names,check=True)
         indexed=set(names.decode().strip('\0').split('\0'))
         present=[f.relative_to(self.root).as_posix() for f in (self.root/'docs').rglob('*') if f.is_file() and f.relative_to(self.root).as_posix() in indexed]
         subprocess.run(['git','-C',str(self.root),'update-index','--no-skip-worktree','-z','--stdin'],input=('\0'.join(present)+'\0').encode(),check=True)
-        self.commit()
         self.measured=dict(commit=brain.git(self.root,'rev-parse','HEAD'),tree=brain.git(self.root,'rev-parse','HEAD^{tree}'))
         self.value=dict(schema_version=3,task_id='M1-03',iteration='OVERNIGHT-01',branch=p.BRANCH,
             status='SUBMITTED_REVIEW_REQUIRED',measured=self.measured,delivery_ref='refs/heads/'+p.BRANCH,

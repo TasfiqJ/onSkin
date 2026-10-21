@@ -1,0 +1,64 @@
+{
+  "authorization_id": "M103-SC03-CLOUD-RUNTIME-RECOVERY-01",
+  "expected_stage_commit": "aa598d0c93fcc416ba02cbda9333953430bb2ede",
+  "expected_stage_tree": "6dd2010073d913ca400c201f6d58ed1212fa97d4",
+  "files": [
+    {
+      "bytes": 2503,
+      "path": "00_START_HERE.md",
+      "sha256": "1dd15c554aff122b5e99ab27582abad19989fa5e584eab20ff352c0c90ca1a76"
+    },
+    {
+      "bytes": 2977,
+      "path": "01_BRAIN_AUDIT_AND_PRIORITIES.md",
+      "sha256": "7541a81ac227729ca13595a80caf5434e5d572873326d8b696ac0308f3d3eac5"
+    },
+    {
+      "bytes": 4161,
+      "path": "02_NATIVE_RUNTIME_PLAYBOOK.md",
+      "sha256": "c9404ebcece71a6e6f305fc7c3a765d404097dd204253ac0a8402dcd97642bda"
+    },
+    {
+      "bytes": 3863,
+      "path": "03_GOVERNANCE_AND_DELIVERY.md",
+      "sha256": "dc7ef98b7dd2695ee5c930a5b2a0eff276cf9902b12d55bebe6a54072f01d41e"
+    },
+    {
+      "bytes": 7295,
+      "path": "04_REISSUED_SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "212775a5bb830b6ce65d396cc2e0601383552a02ec2ea6735115c00943171e80"
+    },
+    {
+      "bytes": 2498,
+      "path": "05_SAFETY_AND_ACCEPTANCE.md",
+      "sha256": "85bafe99afedb613156f86cfaac71435b26562f35b5f8b60607b69ddb19cb6d7"
+    },
+    {
+      "bytes": 2091,
+      "path": "06_EXACT_SOURCE_AND_CURRENT_OBSERVATION.md",
+      "sha256": "701d70de26d0527ed2a2f576e230a3042a23c82074f332ac39de772312e02929"
+    },
+    {
+      "bytes": 20172,
+      "path": "PRIOR/CLOUD_CONTEXT.zip",
+      "sha256": "b7b3c67fd52d2440606e3c4e14097708ace002460dce95bf135a65dead4e3565"
+    },
+    {
+      "bytes": 6302,
+      "path": "PRIOR/EXACT_CODEX_CLOUD_PROMPT.md",
+      "sha256": "7e14de6f5f5d23f07c3b5cc33a3265277353966a88d5d8108f690d5a22d39cd0"
+    },
+    {
+      "bytes": 2063,
+      "path": "verify_packet.py",
+      "sha256": "8e29e505befb440abe52651efb56ec24c2893122030dd5683cf14de55fff8f0d"
+    }
+  ],
+  "iteration": "SOURCE-CLOSURE-03",
+  "kind": "BRAIN_CLOUD_RUNTIME_RECOVERY_PACKET",
+  "prior_cloud_context_manifest_sha256": "215d1176e5f3c6f15f514119339e2f786e953546be35d041e7c53c220ddbfc2f",
+  "prior_cloud_context_sha256": "b7b3c67fd52d2440606e3c4e14097708ace002460dce95bf135a65dead4e3565",
+  "prior_cloud_prompt_sha256": "7e14de6f5f5d23f07c3b5cc33a3265277353966a88d5d8108f690d5a22d39cd0",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

@@ -24,7 +24,7 @@ class SourceClosure(unittest.TestCase):
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
         self.command('init','-q','-b',p.BRANCH)
-        self.objects=fixture_history(self.root,brain.ROOT,brain.git(brain.ROOT,'rev-parse','HEAD'))
+        self.objects=fixture_history(self.root,brain.ROOT,'3600db9b5812acebd718111b6bf58efcb554487d')
         names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
         subprocess.run(['git','-C',str(self.root),'update-index','--skip-worktree','-z','--stdin'],input=names,check=True)
         indexed=set(names.decode().strip('\0').split('\0'))
