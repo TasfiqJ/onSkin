@@ -1,0 +1,8 @@
+test_exact_packet_report_and_false_authority_refusals (test_m103_source_closure03_profile.CloudSourceClosure.test_exact_packet_report_and_false_authority_refusals) ... ok
+test_old_intervals_and_intermediate_unauthorized_commits_refuse (test_m103_source_closure03_profile.CloudSourceClosure.test_old_intervals_and_intermediate_unauthorized_commits_refuse) ... ok
+test_protected_source_and_unmeasured_allowed_source_refuse (test_m103_source_closure03_profile.CloudSourceClosure.test_protected_source_and_unmeasured_allowed_source_refuse) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 96.783s
+
+OK

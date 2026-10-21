@@ -1,0 +1,39 @@
+test_bound_report_authority_immutable_inputs_and_ref (test_m103_source_closure01_profile.SourceClosure.test_bound_report_authority_immutable_inputs_and_ref) ... ok
+test_intermediate_out_of_scope_and_old_interval_refuse (test_m103_source_closure01_profile.SourceClosure.test_intermediate_out_of_scope_and_old_interval_refuse) ... ok
+test_unmeasured_source_and_mismatched_preimage_refuse (test_m103_source_closure01_profile.SourceClosure.test_unmeasured_source_and_mismatched_preimage_refuse) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 101.629s
+
+OK
+test_anchors_authority_types_and_separate_intervals (test_m103_overnight01_profile.Overnight.test_anchors_authority_types_and_separate_intervals) ... FAIL
+test_committed_regular_artifacts_and_identical_local_only_refusal (test_m103_overnight01_profile.Overnight.test_committed_regular_artifacts_and_identical_local_only_refusal) ... FAIL
+
+======================================================================
+FAIL: test_anchors_authority_types_and_separate_intervals (test_m103_overnight01_profile.Overnight.test_anchors_authority_types_and_separate_intervals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/onSkin/scripts/brain/test_m103_overnight01_profile.py", line 27, in setUp
+    self.commit()
+  File "/workspace/onSkin/scripts/brain/test_m1_report_cli.py", line 50, in commit
+    self.command('-c', 'user.name=Synthetic Fixture', '-c', 'user.email=fixture@example.invalid',
+  File "/workspace/onSkin/scripts/brain/test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 1 != 0 : 
+
+======================================================================
+FAIL: test_committed_regular_artifacts_and_identical_local_only_refusal (test_m103_overnight01_profile.Overnight.test_committed_regular_artifacts_and_identical_local_only_refusal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/onSkin/scripts/brain/test_m103_overnight01_profile.py", line 27, in setUp
+    self.commit()
+  File "/workspace/onSkin/scripts/brain/test_m1_report_cli.py", line 50, in commit
+    self.command('-c', 'user.name=Synthetic Fixture', '-c', 'user.email=fixture@example.invalid',
+  File "/workspace/onSkin/scripts/brain/test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 1 != 0 : 
+
+----------------------------------------------------------------------
+Ran 2 tests in 19.425s
+
+FAILED (failures=2)
