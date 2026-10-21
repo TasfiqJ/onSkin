@@ -21,10 +21,6 @@ class M103Continuation(unittest.TestCase):
                 assert target.resolve().is_relative_to(self.root.resolve())
                 shutil.rmtree(target)
         (self.root/p.ON_ACTIVE).unlink(missing_ok=True)
-        for name in ['docs/phase-9/ios-sdk-package-mapping.json',
-                     'docs/phase-9/generated/ios-privacy-source-audit.json',
-                     'docs/phase-9/generated/ios-privacy-source-audit.md']:
-            (self.root/name).write_bytes(subprocess.check_output(['git','-C',str(brain.ROOT),'show',p.ON_BASE+':'+name]))
         (self.root/'docs/brain/current.json').write_bytes(brain.read(brain.ROOT,'docs/brain/current.json'))
         self.command('init','-q','-b',p.BRANCH)
         objects = pathlib.Path(brain.git(brain.ROOT,'rev-parse','--path-format=absolute','--git-common-dir'))/'objects'
