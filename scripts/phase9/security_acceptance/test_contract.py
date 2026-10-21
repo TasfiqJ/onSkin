@@ -263,7 +263,7 @@ class ContractTests(unittest.TestCase):
   write('static/osv-scan.exit-code',str(fresh['osv']['exit']).encode()+b'\n')
   write('static/osv-scan.json',fresh['osv']['report'])
   write('secret/gitleaks-tool.json',{'version':'8.24.3','sha256':self.policy['toolBytes']['gitleaks'][0],'exit':0})
-  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
+  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report']]
   write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'v8.0.0'}},'results':findings}]})
   # New original-secret diagnostic fixture only. Actual source/ref validation is
   # exercised against >30 real Git commits in test_secret_scan, never mocked there.
@@ -323,7 +323,7 @@ class ContractTests(unittest.TestCase):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
   result=w.original_jobs(root,needs,commit,run_id,fresh)
   self.assertEqual(result['sourceCommit'],commit);self.assertEqual(result['runId'],run_id)
-  self.assertEqual(result['eventRangeHistoricalFindings'],2);self.assertEqual(set(result['files']),w.LEGACY_FILES|w.SECRET_FILES)
+  self.assertEqual(result['eventRangeHistoricalFindings'],len(fresh['gitleaks']['report']));self.assertEqual(set(result['files']),w.LEGACY_FILES|w.SECRET_FILES)
   self.assertNotIn('acceptanceGranted',result);self.assertNotIn('signature',result)
  def test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()

@@ -1,0 +1,4 @@
+# Exact delivery CI
+At `c14a3105640034a9d7a47d34533f9bd40faa4cc4`, Quality 39517479330 **completed/success**, including canonical DB 118953136136, repository gates, PG15/17 and both Expo exports. Provider completion2026-10-21T00:35:43Z supersedes the earlier pending observation.
+Security 39517479326 **failed**; original code/static/secret/acceptance logs were independently read. Secret job success has a proven30-commit Gitleaks cutoff/56 omitted later commits and TruffleHoglatest3.99.3 vs collector3.99.2 mismatch. This is neither a leak claim nor complete-source acceptance. iOS 39517479335 passes **source-only**. The exact merge-test checkout tree equals delivered tree; PR9 is not merged.
+Raw scanner failures and missing SAST remain failures/absence. Original expiry 2026-10-21T00:00:00Z is unchanged and expired. No source GO or owner-pin update. Full IDs and qualified observations are in CI_OBSERVATIONS.json.

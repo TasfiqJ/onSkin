@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "claim_origin": "BRAIN_INDEPENDENT_EXECUTIONS_AND_CUSTODY_CHECKS",
+  "record_type": "Exact machine receipts transferred from the external Windows audit directory; direct CI observations are separate CI_OBSERVATIONS.json",
+  "observed_at_utc": "2026-10-21T00:39:50.362703+00:00",
+  "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "external_audit_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M103-20261021T002726Z",
+  "source_runs": [
+    {
+      "case": "root",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/s",
+        "/c",
+        "npm run test -- --force"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:27:26.451736+00:00",
+      "finished_at_utc": "2026-10-21T00:28:09.340233+00:00",
+      "exit_code": 0,
+      "output_path": "root.log",
+      "output_sha256": "3ad9f167d2303c3a72fb41035da1a26dd4cf1af35ddd1b2d9e3ba2a4b14ad1c1",
+      "summary": [
+        "@layerwell/catalog-operator-console:test: \u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m7 passed\u001b[39m\u001b[22m\u001b[90m (7)\u001b[39m",
+        "@layerwell/catalog-operator-console:test: \u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m24 passed\u001b[39m\u001b[22m\u001b[90m (24)\u001b[39m",
+        "@layerwell/mobile:test: \u001b[90mstderr\u001b[2m | src/features/today/todayPersistence.t1.test.ts\u001b[2m > \u001b[22m\u001b[2mT1 Today local persistence and recovery surface\u001b[2m > \u001b[22m\u001b[2mdoes not render a zero-completion result for PRIVATE_KV_DECRYPTION_FAILED, even with retained cached data",
+        "@layerwell/mobile:test: \u001b[90mstderr\u001b[2m | src/features/today/todayPersistence.t1.test.ts\u001b[2m > \u001b[22m\u001b[2mT1 phase-boundary persistence scope regressions\u001b[2m > \u001b[22m\u001b[2min-flight AM -> PM settlement PRIVATE_WRITE_FAILED retains recovery and blocks forced PM dispatch",
+        "@layerwell/mobile:test: \u001b[90mstderr\u001b[2m | src/features/today/todayPersistence.t1.test.ts\u001b[2m > \u001b[22m\u001b[2mT1 phase-boundary persistence scope regressions\u001b[2m > \u001b[22m\u001b[2min-flight AM -> PM settlement PRIVATE_KV_WRITE_ROLLBACK_FAILED retains recovery and blocks forced PM dispatch",
+        "@layerwell/mobile:test:      \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m in-flight AM -> PM settlement PRIVATE_WRITE_FAILED retains recovery and blocks forced PM dispatch \u001b[33m 394\u001b[2mms\u001b[22m\u001b[39m",
+        "@layerwell/mobile:test:      \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m in-flight AM -> PM settlement PRIVATE_KV_WRITE_ROLLBACK_FAILED retains recovery and blocks forced PM dispatch \u001b[33m 376\u001b[2mms\u001b[22m\u001b[39m",
+        "@layerwell/mobile:test: \u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m465 passed\u001b[39m\u001b[22m\u001b[90m (465)\u001b[39m",
+        "@layerwell/mobile:test: \u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m6043 passed\u001b[39m\u001b[22m\u001b[90m (6043)\u001b[39m",
+        " Tasks:    2 successful, 2 total",
+        "Cached:    0 cached, 2 total"
+      ]
+    },
+    {
+      "case": "typecheck",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/s",
+        "/c",
+        "npm run typecheck -- --force"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:28:09.367764+00:00",
+      "finished_at_utc": "2026-10-21T00:28:26.768975+00:00",
+      "exit_code": 0,
+      "output_path": "typecheck.log",
+      "output_sha256": "2fd38a16c693e9dd2497157b2639d1433b3433c8fc2ca05796fd13a785dc2627",
+      "summary": [
+        " Tasks:    3 successful, 3 total",
+        "Cached:    0 cached, 3 total"
+      ]
+    },
+    {
+      "case": "lint",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/s",
+        "/c",
+        "npm run lint -- --force"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:28:26.796003+00:00",
+      "finished_at_utc": "2026-10-21T00:29:34.493428+00:00",
+      "exit_code": 0,
+      "output_path": "lint.log",
+      "output_sha256": "56e18e2d0833358dadcf3df2fa3c970cae4f13ae43c5f199ad15e997250e85cc",
+      "summary": [
+        " Tasks:    3 successful, 3 total",
+        "Cached:    0 cached, 3 total"
+      ]
+    },
+    {
+      "case": "source-contracts",
+      "command": [
+        "node",
+        "--test",
+        "scripts/core03/routine-guidance-source-contract.test.mjs",
+        "scripts/core04/persistence-source-contract.test.mjs",
+        "scripts/core05/adherence-source-contract.test.mjs",
+        "scripts/photo01/photo01-source-contract.test.mjs",
+        "scripts/photo02/photo02-source-contract.test.mjs",
+        "scripts/photo03/photo03-source-contract.test.mjs",
+        "scripts/photo04/photo04-source-contract.test.mjs",
+        "scripts/photo05/trend-admission-source-contract.test.mjs",
+        "scripts/photo07/photo07-source-contract.test.mjs",
+        "scripts/pay07/entitlement-admission-source-contract.test.mjs",
+        "scripts/core01/metro-linked-dependencies.test.cjs",
+        "scripts/core01/native-age-assurance-source-contract.test.mjs",
+        "scripts/e2e/retained-safety-assertions.test.mjs"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:29:34.521975+00:00",
+      "finished_at_utc": "2026-10-21T00:30:01.101085+00:00",
+      "exit_code": 0,
+      "output_path": "source-contracts.log",
+      "output_sha256": "47b195561c38203a7f24047d2f6b2b9c0fa2831e212e7316beb3f86cb8af3711",
+      "summary": [
+        "# tests 164",
+        "# pass 164",
+        "# fail 0",
+        "# skipped 0"
+      ]
+    },
+    {
+      "case": "governance",
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/brain",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:30:01.128607+00:00",
+      "finished_at_utc": "2026-10-21T00:37:49.569057+00:00",
+      "exit_code": 0,
+      "output_path": "governance.log",
+      "output_sha256": "910d1ec3125e0a0e4fde4648b645bcd37841dc191228e6f8f6bbf204e42d2cfe",
+      "summary": [
+        "Ran 58 tests in 468.175s",
+        "OK (skipped=2)"
+      ]
+    },
+    {
+      "case": "report",
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/brain/brain.py",
+        "--profile",
+        "M1-03",
+        "report",
+        "docs/brain/checkpoints/M1-03/completion-report.json"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:37:49.596627+00:00",
+      "finished_at_utc": "2026-10-21T00:37:56.362407+00:00",
+      "exit_code": 0,
+      "output_path": "report.log",
+      "output_sha256": "91725646aa9350f72173046ef9dc6d381d6ecfa5ab34fb75644240eb1e828bca",
+      "summary": [
+        "PASS: M1 issued profile; evidence binding is not independent acceptance"
+      ]
+    },
+    {
+      "case": "worklist",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+      "started_at_utc": "2026-10-21T00:37:56.389454+00:00",
+      "finished_at_utc": "2026-10-21T00:37:56.754641+00:00",
+      "exit_code": 0,
+      "output_path": "worklist.log",
+      "output_sha256": "ad185d39920e0616d95bc94563d889ece773898346bbf58f5d82cd1a1e9d732b",
+      "summary": [
+        "Phase 4 source worklist is current.",
+        "Phase 4 source worklist passed."
+      ]
+    }
+  ],
+  "custody": {
+    "recorded_at_utc": "2026-10-21T00:29:22.138549+00:00",
+    "base": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+    "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+    "commits": [
+      {
+        "sha": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+        "changed_paths": 94,
+        "protected": []
+      },
+      {
+        "sha": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+        "changed_paths": 3,
+        "protected": []
+      },
+      {
+        "sha": "ad04f618a6875e206dca179dca99514d9ef6e791",
+        "changed_paths": 56,
+        "protected": []
+      },
+      {
+        "sha": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+        "changed_paths": 2,
+        "protected": []
+      },
+      {
+        "sha": "ec74d4044991ba1a6887b765dd04ca36f7cb8894",
+        "changed_paths": 25,
+        "protected": []
+      },
+      {
+        "sha": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "changed_paths": 22,
+        "protected": []
+      }
+    ],
+    "changed_path_count": 190,
+    "non_document_changes": [
+      ".gitattributes",
+      "scripts/brain/brain.py",
+      "scripts/brain/m103_profile.py",
+      "scripts/brain/test_m103_profile.py",
+      "scripts/core05/adherence-source-contract.test.mjs"
+    ],
+    "historical_changes": [],
+    "protected_union_paths_checked": 507,
+    "protected_changes": [],
+    "artifacts_checked": 177,
+    "issued_files_checked": 35,
+    "manifest_sha256": "e580ae55c3aa97fe18a8b4e8782b1887ee503b3fec88df0034aa82cc2edee95f",
+    "mismatches": [],
+    "measured": {
+      "commit": "ec74d4044991ba1a6887b765dd04ca36f7cb8894",
+      "tree": "97b5250584f306dd014b92a3746e476c7914017b"
+    },
+    "delivery_tail": [
+      "ONSKIN_BRAIN_HANDOFF.txt",
+      "docs/brain/checkpoints/M1-03/ACCEPTANCE_CLOSEOUT.md",
+      "docs/brain/checkpoints/M1-03/README.md",
+      "docs/brain/checkpoints/M1-03/SECURITY_REMEDY_PROPOSAL.md",
+      "docs/brain/checkpoints/M1-03/ci-observation.json",
+      "docs/brain/checkpoints/M1-03/completion-report.json",
+      "docs/brain/checkpoints/M1-03/diagnostics/driver-index.json",
+      "docs/brain/checkpoints/M1-03/diagnostics/postdb_m103.py.txt",
+      "docs/brain/checkpoints/M1-03/evidence/installed-context.receipt.json",
+      "docs/brain/checkpoints/M1-03/evidence/installed-context.txt",
+      "docs/brain/checkpoints/M1-03/evidence/local-database-outcome.json",
+      "docs/brain/checkpoints/M1-03/evidence/measured-local-verifier.receipt.json",
+      "docs/brain/checkpoints/M1-03/evidence/measured-local-verifier.txt",
+      "docs/brain/checkpoints/M1-03/evidence/post-database-cleanup.json",
+      "docs/brain/checkpoints/M1-03/evidence/post-database-cleanup.receipt.json",
+      "docs/brain/checkpoints/M1-03/evidence/post-database-cleanup.txt",
+      "docs/brain/checkpoints/M1-03/evidence/proposal-expiry-observation.json",
+      "docs/brain/checkpoints/M1-03/evidence/report-validation-precommit.receipt.json",
+      "docs/brain/checkpoints/M1-03/evidence/report-validation-precommit.txt",
+      "docs/brain/checkpoints/M1-03/evidence/worklist-final-clean.receipt.json",
+      "docs/brain/checkpoints/M1-03/evidence/worklist-final-clean.txt",
+      "docs/brain/checkpoints/M1-03/execution-inventory.json"
+    ],
+    "runtime_diff": "",
+    "status": "",
+    "remote_refs": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73\trefs/heads/main\n6aa01995f6dcb94fd28d358badc9f8d1e0273d39\trefs/heads/stage/m0-baseline\nc14a3105640034a9d7a47d34533f9bd40faa4cc4\trefs/heads/stage/m1-retained-safety\n"
+  },
+  "invariants": {
+    "recorded_at_utc": "2026-10-21T00:36:42.125124+00:00",
+    "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "worklist_meanings_equal": true,
+    "worklist_rows": 14,
+    "worklist_references": 414,
+    "worklist_fingerprint_mismatches": [],
+    "migration_count": 97,
+    "migration_paths_equal_to_base": true,
+    "migration_bytes_equal_to_base": true,
+    "independent_path_leaf_newline_inventory_sha256": "480d2ad7be7be5070cfff2d2a72afc96fd872ab8feb4a7c11001bf9370c13606",
+    "protected_canonical_migration_set_sha256": "5ee03b2032781512fe2ab893e46a3f28daf68ea55ba7b800393265256898c3d6",
+    "protected_source_inventory_contract": true,
+    "latest_migration_id": "20261010000081",
+    "canonical_method": "Existing unchanged buildSourceInventory / assertCurrentSourceContract; canonicalJson of id/file/sha256 rows; custom path-NUL hash is separately labeled, not the protected digest"
+  },
+  "final_identity": {
+    "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "status": "",
+    "refs": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73\trefs/heads/main\n6aa01995f6dcb94fd28d358badc9f8d1e0273d39\trefs/heads/stage/m0-baseline\nc14a3105640034a9d7a47d34533f9bd40faa4cc4\trefs/heads/stage/m1-retained-safety\n"
+  },
+  "limits": [
+    "No runtime source changes or dependency installation by Brain.",
+    "No fresh browser/native/provider/paid-positive run in this M1-03 review; prior scoped browser acceptance remains historical at its exact source.",
+    "Canonical CI success independently read; submitted full local DB execution audited, not rerun by Brain.",
+    "A single independent green root run does not erase preserved earlier observer publication failures.",
+    "An unavailable gh CLI diagnostic was abandoned; live GitHub connector reads succeeded.",
+    "Custom path-NUL migration digest is separately labeled; the actual protected canonical id/file/sha256 digest was verified with unchanged existing functions."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "base_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "base_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "method": "SHA256 of exact committed git show HEAD:path bytes; some entries are witnesses only, not writable",
+  "files": [
+    {
+      "path": "apps/catalog-operator-console/package.json",
+      "bytes": 539,
+      "sha256": "8080c0c75e699c27e2dd48197b49a52dea74e1d8c04024cec3dfe0bd67012ed5"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 574165,
+      "sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 28425,
+      "sha256": "20c98df5976fcdd782f5cf0f695fe2386afbf47253aef02d808bf3e5e5cacf09"
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.mjs",
+      "bytes": 11055,
+      "sha256": "543e6c07e390d0375b808e9d5eafdceb620126441f23b8939eff83eca30d1f80"
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.test.mjs",
+      "bytes": 6925,
+      "sha256": "7b3c47d5024be8c31149296c8b149b8008e41caae3c88e3e24275b0fee69dec2"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "bytes": 16845,
+      "sha256": "789b374f7cd469d4735f5deabdaab062a977b62d87587a784fbaf992cecb1ed8"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "bytes": 13854,
+      "sha256": "cebc3867c3235d1d36683da4b8568e128718f1e68987133b113411110c27d07f"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "bytes": 47953,
+      "sha256": "b4539e7ec87ea7e81be5c47e1076f56f4e4e520c39295ff1b5165bdf72af4a08"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "bytes": 7937,
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "bytes": 38158,
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/collect.py",
+      "bytes": 10743,
+      "sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "bytes": 13797,
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "bytes": 6778,
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "bytes": 12733,
+      "sha256": "b00042e9dea1a0cf9781cb2beae104324fe69d51c296fb45ea2eaaa7132da729"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+      "bytes": 12870,
+      "sha256": "7b38564e16a605e9c263b6fa6cee51f15f9498c079ad46787b099e41acef8b30"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "bytes": 3967,
+      "sha256": "2c90c930463b701270c94981f1939e9993a6cd531b7ae9a5c1a31a5b8600df45"
+    },
+    {
+      "path": "scripts/brain/test_m103_profile.py",
+      "bytes": 3860,
+      "sha256": "d64a310967ed7c5ea99970b4af17cbe8a6100d06d9047782ff992df5243f3e0d"
+    },
+    {
+      "path": "scripts/brain/brain.py",
+      "bytes": 48072,
+      "sha256": "75c6f2e83901a649c5f8b1997dd8c96f1546bc1842ec563db9128506a743f9b6"
+    },
+    {
+      "path": "docs/brain/m103-active.json",
+      "bytes": 781,
+      "sha256": "11b9b7eb1aba5bcc81a19d32d2f4bfb15096ba0ee606d2caae9e31b68c35eba6"
+    }
+  ]
+}

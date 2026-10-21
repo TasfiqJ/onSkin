@@ -167,6 +167,7 @@ def original_jobs(directory, needs, commit, run_id, fresh):
         if 'endLine' in region:
             c.require(type(region['endLine']) is int and region['endLine'] == full[fingerprint]['EndLine'],
                       'WORKFLOW_GITLEAKS_RANGE_DRIFT')
+    c.require(seen == set(full), 'WORKFLOW_FULL_HISTORY_FINDINGS_OMITTED')
     return {'sourceCommit': commit, 'runId': run_id, 'originalJobs': needs,
             'outcomes': manifests, 'eventRangeHistoricalFindings': len(seen),
             'originalSecretDiagnosticSha256': c.SHA(c.CANON(secret_proof)),

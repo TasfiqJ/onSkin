@@ -1,0 +1,2 @@
+# Independent review observations
+Read AUDIT_M1-03_REVIEW01.md for findings/disposition, EXECUTION_EVIDENCE.json for exact independent command receipts and custody, and CI_OBSERVATIONS.json for direct original CI observations. REVIEWED_SOURCE_HASHES.json records current preimages; only the smaller SOURCE_EDIT_AUTHORIZATION.json list is writable, only for its stated purposes. A witness hash is not blanket change authorization. The previous AUDIT_M1-02_ACCEPTANCE.md is historical evidence, not the current task instruction.

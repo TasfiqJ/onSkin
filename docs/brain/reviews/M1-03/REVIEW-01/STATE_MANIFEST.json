@@ -1,0 +1,119 @@
+{
+  "state_version": "brain-m1-03-partial-reviewed-cont01-issued-12",
+  "files": [
+    {
+      "path": "ACCEPTANCE_LEDGER.json",
+      "bytes": 20010,
+      "sha256": "69aefe330bda27d6451436f44a6cdd545fa3fa9b0340978cb7da547c367e030a"
+    },
+    {
+      "path": "ACCEPTANCE_SCOPE.md",
+      "bytes": 455,
+      "sha256": "a34afb47b4ea4c7086bab30d9bc9c8abda9c8c56d0c9fb44d9f76afc0ac8f9a0"
+    },
+    {
+      "path": "ADR_DECISIONS.md",
+      "bytes": 1488,
+      "sha256": "c1767ad861d64801cc19d07f3386373acd8dfc466132384086751fc00af1f21d"
+    },
+    {
+      "path": "ADR_REGISTRY.json",
+      "bytes": 24416,
+      "sha256": "1536b62c593cefffa7ec6852b9ded2d573f4948590554ff18cbb951e4aa5b5b8"
+    },
+    {
+      "path": "AUDIT_M1-02_ACCEPTANCE.md",
+      "bytes": 5859,
+      "sha256": "455f98c8ba57f3d69081f3c9a4fd77f9b81487ea8428db3db9f4e6b0e3a50092"
+    },
+    {
+      "path": "AUDIT_M1-03_REVIEW01.md",
+      "bytes": 10089,
+      "sha256": "c72847b7b704b584da2869662c907b414557481eb57d3b35054332d4a1ef7c75"
+    },
+    {
+      "path": "BLOCKERS.json",
+      "bytes": 43192,
+      "sha256": "da6ee0ae75d4bb48945fdbf4ab773f94becc32bce0c0cef5fb119715329df408"
+    },
+    {
+      "path": "BLOCKERS.md",
+      "bytes": 815,
+      "sha256": "8c1e58a418d42c03c114cbb4588c5e9860666806ed552baf3faa8083b39f1225"
+    },
+    {
+      "path": "BRAIN_RESUME_PROMPT.md",
+      "bytes": 1162,
+      "sha256": "6ee9e47a6f249120d4461e7511c1694cced9d6c0a195a7f0035249e7666fdb2b"
+    },
+    {
+      "path": "CI_OBSERVATIONS.json",
+      "bytes": 4649,
+      "sha256": "63b9f6c388596379ff22bba15216c4d94ca9523847afd60614d1e0272db5a4a1"
+    },
+    {
+      "path": "CI_OBSERVATIONS.md",
+      "bytes": 923,
+      "sha256": "5388c58958d2335140cbb8b3ae9ed88443d169dbb5b9349fda7cbeee3eb2f681"
+    },
+    {
+      "path": "DECISIONS_DELTA.md",
+      "bytes": 697,
+      "sha256": "b22a860c12547b7d178b54b262697a7b1d473ca063302abe96ae6576b1df904c"
+    },
+    {
+      "path": "EXECUTION_EVIDENCE.json",
+      "bytes": 13819,
+      "sha256": "61527437ba0353948bacc35bfedf93e223894e002481dd04b6e697c1b5217412"
+    },
+    {
+      "path": "REVIEWED_SOURCE_HASHES.json",
+      "bytes": 3681,
+      "sha256": "57b5fac15624f1f55b0e1ea93751e92ce9b7594906b6cd1c9a982ffe5bb581e0"
+    },
+    {
+      "path": "REVIEW_OBSERVATIONS.md",
+      "bytes": 527,
+      "sha256": "a4498471dfa98f23ddcf1b011c545d9c5a81cd457b0483c28d485d032b027b4d"
+    },
+    {
+      "path": "ROADMAP_STATUS.md",
+      "bytes": 545,
+      "sha256": "91f15bc7ef27090d70164a3443d0ee47ff2d19e3364d02dc0eae91b8fbeb6a13"
+    },
+    {
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 8858,
+      "sha256": "f5c77410644704d4bae52564f85c2a82ed690b610a063c49cfafc868efe758d2"
+    },
+    {
+      "path": "STATE_AT_GLANCE.md",
+      "bytes": 1151,
+      "sha256": "611203a627a1b3cc76eb63fa4941cd2c73d8d067b21f481ea013ec434ee1ff5f"
+    },
+    {
+      "path": "TRUFFLEHOG_BYTE_WITNESS.json",
+      "bytes": 2236,
+      "sha256": "52ff6165602d80d71b9918c6f24ab7b9dedb1e0f2fc899d22bc315362cf44257"
+    },
+    {
+      "path": "brain_state.json",
+      "bytes": 57587,
+      "sha256": "f9d225b85a56fae916cab9ce8a7a9913c779ca25e3f496c9670ce0a3ecc23ffa"
+    },
+    {
+      "path": "roadmap.json",
+      "bytes": 49906,
+      "sha256": "b51b2025c0ebd2747e11454be1a8b69dbe6bac324e9eca53710a8e5c875dcb76"
+    }
+  ],
+  "not_authority_for": [
+    "G97 SOURCE_GO",
+    "new policy expiry",
+    "owner public pins",
+    "protected DB replay",
+    "M2",
+    "main promotion",
+    "native/provider/qualified/clinical/commercial/release"
+  ]
+}

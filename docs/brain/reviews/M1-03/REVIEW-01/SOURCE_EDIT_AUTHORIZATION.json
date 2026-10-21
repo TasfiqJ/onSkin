@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-CONT01-SOURCE-EDIT-01",
+  "issuer": "onSkin Brain; bounded engineering sequencing authority, not repository-owner administration or external expert attestation",
+  "decision": "AUTHORIZED_BOUNDED_SOURCE_REPAIR_ONLY",
+  "issued_at_utc": "2026-10-21T00:50:48.373089+00:00",
+  "task_id": "M1-03",
+  "iteration": "CONT-01",
+  "state_version": "brain-m1-03-partial-reviewed-cont01-issued-12",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "base_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "validity": "This exact continuation on this stage only, one writer, until submission and stop for independent review. Any different source base must be reconciled; no implicit authorization of unreviewed descendants or changed preimages.",
+  "scope_type": "SOURCE_EDIT_AND_NONDEPLOYING_DIAGNOSTICS_NOT_G97_SOURCE_ACCEPTANCE",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "spend_usd": 0,
+  "original_proposal_not_after": "2026-10-21T00:00:00Z",
+  "original_proposal_status": "EXPIRED_NOT_RENEWED",
+  "allowed_existing_files": [
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "bytes": 12733,
+      "sha256": "b00042e9dea1a0cf9781cb2beae104324fe69d51c296fb45ea2eaaa7132da729",
+      "permitted_change": "Await actual React Query observer publication before the two successful outcome assertions; retain all owner/consent/stale retry/durable-intent expectations. Test-only, no runtime edits."
+    },
+    {
+      "path": "apps/catalog-operator-console/package.json",
+      "bytes": 539,
+      "sha256": "8080c0c75e699c27e2dd48197b49a52dea74e1d8c04024cec3dfe0bd67012ed5",
+      "permitted_change": "Only exact Vite8.1.3 to Vite8.1.6 development dependency pin; no other direct dependency or scripts change."
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 574165,
+      "sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+      "permitted_change": "Only corresponding Vite8.1.6 workspace/hoisted records and necessary transitive closure. Preserve package-manager format, unrelated resolutions, integrity and all backports."
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.mjs",
+      "bytes": 11055,
+      "sha256": "543e6c07e390d0375b808e9d5eafdceb620126441f23b8939eff83eca30d1f80",
+      "permitted_change": "Correct schema/severity traversal for valid mixed-severity primary children; report actual severity and retain all records, raw exits, expiration and unknown/unreviewed refusal. No waiver or admission policy change."
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.test.mjs",
+      "bytes": 6925,
+      "sha256": "7b3c47d5024be8c31149296c8b149b8008e41caae3c88e3e24275b0fee69dec2",
+      "permitted_change": "Add actual mixed-severity and malformed/missing/unknown/expired adversarial cases without deleting or weakening existing protections."
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 28425,
+      "sha256": "20c98df5976fcdd782f5cf0f695fe2386afbf47253aef02d808bf3e5e5cacf09",
+      "permitted_change": "Only original secret-scan acquisition/execution/proof steps and their corresponding tests/artifact wiring, using the exact Gitleaks bytes and newly witnessed TruffleHog3.99.3 bytes authorized here; no downgrade to3.99.2 and no change to its historical frozen G97 closure. Retain all original jobs and artifacts, triggers, permissions and final enforcement; no added write privilege, secrets, pull_request_target, bypass or action/toolchain upgrades."
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "bytes": 16845,
+      "sha256": "789b374f7cd469d4735f5deabdaab062a977b62d87587a784fbaf992cecb1ed8",
+      "permitted_change": "Only bind strengthened original secret-job scope/tool/raw-result receipts and their exact artifact inventory; no changes to source inventory, generic acceptance, owner pins, proposal dates, other scanner admissions or findings/exit policy."
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "bytes": 13854,
+      "sha256": "cebc3867c3235d1d36683da4b8568e128718f1e68987133b113411110c27d07f",
+      "permitted_change": "Replace only obsolete secret action-wrapper assumptions with exact stronger secret command/acquisition/proof requirements; preserve all unrelated checks and SBOM failure semantics."
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+      "bytes": 12870,
+      "sha256": "7b38564e16a605e9c263b6fa6cee51f15f9498c079ad46787b099e41acef8b30",
+      "permitted_change": "Add stronger full-history/current-source, exact-tool and receipt negative controls; retain unrelated refusals."
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "bytes": 47953,
+      "sha256": "b4539e7ec87ea7e81be5c47e1076f56f4e4e520c39295ff1b5165bdf72af4a08",
+      "permitted_change": "Only synthetic original-secret receipt fixtures and assertions necessary to test the stronger secret proof. Preserve all original intended negative cases. No blanket Windows skips, source-path guard weakening or general portability redesign."
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "bytes": 3967,
+      "sha256": "2c90c930463b701270c94981f1939e9993a6cd531b7ae9a5c1a31a5b8600df45",
+      "permitted_change": "Add independently anchored CONT-01 lifecycle/report binding, leaving INITIAL validation and historical authority unchanged."
+    }
+  ],
+  "allowed_new_code_files": [
+    {
+      "path": "scripts/phase9/security_acceptance/secret_scan.py",
+      "purpose": "Minimal byte-pinned original secret-job acquisition/execution/proof helper; no general scanner bootstrap or acceptance evaluator."
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+      "purpose": "Synthetic >30-commit and tool/source/receipt tampering regressions; no real credentials."
+    },
+    {
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "purpose": "Disposable exact-base/digest/allowlist/no-self-acceptance continuation tests."
+    }
+  ],
+  "administrative_paths": {
+    "new_review_overlay": "docs/brain/reviews/M1-03/REVIEW-01/",
+    "new_checkpoint": "docs/brain/checkpoints/M1-03/CONT-01/",
+    "new_active_record": "docs/brain/m103-cont01-active.json",
+    "existing_exact_scope": {
+      ".gitattributes": "Only byte-stable -text entries for the two new review/checkpoint subtrees.",
+      "docs/brain/README.md": "Compact link to this successor; no historical rewriting.",
+      "ONSKIN_BRAIN_HANDOFF.txt": "Current exact safe delivery and stop record."
+    },
+    "derived_outputs": [
+      "docs/phase-4/generated/source-worklist.json",
+      "docs/phase-4/generated/source-worklist.md"
+    ],
+    "derived_rule": "Only regenerate with unchanged existing generator; preserve all14 row meanings and414 source-reference identities."
+  },
+  "secret_tool_bytes": {
+    "gitleaks": {
+      "version": "8.24.3",
+      "asset_sha256": "9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c",
+      "binary_sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad"
+    },
+    "trufflehog": {
+      "version": "3.99.3",
+      "asset_sha256": "029b182e0ed35fd5b02cd1eadc2a94bd457ab14ad22a9380b6e5d9652261d28d",
+      "binary_sha256": "f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61",
+      "independent_witness": "TRUFFLEHOG_BYTE_WITNESS.json",
+      "scope": "Original secret job only; historical G973.99.2 pin remains unchanged and mismatches still reject."
+    }
+  },
+  "secret_execution_limit": "Existing credential-free reviewed Linux environment and exact public release bytes only. Preserve established scanner modes and refusal semantics; no new credentials, credential use, probing/exploitation or provider mutation. Unexpected sensitive findings stay red and redacted. Missing platform/bytes is BLOCKED, never fallback to latest.",
+  "unapproved_candidates": [
+    "Semgrep/MCP/certifi replacement or derivative closure; no new scanner installation, metadata override or activation.",
+    "Frozen source/coverage/proposal/history/exception/rule or public G97 pin changes.",
+    "New proposal window, signatures, owner receipts or protected source GO.",
+    "DB06/DB08/R2B source/control/target operations and any SQL/schema/RLS/DB types/Edge changes.",
+    "Shared node_modules mutation, runtime notification rewrite, M2 work, deployment, signing, release or main promotion."
+  ],
+  "outside_list_rule": "Read/diagnose and propose any additionally required source change; do not apply it. A listed path permits only its listed semantic purpose, not arbitrary edits."
+}

@@ -278,6 +278,11 @@ def validate_proof(directory, root, commit, run_id, now=None):
     history = proof['commands']['gitleaks-history']; current = proof['commands']['gitleaks-current']
     require(bool(report['runs'][0]['results']) == (history['exit'] == 2) and
             isinstance(current['report'], list) and bool(current['report']) == (current['exit'] == 2), 'EXIT_REPORT_DRIFT')
+    for row, records in [(history, report['runs'][0]['results']), (current, current['report'])]:
+        clean = re.sub(r'\x1b\[[0-9;]*m', '', row['stderr'])
+        found = re.findall(r'leaks found: (\d+)\s*$', clean)
+        require((len(found) == 1 and int(found[0]) == len(records)) if row['exit'] == 2 else
+                bool(re.search(r'no leaks found\s*$', clean)) and not records, 'TRUNCATED_REPORT')
     current_disposition(root, current['report'], proof['snapshot'], commit)
     return proof
 

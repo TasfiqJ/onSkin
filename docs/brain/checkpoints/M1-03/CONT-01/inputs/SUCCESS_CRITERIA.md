@@ -1,0 +1,3 @@
+# Success and stop
+Complete the four selected repairs to the extent actually authorized and executable; preserve and precisely propose any newly discovered out-of-list dependency while finishing every independent ready stream. Small tested source changes with honest original red gates are useful progress. Neither success nor partial completion requires falsifying old policy, applying an unproved scanner derivative, or issuing M2.
+Finish with exact measured/delivery evidence, one concise review entrypoint, strict report, updated root handoff and safe normal commit/push to the existing stage. PR9 remains draft. If push fails, report PUSH_BLOCKED and preserve local custody; never force. Then stop for independent Brain review. The founder returns only "Codex is done."
