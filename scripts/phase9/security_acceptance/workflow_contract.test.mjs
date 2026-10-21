@@ -113,8 +113,23 @@ test('legacy fetch errors, newer releases, crashes, missing errors or invented s
 });
 
 test('Gitleaks actual executable identity remains a mandatory original-job artifact', () => {
-  reject(w => w.jobs['secret-scan'].steps = w.jobs['secret-scan'].steps.filter(s => s.name !== 'Bind actual Gitleaks executable'));
-  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Bind actual Gitleaks executable')['continue-on-error'] = true);
+  reject(w => w.jobs['secret-scan'].steps = w.jobs['secret-scan'].steps.filter(s => s.name !== 'Acquire exact original secret executables'));
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Acquire exact original secret executables')['continue-on-error'] = true);
+});
+
+test('complete history, current snapshot, exact acquisition and source/run proof cannot be omitted', () => {
+  for (const token of ['--tools', '--work', '--commit', '--run-id', '--source-ref']) {
+    reject(w => { const s=w.jobs['secret-scan'].steps.find(s => s.name === 'Scan complete local refs and exact committed current source'); s.run=s.run.replaceAll(token,'--omitted'); });
+  }
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Checkout').with['fetch-depth']=30);
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.id === 'trufflehog').run += ' --version latest');
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.id === 'gitleaks').run = 'true');
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Enforce secret scanner results').run = 'test "${G97_TRUFFLEHOG_OUTCOME}" = "success"');
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Scan complete local refs and exact committed current source').run += '\ntrue || true');
+  const helper=readFileSync(new URL('./secret_scan.py', import.meta.url),'utf8');
+  for (const pin of ['8.24.3','3.99.3','e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad','f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61']) assert.ok(helper.includes(pin));
+  const frozen=JSON.parse(readFileSync(new URL('./proposal.json', import.meta.url)));
+  assert.equal(frozen.toolBytes.trufflehog.includes('f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61'),false);
 });
 
 test('automated admission cannot omit exact commit/run or actual original outcomes', () => {

@@ -265,6 +265,15 @@ class ContractTests(unittest.TestCase):
   write('secret/gitleaks-tool.json',{'version':'8.24.3','sha256':self.policy['toolBytes']['gitleaks'][0],'exit':0})
   findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
   write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'v8.0.0'}},'results':findings}]})
+  # New original-secret diagnostic fixture only. Actual source/ref validation is
+  # exercised against >30 real Git commits in test_secret_scan, never mocked there.
+  from unittest import mock
+  from test_secret_scan import synthetic_proof
+  scope=dict(head=commit,tree='b'*40,parents=[],refs=['refs/heads/synthetic '+commit],
+             commits=[commit],snapshot=[],snapshot_sha256=w.secret_scan.sha(b'[]'))
+  patch=mock.patch.object(w.secret_scan,'git_scope',return_value=scope);patch.start();self.addCleanup(patch.stop)
+  proof,sarif=synthetic_proof(scope,run_id,findings)
+  write('secret/gitleaks-results.sarif',sarif);write('secret/'+w.secret_scan.PROOF,proof)
   return w,root,needs,commit,run_id,fresh
  def test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'code/dependency-inventory.json';original=p.read_bytes()
@@ -314,7 +323,7 @@ class ContractTests(unittest.TestCase):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
   result=w.original_jobs(root,needs,commit,run_id,fresh)
   self.assertEqual(result['sourceCommit'],commit);self.assertEqual(result['runId'],run_id)
-  self.assertEqual(result['eventRangeHistoricalFindings'],2);self.assertEqual(set(result['files']),w.LEGACY_FILES)
+  self.assertEqual(result['eventRangeHistoricalFindings'],2);self.assertEqual(set(result['files']),w.LEGACY_FILES|w.SECRET_FILES)
   self.assertNotIn('acceptanceGranted',result);self.assertNotIn('signature',result)
  def test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()

@@ -158,28 +158,36 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Test original secret scope and receipt refusals
+        run: python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v
+
+      - name: Acquire exact original secret executables
+        run: python3 -B scripts/phase9/security_acceptance/secret_scan.py acquire --tools "$RUNNER_TEMP/original-secret-tools"
+
+      - name: Scan complete local refs and exact committed current source
+        run: |
+          git show-ref --verify --quiet "$GITHUB_REF" || git update-ref "$GITHUB_REF" "$GITHUB_SHA"
+          test "$(git rev-parse "$GITHUB_REF")" = "$GITHUB_SHA"
+          python3 -B scripts/phase9/security_acceptance/secret_scan.py scan \
+            --tools "$RUNNER_TEMP/original-secret-tools" \
+            --work "$RUNNER_TEMP/original-secret-scope" \
+            --output docs/phase-9/generated/ci-scanner-evidence \
+            --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --source-ref "$GITHUB_REF"
+
       - name: Gitleaks
         id: gitleaks
         continue-on-error: true
-        # gitleaks/gitleaks-action v3.0.0 (Node 24); personal repositories need no license.
-        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_ENABLE_COMMENTS: 'false'
-          GITLEAKS_VERSION: '8.24.3'
-
-      - name: Bind actual Gitleaks executable
-        if: always()
-        run: python3 -B scripts/phase9/security_acceptance/workflow_admission.py gitleaks-tool
+        run: |
+          set +e
+          python3 -B scripts/phase9/security_acceptance/secret_scan.py outcome --scanner gitleaks --output docs/phase-9/generated/ci-scanner-evidence
+          code=$?
+          echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+          exit "$code"
 
       - name: TruffleHog verified secrets
         id: trufflehog
         continue-on-error: true
-        # trufflesecurity/trufflehog v3.95.8
-        uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f
-        with:
-          path: ./
-          extra_args: --only-verified
+        run: python3 -B scripts/phase9/security_acceptance/secret_scan.py outcome --scanner trufflehog --output docs/phase-9/generated/ci-scanner-evidence
 
       - name: Write secret scanner evidence manifest
         if: always()
@@ -199,7 +207,6 @@ jobs:
             "trufflehog": "${G97_TRUFFLEHOG_OUTCOME}"
           }
           JSON
-          cp -- results.sarif docs/phase-9/generated/ci-scanner-evidence/gitleaks-results.sarif
 
       - name: Upload secret scanner evidence
         if: always()
@@ -218,6 +225,9 @@ jobs:
           G97_TRUFFLEHOG_OUTCOME: ${{ steps.trufflehog.outcome }}
         run: |
           test "${G97_TRUFFLEHOG_OUTCOME}" = "success"
+          python3 -B scripts/phase9/security_acceptance/secret_scan.py check \
+            --output docs/phase-9/generated/ci-scanner-evidence \
+            --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"
 
   static-analysis:
     name: Static analysis and OSV
