@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "scripts/security_readiness/m103/adverse_install.py",
+    "/root/onskin-overnight01-sh01-candidate04"
+  ],
+  "started": "2026-10-21T11:46:27.098160+00:00",
+  "finished": "2026-10-21T11:47:29.495231+00:00",
+  "raw_exit": 0,
+  "output_sha256": "2b65d2aa861ddb44580005b42a0f595496ee816096900b8d263422ab7d0030fb",
+  "output_bytes": 148,
+  "environment_overrides": {},
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "admission": "NONE"
+}

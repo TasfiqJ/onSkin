@@ -1,0 +1,14 @@
+test_complete_object_partition_wrong_blob_missing_duplicate_and_digest_lookalike (test_diagnostics.CandidateTests.test_complete_object_partition_wrong_blob_missing_duplicate_and_digest_lookalike) ... ok
+test_exact_deterministic_metadata_record_derivative_and_unchanged_core (test_diagnostics.CandidateTests.test_exact_deterministic_metadata_record_derivative_and_unchanged_core) ... ok
+test_typed_complete_results_timeout_missing_duplicate_stale_and_rule_drift (test_diagnostics.CandidateTests.test_typed_complete_results_timeout_missing_duplicate_stale_and_rule_drift) ... ok
+test_actual_official_core_positive_and_benign_in_capsule (test_integrity.IntegrityTests.test_actual_official_core_positive_and_benign_in_capsule) ... ok
+test_bytecode_cache_and_launcher_inputs_are_not_ignored (test_integrity.IntegrityTests.test_bytecode_cache_and_launcher_inputs_are_not_ignored) ... ok
+test_export_modification_rename_links_and_added_paths_refuse (test_integrity.IntegrityTests.test_export_modification_rename_links_and_added_paths_refuse) ... ok
+test_host_change_and_restore_while_child_executes_refuses (test_integrity.IntegrityTests.test_host_change_and_restore_while_child_executes_refuses) ... ok
+test_installed_links_hardlinks_fifo_and_transient_process_mutation_refuse (test_integrity.IntegrityTests.test_installed_links_hardlinks_fifo_and_transient_process_mutation_refuse) ... ok
+test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite (test_integrity.IntegrityTests.test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 20.588s
+
+OK

@@ -1,0 +1,24 @@
+{
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+  "counts": {
+    "failed": 0,
+    "passed": 70,
+    "skipped": 0
+  },
+  "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-21T11:54:38.699109+00:00",
+  "kind": "LOCAL_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-hydrated.txt",
+    "sha256": "1aef85388fc5c21a736e19155212fb4912580c81381c17bf1764ce860944f518"
+  },
+  "schema_version": 1,
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_reported_scope": "Actual committed snapshot; external/provider/expert axes remain separate",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "started_at_utc": "2026-10-21T11:50:28.996056+00:00",
+  "status": "PASS",
+  "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+}

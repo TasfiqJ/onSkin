@@ -1,0 +1,423 @@
+{
+  "executions": [
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/brain-all.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "brain-all",
+      "sha256": "1585fc5e8019f40cec9899e82e739b70976bd5f3846914b408dc009f2a6fdd18",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-fixtures.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/fixtures.py /root/onskin-overnight01-sh01-candidate04 /root/onskin-sh01-positive-fixture",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "candidate-fixtures",
+      "sha256": "228b4a039f462020898505bdb924b9e87280fcad366e6d477abc9673ca4b4885",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-install-adverse.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/adverse_install.py /root/onskin-overnight01-sh01-candidate04",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "candidate-install-adverse",
+      "sha256": "cd6e915d5810a5900a7b1fd1d0a44d306765749ded62fae121930a47bee3319f",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-nine.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/security_readiness/m103 -p test_*.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {\"ONSKIN_TEST_CANDIDATE\": \"/root/onskin-overnight01-sh01-candidate04\"}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "candidate-nine",
+      "sha256": "943018a2b359a749020d598683730a7f5dc1cac08c6d6f7c9a7e30c265a9f1ba",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-lint.receipt.json",
+      "axis": "source",
+      "command": "npm run lint -- --force",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "forced-root-lint",
+      "sha256": "cac779356b6eb84db5b87eb7f8d4da23de5f4fd2ef1b43fe1fd18b47bcf47105",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-test.receipt.json",
+      "axis": "source",
+      "command": "npm test -- --force",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "forced-root-test",
+      "sha256": "5b98ceda5226fa205311665ede17231e2f723cce618163d5dcba24c481b4f7a7",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-typecheck.receipt.json",
+      "axis": "source",
+      "command": "npm run typecheck -- --force",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "forced-root-typecheck",
+      "sha256": "55aa4fd92673811839ac568765d5e61a1dc7defd97341cd42635a76211dbd734",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan-2.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/source_scan.py --candidate /root/onskin-overnight01-sh01-candidate04 --repo /root/onskin-sh01-measured-8e8983f5 --commit 8e8983f5f05ad23406f58129551eb4dc312176b1 --work /root/onskin-sh01-full-source-scan02 --rules /root/onskin-overnight01-source-scan02 --pins /root/onskin-sh01-measured-8e8983f5/docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json --tool-manifest-sha256 3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "four-bundle-source-scan-2",
+      "sha256": "6057365c03935c55e67628b66d0a9ff08e151d990d7a0655a8403a77afb38bc9",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/source_scan.py --candidate /root/onskin-overnight01-sh01-candidate04 --repo /root/onskin-sh01-measured-8e8983f5 --commit 8e8983f5f05ad23406f58129551eb4dc312176b1 --work /root/onskin-sh01-full-source-scan --rules /root/onskin-overnight01-source-scan02 --pins /root/onskin-sh01-measured-8e8983f5/docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json --tool-manifest-sha256 3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "four-bundle-source-scan",
+      "sha256": "356319335e28cbd948439d1b66e2ec62827fbadac7844db0c3506f73f0b617e7",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci-2.receipt.json",
+      "axis": "source",
+      "command": "npm ci --no-audit --no-fund",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "npm-ci-2",
+      "sha256": "30624ea13a1dec84a13bceeaf329a5898dfd8e2a20fc3ecbdf6f0f203b72b430",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-1.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-1",
+      "sha256": "4798eba45893f1b6bc6c52e758e539b7074d88a72a9b052888242f45eefc471b",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-2.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-2",
+      "sha256": "7bfa3e87480f42b3d2347c2adda205c4f07033f625db9e495ad2477fa7f1543b",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-3.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-3",
+      "sha256": "d4a22910cfa7e6b0753a249fa8b07ef2ebe8013f3d87a9ae01dc7cb29e56ad71",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-4.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-4",
+      "sha256": "1a9a6c1266d57dc5951262acf7dcedec2958802f04a775bd8946a0a958891661",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-5.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-5",
+      "sha256": "427816f31b2ca034870935f043e73696a0913bc9908585624bbc38e544fa8e16",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-hydrated.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-supported-70-hydrated",
+      "sha256": "e30dc5873277700826855e80da08ba613a08032aacba21d3e024b91d21d4d71c",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "original-supported-70",
+      "sha256": "dc7bbeabd925294e3089b58f04f1b642301cfce5d14421999f45e8aced769a22",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-worklist-check.receipt.json",
+      "axis": "source",
+      "command": "npm run phase4:source-worklist:check",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "source-worklist-check",
+      "sha256": "18dce4f4d4a011d0b56c82908efc55e8979b78de8a86091b2d6f8b991eb0f794",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    }
+  ],
+  "exploratory": [
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory-2",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-2.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory-3",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-3.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory-4",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-4.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory-5",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-5.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory-6",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-6.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory-7",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-7.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "candidate-adverse-exploratory-8",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-8.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-adverse-exploratory",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-prepare",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "candidate-prepare02",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare02.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "candidate-prepare03",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare03.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "candidate-prepare04",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare04.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "candidate-unit-exploratory",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-unit-exploratory.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "hardening-governance-exploratory",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/hardening-governance-exploratory.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "npm-ci",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 1,
+      "name": "original-supported-70-exploratory",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-exploratory.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "secret-fixture-exploratory-1",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-1.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "secret-fixture-exploratory-2",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-2.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "secret-fixture-exploratory-3",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-3.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "secret-fixture-exploratory-4",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-4.raw-receipt.json"
+    },
+    {
+      "actual_source": "DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION",
+      "exit": 0,
+      "name": "secret-fixture-exploratory-5",
+      "nominal_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "raw_receipt": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-5.raw-receipt.json"
+    }
+  ]
+}

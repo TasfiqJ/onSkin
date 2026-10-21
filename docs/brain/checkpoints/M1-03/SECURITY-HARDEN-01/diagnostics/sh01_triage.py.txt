@@ -1,0 +1,46 @@
+import collections,datetime,gzip,hashlib,json,pathlib,subprocess,sys
+WS=pathlib.Path(__file__).parent;REPO=WS/'overnight-delivery-clean';OUT=REPO/'docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence'
+PRIVATE=WS/'sh01-provider-private'
+SHA=lambda b:hashlib.sha256(b).hexdigest()
+def save(name,v): (OUT/name).write_bytes((json.dumps(v,sort_keys=True,indent=2)+'\n').encode())
+npmraw=(PRIVATE/'12343126081/npm-audit-high.json').read_bytes();osvraw=(PRIVATE/'12343336035/osv-scan.json').read_bytes()
+npm=json.loads(npmraw);osv=json.loads(osvraw)
+lockraw=subprocess.check_output(['git','-C',str(REPO),'show','8e8983f5f05ad23406f58129551eb4dc312176b1:package-lock.json']);lock=json.loads(lockraw);packages=lock['packages']
+old=json.loads((REPO/'docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/dependency-reconciliation.json').read_bytes())
+assert SHA(lockraw)==old['package_lock_sha256']
+def resolve(parent,name):
+    while True:
+        target=parent+'/node_modules/'+name if parent else 'node_modules/'+name
+        if target in packages:return packages[target].get('resolved') if packages[target].get('link') else target
+        if not parent:return None
+        parent=parent.rsplit('/',1)[0] if '/' in parent else ''
+edges=collections.defaultdict(list)
+for parent,row in packages.items():
+    for kind in ['dependencies','optionalDependencies','devDependencies','peerDependencies']:
+        if kind=='devDependencies' and 'node_modules/' in parent:continue
+        for name,range in row.get(kind,{}).items():
+            target=resolve(parent,name)
+            if target:edges[parent].append(dict(from_path=parent,to=target,name=name,range=range,kind=kind,optional_peer=row.get('peerDependenciesMeta',{}).get(name,{}).get('optional',False)))
+roots=['']+[p for p in packages if p and 'node_modules/' not in p]
+paths={p:[] if not p else [dict(kind='WORKSPACE_ROOT',from_path='',to=p)] for p in roots};queue=list(roots)
+for parent in queue:
+    for edge in edges[parent]:
+        if edge['to'] not in paths:paths[edge['to']]=paths[parent]+[edge];queue.append(edge['to'])
+gaps=[r for r in old['inventory'] if r['dependency_path'] is None]
+resolutions=[dict(path=r['path'],version=packages[r['path']]['version'],dependency_path=paths.get(r['path']),status='EXACT_LOCK_PEER_ROUTE' if r['path'] in paths else 'UNKNOWN',
+    scope='INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE') for r in gaps]
+save('dependency-current.json',dict(admission='NONE',source_commit='8e8983f5f05ad23406f58129551eb4dc312176b1',provider_merge='4961434a8c1ddcc5588177b01d2cf7f8a210202f',package_lock_sha256=SHA(lockraw),
+    npm_sha256=SHA(npmraw),osv_sha256=SHA(osvraw),npm_exit=int((PRIVATE/'12343126081/npm-audit-high.exit-code').read_text()),osv_exit=int((PRIVATE/'12343336035/osv-scan.exit-code').read_text()),
+    npm_record_count=len(npm['vulnerabilities']),npm_records=npm['vulnerabilities'],osv_record_count=sum(len(p.get('vulnerabilities',[])) for r in osv.get('results',[]) for p in r.get('packages',[])),
+    osv_records=osv['results'],six_previous_unknown_routes=resolutions,disposition='ALL_UNREVIEWED_NO_EXCEPTION_OR_EXPIRY_RENEWAL',provider_run_id=39593867671))
+print('current npm',len(npm['vulnerabilities']),'OSV',sum(len(p.get('vulnerabilities',[])) for r in osv.get('results',[]) for p in r.get('packages',[])),'peer routes',sum(r['status']=='EXACT_LOCK_PEER_ROUTE' for r in resolutions),'of',len(resolutions))
+sys.path.insert(0,str(REPO/'scripts/security_readiness/m103'))
+from reconcile import reconcile_gitleaks
+reconcile_gitleaks(REPO,PRIVATE/'12344040232/secret-scan-proof.json',PRIVATE/'12344040232/gitleaks-results.sarif',OUT/'secret-redacted-working.json')
+v=json.loads((OUT/'secret-redacted-working.json').read_bytes());(OUT/'secret-redacted-working.json').unlink()
+assert v['raw_count']==5463
+v.update(evidence_origin='AUTHENTICATED_ORIGINAL_PROVIDER_ARTIFACT_RECONCILED_LOCALLY',provider_run=39593867671,provider_job=119201254827,artifact_id=12344040232,
+    artifact_zip_sha256=SHA((PRIVATE/'12344040232.zip').read_bytes()),source_tree='369a92f9f36f19d6b90f3d43535f9ce9a01d279c',previous_5439='HISTORICAL_ONLY_NOT_OVERWRITTEN')
+# Proposals are not independently qualified review; every record stays unreviewed.
+body=json.dumps(v,sort_keys=True,separators=(',',':')).encode();(OUT/'secret-redacted.json.gz').write_bytes(gzip.compress(body,mtime=0))
+print('Secret safe derivative',len(v['records']),'records; compressed SHA',SHA(gzip.compress(body,mtime=0)))

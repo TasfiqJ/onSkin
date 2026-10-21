@@ -1,0 +1,103 @@
+{
+  "admission": "NONE",
+  "bundles": [
+    {
+      "bundle": "owasp-top-ten",
+      "errors": 1,
+      "findings": 4,
+      "fixpoint_timeouts": 146,
+      "raw_exit": 0,
+      "scanned": 12346,
+      "unscanned": 26
+    },
+    {
+      "bundle": "react",
+      "errors": 0,
+      "findings": 0,
+      "fixpoint_timeouts": 30,
+      "raw_exit": 0,
+      "scanned": 1608,
+      "unscanned": 0
+    },
+    {
+      "bundle": "secrets",
+      "errors": 0,
+      "findings": 0,
+      "fixpoint_timeouts": 21,
+      "raw_exit": 0,
+      "scanned": 12346,
+      "unscanned": 26
+    },
+    {
+      "bundle": "typescript",
+      "errors": 1,
+      "findings": 0,
+      "fixpoint_timeouts": 136,
+      "raw_exit": 0,
+      "scanned": 1608,
+      "unscanned": 0
+    }
+  ],
+  "final_source_rerun": "NOT_RUN_AFTER_45cf259b; context HIGH; no source/tool/rule/admission equivalence inferred",
+  "finding_count": 4,
+  "partition": {
+    "FAILED": 173,
+    "SCANNED": 12199,
+    "UNSUPPORTED": 6592
+  },
+  "paths": 18964,
+  "probes": [
+    {
+      "bundle": "owasp-top-ten",
+      "error_types": {
+        "Lexical error": 20,
+        "Other syntax error": 16,
+        "PartialParsing": 102,
+        "Syntax error": 48
+      },
+      "errors": 186,
+      "kind": "explicit-sql",
+      "raw_exit": 0,
+      "scanned": 26,
+      "targets": 26
+    },
+    {
+      "bundle": "owasp-top-ten",
+      "error_types": {
+        "PartialParsing": 1
+      },
+      "errors": 1,
+      "kind": "exact-partial-parser",
+      "raw_exit": 0,
+      "scanned": 1,
+      "targets": 1
+    },
+    {
+      "bundle": "secrets",
+      "error_types": {
+        "Lexical error": 14,
+        "Other syntax error": 15,
+        "PartialParsing": 10,
+        "Syntax error": 1
+      },
+      "errors": 40,
+      "kind": "explicit-sql",
+      "raw_exit": 0,
+      "scanned": 26,
+      "targets": 26
+    },
+    {
+      "bundle": "typescript",
+      "error_types": {
+        "PartialParsing": 1
+      },
+      "errors": 1,
+      "kind": "exact-partial-parser",
+      "raw_exit": 0,
+      "scanned": 1,
+      "targets": 1
+    }
+  ],
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c"
+}

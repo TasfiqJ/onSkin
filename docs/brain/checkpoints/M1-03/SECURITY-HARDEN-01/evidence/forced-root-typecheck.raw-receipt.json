@@ -1,0 +1,18 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "started": "2026-10-21T11:43:46.056711+00:00",
+  "finished": "2026-10-21T11:44:03.459997+00:00",
+  "raw_exit": 0,
+  "output_sha256": "81277e8f1a4fc00cc45147ae13b39912c1c5a3cf5d0a813d3314abe4defa0183",
+  "output_bytes": 1169,
+  "environment_overrides": {},
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "admission": "NONE"
+}

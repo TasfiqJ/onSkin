@@ -1,0 +1,58 @@
+{
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "kind": "CI_OBSERVATION",
+  "recorded_at_utc": "2026-10-21T12:11:44Z",
+  "repository": "TasfiqJ/onSkin",
+  "runs": [
+    {
+      "conclusion": "success",
+      "head_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "name": "iOS launch contract",
+      "run_id": 39593867532,
+      "status": "completed",
+      "workflow_id": 312030667
+    },
+    {
+      "conclusion": "failure",
+      "head_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "name": "Security",
+      "run_id": 39593867671,
+      "status": "completed",
+      "workflow_id": 308213475
+    },
+    {
+      "conclusion": "cancelled",
+      "head_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "name": "Quality",
+      "run_id": 39593867565,
+      "status": "completed",
+      "workflow_id": 312030668
+    },
+    {
+      "conclusion": "pending",
+      "head_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "name": "Quality",
+      "run_id": 39596417892,
+      "status": "in_progress",
+      "workflow_id": 312030668
+    },
+    {
+      "conclusion": "failure",
+      "head_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "name": "Security",
+      "run_id": 39596418044,
+      "status": "completed",
+      "workflow_id": 308213475
+    },
+    {
+      "conclusion": "success",
+      "head_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "name": "iOS launch contract",
+      "run_id": 39596417543,
+      "status": "completed",
+      "workflow_id": 312030667
+    }
+  ],
+  "schema_version": 1
+}

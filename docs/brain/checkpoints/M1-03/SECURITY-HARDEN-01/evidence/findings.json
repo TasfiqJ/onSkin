@@ -1,0 +1,79 @@
+{
+  "admission": "NONE",
+  "current": [
+    {
+      "disposition": "UNREVIEWED",
+      "end": {
+        "col": 68,
+        "line": 12,
+        "offset": 629
+      },
+      "git_blob": "d69576420d38f94b0eb0ac108b09da3294619724",
+      "id": "583832ac6152d17dae3771a7f27f7ef17921be9d7d6b2e6454fd837f61791a87",
+      "path": "scripts/security_readiness/m103/reconcile.py",
+      "rule": "python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+      "severity": "WARNING",
+      "start": {
+        "col": 13,
+        "line": 12,
+        "offset": 574
+      }
+    },
+    {
+      "disposition": "UNREVIEWED",
+      "end": {
+        "col": 67,
+        "line": 39,
+        "offset": 2307
+      },
+      "git_blob": "f48e4fe0187a5c1e5c484d291826fa63d79cb633",
+      "id": "ea5b944eef1db0c4ee17a3695b225a103acf69678cdb7fec87c376259487b4d8",
+      "path": "scripts/security_readiness/m103/sandbox.py",
+      "rule": "python.lang.security.audit.dangerous-os-exec-tainted-env-args.dangerous-os-exec-tainted-env-args",
+      "severity": "ERROR",
+      "start": {
+        "col": 20,
+        "line": 39,
+        "offset": 2260
+      }
+    },
+    {
+      "disposition": "UNREVIEWED",
+      "end": {
+        "col": 83,
+        "line": 52,
+        "offset": 3493
+      },
+      "git_blob": "a7d7b6864f9c764abc7af0282e0e85158759418f",
+      "id": "7f4aafab726ce3e4d0bf916e18dd1f747cfcd0dc6560931f4decd291b41d28db",
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "rule": "python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+      "severity": "WARNING",
+      "start": {
+        "col": 28,
+        "line": 52,
+        "offset": 3438
+      }
+    },
+    {
+      "disposition": "UNREVIEWED",
+      "end": {
+        "col": 68,
+        "line": 87,
+        "offset": 6047
+      },
+      "git_blob": "a7d7b6864f9c764abc7af0282e0e85158759418f",
+      "id": "7188fb631d5710ea546d7fb361237fb1c75650236f52de90db9c2b120b922740",
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "rule": "python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1",
+      "severity": "WARNING",
+      "start": {
+        "col": 13,
+        "line": 87,
+        "offset": 5992
+      }
+    }
+  ],
+  "prior_proposals_sha256": "0254c2a68d63eb2ec5c2cf90692e3db6e0d29023b722690ff23d041e03e06ee6",
+  "prior_three_unchanged_review": "UNREVIEWED; no harmless disposition adopted"
+}

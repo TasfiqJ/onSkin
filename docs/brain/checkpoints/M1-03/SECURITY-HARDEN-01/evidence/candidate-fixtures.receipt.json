@@ -1,0 +1,19 @@
+{
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B scripts/security_readiness/m103/fixtures.py /root/onskin-overnight01-sh01-candidate04 /root/onskin-sh01-positive-fixture",
+  "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-21T11:47:38.651205+00:00",
+  "kind": "LOCAL_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-fixtures.txt",
+    "sha256": "6ee6be0f5777dece84983506b630de159d35acae113353320bb12645b38d43e6"
+  },
+  "schema_version": 1,
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_reported_scope": "Actual committed snapshot; external/provider/expert axes remain separate",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "started_at_utc": "2026-10-21T11:47:29.501000+00:00",
+  "status": "PASS",
+  "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+}
