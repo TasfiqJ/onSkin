@@ -93,6 +93,8 @@ class SecretScanTests(unittest.TestCase):
             with self.assertRaises(ValueError): self.validate()
     def test_raw_reports_findings_and_exits_remain_independent(self):
         self.proof['commands']['gitleaks-current'].update(exit=2,report=[{'synthetic': 'finding'}]); self.save()
+        with self.assertRaisesRegex(ValueError,'TRUNCATED_REPORT'):self.validate()
+        row=self.proof['commands']['gitleaks-current'];row['stderr']=row['stderr'].replace('no leaks found','leaks found: 1');row['stderr_sha256']=s.sha(row['stderr'].encode());self.save()
         with self.assertRaisesRegex(ValueError,'CURRENT_SOURCE_FINDINGS'):self.validate()
         self.proof, self.sarif = synthetic_proof(self.scope); self.sarif['runs'][0]['results']=[{}]; self.save()
         with self.assertRaisesRegex(ValueError,'SARIF_SUBSTITUTION'):self.validate()
