@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-21T15:31:06.586Z",
+  "generatedAt": "2026-10-21T15:34:34.411Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "760745cfe321c0453a17f7fe2340d49098c849e6",
-  "gitStatus": "?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/derived-preimages.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-lint.receipt.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-test.receipt.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-typecheck.receipt.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/primary-history-witnesses.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile.receipt.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/windows-governance-68.receipt.json\n?? docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check.receipt.json",
+  "gitSha": "2cdcb843025aacd8f7cf9c0f09814872ff126af8",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 414,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -3088,7 +3088,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }
