@@ -123,10 +123,13 @@ def git_scope(root):
     commits = sorted(set(git(root, 'rev-list', '--all', 'HEAD').decode().splitlines()))
     require(head in commits and bool(refs), 'NEWEST_COMMIT_MISSING')
     patch_commits = []; current_commit = None
+    # Gitleaks8.24.3 counts commits only after its built-in binary/deletion
+    # filter. Keep every reachable commit above, and independently reproduce
+    # that counter without adding exclusions to the scanner command.
     for line in git(root, 'log', '--all', 'HEAD', '--full-history', '--diff-merges=first-parent',
-                    '--format=COMMIT%H', '--raw').decode().splitlines():
+                    '--format=COMMIT%H', '--numstat', '--diff-filter=d').decode().splitlines():
         if line.startswith('COMMIT'): current_commit = line[6:]
-        elif line.startswith(':') and current_commit not in patch_commits: patch_commits.append(current_commit)
+        elif re.match(r'^\d+\t\d+\t', line) and current_commit not in patch_commits: patch_commits.append(current_commit)
     rows = []
     for item in git(root, 'ls-tree', '-rz', '--full-tree', head).split(b'\0'):
         if not item: continue

@@ -109,6 +109,15 @@ class SecretScanTests(unittest.TestCase):
         scope=s.git_scope(self.root)
         self.assertIn(scope['head'],scope['patch_commits'])
         self.assertIn('Non-secret newest merge sentinel',self.git('log','--all','--full-history','--diff-merges=first-parent','-p').decode())
+    def test_binary_and_deletion_commits_remain_in_reachable_history(self):
+        (self.root/'binary.dat').write_bytes(b'\0non-secret-binary')
+        self.git('add','.');self.git('-c','commit.gpgsign=false','commit','-qm','Synthetic binary only')
+        binary=self.git('rev-parse','HEAD').decode().strip()
+        self.git('rm','-q','sentinel.txt');self.git('-c','commit.gpgsign=false','commit','-qm','Synthetic deletion only')
+        scope=s.git_scope(self.root)
+        self.assertIn(binary,scope['commits']);self.assertIn(scope['head'],scope['commits'])
+        self.assertNotIn(binary,scope['patch_commits']);self.assertNotIn(scope['head'],scope['patch_commits'])
+        self.assertTrue(any(r['path']=='binary.dat' for r in scope['snapshot']))
     def test_safe_archive_and_byte_substitution_refuse_before_execution(self):
         def archive(name,kind=tarfile.REGTYPE):
             out=io.BytesIO()

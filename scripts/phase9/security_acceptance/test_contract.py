@@ -344,7 +344,7 @@ class ContractTests(unittest.TestCase):
    p.write_bytes(original)
  def test_original_workflow_omitted_added_or_linked_artifacts_reject(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
-  for name in w.LEGACY_FILES:
+  for name in w.LEGACY_FILES|w.SECRET_FILES:
    p=root/name;original=p.read_bytes();p.unlink()
    with self.subTest(missing=name):
     with self.assertRaises((c.Rejected,FileNotFoundError)):w.original_jobs(root,needs,commit,run_id,fresh)
