@@ -1,0 +1,33 @@
+{
+  "environment_id": "ccarenv_b64_Y2NhcmVudl82OTE1MzUzOTIyYWM4MTkxYmE1YmU5NmQ1MmIxYThiNg",
+  "connectivity": "connected",
+  "cwd": "/workspace/onSkin",
+  "python": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+  "python_version": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "node": "v22.23.4",
+  "npm": "10.9.9",
+  "node_executable": "/workspace/sc03-runtime-recovery/node-v22.23.4-linux-x64/bin/node",
+  "node_tar_sha256": "1805bcd35e6815559bd2eb97db438d3fdb0eb3a5e6a977b7c1badca76337e9ce",
+  "initial_default_node": "v24.19.0; not used for npm/root validation",
+  "network_setup": "restricted package-manager preset, enforced; no policy changes",
+  "native_runtime_environment_changes": "NONE: fresh task venv only; no OS packages, wheels, library replacement, path filtering, symlink hacks or loader changes",
+  "incremental_external_spend_usd": 0,
+  "approved_cloud_disk": {
+    "total": 33770192896,
+    "used": 5279756288,
+    "free": 26755674112
+  },
+  "limits": {
+    "memory.max": "17179869184",
+    "memory.swap.max": "max",
+    "cpu.max": "400000 100000",
+    "pids.max": "max"
+  },
+  "cpu_count": 5,
+  "disk_at_final_measurement": {
+    "total": 33770192896,
+    "used": 5279780864,
+    "free": 26755649536
+  }
+}

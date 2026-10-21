@@ -1,0 +1,5 @@
+{
+  "exit": 1,
+  "seconds": 202.83078026771545,
+  "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v"
+}

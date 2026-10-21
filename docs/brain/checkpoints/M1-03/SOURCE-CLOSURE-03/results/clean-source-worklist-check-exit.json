@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "exit": 0,
+  "seconds": 0.44904232025146484,
+  "source_commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+  "source_tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e"
+}

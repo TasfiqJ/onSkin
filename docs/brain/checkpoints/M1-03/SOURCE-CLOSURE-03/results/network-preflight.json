@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/usr/bin/bwrap",
+    "--unshare-all",
+    "--die-with-parent",
+    "--new-session",
+    "--cap-drop",
+    "ALL",
+    "--ro-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--dev",
+    "/dev",
+    "--",
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "import sys,socket,errno,json\nsys.path.insert(0,\"/workspace/onSkin/scripts/security_readiness/m103\")\nfrom sandbox import deny_network\nheld=[socket.socket(f,socket.SOCK_STREAM) for f in (socket.AF_INET,socket.AF_INET6)]\ndeny_network()\nchecks=[]\nfor s in held:\n addr=(\"127.0.0.1\",9) if s.family==socket.AF_INET else (\"::1\",9)\n for method,args in [(\"connect\",(addr,)),(\"bind\",(addr,)),(\"listen\",(1,))]:\n  try:getattr(s,method)(*args)\n  except OSError as e:assert e.errno==errno.EPERM,(method,e);checks.append([str(s.family),method,e.errno])\n  else:raise AssertionError(method+\" permitted\")\nfor f in (socket.AF_INET,socket.AF_INET6):\n try:socket.socket(f,socket.SOCK_STREAM)\n except OSError as e:assert e.errno==errno.EPERM;checks.append([str(f),\"socket\",e.errno])\n else:raise AssertionError(\"socket permitted\")\nprint(json.dumps(checks))\n"
+  ],
+  "exit": 0,
+  "stdout": "[[\"2\", \"connect\", 1], [\"2\", \"bind\", 1], [\"2\", \"listen\", 1], [\"10\", \"connect\", 1], [\"10\", \"bind\", 1], [\"10\", \"listen\", 1], [\"2\", \"socket\", 1], [\"10\", \"socket\", 1]]\n",
+  "stderr": ""
+}

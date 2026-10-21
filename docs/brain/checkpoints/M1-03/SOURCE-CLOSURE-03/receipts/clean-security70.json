@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+  "working_directory": "/workspace/sc03-runtime-recovery/measured-repo",
+  "environment": "Same Codex Cloud Linux x86_64; Python 3.12.14; Node 22.23.4/npm 10.9.9 for npm commands; independent no-hardlinks clone, no alternates",
+  "source_commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+  "source_tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/results/clean-security70.log",
+    "sha256": "81129d2625b89374a7690b1bdc967557eeff58f2f36903d7293e978ce9b9fd73"
+  },
+  "counts": {
+    "passed": 70,
+    "failed": 0,
+    "skipped": 0
+  }
+}

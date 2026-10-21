@@ -1,0 +1,50 @@
+{
+  "admission": "NONE",
+  "status": "PARTIAL_BLOCKED_REVIEW_REQUIRED",
+  "gates": [
+    {
+      "id": "K01",
+      "status": "PASS",
+      "detail": "Both external verifiers, exact initial refs/tree, 12 preimages and one writer"
+    },
+    {
+      "id": "K02",
+      "status": "PASS",
+      "detail": "3,265 authentic witnesses / 112 references / 67 endpoints; offline independent pack roundtrip; eight genuine Git adverse cases"
+    },
+    {
+      "id": "K03",
+      "status": "PASS",
+      "detail": "Clean governance 69 pass + 2 unchanged Windows skips; history 8/8; original Linux Security 70/70 and secret fixtures 12/12, separate"
+    },
+    {
+      "id": "K04",
+      "status": "BLOCKED_CLOUD_CAPABILITY",
+      "detail": "Two finite probes exhausted; unchanged runtime_inputs raises RUNTIME_LIBRARY_MISSING; fresh 66-wheel candidate and nine candidate tests NOT_RUN"
+    },
+    {
+      "id": "K05",
+      "status": "NOT_RUN",
+      "detail": "All four pinned bundles NOT_RUN; no new coverage/findings/parser totals"
+    },
+    {
+      "id": "K06",
+      "status": "PARTIAL_TESTED",
+      "detail": "Node22 npm ci, forced root6067/typecheck/lint, clean worklist pass; original CI and owner refusals remain separate"
+    },
+    {
+      "id": "K07",
+      "status": "PARTIAL_TESTED",
+      "detail": "Authorized tested stage delivery only; independent Brain review required"
+    }
+  ],
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "bounded_owner_action": "Environment owner provides a supported clean trusted CPython3.12 with full native closure; Brain reauthorizes fresh sealed execution. No scanner/pin/policy changes.",
+  "security_db_owner_blockers": [
+    "Original Security proposal expired 2026-10-21T00:00:00Z; no renewed issuer receipt",
+    "SAST/provider-secret/npm/OSV observations remain UNKNOWN/UNREVIEWED; no found credential validation",
+    "Frozen original source inventory/owner/rule boundaries unchanged",
+    "DB06 unconditional replay refusal; DB08 linked-target parity; R2B supabase_admin ACL issuer/receipt unresolved"
+  ]
+}

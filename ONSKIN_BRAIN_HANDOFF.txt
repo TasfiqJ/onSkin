@@ -1,13 +1,64 @@
-M1-03 / SOURCE-CLOSURE-02 — BLOCKED_HOST_CUSTODY. STOP for independent Brain review; admission NONE.
-Existing branch stage/m1-retained-safety; PR9 draft/unmerged; mainbbc28dc3d1f945191a81be56945b8bda7bb6ef73 unchanged. One writer, no delegation or background continuation.
-Source/input base3600db9b5812acebd718111b6bf58efcb554487d; treefe6148d303adcaf3092c073cefca8ee92065c10e. No new implementation commit, measured test source, active execution marker or test run.
-Independent manifestdde42dff63522aa0620d188f5d9051f06e138e8c43abb1ec6160fb8d918cfe97 and all12 supplied file bytes pass the supplied verifier. All10 current blobOID+SHA256+working preimages match; former overnight mismatch is corrected in new authority only.
-Host C free approximately0.10GiB versus mandatory30GiB. WSL inventorySTOPPED; no Linux launch/internal-free probe because host gate failed. Earlier WSL E_FAIL remains historical.
-Evidence rootdocs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/. README, RESULTS, ACCEPTANCE_MATRIX, BLOCKERS and strictly hashed host-stop completion-report.json preserve exact observations. Exact new reviewdocs/brain/reviews/M1-03/SC01-REVIEW01/BRAIN_REVIEW.md. Prior SC01 and all other inputs/reviews unchanged.
-This delivery adds only small custody inputs/review/receipts, .gitattributes for new review byte preservation and this handoff; final pushed evidence SHA/tree are reported in session response and resolve on the existing stage ref. No source closure or whole M1-03 acceptance.
-Original3600db9b CI: Quality39628029199FAIL Expo patch compatibility; canonical DB119318932810PASS, PG15/17PASS, Expo exportsSKIPPED. Security39628029041FAIL despite Static/OSV70/70 and secretfixture12/12PASS. iOS39628029045PASS SOURCE_ONLY. Merge checkout03cf29ee7c14163be9cdbccb967f5de42afabf17 treefe6148d303adcaf3092c073cefca8ee92065c10e. Later delivery CI remains distinct/pending until observed.
-Remaining NOT_RUN: real-object sequencing fix/adversarial hydration tests, historical full68+new, independent Linux70, candidate9+66wheel verification, new originalfourbundle scan/probes, forcedroot/type/lint and new source-governance profile negatives. Parser cycles0; historical scan findings not borrowed.
-ONE custodian request: restore>=30GiB usable C free via properly authorized OS capacity recovery, preserve all onSkin/retained/WSL/clone/temp data, restore existing onskin-r6-verification healthy without reset/reinstall/data loss, then return for readonly preflight and Brain review. No deletion/cleanup/move retry or bypass, purchases, credentials or registry login.
-Security original/current/candidate findings and npm/OSV remain UNREVIEWED/UNKNOWN; original2026-10-21T00:00:00Z window expired unchanged. DB06 replay refusal, DB08 linked parity and R2B issuer/receipt remain closed; canonical local success is not hosted replay.
-protected_source_go=false; main_promotion_authorized=false; spend0; accepted onlyM0-01/M0-02/M1-01/M1-02. No M2/SQL/types/Edge/provider mutation/signing/TestFlight/deployment/release/main merge.
-ContextMEDIUM; no compaction observed. No cleanup was attempted or approval requested this session. Stop after safe stage push; no automatic follow-up.
+onSkin M1-03 / SOURCE-CLOSURE-03 — PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED
+Authority: M103-SC03-CLOUD-RUNTIME-RECOVERY-01 only. Source-only, NON_ADMITTING.
+Independent Brain review required. No self-acceptance, Security GO or main promotion.
+
+Base: aa598d0c93fcc416ba02cbda9333953430bb2ede
+Base tree: 6dd2010073d913ca400c201f6d58ed1212fa97d4
+Implementation: 79db3088b42e0de2671cbeda27e1cfc0bdc3c9db
+Implementation tree: 43a6bcee9d505c54e68bb730947053124160ec3b
+Measured source/worklist: ad7ba39e59566ebf076c385fdcc32377af6ead15
+Measured tree: f38cf743d83a5e82f4780c5b312a09c0b59a2a4e
+Evidence-only tail: containing commit; exact final pushed SHA/tree in external final delivery receipt and final response.
+Measured PR9 merge checkout: 404685389c0a388fec6a9f57e1693663a7e0a201
+Measured PR9 merge tree: f38cf743d83a5e82f4780c5b312a09c0b59a2a4e
+Main unchanged: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+Existing stage/m1-retained-safety only. Normal pushes, no force/reset/rebase/merge.
+PR9 remains draft/open/unmerged; no substitute PR.
+
+Changed: acquire authentic Git objects before witness verification, including missing commit/tree descendants.
+Retained offline verification, authentic SHA1/SHA256, endpoint type/identity and completeness.
+8 real Git cases pass; original preimage fails the real missing-history positive regression.
+3,265 witnesses / 112 references / 67 authentic endpoints; private independent pack roundtrip PASS.
+Pack SHA256: 82614addd5d35f3f3830d224a81b5c7b0743b01b22c26e7683b400afd49f4351
+Historical OVERNIGHT and SC01 fixtures now use exact old endpoints and independent copied objects.
+All five baseline failures repaired; every old negative assertion and both Windows-only skips retained.
+Additive exact SC03 profile preserves disjoint old intervals and refuses false authority/protected paths.
+
+Clean independent measured checkout:
+- Governance: 69 PASS, 0 FAIL/ERROR, 2 Windows-only SKIP (71 = original65 + SC01 3 + SC03 profile3).
+- New historical Git suite: 8/8 PASS, separate.
+- Original supported Linux Security: 70/70 PASS, independently run.
+- Original secret scope/receipt fixtures: 12/12 PASS, separate.
+- Node22.23.4/npm10.9.9 official hash-verified runtime; npm ci exit0, lock unchanged.
+- Forced root: 6,067 PASS; typecheck/lint exit0; zero cached Turbo tasks.
+- Original source-worklist: unchanged-generator regeneration and clean strict check PASS.
+
+K01/K02/K03 PASS. K04 BLOCKED_CLOUD_CAPABILITY. K05 NOT_RUN.
+K06/K07 PARTIAL_TESTED, review required. No new scan coverage/findings/parser totals.
+Sole preinstalled vendor Python3.12 full stdlib contains ambient Tcl/Tk9/CasADi ELF dependencies.
+Fresh task venv still fails unchanged runtime_inputs with RUNTIME_LIBRARY_MISSING.
+Two finite probes exhausted; distro query returned no package candidate and an apt-config permission warning.
+No installation or permissions workaround, scanner/capsule/pin/rule/loader change, or 67th wheel.
+Fresh 66-wheel install/nine candidate cases/four-bundle scan NOT_RUN; prior reported wheel success not reproduced.
+Actual namespace+original seccomp preflight denies IPv4/IPv6 socket/connect/bind/listen (8 checks).
+One bounded owner action: provide supported trusted clean Python3.12 with complete official ELF closure,
+then obtain Brain reauthorization for a fresh sealed candidate/scan; no source-policy bypass.
+
+Measured-head original CI: Quality39695723429 still running with Expo compatibility failed,
+PG15/17 passed and canonical DB job still running at observation; no old ECR failure projected forward.
+Security39695723441 still running, original code/secret/static enforcement jobs failed;
+automated acceptance job still running at observation. iOS39695723484 SUCCESS, source-only.
+Final evidence-head CI is separate; external final receipt records exact observed run IDs/statuses.
+
+Original Security remains unaccepted: expired2026-10-21T00:00:00Z proposal, frozen source inventory,
+UNKNOWN/UNREVIEWED SAST/provider-secret/npm/OSV evidence. No found-credential validation or new waiver.
+DB06 unconditional replay refusal, DB08 linked-target parity, R2B supabase_admin ACL issuer/receipt unresolved.
+No SQL/types/Edge/phase2, live provider/patient/JANUS/PHI, M2/J05, paid services, signing or release.
+Accepted only M0-01/M0-02/M1-01/M1-02; 47 tasks, 27 module identities, 51 ADRs retained.
+Zero incremental external spend. One source writer. Earlier immutable contexts/reviews/evidence untouched.
+
+Evidence: docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/
+Strict completion-report.json, 11 exact measured execution receipts, SHA256-bound raw-safe results,
+all intermediate failures, capability/scan NOT_RUN matrix, original immutable recovery/context copies.
+Review path contains Brain-issued inputs only, not independent post-code approval.
+Context MODERATE; no compaction observed. STOP for independent Brain review.

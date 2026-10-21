@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "exit": 0,
+  "seconds": 28.981465339660645
+}
