@@ -5,8 +5,8 @@
   "branch": "stage/m1-retained-safety",
   "status": "SUBMITTED_REVIEW_REQUIRED",
   "measured": {
-    "commit": "e04c77b2fc1975139aaa5f240968f9d8d3f72792",
-    "tree": "1f83d386bac4b4125abf74f728731bb3f1a24c63"
+    "commit": "676bde2e3d6865fa7d51180209d7f64fee2ee789",
+    "tree": "09a772fb17d074b22549f1ee263aaa108bb8f6cc"
   },
   "delivery_ref": "refs/heads/stage/m1-retained-safety",
   "executions": [
@@ -3283,12 +3283,20 @@
       "sha256": "61c187208eb6d7c9b01667a293cb72440ca3c839e4414de82c0f960b3efca87a"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json",
+      "sha256": "ff5f1acfc606fa63a9be16605f04cdcc16f57b9ee149c6b06bb0ad865228ef7b"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/classifier.receipt.json",
       "sha256": "58d7da0723fe2c5437d74392046b1b86f7ec9b95b46550b61e5f4ab2249d4e77"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/classifier.txt",
       "sha256": "7d6b23a650695d95f89d668127d6b725e7df572a412e0a3f1e972f8b920622b1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/clean-worklist-generation.txt",
+      "sha256": "ac809e7dd4777816fdf7746026d0928c846810600d471b5affe29dd276c7f747"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser/screen.png",
@@ -3719,6 +3727,10 @@
       "sha256": "cace07a5803f4610414370e65796485851c502760606fd60797097abdaf2ac85"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json",
+      "sha256": "e8bbc5db86526842a6a92d88660c927ded7a23f2c4859e02737a5c4673f18874"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/typecheck.receipt.json",
       "sha256": "5c40507248ad2b4aa807b236bbd01a449a6b7512f0a02fcea480adc79c16eddb"
     },
@@ -4088,5 +4100,36 @@
     "installation_and_outer_wrapper_attribution_corrections_explicit": true,
     "stop": "Independent Brain review; no next task/research request"
   },
-  "ci": []
+  "ci": [
+    {
+      "run_id": 39517479335,
+      "workflow_id": 312030667,
+      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "name": "iOS launch contract",
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json"
+    },
+    {
+      "run_id": 39517479326,
+      "workflow_id": 308213475,
+      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "name": "Security",
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json"
+    },
+    {
+      "run_id": 39517479330,
+      "workflow_id": 312030668,
+      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "name": "Quality",
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json"
+    }
+  ]
 }

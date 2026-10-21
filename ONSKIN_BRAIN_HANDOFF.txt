@@ -1,8 +1,8 @@
 M1-03 / CONT-01 — SUBMITTED_REVIEW_REQUIRED; STOP FOR INDEPENDENT BRAIN REVIEW
 Branch: stage/m1-retained-safety
 Delivery ref: refs/heads/stage/m1-retained-safety (resolve containing delivery commit / PR9; exact final SHA and remote push result are in the post-push observation below and final response).
-Measured implementation: e04c77b2fc1975139aaa5f240968f9d8d3f72792
-Measured tree: 1f83d386bac4b4125abf74f728731bb3f1a24c63
+Measured implementation: 676bde2e3d6865fa7d51180209d7f64fee2ee789
+Measured tree: 09a772fb17d074b22549f1ee263aaa108bb8f6cc
 Last code commit/tree: e04c77b2fc1975139aaa5f240968f9d8d3f72792 / 1f83d386bac4b4125abf74f728731bb3f1a24c63
 Continuation base/tree: c14a3105640034a9d7a47d34533f9bd40faa4cc4 / eb9bb55569b75dba730ae69e8eb5c703804cfc58
 Original task base: 2de9ef75a1a1d539b0520ca22160abd6171c9c3b
