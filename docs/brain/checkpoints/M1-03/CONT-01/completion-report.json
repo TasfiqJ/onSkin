@@ -461,6 +461,21 @@
       "sha256": "654905fef88f94aff2f7371c8ee6c72394d2b3cb3a2ec31150b9dbb44c1b7642"
     },
     {
+      "command": "node scripts/phase9/ios-privacy-source-audit.mjs --check --strict",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+      "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+      "source_commit": "20cd7d8f95bf889362a56620f9945190c571d5a1",
+      "source_tree": "14cd401c53854f876293176c3b4a9225cc78f34c",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "ios-mapping-lock-refusal",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ios-mapping-lock-refusal.receipt.json",
+      "sha256": "70115e7bfe150becee7e717d9a1973523355e440ecf48b617d792040871e8fe2"
+    },
+    {
       "command": "npm.cmd run lint -- --force",
       "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
       "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
@@ -3283,6 +3298,10 @@
       "sha256": "61c187208eb6d7c9b01667a293cb72440ca3c839e4414de82c0f960b3efca87a"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-first-delivery.observation.json",
+      "sha256": "26d3f81819dcb3aedb2a4f069749451699f25c185be8f1127b69df820f5692af"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json",
       "sha256": "ff5f1acfc606fa63a9be16605f04cdcc16f57b9ee149c6b06bb0ad865228ef7b"
     },
@@ -3447,6 +3466,142 @@
       "sha256": "d2f57ca4c2b210e8c363f325b8db9c7758958150f9259be69a3e9c1d1a30bd9e"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/downloaded-artifact-inventory.json",
+      "sha256": "3099fe1ace54aa17b9fc2673d43ee1668f18a21a8800670eb9021d68026a0df3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/final-original-jobs.json",
+      "sha256": "6d5d95022f9a1c4b65d27086a965ebc54d7c7fb25fad59035b82f93d660a2dd6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/independent-original20-binding.json",
+      "sha256": "11dd16b2622b8d85d30e3aa2e6da0b102fddc65072cd9ce44d4ea6c792b804af"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275609.log",
+      "sha256": "2cdc2dba0ff83d9c91ed7abfa9dede7edb548601d1a7d764b4204288a3b1fdb9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275892.log",
+      "sha256": "964fa775e7335ef634c16be9bccdeb8a8334d96e8d6f7622fde2024f190d1441"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275954.log",
+      "sha256": "95f0b3877b00e44a120bcc40121ab26a72752e7fc0b387abc7372ca58133929d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996276257.log",
+      "sha256": "d2f43a69e5e507179ba603b29a161546d9cbdc88bcf0789a6d8a2486a75b3ff5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118997685565.log",
+      "sha256": "957b5228af058d4294069e50e570498f518808b79c9a3c217b5a6e90f9396350"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/code-gates-outcomes.json.gz",
+      "sha256": "46dcb866f1c13c447ba8c189c2ce6b1a4c796da19c4f705768bd8ee191700506"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-inventory.json.gz",
+      "sha256": "cede82da929ee57c927b60f412cf533249c8f392fc7e1e913cf67ccde9c35459"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-sbom-audit.exit-code.gz",
+      "sha256": "c28cc69d141393e44a931229323624ef7b8c5bde3ee047ca9b87332daef23c82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-sbom-audit.json.gz",
+      "sha256": "9994d13b6fcd51f3d04b5677af2e08de3a1a7f79be7eaccf296e17929f91f212"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-sbom.exit-code.gz",
+      "sha256": "c28cc69d141393e44a931229323624ef7b8c5bde3ee047ca9b87332daef23c82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-audit-high.exit-code.gz",
+      "sha256": "c28cc69d141393e44a931229323624ef7b8c5bde3ee047ca9b87332daef23c82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-audit-high.json.gz",
+      "sha256": "f2fd13fc2d1a9129163350983f21d40e7fdf7c2fde9118e35a8f4652fb0ad715"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-exception-gate.exit-code.gz",
+      "sha256": "c28cc69d141393e44a931229323624ef7b8c5bde3ee047ca9b87332daef23c82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-exception-gate.stderr.gz",
+      "sha256": "942028837d6ab4d9ebd0b20cd07d44da36acbcd50aa244e93c1f6229ff15acd1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-exception-gate.stdout.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-decision/g97-decision.json.gz",
+      "sha256": "b368c929af690fbbfa2c9989b1238e2f517ef93f95f16e43b721518644ed120f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/gitleaks-results.sarif.gz",
+      "sha256": "3621ea5848378866934a6907b03b50dc8d145d97fc45570dd69eeb2d76a563b3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/gitleaks-tool.json.gz",
+      "sha256": "e47461617bfe94ff930479775e7e3d0ce471f31f5d1aa4376d08939a1eddd110"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/secret-scan-outcomes.json.gz",
+      "sha256": "50c7081c1b7c123bb9c3b9e952b89949f7ba130217d230b599e9818d5e061508"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/secret-scan-proof.json.gz",
+      "sha256": "44d3033f7daa80f0ba36780e69910cccd5a276a97a67846a08db0481896b4a87"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/summary.json",
+      "sha256": "c0495a000f86dd7df5c78accd67afdf71c5fd95f4c00092369053a0757cbf24a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-exception-gate.exit-code.gz",
+      "sha256": "c28cc69d141393e44a931229323624ef7b8c5bde3ee047ca9b87332daef23c82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-exception-gate.stderr.gz",
+      "sha256": "050337be39cc6e3d5794783182c9eedc06c2bce51b54b806f6f5242d3d9e16ae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-exception-gate.stdout.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-scan.exit-code.gz",
+      "sha256": "c28cc69d141393e44a931229323624ef7b8c5bde3ee047ca9b87332daef23c82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-scan.json.gz",
+      "sha256": "66e8f14ed25d110708f4021dbd0bca4664b4b36bfefd3d0a28f00927e586e566"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/static-analysis-outcomes.json.gz",
+      "sha256": "9837c0f3e27138268d462f33c84b63ebeb41d6d6d0a3ed3946e22ae90df3d616"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/source-checkout-and-jobs.json",
+      "sha256": "6527ea257f8598ec1649467d9b8db42ad1d4393f2186c76bb853c5bc9db27f8f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/git-whitespace-0.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/git-whitespace-1.txt",
+      "sha256": "e56497b0ec853ea47ced7626e65ccc3c222fc20b7fca8b21c488892040c0eb12"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/git-whitespace-disposition.json",
+      "sha256": "93872d6aac059005afc4d5cd417e7efaa578333fcaa23ec822cc93c90e774968"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/governance.receipt.json",
       "sha256": "654905fef88f94aff2f7371c8ee6c72394d2b3cb3a2ec31150b9dbb44c1b7642"
     },
@@ -3485,6 +3640,14 @@
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/intake-ci.json",
       "sha256": "ab9c95c310a0392e1a111fcede08bd1aae49fe87fbb42f5be8e25a58f643d994"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ios-mapping-lock-refusal.receipt.json",
+      "sha256": "70115e7bfe150becee7e717d9a1973523355e440ecf48b617d792040871e8fe2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ios-mapping-lock-refusal.txt",
+      "sha256": "11b81abb023031e3cc5427c1840aa5330d6f4a96233d8f27424d7c6d3a7f3600"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/isolated-installation.json",
@@ -3812,7 +3975,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/INERT_PROPOSALS.md",
-      "sha256": "930e2329204d0340871e1e86a5ac1f831329e88996acef1f42b08d01a25ee897"
+      "sha256": "39a253ef0f22561a8cee56522b96ad4a3f06d1b88643d6bbf61d0ba282613670"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/inputs/00_READ_FIRST.md",
@@ -3975,6 +4138,10 @@
       "sha256": "b324574efba1dba96bed5e69b41becec360dd5e64555135703614b0441a05f37"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/ios-mapping-lock.INERT.patch",
+      "sha256": "5b6bd2d367d6121f66e43aaa95fc436c4287255f125c90c24ca479ee1368ed4c"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/README.md",
       "sha256": "9992b10c97e82601026557ebe40ce88ad91e5661aeb4dec18b8a9fd30763782a"
     },
@@ -3984,7 +4151,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/CONT-01/VALIDATION.md",
-      "sha256": "03127a59b59e0b52b0628351d1059113afbf0297ad7b6d1143880734f7824981"
+      "sha256": "79027cc59007e87358e8f954f43f35ca575b6a6fa8d42fd4e88ed6dcbe092130"
     }
   ],
   "scope_matrix": [
@@ -4080,6 +4247,7 @@
   },
   "blockers": [
     "Independent Brain review required; whole M1-03 remains incomplete and M2 unissued.",
+    "Quality/native source audit refuses three unchanged iOS SDK whole-lock custody pins after the authorized lock change. Exact three-field inert proposal only; mapping file is outside this source authorization.",
     "Security remains red: frozen source/SAST inventory and expired proposal/reviews; no manifest, pin, date or exception renewal.",
     "Complete original scans expose additional merge-history and current manifest-digest records outside frozen typed history; raw findings/exits refused, no leak inferred.",
     "Standalone historical SBOM fixture/current-lock mismatch remains failed; exact inert follow-up only.",
@@ -4101,6 +4269,36 @@
     "stop": "Independent Brain review; no next task/research request"
   },
   "ci": [
+    {
+      "run_id": 39530897016,
+      "workflow_id": 312030668,
+      "head_commit": "9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+      "name": "Quality",
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-first-delivery.observation.json"
+    },
+    {
+      "run_id": 39530897018,
+      "workflow_id": 312030667,
+      "head_commit": "9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+      "name": "iOS launch contract",
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-first-delivery.observation.json"
+    },
+    {
+      "run_id": 39530897028,
+      "workflow_id": 308213475,
+      "head_commit": "9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+      "name": "Security",
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-first-delivery.observation.json"
+    },
     {
       "run_id": 39517479335,
       "workflow_id": 312030667,

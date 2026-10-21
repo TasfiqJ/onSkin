@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "recorded_at_utc": "2026-10-21T02:14:43Z",
+  "repository": "TasfiqJ/onSkin",
+  "runs": [
+    {
+      "run_id": 39530897016,
+      "workflow_id": 312030668,
+      "head_commit": "9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+      "name": "Quality",
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "run_id": 39530897018,
+      "workflow_id": 312030667,
+      "head_commit": "9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+      "name": "iOS launch contract",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run_id": 39530897028,
+      "workflow_id": 308213475,
+      "head_commit": "9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+      "name": "Security",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "raw_provider": {
+    "workflow_runs": [
+      {
+        "id": 39530897016,
+        "name": "Quality",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 370,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39530897016/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39530897016/logs",
+        "workflow_id": 312030668
+      },
+      {
+        "id": 39530897018,
+        "name": "iOS launch contract",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 370,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39530897018/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39530897018/logs",
+        "workflow_id": 312030667
+      },
+      {
+        "id": 39530897028,
+        "name": "Security",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_number": 902,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39530897028/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39530897028/logs",
+        "workflow_id": 308213475
+      }
+    ]
+  },
+  "observation_limit": "Provider metadata at this finite observation; unfinished stays pending. Stage head and actual PR checkout/tree/parents are distinct bindings."
+}

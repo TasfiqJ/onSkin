@@ -1,0 +1,33 @@
+INERT EXACT PROPOSAL — NOT APPLIED. Outside M103-CONT01-SOURCE-EDIT-01.
+Preimage SHA256 5b26b47d893d76bdc3b8aa087171979d5461eb71b056afd9752d3f21520a6bed
+Only three whole-lock hashes; native versions/SRIs/source pins, source_candidate/archive-required limits unchanged. Requires separate Brain permission and rerunning existing strict source audits; no native/release acceptance.
+
+--- a/docs/phase-9/ios-sdk-package-mapping.json
++++ b/docs/phase-9/ios-sdk-package-mapping.json
+@@ -11,7 +11,7 @@
+       "version": "16.1.2",
+       "lockIntegrity": {
+         "packageLockPath": "package-lock.json",
+-        "packageLockSha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
++        "packageLockSha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+         "entries": [
+           {
+             "path": "node_modules/@react-native-google-signin/google-signin",
+@@ -73,7 +73,7 @@
+       "version": "57.0.5",
+       "lockIntegrity": {
+         "packageLockPath": "package-lock.json",
+-        "packageLockSha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
++        "packageLockSha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+         "entries": [
+           {
+             "path": "node_modules/expo-image",
+@@ -134,7 +134,7 @@
+       "version": "0.86.3",
+       "lockIntegrity": {
+         "packageLockPath": "package-lock.json",
+-        "packageLockSha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
++        "packageLockSha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+         "entries": [
+           {
+             "path": "node_modules/hermes-compiler",

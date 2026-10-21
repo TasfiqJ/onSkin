@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node scripts/phase9/ios-privacy-source-audit.mjs --check --strict",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "20cd7d8f95bf889362a56620f9945190c571d5a1",
+  "source_tree": "14cd401c53854f876293176c3b4a9225cc78f34c",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ios-mapping-lock-refusal.txt",
+    "sha256": "11b81abb023031e3cc5427c1840aa5330d6f4a96233d8f27424d7c6d3a7f3600"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T02:09:26.307055+00:00",
+  "finished_at_utc": "2026-10-21T02:09:36.995500+00:00",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "scripts/phase9/ios-privacy-source-audit.mjs",
+    "--check",
+    "--strict"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}
