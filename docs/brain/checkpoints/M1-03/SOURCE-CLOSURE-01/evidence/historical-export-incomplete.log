@@ -1,0 +1,10 @@
+warning: lazy fetching disabled; some objects may not be available
+fatal: could not fetch 3fd9788ff57b9f0d4759964574fc4a5c77de8d51 from promisor remote
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\security_readiness\m103\hydrate_history.py", line 67, in <module>
+    hydrate(args.repo.resolve(), args.pack.resolve(), args.receipt.resolve(), args.import_pack)
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\security_readiness\m103\hydrate_history.py", line 48, in hydrate
+    subprocess.run(['git', '-C', str(repo), 'pack-objects', '--stdout', '--revs'],
+  File "C:\Python39\lib\subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', 'C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean', 'pack-objects', '--stdout', '--revs']' returned non-zero exit status 128.

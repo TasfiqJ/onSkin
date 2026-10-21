@@ -1,0 +1,112 @@
+test_extra_source_and_unmeasured_allowed_source_and_false_acceptance (test_m103_cont01_profile.M103Continuation) ... warning: in the working copy of 'scripts/brain/m103_profile.py', CRLF will be replaced by LF the next time Git touches it
+FAIL
+test_positive_report_and_wrong_base_tree_branch_digest_authority (test_m103_cont01_profile.M103Continuation) ... ERROR
+test_anchors_authority_types_and_separate_intervals (test_m103_overnight01_profile.Overnight) ... FAIL
+test_committed_regular_artifacts_and_identical_local_only_refusal (test_m103_overnight01_profile.Overnight) ... FAIL
+test_independent_inputs_and_authority_refusals (test_m103_profile.M103Report) ... ok
+test_valid_and_false_evidence_refusals (test_m103_profile.M103Report) ... ok
+test_wrong_branch_old_base_and_unmeasured_source (test_m103_profile.M103Report) ... ok
+test_exact_issuance_prior_interval_and_gate_types (test_m103_security_harden01_profile.Hardening) ... FAIL
+test_intermediate_unauthorized_commit_and_malformed_preimage_refuse (test_m103_security_harden01_profile.Hardening) ... FAIL
+test_sandbox_digest_discrepancy_is_not_permission_to_edit (test_m103_security_harden01_profile.Hardening) ... FAIL
+
+======================================================================
+ERROR: test_positive_report_and_wrong_base_tree_branch_digest_authority (test_m103_cont01_profile.M103Continuation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_cont01_profile.py", line 49, in test_positive_report_and_wrong_base_tree_branch_digest_authority
+    self.save(self.name,self.value);p.report(self.root,self.name)
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\m103_profile.py", line 89, in report
+    value = m1_profile.report(root, name, task='M1-03', base=BASE,
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\m1_profile.py", line 92, in report
+    validator(root)
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\m103_profile.py", line 120, in validate_cont01
+    return _validate_cont01(root, fixed=False)
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\m103_profile.py", line 175, in _validate_cont01
+    brain.require(all(p in allowed or any(p.startswith(prefix) for prefix in prefixes) for p in changes),
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\brain.py", line 50, in require
+    raise ValueError(message)
+ValueError: CONT-01 path outside exact source-edit authorization
+
+======================================================================
+FAIL: test_extra_source_and_unmeasured_allowed_source_and_false_acceptance (test_m103_cont01_profile.M103Continuation)
+----------------------------------------------------------------------
+ValueError: CONT-01 path outside exact source-edit authorization
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_cont01_profile.py", line 70, in test_extra_source_and_unmeasured_allowed_source_and_false_acceptance
+    with self.assertRaisesRegex(ValueError,'Implementation differs'):p.report(self.root,self.name)
+AssertionError: "Implementation differs" does not match "CONT-01 path outside exact source-edit authorization"
+
+======================================================================
+FAIL: test_anchors_authority_types_and_separate_intervals (test_m103_overnight01_profile.Overnight)
+----------------------------------------------------------------------
+ValueError: OVERNIGHT-01 path outside exact authorization: docs/brain/reviews/M1-03/SH01-REVIEW01/NATIVE_AND_FIXTURE_BINDINGS.json
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_overnight01_profile.py", line 74, in test_anchors_authority_types_and_separate_intervals
+    with self.assertRaisesRegex(ValueError,'extension refused'):p.validate_overnight01(self.root)
+AssertionError: "extension refused" does not match "OVERNIGHT-01 path outside exact authorization: docs/brain/reviews/M1-03/SH01-REVIEW01/NATIVE_AND_FIXTURE_BINDINGS.json"
+
+======================================================================
+FAIL: test_committed_regular_artifacts_and_identical_local_only_refusal (test_m103_overnight01_profile.Overnight)
+----------------------------------------------------------------------
+ValueError: OVERNIGHT-01 path outside exact authorization: docs/brain/reviews/M1-03/SH01-REVIEW01/NATIVE_AND_FIXTURE_BINDINGS.json
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_overnight01_profile.py", line 45, in test_committed_regular_artifacts_and_identical_local_only_refusal
+    with self.assertRaisesRegex(ValueError,'committed regular'):p.report(self.root,self.name)
+AssertionError: "committed regular" does not match "OVERNIGHT-01 path outside exact authorization: docs/brain/reviews/M1-03/SH01-REVIEW01/NATIVE_AND_FIXTURE_BINDINGS.json"
+
+======================================================================
+FAIL: test_exact_issuance_prior_interval_and_gate_types (test_m103_security_harden01_profile.Hardening)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_security_harden01_profile.py", line 18, in setUp
+    names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 128 != 0 : error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+fatal: update_ref failed for ref 'HEAD': cannot update ref 'refs/heads/stage/m1-retained-safety': trying to write ref 'refs/heads/stage/m1-retained-safety' with nonexistent object 8babdad11791496ad6e8c45154b3b173bdddd36e
+
+
+======================================================================
+FAIL: test_intermediate_unauthorized_commit_and_malformed_preimage_refuse (test_m103_security_harden01_profile.Hardening)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_security_harden01_profile.py", line 18, in setUp
+    names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 128 != 0 : error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+fatal: update_ref failed for ref 'HEAD': cannot update ref 'refs/heads/stage/m1-retained-safety': trying to write ref 'refs/heads/stage/m1-retained-safety' with nonexistent object 8babdad11791496ad6e8c45154b3b173bdddd36e
+
+
+======================================================================
+FAIL: test_sandbox_digest_discrepancy_is_not_permission_to_edit (test_m103_security_harden01_profile.Hardening)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_security_harden01_profile.py", line 18, in setUp
+    names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 128 != 0 : error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+error: object directory C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/.git/objects? does not exist; check .git/objects/info/alternates
+fatal: update_ref failed for ref 'HEAD': cannot update ref 'refs/heads/stage/m1-retained-safety': trying to write ref 'refs/heads/stage/m1-retained-safety' with nonexistent object 8babdad11791496ad6e8c45154b3b173bdddd36e
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 230.454s
+
+FAILED (failures=6, errors=1)

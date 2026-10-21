@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "kind": "PRIMARY_HISTORICAL_WITNESS_CUSTODY",
+  "admission": "NONE",
+  "observed_at": "2026-10-21T15:31:05.851643+00:00",
+  "witnesses": 3265,
+  "references": [
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/app-lock-result.json",
+      "git_blob": "1d59c8977e3a0a7cdb737667777ca5660c7181e1",
+      "sha256": "2f0590bd83d3869ae9f85b88a0aaa52bb5c13d6633147e3908d2f43cf3f990c6",
+      "bytes": 955
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/foreground-result.json",
+      "git_blob": "e33ece94e71fc0a57a4a831ea8260b106f786abc",
+      "sha256": "0c9b5bc00d0e693228015de541fa39bf6e8e958275d3ea922a3c405ff23c7df1",
+      "bytes": 1455
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/persistent-results.json",
+      "git_blob": "6987190adc0b581cff23693a1bfc1ea285b34364",
+      "sha256": "2c25ff32a0371afe4cc4beb78756b523ba8242bb7e0b278890f21857f31a7e7f",
+      "bytes": 15489
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/progress-modern-390x844.json",
+      "git_blob": "625479a9d93b8e26ca6c2e99d55a5ab765cb7e16",
+      "sha256": "5b33c701d76375ef6233c1d941fd473e0ce86bfa2a5c0d03e321e6d56faa3083",
+      "bytes": 1455
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/progress-supported-floor-360x640.json",
+      "git_blob": "d3bc5fe1deb74f2c5f62cd2b47356d6eff4f5bcb",
+      "sha256": "f47ff7a25825bf59a81710eb90e63d6c996b85501fee1fadd4f5203c1b1ab1f1",
+      "bytes": 1473
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/retry-result.json",
+      "git_blob": "a7d2cdfedd06a6ca5ce51021ace5481a26654e01",
+      "sha256": "b0edade4a7021af499791e165e0e470bda894abc10d8ca80d7da3d20ae797ee1",
+      "bytes": 1238
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/routine-plan-modern-390x844.json",
+      "git_blob": "e86535ace418e9c806531089ea7dfc3025b59af8",
+      "sha256": "2c38d482485877c89c22ad1ac29035d84a929f643b5427e02667072d59d08adb",
+      "bytes": 1467
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/routine-plan-supported-floor-360x640.json",
+      "git_blob": "c41f5308579f22af8a1f64293052515e9cb732da",
+      "sha256": "2815e91310258469606f1a029b9378de9a20fadda1bb6a73e1c05b4641fcf62d",
+      "bytes": 1485
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/settings-privacy-modern-390x844.json",
+      "git_blob": "3efd0d61468977c67805a0aed1934c99e6b20e00",
+      "sha256": "3c93dc34db351ae89230ab49eb17d191d22b8198ca6354cce7417edf3931d345",
+      "bytes": 1479
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/settings-privacy-supported-floor-360x640.json",
+      "git_blob": "421c3d101eb18183f750ea53fc61640846d64c3c",
+      "sha256": "a1c2a128ae174e427c873327686baf16aa15a0f2c50bc25673ee127aafca61b8",
+      "bytes": 1497
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/shelf-modern-390x844.json",
+      "git_blob": "6c751d4df9b6e6e71c83839cb77e88dc765cb0ba",
+      "sha256": "8f7c2a961ef97eb5d77ca8ab23d795df3750d517ea9a520e592ea89a60d0f308",
+      "bytes": 1446
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/shelf-supported-floor-360x640.json",
+      "git_blob": "11e182101924907a10005ab5262e9386dd3c104f",
+      "sha256": "79f020541c0bbbd57701b246061df699541abd63dcb91b9fdfcc6f2b53a87fdd",
+      "bytes": 1464
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/today-modern-390x844.json",
+      "git_blob": "69d23fa07c497707cde64edf5ef4c4bec17f9816",
+      "sha256": "db1159fdf320816441fc44e848bfcd2492376ac132db63b38608d39f247f78fd",
+      "bytes": 1446
+    },
+    {
+      "reference": "04689ea3ffd0ccedb0f216dd28017af282d193ba:test-results/human-e2e/2026-07-10/private-data-availability-current/today-supported-floor-360x640.json",
+      "git_blob": "4ea919b39ae34b9a976936170c95b92471665ba9",
+      "sha256": "a4888965dc5feb15f759e9ae3813da6e3b0d81434c9d8f6b895484fee488ee60",
+      "bytes": 1464
+    },
+    {
+      "reference": "06524828bb71ae85708c74db868f6f27898e28ec:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "2ec731d065221665ae1a1d833930517b72ed7438",
+      "sha256": "f2ccea681e530ef3425d2c0cd8686c411326e152bb54902b30e5c7e0e042873a",
+      "bytes": 9665
+    },
+    {
+      "reference": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "432867bad28310fe53796dcdd514961e01327d32",
+      "sha256": "84df0ea6deaec8be62e6c3663f6fd468030282f5aaff9e17390bb74d841f1446",
+      "bytes": 32881
+    },
+    {
+      "reference": "0e6f3845d8bb0410f124e047a468caa5dd2e8ca9:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "e32b22a8a20f938fcce23de98c02a6cc293ba29f",
+      "sha256": "20345d81cc43c3d5dd8ff59b91cc5e46dfbad6bf15265287e9acf4d1cb34e27d",
+      "bytes": 19809
+    },
+    {
+      "reference": "0e6f3845d8bb0410f124e047a468caa5dd2e8ca9:scripts/phase9/live-consent-withdrawal.mjs",
+      "git_blob": "8310fedbad487ca40cf7a48eaabc125da5043cd2",
+      "sha256": "c5480223a9379fe30c3fe092a23ca7e5be595b4cc693cffd7da3ccec838e1189",
+      "bytes": 18168
+    },
+    {
+      "reference": "0e6f3845d8bb0410f124e047a468caa5dd2e8ca9:scripts/phase9/live-supabase-adversarial.mjs",
+      "git_blob": "73664e527a8e2f54a3eb9b880f42e6a7a31341f9",
+      "sha256": "bb6407ff0f65e9ffb33beb9aeaa41f2dbd9ea641f88ac23413229f48d4d2c973",
+      "bytes": 47083
+    },
+    {
+      "reference": "0f82252ddafea271caa4088f7a501bef93dfddca:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "1a1d58464f4cb8f52d4d3b51087d6df23ad210a2",
+      "sha256": "65eb73c3f9c79a95c9917036d39a04db720a3e3df5c93cdedd2e91fb481f03e6",
+      "bytes": 33144
+    },
+    {
+      "reference": "10a74a3b70073adcf181b439a1959ecf6321525c:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-camera-recovery.json",
+      "git_blob": "aa4dad7aa4976b7acb5b7485bb01b0f5409d36d7",
+      "sha256": "ea612153c38b3fbbe943312a3f23c344765e77db586ad00df5cd1bc33a0c2fe9",
+      "bytes": 2205826
+    },
+    {
+      "reference": "10a74a3b70073adcf181b439a1959ecf6321525c:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-matched.json",
+      "git_blob": "2cdd0a33e3cfc59bc9e61fe5c7f9d0eb0006e81b",
+      "sha256": "aaa718a7d7c61c3ae32dcf07c8a9e64d078e8b39ea166765435cb1edf7298de8",
+      "bytes": 2766029
+    },
+    {
+      "reference": "10a74a3b70073adcf181b439a1959ecf6321525c:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-no-match.json",
+      "git_blob": "5519ee1557196c98363c3e9e9ce6c9978a688bbb",
+      "sha256": "629bcbb479ebd286ef8f9de79b93fd6e36326ae6b3c814b81ab950d8a96d7801",
+      "bytes": 2212394
+    },
+    {
+      "reference": "10a74a3b70073adcf181b439a1959ecf6321525c:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-ocr-capture-failure.json",
+      "git_blob": "7dcfdcaa540032f9ae6fecbd81e69db96a8f0fd3",
+      "sha256": "1a29d995ef32afbd4c42497a23e88f08f8477433e6610fbe370a14272ef80579",
+      "bytes": 3306602
+    },
+    {
+      "reference": "10a74a3b70073adcf181b439a1959ecf6321525c:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-offline.json",
+      "git_blob": "5357c1e0f9368658321e4a4dbb5c095e2ae00abe",
+      "sha256": "80a58322e1ef7cec7bc4baf03e7f39b1e88134d98a4b5b5f497e204e318ebc37",
+      "bytes": 3123276
+    },
+    {
+      "reference": "10a74a3b70073adcf181b439a1959ecf6321525c:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-scan-error.json",
+      "git_blob": "3ec8013ed1512a6c68c7bcd5cc4b10efaeac9f2d",
+      "sha256": "7a6038dc03d055ca0f6b4cef3ec984dd05e648839f908ec61b6115e9387fd82d",
+      "bytes": 2766610
+    },
+    {
+      "reference": "11251beb39ff5d3656d47fe0684471aec5b35350:docs/phase-4/beta-shelf-corpus.template.json",
+      "git_blob": "d3bc3894f762ec29d9f2268b45705449c853b8fc",
+      "sha256": "55a44a32ecd47ed53a7a7ba1b8a1694ea936a69768668e9a739f0218d98420a5",
+      "bytes": 24386
+    },
+    {
+      "reference": "11251beb39ff5d3656d47fe0684471aec5b35350:docs/phase-4/catalog-coverage-quality-targets.template.json",
+      "git_blob": "3fcebbb648fc043ea35bb1e01e82e75760e2216c",
+      "sha256": "e53c6c5d2715392dab63930046836e1c7b832a007419508a778dd085c54846c1",
+      "bytes": 9408
+    },
+    {
+      "reference": "11251beb39ff5d3656d47fe0684471aec5b35350:docs/phase-4/catalog-curation-database-readback.template.json",
+      "git_blob": "7c37153af7fbed0e3d65c1c7ca69ebddb267de16",
+      "sha256": "98efb09bf33c5ef326534ddf6ce888594968bbf50e5bf953d651cb297b47f341",
+      "bytes": 8239
+    },
+    {
+      "reference": "11251beb39ff5d3656d47fe0684471aec5b35350:docs/phase-4/catalog-curation-review.template.json",
+      "git_blob": "0bd3d29bee5d8fad0b74b00d5aa48eea70123b87",
+      "sha256": "47c15809a4db10ff82855c97405e3b01bca520df1d389b90baa44b6346658390",
+      "bytes": 22649
+    },
+    {
+      "reference": "11b6d8f5eaaedba2944bc3974b68467b75a2ec76:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "987d76bef54e25af9d242dc90c026c0aae034f58",
+      "sha256": "7e4d5daa37f27d8a931048940dddff9bca4e6e38e98682fbb36c82ad06923651",
+      "bytes": 9884
+    },
+    {
+      "reference": "14fdef94f69698b92b48a050e6380f632b67cab0:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-camera-recovery.json",
+      "git_blob": "c8ed8126fb77b3db229511423db427804d6b3be0",
+      "sha256": "39640d5c74d3fde0d77f161218f59231afbc2686e74f03842860c63df3aa8caa",
+      "bytes": 2205908
+    },
+    {
+      "reference": "14fdef94f69698b92b48a050e6380f632b67cab0:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-matched.json",
+      "git_blob": "ff1bfa67c45207bc991cc06e2cb6792de7fd25f6",
+      "sha256": "85a3725596b9f0e6df8376404bbee4c402316b5e8dc67e5bbaf3dba20a1473e0",
+      "bytes": 2761493
+    },
+    {
+      "reference": "14fdef94f69698b92b48a050e6380f632b67cab0:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-no-match.json",
+      "git_blob": "d4176b5cb4a1d7f998dba4e288d538f3771560cb",
+      "sha256": "0feb94230d12ff393c3628b097d69b9b8acfe83234a6527f5e00febba9ebb17b",
+      "bytes": 2208525
+    },
+    {
+      "reference": "14fdef94f69698b92b48a050e6380f632b67cab0:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-ocr-capture-failure.json",
+      "git_blob": "5b6872fde3b10382721043a9ac74bbb6edd9e322",
+      "sha256": "e2a7306c3dd5952cfdcd325d3d6e670d019594a8f312eae45f86b8922248ef15",
+      "bytes": 3314255
+    },
+    {
+      "reference": "14fdef94f69698b92b48a050e6380f632b67cab0:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-offline.json",
+      "git_blob": "f2a1388f6110ac272a993ea269ace61660566964",
+      "sha256": "25b8667a1b2520d99c161176bad4029d37ca030ef28ac23d2a84705b6c2a2cb0",
+      "bytes": 2749345
+    },
+    {
+      "reference": "14fdef94f69698b92b48a050e6380f632b67cab0:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-scan-error.json",
+      "git_blob": "67888dfaa8476cbcecedaf53f937479a8946dea4",
+      "sha256": "9b7530cae8d53805c454423170aa4e74c48ce627463dda009dd2bcf7564e3b1d",
+      "bytes": 2750043
+    },
+    {
+      "reference": "1b6cf23465bcc5904aa2052a1ba36cdd9c2ccdbd:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "1d82e7999d56c4f73f17945f3905b355e259e4e2",
+      "sha256": "4496cefb1b4fb94d64df8c389bf145ae32d005322e1714748cb7bbb9887fedd1",
+      "bytes": 12397
+    },
+    {
+      "reference": "32c36cf860aee91e177d7db2286e40e6dda35182:scripts/phase9/security_acceptance/proposal.json",
+      "git_blob": "127b4188514367566c6fcc8541bbf543f0b9f4ea",
+      "sha256": "3d43840064e56c0d44d0921fd2f2ced799cc729a776acbae98f99e8774b9964c",
+      "bytes": 3856
+    },
+    {
+      "reference": "422ec36eaeb96f122d485b09a0f06337e957fffd:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "5b03091fabc9df4bb152cb38c767901979760129",
+      "sha256": "31ee97545d2647a472afbec713f7206e1e0c6f66ef5cc1d6040c1b3ca9327182",
+      "bytes": 42819
+    },
+    {
+      "reference": "4304f19a7546098ccb14a3961aab8fe5e9858324:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "73aa574f78c330fce3f356b523355cafe292880f",
+      "sha256": "c03b3ed0158cfbbf7013bc80fe0706f025dff091783f573fc026d6a89ebfdc30",
+      "bytes": 21934
+    },
+    {
+      "reference": "44dfa153d1974928c217754f0d1702a93833abc5:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "9df72e4e6f20cf722836c8a3bf2eeab3530c27a3",
+      "sha256": "54be67ec998d62e7363003a4a907776cc2503abc6a92c297423bdf84129ffc50",
+      "bytes": 14339
+    },
+    {
+      "reference": "4659f42154d7714cbf258784fc1ae983e809f123:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "7e9cb5522b5bbfb925038c583b5cd5cb77292399",
+      "sha256": "1d02475d577c9325cc339df542d409705fd2f8ac92bd3107803f4f7928922ae1",
+      "bytes": 91376
+    },
+    {
+      "reference": "4873c42689604af736bb542fa088d2a2dbec037d:docs/optimization/evidence/2026-07-16_catalog-search-input-isolation-checkpoint.md",
+      "git_blob": "1134aa9279239b4b7b3b7f9b2c1aa7029e0eb77c",
+      "sha256": "398a94e32fa4847d9b4c78f0ba104cc8f245e08344693b86243a30056e0c0bb6",
+      "bytes": 7091
+    },
+    {
+      "reference": "49182bd18978cb4133cd935ac322e6be79f75bf6:supabase/functions/account-deletion/providerDeletion.test.ts",
+      "git_blob": "0f4ad65b4a6b75f65c9bb34f8543bbbf954d6327",
+      "sha256": "ce9e10bedcbd3a85f42009a79c9d4a7c5db9450c7cd1cc6ff8081b6b99e81d81",
+      "bytes": 17446
+    },
+    {
+      "reference": "495e646a98fb8e177e8d4f7437abab38436f9bfb:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-camera-recovery.json",
+      "git_blob": "2c8285a81a149f2593f3a093193165656a3ddce7",
+      "sha256": "1fcbe4165c4e2d18a54c776743e4e69e5c9ca7056bb2ba98f80f84e2abc91dec",
+      "bytes": 2206597
+    },
+    {
+      "reference": "495e646a98fb8e177e8d4f7437abab38436f9bfb:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-matched.json",
+      "git_blob": "48c463fc20541debc51510682de8090819bfd7d0",
+      "sha256": "b70d3d8b26d4bbb2ea869944d9f8ad91200158aca126b0051fa5f726bfbddf14",
+      "bytes": 2756659
+    },
+    {
+      "reference": "495e646a98fb8e177e8d4f7437abab38436f9bfb:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-no-match.json",
+      "git_blob": "3863b108c8ab14fde4afeeaf75a08eb3a09aaa3e",
+      "sha256": "451c7963817a0d0f43e2955383283209cfb07b201851b2773c9ba491c2d356e4",
+      "bytes": 2223623
+    },
+    {
+      "reference": "495e646a98fb8e177e8d4f7437abab38436f9bfb:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-ocr-capture-failure.json",
+      "git_blob": "d8c5ec99f68c8bf6c12c61e96e63d6fed35588d1",
+      "sha256": "2df2c7fd0bac20f1fe3cc47b6ac0f874b2879f01b2601d2ef2ea468958bf3487",
+      "bytes": 3307215
+    },
+    {
+      "reference": "495e646a98fb8e177e8d4f7437abab38436f9bfb:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-offline.json",
+      "git_blob": "b95e1154988983ad8a7f4a484af2047713e9d534",
+      "sha256": "af0bd142b8cf0077b50695360fe2441614be04afbac400e651411dee7fb1cfef",
+      "bytes": 2748623
+    },
+    {
+      "reference": "495e646a98fb8e177e8d4f7437abab38436f9bfb:test-results/human-e2e/2026-07-18/cat04-catalog-recovery-current/browser-events-scan-error.json",
+      "git_blob": "95bbb6de2393f0b6975aac3bc7283421d25e755d",
+      "sha256": "9872efa678fe2d48c240c69fd270768a4ec0ef9f4eca6a48f69297c1743fece0",
+      "bytes": 2748899
+    },
+    {
+      "reference": "4d0a8efb0a84707de816f6665b02610eed3c40c0:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "ca47c671f54d0ea1785bcd8b5aa19119f3c6201f",
+      "sha256": "ee93b5ef620f852c1719e839debb44ef8e9536b074f146f8711142dbb9881af8",
+      "bytes": 42958
+    },
+    {
+      "reference": "5789963cc572e25dc81dc660bd93e6329e210f2f:apps/mobile/src/features/routine/activationAnalytics.test.ts",
+      "git_blob": "183480bf595e659171f4842e2b64c05e3a207fc8",
+      "sha256": "2b45613860035dcea25834f1ab153f82d94ba8b873cd8e6f58e91d3f5079b799",
+      "bytes": 2485
+    },
+    {
+      "reference": "5789963cc572e25dc81dc660bd93e6329e210f2f:apps/mobile/src/features/routine/activationAnalytics.ts",
+      "git_blob": "7b7a07da33c347e34711e2cea7bde0e00ef3b7cc",
+      "sha256": "5f3fd771422126dc233160e7abfbc028bd54070d49cafe4add707109a2047eaa",
+      "bytes": 2167
+    },
+    {
+      "reference": "5923a192ff477e3905c05225ec5ee1cf7ee420a4:apps/mobile/src/features/routine/orderStore.test.ts",
+      "git_blob": "27f6ebdae392c3a6331e128273038e6c5835c2db",
+      "sha256": "f331b030561729d32bed300fc8da74eafd3b1b8581b0dacae895d0b9c7282eb9",
+      "bytes": 7094
+    },
+    {
+      "reference": "5923a192ff477e3905c05225ec5ee1cf7ee420a4:apps/mobile/src/features/routine/orderStore.ts",
+      "git_blob": "f847b4e5c5e8093d7df723e2e3ef85b92175fc22",
+      "sha256": "2118bfb01b5f9f1d801774161c511fac8a1e0c7197977faa02f9f2de78da7ea9",
+      "bytes": 6726
+    },
+    {
+      "reference": "5923a192ff477e3905c05225ec5ee1cf7ee420a4:apps/mobile/src/features/settings/localDeviceExport.ts",
+      "git_blob": "c861da78556d2c7ed1b496cd652b6c72f26993b3",
+      "sha256": "25eea3aa6293032f9d6fba1d3b694cd7cb386b241d9b724f32d8b048d5d0e330",
+      "bytes": 10784
+    },
+    {
+      "reference": "5adc12a34743671318b9c0f32db09863a7043382:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "f14e513612317c7de0d5b37b3c7f806df2ac4a07",
+      "sha256": "2349c884c818c18006e2fafce1a706e20ddf2b23f711414963b31c022fbdd3fd",
+      "bytes": 33144
+    },
+    {
+      "reference": "622948b7a415b25d064f285eb1e0e48352a2691a:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "9eb5eed93287d6659cf330afc5895971298ca674",
+      "sha256": "f35569af88e458506e0fe65bb0bbb142f20a538cfc9365000282768d3069003c",
+      "bytes": 12048
+    },
+    {
+      "reference": "63c8f6b82f56535f60707c215fc9e64113f6f3ba:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-camera-recovery.json",
+      "git_blob": "3fd0a47c83bdf542c4a3bc62d39878ce90817900",
+      "sha256": "d2ea9c8160ddb63b1a52261f0f317000943911fb51665d446a5bded9c6dbb172",
+      "bytes": 2205977
+    },
+    {
+      "reference": "63c8f6b82f56535f60707c215fc9e64113f6f3ba:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-matched.json",
+      "git_blob": "45c133d032ba8d48da60c4a94bf031a1e235dc0f",
+      "sha256": "9a3c12e2e6a6e7180a5bbc9d0de9ac05caca54f7db413e9dba584963deb4fa64",
+      "bytes": 2753041
+    },
+    {
+      "reference": "63c8f6b82f56535f60707c215fc9e64113f6f3ba:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-no-match.json",
+      "git_blob": "5fbd26bc2ceb7ad16bb9ed424ef51afcc13bc0fa",
+      "sha256": "0321160b9a64bbc864ee0b76e5606ae3ae4dfeb931972b4ed85894a8a4c0caeb",
+      "bytes": 2209264
+    },
+    {
+      "reference": "63c8f6b82f56535f60707c215fc9e64113f6f3ba:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-ocr-capture-failure.json",
+      "git_blob": "23ff031b0037c7f2b4d91100da287c677441b9bb",
+      "sha256": "2c9c06bc9f250117700f4f2b2cb1e74ec789563f1e5504d0748e9ae7ffe9042c",
+      "bytes": 3309400
+    },
+    {
+      "reference": "63c8f6b82f56535f60707c215fc9e64113f6f3ba:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-offline.json",
+      "git_blob": "9081b2df2b0f3c23f3144e81f425f76a6ae2e954",
+      "sha256": "43bad74d7fd7ed9acc413ea6f985bc90f3877826f704d88b665a40ceafe388c6",
+      "bytes": 2750827
+    },
+    {
+      "reference": "63c8f6b82f56535f60707c215fc9e64113f6f3ba:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-scan-error.json",
+      "git_blob": "41c0bde0b98b7080cd84cf069dd32b65593d26c6",
+      "sha256": "090cf4a0dbdb592df52d3e6b541d8065bc9fdf4531283ee0f435563c7cddd080",
+      "bytes": 2752008
+    },
+    {
+      "reference": "6ae70975f0aa8c156d65804859a6bea340973835:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "9f0a11361760621090b01f1c5ec89fdf3f42edb3",
+      "sha256": "be68f52f07f05813eefba1f866637f6f0b7ca0f801ec4e113adbdb3db37d787a",
+      "bytes": 33144
+    },
+    {
+      "reference": "726fa85cf5a0d7a93fa15ed37299dfcc6fc623ad:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "a77689883e16bf8cdff2a1627bfa776904f68a56",
+      "sha256": "e4bda237a10d42cc900a47abe853bfe258cdab309144cf3f7c79f98757d6d8be",
+      "bytes": 14703
+    },
+    {
+      "reference": "73c25ea4176a5b7c3d658e568b8d579b47c71f26:apps/catalog-operator-console/src/auth.test.ts",
+      "git_blob": "3f549a46c74cce326fff5a05c5cdb65adff316b7",
+      "sha256": "2cfbd0fe9a6427baad0c5345d72694a952baae16c0fc5f4fa683509eb49b37eb",
+      "bytes": 2414
+    },
+    {
+      "reference": "73c25ea4176a5b7c3d658e568b8d579b47c71f26:scripts/e2e/catalog-operator-console-fixture-server.mjs",
+      "git_blob": "8b4ea68cf1b6d8251eebd15e7ef5a7e32e879611",
+      "sha256": "655a8cf8865152e671ef63b00870cc152cb595718e33696125003db1ec83e1bc",
+      "bytes": 20369
+    },
+    {
+      "reference": "7931fa0d934a1f14454fa757c2f15fc2dac75a10:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "4c4c25ea4b71c2f091b9a9d66ddab8bb4c469468",
+      "sha256": "7c7a8eea21233fcdd80dcfba8867b0ed487da1c959783e08091245dc6371fa4c",
+      "bytes": 10185
+    },
+    {
+      "reference": "79c9237b17c5e71b117d472d622457bb7dd52305:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-camera-recovery.json",
+      "git_blob": "c9b0e94bc078e41e883ee293996042084ed13665",
+      "sha256": "6945f39ead40401eecbe044e2e7a1d5c5c2eb6e507ffc763bb7b24cb3d5cd82c",
+      "bytes": 2215541
+    },
+    {
+      "reference": "79c9237b17c5e71b117d472d622457bb7dd52305:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-matched.json",
+      "git_blob": "16212adf641ab97116f45e0e230fea6111993a3e",
+      "sha256": "930c5ecfbf272b1f53c56b324102841a66909f0e4f9946cb4f20353f8dcd2642",
+      "bytes": 2751210
+    },
+    {
+      "reference": "79c9237b17c5e71b117d472d622457bb7dd52305:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-no-match.json",
+      "git_blob": "a91cb9fc01f9b75c0e089ffdba37779cd84d103f",
+      "sha256": "2f390ed5ef95692c838c749e3ebd4aef32d761e38ebe2758f9b8bfe8c375d563",
+      "bytes": 2212193
+    },
+    {
+      "reference": "79c9237b17c5e71b117d472d622457bb7dd52305:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-ocr-capture-failure.json",
+      "git_blob": "70bec5ec3cd9516aae737585efabd20fad754b7c",
+      "sha256": "c2e0be19e6339af50d7de65558ae4497bad0dc90382d1009eb261bec07124451",
+      "bytes": 3307509
+    },
+    {
+      "reference": "79c9237b17c5e71b117d472d622457bb7dd52305:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-offline.json",
+      "git_blob": "8c0e716d2170a50344a05018e94685d4d4633e99",
+      "sha256": "32d52ecd1fc676eaa07628353750ddb527f6cf1a49364c6bfa81eee92c180084",
+      "bytes": 3348052
+    },
+    {
+      "reference": "79c9237b17c5e71b117d472d622457bb7dd52305:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-scan-error.json",
+      "git_blob": "740e90d2bf2bb90243805942859c16737e600189",
+      "sha256": "d8c573eea918f836401a2b1b22c4fe19667f5278dc7bbd1c6330be9fa690e65a",
+      "bytes": 2778338
+    },
+    {
+      "reference": "7a31e57b5d6201fadbe86dc0a31dae2d8745e3a7:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-camera-recovery.json",
+      "git_blob": "8bc63c5e7b3ee68a3f6b574fe94f619857fe6bc9",
+      "sha256": "c33898e9d0cd80e8216680bcda16f717c54c46fb37cda1f5e7fb1f6dba160141",
+      "bytes": 2960428
+    },
+    {
+      "reference": "7a31e57b5d6201fadbe86dc0a31dae2d8745e3a7:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-matched.json",
+      "git_blob": "052710e627f8b65edd5602c406ca7fae21f049d4",
+      "sha256": "b5d6c4ab56f87356c253f307daafe70449b5e1d1a702965ed2e16ca47bb35d8e",
+      "bytes": 2751632
+    },
+    {
+      "reference": "7a31e57b5d6201fadbe86dc0a31dae2d8745e3a7:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-no-match.json",
+      "git_blob": "d5293281732043b43e4d875373fdab42b355f261",
+      "sha256": "1c4362886b2eb8be95037efcde797a0963b67456eb459e6de86b00e6eac3c479",
+      "bytes": 2957737
+    },
+    {
+      "reference": "7a31e57b5d6201fadbe86dc0a31dae2d8745e3a7:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-ocr-capture-failure.json",
+      "git_blob": "f6a5e168e8efa9343fd2883738881ad3b9585aeb",
+      "sha256": "54c6e02e621bd854b940b0ac276acde502f74436f4d2930f81aef6a627b32d3e",
+      "bytes": 3317601
+    },
+    {
+      "reference": "7a31e57b5d6201fadbe86dc0a31dae2d8745e3a7:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-offline.json",
+      "git_blob": "52dce1bfda6ffb264ff13d94b51161e9fae77e37",
+      "sha256": "776938571ba72d0b6fb78f683edc55fce5e3f536e7bfb6efbaf50e4a2d2e08fe",
+      "bytes": 2750577
+    },
+    {
+      "reference": "7a31e57b5d6201fadbe86dc0a31dae2d8745e3a7:test-results/human-e2e/2026-07-22/cat04-catalog-recovery-current/browser-events-scan-error.json",
+      "git_blob": "b32e06e642b6b0233642bc6f108b9c229770b9ae",
+      "sha256": "639812e757debb16ae4ba65bca9e2260d69c8248884d9dab07aeaa88764938bc",
+      "bytes": 3130649
+    },
+    {
+      "reference": "828be6b44ddbd313ce234e95afb7c24e78a422c3:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "2063840815cacbee322b73b6a5d2e1696619c3a7",
+      "sha256": "c448bc006106d84f35d2505de1d4aac15703d8ec5ebd8ae67376d4229ce9360a",
+      "bytes": 71431
+    },
+    {
+      "reference": "8452d397249f69c2487d6ffe0a80a85e0c0149ea:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "9487a84ad8165f5250a966ca7f2ef435df03da18",
+      "sha256": "805906977531b7531892ad0573254488766f8596f85f340bc0fb22841b379c42",
+      "bytes": 19470
+    },
+    {
+      "reference": "84b98e7edba1834bf7a003395a1ed5d6877b81e2:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "c5fd3d40afdab878bfa1883645146e011f8174ad",
+      "sha256": "570401e51cc266524215825b82058000b1d163228952bcfbfe0424c292fde856",
+      "bytes": 13381
+    },
+    {
+      "reference": "8902caaf51337adb10f2843f48d92611e0bfabcf:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "8d3dd5becc03b59bad3000dd6bea46807a25a252",
+      "sha256": "2dd8a364983b50503fbb40b417bd2e456693f48b111f38b93e839a2d7650c6e7",
+      "bytes": 14703
+    },
+    {
+      "reference": "89afc091259c49f0c9f1a1c11ad054d38b84c85c:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "e1a1c4bbefb200e7835409bbf63601612b8de4bb",
+      "sha256": "d99eb4c3516c08472d45b45315755726dcc41f2abc53d5c5c33909db3da01428",
+      "bytes": 13381
+    },
+    {
+      "reference": "8cfaa1921606f6b75e477e0b5a29ec88a3ab1d21:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "1341da8be7b283fc278b904e1f8023bce6c411ec",
+      "sha256": "20b7a008da399802ec8b02993fd0f94f689754154c65f951a4df8381d9f853f8",
+      "bytes": 9726
+    },
+    {
+      "reference": "8e8e43aa11fe8b65f54094661e7471961ca32f6a:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "fa238babac42c4934a5f0a651e527094879346ca",
+      "sha256": "d6acebf44d314061ebec4156c7439414a307d85a87831c351e4afe753bb3ade9",
+      "bytes": 91753
+    },
+    {
+      "reference": "9416b48f35cf5e1d6c4957ec632c752775b1d1d2:scripts/phase9/live-order-report-poll.mjs",
+      "git_blob": "7ce8d59552ba19853c6423fe751cef0b3cb48f0e",
+      "sha256": "2ded90acef48bff23d422236ca78946c37d211fa9fb887055bf2eb77415b1aa0",
+      "bytes": 8802
+    },
+    {
+      "reference": "96770f615b7d3896f18648b826eb1645c5a7162c:apps/mobile/src/features/settings/localDeviceExport.ts",
+      "git_blob": "10a8bac714dfffda1b6a815caebb18c191b242be",
+      "sha256": "5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81",
+      "bytes": 10663
+    },
+    {
+      "reference": "a2f2a5e42af95fbea82d7f651c3c8141e20f9139:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "80eb2f12f1efaf863a9206290c64027883bfc8fc",
+      "sha256": "19a7b7003ae9d9d7c53338bf8027be4800eda594ced91291ce3bc557be6fd5ea",
+      "bytes": 42819
+    },
+    {
+      "reference": "aadcf67688df648dd9c9ba872b84c6fc6f79be30:scripts/e2e/cat07-shelf-freshness-audit.mjs",
+      "git_blob": "e8aa0b42c5c6b41bc173b3a0512ca024b5b32acf",
+      "sha256": "84532689b6b2025c80f14c21771486804242b42257b6cc40a38fd24c9fbe6229",
+      "bytes": 150904
+    },
+    {
+      "reference": "aadcf67688df648dd9c9ba872b84c6fc6f79be30:scripts/e2e/cat07-shelf-freshness-audit.test.mjs",
+      "git_blob": "40dd073615f8341379eb731bbaaabab5e82c1ab2",
+      "sha256": "a5a2f444cdf73cc914490101b1f90a4c3f5b48156e43eca3b219c1b0816615a6",
+      "bytes": 60211
+    },
+    {
+      "reference": "aadcf67688df648dd9c9ba872b84c6fc6f79be30:scripts/phase2/contained-command.test.mjs",
+      "git_blob": "afbf35a300c02d8f095da2b2d163330ed8458e5b",
+      "sha256": "695c8c512c90472ef1e9902e595a8ad0b13e0998db164aba4990249426d8b736",
+      "bytes": 14634
+    },
+    {
+      "reference": "ae267af93dc24632a6c80567b91d7a8b50559793:apps/mobile/src/features/settings/localPrivateDataRegistry.ts",
+      "git_blob": "00cfb992b40f786cc78d11e734d9b0f088bb68a4",
+      "sha256": "a336b5aac79d9ec6fa9e0e9e6581514491829dd12ff85743cbf4f8a7e6d1a4e9",
+      "bytes": 26647
+    },
+    {
+      "reference": "b365fa17cfd96b2c4c7ca695d4d8ebdf25f9439c:docs/phase-7/generated/core-loop-qa-packet.json",
+      "git_blob": "623eaf0a17e7adf707b0372757599d640139b757",
+      "sha256": "5f8fec0093dd752b9f1992ba8accbaa3da1d441c9de84018f7335e0a4df59e59",
+      "bytes": 8735
+    },
+    {
+      "reference": "b365fa17cfd96b2c4c7ca695d4d8ebdf25f9439c:scripts/phase7/build-core-loop-qa-packet.mjs",
+      "git_blob": "064574defdd5f79d7f176d61e86be98d96b93715",
+      "sha256": "4febe8e73c323cb16c738ce8512b6cedf117739eca5077064059a1bc0203f00b",
+      "bytes": 8548
+    },
+    {
+      "reference": "ba188b7b149e1bac1985a900c012b8649c8f9872:scripts/phase9/rls-adversarial.mjs",
+      "git_blob": "866fd1a502b1532d93b15faa857462d78c70a70f",
+      "sha256": "2878cb139c1ee1c8cbd511eecc577d6ab79496761fbe7104697e666acb7e8e3a",
+      "bytes": 18562
+    },
+    {
+      "reference": "c7719616421c4d1f915eb403443a740150f95b40:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "b96aaaa22e4ca4ad51260a932a6cb5dca01957f5",
+      "sha256": "679e80a97919a9d7a461b2970a846a8a4d542d0d66a3ee1cb8231bbfeb20e4ed",
+      "bytes": 14703
+    },
+    {
+      "reference": "cc51de217ca4f80567c5177f9ccb1ed749a6614a:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "897ae60b2c21ba2fd3ac460db4e0d29ea575a7df",
+      "sha256": "fce8926658aa745d23e43ca29b21328252206e71dda81c7b9cafa25658fcc8b3",
+      "bytes": 12636
+    },
+    {
+      "reference": "d15ae6a37e9c46cf01d648864b76f9c881554703:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "1d3131f747bb4c2024bf9c56e0c5a7d31f80b7be",
+      "sha256": "6e7c1f92410dde631693e704d65bc2c0f9aaafa4543061d35d96b41ca068b3cb",
+      "bytes": 9513
+    },
+    {
+      "reference": "debb44948f5011fce0f803f235f26f838e8f3362:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "6aa465429f21edb8651479df51c183b49956d7ea",
+      "sha256": "868f4ff911ce162ce970129e57d5ed0e8e5982cbd31282dc9eb289415b8e7679",
+      "bytes": 19470
+    },
+    {
+      "reference": "e2971f3652952464536e4216f95637d10952c01c:apps/mobile/src/features/scheduler/cycleStore.test.ts",
+      "git_blob": "97ceb684a553de659c43573b1cbbb0e17dc8be54",
+      "sha256": "77a6eebec64f7afbefa60f6ad04878b075c7f74e105ce409a8b1d52b7713fa06",
+      "bytes": 14902
+    },
+    {
+      "reference": "e2971f3652952464536e4216f95637d10952c01c:apps/mobile/src/features/scheduler/cycleStore.ts",
+      "git_blob": "a04d28a15fc5a53d50a775a9c540a908869bb970",
+      "sha256": "79bbc5f714baac7229a381aa4dd99eff542b4d357eba10ec6dc2a515f31e56bc",
+      "bytes": 16143
+    },
+    {
+      "reference": "e2971f3652952464536e4216f95637d10952c01c:apps/mobile/src/features/settings/localDeviceExport.ts",
+      "git_blob": "13d84f42f6235fe79672cde7c706bb3959e46b93",
+      "sha256": "16dd55731879bace8db794440b2a369d40ea53cf092a7029d6ead480a8a12064",
+      "bytes": 11185
+    },
+    {
+      "reference": "e5ac82670fa8ff72ca39048faba8f1a964fd3995:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "b81bf24d7e081f7665d1595349fa94a9ab753855",
+      "sha256": "9614a1b82932a51682a8ebba20d1d2963e268b1884aa41e0327ca1f984a216d1",
+      "bytes": 90776
+    },
+    {
+      "reference": "e7be0a954426e98e5c46c2e50137f33092d941b9:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "08b36d530483b95bbb862f502bb8f983059cd5f4",
+      "sha256": "72963f02cf11d0ed40470a8abb9ce5c4a3d877cd040b01bb18bd526a8846a69b",
+      "bytes": 14703
+    },
+    {
+      "reference": "e96dd1fef05435c926e6807b0575ade4fe96ae7d:docs/phase-9/generated/release-engineering-qa-packet.json",
+      "git_blob": "46c799ed9e75eff8d74277c3fefc3a606a397063",
+      "sha256": "b424558dc26f6bfe14d9f3eb43112cd634d294bbec573cce7ed137ae7335dfe6",
+      "bytes": 14703
+    },
+    {
+      "reference": "ebaa10fa5c42d96d4e455442cc1323f397025f2c:scripts/phase9/live-consent-withdrawal.mjs",
+      "git_blob": "6bdec320f3424d570f85ab5e1c95e08f2ce7f87d",
+      "sha256": "648a259c4e950319696d68cc37e7d6c1eaf7e3dbe851530fd3ff4946a6d320c9",
+      "bytes": 30866
+    },
+    {
+      "reference": "f1e9a970bbceb803271c8bca41e3a090f93ceefe:scripts/phase2/staging-deployment-evidence-lib.mjs",
+      "git_blob": "bfb39c828ef66a82ce6df0341f04f78b9e5258b1",
+      "sha256": "387bf4f1c685042c0295c5b80f2d4ebb29ce4b0a9f39b10a2450c4f7d5665d45",
+      "bytes": 75234
+    },
+    {
+      "reference": "f1e9a970bbceb803271c8bca41e3a090f93ceefe:scripts/phase2/staging-deployment-evidence.test.mjs",
+      "git_blob": "88d9c14882631cb39127089ec496b00ee2e6ee62",
+      "sha256": "2b9fdad3d86fcae143f016960305403e4fa9e69eee0ae478168ba3ee65191674",
+      "bytes": 69747
+    }
+  ],
+  "complete_hydration": false,
+  "linux_import": "NOT_RUN; host disk full and WSL E_FAIL",
+  "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6"
+}
