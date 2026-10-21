@@ -32,29 +32,31 @@ def snapshot(repo,commit,destination):
     require(head==commit, 'FULL_EXACT_COMMIT_REQUIRED')
     tree=git(repo,'rev-parse',commit+'^{tree}').decode().strip()
     rows=[];destination.mkdir(mode=0o700)
-    for entry in git(repo,'ls-tree','-rz','--full-tree',commit).split(b'\0'):
-        if not entry:continue
-        meta,name=entry.split(b'\t',1);mode,kind,oid=meta.decode().split();name=name.decode('utf-8')
-        require(not name.startswith('/') and not any(p in {'','.','..'} for p in name.split('/')) and
-                not any(c in name for c in '\\:\0'), 'SOURCE_PATH_REFUSED')
-        row=dict(path=name,mode=mode,git_blob=oid)
-        if kind!='blob' or mode not in {'100644','100755'}:
-            row.update(partition='UNSUPPORTED',reason='NONREGULAR_GIT_OBJECT')
-        else:
-            raw=git(repo,'cat-file','blob',oid)
-            # Hash object independently as well as content; source never comes
-            # from an ignored local overlay or an arbitrary archive extraction.
-            calculated=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
-            require(calculated==oid, 'GIT_BLOB_DRIFT')
-            row.update(bytes=len(raw),sha256=SHA(raw))
-            try:raw.decode('utf-8');text=b'\0' not in raw
-            except UnicodeDecodeError:text=False
-            supported=text
-            if supported:
-                target=destination/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw);target.chmod(0o444)
-            row.update(partition='PENDING' if supported else 'UNSUPPORTED',
-                       reason='TEXT_FOR_GENERIC_OR_LANGUAGE_RULES' if supported else 'BINARY')
-        rows.append(row)
+    # One Git object reader avoids reopening the large shared pack per path.
+    with subprocess.Popen(['git','-C',str(repo),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE) as objects:
+        for entry in git(repo,'ls-tree','-rz','--full-tree',commit).split(b'\0'):
+            if not entry:continue
+            meta,name=entry.split(b'\t',1);mode,kind,oid=meta.decode().split();name=name.decode('utf-8')
+            require(not name.startswith('/') and not any(p in {'','.','..'} for p in name.split('/')) and
+                    not any(c in name for c in '\\:\0\r\n'), 'SOURCE_PATH_REFUSED')
+            row=dict(path=name,mode=mode,git_blob=oid)
+            if kind!='blob' or mode not in {'100644','100755'}:
+                row.update(partition='UNSUPPORTED',reason='NONREGULAR_GIT_OBJECT')
+            else:
+                objects.stdin.write((oid+'\n').encode());objects.stdin.flush()
+                header=objects.stdout.readline().decode().split()
+                require(len(header)==3 and header[:2]==[oid,'blob'],'GIT_OBJECT_HEADER')
+                raw=objects.stdout.read(int(header[2]));require(objects.stdout.read(1)==b'\n','GIT_OBJECT_TRUNCATED')
+                calculated=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+                require(calculated==oid, 'GIT_BLOB_DRIFT')
+                row.update(bytes=len(raw),sha256=SHA(raw))
+                try:raw.decode('utf-8');text=b'\0' not in raw
+                except UnicodeDecodeError:text=False
+                if text:
+                    target=destination/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw);target.chmod(0o444)
+                row.update(partition='PENDING' if text else 'UNSUPPORTED',reason='TEXT_FOR_GENERIC_OR_LANGUAGE_RULES' if text else 'BINARY')
+            rows.append(row)
+        objects.stdin.close();require(objects.wait()==0,'GIT_OBJECT_READER_FAILED')
     write_json(destination.parent/(destination.name+'-inventory.json'),dict(source_commit=head,source_tree=tree,admission='NONE',paths=rows))
     return dict(source_commit=head,source_tree=tree,admission='NONE',paths=rows)
 
