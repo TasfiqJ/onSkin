@@ -1,0 +1,954 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/bounded-probes.json.gz",
+      "sha256": "dd7696e74fd18438a4e21d65d649f8dc21e77549095c39fd3e62dc53625eaffc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/brain-all.raw-receipt.json",
+      "sha256": "52402a5e5615c18a6fe1b6a3a76c608000796492be0ae295cf8f6f572cc54f5f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/brain-all.receipt.json",
+      "sha256": "1585fc5e8019f40cec9899e82e739b70976bd5f3846914b408dc009f2a6fdd18"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/brain-all.txt",
+      "sha256": "4e81a1da2f5ae02af95b8797d50f3daa42fcd23aa4c1752a4b6b6e3115083a80"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-2.raw-receipt.json",
+      "sha256": "ffa76b3d40565c58faaae0a304a29572c7427982b80a3d3b740f96e8f7a136e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-2.txt",
+      "sha256": "07d787c83aec9c81b7ec8fb81f6ca7789bb8ed32a25e2184a5f9be8fca69eecf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-3.raw-receipt.json",
+      "sha256": "354e8de46c46f6af789c71e3a628d371e0b631cdc59656938b44fe854d7ee625"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-3.txt",
+      "sha256": "66e7ea675e23a16208de9ca61ba4fc48e45fa00e0763ff2c0913cdc6a33d4da4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-4.raw-receipt.json",
+      "sha256": "9d145dee4fc75c88b64610244c849c795fca7a78aa85014a8b21efc56b3405f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-4.txt",
+      "sha256": "0d656816bbcfa9314a7f9d24dd808682ca4ee2bd74fa173ac0dd1397b17a74ea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-5.raw-receipt.json",
+      "sha256": "d1bd8be1fba570c7abc9c72b66cbbed1d312fd39a6d9bb09564eabcf371b9f72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-5.txt",
+      "sha256": "66104c3076ab44ce0041087be291a4ae6c7d3ccbfca37ab46845aebaf244fa2f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-6.raw-receipt.json",
+      "sha256": "9715806fa42e46f72b5435fc00b4b062ddf29a4d32f058bf8c6c92c663bde8ef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-6.txt",
+      "sha256": "2bef9f100c1400c51947c895103f4627a8b79e022acd8b04d4c8be63cb2365ca"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-7.raw-receipt.json",
+      "sha256": "1d5f44d0c3346749206a7f50a8c5c59cedd9a9a782b5cea7e3cf9a4d421da6d7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-7.txt",
+      "sha256": "a39b5067bcac2de3996f2f3ceff6d05fd0c6c5c776977f2b7e4873cb771f8466"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-8.raw-receipt.json",
+      "sha256": "1f4552f64d79a61d3624d650c1411a91705ab70f69af0362d3e6c4a68ec42296"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory-8.txt",
+      "sha256": "908f6177d35a69c51734fcd0f47dbf1549e0bb5781ef79af02aeca4fcae3cbf7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory.raw-receipt.json",
+      "sha256": "ac45c903537c7419a24dc255ad94cbc44361915cbd89aa67bf488c1407d0a66c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-adverse-exploratory.txt",
+      "sha256": "fa0cd6bff957976e8c1c0464737aae582b3c13eeaa37df67da85bf5bc308015c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-fixtures.raw-receipt.json",
+      "sha256": "63dd6ded911e97b0d56b35d309e1113ceb95110695131051696b217f9686c344"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-fixtures.receipt.json",
+      "sha256": "228b4a039f462020898505bdb924b9e87280fcad366e6d477abc9673ca4b4885"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-fixtures.txt",
+      "sha256": "6ee6be0f5777dece84983506b630de159d35acae113353320bb12645b38d43e6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-install-adverse.raw-receipt.json",
+      "sha256": "b6fd02383a42a7b53b5db14e0716edb3b75153c6014d6e96fde167dbbf445aff"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-install-adverse.receipt.json",
+      "sha256": "cd6e915d5810a5900a7b1fd1d0a44d306765749ded62fae121930a47bee3319f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-install-adverse.txt",
+      "sha256": "2b65d2aa861ddb44580005b42a0f595496ee816096900b8d263422ab7d0030fb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-nine.raw-receipt.json",
+      "sha256": "844b202142f8d5027df0564c8d87b4c5e47c260f50e2cd8a0871158a55edb72a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-nine.receipt.json",
+      "sha256": "943018a2b359a749020d598683730a7f5dc1cac08c6d6f7c9a7e30c265a9f1ba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-nine.txt",
+      "sha256": "c61087f8193e3758a3809cccffe9ed8a168ae1afc74c0f080ef4c2070e0febdf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare.raw-receipt.json",
+      "sha256": "adfc422ffae2b3aed6d2802d2250ab4eb25b54eaffee29be1d3434eded44600e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare.txt",
+      "sha256": "e3757bf30dd0295ae4266ac26117c5b6328698aee07942f06c550b638200f0f5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare02.raw-receipt.json",
+      "sha256": "0d7d4deddc0a03d88219ff4a94d0262e65717fb3971adf0e2bd8017a6c83832e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare02.txt",
+      "sha256": "729efbec583eecd77b26d7f31757140e29e48f931b059e83bf42f637d7c98ac7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare03.raw-receipt.json",
+      "sha256": "e23e486d41e7e32948c39326d8f50544917c4a5d3e115b01404fda6c97527581"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare03.txt",
+      "sha256": "d9623af3b513f6ef882fecec04237028203a4f3c468a982fa601e299474a4542"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare04.raw-receipt.json",
+      "sha256": "8241d439b403ff7fd115dc78c8ef00cc91dda868c1ab0d53b69f5df3e9362860"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-prepare04.txt",
+      "sha256": "d9623af3b513f6ef882fecec04237028203a4f3c468a982fa601e299474a4542"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-unit-exploratory.raw-receipt.json",
+      "sha256": "38a9796077a35cc9865eeda943d07ae758ea46ebde756e433b7e397540670055"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-unit-exploratory.txt",
+      "sha256": "7cfcccacc492b04faaf0fd9179daeee1080e1b883c5a8b5a9cf01f41b609a209"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-index.json",
+      "sha256": "ed0fc7d00614e203f9c2b220cbdfeef6f1a4d133bf3aa4897a90081bd6f1e7a2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "sha256": "886f143af52aef59fefd3c3312f27343dc6d01e145e54fed1aee7eaa8681fb46"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/coverage-corrected.json.gz",
+      "sha256": "0d3ce81e27f5b3d168f66cd857332223cb297ea98ebe37bc6e2f851d4d4b37ca"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/dependency-current.json",
+      "sha256": "744ea3fabc404deb2adadeb6e8008a35faddbf2f0a17be346f44b03534e7bc77"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/execution-index.json",
+      "sha256": "2d198fecdecd8dc6b26a977f2d008d063fd13bbad9e2cf96e9fda2bff4dcb3ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/final-profile.receipt.json",
+      "sha256": "6fec880caff629c2b1a9319eae994c8fd9ec5dfef22027867412753e7710171e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/final-profile.txt",
+      "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/findings.json",
+      "sha256": "191d5b112749a82b3e9d9bdd543d83217eb746d77534329dcd88d3620caacd7c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-lint.raw-receipt.json",
+      "sha256": "814f11cfd997fbc0f77b0ddebcea74c04641b72cfbe399065a83fa2f2ecb1f70"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-lint.receipt.json",
+      "sha256": "cac779356b6eb84db5b87eb7f8d4da23de5f4fd2ef1b43fe1fd18b47bcf47105"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-lint.txt",
+      "sha256": "14f8a56e0c071527aa94bf70326134cf503111f73ac72c70554a25fde0966f79"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-test.raw-receipt.json",
+      "sha256": "9f00f4cba3c33f41903900413c53eff766deb84576021f8b29dbc3cde212fa65"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-test.receipt.json",
+      "sha256": "5b98ceda5226fa205311665ede17231e2f723cce618163d5dcba24c481b4f7a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-test.txt",
+      "sha256": "25cc370aeb0eff6e54ef9b33fa2fdfa1b789be80f49671994722a3da2cca268d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-typecheck.raw-receipt.json",
+      "sha256": "1d03a23c63a33eb99cb5bb86e0c38dc1a0a29eeb4b488c302dce3ffc9f0e340c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-typecheck.receipt.json",
+      "sha256": "55aa4fd92673811839ac568765d5e61a1dc7defd97341cd42635a76211dbd734"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-typecheck.txt",
+      "sha256": "81277e8f1a4fc00cc45147ae13b39912c1c5a3cf5d0a813d3314abe4defa0183"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan-2.raw-receipt.json",
+      "sha256": "64776c4c8daf7d22ace921596f6b96ad432147bdeb20304fdb25f78b792db147"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan-2.receipt.json",
+      "sha256": "6057365c03935c55e67628b66d0a9ff08e151d990d7a0655a8403a77afb38bc9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan-2.txt",
+      "sha256": "9e8f4e97cb5eb838df9035d5842fcf1017c18b8cf902b01ac78cadb4afd88b23"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan.raw-receipt.json",
+      "sha256": "bf9c584de2983fef9de1527c7efa3948fb0596bfca6b6499ae2c569998703710"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan.receipt.json",
+      "sha256": "356319335e28cbd948439d1b66e2ec62827fbadac7844db0c3506f73f0b617e7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan.txt",
+      "sha256": "4bc7463adb7a8f049eda9322c07814bc6e4c5d88b6ad2839e14b7f9abe8b7f05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/hardening-governance-exploratory.raw-receipt.json",
+      "sha256": "5af778b620418ec19e3cab0b0291fc46807be5c9fe598ba1d19a824d36d1efa4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/hardening-governance-exploratory.txt",
+      "sha256": "21588a1bf6f25e05bd0d3ff636ff711c5d827f30d59302d5b80bb98523ba4c27"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci-2.raw-receipt.json",
+      "sha256": "2c89dc1d79b5465abddf627670d90840b931467c5b38a07f04620778c233f3f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci-2.receipt.json",
+      "sha256": "30624ea13a1dec84a13bceeaf329a5898dfd8e2a20fc3ecbdf6f0f203b72b430"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci-2.txt",
+      "sha256": "03961d044959c9b9a9e997ebcd5fd6d3f8c6e46e1340de7c2ade28e34823d9d6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci.raw-receipt.json",
+      "sha256": "d93326cb1cf82995728ae8d4141f8adf2c8be48515f1b8235133ac30a9869f97"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci.txt",
+      "sha256": "03030643d8d5dadc7e11ac771017e4ee4d24e072091cc4c944ca0e96d2c0add8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-1.raw-receipt.json",
+      "sha256": "abed0863d75e5e457cbf4756523052e4019ebf1bcd3b4dc75c5fee86256ee8ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-1.receipt.json",
+      "sha256": "4798eba45893f1b6bc6c52e758e539b7074d88a72a9b052888242f45eefc471b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-1.txt",
+      "sha256": "e1698859103a9e11449bd306d02d4e6496b4544547a488c2c412eb11e2899579"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-2.raw-receipt.json",
+      "sha256": "4b8c825fe65dcfe0e88a21857a747691b3419f9ae6949db505dc842b2ce6148f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-2.receipt.json",
+      "sha256": "7bfa3e87480f42b3d2347c2adda205c4f07033f625db9e495ad2477fa7f1543b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-2.txt",
+      "sha256": "364f3e4dab7269fa698d77275695b057bf2d60393662cdf4126d965fe6027217"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-3.raw-receipt.json",
+      "sha256": "522bb6b40d8ddf7bd64ca0db4be9504e5b4649861a10e50ca80ff6488d7d2d82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-3.receipt.json",
+      "sha256": "d4a22910cfa7e6b0753a249fa8b07ef2ebe8013f3d87a9ae01dc7cb29e56ad71"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-3.txt",
+      "sha256": "f9d64262003d9be0ad977db17deef219e22e52f672df8a8651257705f87fb308"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-4.raw-receipt.json",
+      "sha256": "ef9a63fcff19e89d271f7b2ea79cab5d10ae2d32242c7ecea6b2e8a52919a8b1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-4.receipt.json",
+      "sha256": "1a9a6c1266d57dc5951262acf7dcedec2958802f04a775bd8946a0a958891661"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-4.txt",
+      "sha256": "df2f3c1a8598fb988af61f5aba8df565bd04daad314e3b3320c51d900d214690"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-5.raw-receipt.json",
+      "sha256": "034c6b7c480a692bc79369e9a75545cb58a867fbe0f7609e22f7eb84c32c8737"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-5.receipt.json",
+      "sha256": "427816f31b2ca034870935f043e73696a0913bc9908585624bbc38e544fa8e16"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-5.txt",
+      "sha256": "94579a658d78bbaf1a7e88d7dc0156e2c2dfbac6dc560c889b26429dccf9029c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-exploratory.raw-receipt.json",
+      "sha256": "ba5ec07f460871614a8dc65b0ca6972c2e613aa66867ace928b558e6ac08e836"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-exploratory.txt",
+      "sha256": "7cc0cbacc2d59f488d5491b07f20a7c231398a8a3efe46524b2d6c99d83edd92"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-hydrated.raw-receipt.json",
+      "sha256": "e570aabbf343f0e3a8d73914b23e9e45ac941740f063ad714001a8ad35529238"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-hydrated.receipt.json",
+      "sha256": "e30dc5873277700826855e80da08ba613a08032aacba21d3e024b91d21d4d71c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-hydrated.txt",
+      "sha256": "1aef85388fc5c21a736e19155212fb4912580c81381c17bf1764ce860944f518"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70.raw-receipt.json",
+      "sha256": "ed9c07b427bea69d1a017dafdb81c5ea216c5ac065b4ede30e93ce433ec3ba92"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70.receipt.json",
+      "sha256": "dc7bbeabd925294e3089b58f04f1b642301cfce5d14421999f45e8aced769a22"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70.txt",
+      "sha256": "4f51b6a4ac58070f22c5fc4becd2f8f05f84b2ac3c4bf4a08b511b029b898b9e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/owasp-top-ten-rule-file-profile.json.gz",
+      "sha256": "4c53c8b7e2c712f9622736476afd452b26bd8ec8bd06f6b2daca9321602a822b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/partition-corrected.json.gz",
+      "sha256": "d0b2def38a10861b01f146b5ad703b3b8e1faa0e7c9d272958cb7e4492977342"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/preimages.json",
+      "sha256": "636026859713cb85668d66c79128d8e85312aeea784800cb69b4cfa4819bdfd6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/provider-45cf259b.json",
+      "sha256": "e690faa988afb132d719524f8be04a6df478801e87755cbd8e5e1dbde24f009e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/provider-8e8983f5.json",
+      "sha256": "ec7603467536fb360c13e9365215dd22c35b058609a8b6a2e59d6b82e1495271"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/react-rule-file-profile.json.gz",
+      "sha256": "91b39aa38de0b73387890b56e8eaae8bebe5853a793a5d4a9ea36b07f74b31fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/scan-summary.json",
+      "sha256": "5367b189712935f70db68969f2eccc3bf9a1b71db273356660c9d7baf43e6dfb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-1.raw-receipt.json",
+      "sha256": "613013854929a2963fd41d6755612c48295cedcb5ba3dc06bc67fd58d3ad7160"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-1.txt",
+      "sha256": "7caf533acf18663e66672cb5438ae6cc60537879439d644595d10cebb02826af"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-2.raw-receipt.json",
+      "sha256": "e0e1f834d4a2313dae2b3ea3c53cf75da00056a3ba5efeb8b09b3dcaae239b49"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-2.txt",
+      "sha256": "5105969f7b2e0aaa5a8596c700dc3853a68971481006c17ff256743b5f3e19b7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-3.raw-receipt.json",
+      "sha256": "d0c6e775dc336e488330fd934fb458be6a725486346fe8835db13d974f390cad"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-3.txt",
+      "sha256": "40d49f74488f94d0e3b5190acfa76a0af0178244ade6655ee4a27ab6f2c69e37"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-4.raw-receipt.json",
+      "sha256": "6a04fbf5fd96c77b0f8bab724676f28d57d1a89e76175563b7390d3347861e26"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-4.txt",
+      "sha256": "9bf56dd80c8f633fa13aac40ba7b1ff5d63d75d86f65fba7768b815a50d6f8a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-5.raw-receipt.json",
+      "sha256": "3592437fa6a0e81e6c7be06df2febb90ba71d1b0567a1e6b5dce292fedb8b8d3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-fixture-exploratory-5.txt",
+      "sha256": "9bf56dd80c8f633fa13aac40ba7b1ff5d63d75d86f65fba7768b815a50d6f8a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-redacted.json.gz",
+      "sha256": "30821a4786a1650a90497eb7b6c414547da6beaa4ee0e2fbda979822478de6f9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secrets-rule-file-profile.json.gz",
+      "sha256": "a8bce2d8d92c34181569e83c92a85917c880d16f101b0eab85da3ffe0158f2fc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-inventory.json.gz",
+      "sha256": "ade2d67aaf8b43f08451ce097383613e8dd5ff05b736503fd5f3516e080f1313"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-worklist-check.raw-receipt.json",
+      "sha256": "f4c27b15da451e7cb625a9f15b70125c7337e397167d142ed82ad6a0049a6a8f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-worklist-check.receipt.json",
+      "sha256": "18dce4f4d4a011d0b56c82908efc55e8979b78de8a86091b2d6f8b991eb0f794"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-worklist-check.txt",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/tool-hashes.json",
+      "sha256": "2798b6d783a7a8cc03a7bb2ece9429d396fcd0725a4f9240c4fc5ebcf1e40fc8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/tool-manifest.json.gz",
+      "sha256": "ad8f374ebb53b855d63b5f7db9046281851966ba687e2f6261ddcaac1df6d4a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/typescript-rule-file-profile.json.gz",
+      "sha256": "12c8a2d425f35674eb172ed5079df932f6fb6ace5bc6362f59f1ab838ad2c367"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_coverage_probe.py.txt",
+      "sha256": "f2a2bb0f90a425b571a1b5dad131a75a41d08baaeebf0c5c8c44430913e8b46d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_export.py.txt",
+      "sha256": "89e788867caf30a6feb4e9d362549f2c2abbf20b7e993cca842c8f390e8d63dc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_hydrate.py.txt",
+      "sha256": "416952a921be98cf03a4f4da71db0c92e969cec3d7662e0a9a6a01fd8baaac82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_hydrate_fixtures.py.txt",
+      "sha256": "7e93ea6b350d012cc8e09e64e1c9f032ae63d0d3fa56ad470e3e91101ce76960"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_linux.py.txt",
+      "sha256": "ccc8adf4ea519a3fde645744133239a7fbcb60f17bd04c1bd7445a30ec8c7433"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_provider.py.txt",
+      "sha256": "c3c43642ed3eb70ba00dc73e3775fc16218a7b5bc1373bf3be1a77cccd009676"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/diagnostics/sh01_triage.py.txt",
+      "sha256": "e92024df0f04e3c29b61d2e389fb2d70f27ae7aace1f189258dd2b977390dd3a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/README.md",
+      "sha256": "2795e5863313d3880af78bf06c7aaac473fe6ee139617a404e2c9e815d3c61a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/RESUME.md",
+      "sha256": "8eadfcab4d6893c521aa0fbeae88d7aec2beae4af62b01608591e412f1481bd5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/WORK_REMAINING.md",
+      "sha256": "ce7c8e6a268b8782fd6106160957462fcaec3f83315b46a5ca717ca399724379"
+    }
+  ],
+  "axes": {
+    "clinical": "NOT_ADMITTED",
+    "commercial": "NOT_ADMITTED",
+    "integration": "NOT_RUN",
+    "live_provider": "NOT_ADMITTED",
+    "physical_device": "NOT_ADMITTED",
+    "qualified_review": "NOT_ADMITTED",
+    "release": "NOT_ADMITTED",
+    "source": "PARTIAL_TESTED_NOT_COMPLETE",
+    "surface": "NOT_RUN"
+  },
+  "blockers": [
+    "HIGH context stop; no observed compaction. Final-source root/typecheck/lint/full-governance/70/12/candidate/four-bundle reruns after45cf are NOT_RUN.",
+    "Measured source8e8983f5:18964 paths;12199 scanned/6592 unsupported/173 failed;333 fixpoint events, SQL26 parser errors and exact TypeScript PartialParsing. Four findings remain UNREVIEWED.",
+    "5463 original provider secret records all UNKNOWN at measured merge4961434; prior5439 historical; current npm68/OSV5 remain unresolved. Latest delivery artifact counts not assumed.",
+    "Source-head Security39596418044 FAIL; iOS39596417543 source-only success; Quality39596417892 pending at recorded observation. Delivery-tail CI unobserved until refresh. Earlier Quality39593867565 cancelled.",
+    "G97 expired2026-10-21T00:00:00Z; protected_source_go=false; DB06/DB08/R2B closed; malformed sandbox.py preimage requires a separate Brain decision before edit.",
+    "No main promotion, whole M1-03 acceptance, M2/J05, qualified/clinical/commercial/native/provider/release approval."
+  ],
+  "branch": "stage/m1-retained-safety",
+  "ci": [
+    {
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "conclusion": "success",
+      "head_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "name": "iOS launch contract",
+      "repository": "TasfiqJ/onSkin",
+      "run_id": 39593867532,
+      "status": "completed",
+      "workflow_id": 312030667
+    },
+    {
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "conclusion": "failure",
+      "head_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "name": "Security",
+      "repository": "TasfiqJ/onSkin",
+      "run_id": 39593867671,
+      "status": "completed",
+      "workflow_id": 308213475
+    },
+    {
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "conclusion": "cancelled",
+      "head_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "name": "Quality",
+      "repository": "TasfiqJ/onSkin",
+      "run_id": 39593867565,
+      "status": "completed",
+      "workflow_id": 312030668
+    },
+    {
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "conclusion": "pending",
+      "head_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "name": "Quality",
+      "repository": "TasfiqJ/onSkin",
+      "run_id": 39596417892,
+      "status": "in_progress",
+      "workflow_id": 312030668
+    },
+    {
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "conclusion": "failure",
+      "head_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "name": "Security",
+      "repository": "TasfiqJ/onSkin",
+      "run_id": 39596418044,
+      "status": "completed",
+      "workflow_id": 308213475
+    },
+    {
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/ci-observation.json",
+      "conclusion": "success",
+      "head_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "name": "iOS launch contract",
+      "repository": "TasfiqJ/onSkin",
+      "run_id": 39596417543,
+      "status": "completed",
+      "workflow_id": 312030667
+    }
+  ],
+  "context_health": {
+    "compaction_observed": false,
+    "decision": "SAFE_CHECKPOINT_PUSH_AND_STOP_FOR_INDEPENDENT_BRAIN_REVIEW",
+    "level": "HIGH"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/brain-all.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "brain-all",
+      "sha256": "1585fc5e8019f40cec9899e82e739b70976bd5f3846914b408dc009f2a6fdd18",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-fixtures.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/fixtures.py /root/onskin-overnight01-sh01-candidate04 /root/onskin-sh01-positive-fixture",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "candidate-fixtures",
+      "sha256": "228b4a039f462020898505bdb924b9e87280fcad366e6d477abc9673ca4b4885",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-install-adverse.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/adverse_install.py /root/onskin-overnight01-sh01-candidate04",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "candidate-install-adverse",
+      "sha256": "cd6e915d5810a5900a7b1fd1d0a44d306765749ded62fae121930a47bee3319f",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-nine.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/security_readiness/m103 -p test_*.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {\"ONSKIN_TEST_CANDIDATE\": \"/root/onskin-overnight01-sh01-candidate04\"}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "candidate-nine",
+      "sha256": "943018a2b359a749020d598683730a7f5dc1cac08c6d6f7c9a7e30c265a9f1ba",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-lint.receipt.json",
+      "axis": "source",
+      "command": "npm run lint -- --force",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "forced-root-lint",
+      "sha256": "cac779356b6eb84db5b87eb7f8d4da23de5f4fd2ef1b43fe1fd18b47bcf47105",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-test.receipt.json",
+      "axis": "source",
+      "command": "npm test -- --force",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "forced-root-test",
+      "sha256": "5b98ceda5226fa205311665ede17231e2f723cce618163d5dcba24c481b4f7a7",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/forced-root-typecheck.receipt.json",
+      "axis": "source",
+      "command": "npm run typecheck -- --force",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "forced-root-typecheck",
+      "sha256": "55aa4fd92673811839ac568765d5e61a1dc7defd97341cd42635a76211dbd734",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan-2.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/source_scan.py --candidate /root/onskin-overnight01-sh01-candidate04 --repo /root/onskin-sh01-measured-8e8983f5 --commit 8e8983f5f05ad23406f58129551eb4dc312176b1 --work /root/onskin-sh01-full-source-scan02 --rules /root/onskin-overnight01-source-scan02 --pins /root/onskin-sh01-measured-8e8983f5/docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json --tool-manifest-sha256 3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "four-bundle-source-scan-2",
+      "sha256": "6057365c03935c55e67628b66d0a9ff08e151d990d7a0655a8403a77afb38bc9",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/four-bundle-source-scan.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B scripts/security_readiness/m103/source_scan.py --candidate /root/onskin-overnight01-sh01-candidate04 --repo /root/onskin-sh01-measured-8e8983f5 --commit 8e8983f5f05ad23406f58129551eb4dc312176b1 --work /root/onskin-sh01-full-source-scan --rules /root/onskin-overnight01-source-scan02 --pins /root/onskin-sh01-measured-8e8983f5/docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json --tool-manifest-sha256 3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "four-bundle-source-scan",
+      "sha256": "356319335e28cbd948439d1b66e2ec62827fbadac7844db0c3506f73f0b617e7",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci-2.receipt.json",
+      "axis": "source",
+      "command": "npm ci --no-audit --no-fund",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "npm-ci-2",
+      "sha256": "30624ea13a1dec84a13bceeaf329a5898dfd8e2a20fc3ecbdf6f0f203b72b430",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-1.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-1",
+      "sha256": "4798eba45893f1b6bc6c52e758e539b7074d88a72a9b052888242f45eefc471b",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-2.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-2",
+      "sha256": "7bfa3e87480f42b3d2347c2adda205c4f07033f625db9e495ad2477fa7f1543b",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-3.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-3",
+      "sha256": "d4a22910cfa7e6b0753a249fa8b07ef2ebe8013f3d87a9ae01dc7cb29e56ad71",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-4.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-4",
+      "sha256": "1a9a6c1266d57dc5951262acf7dcedec2958802f04a775bd8946a0a958891661",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-secret-12-repeat-5.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-secret-12-repeat-5",
+      "sha256": "427816f31b2ca034870935f043e73696a0913bc9908585624bbc38e544fa8e16",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70-hydrated.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "original-supported-70-hydrated",
+      "sha256": "e30dc5873277700826855e80da08ba613a08032aacba21d3e024b91d21d4d71c",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/original-supported-70.receipt.json",
+      "axis": "source",
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 1,
+      "id": "original-supported-70",
+      "sha256": "dc7bbeabd925294e3089b58f04f1b642301cfce5d14421999f45e8aced769a22",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "FAIL",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-worklist-check.receipt.json",
+      "axis": "source",
+      "command": "npm run phase4:source-worklist:check",
+      "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "source-worklist-check",
+      "sha256": "18dce4f4d4a011d0b56c82908efc55e8979b78de8a86091b2d6f8b991eb0f794",
+      "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+      "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+      "status": "PASS",
+      "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+    },
+    {
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/final-profile.receipt.json",
+      "axis": "source",
+      "command": "C:\\Python39\\python.exe -B scripts/brain/brain.py --profile M1-03 validate",
+      "environment": "Windows; Python 3.9.13; local Git; privacy-safe checkpoint validation only",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "exit_code": 0,
+      "id": "final-profile",
+      "sha256": "6fec880caff629c2b1a9319eae994c8fd9ec5dfef22027867412753e7710171e",
+      "source_commit": "481d146f4bf8c950513b3479dfa052e868f43bae",
+      "source_tree": "ccfbfee4a45166cb74c8f1438e7c98dd008eaa54",
+      "status": "PASS",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean"
+    }
+  ],
+  "iteration": "SECURITY-HARDEN-01",
+  "measured": {
+    "commit": "481d146f4bf8c950513b3479dfa052e868f43bae",
+    "tree": "ccfbfee4a45166cb74c8f1438e7c98dd008eaa54"
+  },
+  "schema_version": 3,
+  "scope_matrix": [
+    {
+      "evidence": [
+        "original-secret-12-repeat-1",
+        "original-secret-12-repeat-2",
+        "original-secret-12-repeat-3",
+        "original-secret-12-repeat-4",
+        "original-secret-12-repeat-5"
+      ],
+      "id": "SH-1",
+      "status": "PARTIAL_TESTED"
+    },
+    {
+      "evidence": [
+        "candidate-nine",
+        "candidate-install-adverse",
+        "candidate-fixtures"
+      ],
+      "id": "SH-2",
+      "status": "PARTIAL_TESTED"
+    },
+    {
+      "evidence": [
+        "candidate-nine",
+        "four-bundle-source-scan",
+        "four-bundle-source-scan-2"
+      ],
+      "id": "SH-3",
+      "status": "PARTIAL_TESTED"
+    },
+    {
+      "evidence": [
+        "four-bundle-source-scan-2"
+      ],
+      "id": "SH-4",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": [],
+      "id": "SH-5",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": [
+        "final-profile"
+      ],
+      "id": "SH-6",
+      "status": "PARTIAL_TESTED"
+    },
+    {
+      "evidence": [],
+      "id": "SH-7",
+      "status": "BLOCKED"
+    }
+  ],
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "task_id": "M1-03"
+}
