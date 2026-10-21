@@ -255,6 +255,13 @@ class ContractTests(unittest.TestCase):
   write('code/npm-audit-high.json',fresh['npm-installed']['report']);write('code/npm-audit-high.exit-code',b'1\n')
   # Actual source-generated packet; only the unit fixture's clock is refreshed.
   execution=c.load(c.HERE,'legacy-sbom-fixture.json.gz');sbom=execution['packet'];sbom['generatedAt']=c.now().isoformat(timespec='milliseconds').replace('+00:00','Z')
+  # Synthetic original-secret receipt fixture only: the authorized Vite closure
+  # must match the current lock so the unchanged SBOM guard can reach the new
+  # secret proof negatives. The historical compressed fixture stays untouched.
+  locked=c.load(c.ROOT,'package-lock.json')['packages']
+  for row in sbom['packages']:
+   if row['path'] in ('node_modules/vite','node_modules/rolldown','node_modules/@oxc-project/types') or row['path'].startswith('node_modules/@rolldown/binding-'):
+    row.update(**{key:locked[row['path']].get(key) for key in ('version','license','resolved')})
   write('code/dependency-inventory.json',sbom);write('code/dependency-sbom.exit-code',b'1\n')
   write('code/dependency-sbom-audit.json',execution['audit']);write('code/dependency-sbom-audit.exit-code',b'1\n')
   for mode,refusal in execution['policyRefusals'].items():
