@@ -1,20 +1,11 @@
-TASK: M1-03 / SECURITY-HARDEN-01
-STATUS: PARTIAL / SUBMITTED_REVIEW_REQUIRED / HIGH_CONTEXT_SAFE_STOP
-BRANCH: stage/m1-retained-safety; normal push only; stop for Brain review
-ISSUED_BASE: 8babdad11791496ad6e8c45154b3b173bdddd36e / cf2ff58cc140956d8c3cda4a11c703733ebe6544
-MEASURED: 8e8983f5f05ad23406f58129551eb4dc312176b1 / 369a92f9f36f19d6b90f3d43535f9ce9a01d279c
-CODE_CHECKPOINT: 45cf259b86d0d2c2f6160ffa77c8755cc3dff52d / f3fb464d9773842a79ccf1ed66e809ccab8eb627
-DELIVERY: resolve current committed handoff using refs/heads/stage/m1-retained-safety; evidence/report tails are normal commits; final source reruns after45cf NOT_RUN
-IMPLEMENTED: original test-only Git/process lifecycle; complete cache/link/install/runtime measurements; readonly private scan capsule, network denial, inotify and final Git byte/inode checks; typed fixpoint failures and compressed complete rule/file profiles; independent digest-bound additive governance
-TESTS: measured forced root6067 pass; typecheck/lint pass zero cached tasks; supported Linux70 pass after historical object hydration; original10+additive2 pass five repetitions and actual provider at both code heads; candidate9 and real installation adverse/positive pass. Initial failures preserved. Broad governance59pass/4fail/2real skips; final full rerun NOT_RUN. Historical two Windows recovery methods passed exploratory overlay.
-SCAN: measured18964 paths=12199 SCANNED/6592 UNSUPPORTED/173 FAILED; exact four bundles raw0/0/0/0, four UNREVIEWED findings,333 fixpoint events.26 explicit SQL targets yield186/40 parser errors; exact TypeScript PartialParsing persists. Candidate remains NON_ADMITTING.
-TRIAGE: exact provider measured merge4961434a8c1ddcc5588177b01d2cf7f8a210202f same measured tree;5463 secret records=1118current/4345history all UNKNOWN; earlier5439 preserved as historical; npm68/OSV5 current original artifacts; six peer routes traced without waiver/runtime claim. No raw secrets/reports in Git.
-CI: code45cf Quality39596417892 IN_PROGRESS at observation; Security39596418044 FAIL (original12 tests and scanners ran; current findings unreviewed), iOS39596417543 SUCCESS source-only. Latest evidence-tail jobs require refresh; never inferred green.
-EVIDENCE: docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/README.md; evidence/execution-index.json; completion-report.json follows committed evidence
-PROTECTED: protected_source_go=false; main_promotion_authorized=false; G97 remains expired2026-10-21T00:00:00Z; DB06/DB08/R2B closed; main bbc28dc3d1f945191a81be56945b8bda7bb6ef73 read-only; accepted_tasks M0-01/M0-02/M1-01/M1-02; no M2/J05/spend/provider mutation/native signing/deployment/release or qualified/clinical self-approval
-BLOCKERS: parser/fixpoint/coverage and four findings; secret/advisory review and expired source authority; sandbox.py malformed preimage preserved; final-source/full governance/root replay and exact final provider CI remain NOT_RUN/pending, not pass
-CONTEXT: HIGH; no observed compaction; safe checkpoint and STOP
-NEXT: independent Brain review only. Exact sanitized resume: docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/RESUME.md. Founder says only Codex is done.
-
-EVIDENCE_CHECKPOINT_PUSHED: 481d146f4bf8c950513b3479dfa052e868f43bae / ccfbfee4a45166cb74c8f1438e7c98dd008eaa54
-STRICT_REPORT: docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/completion-report.json; committed evidence bindings; final report tail resolves via delivery_ref
+M1-03 / SOURCE-CLOSURE-01 — IN_PROGRESS, NON_ADMITTING
+Sole writer: overnight-delivery-clean on stage/m1-retained-safety; PR9 draft/unmerged.
+Base 49a39b7f5b194d5c356a21c690e3f1bdb09edfa1 / tree 1ca412f1fc6550124445adae7d4b0e748429b11e.
+Verified external manifest 0759147b5810936e79891852f1d4b490b1bf8c132c7d3e61d1b2716b6d82dcc5; installed exact inputs and complete SH01-REVIEW01.
+New additive profile and real historical fixture/object custody implementation checkpoint; exploratory CONT tests 2/2. Full measured checks pending.
+Mismatched authorized overnight test preimage bbd4d4... vs actual 9aee4fe9...; file untouched, exact hashes in checkpoint README/intake.
+Resume: finish local pack hydration; clean full65+new tests and supported Linux70; nine real candidate tests; NEW four-bundle final-source scan and bounded causal probes; forced root/type/lint; strict report/worklist and exact final CI.
+Reviewed-head Quality is now SUCCESS including canonical DB; Security FAILURE; source-only iOS SUCCESS. New-head CI not borrowed.
+Keep all four SAST candidates, original secret records and advisories unreviewed. DB06/08/R2B blocked; frozen Security window expired 2026-10-21T00:00:00Z.
+protected_source_go=false; main_promotion_authorized=false; spend0; accepted only M0-01/M0-02/M1-01/M1-02. No M2/main merge/release.
+Context MEDIUM; no compaction observed. This is a milestone, not completion or acceptance.

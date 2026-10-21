@@ -1,9 +1,11 @@
 """Disposable continuation controls; synthetic receipts grant no acceptance."""
-import copy, pathlib, shutil, subprocess, unittest
+import copy, pathlib, shutil, subprocess, sys, unittest
 import brain
 import m103_profile as p
 import test_brain
 import test_m1_report_cli as common
+sys.path.insert(0, str(brain.ROOT/'scripts/security_readiness/m103'))
+from history_custody import fixture_history
 
 class M103Continuation(unittest.TestCase):
     save = test_brain.InstalledControls.save
@@ -14,19 +16,8 @@ class M103Continuation(unittest.TestCase):
     name = checkpoint + 'synthetic-report.json'
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
-        # Keep this historical fixture before the separately issued successor.
-        for name in [p.ON_INPUT.rsplit('/',1)[0],p.ON_REVIEW]:
-            target=self.root/name
-            if target.exists():
-                assert target.resolve().is_relative_to(self.root.resolve())
-                shutil.rmtree(target)
-        (self.root/p.ON_ACTIVE).unlink(missing_ok=True)
-        (self.root/'docs/brain/current.json').write_bytes(brain.read(brain.ROOT,'docs/brain/current.json'))
         self.command('init','-q','-b',p.BRANCH)
-        objects = pathlib.Path(brain.git(brain.ROOT,'rev-parse','--path-format=absolute','--git-common-dir'))/'objects'
-        alt=self.root/'.git/objects/info/alternates';alt.parent.mkdir(parents=True,exist_ok=True);alt.write_bytes((objects.as_posix()+'\n').encode())
-        self.command('update-ref','HEAD',p.CONT_BASE)
-        self.command('read-tree',p.CONT_BASE)
+        fixture_history(self.root, brain.ROOT, p.ON_BASE)
         # Sparse disposable Git fixture: absent runtime files are intentionally
         # skip-worktree, while the real governance copies remain measurable.
         names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
@@ -36,7 +27,9 @@ class M103Continuation(unittest.TestCase):
         present=[str(f.relative_to(self.root)).replace('\\','/') for f in (self.root/'docs').rglob('*') if f.is_file() and str(f.relative_to(self.root)).replace('\\','/') in indexed]
         result=subprocess.run(['git','-C',str(self.root),'update-index','--no-skip-worktree','-z','--stdin'],input=('\0'.join(present)+'\0').encode(),capture_output=True)
         self.assertEqual(result.returncode,0,result.stderr)
-        self.commit()
+        self.command('add','.')
+        self.command('-c','user.name=Synthetic Fixture','-c','user.email=fixture@example.invalid',
+                     '-c','commit.gpgsign=false','commit','--allow-empty','-qm','Synthetic historical fixture only')
         measured=dict(commit=brain.git(self.root,'rev-parse','HEAD'),tree=brain.git(self.root,'rev-parse','HEAD^{tree}'))
         self.measured=measured
         self.value=dict(schema_version=3,task_id='M1-03',iteration='CONT-01',branch=p.BRANCH,

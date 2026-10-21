@@ -1,0 +1,128 @@
+{
+  "commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "measured_on_device": "Sleepy",
+  "raw_record": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/reviewed-hashes.json",
+  "files": [
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "5b26b47d893d76bdc3b8aa087171979d5461eb71b056afd9752d3f21520a6bed"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "bytes": 247820,
+      "sha256": "08a5ff4ed0f0f2911d13dcb59cef19b62898c2e8df65bbdaf44424be9b7fe127"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "bytes": 19517,
+      "sha256": "8b8698f41c85ba53c4ab3012a99ad580fe79329e8724bec54006f8cba7ecef98"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+      "bytes": 14381,
+      "sha256": "f44d77e85240683bc60afed9f7763ed9e3e4276d3c2e0f262468f6963f6a78a9"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "bytes": 9128,
+      "sha256": "5fb436e1a5622037711fd0411f8fd02393b150c7c85c3cd768464ea21a35f48d"
+    },
+    {
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "bytes": 5111,
+      "sha256": "320fb1e7ca445130a9e4da07c02416cdab5d37fd52574a11865e00ea27310f3d"
+    },
+    {
+      "path": ".gitattributes",
+      "bytes": 1192,
+      "sha256": "72322dfb0cf3e5a2d0cefe8d5e0217dd910a97d667c409f1a6a6f441a5211578"
+    },
+    {
+      "path": "docs/brain/README.md",
+      "bytes": 10384,
+      "sha256": "29574101505a41cd716b04056ab5574f49dc4546f7fbe06ecc3039b7d74dd15b"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 4467,
+      "sha256": "6688b5037d8db5dd249b81e66a27e2ed286933605a1e3ef8c7b3c729ed72a736"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "bytes": 137486,
+      "sha256": "fdb95bcad2efc6fcdec219e20e5820b5d7f171d8908b40b44488a4c0f06dde24"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "bytes": 81878,
+      "sha256": "225e8282e9dd2a9b31e2b8c0c8b0e14cac7f417b723d0d5bce9b162e25f3e5d5"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "bytes": 78932,
+      "sha256": "aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-source-audit.mjs",
+      "bytes": 10966,
+      "sha256": "8dc1454011df7029830611c8593d6bd2e8267d7276e9027d45c6adbd3a00f7d1"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "bytes": 15616,
+      "sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/secret_scan.py",
+      "bytes": 20692,
+      "sha256": "30a04d2b2c7a4fa9aefacdea6796b20c7e1f332b61102d12a47878145e3590a5"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+      "bytes": 12081,
+      "sha256": "296eac4dd887b3403eea2ac77f8ec4d3ad7299bc5b8063ce75bda0d873e07831"
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.mjs",
+      "bytes": 11564,
+      "sha256": "9ff3af96f600a2f4fd0200b3f8edc9be8c261dfb3aa98225ff7c1877472d527e"
+    },
+    {
+      "path": "scripts/phase9/security-advisory-exceptions.test.mjs",
+      "bytes": 9293,
+      "sha256": "e0614d2ff333580025c9cd9fee389e1886b7dcbc450c2026bcec1497ec39b90e"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 574409,
+      "sha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c"
+    },
+    {
+      "path": "apps/catalog-operator-console/package.json",
+      "bytes": 539,
+      "sha256": "61b4d3b51ae7baafe47c8902ad5dcb2cde4f975543eb3d867eb051d46e3ac67b"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "bytes": 12915,
+      "sha256": "716050e95d37626333401c33e0efb027019ed2cdc98a9c244d9fb2247f00ef2d"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 29246,
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "bytes": 17412,
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "bytes": 49408,
+      "sha256": "73e31496101f9e0dd3bfc0bb716e0717ebfdfeecea1627c5d43853c3a1f1638c"
+    }
+  ]
+}

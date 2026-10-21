@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "SOURCE-CLOSURE-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "49a39b7f5b194d5c356a21c690e3f1bdb09edfa1",
+  "base_tree": "1ca412f1fc6550124445adae7d4b0e748429b11e",
+  "input_manifest_sha256": "0759147b5810936e79891852f1d4b490b1bf8c132c7d3e61d1b2716b6d82dcc5",
+  "approved_state_version": "brain-m1-03-sh01-review01-source-closure01-issued-16",
+  "authorization_id": "M103-SOURCE-CLOSURE01-SOURCE-EDIT-01",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "active_writers": 1,
+  "incremental_spend_usd": 0,
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "IN_PROGRESS"
+}

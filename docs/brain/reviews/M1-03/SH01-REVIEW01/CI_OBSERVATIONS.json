@@ -1,0 +1,79 @@
+{
+  "limits": [
+    "CI green does not authorize DB06/DB08/R2B replay",
+    "Security run failure remains",
+    "last measured head 3c063 had different DB acquisition result",
+    "all findings/expired reviews remain separate"
+  ],
+  "main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "observed_at_utc": "2026-10-21T11:10:53+00:00",
+  "repository": "TasfiqJ/onSkin",
+  "runs": [
+    {
+      "conclusion": "success",
+      "jobs": {
+        "PG15": {
+          "conclusion": "success",
+          "id": 119041893575
+        },
+        "PG17": {
+          "conclusion": "success",
+          "id": 119041893684
+        },
+        "credential_free_database": {
+          "conclusion": "success",
+          "id": 119041893746
+        },
+        "expo_android": {
+          "conclusion": "success",
+          "id": 119043555966,
+          "scope": "source-only"
+        },
+        "expo_ios": {
+          "conclusion": "success",
+          "id": 119043556017,
+          "scope": "source-only"
+        },
+        "repository_quality": {
+          "conclusion": "success",
+          "id": 119041893355
+        }
+      },
+      "run_id": 39545262835,
+      "workflow": "Quality"
+    },
+    {
+      "conclusion": "failure",
+      "jobs": {
+        "code_gates": {
+          "conclusion": "failure",
+          "id": 119041893533
+        },
+        "secret_scanning": {
+          "conclusion": "failure",
+          "id": 119041893805,
+          "original_unit_suite": "9 pass 1 error tempfile cleanup"
+        },
+        "source_only_acceptance": {
+          "conclusion": "failure",
+          "id": 119042891971
+        },
+        "static_analysis": {
+          "conclusion": "failure",
+          "frozen_inventory": "SOURCE_INVENTORY_DRIFT",
+          "id": 119041893690
+        }
+      },
+      "run_id": 39545262842,
+      "workflow": "Security"
+    },
+    {
+      "conclusion": "success",
+      "run_id": 39545262853,
+      "scope": "source-only",
+      "workflow": "iOS launch contract"
+    }
+  ],
+  "stage_head": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "stage_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544"
+}

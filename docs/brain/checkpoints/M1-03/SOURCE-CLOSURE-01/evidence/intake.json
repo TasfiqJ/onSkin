@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-21T15:12:39.806652+00:00",
+  "task_id": "M1-03",
+  "iteration": "SOURCE-CLOSURE-01",
+  "manifest_sha256": "0759147b5810936e79891852f1d4b490b1bf8c132c7d3e61d1b2716b6d82dcc5",
+  "source_commit": "49a39b7f5b194d5c356a21c690e3f1bdb09edfa1",
+  "source_tree": "1ca412f1fc6550124445adae7d4b0e748429b11e",
+  "branch": "stage/m1-retained-safety",
+  "origin": "https://github.com/TasfiqJ/onSkin.git",
+  "preimages": [
+    {
+      "path": ".gitattributes",
+      "source_blob": "c53b20325313d35fe5d411cb3a339d908c56a15e",
+      "bytes": 1470,
+      "sha256": "8dbe363cdbbe9a0c2f935886b63e5a112c3c5c481f1ac759e48151a5525c4e2f",
+      "expected_sha256": "8dbe363cdbbe9a0c2f935886b63e5a112c3c5c481f1ac759e48151a5525c4e2f",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "source_blob": "8f9bf6bc6f0f45b1cad9999ca586e8c8387f3112",
+      "bytes": 3441,
+      "sha256": "31c71387f81e5bc7d0a70c528b324cfb90c814017d6e57e7255769b770abdc2c",
+      "expected_sha256": "31c71387f81e5bc7d0a70c528b324cfb90c814017d6e57e7255769b770abdc2c",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "docs/brain/README.md",
+      "source_blob": "1cfff5bae153a408974a62dd8e357845b80caf2d",
+      "bytes": 11302,
+      "sha256": "450b1f6479a2936dc31d36b927dff75bb00d6c6ed47276e745bde2f821eb37a6",
+      "expected_sha256": "450b1f6479a2936dc31d36b927dff75bb00d6c6ed47276e745bde2f821eb37a6",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "source_blob": "6fd30e882ddcc227d8ce1ec94a2a91aa2c3e2bef",
+      "bytes": 21237,
+      "sha256": "7e4011aeb669d7fb92298141bdc51b0dedeb1835ee2e920016b2a7895270ecb3",
+      "expected_sha256": "7e4011aeb669d7fb92298141bdc51b0dedeb1835ee2e920016b2a7895270ecb3",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "source_blob": "d0f07bb940f983143dce6dddb410c0dfb63062f4",
+      "bytes": 5497,
+      "sha256": "9416639c654d0ca2ba1d9cb405d6db5af24b78a02dcf18ab3ce8308550c5fb4e",
+      "expected_sha256": "9416639c654d0ca2ba1d9cb405d6db5af24b78a02dcf18ab3ce8308550c5fb4e",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_overnight01_profile.py",
+      "source_blob": "95602ee0d8b1a71a6dfdfbe51854eee2ad4cf164",
+      "bytes": 5653,
+      "sha256": "9aee4fe96c474edbc58fb3e63d48912b5eb6bc7718da51cdb4cf31f36fc3c46e",
+      "expected_sha256": "bbd4d4e7a7dd41f7e4a32c3f865277d46afd42e329a137908814a855a59e83bb",
+      "authorized": false,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_security_harden01_profile.py",
+      "source_blob": "faa0c103d5e9b9bfd9f0ab4bff3d3af88c569aa3",
+      "bytes": 3623,
+      "sha256": "3685dc7cb978949056d3bc4d8719fd3d65530cf02a6935d80862a01984b4c6cc",
+      "expected_sha256": "3685dc7cb978949056d3bc4d8719fd3d65530cf02a6935d80862a01984b4c6cc",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/README.md",
+      "source_blob": "1a44877381c9d9cb617d7279a43f37d221407efd",
+      "bytes": 5015,
+      "sha256": "6ff70656c9504ff23c8b88208308184b476b614c0b473c8ba00e9e87eeb94ce1",
+      "expected_sha256": "6ff70656c9504ff23c8b88208308184b476b614c0b473c8ba00e9e87eeb94ce1",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/adverse_install.py",
+      "source_blob": "bb0d87f4dfa667400e502e6510fbc8f710a54d18",
+      "bytes": 3182,
+      "sha256": "cb644c033dc169d730d948ac66e268271b4acc7e20f2118a1dac2d47d9dc49b0",
+      "expected_sha256": "cb644c033dc169d730d948ac66e268271b4acc7e20f2118a1dac2d47d9dc49b0",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/candidate.py",
+      "source_blob": "7479a567ca65a2721d3c4d7a70b663a256bea67c",
+      "bytes": 13243,
+      "sha256": "02796dac2260c0d5475c3f657fc47689ab9b0e99c19a1536ab331ef5fef52218",
+      "expected_sha256": "02796dac2260c0d5475c3f657fc47689ab9b0e99c19a1536ab331ef5fef52218",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/capsule.py",
+      "source_blob": "7f6ba5d03e6304983396eb0eff54f94e8c235ea2",
+      "bytes": 7198,
+      "sha256": "0564f423663811aff707a3ab7fa0a618711c9359621f35f26e26edb5d13c954f",
+      "expected_sha256": "0564f423663811aff707a3ab7fa0a618711c9359621f35f26e26edb5d13c954f",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/fixtures.py",
+      "source_blob": "e4b8f07ce937c12bb44761b18c37e4231f4533ff",
+      "bytes": 2879,
+      "sha256": "aaa07f8f18acce97326be458256280fab2da15739a4ddd5fc4c7ad3df880ff3b",
+      "expected_sha256": "aaa07f8f18acce97326be458256280fab2da15739a4ddd5fc4c7ad3df880ff3b",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/integrity.py",
+      "source_blob": "63a485f0fcd98b0ca1f1a59038b1a51936367818",
+      "bytes": 4042,
+      "sha256": "11e548c814f08512a1ea43bb9e2bb4858512f814abe901d65fb95fa6598f8cbc",
+      "expected_sha256": "11e548c814f08512a1ea43bb9e2bb4858512f814abe901d65fb95fa6598f8cbc",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/reconcile.py",
+      "source_blob": "d69576420d38f94b0eb0ac108b09da3294619724",
+      "bytes": 7004,
+      "sha256": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde",
+      "expected_sha256": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/sandbox.py",
+      "source_blob": "f48e4fe0187a5c1e5c484d291826fa63d79cb633",
+      "bytes": 2308,
+      "sha256": "fe2c5580115c7f4b791edc7f7a72851044c0677e464bc53c467a42d9ce508b15",
+      "expected_sha256": "fe2c5580115c7f4b791edc7f7a72851044c0677e464bc53c467a42d9ce508b15",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "source_blob": "e2c37ea0ae28f30245ecd6dafa54a863535ce228",
+      "bytes": 16803,
+      "sha256": "19361faa398682beaed980df8519b0ed998508c72931a24264ebad3c52dd3c82",
+      "expected_sha256": "19361faa398682beaed980df8519b0ed998508c72931a24264ebad3c52dd3c82",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/test_diagnostics.py",
+      "source_blob": "c5da110f3473a7d89631de2265fe1ed3c6b4d466",
+      "bytes": 5540,
+      "sha256": "8db47ede9f8385f7b16653280e3e614520140f6cfc37848d8142d2c444c8438d",
+      "expected_sha256": "8db47ede9f8385f7b16653280e3e614520140f6cfc37848d8142d2c444c8438d",
+      "authorized": true,
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/test_integrity.py",
+      "source_blob": "a6319efd0dad9dd12d17a5f65f69e7e81bd0691c",
+      "bytes": 9282,
+      "sha256": "4a0694bade026fe614076eedb1dd87b229a8338f981e573e67b068de45c85882",
+      "expected_sha256": "4a0694bade026fe614076eedb1dd87b229a8338f981e573e67b068de45c85882",
+      "authorized": true,
+      "worktree_matches": true
+    }
+  ],
+  "dirty_before": [],
+  "other_checkout": "m103c1-isolated dirty dependency inventory preserved",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "admission": "NONE"
+}

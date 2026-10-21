@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-SOURCE-CLOSURE01-SOURCE-EDIT-01",
+  "task_id": "M1-03",
+  "iteration": "SOURCE-CLOSURE-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "49a39b7f5b194d5c356a21c690e3f1bdb09edfa1",
+  "base_tree": "1ca412f1fc6550124445adae7d4b0e748429b11e",
+  "main_observed": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "state_version": "brain-m1-03-sh01-review01-source-closure01-issued-16",
+  "preimages": [
+    {
+      "path": ".gitattributes",
+      "sha256": "8dbe363cdbbe9a0c2f935886b63e5a112c3c5c481f1ac759e48151a5525c4e2f"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "31c71387f81e5bc7d0a70c528b324cfb90c814017d6e57e7255769b770abdc2c"
+    },
+    {
+      "path": "docs/brain/README.md",
+      "sha256": "450b1f6479a2936dc31d36b927dff75bb00d6c6ed47276e745bde2f821eb37a6"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "sha256": "7e4011aeb669d7fb92298141bdc51b0dedeb1835ee2e920016b2a7895270ecb3"
+    },
+    {
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "sha256": "9416639c654d0ca2ba1d9cb405d6db5af24b78a02dcf18ab3ce8308550c5fb4e"
+    },
+    {
+      "path": "scripts/brain/test_m103_overnight01_profile.py",
+      "sha256": "bbd4d4e7a7dd41f7e4a32c3f865277d46afd42e329a137908814a855a59e83bb"
+    },
+    {
+      "path": "scripts/brain/test_m103_security_harden01_profile.py",
+      "sha256": "3685dc7cb978949056d3bc4d8719fd3d65530cf02a6935d80862a01984b4c6cc"
+    },
+    {
+      "path": "scripts/security_readiness/m103/README.md",
+      "sha256": "6ff70656c9504ff23c8b88208308184b476b614c0b473c8ba00e9e87eeb94ce1"
+    },
+    {
+      "path": "scripts/security_readiness/m103/adverse_install.py",
+      "sha256": "cb644c033dc169d730d948ac66e268271b4acc7e20f2118a1dac2d47d9dc49b0"
+    },
+    {
+      "path": "scripts/security_readiness/m103/candidate.py",
+      "sha256": "02796dac2260c0d5475c3f657fc47689ab9b0e99c19a1536ab331ef5fef52218"
+    },
+    {
+      "path": "scripts/security_readiness/m103/capsule.py",
+      "sha256": "0564f423663811aff707a3ab7fa0a618711c9359621f35f26e26edb5d13c954f"
+    },
+    {
+      "path": "scripts/security_readiness/m103/fixtures.py",
+      "sha256": "aaa07f8f18acce97326be458256280fab2da15739a4ddd5fc4c7ad3df880ff3b"
+    },
+    {
+      "path": "scripts/security_readiness/m103/integrity.py",
+      "sha256": "11e548c814f08512a1ea43bb9e2bb4858512f814abe901d65fb95fa6598f8cbc"
+    },
+    {
+      "path": "scripts/security_readiness/m103/reconcile.py",
+      "sha256": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde"
+    },
+    {
+      "path": "scripts/security_readiness/m103/sandbox.py",
+      "sha256": "fe2c5580115c7f4b791edc7f7a72851044c0677e464bc53c467a42d9ce508b15"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "sha256": "19361faa398682beaed980df8519b0ed998508c72931a24264ebad3c52dd3c82"
+    },
+    {
+      "path": "scripts/security_readiness/m103/test_diagnostics.py",
+      "sha256": "8db47ede9f8385f7b16653280e3e614520140f6cfc37848d8142d2c444c8438d"
+    },
+    {
+      "path": "scripts/security_readiness/m103/test_integrity.py",
+      "sha256": "4a0694bade026fe614076eedb1dd87b229a8338f981e573e67b068de45c85882"
+    }
+  ],
+  "new_paths": [
+    "scripts/brain/test_m103_source_closure01_profile.py",
+    "scripts/security_readiness/m103/ ONLY NEW .py/.mjs/.md test/diagnostic support files",
+    "docs/brain/reviews/M1-03/SH01-REVIEW01/**",
+    "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/**",
+    "docs/brain/m103-source-closure01-active.json"
+  ],
+  "derived_paths": [
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md"
+  ],
+  "semantic_limits": {
+    "sandbox.py": "Independently corrected 64-character SHA authorizes precise non-admitting private diagnostic hardening only, not active CI or rule changes.",
+    "source_scan.py": "Exact object-derived source/rule binding, parser/fixpoint truth, bounded per-file diagnostic probes; never mark unscanned target as passing.",
+    "candidate.py and capsule.py": "Retain official core, exact MCP/certifi derivative integrity, sealed runtime and all adverse tests; no active adoption or network egress.",
+    "m103_profile.py": "Additive task-specific issuance and report binding only; all prior profiles/fixtures remain immutable and working.",
+    "other_existing": "Evidence, regression, diagnostics within existing behavior. Any new package/tool/rule/workflow/policy edit needs separate review.",
+    "findings": "Qualified source/blob redacted triage proposals only. No secret validation, suppression, exception, signer, green badge or approval."
+  },
+  "forbidden": [
+    ".github/**",
+    "supabase/**",
+    "packages/types/**",
+    "package-lock.json",
+    "**/package.json",
+    "scripts/phase2/**",
+    "scripts/phase9/security_acceptance/{proposal.json,source-manifest.json,history.json.gz,scan-coverage-manifest.json,rule-pins,etc}",
+    "scripts/phase9/security_acceptance/{bootstrap_tools.py,contract.py,collect.py,history.py,workflow_admission.py,secret_scan.py}",
+    "docs/phase-9/security-advisory-exceptions.json",
+    "docs/phase-9/ios-sdk-package-mapping.json",
+    "apps/mobile/**",
+    "new scanner dependencies",
+    "source inventory rebind",
+    "owner-pin update",
+    "expiry renewal",
+    "protected DB06/DB08/R2B changes",
+    "M2-01 or other later roadmap code",
+    "main merge/release"
+  ],
+  "authority": {
+    "source_only_non_admitting": true,
+    "protected_source_go": false,
+    "main_promotion_authorized": false,
+    "incremental_spend_usd": 0,
+    "accepted_tasks": [
+      "M0-01",
+      "M0-02",
+      "M1-01",
+      "M1-02"
+    ],
+    "proposal_expires_utc": "2026-10-21T00:00:00Z",
+    "scope_required": "Only source-side test/diagnostic completion, no owner/qualified Security acceptance"
+  }
+}

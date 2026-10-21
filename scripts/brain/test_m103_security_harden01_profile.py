@@ -1,7 +1,9 @@
 """Bound issuance, disjoint intervals and real-Git adverse authorizations."""
-import pathlib,subprocess,unittest
+import pathlib,subprocess,sys,unittest
 import brain,m103_profile as p,test_brain
 import test_m1_report_cli as common
+sys.path.insert(0, str(brain.ROOT/'scripts/security_readiness/m103'))
+from history_custody import fixture_history
 
 
 class Hardening(unittest.TestCase):
@@ -11,17 +13,16 @@ class Hardening(unittest.TestCase):
 
     def setUp(self):
         test_brain.InstalledControls.setUp(self)
-        (self.root/'docs/brain/current.json').write_bytes(brain.read(brain.ROOT,'docs/brain/current.json'))
         self.command('init','-q','-b',p.BRANCH)
-        objects=pathlib.Path(brain.git(brain.ROOT,'rev-parse','--path-format=absolute','--git-common-dir'))/'objects'
-        alt=self.root/'.git/objects/info/alternates';alt.parent.mkdir(parents=True,exist_ok=True);alt.write_text(objects.as_posix()+'\n')
-        self.command('update-ref','HEAD',p.SH_BASE);self.command('read-tree',p.SH_BASE)
+        fixture_history(self.root, brain.ROOT, '49a39b7f5b194d5c356a21c690e3f1bdb09edfa1')
         names=subprocess.check_output(['git','-C',str(self.root),'ls-files','-z'])
         subprocess.run(['git','-C',str(self.root),'update-index','--skip-worktree','-z','--stdin'],input=names,check=True)
         indexed=set(names.decode().strip('\0').split('\0'))
         present=[f.relative_to(self.root).as_posix() for f in (self.root/'docs').rglob('*') if f.is_file() and f.relative_to(self.root).as_posix() in indexed]
         subprocess.run(['git','-C',str(self.root),'update-index','--no-skip-worktree','-z','--stdin'],input=('\0'.join(present)+'\0').encode(),check=True)
-        self.commit()
+        self.command('add','.')
+        self.command('-c','user.name=Synthetic Fixture','-c','user.email=fixture@example.invalid',
+                     '-c','commit.gpgsign=false','commit','--allow-empty','-qm','Synthetic historical fixture only')
 
     def test_exact_issuance_prior_interval_and_gate_types(self):
         p.validate_security_harden01(self.root)

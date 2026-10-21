@@ -1,0 +1,257 @@
+{
+  "reviewed_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "reviewed_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "review_window_utc": [
+    "2026-10-21T02:25:40Z",
+    "2026-10-21T02:47:34Z"
+  ],
+  "record_type": "CONDENSED_INDEPENDENT_REVIEW_RECEIPTS",
+  "raw_logs_bundled": false,
+  "raw_custody": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z",
+  "full_execution_ledgers": [
+    "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/executions.json",
+    "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/linux-executions.json",
+    "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/candidate-followup-executions.json"
+  ],
+  "windows_environment": {
+    "node": "22.21.0",
+    "python": "3.9.13",
+    "fresh_clone": true,
+    "fresh_independent_node_modules": true,
+    "lock_sha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c"
+  },
+  "linux_environment": {
+    "distribution": "existing onskin-r6-verification",
+    "node": "24.19.0",
+    "python": "3.12.3",
+    "npm": "11.20.0",
+    "fresh_native_clone": true,
+    "fresh_independent_node_modules": true
+  },
+  "delivered_source": [
+    {
+      "case": "root",
+      "exit_code": 0,
+      "command_or_diagnostic": "npm run test -- --force",
+      "result": "6067 passed; 472 files; 0 failed/skipped; 0 cached tasks",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/root.log",
+      "output_sha256": "2df1c768b6aa6bed154a709299d897bf27fd9c7e9379061e13fa72e5e0bb4a7e",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "typecheck",
+      "exit_code": 0,
+      "command_or_diagnostic": "npm run typecheck -- --force",
+      "result": "3 successful; 0 cached",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/typecheck.log",
+      "output_sha256": "f1a42f5c11285e53aa30c13fc021b8dc516cf1505d6b064778252389eb1e4e4b",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "lint",
+      "exit_code": 0,
+      "command_or_diagnostic": "npm run lint -- --force",
+      "result": "3 successful; 0 cached",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/lint.log",
+      "output_sha256": "5d3f9c4a434b16b4996d246bdd90a89cf50eba350df000ba09d7b2196a906b75",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "console-build",
+      "exit_code": 0,
+      "command_or_diagnostic": "npm --workspace apps/catalog-operator-console run build",
+      "result": "PASS",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/console-build.log",
+      "output_sha256": "a0cc8c26c73f224a879d1f522ea57cc6a73970e8ebad4bf7c79182ab100df4ca",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "classifier",
+      "exit_code": 0,
+      "command_or_diagnostic": "node --test scripts/phase9/security-advisory-exceptions.test.mjs",
+      "result": "8 passed",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/classifier.log",
+      "output_sha256": "8b3048a57f9feda28c14c791a2a4edd2d7a0e99523d27cebf5623c501bc16920",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "workflow-contract",
+      "exit_code": 1,
+      "command_or_diagnostic": "node --test scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+      "result": "27 passed / 1 failed; historical packet paired with current lock",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/workflow-contract.log",
+      "output_sha256": "baddab14c813e3097aad1c7f7be51453d7797b5d10ca9226b4f329b8cf6cfcf0",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "source-contracts",
+      "exit_code": 0,
+      "command_or_diagnostic": "node --test (13 explicitly enumerated retained contract files; full argv in remote executions.json)",
+      "result": "164 passed; 0 failed/skipped",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/source-contracts.log",
+      "output_sha256": "062c76ca2e919a7ea014014a1799e747628017fbe07139d263ec6a264e268ba2",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "governance",
+      "exit_code": 0,
+      "command_or_diagnostic": "C:/Python39/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "result": "60 discovered; 58 passed; 2 genuine Windows symlink-privilege skips",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/governance.log",
+      "output_sha256": "a8ac3202cfa089581141a01703b382859a43ba1e65d76c7f7b2336ed6d0fc9e1",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "strict-report",
+      "exit_code": 1,
+      "command_or_diagnostic": "C:/Python39/python.exe -B scripts/brain/brain.py --profile M1-03 report docs/brain/checkpoints/M1-03/CONT-01/completion-report.json",
+      "result": "FAIL in clean clone: first missing ignored expo-web.log; 12 omitted artifacts in total",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/strict-report.log",
+      "output_sha256": "e3c009c112fa49f51a54f1fa627606d9efe21be2bee3ee8c8a7c887f092dede0",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "worklist",
+      "exit_code": 0,
+      "command_or_diagnostic": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "result": "PASS; 14 meanings and 414 references unchanged",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/worklist.log",
+      "output_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "linux-secrets",
+      "exit_code": 0,
+      "command_or_diagnostic": "python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "result": "10 passed",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/linux-secrets.log",
+      "output_sha256": "0b6bb9b1b1b18014a7909fa7936a88d58d5461b295f79ca82d41d84c3becb3d6",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "linux-original-contracts",
+      "exit_code": 0,
+      "command_or_diagnostic": "python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "result": "70 passed",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/linux-original-contracts.log",
+      "output_sha256": "1f9038c49041d504d564ec8e30d618d275ef4f552161bc6b0e9e673936852a90",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "linux-native-tests",
+      "exit_code": 0,
+      "command_or_diagnostic": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs scripts/phase9/ios-archive-privacy-evidence.test.mjs",
+      "result": "PASS",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/linux-native-tests.log",
+      "output_sha256": "c2ccc8745970e8bbb9fea415c24b3b3e846570aba043461c5ce714238c457b73",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    },
+    {
+      "case": "native-mapping-unchanged",
+      "exit_code": 1,
+      "command_or_diagnostic": "node scripts/phase9/ios-privacy-source-audit.mjs --check --strict",
+      "result": "3 MAPPING_LOCK_DRIFT refusals",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-mapping-unchanged.log",
+      "output_sha256": "11b81abb023031e3cc5427c1840aa5330d6f4a96233d8f27424d7c6d3a7f3600",
+      "kind": "EXACT_DELIVERY_SOURCE"
+    }
+  ],
+  "private_candidates": [
+    {
+      "case": "native-candidate-stale-derived",
+      "exit_code": 1,
+      "command_or_diagnostic": "3 candidate mapping hashes only; unchanged strict audit",
+      "result": "Generated JSON drift still rejects",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-candidate-stale-derived.log",
+      "output_sha256": "f2d735b18b00a585230618d4e47f7e8a82af05812e8992b737b08bc09d794da3",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "native-candidate-generate",
+      "exit_code": 0,
+      "command_or_diagnostic": "unchanged native audit --write --strict",
+      "result": "Generated exact candidate reports",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-candidate-generate.log",
+      "output_sha256": "b8bcdb8f60de5c822a26c5fbd338b33e3be476699476bd90be1a52b022d80b3d",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "native-candidate-check",
+      "exit_code": 0,
+      "command_or_diagnostic": "unchanged native audit --check --strict",
+      "result": "PASS after generator",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-candidate-check.log",
+      "output_sha256": "d960a107f2026007e252e97133834df9d7a12f213d6a109f18c4978829f5fda8",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "native-candidate-negative-stale-one",
+      "exit_code": 1,
+      "command_or_diagnostic": "restore one old mapping digest in disposable clone",
+      "result": "Intended MAPPING_LOCK_DRIFT refusal retained",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-candidate-negative-stale-one.log",
+      "output_sha256": "4582aca3c9b5afbc2f919cf08e1cd31199a65e4d78df097dcf287891cbf0590a",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "historical-self-contained-no-git",
+      "exit_code": 0,
+      "command_or_diagnostic": "absolute existing node --test --test-reporter=tap workflow_contract.test.mjs; PATH contains no executables",
+      "result": "29 passed; old packet/current lock still rejects; no runtime Git dependency",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/historical-self-contained-no-git.log",
+      "output_sha256": "af8c019a58f29efa1a3637f924a6c20a48ab78d59db2dcf659f6eaba29f4f7fc",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "historical-self-contained-corruption-negative",
+      "exit_code": 1,
+      "command_or_diagnostic": "same candidate with a changed gzip byte",
+      "result": "REFUSED; fixture restored afterwards",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/historical-self-contained-corruption-negative.log",
+      "output_sha256": "ad5b5975bccf7abe09e52635da4086294adeb2c659f5b8a7bccef27ff1de1eef",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "historical-self-contained-missing-negative",
+      "exit_code": 1,
+      "command_or_diagnostic": "same candidate with absent gzip fixture",
+      "result": "REFUSED; fixture restored afterwards",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/historical-self-contained-missing-negative.log",
+      "output_sha256": "7cd069a65f548e5ec9a9e63bb610f9401212e631cb68b244ceb93f271ae89c81",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    },
+    {
+      "case": "strict-report-local-only-diagnostic",
+      "exit_code": 0,
+      "command_or_diagnostic": "restore exactly 12 ignored matching files into private review clone, without Git add/commit; rerun original report command",
+      "result": "PASS demonstrates missing publication guard, not successful delivery; all 12 copies removed afterwards",
+      "output_path": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/strict-report-local-only-diagnostic.log",
+      "output_sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf",
+      "kind": "DISPOSABLE_DIAGNOSTIC_NOT_DELIVERY"
+    }
+  ],
+  "candidate_downstream_checks": {
+    "count": 11,
+    "all_exit_zero": true,
+    "scope": "store source check with retained release warnings; QA integrity; governed chain/coverage; Git exclusions; SBOM contracts; human manifest; phase7 packet; performance/device/source docs",
+    "raw_ledger": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/candidate-followup-executions.json"
+  },
+  "review_harness_failures": [
+    {
+      "error": "WSL clone from Windows linked worktree could not resolve Windows .git pointer",
+      "correction": "clone the independently created full repository instead; no source changes",
+      "record": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/linux-attempt1-executions.json"
+    },
+    {
+      "error": "Hardcoded /usr/bin/node absent in existing WSL",
+      "correction": "resolve /usr/local/bin/node with shutil.which before PATH-negative test; no installation",
+      "record": "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/candidate-followup-attempt1.json"
+    }
+  ],
+  "limits": [
+    "No independent new browser replay or physical-device test in this review. Submitted browser evidence reviewed as bounded source artifacts, with publication defect explicitly retained.",
+    "No new full Semgrep scan, G97 acceptance, hosted DB replay, provider mutation, qualified review, deployment or release.",
+    "Private candidate successes are not a claim that those changes were delivered at H.",
+    "Active user source and branch/main were not modified or pushed by Brain."
+  ]
+}

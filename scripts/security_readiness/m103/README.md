@@ -25,8 +25,17 @@ method. Missing Linux capabilities or candidate inputs remain explicit failures
 or documented skips. `prepare --wheel-cache DIR` reuses only exact hash-verified
 public wheels and still installs/resolves/checks the complete graph afresh.
 
-The issued `sandbox.py` preimage digest is malformed and differs from Git; that
-file is preserved. The additional capsule is in the issued new Python namespace.
+The historical SECURITY-HARDEN-01 `sandbox.py` preimage digest was malformed.
+SOURCE-CLOSURE-01 supplies the independently reviewed 64-character digest;
+no new sandbox change has been justified. The sealed capsule remains private.
+
+`hydrate_history.py` verifies every immutable historical witness against real
+commit/blob bytes and exports a private Git pack for isolated Linux import.
+Missing reachable objects can be read from an explicitly selected authorized
+local Git repository, rehashed and imported without changing any source ref.
+`history_custody.py` gives synthetic governance tests their own copied Git object
+pool and exact historical documents; successor issuances cannot contaminate
+an older interval. Missing objects always fail instead of becoming substitutes.
 
 Every output is **NON_ADMITTING / UNREVIEWED**. Admission is always NONE. No runtime,
 package script, workflow, source acceptance policy or frozen scanner consumes this

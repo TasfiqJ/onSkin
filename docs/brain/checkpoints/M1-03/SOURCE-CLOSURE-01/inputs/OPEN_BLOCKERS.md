@@ -1,0 +1,8 @@
+# Current blockers and next engineering decision
+
+1. **Security G97**: Original proposal expired 2026-10-21T00:00:00Z. Frozen source inventory and OSV/npm/secret evidence currently refuse. An independently qualified/current issuer packet is needed; Codex may investigate and propose but cannot renew or self-approve.
+2. **Candidate source coverage**: full four-bundle result is from measured `8e8983f5`, not `49a39b7f5b194d5c356a21c690e3f1bdb09edfa1`; 173 failed targets/333 fixpoint warnings, 26 SQL parser gaps, one onboarding TS parser gap, four unreviewed candidate findings. Preserve specific raw exits, paths/rules/bytes, no suppressions.
+3. **Git historical governance**: Independent Windows clean clone produced 65 cases: 58 pass, 4 fail, 1 error, 2 genuine privilege skips. Four historical fixture issues stem from malformed Git alternates/missing objects and a prior-interval expectation mismatch. Independent Linux 70-contract attempt had 3 errors from missing historical objects despite npm ci. Repair fixture mechanism and rerun, without suppressing historical proofs.
+4. **DB06/DB08/R2B**: unconditional current-chain replay refusal, linked target parity missing, `supabase_admin` default-ACL issuer/receipt unknown; hosted replay needs independently reviewed target/source/expiry. No protected modifications authorized.
+5. **Delivery CI**: Quality canonical job 119217196867 pending at audit snapshot; update status exactly, do not assume green or permanently fixed ECR.
+6. **M2 dependency**: M2-01 depends on M1-03 source baseline resolution. No automatic schema/Edge/toolchain work or new phase branch under this diagnostic issuance. Retained undo remains unavailable; additive correction obligation remains due M2-01/M2-02 when separately authorized.

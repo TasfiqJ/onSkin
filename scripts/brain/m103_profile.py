@@ -58,6 +58,8 @@ def _validate_initial(root):
 
 
 def validate(root):
+    if (root / SC_ACTIVE).exists():
+        return validate_source_closure01(root)
     if (root / SH_ACTIVE).exists():
         return validate_security_harden01(root)
     if (root / ON_ACTIVE).exists():
@@ -66,6 +68,15 @@ def validate(root):
 
 
 def report(root, name):
+    if name.startswith(SC_INPUT.rsplit('/',1)[0]+'/'):
+        value=m1_profile.report(root,name,task='M1-03',base=SC_BASE,
+            validator=validate_source_closure01,checkpoint=SC_INPUT.rsplit('/',1)[0]+'/',
+            continuation_bindings={'SOURCE-CLOSURE-01':(SC_INPUT,SC_BASE)})
+        brain.require(value['schema_version']==3 and value['iteration']=='SOURCE-CLOSURE-01','Wrong source closure report iteration')
+        brain.identities(value['scope_matrix'],SC_SCOPE)
+        brain.require(bool(value['executions']),'Source closure requires actual executions')
+        committed_artifacts(root,value['artifacts'])
+        return value
     if name.startswith(SH_INPUT.rsplit('/',1)[0]+'/'):
         value=m1_profile.report(root,name,task='M1-03',base=SH_BASE,
             validator=validate_security_harden01,checkpoint=SH_INPUT.rsplit('/',1)[0]+'/',
@@ -274,7 +285,7 @@ SH_DIGEST='9dc4ecaef5d2c074a57983906dec25ed59c8d6b3b23e36c66993ed63e87bf196'
 SH_SCOPE=['SH-1','SH-2','SH-3','SH-4','SH-5','SH-6','SH-7']
 
 
-def validate_security_harden01(root):
+def validate_security_harden01(root, *, fixed=False):
     import pathlib,subprocess
     validate_overnight01(root,fixed=True)
     brain.git_snapshot(root,dict(commit=SH_BASE,tree=SH_TREE),'hardening reviewed base')
@@ -306,8 +317,9 @@ def validate_security_harden01(root):
     existing={r['path']:r['sha256'] for r in authority['allowed_existing_files']}
     prefixes=[SH_REVIEW+'/',SH_INPUT.rsplit('/',1)[0]+'/']
     exact=set(authority['allowed_derived_outputs'])|{SH_ACTIVE,'scripts/brain/test_m103_security_harden01_profile.py'}
-    changes=brain.git(root,'diff','--name-only',SH_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
-    for commit in brain.git(root,'rev-list',SH_BASE+'..HEAD').splitlines():
+    endpoint=SC_BASE if fixed else 'HEAD'
+    changes=brain.git(root,'diff','--name-only',SH_BASE,endpoint).splitlines() if fixed else brain.git(root,'diff','--name-only',SH_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',SH_BASE+'..'+endpoint).splitlines():
         changes+=brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
     for path in set(changes):
         prior=subprocess.run(['git','-C',str(root),'show',SH_BASE+':'+path],capture_output=True)
@@ -317,4 +329,65 @@ def validate_security_harden01(root):
         else:
             candidate=path.startswith('scripts/security_readiness/m103/') and pathlib.PurePosixPath(path).suffix in {'.py','.mjs','.md'}
             brain.require(prior.returncode!=0 and (path in exact or candidate or any(path.startswith(p) for p in prefixes)),'Hardening path outside exact authorization: '+path)
+    return current
+
+
+# New issuance, disjoint from the fixed historical intervals above.
+SC_INPUT='docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs'
+SC_REVIEW='docs/brain/reviews/M1-03/SH01-REVIEW01'
+SC_ACTIVE='docs/brain/m103-source-closure01-active.json'
+SC_BASE='49a39b7f5b194d5c356a21c690e3f1bdb09edfa1'
+SC_TREE='1ca412f1fc6550124445adae7d4b0e748429b11e'
+SC_DIGEST='0759147b5810936e79891852f1d4b490b1bf8c132c7d3e61d1b2716b6d82dcc5'
+SC_VERSION='brain-m1-03-sh01-review01-source-closure01-issued-16'
+SC_SCOPE=['C1','C2','C3','C4','C5','C6','C7']
+
+
+def validate_source_closure01(root):
+    import pathlib, subprocess
+    validate_security_harden01(root,fixed=True)
+    brain.git_snapshot(root,dict(commit=SC_BASE,tree=SC_TREE),'source closure reviewed base')
+    raw=brain.read(root,SC_INPUT+'/TASK_MANIFEST.json')
+    brain.require(brain.digest(raw)==SC_DIGEST,'Source closure independent manifest differs')
+    issued=brain.decode(raw)
+    brain.require((issued['task_id'],issued['iteration'],issued['base_commit'],issued['base_tree'],
+                   issued['branch'],issued['state_version'])==
+        ('M1-03','SOURCE-CLOSURE-01',SC_BASE,SC_TREE,BRANCH,SC_VERSION),'Wrong source closure issuance')
+    for row in issued['files']:
+        blob=brain.read(root,SC_INPUT+'/'+row['path'])
+        brain.require(len(blob)==row['bytes'] and brain.digest(blob)==row['sha256'],'Source closure immutable input differs')
+        if row['path'].startswith('BRAIN_STATE/'):
+            brain.require(blob==brain.read(root,SC_REVIEW+'/'+row['path'].split('/',1)[1]),'Source closure immutable review differs')
+    authority=brain.load(root,SC_INPUT+'/SOURCE_EDIT_AUTHORIZATION.json')
+    expected=dict(schema_version=1,task_id='M1-03',iteration='SOURCE-CLOSURE-01',branch=BRANCH,
+        base_commit=SC_BASE,base_tree=SC_TREE,input_manifest_sha256=SC_DIGEST,approved_state_version=SC_VERSION,
+        authorization_id='M103-SOURCE-CLOSURE01-SOURCE-EDIT-01',accepted_tasks=['M0-01','M0-02','M1-01','M1-02'],
+        protected_source_go=False,main_promotion_authorized=False,active_writers=1,incremental_spend_usd=0,
+        next_task=None,research_requests=[],proposal_expires_utc='2026-10-21T00:00:00Z')
+    current=brain.load(root,SC_ACTIVE)
+    brain.require(set(current)==set(expected)|{'submission_status'} and
+        all(type(current[k]) is type(v) and current[k]==v for k,v in expected.items()),'Source closure unissued authority')
+    brain.require(current['submission_status'] in ['IN_PROGRESS','PARTIAL','BLOCKED','SUBMITTED_REVIEW_REQUIRED'],'Source closure cannot self-accept')
+    brain.require(brain.git(root,'branch','--show-current')==BRANCH,'Wrong source closure branch')
+    brain.ancestor(root,SC_BASE,brain.git(root,'rev-parse','HEAD'),'source closure base -> head')
+    approved=brain.load(root,SC_REVIEW+'/brain_state.json')
+    brain.require(approved['state_version']==SC_VERSION and approved['accepted_tasks']==current['accepted_tasks'],'Source closure approved state differs')
+    old=brain.load(root,'docs/brain/state/roadmap.json')['tasks'];new=brain.load(root,SC_REVIEW+'/roadmap.json')['tasks']
+    brain.require(len(new)==47 and [(r['id'],r['depends_on']) for r in old]==[(r['id'],r['depends_on']) for r in new],'Source closure roadmap drift')
+    existing={r['path']:r['sha256'] for r in authority['preimages']}
+    new_exact={SC_ACTIVE,'scripts/brain/test_m103_source_closure01_profile.py'}
+    prefixes=[SC_REVIEW+'/',SC_INPUT.rsplit('/',1)[0]+'/']
+    changes=brain.git(root,'diff','--name-only',SC_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',SC_BASE+'..HEAD').splitlines():
+        changes+=brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
+    for path in set(changes):
+        prior=subprocess.run(['git','-C',str(root),'show',SC_BASE+':'+path],capture_output=True)
+        if path in existing:
+            brain.require(prior.returncode==0 and brain.digest(prior.stdout)==existing[path],'Source closure preimage mismatch: '+path)
+        elif path in authority['derived_paths']:
+            pass
+        else:
+            candidate=path.startswith('scripts/security_readiness/m103/') and pathlib.PurePosixPath(path).suffix in {'.py','.mjs','.md'}
+            brain.require(prior.returncode!=0 and (path in new_exact or candidate or any(path.startswith(p) for p in prefixes)),
+                          'Source closure path outside exact authorization: '+path)
     return current
