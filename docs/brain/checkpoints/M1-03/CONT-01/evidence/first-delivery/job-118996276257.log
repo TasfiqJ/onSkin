@@ -1,0 +1,1352 @@
+﻿2026-10-21T02:03:55.2350614Z Current runner version: '2.338.0'
+2026-10-21T02:03:55.2389091Z ##[group]Runner Image Provisioner
+2026-10-21T02:03:55.2390737Z Hosted Compute Agent
+2026-10-21T02:03:55.2391888Z Version: 20261015.610
+2026-10-21T02:03:55.2393083Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-21T02:03:55.2394411Z Build Date: 2026-10-14T17:06:54Z
+2026-10-21T02:03:55.2395819Z Worker ID: {9c19ffa0-e8f4-44e1-87ae-98e2cc6b3b52}
+2026-10-21T02:03:55.2397087Z Region: eastus
+2026-10-21T02:03:55.2398121Z Cloud: Azure
+2026-10-21T02:03:55.2399088Z ##[endgroup]
+2026-10-21T02:03:55.2402662Z ##[group]Operating System
+2026-10-21T02:03:55.2403887Z Ubuntu
+2026-10-21T02:03:55.2404832Z 24.04.5
+2026-10-21T02:03:55.2405881Z LTS
+2026-10-21T02:03:55.2406869Z ##[endgroup]
+2026-10-21T02:03:55.2407961Z ##[group]Runner Image
+2026-10-21T02:03:55.2409296Z Image: ubuntu-24.04
+2026-10-21T02:03:55.2410666Z Version: 20261018.339.1
+2026-10-21T02:03:55.2413024Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-21T02:03:55.2416085Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-21T02:03:55.2418041Z ##[endgroup]
+2026-10-21T02:03:55.2420153Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T02:03:55.2423631Z Contents: read
+2026-10-21T02:03:55.2424824Z Metadata: read
+2026-10-21T02:03:55.2425931Z ##[endgroup]
+2026-10-21T02:03:55.2429688Z Secret source: Actions
+2026-10-21T02:03:55.2431615Z Cache mode: write
+2026-10-21T02:03:55.2433413Z Prepare workflow directory
+2026-10-21T02:03:55.3122928Z Prepare all required actions
+2026-10-21T02:03:55.3201428Z Getting action download info
+2026-10-21T02:03:55.4909472Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-21T02:03:55.7169161Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-21T02:03:55.8686019Z Download action repository 'denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282' (SHA:667a34cdef165d8d2b2e98dde39547c9daac7282)
+2026-10-21T02:03:56.0936821Z Complete job name: Repository quality gates
+2026-10-21T02:03:56.1582372Z ##[group]Checking docker version
+2026-10-21T02:03:56.1596512Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-21T02:03:56.2711578Z '1.48'
+2026-10-21T02:03:56.2735749Z Docker daemon API version: '1.48'
+2026-10-21T02:03:56.2736992Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-21T02:03:56.2990067Z '1.48'
+2026-10-21T02:03:56.2997642Z Docker client API version: '1.48'
+2026-10-21T02:03:56.3002909Z ##[endgroup]
+2026-10-21T02:03:56.3005920Z ##[group]Clean up resources from previous jobs
+2026-10-21T02:03:56.3012095Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=27c150"
+2026-10-21T02:03:56.3263192Z ##[command]/usr/bin/docker network prune --force --filter "label=27c150"
+2026-10-21T02:03:56.3435542Z ##[endgroup]
+2026-10-21T02:03:56.3436135Z ##[group]Create local container network
+2026-10-21T02:03:56.3447257Z ##[command]/usr/bin/docker network create --label 27c150 github_network_1efab847de1448a498f41dec21e5b97c
+2026-10-21T02:03:56.4029552Z 8ce7e51ce637e73ae6fdac6b43be14fddb7009485e3c509c6bff3e35de677c07
+2026-10-21T02:03:56.4053587Z ##[endgroup]
+2026-10-21T02:03:56.4078992Z ##[group]Starting postgres service container
+2026-10-21T02:03:56.4102174Z ##[command]/usr/bin/docker pull postgres:15-alpine
+2026-10-21T02:03:56.6893966Z 15-alpine: Pulling from library/postgres
+2026-10-21T02:03:56.7671512Z e2de96513ba9: Already exists
+2026-10-21T02:03:56.7702990Z 2c2e40dd947e: Pulling fs layer
+2026-10-21T02:03:56.7704517Z 2e9987a42d41: Pulling fs layer
+2026-10-21T02:03:56.7705908Z 3f49193fd82d: Pulling fs layer
+2026-10-21T02:03:56.7706951Z bc2205dd5a3a: Pulling fs layer
+2026-10-21T02:03:56.7708443Z e9516be90840: Pulling fs layer
+2026-10-21T02:03:56.7709965Z 4f83103187f5: Pulling fs layer
+2026-10-21T02:03:56.7711362Z c020dab2e853: Pulling fs layer
+2026-10-21T02:03:56.7712682Z 0976f43b012c: Pulling fs layer
+2026-10-21T02:03:56.7713640Z 6ba2251a51ae: Pulling fs layer
+2026-10-21T02:03:56.7714652Z 277e2289225f: Pulling fs layer
+2026-10-21T02:03:56.7715568Z c020dab2e853: Waiting
+2026-10-21T02:03:56.7716420Z bc2205dd5a3a: Waiting
+2026-10-21T02:03:56.7717338Z e9516be90840: Waiting
+2026-10-21T02:03:56.7718339Z 4f83103187f5: Waiting
+2026-10-21T02:03:56.7719214Z 0976f43b012c: Waiting
+2026-10-21T02:03:56.7720617Z 6ba2251a51ae: Waiting
+2026-10-21T02:03:56.7721553Z 277e2289225f: Waiting
+2026-10-21T02:03:56.8767936Z 2c2e40dd947e: Download complete
+2026-10-21T02:03:56.8781035Z 3f49193fd82d: Verifying Checksum
+2026-10-21T02:03:56.8784081Z 3f49193fd82d: Download complete
+2026-10-21T02:03:56.9204230Z 2c2e40dd947e: Pull complete
+2026-10-21T02:03:56.9206457Z 2e9987a42d41: Verifying Checksum
+2026-10-21T02:03:56.9208491Z 2e9987a42d41: Download complete
+2026-10-21T02:03:56.9226919Z bc2205dd5a3a: Verifying Checksum
+2026-10-21T02:03:56.9228970Z bc2205dd5a3a: Download complete
+2026-10-21T02:03:56.9491861Z 2e9987a42d41: Pull complete
+2026-10-21T02:03:56.9587225Z 4f83103187f5: Verifying Checksum
+2026-10-21T02:03:56.9589435Z 4f83103187f5: Download complete
+2026-10-21T02:03:56.9631025Z 3f49193fd82d: Pull complete
+2026-10-21T02:03:56.9643106Z c020dab2e853: Download complete
+2026-10-21T02:03:56.9825775Z bc2205dd5a3a: Pull complete
+2026-10-21T02:03:57.0057464Z 0976f43b012c: Verifying Checksum
+2026-10-21T02:03:57.0062181Z 0976f43b012c: Download complete
+2026-10-21T02:03:57.0075770Z 6ba2251a51ae: Verifying Checksum
+2026-10-21T02:03:57.0077784Z 6ba2251a51ae: Download complete
+2026-10-21T02:03:57.0498878Z 277e2289225f: Verifying Checksum
+2026-10-21T02:03:57.0501218Z 277e2289225f: Download complete
+2026-10-21T02:03:57.2938408Z e9516be90840: Verifying Checksum
+2026-10-21T02:03:57.2939080Z e9516be90840: Download complete
+2026-10-21T02:03:59.7421779Z e9516be90840: Pull complete
+2026-10-21T02:03:59.7534628Z 4f83103187f5: Pull complete
+2026-10-21T02:03:59.7646369Z c020dab2e853: Pull complete
+2026-10-21T02:03:59.7766477Z 0976f43b012c: Pull complete
+2026-10-21T02:03:59.7872080Z 6ba2251a51ae: Pull complete
+2026-10-21T02:03:59.7986040Z 277e2289225f: Pull complete
+2026-10-21T02:03:59.8029594Z Digest: sha256:f7d23353e1b15400d22ebe31189f4d314b87a4c129cc400c8c2d8d4ca127bf81
+2026-10-21T02:03:59.8047346Z Status: Downloaded newer image for postgres:15-alpine
+2026-10-21T02:03:59.8055098Z docker.io/library/postgres:15-alpine
+2026-10-21T02:03:59.8127510Z ##[command]/usr/bin/docker create --name de238b1c45e048c6a9cf485437b8577e_postgres15alpine_cf0d8c --label 27c150 --network github_network_1efab847de1448a498f41dec21e5b97c --network-alias postgres -p 5432:5432 --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5 -e "POSTGRES_PASSWORD=layerwell_rehearsal" -e GITHUB_ACTIONS=true -e CI=true postgres:15-alpine
+2026-10-21T02:03:59.8432405Z 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:03:59.8461554Z ##[command]/usr/bin/docker start 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:00.1880635Z 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:00.1905605Z ##[command]/usr/bin/docker ps --all --filter id=6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-21T02:04:00.2081415Z 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af Up Less than a second (health: starting)
+2026-10-21T02:04:00.2108000Z ##[command]/usr/bin/docker port 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:00.2260849Z 5432/tcp -> 0.0.0.0:5432
+2026-10-21T02:04:00.2261354Z 5432/tcp -> [::]:5432
+2026-10-21T02:04:00.2310075Z ##[endgroup]
+2026-10-21T02:04:00.2319048Z ##[group]Waiting for all services to be ready
+2026-10-21T02:04:00.2333794Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:00.2499833Z starting
+2026-10-21T02:04:00.2524334Z postgres service is starting, waiting 2 seconds before checking again.
+2026-10-21T02:04:02.2525917Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:02.2677426Z starting
+2026-10-21T02:04:02.2694336Z postgres service is starting, waiting 4 seconds before checking again.
+2026-10-21T02:04:06.6320526Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:06.6470477Z starting
+2026-10-21T02:04:06.6490014Z postgres service is starting, waiting 8 seconds before checking again.
+2026-10-21T02:04:15.4052332Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:04:15.4204604Z healthy
+2026-10-21T02:04:15.4226189Z postgres service is healthy.
+2026-10-21T02:04:15.4226987Z ##[endgroup]
+2026-10-21T02:04:15.4537272Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-21T02:04:15.4538001Z with:
+2026-10-21T02:04:15.4538243Z   persist-credentials: false
+2026-10-21T02:04:15.4538510Z   repository: TasfiqJ/onSkin
+2026-10-21T02:04:15.4541401Z   token: ***
+2026-10-21T02:04:15.4541614Z   ssh-strict: true
+2026-10-21T02:04:15.4541820Z   ssh-user: git
+2026-10-21T02:04:15.4542008Z   clean: true
+2026-10-21T02:04:15.4542219Z   sparse-checkout-cone-mode: true
+2026-10-21T02:04:15.4542481Z   fetch-depth: 1
+2026-10-21T02:04:15.4542682Z   fetch-tags: false
+2026-10-21T02:04:15.4542891Z   show-progress: true
+2026-10-21T02:04:15.4543163Z   lfs: false
+2026-10-21T02:04:15.4543356Z   submodules: false
+2026-10-21T02:04:15.4543564Z   set-safe-directory: true
+2026-10-21T02:04:15.4544033Z env:
+2026-10-21T02:04:15.4544238Z   CI: true
+2026-10-21T02:04:15.4544450Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:04:15.4544665Z ##[endgroup]
+2026-10-21T02:04:15.5639112Z Syncing repository: TasfiqJ/onSkin
+2026-10-21T02:04:15.5642036Z ##[group]Getting Git version info
+2026-10-21T02:04:15.5642708Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-21T02:04:15.5643673Z [command]/usr/bin/git version
+2026-10-21T02:04:15.5717324Z git version 2.55.0
+2026-10-21T02:04:15.5755589Z ##[endgroup]
+2026-10-21T02:04:15.5771579Z Temporarily overriding HOME='/home/runner/work/_temp/4a9919c5-e2aa-45d1-a50c-11244c0842ad' before making global git config changes
+2026-10-21T02:04:15.5773004Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T02:04:15.5778566Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-21T02:04:15.5845885Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-21T02:04:15.5850463Z ##[group]Determining repository object format
+2026-10-21T02:04:15.5852789Z ##[endgroup]
+2026-10-21T02:04:15.5853751Z ##[group]Initializing the repository
+2026-10-21T02:04:15.5859209Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-21T02:04:15.5978821Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-21T02:04:15.5980135Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-21T02:04:15.5981479Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-21T02:04:15.5982395Z hint: call:
+2026-10-21T02:04:15.5982851Z hint:
+2026-10-21T02:04:15.5983478Z hint: 	git config --global init.defaultBranch <name>
+2026-10-21T02:04:15.5984373Z hint:
+2026-10-21T02:04:15.5985382Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-21T02:04:15.5986677Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-21T02:04:15.5987783Z hint:
+2026-10-21T02:04:15.5988256Z hint: 	git branch -m <name>
+2026-10-21T02:04:15.5989558Z hint:
+2026-10-21T02:04:15.5990672Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-21T02:04:15.5992078Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-21T02:04:15.5999571Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-21T02:04:15.6069021Z ##[endgroup]
+2026-10-21T02:04:15.6069752Z ##[group]Disabling automatic garbage collection
+2026-10-21T02:04:15.6070688Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-21T02:04:15.6114886Z ##[endgroup]
+2026-10-21T02:04:15.6115875Z ##[group]Setting up auth
+2026-10-21T02:04:15.6116640Z Removing SSH command configuration
+2026-10-21T02:04:15.6124915Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T02:04:15.6172569Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T02:04:15.6599761Z Removing HTTP extra header
+2026-10-21T02:04:15.6609320Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T02:04:15.6666013Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T02:04:15.6913200Z Removing includeIf entries pointing to credentials config files
+2026-10-21T02:04:15.6919877Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T02:04:15.6966721Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T02:04:15.7223352Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-21T02:04:15.7279275Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:15.7324557Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:15.7373019Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:15.7421398Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:15.7463713Z ##[endgroup]
+2026-10-21T02:04:15.7464366Z ##[group]Fetching the repository
+2026-10-21T02:04:15.7474339Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5278d2cd9b36c8079e8c9c9024c0976694ef48b7:refs/remotes/pull/9/merge
+2026-10-21T02:04:23.6999990Z From https://github.com/TasfiqJ/onSkin
+2026-10-21T02:04:23.7001570Z  * [new ref]         5278d2cd9b36c8079e8c9c9024c0976694ef48b7 -> pull/9/merge
+2026-10-21T02:04:23.7009847Z ##[endgroup]
+2026-10-21T02:04:23.7010888Z ##[group]Determining the checkout info
+2026-10-21T02:04:23.7011673Z ##[endgroup]
+2026-10-21T02:04:23.7020039Z [command]/usr/bin/git sparse-checkout disable
+2026-10-21T02:04:23.7092270Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-21T02:04:23.7135566Z ##[group]Checking out the ref
+2026-10-21T02:04:23.7141832Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/9/merge
+2026-10-21T02:04:24.7561081Z Updating files:  31% (5832/18640)
+2026-10-21T02:04:24.7854095Z Updating files:  32% (5965/18640)
+2026-10-21T02:04:24.8147967Z Updating files:  33% (6152/18640)
+2026-10-21T02:04:24.8518337Z Updating files:  34% (6338/18640)
+2026-10-21T02:04:24.8757278Z Updating files:  35% (6524/18640)
+2026-10-21T02:04:24.9135210Z Updating files:  36% (6711/18640)
+2026-10-21T02:04:24.9527430Z Updating files:  37% (6897/18640)
+2026-10-21T02:04:24.9931516Z Updating files:  38% (7084/18640)
+2026-10-21T02:04:25.0176726Z Updating files:  39% (7270/18640)
+2026-10-21T02:04:25.0391929Z Updating files:  40% (7456/18640)
+2026-10-21T02:04:25.0487014Z Updating files:  41% (7643/18640)
+2026-10-21T02:04:25.0582957Z Updating files:  42% (7829/18640)
+2026-10-21T02:04:25.0825569Z Updating files:  43% (8016/18640)
+2026-10-21T02:04:25.0975550Z Updating files:  44% (8202/18640)
+2026-10-21T02:04:25.1163576Z Updating files:  45% (8388/18640)
+2026-10-21T02:04:25.1376743Z Updating files:  46% (8575/18640)
+2026-10-21T02:04:25.1572463Z Updating files:  47% (8761/18640)
+2026-10-21T02:04:25.3879351Z Updating files:  48% (8948/18640)
+2026-10-21T02:04:25.4035830Z Updating files:  49% (9134/18640)
+2026-10-21T02:04:25.4207041Z Updating files:  50% (9320/18640)
+2026-10-21T02:04:25.4339785Z Updating files:  51% (9507/18640)
+2026-10-21T02:04:25.4466535Z Updating files:  52% (9693/18640)
+2026-10-21T02:04:25.4581632Z Updating files:  53% (9880/18640)
+2026-10-21T02:04:25.4695261Z Updating files:  54% (10066/18640)
+2026-10-21T02:04:25.4826252Z Updating files:  55% (10252/18640)
+2026-10-21T02:04:25.4971603Z Updating files:  56% (10439/18640)
+2026-10-21T02:04:25.5091263Z Updating files:  57% (10625/18640)
+2026-10-21T02:04:25.5251559Z Updating files:  58% (10812/18640)
+2026-10-21T02:04:25.5406017Z Updating files:  59% (10998/18640)
+2026-10-21T02:04:25.5586555Z Updating files:  60% (11184/18640)
+2026-10-21T02:04:25.5736754Z Updating files:  61% (11371/18640)
+2026-10-21T02:04:25.5884361Z Updating files:  62% (11557/18640)
+2026-10-21T02:04:25.6021793Z Updating files:  63% (11744/18640)
+2026-10-21T02:04:25.6151459Z Updating files:  64% (11930/18640)
+2026-10-21T02:04:25.6302759Z Updating files:  65% (12116/18640)
+2026-10-21T02:04:25.6522116Z Updating files:  66% (12303/18640)
+2026-10-21T02:04:25.6740683Z Updating files:  67% (12489/18640)
+2026-10-21T02:04:25.6932554Z Updating files:  68% (12676/18640)
+2026-10-21T02:04:25.7104175Z Updating files:  69% (12862/18640)
+2026-10-21T02:04:25.7344273Z Updating files:  70% (13048/18640)
+2026-10-21T02:04:25.7416544Z Updating files:  70% (13199/18640)
+2026-10-21T02:04:25.7737111Z Updating files:  71% (13235/18640)
+2026-10-21T02:04:25.8011372Z Updating files:  72% (13421/18640)
+2026-10-21T02:04:25.8411555Z Updating files:  73% (13608/18640)
+2026-10-21T02:04:25.8746610Z Updating files:  74% (13794/18640)
+2026-10-21T02:04:25.9083946Z Updating files:  75% (13980/18640)
+2026-10-21T02:04:25.9323937Z Updating files:  76% (14167/18640)
+2026-10-21T02:04:25.9542801Z Updating files:  77% (14353/18640)
+2026-10-21T02:04:25.9979763Z Updating files:  78% (14540/18640)
+2026-10-21T02:04:26.0402577Z Updating files:  79% (14726/18640)
+2026-10-21T02:04:26.0822596Z Updating files:  80% (14912/18640)
+2026-10-21T02:04:26.1237207Z Updating files:  81% (15099/18640)
+2026-10-21T02:04:26.1583523Z Updating files:  82% (15285/18640)
+2026-10-21T02:04:26.1971163Z Updating files:  83% (15472/18640)
+2026-10-21T02:04:26.2388510Z Updating files:  84% (15658/18640)
+2026-10-21T02:04:26.2780514Z Updating files:  85% (15844/18640)
+2026-10-21T02:04:26.3031482Z Updating files:  86% (16031/18640)
+2026-10-21T02:04:26.3297024Z Updating files:  87% (16217/18640)
+2026-10-21T02:04:26.3539534Z Updating files:  88% (16404/18640)
+2026-10-21T02:04:26.3674733Z Updating files:  89% (16590/18640)
+2026-10-21T02:04:26.3865731Z Updating files:  90% (16776/18640)
+2026-10-21T02:04:26.4441524Z Updating files:  91% (16963/18640)
+2026-10-21T02:04:26.4636233Z Updating files:  92% (17149/18640)
+2026-10-21T02:04:26.4840104Z Updating files:  93% (17336/18640)
+2026-10-21T02:04:26.5021401Z Updating files:  94% (17522/18640)
+2026-10-21T02:04:26.5388140Z Updating files:  95% (17708/18640)
+2026-10-21T02:04:26.5590990Z Updating files:  96% (17895/18640)
+2026-10-21T02:04:26.5771411Z Updating files:  97% (18081/18640)
+2026-10-21T02:04:26.6129609Z Updating files:  98% (18268/18640)
+2026-10-21T02:04:26.6499390Z Updating files:  99% (18454/18640)
+2026-10-21T02:04:26.6500083Z Updating files: 100% (18640/18640)
+2026-10-21T02:04:26.6500889Z Updating files: 100% (18640/18640), done.
+2026-10-21T02:04:26.6682767Z Note: switching to 'refs/remotes/pull/9/merge'.
+2026-10-21T02:04:26.6683182Z 
+2026-10-21T02:04:26.6683484Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-21T02:04:26.6684192Z changes and commit them, and you can discard any commits you make in this
+2026-10-21T02:04:26.6684892Z state without impacting any branches by switching back to a branch.
+2026-10-21T02:04:26.6685296Z 
+2026-10-21T02:04:26.6685566Z If you want to create a new branch to retain commits you create, you may
+2026-10-21T02:04:26.6686212Z do so (now or later) by using -c with the switch command. Example:
+2026-10-21T02:04:26.6686599Z 
+2026-10-21T02:04:26.6686759Z   git switch -c <new-branch-name>
+2026-10-21T02:04:26.6687021Z 
+2026-10-21T02:04:26.6687164Z Or undo this operation with:
+2026-10-21T02:04:26.6687424Z 
+2026-10-21T02:04:26.6687522Z   git switch -
+2026-10-21T02:04:26.6687665Z 
+2026-10-21T02:04:26.6688185Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-21T02:04:26.6688568Z 
+2026-10-21T02:04:26.6688995Z HEAD is now at 5278d2c Merge 9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562 into bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+2026-10-21T02:04:26.6777968Z ##[endgroup]
+2026-10-21T02:04:26.6838293Z [command]/usr/bin/git log -1 --format=%H
+2026-10-21T02:04:26.6876890Z 5278d2cd9b36c8079e8c9c9024c0976694ef48b7
+2026-10-21T02:04:26.6891743Z ##[group]Removing auth
+2026-10-21T02:04:26.6892062Z Removing SSH command configuration
+2026-10-21T02:04:26.6892488Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T02:04:26.6940499Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T02:04:26.7225779Z Removing HTTP extra header
+2026-10-21T02:04:26.7232013Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T02:04:26.7286062Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T02:04:26.7565995Z Removing includeIf entries pointing to credentials config files
+2026-10-21T02:04:26.7576379Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T02:04:26.7613114Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-21T02:04:26.7613943Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-21T02:04:26.7614413Z includeif.gitdir:/github/workspace/.git.path
+2026-10-21T02:04:26.7614812Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T02:04:26.7624522Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-21T02:04:26.7659100Z /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7672142Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7728994Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-21T02:04:26.7763393Z /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7773448Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7819996Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-21T02:04:26.7854988Z /github/runner_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7863711Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7914970Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T02:04:26.7949943Z /github/runner_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.7962240Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config
+2026-10-21T02:04:26.8008753Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T02:04:26.8280092Z Removing credentials config '/home/runner/work/_temp/git-credentials-01003ac6-f616-4aee-8563-d628774c283d.config'
+2026-10-21T02:04:26.8291213Z ##[endgroup]
+2026-10-21T02:04:26.8583245Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-21T02:04:26.8583667Z with:
+2026-10-21T02:04:26.8583863Z   node-version: 20
+2026-10-21T02:04:26.8584070Z   cache: npm
+2026-10-21T02:04:26.8584266Z   check-latest: false
+2026-10-21T02:04:26.8586890Z   token: ***
+2026-10-21T02:04:26.8587110Z   package-manager-cache: true
+2026-10-21T02:04:26.8587348Z env:
+2026-10-21T02:04:26.8587530Z   CI: true
+2026-10-21T02:04:26.8587718Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:04:26.8587936Z ##[endgroup]
+2026-10-21T02:04:27.0248543Z Attempting to download 20...
+2026-10-21T02:04:27.6258252Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+2026-10-21T02:04:27.9705821Z Extracting ...
+2026-10-21T02:04:27.9841330Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/9dbbc4cf-c2c0-4bad-b8b9-b6362b07f275 -f /home/runner/work/_temp/fe055e12-2adb-4fdb-b017-fdbb33960911
+2026-10-21T02:04:29.0120735Z Adding to the cache ...
+2026-10-21T02:04:30.6591666Z ##[group]Environment details
+2026-10-21T02:04:30.9107965Z node: v20.20.2
+2026-10-21T02:04:30.9108397Z npm: 10.8.2
+2026-10-21T02:04:30.9108721Z yarn: 1.22.22
+2026-10-21T02:04:30.9109353Z ##[endgroup]
+2026-10-21T02:04:30.9132992Z [command]/opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+2026-10-21T02:04:31.0204783Z /home/runner/.npm
+2026-10-21T02:04:31.0885820Z npm cache is not found
+2026-10-21T02:04:31.1092523Z ##[group]Run denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282
+2026-10-21T02:04:31.1092950Z with:
+2026-10-21T02:04:31.1093152Z   deno-version: v2.7.5
+2026-10-21T02:04:31.1093381Z   deno-binary-name: deno
+2026-10-21T02:04:31.1093604Z   cache: false
+2026-10-21T02:04:31.1093793Z env:
+2026-10-21T02:04:31.1093973Z   CI: true
+2026-10-21T02:04:31.1094160Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:04:31.1094387Z ##[endgroup]
+2026-10-21T02:04:31.4253520Z Going to install stable version 2.7.5.
+2026-10-21T02:04:31.4260814Z Downloading Deno from https://github.com/denoland/deno/releases/download/v2.7.5/deno-x86_64-unknown-linux-gnu.zip.
+2026-10-21T02:04:31.7724222Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/0a1f0f33-97f3-48cf-b02b-18a0cb42ef3e
+2026-10-21T02:04:32.7182624Z Cached Deno to /opt/hostedtoolcache/deno/2.7.5/x64.
+2026-10-21T02:04:32.7194143Z Installation complete.
+2026-10-21T02:04:32.7427103Z ##[group]Run npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+2026-10-21T02:04:32.7427792Z [36;1mnpm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund[0m
+2026-10-21T02:04:32.7511396Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:04:32.7511675Z env:
+2026-10-21T02:04:32.7511869Z   CI: true
+2026-10-21T02:04:32.7512073Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:04:32.7512331Z ##[endgroup]
+2026-10-21T02:04:37.0615596Z 
+2026-10-21T02:04:37.0616469Z removed 65 packages, and changed 112 packages in 4s
+2026-10-21T02:04:37.0821411Z ##[group]Run npm ci
+2026-10-21T02:04:37.0821715Z [36;1mnpm ci[0m
+2026-10-21T02:04:37.0875014Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:04:37.0875279Z env:
+2026-10-21T02:04:37.0875468Z   CI: true
+2026-10-21T02:04:37.0875665Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:04:37.0875889Z ##[endgroup]
+2026-10-21T02:04:59.9516006Z npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-21T02:05:09.4680599Z 
+2026-10-21T02:05:09.4681330Z > layerwell@0.1.0 postinstall
+2026-10-21T02:05:09.4681842Z > node scripts/postinstall.mjs
+2026-10-21T02:05:09.4682025Z 
+2026-10-21T02:05:09.6101568Z {"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+2026-10-21T02:05:09.7242704Z 
+2026-10-21T02:05:09.7243702Z added 1035 packages, and audited 1039 packages in 33s
+2026-10-21T02:05:09.7245458Z 
+2026-10-21T02:05:09.7248044Z 203 packages are looking for funding
+2026-10-21T02:05:09.7248859Z   run `npm fund` for details
+2026-10-21T02:05:09.8681656Z 
+2026-10-21T02:05:09.8682886Z 25 high severity vulnerabilities
+2026-10-21T02:05:09.8683377Z 
+2026-10-21T02:05:09.8683958Z To address all issues (including breaking changes), run:
+2026-10-21T02:05:09.8684762Z   npm audit fix --force
+2026-10-21T02:05:09.8685087Z 
+2026-10-21T02:05:09.8685356Z Run `npm audit` for details.
+2026-10-21T02:05:09.8695608Z npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+2026-10-21T02:05:09.8696979Z npm warn install-scripts   @sentry/cli@2.58.4 (postinstall: node ./scripts/install.js)
+2026-10-21T02:05:09.8698253Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-21T02:05:09.8699112Z npm warn install-scripts
+2026-10-21T02:05:09.8700516Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-21T02:05:09.9399442Z ##[group]Run npm run phase9:tooling-security:test
+2026-10-21T02:05:09.9399887Z [36;1mnpm run phase9:tooling-security:test[0m
+2026-10-21T02:05:09.9459717Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:09.9459983Z env:
+2026-10-21T02:05:09.9460400Z   CI: true
+2026-10-21T02:05:09.9460632Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:05:09.9460863Z ##[endgroup]
+2026-10-21T02:05:10.0834713Z 
+2026-10-21T02:05:10.0835523Z > layerwell@0.1.0 phase9:tooling-security:test
+2026-10-21T02:05:10.0836728Z > node --test scripts/phase9/patch-tooling-security.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs
+2026-10-21T02:05:10.0837452Z 
+2026-10-21T02:05:10.1293046Z TAP version 13
+2026-10-21T02:05:10.4345795Z # Subtest: exact reviewed files and every nested copy are checked without audit clearance
+2026-10-21T02:05:10.4355490Z ok 1 - exact reviewed files and every nested copy are checked without audit clearance
+2026-10-21T02:05:10.4356637Z   ---
+2026-10-21T02:05:10.4357412Z   duration_ms: 27.16209
+2026-10-21T02:05:10.4358157Z   ...
+2026-10-21T02:05:10.4366137Z # Subtest: an unexpected nested copy fails the entire preflight without writing any other target
+2026-10-21T02:05:10.4367984Z ok 2 - an unexpected nested copy fails the entire preflight without writing any other target
+2026-10-21T02:05:10.4369138Z   ---
+2026-10-21T02:05:10.4369784Z   duration_ms: 11.47606
+2026-10-21T02:05:10.4370718Z   ...
+2026-10-21T02:05:10.4373728Z # Subtest: wrong lock version, SRI, registry URL, package version and link records fail closed
+2026-10-21T02:05:10.4374902Z     # Subtest: identity mismatch
+2026-10-21T02:05:10.4376182Z     ok 1 - identity mismatch
+2026-10-21T02:05:10.4376962Z       ---
+2026-10-21T02:05:10.4377595Z       duration_ms: 4.610909
+2026-10-21T02:05:10.4378280Z       ...
+2026-10-21T02:05:10.4379613Z     # Subtest: identity mismatch
+2026-10-21T02:05:10.4381461Z     ok 2 - identity mismatch
+2026-10-21T02:05:10.4382335Z       ---
+2026-10-21T02:05:10.4383032Z       duration_ms: 4.460847
+2026-10-21T02:05:10.4383718Z       ...
+2026-10-21T02:05:10.4411222Z     # Subtest: identity mismatch
+2026-10-21T02:05:10.4431232Z     ok 3 - identity mismatch
+2026-10-21T02:05:10.4451079Z       ---
+2026-10-21T02:05:10.4481501Z       duration_ms: 5.302464
+2026-10-21T02:05:10.4482097Z       ...
+2026-10-21T02:05:10.4482704Z     # Subtest: identity mismatch
+2026-10-21T02:05:10.4483337Z     ok 4 - identity mismatch
+2026-10-21T02:05:10.4483868Z       ---
+2026-10-21T02:05:10.4484359Z       duration_ms: 5.450401
+2026-10-21T02:05:10.4484880Z       ...
+2026-10-21T02:05:10.4485446Z     # Subtest: identity mismatch
+2026-10-21T02:05:10.4486010Z     ok 5 - identity mismatch
+2026-10-21T02:05:10.4486511Z       ---
+2026-10-21T02:05:10.4486963Z       duration_ms: 5.385038
+2026-10-21T02:05:10.4487464Z       ...
+2026-10-21T02:05:10.4487878Z     1..5
+2026-10-21T02:05:10.4488793Z ok 3 - wrong lock version, SRI, registry URL, package version and link records fail closed
+2026-10-21T02:05:10.4489671Z   ---
+2026-10-21T02:05:10.4490133Z   duration_ms: 26.351118
+2026-10-21T02:05:10.4490889Z   ...
+2026-10-21T02:05:10.4491687Z # Subtest: installed identity and payload tampering fail before writes
+2026-10-21T02:05:10.4492593Z     # Subtest: installed package
+2026-10-21T02:05:10.4501260Z     ok 1 - installed package
+2026-10-21T02:05:10.4501590Z       ---
+2026-10-21T02:05:10.4501814Z       duration_ms: 5.348841
+2026-10-21T02:05:10.4502053Z       ...
+2026-10-21T02:05:10.4502513Z     # Subtest: payload
+2026-10-21T02:05:10.4503318Z     ok 2 - payload
+2026-10-21T02:05:10.4504057Z       ---
+2026-10-21T02:05:10.4504801Z       duration_ms: 5.630999
+2026-10-21T02:05:10.4505674Z       ...
+2026-10-21T02:05:10.4506330Z     1..2
+2026-10-21T02:05:10.4507401Z ok 4 - installed identity and payload tampering fail before writes
+2026-10-21T02:05:10.4508509Z   ---
+2026-10-21T02:05:10.4509147Z   duration_ms: 11.783606
+2026-10-21T02:05:10.4509743Z   ...
+2026-10-21T02:05:10.4510719Z # Subtest: junction targets cannot redirect a reviewed package outside its root
+2026-10-21T02:05:10.4512321Z ok 5 - junction targets cannot redirect a reviewed package outside its root
+2026-10-21T02:05:10.4513010Z   ---
+2026-10-21T02:05:10.4513349Z   duration_ms: 5.844449
+2026-10-21T02:05:10.4513684Z   ...
+2026-10-21T02:05:10.4514190Z # Subtest: official original preimages require application; application is exact and idempotent
+2026-10-21T02:05:10.4514952Z ok 6 - official original preimages require application; application is exact and idempotent
+2026-10-21T02:05:10.4515389Z   ---
+2026-10-21T02:05:10.4515735Z   duration_ms: 156.928975
+2026-10-21T02:05:10.4515971Z   ...
+2026-10-21T02:05:10.4516430Z # Subtest: a commit failure still restores earlier files when temporary cleanup also fails
+2026-10-21T02:05:10.4517111Z ok 7 - a commit failure still restores earlier files when temporary cleanup also fails
+2026-10-21T02:05:10.4517523Z   ---
+2026-10-21T02:05:10.4517743Z   duration_ms: 16.075246
+2026-10-21T02:05:10.4517968Z   ...
+2026-10-21T02:05:10.4667459Z # Subtest: braces preserves ordinary parse, compile, expansion and escaping behavior
+2026-10-21T02:05:10.4669156Z ok 8 - braces preserves ordinary parse, compile, expansion and escaping behavior
+2026-10-21T02:05:10.4670736Z   ---
+2026-10-21T02:05:10.4671589Z   duration_ms: 3.338825
+2026-10-21T02:05:10.4672742Z   ...
+2026-10-21T02:05:10.4674019Z # Subtest: braces rejects deeply nested strings before recursive traversal, regardless of caller options
+2026-10-21T02:05:10.4675854Z ok 9 - braces rejects deeply nested strings before recursive traversal, regardless of caller options
+2026-10-21T02:05:10.4677129Z   ---
+2026-10-21T02:05:10.4677796Z   duration_ms: 5.341838
+2026-10-21T02:05:10.4678539Z   ...
+2026-10-21T02:05:10.4679550Z # Subtest: braces direct AST APIs cannot bypass the fixed recursion bound
+2026-10-21T02:05:10.4681250Z ok 10 - braces direct AST APIs cannot bypass the fixed recursion bound
+2026-10-21T02:05:10.4682275Z   ---
+2026-10-21T02:05:10.4683011Z   duration_ms: 19.220029
+2026-10-21T02:05:10.4683783Z   ...
+2026-10-21T02:05:10.4685063Z # Subtest: node-forge rejects extra nested DigestAlgorithm elements that native verification rejects
+2026-10-21T02:05:10.4687380Z ok 11 - node-forge rejects extra nested DigestAlgorithm elements that native verification rejects
+2026-10-21T02:05:10.4688474Z   ---
+2026-10-21T02:05:10.4689044Z   duration_ms: 21.714021
+2026-10-21T02:05:10.4689688Z   ...
+2026-10-21T02:05:10.4691043Z # Subtest: node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures
+2026-10-21T02:05:10.4692653Z ok 12 - node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures
+2026-10-21T02:05:10.4693727Z   ---
+2026-10-21T02:05:10.4694332Z   duration_ms: 8.064899
+2026-10-21T02:05:10.4694975Z   ...
+2026-10-21T02:05:10.4695988Z # Subtest: node-forge ASN.1 capture never inherits prototype parameter markers
+2026-10-21T02:05:10.4697255Z ok 13 - node-forge ASN.1 capture never inherits prototype parameter markers
+2026-10-21T02:05:10.4698182Z   ---
+2026-10-21T02:05:10.4698792Z   duration_ms: 101.375478
+2026-10-21T02:05:10.4699424Z   ...
+2026-10-21T02:05:10.4763946Z 1..13
+2026-10-21T02:05:10.4764308Z # tests 20
+2026-10-21T02:05:10.4764909Z # suites 0
+2026-10-21T02:05:10.4765338Z # pass 20
+2026-10-21T02:05:10.4765841Z # fail 0
+2026-10-21T02:05:10.4766741Z # cancelled 0
+2026-10-21T02:05:10.4767200Z # skipped 0
+2026-10-21T02:05:10.4767759Z # todo 0
+2026-10-21T02:05:10.4773477Z # duration_ms 359.993561
+2026-10-21T02:05:10.4938815Z ##[group]Run npm run postinstall:check
+2026-10-21T02:05:10.4939326Z [36;1mnpm run postinstall:check[0m
+2026-10-21T02:05:10.4939893Z [36;1mnpm run phase5:expo-widgets-lifecycle:test[0m
+2026-10-21T02:05:10.4940786Z [36;1mnpm run phase9:view-shot-privacy:test[0m
+2026-10-21T02:05:10.4941408Z [36;1mnpm run phase9:ios-privacy-source-audit:test[0m
+2026-10-21T02:05:10.4942034Z [36;1mnpm run phase9:ios-privacy-source-audit:check[0m
+2026-10-21T02:05:10.4942675Z [36;1mnpm run phase9:ios-archive-privacy-evidence:test[0m
+2026-10-21T02:05:10.4943349Z [36;1mnpm run phase9:release-candidate-git-contract:test[0m
+2026-10-21T02:05:10.4943980Z [36;1mnpm run phase9:verification-wiring:test[0m
+2026-10-21T02:05:10.4944564Z [36;1mnpm run phase9:store-build-inspect:check[0m
+2026-10-21T02:05:10.5021940Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:10.5022372Z env:
+2026-10-21T02:05:10.5022680Z   CI: true
+2026-10-21T02:05:10.5022983Z   EXPO_NO_TELEMETRY: 1
+2026-10-21T02:05:10.5023382Z ##[endgroup]
+2026-10-21T02:05:10.6309248Z 
+2026-10-21T02:05:10.6310009Z > layerwell@0.1.0 postinstall:check
+2026-10-21T02:05:10.6310873Z > node scripts/postinstall.mjs --check
+2026-10-21T02:05:10.6311152Z 
+2026-10-21T02:05:10.7025201Z {"check":true,"viewShot":"checked","widgets":"checked","toolingSecurity":"checked"}
+2026-10-21T02:05:10.8337913Z 
+2026-10-21T02:05:10.8338827Z > layerwell@0.1.0 phase5:expo-widgets-lifecycle:test
+2026-10-21T02:05:10.8340962Z > node --test scripts/phase5/patch-expo-widgets-lifecycle.test.mjs scripts/phase5/expo-widgets-lifecycle-source.test.mjs
+2026-10-21T02:05:10.8342153Z 
+2026-10-21T02:05:10.8817130Z TAP version 13
+2026-10-21T02:05:10.9314993Z # Subtest: SDK57 bridge accepts the new API while native authority owns deadlines and deep links
+2026-10-21T02:05:10.9325328Z ok 1 - SDK57 bridge accepts the new API while native authority owns deadlines and deep links
+2026-10-21T02:05:10.9326563Z   ---
+2026-10-21T02:05:10.9327332Z   duration_ms: 1.803549
+2026-10-21T02:05:10.9328004Z   ...
+2026-10-21T02:05:10.9329824Z # Subtest: native authority is cross-process serialized, durable, and ABA-resistant
+2026-10-21T02:05:10.9331899Z ok 2 - native authority is cross-process serialized, durable, and ABA-resistant
+2026-10-21T02:05:10.9333235Z   ---
+2026-10-21T02:05:10.9333855Z   duration_ms: 1.57998
+2026-10-21T02:05:10.9334520Z   ...
+2026-10-21T02:05:10.9351799Z # Subtest: unconditional cleanup closes authority before clearing derived presentation and activities
+2026-10-21T02:05:10.9361909Z ok 3 - unconditional cleanup closes authority before clearing derived presentation and activities
+2026-10-21T02:05:10.9381563Z   ---
+2026-10-21T02:05:10.9401566Z   duration_ms: 0.75768
+2026-10-21T02:05:10.9411298Z   ...
+2026-10-21T02:05:10.9412456Z # Subtest: SQLite is the sole Layerwell timeline authority with a killed-app redaction entry
+2026-10-21T02:05:10.9414768Z ok 4 - SQLite is the sole Layerwell timeline authority with a killed-app redaction entry
+2026-10-21T02:05:10.9415491Z   ---
+2026-10-21T02:05:10.9415892Z   duration_ms: 0.654957
+2026-10-21T02:05:10.9416269Z   ...
+2026-10-21T02:05:10.9417455Z # Subtest: AppIntent commits the native outbox and never writes Layerwell UserDefaults
+2026-10-21T02:05:10.9418354Z ok 5 - AppIntent commits the native outbox and never writes Layerwell UserDefaults
+2026-10-21T02:05:10.9419196Z   ---
+2026-10-21T02:05:10.9419547Z   duration_ms: 0.569316
+2026-10-21T02:05:10.9419913Z   ...
+2026-10-21T02:05:10.9421832Z # Subtest: reconciliation is exact all-or-redact and persisted rows are strictly bounded
+2026-10-21T02:05:10.9423198Z ok 6 - reconciliation is exact all-or-redact and persisted rows are strictly bounded
+2026-10-21T02:05:10.9441626Z   ---
+2026-10-21T02:05:10.9442204Z   duration_ms: 1.245273
+2026-10-21T02:05:10.9442590Z   ...
+2026-10-21T02:05:10.9443388Z # Subtest: Live Activity APIs globally gate Layerwell and destroy aliases or duplicates
+2026-10-21T02:05:10.9444532Z ok 7 - Live Activity APIs globally gate Layerwell and destroy aliases or duplicates
+2026-10-21T02:05:10.9445550Z   ---
+2026-10-21T02:05:10.9445901Z   duration_ms: 0.815578
+2026-10-21T02:05:10.9446263Z   ...
+2026-10-21T02:05:10.9446954Z # Subtest: signed flags remain literal false and cleanup does not consult them
+2026-10-21T02:05:10.9447970Z ok 8 - signed flags remain literal false and cleanup does not consult them
+2026-10-21T02:05:10.9448444Z   ---
+2026-10-21T02:05:10.9448658Z   duration_ms: 0.452287
+2026-10-21T02:05:10.9448879Z   ...
+2026-10-21T02:05:10.9449370Z # Subtest: the exact dependency patch links SQLite and exposes only bounded JSON bridge methods
+2026-10-21T02:05:10.9450707Z ok 9 - the exact dependency patch links SQLite and exposes only bounded JSON bridge methods
+2026-10-21T02:05:10.9451523Z   ---
+2026-10-21T02:05:10.9451900Z   duration_ms: 0.85406
+2026-10-21T02:05:10.9452286Z   ...
+2026-10-21T02:05:11.0518037Z # Subtest: pins every reviewed original and patched source hash
+2026-10-21T02:05:11.0519833Z ok 10 - pins every reviewed original and patched source hash
+2026-10-21T02:05:11.0521291Z   ---
+2026-10-21T02:05:11.0521990Z   duration_ms: 5.277527
+2026-10-21T02:05:11.0522428Z   ...
+2026-10-21T02:05:11.0526275Z # Subtest: rejects an extra copy hidden below an unreviewed transitive dependency
+2026-10-21T02:05:11.0527641Z ok 11 - rejects an extra copy hidden below an unreviewed transitive dependency
+2026-10-21T02:05:11.0528572Z   ---
+2026-10-21T02:05:11.0529096Z   duration_ms: 16.024952
+2026-10-21T02:05:11.0529660Z   ...
+2026-10-21T02:05:11.0531590Z # Subtest: durably stages files and synchronizes each POSIX rename for crash recovery
+2026-10-21T02:05:11.0534040Z ok 12 - durably stages files and synchronizes each POSIX rename for crash recovery
+2026-10-21T02:05:11.0534963Z   ---
+2026-10-21T02:05:11.0535386Z   duration_ms: 0.339165
+2026-10-21T02:05:11.0535856Z   ...
+2026-10-21T02:05:11.0537436Z # Subtest: check mode accepts a complete reviewed patch without writing
+2026-10-21T02:05:11.0538516Z ok 13 - check mode accepts a complete reviewed patch without writing
+2026-10-21T02:05:11.0539338Z   ---
+2026-10-21T02:05:11.0539883Z   duration_ms: 10.820913
+2026-10-21T02:05:11.0540645Z   ...
+2026-10-21T02:05:11.0571415Z # Subtest: accepts one exact workspace-nested reviewed installation
+2026-10-21T02:05:11.0606031Z ok 14 - accepts one exact workspace-nested reviewed installation
+2026-10-21T02:05:11.0606998Z   ---
+2026-10-21T02:05:11.0607566Z   duration_ms: 9.817733
+2026-10-21T02:05:11.0608162Z   ...
+2026-10-21T02:05:11.0609258Z # Subtest: idempotently completes a reviewed partial install by adding the missing native store
+2026-10-21T02:05:11.0611156Z ok 15 - idempotently completes a reviewed partial install by adding the missing native store
+2026-10-21T02:05:11.0612352Z   ---
+2026-10-21T02:05:11.0613015Z   duration_ms: 23.870582
+2026-10-21T02:05:11.0614258Z   ...
+2026-10-21T02:05:11.0615376Z # Subtest: classifies only explicitly reviewed prior patch generations as upgradeable
+2026-10-21T02:05:11.0616942Z ok 16 - classifies only explicitly reviewed prior patch generations as upgradeable
+2026-10-21T02:05:11.0618004Z   ---
+2026-10-21T02:05:11.0618674Z   duration_ms: 0.284122
+2026-10-21T02:05:11.0619384Z   ...
+2026-10-21T02:05:11.0620639Z # Subtest: rejects payload or installed target byte drift before mutation
+2026-10-21T02:05:11.0621712Z     # Subtest: payload drift
+2026-10-21T02:05:11.0622463Z     ok 1 - payload drift
+2026-10-21T02:05:11.0623194Z       ---
+2026-10-21T02:05:11.0623847Z       duration_ms: 6.595627
+2026-10-21T02:05:11.0624561Z       ...
+2026-10-21T02:05:11.0625222Z     # Subtest: target drift
+2026-10-21T02:05:11.0625948Z     ok 2 - target drift
+2026-10-21T02:05:11.0626624Z       ---
+2026-10-21T02:05:11.0627199Z       duration_ms: 7.00795
+2026-10-21T02:05:11.0627858Z       ...
+2026-10-21T02:05:11.0628473Z     1..2
+2026-10-21T02:05:11.0629420Z ok 17 - rejects payload or installed target byte drift before mutation
+2026-10-21T02:05:11.0630535Z   ---
+2026-10-21T02:05:11.0631107Z   duration_ms: 14.482102
+2026-10-21T02:05:11.0631707Z   ...
+2026-10-21T02:05:11.0633127Z # Subtest: rejects reviewed package and lock provenance drift
+2026-10-21T02:05:11.0634160Z     # Subtest: mobile range
+2026-10-21T02:05:11.0638247Z     ok 1 - mobile range
+2026-10-21T02:05:11.0638917Z       ---
+2026-10-21T02:05:11.0639431Z       duration_ms: 6.964859
+2026-10-21T02:05:11.0639839Z       ...
+2026-10-21T02:05:11.0640507Z     # Subtest: workspace range
+2026-10-21T02:05:11.0641133Z     ok 2 - workspace range
+2026-10-21T02:05:11.0641560Z       ---
+2026-10-21T02:05:11.0641908Z       duration_ms: 8.342649
+2026-10-21T02:05:11.0642275Z       ...
+2026-10-21T02:05:11.0642611Z     # Subtest: artifact URL
+2026-10-21T02:05:11.0643039Z     ok 3 - artifact URL
+2026-10-21T02:05:11.0643414Z       ---
+2026-10-21T02:05:11.0643756Z       duration_ms: 5.942
+2026-10-21T02:05:11.0644145Z       ...
+2026-10-21T02:05:11.0644475Z     # Subtest: integrity
+2026-10-21T02:05:11.0644867Z     ok 4 - integrity
+2026-10-21T02:05:11.0645218Z       ---
+2026-10-21T02:05:11.0645546Z       duration_ms: 6.780433
+2026-10-21T02:05:11.0645922Z       ...
+2026-10-21T02:05:11.0646313Z     # Subtest: installed version
+2026-10-21T02:05:11.0652394Z     ok 5 - installed version
+2026-10-21T02:05:11.0653125Z       ---
+2026-10-21T02:05:11.0653809Z       duration_ms: 7.001738
+2026-10-21T02:05:11.0654434Z       ...
+2026-10-21T02:05:11.0671027Z     1..5
+2026-10-21T02:05:11.0671661Z ok 18 - rejects reviewed package and lock provenance drift
+2026-10-21T02:05:11.0672300Z   ---
+2026-10-21T02:05:11.0672656Z   duration_ms: 36.082277
+2026-10-21T02:05:11.0673048Z   ...
+2026-10-21T02:05:11.0758791Z 1..18
+2026-10-21T02:05:11.0759157Z # tests 25
+2026-10-21T02:05:11.0759754Z # suites 0
+2026-10-21T02:05:11.0760517Z # pass 25
+2026-10-21T02:05:11.0761790Z # fail 0
+2026-10-21T02:05:11.0762374Z # cancelled 0
+2026-10-21T02:05:11.0762884Z # skipped 0
+2026-10-21T02:05:11.0763396Z # todo 0
+2026-10-21T02:05:11.0768676Z # duration_ms 207.850845
+2026-10-21T02:05:11.2266076Z 
+2026-10-21T02:05:11.2266605Z > layerwell@0.1.0 phase9:view-shot-privacy:test
+2026-10-21T02:05:11.2267269Z > node --test scripts/phase9/patch-react-native-view-shot-privacy.test.mjs
+2026-10-21T02:05:11.2267642Z 
+2026-10-21T02:05:11.2771600Z TAP version 13
+2026-10-21T02:05:11.5273499Z # Subtest: pins the reviewed source and minimal target bytes
+2026-10-21T02:05:11.5278821Z ok 1 - pins the reviewed source and minimal target bytes
+2026-10-21T02:05:11.5279526Z   ---
+2026-10-21T02:05:11.5279888Z   duration_ms: 1.80407
+2026-10-21T02:05:11.5280534Z   ...
+2026-10-21T02:05:11.5311424Z # Subtest: atomically patches only the reviewed original bytes
+2026-10-21T02:05:11.5332064Z ok 2 - atomically patches only the reviewed original bytes
+2026-10-21T02:05:11.5332970Z   ---
+2026-10-21T02:05:11.5333733Z   duration_ms: 12.701916
+2026-10-21T02:05:11.5334446Z   ...
+2026-10-21T02:05:11.5336304Z # Subtest: is idempotent without rewriting the reviewed target
+2026-10-21T02:05:11.5337459Z ok 3 - is idempotent without rewriting the reviewed target
+2026-10-21T02:05:11.5338299Z   ---
+2026-10-21T02:05:11.5338922Z   duration_ms: 6.797235
+2026-10-21T02:05:11.5339579Z   ...
+2026-10-21T02:05:11.5340797Z # Subtest: --check accepts only the patched state and never writes
+2026-10-21T02:05:11.5342015Z ok 4 - --check accepts only the patched state and never writes
+2026-10-21T02:05:11.5342880Z   ---
+2026-10-21T02:05:11.5343493Z   duration_ms: 4.46794
+2026-10-21T02:05:11.5344124Z   ...
+2026-10-21T02:05:11.5345095Z # Subtest: rejects every unreviewed manifest byte variant without mutation
+2026-10-21T02:05:11.5346081Z     # Subtest: one-byte drift
+2026-10-21T02:05:11.5346792Z     ok 1 - one-byte drift
+2026-10-21T02:05:11.5347495Z       ---
+2026-10-21T02:05:11.5348115Z       duration_ms: 3.183645
+2026-10-21T02:05:11.5348777Z       ...
+2026-10-21T02:05:11.5349407Z     # Subtest: UTF-8 BOM
+2026-10-21T02:05:11.5350095Z     ok 2 - UTF-8 BOM
+2026-10-21T02:05:11.5350975Z       ---
+2026-10-21T02:05:11.5351675Z       duration_ms: 2.00174
+2026-10-21T02:05:11.5352196Z       ...
+2026-10-21T02:05:11.5352656Z     # Subtest: CRLF normalization
+2026-10-21T02:05:11.5353129Z     ok 3 - CRLF normalization
+2026-10-21T02:05:11.5353872Z       ---
+2026-10-21T02:05:11.5354256Z       duration_ms: 2.00187
+2026-10-21T02:05:11.5354664Z       ...
+2026-10-21T02:05:11.5355164Z     # Subtest: semantically plausible but unreviewed
+2026-10-21T02:05:11.5355882Z     ok 4 - semantically plausible but unreviewed
+2026-10-21T02:05:11.5356433Z       ---
+2026-10-21T02:05:11.5356805Z       duration_ms: 1.987343
+2026-10-21T02:05:11.5357214Z       ...
+2026-10-21T02:05:11.5357578Z     # Subtest: malformed XML
+2026-10-21T02:05:11.5358033Z     ok 5 - malformed XML
+2026-10-21T02:05:11.5358450Z       ---
+2026-10-21T02:05:11.5358813Z       duration_ms: 2.072193
+2026-10-21T02:05:11.5359236Z       ...
+2026-10-21T02:05:11.5360598Z     1..5
+2026-10-21T02:05:11.5381655Z ok 5 - rejects every unreviewed manifest byte variant without mutation
+2026-10-21T02:05:11.5392908Z   ---
+2026-10-21T02:05:11.5393818Z   duration_ms: 12.339688
+2026-10-21T02:05:11.5394589Z   ...
+2026-10-21T02:05:11.5395457Z # Subtest: rejects all reviewed lock provenance drift
+2026-10-21T02:05:11.5396413Z     # Subtest: lockfile version
+2026-10-21T02:05:11.5397219Z     ok 1 - lockfile version
+2026-10-21T02:05:11.5397959Z       ---
+2026-10-21T02:05:11.5398606Z       duration_ms: 1.904598
+2026-10-21T02:05:11.5399303Z       ...
+2026-10-21T02:05:11.5399948Z     # Subtest: workspace spec
+2026-10-21T02:05:11.5400961Z     ok 2 - workspace spec
+2026-10-21T02:05:11.5401663Z       ---
+2026-10-21T02:05:11.5402300Z       duration_ms: 1.781087
+2026-10-21T02:05:11.5403020Z       ...
+2026-10-21T02:05:11.5403669Z     # Subtest: entry version
+2026-10-21T02:05:11.5404401Z     ok 3 - entry version
+2026-10-21T02:05:11.5404997Z       ---
+2026-10-21T02:05:11.5405530Z       duration_ms: 1.713059
+2026-10-21T02:05:11.5406168Z       ...
+2026-10-21T02:05:11.5406835Z     # Subtest: resolved artifact
+2026-10-21T02:05:11.5407572Z     ok 4 - resolved artifact
+2026-10-21T02:05:11.5408254Z       ---
+2026-10-21T02:05:11.5408778Z       duration_ms: 1.645151
+2026-10-21T02:05:11.5409340Z       ...
+2026-10-21T02:05:11.5409903Z     # Subtest: integrity
+2026-10-21T02:05:11.5410775Z     ok 5 - integrity
+2026-10-21T02:05:11.5411380Z       ---
+2026-10-21T02:05:11.5411916Z       duration_ms: 1.744158
+2026-10-21T02:05:11.5412478Z       ...
+2026-10-21T02:05:11.5412985Z     # Subtest: placement flag
+2026-10-21T02:05:11.5413597Z     ok 6 - placement flag
+2026-10-21T02:05:11.5414156Z       ---
+2026-10-21T02:05:11.5414663Z       duration_ms: 1.797498
+2026-10-21T02:05:11.5415311Z       ...
+2026-10-21T02:05:11.5415879Z     # Subtest: nested duplicate
+2026-10-21T02:05:11.5416481Z     ok 7 - nested duplicate
+2026-10-21T02:05:11.5417089Z       ---
+2026-10-21T02:05:11.5417711Z       duration_ms: 1.70793
+2026-10-21T02:05:11.5418379Z       ...
+2026-10-21T02:05:11.5419532Z     # Subtest: moved entry
+2026-10-21T02:05:11.5438426Z     ok 8 - moved entry
+2026-10-21T02:05:11.5438998Z       ---
+2026-10-21T02:05:11.5439589Z       duration_ms: 1.596852
+2026-10-21T02:05:11.5440572Z       ...
+2026-10-21T02:05:11.5446270Z     1..8
+2026-10-21T02:05:11.5447153Z ok 6 - rejects all reviewed lock provenance drift
+2026-10-21T02:05:11.5448057Z   ---
+2026-10-21T02:05:11.5448689Z   duration_ms: 14.956921
+2026-10-21T02:05:11.5449094Z   ...
+2026-10-21T02:05:11.5450438Z # Subtest: rejects package declaration and installed identity drift
+2026-10-21T02:05:11.5451438Z     # Subtest: mobile dependency
+2026-10-21T02:05:11.5452249Z     ok 1 - mobile dependency
+2026-10-21T02:05:11.5452940Z       ---
+2026-10-21T02:05:11.5453564Z       duration_ms: 1.940927
+2026-10-21T02:05:11.5454225Z       ...
+2026-10-21T02:05:11.5454843Z     # Subtest: installed name
+2026-10-21T02:05:11.5455520Z     ok 2 - installed name
+2026-10-21T02:05:11.5456203Z       ---
+2026-10-21T02:05:11.5456804Z       duration_ms: 2.525421
+2026-10-21T02:05:11.5457521Z       ...
+2026-10-21T02:05:11.5458212Z     # Subtest: installed version
+2026-10-21T02:05:11.5458973Z     ok 3 - installed version
+2026-10-21T02:05:11.5459752Z       ---
+2026-10-21T02:05:11.5460610Z       duration_ms: 1.800133
+2026-10-21T02:05:11.5461304Z       ...
+2026-10-21T02:05:11.5462350Z     1..3
+2026-10-21T02:05:11.5463277Z ok 7 - rejects package declaration and installed identity drift
+2026-10-21T02:05:11.5464182Z   ---
+2026-10-21T02:05:11.5464757Z   duration_ms: 6.759444
+2026-10-21T02:05:11.5465357Z   ...
+2026-10-21T02:05:11.5484220Z # Subtest: rejects malformed or non-object provenance JSON
+2026-10-21T02:05:11.5485309Z ok 8 - rejects malformed or non-object provenance JSON
+2026-10-21T02:05:11.5486678Z   ---
+2026-10-21T02:05:11.5487227Z   duration_ms: 3.146695
+2026-10-21T02:05:11.5487860Z   ...
+2026-10-21T02:05:11.5488827Z # Subtest: rejects missing, moved, or wrong-type manifest paths
+2026-10-21T02:05:11.5489903Z ok 9 - rejects missing, moved, or wrong-type manifest paths
+2026-10-21T02:05:11.5491051Z   ---
+2026-10-21T02:05:11.5491597Z   duration_ms: 5.578521
+2026-10-21T02:05:11.5492166Z   ...
+2026-10-21T02:05:11.5493051Z # Subtest: rejects a linked dependency directory before following it
+2026-10-21T02:05:11.5494224Z ok 10 - rejects a linked dependency directory before following it
+2026-10-21T02:05:11.5508123Z   ---
+2026-10-21T02:05:11.5508505Z   duration_ms: 2.629726
+2026-10-21T02:05:11.5508899Z   ...
+2026-10-21T02:05:11.5509605Z # Subtest: rejects a linked manifest before reading or replacing its target
+2026-10-21T02:05:11.5510847Z ok 11 - rejects a linked manifest before reading or replacing its target
+2026-10-21T02:05:11.5511470Z   ---
+2026-10-21T02:05:11.5511803Z   duration_ms: 2.057525
+2026-10-21T02:05:11.5512166Z   ...
+2026-10-21T02:05:11.5512633Z # Subtest: rejects non-boolean check options
+2026-10-21T02:05:11.5513247Z ok 12 - rejects non-boolean check options
+2026-10-21T02:05:11.5513700Z   ---
+2026-10-21T02:05:11.5514025Z   duration_ms: 1.34476
+2026-10-21T02:05:11.5514402Z   ...
+2026-10-21T02:05:11.5516401Z # Subtest: CLI rejects unknown and duplicate flags before inspecting dependencies
+2026-10-21T02:05:11.5517643Z ok 13 - CLI rejects unknown and duplicate flags before inspecting dependencies
+2026-10-21T02:05:11.5518320Z   ---
+2026-10-21T02:05:11.5518673Z   duration_ms: 82.302112
+2026-10-21T02:05:11.5519045Z   ...
+2026-10-21T02:05:11.5519699Z # Subtest: CLI root is anchored to its script location, not the caller cwd
+2026-10-21T02:05:11.5528957Z ok 14 - CLI root is anchored to its script location, not the caller cwd
+2026-10-21T02:05:11.5529895Z   ---
+2026-10-21T02:05:11.5530701Z   duration_ms: 43.331642
+2026-10-21T02:05:11.5531061Z   ...
+2026-10-21T02:05:11.5578573Z 1..14
+2026-10-21T02:05:11.5579286Z # tests 30
+2026-10-21T02:05:11.5579608Z # suites 0
+2026-10-21T02:05:11.5579893Z # pass 30
+2026-10-21T02:05:11.5580354Z # fail 0
+2026-10-21T02:05:11.5580647Z # cancelled 0
+2026-10-21T02:05:11.5581363Z # skipped 0
+2026-10-21T02:05:11.5581792Z # todo 0
+2026-10-21T02:05:11.5586305Z # duration_ms 292.221653
+2026-10-21T02:05:11.6819434Z 
+2026-10-21T02:05:11.6820358Z > layerwell@0.1.0 phase9:ios-privacy-source-audit:test
+2026-10-21T02:05:11.6821399Z > node --test scripts/phase9/ios-privacy-source-audit.test.mjs
+2026-10-21T02:05:11.6821779Z 
+2026-10-21T02:05:11.7235614Z TAP version 13
+2026-10-21T02:05:12.0835801Z # Subtest: pins and parses the installed react-native-view-shot privacy manifest
+2026-10-21T02:05:12.0859424Z ok 1 - pins and parses the installed react-native-view-shot privacy manifest
+2026-10-21T02:05:12.0875541Z   ---
+2026-10-21T02:05:12.0876337Z   duration_ms: 7.163831
+2026-10-21T02:05:12.0876804Z   ...
+2026-10-21T02:05:12.0877698Z # Subtest: checked-in SDK mapping resolves hoisted lock entries and installed source pins
+2026-10-21T02:05:12.0879041Z ok 2 - checked-in SDK mapping resolves hoisted lock entries and installed source pins
+2026-10-21T02:05:12.0879829Z   ---
+2026-10-21T02:05:12.0880484Z   duration_ms: 8.184553
+2026-10-21T02:05:12.0880924Z   ...
+2026-10-21T02:05:12.0881915Z # Subtest: accepts a minimal dictionary and deterministically normalizes a complete valid manifest
+2026-10-21T02:05:12.0883368Z ok 3 - accepts a minimal dictionary and deterministically normalizes a complete valid manifest
+2026-10-21T02:05:12.0884232Z   ---
+2026-10-21T02:05:12.0885113Z   duration_ms: 2.607014
+2026-10-21T02:05:12.0885556Z   ...
+2026-10-21T02:05:12.0886583Z # Subtest: rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs
+2026-10-21T02:05:12.0887506Z     # Subtest: non-buffer
+2026-10-21T02:05:12.0887962Z     ok 1 - non-buffer
+2026-10-21T02:05:12.0888371Z       ---
+2026-10-21T02:05:12.0888742Z       duration_ms: 0.285414
+2026-10-21T02:05:12.0889169Z       ...
+2026-10-21T02:05:12.0889556Z     # Subtest: incomplete XML
+2026-10-21T02:05:12.0890022Z     ok 2 - incomplete XML
+2026-10-21T02:05:12.0890715Z       ---
+2026-10-21T02:05:12.0891095Z       duration_ms: 0.210314
+2026-10-21T02:05:12.0891519Z       ...
+2026-10-21T02:05:12.0892139Z     # Subtest: malformed XML that passes the document boundary check
+2026-10-21T02:05:12.0893061Z     ok 3 - malformed XML that passes the document boundary check
+2026-10-21T02:05:12.0893678Z       ---
+2026-10-21T02:05:12.0894045Z       duration_ms: 0.498824
+2026-10-21T02:05:12.0894463Z       ...
+2026-10-21T02:05:12.0894969Z     # Subtest: non-XML junk before the plist root
+2026-10-21T02:05:12.0902706Z     ok 4 - non-XML junk before the plist root
+2026-10-21T02:05:12.0903515Z       ---
+2026-10-21T02:05:12.0903914Z       duration_ms: 0.187502
+2026-10-21T02:05:12.0904359Z       ...
+2026-10-21T02:05:12.0904754Z     # Subtest: binary plist
+2026-10-21T02:05:12.0905208Z     ok 5 - binary plist
+2026-10-21T02:05:12.0905611Z       ---
+2026-10-21T02:05:12.0905980Z       duration_ms: 0.42187
+2026-10-21T02:05:12.0906420Z       ...
+2026-10-21T02:05:12.0906857Z     # Subtest: non-dictionary root
+2026-10-21T02:05:12.0907409Z     ok 6 - non-dictionary root
+2026-10-21T02:05:12.0907851Z       ---
+2026-10-21T02:05:12.0908211Z       duration_ms: 0.655879
+2026-10-21T02:05:12.0908651Z       ...
+2026-10-21T02:05:12.0909041Z     # Subtest: UTF-8 BOM
+2026-10-21T02:05:12.0909480Z     ok 7 - UTF-8 BOM
+2026-10-21T02:05:12.0909896Z       ---
+2026-10-21T02:05:12.0910439Z       duration_ms: 0.35223
+2026-10-21T02:05:12.0910870Z       ...
+2026-10-21T02:05:12.0911233Z     # Subtest: invalid UTF-8
+2026-10-21T02:05:12.0913470Z     ok 8 - invalid UTF-8
+2026-10-21T02:05:12.0914537Z       ---
+2026-10-21T02:05:12.0915077Z       duration_ms: 0.285846
+2026-10-21T02:05:12.0915600Z       ...
+2026-10-21T02:05:12.0915951Z     1..8
+2026-10-21T02:05:12.0917218Z ok 4 - rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs
+2026-10-21T02:05:12.0918121Z   ---
+2026-10-21T02:05:12.0918510Z   duration_ms: 4.143804
+2026-10-21T02:05:12.0918919Z   ...
+2026-10-21T02:05:12.0919943Z # Subtest: rejects duplicate top-level dictionary keys before parser last-value recovery
+2026-10-21T02:05:12.0921777Z ok 5 - rejects duplicate top-level dictionary keys before parser last-value recovery
+2026-10-21T02:05:12.0923231Z   ---
+2026-10-21T02:05:12.0923752Z   duration_ms: 0.491871
+2026-10-21T02:05:12.0924300Z   ...
+2026-10-21T02:05:12.0925192Z # Subtest: rejects unknown top-level keys and wrong top-level value types
+2026-10-21T02:05:12.0926096Z     # Subtest: unknown key
+2026-10-21T02:05:12.0926704Z     ok 1 - unknown key
+2026-10-21T02:05:12.0953859Z       ---
+2026-10-21T02:05:12.0991000Z       duration_ms: 0.860111
+2026-10-21T02:05:12.1038166Z       ...
+2026-10-21T02:05:12.1060971Z     # Subtest: tracking string
+2026-10-21T02:05:12.1081090Z     ok 2 - tracking string
+2026-10-21T02:05:12.1081826Z       ---
+2026-10-21T02:05:12.1121162Z       duration_ms: 1.632298
+2026-10-21T02:05:12.1150728Z       ...
+2026-10-21T02:05:12.1151633Z     # Subtest: domains string
+2026-10-21T02:05:12.1181191Z     ok 3 - domains string
+2026-10-21T02:05:12.1187419Z       ---
+2026-10-21T02:05:12.1188107Z       duration_ms: 0.470802
+2026-10-21T02:05:12.1188801Z       ...
+2026-10-21T02:05:12.1189530Z     # Subtest: accessed API dictionary
+2026-10-21T02:05:12.1190678Z     ok 4 - accessed API dictionary
+2026-10-21T02:05:12.1191390Z       ---
+2026-10-21T02:05:12.1191972Z       duration_ms: 0.361688
+2026-10-21T02:05:12.1192594Z       ...
+2026-10-21T02:05:12.1193199Z     # Subtest: collected data dictionary
+2026-10-21T02:05:12.1194413Z     ok 5 - collected data dictionary
+2026-10-21T02:05:12.1196291Z       ---
+2026-10-21T02:05:12.1196831Z       duration_ms: 0.408616
+2026-10-21T02:05:12.1197541Z       ...
+2026-10-21T02:05:12.1198063Z     1..5
+2026-10-21T02:05:12.1221298Z ok 6 - rejects unknown top-level keys and wrong top-level value types
+2026-10-21T02:05:12.1222172Z   ---
+2026-10-21T02:05:12.1222740Z   duration_ms: 4.544674
+2026-10-21T02:05:12.1223330Z   ...
+2026-10-21T02:05:12.1224128Z # Subtest: rejects an explicitly empty accessed-API array
+2026-10-21T02:05:12.1225146Z ok 7 - rejects an explicitly empty accessed-API array
+2026-10-21T02:05:12.1225904Z   ---
+2026-10-21T02:05:12.1226454Z   duration_ms: 0.429735
+2026-10-21T02:05:12.1227065Z   ...
+2026-10-21T02:05:12.1228113Z # Subtest: rejects required-reason mismatches, duplicate reasons, and duplicate categories
+2026-10-21T02:05:12.1229358Z     # Subtest: reason belongs to another category
+2026-10-21T02:05:12.1230544Z     ok 1 - reason belongs to another category
+2026-10-21T02:05:12.1231409Z       ---
+2026-10-21T02:05:12.1232064Z       duration_ms: 0.492884
+2026-10-21T02:05:12.1232777Z       ...
+2026-10-21T02:05:12.1233484Z     # Subtest: duplicate reason
+2026-10-21T02:05:12.1234246Z     ok 2 - duplicate reason
+2026-10-21T02:05:12.1234980Z       ---
+2026-10-21T02:05:12.1235655Z       duration_ms: 0.4541
+2026-10-21T02:05:12.1236411Z       ...
+2026-10-21T02:05:12.1237122Z     # Subtest: duplicate category
+2026-10-21T02:05:12.1237989Z     ok 3 - duplicate category
+2026-10-21T02:05:12.1238711Z       ---
+2026-10-21T02:05:12.1239330Z       duration_ms: 0.485129
+2026-10-21T02:05:12.1240056Z       ...
+2026-10-21T02:05:12.1241023Z     # Subtest: unknown category
+2026-10-21T02:05:12.1241795Z     ok 4 - unknown category
+2026-10-21T02:05:12.1242490Z       ---
+2026-10-21T02:05:12.1243140Z       duration_ms: 0.367098
+2026-10-21T02:05:12.1243823Z       ...
+2026-10-21T02:05:12.1244393Z     # Subtest: empty reasons
+2026-10-21T02:05:12.1244989Z     ok 5 - empty reasons
+2026-10-21T02:05:12.1245559Z       ---
+2026-10-21T02:05:12.1246085Z       duration_ms: 0.390953
+2026-10-21T02:05:12.1246660Z       ...
+2026-10-21T02:05:12.1247218Z     1..5
+2026-10-21T02:05:12.1248306Z ok 8 - rejects required-reason mismatches, duplicate reasons, and duplicate categories
+2026-10-21T02:05:12.1249330Z   ---
+2026-10-21T02:05:12.1249935Z   duration_ms: 2.7333
+2026-10-21T02:05:12.1250860Z   ...
+2026-10-21T02:05:12.1251954Z # Subtest: rejects collected-data values outside Apple enums and invalid field values
+2026-10-21T02:05:12.1253151Z     # Subtest: unknown collected data type
+2026-10-21T02:05:12.1254023Z     ok 1 - unknown collected data type
+2026-10-21T02:05:12.1254809Z       ---
+2026-10-21T02:05:12.1255946Z       duration_ms: 0.497973
+2026-10-21T02:05:12.1256656Z       ...
+2026-10-21T02:05:12.1257616Z     # Subtest: unknown collected data purpose
+2026-10-21T02:05:12.1258571Z     ok 2 - unknown collected data purpose
+2026-10-21T02:05:12.1259367Z       ---
+2026-10-21T02:05:12.1260028Z       duration_ms: 0.417453
+2026-10-21T02:05:12.1260935Z       ...
+2026-10-21T02:05:12.1261487Z     # Subtest: empty purposes
+2026-10-21T02:05:12.1262117Z     ok 3 - empty purposes
+2026-10-21T02:05:12.1262741Z       ---
+2026-10-21T02:05:12.1263320Z       duration_ms: 0.414387
+2026-10-21T02:05:12.1263928Z       ...
+2026-10-21T02:05:12.1264436Z     1..3
+2026-10-21T02:05:12.1265382Z ok 9 - rejects collected-data values outside Apple enums and invalid field values
+2026-10-21T02:05:12.1266283Z   ---
+2026-10-21T02:05:12.1266817Z   duration_ms: 2.037888
+2026-10-21T02:05:12.1267383Z   ...
+2026-10-21T02:05:12.1268060Z # Subtest: rejects duplicate collected types
+2026-10-21T02:05:12.1268892Z ok 10 - rejects duplicate collected types
+2026-10-21T02:05:12.1269594Z   ---
+2026-10-21T02:05:12.1270161Z   duration_ms: 0.588472
+2026-10-21T02:05:12.1271123Z   ...
+2026-10-21T02:05:12.1271997Z # Subtest: rejects every tracking contradiction
+2026-10-21T02:05:12.1272961Z     # Subtest: domains while tracking is false
+2026-10-21T02:05:12.1274193Z     ok 1 - domains while tracking is false
+2026-10-21T02:05:12.1275039Z       ---
+2026-10-21T02:05:12.1275663Z       duration_ms: 0.381515
+2026-10-21T02:05:12.1276328Z       ...
+2026-10-21T02:05:12.1277042Z     # Subtest: tracking true without domains
+2026-10-21T02:05:12.1277913Z     ok 2 - tracking true without domains
+2026-10-21T02:05:12.1278695Z       ---
+2026-10-21T02:05:12.1279348Z       duration_ms: 0.330219
+2026-10-21T02:05:12.1280045Z       ...
+2026-10-21T02:05:12.1301494Z     # Subtest: collected item tracks while top-level tracking is false
+2026-10-21T02:05:12.1302760Z     ok 3 - collected item tracks while top-level tracking is false
+2026-10-21T02:05:12.1303685Z       ---
+2026-10-21T02:05:12.1304290Z       duration_ms: 0.60349
+2026-10-21T02:05:12.1304923Z       ...
+2026-10-21T02:05:12.1305453Z     1..3
+2026-10-21T02:05:12.1306159Z ok 11 - rejects every tracking contradiction
+2026-10-21T02:05:12.1306854Z   ---
+2026-10-21T02:05:12.1307402Z   duration_ms: 1.667023
+2026-10-21T02:05:12.1308015Z   ...
+2026-10-21T02:05:12.1309197Z # Subtest: accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts
+2026-10-21T02:05:12.1310528Z     # Subtest: query
+2026-10-21T02:05:12.1311208Z     ok 1 - query
+2026-10-21T02:05:12.1311830Z       ---
+2026-10-21T02:05:12.1312442Z       duration_ms: 0.420799
+2026-10-21T02:05:12.1313080Z       ...
+2026-10-21T02:05:12.1313635Z     # Subtest: wildcard
+2026-10-21T02:05:12.1314248Z     ok 2 - wildcard
+2026-10-21T02:05:12.1314819Z       ---
+2026-10-21T02:05:12.1315392Z       duration_ms: 0.362249
+2026-10-21T02:05:12.1316008Z       ...
+2026-10-21T02:05:12.1316570Z     # Subtest: leading hyphen
+2026-10-21T02:05:12.1317254Z     ok 3 - leading hyphen
+2026-10-21T02:05:12.1317921Z       ---
+2026-10-21T02:05:12.1318502Z       duration_ms: 0.349605
+2026-10-21T02:05:12.1319116Z       ...
+2026-10-21T02:05:12.1319697Z     # Subtest: trailing hyphen
+2026-10-21T02:05:12.1320603Z     ok 4 - trailing hyphen
+2026-10-21T02:05:12.1321228Z       ---
+2026-10-21T02:05:12.1321801Z       duration_ms: 0.373208
+2026-10-21T02:05:12.1322416Z       ...
+2026-10-21T02:05:12.1322959Z     # Subtest: empty label
+2026-10-21T02:05:12.1323578Z     ok 5 - empty label
+2026-10-21T02:05:12.1324189Z       ---
+2026-10-21T02:05:12.1324753Z       duration_ms: 0.341279
+2026-10-21T02:05:12.1325399Z       ...
+2026-10-21T02:05:12.1325743Z     # Subtest: IPv4
+2026-10-21T02:05:12.1326118Z     ok 6 - IPv4
+2026-10-21T02:05:12.1326459Z       ---
+2026-10-21T02:05:12.1326801Z       duration_ms: 0.356678
+2026-10-21T02:05:12.1327189Z       ...
+2026-10-21T02:05:12.1327517Z     # Subtest: IPv6
+2026-10-21T02:05:12.1327866Z     ok 7 - IPv6
+2026-10-21T02:05:12.1328205Z       ---
+2026-10-21T02:05:12.1328532Z       duration_ms: 0.345478
+2026-10-21T02:05:12.1329384Z       ...
+2026-10-21T02:05:12.1329711Z     # Subtest: localhost
+2026-10-21T02:05:12.1330096Z     ok 8 - localhost
+2026-10-21T02:05:12.1330669Z       ---
+2026-10-21T02:05:12.1331011Z       duration_ms: 0.332603
+2026-10-21T02:05:12.1331353Z       ...
+2026-10-21T02:05:12.1331554Z     # Subtest: port
+2026-10-21T02:05:12.1331761Z     ok 9 - port
+2026-10-21T02:05:12.1331962Z       ---
+2026-10-21T02:05:12.1332164Z       duration_ms: 0.463308
+2026-10-21T02:05:12.1332400Z       ...
+2026-10-21T02:05:12.1332598Z     # Subtest: scheme
+2026-10-21T02:05:12.1332826Z     ok 10 - scheme
+2026-10-21T02:05:12.1333028Z       ---
+2026-10-21T02:05:12.1333218Z       duration_ms: 0.359704
+2026-10-21T02:05:12.1333440Z       ...
+2026-10-21T02:05:12.1333637Z     # Subtest: path
+2026-10-21T02:05:12.1333854Z     ok 11 - path
+2026-10-21T02:05:12.1334060Z       ---
+2026-10-21T02:05:12.1334253Z       duration_ms: 0.369723
+2026-10-21T02:05:12.1334481Z       ...
+2026-10-21T02:05:12.1334676Z     # Subtest: unicode label
+2026-10-21T02:05:12.1334927Z     ok 12 - unicode label
+2026-10-21T02:05:12.1335156Z       ---
+2026-10-21T02:05:12.1335387Z       duration_ms: 0.343173
+2026-10-21T02:05:12.1335602Z       ...
+2026-10-21T02:05:12.1335844Z     # Subtest: case-insensitive duplicate
+2026-10-21T02:05:12.1336340Z     ok 13 - case-insensitive duplicate
+2026-10-21T02:05:12.1336660Z       ---
+2026-10-21T02:05:12.1336866Z       duration_ms: 0.390732
+2026-10-21T02:05:12.1337093Z       ...
+2026-10-21T02:05:12.1337370Z     # Subtest: case-insensitive two-label duplicate
+2026-10-21T02:05:12.1337760Z     ok 14 - case-insensitive two-label duplicate
+2026-10-21T02:05:12.1338058Z       ---
+2026-10-21T02:05:12.1338258Z       duration_ms: 0.415198
+2026-10-21T02:05:12.1338501Z       ...
+2026-10-21T02:05:12.1338699Z     # Subtest: overlong label
+2026-10-21T02:05:12.1338948Z     ok 15 - overlong label
+2026-10-21T02:05:12.1339171Z       ---
+2026-10-21T02:05:12.1339358Z       duration_ms: 0.389049
+2026-10-21T02:05:12.1339569Z       ...
+2026-10-21T02:05:12.1339755Z     1..15
+2026-10-21T02:05:12.1340584Z ok 12 - accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts
+2026-10-21T02:05:12.1341057Z   ---
+2026-10-21T02:05:12.1341259Z   duration_ms: 7.230536
+2026-10-21T02:05:12.1341469Z   ...
+2026-10-21T02:05:12.1342001Z # Subtest: rejects source-only reports that make archive, labels, signatures, review, or acceptance claims
+2026-10-21T02:05:12.1342799Z ok 13 - rejects source-only reports that make archive, labels, signatures, review, or acceptance claims
+2026-10-21T02:05:12.1343257Z   ---
+2026-10-21T02:05:12.1343451Z   duration_ms: 0.88615
+2026-10-21T02:05:12.1343664Z   ...
+2026-10-21T02:05:12.1344236Z # Subtest: rejects nested archive-inclusion and signature claims anywhere in report arrays or records
+2026-10-21T02:05:12.1345039Z ok 14 - rejects nested archive-inclusion and signature claims anywhere in report arrays or records
+2026-10-21T02:05:12.1345510Z   ---
+2026-10-21T02:05:12.1345723Z   duration_ms: 0.351187
+2026-10-21T02:05:12.1345962Z   ...
+2026-10-21T02:05:12.1346431Z # Subtest: audits a minimal fixture deterministically and still requires archive follow-up
+2026-10-21T02:05:12.1347155Z ok 15 - audits a minimal fixture deterministically and still requires archive follow-up
+2026-10-21T02:05:12.1347589Z   ---
+2026-10-21T02:05:12.1347800Z   duration_ms: 8.728774
+2026-10-21T02:05:12.1348012Z   ...
+2026-10-21T02:05:12.1348509Z # Subtest: deeply freezes the audit report so mutation cannot alter deterministic serialization
+2026-10-21T02:05:12.1349243Z ok 16 - deeply freezes the audit report so mutation cannot alter deterministic serialization
+2026-10-21T02:05:12.1349691Z   ---
+2026-10-21T02:05:12.1349883Z   duration_ms: 5.410978
+2026-10-21T02:05:12.1350115Z   ...
+2026-10-21T02:05:12.1350828Z # Subtest: rejects a mutated baseline even when its published and sorted digests are recomputed
+2026-10-21T02:05:12.1351580Z ok 17 - rejects a mutated baseline even when its published and sorted digests are recomputed
+2026-10-21T02:05:12.1352249Z   ---
+2026-10-21T02:05:12.1352449Z   duration_ms: 4.004983
+2026-10-21T02:05:12.1352678Z   ...
+2026-10-21T02:05:12.1353132Z # Subtest: binds exact podspec privacy resources and ignores Ruby comments as evidence
+2026-10-21T02:05:12.1353833Z ok 18 - binds exact podspec privacy resources and ignores Ruby comments as evidence
+2026-10-21T02:05:12.1354266Z   ---
+2026-10-21T02:05:12.1354460Z   duration_ms: 6.638136
+2026-10-21T02:05:12.1354695Z   ...
+2026-10-21T02:05:12.1355141Z # Subtest: retains unresolved standalone manifests as archive-required warnings
+2026-10-21T02:05:12.1355769Z ok 19 - retains unresolved standalone manifests as archive-required warnings
+2026-10-21T02:05:12.1356190Z   ---
+2026-10-21T02:05:12.1356384Z   duration_ms: 3.289042
+2026-10-21T02:05:12.1356613Z   ...
+2026-10-21T02:05:12.1357057Z # Subtest: does not treat an arbitrary quoted podspec string as a resource binding
+2026-10-21T02:05:12.1357706Z ok 20 - does not treat an arbitrary quoted podspec string as a resource binding
+2026-10-21T02:05:12.1358146Z   ---
+2026-10-21T02:05:12.1358337Z   duration_ms: 3.675005
+2026-10-21T02:05:12.1358564Z   ...
+2026-10-21T02:05:12.1359036Z # Subtest: does not parse a .resources assignment token embedded inside a Ruby string literal
+2026-10-21T02:05:12.1359929Z ok 21 - does not parse a .resources assignment token embedded inside a Ruby string literal
+2026-10-21T02:05:12.1360585Z   ---
+2026-10-21T02:05:12.1360785Z   duration_ms: 4.087107
+2026-10-21T02:05:12.1361026Z   ...
+2026-10-21T02:05:12.1361458Z # Subtest: treats an embedded XCFramework manifest as source-container bound
+2026-10-21T02:05:12.1362111Z ok 22 - treats an embedded XCFramework manifest as source-container bound
+2026-10-21T02:05:12.1362516Z   ---
+2026-10-21T02:05:12.1362730Z   duration_ms: 4.853313
+2026-10-21T02:05:12.1362983Z   ...
+2026-10-21T02:05:12.1363429Z # Subtest: rejects non-exact, escaping, and missing podspec privacy resources
+2026-10-21T02:05:12.1363880Z     # Subtest: glob reference
+2026-10-21T02:05:12.1364177Z     ok 1 - glob reference
+2026-10-21T02:05:12.1364424Z       ---
+2026-10-21T02:05:12.1364644Z       duration_ms: 4.431402
+2026-10-21T02:05:12.1364912Z       ...
+2026-10-21T02:05:12.1365147Z     # Subtest: package escape
+2026-10-21T02:05:12.1365413Z     ok 2 - package escape
+2026-10-21T02:05:12.1365663Z       ---
+2026-10-21T02:05:12.1365907Z       duration_ms: 5.414074
+2026-10-21T02:05:12.1366153Z       ...
+2026-10-21T02:05:12.1366412Z     # Subtest: missing exact target
+2026-10-21T02:05:12.1366727Z     ok 3 - missing exact target
+2026-10-21T02:05:12.1367004Z       ---
+2026-10-21T02:05:12.1367245Z       duration_ms: 4.112776
+2026-10-21T02:05:12.1367488Z       ...
+2026-10-21T02:05:12.1367693Z     1..3
+2026-10-21T02:05:12.1368110Z ok 23 - rejects non-exact, escaping, and missing podspec privacy resources
+2026-10-21T02:05:12.1368536Z   ---
+2026-10-21T02:05:12.1368760Z   duration_ms: 14.489246
+2026-10-21T02:05:12.1369024Z   ...
+2026-10-21T02:05:12.1369410Z # Subtest: does not silently skip a malformed native package.json
+2026-10-21T02:05:12.1369964Z ok 24 - does not silently skip a malformed native package.json
+2026-10-21T02:05:12.1370654Z   ---
+2026-10-21T02:05:12.1371047Z   duration_ms: 2.991173
+2026-10-21T02:05:12.1371460Z   ...
+2026-10-21T02:05:12.1372192Z # Subtest: ledgers a malformed installed package.json even without another native root signal
+2026-10-21T02:05:12.1373072Z ok 25 - ledgers a malformed installed package.json even without another native root signal
+2026-10-21T02:05:12.1373622Z   ---
+2026-10-21T02:05:12.1374004Z   duration_ms: 2.687384
+2026-10-21T02:05:12.1374349Z   ...
+2026-10-21T02:05:12.1374864Z # Subtest: applies the total native traversal bound globally across packages
+2026-10-21T02:05:12.1375507Z ok 26 - applies the total native traversal bound globally across packages
+2026-10-21T02:05:12.1375899Z   ---
+2026-10-21T02:05:12.1376116Z   duration_ms: 4.307971
+2026-10-21T02:05:12.1376323Z   ...
+2026-10-21T02:05:12.1376747Z # Subtest: rejects oversized manifests, excessive depth, and unreviewed bound overrides
+2026-10-21T02:05:12.1377789Z ok 27 - rejects oversized manifests, excessive depth, and unreviewed bound overrides
+2026-10-21T02:05:12.1378197Z   ---
+2026-10-21T02:05:12.1378389Z   duration_ms: 7.231889
+2026-10-21T02:05:12.1378598Z   ...
+2026-10-21T02:05:12.1378965Z # Subtest: rejects a symlink or junction inside native source traversal
+2026-10-21T02:05:12.1379499Z ok 28 - rejects a symlink or junction inside native source traversal
+2026-10-21T02:05:12.1379836Z   ---
+2026-10-21T02:05:12.1380034Z   duration_ms: 2.66901
+2026-10-21T02:05:12.1380582Z   ...
+2026-10-21T02:05:12.1381032Z # Subtest: CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments
+2026-10-21T02:05:12.1381759Z ok 29 - CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments
+2026-10-21T02:05:12.1382202Z   ---
+2026-10-21T02:05:12.1382401Z   duration_ms: 137.434372
+2026-10-21T02:05:12.1382625Z   ...
+2026-10-21T02:05:12.1383062Z # Subtest: CLI --write is deterministic and --check is read-only on success and drift
+2026-10-21T02:05:12.1383690Z ok 30 - CLI --write is deterministic and --check is read-only on success and drift
+2026-10-21T02:05:12.1384074Z   ---
+2026-10-21T02:05:12.1384268Z   duration_ms: 9.865254
+2026-10-21T02:05:12.1384488Z   ...
+2026-10-21T02:05:12.1385111Z # Subtest: CLI strict mode fails closed before writing invalid source evidence
+2026-10-21T02:05:12.1385689Z ok 31 - CLI strict mode fails closed before writing invalid source evidence
+2026-10-21T02:05:12.1386048Z   ---
+2026-10-21T02:05:12.1386233Z   duration_ms: 2.14562
+2026-10-21T02:05:12.1386439Z   ...
+2026-10-21T02:05:12.1386856Z # Subtest: CLI refuses a generated-output directory link without touching its target
+2026-10-21T02:05:12.1387480Z ok 32 - CLI refuses a generated-output directory link without touching its target
+2026-10-21T02:05:12.1387865Z   ---
+2026-10-21T02:05:12.1388058Z   duration_ms: 2.010687
+2026-10-21T02:05:12.1388271Z   ...
+2026-10-21T02:05:12.1388909Z # Subtest: CLI refuses existing output paths that are distinct hardlinks to one inode
+2026-10-21T02:05:12.1389793Z ok 33 - CLI refuses existing output paths that are distinct hardlinks to one inode
+2026-10-21T02:05:12.1390753Z   ---
+2026-10-21T02:05:12.1391000Z   duration_ms: 2.472953
+2026-10-21T02:05:12.1391308Z   ...
+2026-10-21T02:05:12.1392004Z # Subtest: CLI follows host case rules when output paths differ only by case
+2026-10-21T02:05:12.1393029Z ok 34 - CLI follows host case rules when output paths differ only by case
+2026-10-21T02:05:12.1393790Z   ---
+2026-10-21T02:05:12.1394105Z   duration_ms: 5.677167
+2026-10-21T02:05:12.1394439Z   ...
+2026-10-21T02:05:12.1395114Z # Subtest: CLI refuses an existing output-file symlink without mutating its target
+2026-10-21T02:05:12.1396156Z ok 35 - CLI refuses an existing output-file symlink without mutating its target
+2026-10-21T02:05:12.1396776Z   ---
+2026-10-21T02:05:12.1397082Z   duration_ms: 2.138196
+2026-10-21T02:05:12.1397420Z   ...
+2026-10-21T02:05:12.1447996Z 1..35
+2026-10-21T02:05:12.1448525Z # tests 77
+2026-10-21T02:05:12.1448900Z # suites 0
+2026-10-21T02:05:12.1449309Z # pass 77
+2026-10-21T02:05:12.1449651Z # fail 0
+2026-10-21T02:05:12.1450087Z # cancelled 0
+2026-10-21T02:05:12.1450834Z # skipped 0
+2026-10-21T02:05:12.1451286Z # todo 0
+2026-10-21T02:05:12.1455714Z # duration_ms 430.570807
+2026-10-21T02:05:12.2699512Z 
+2026-10-21T02:05:12.2701026Z > layerwell@0.1.0 phase9:ios-privacy-source-audit:check
+2026-10-21T02:05:12.2701815Z > node scripts/phase9/ios-privacy-source-audit.mjs --check --strict
+2026-10-21T02:05:12.2702217Z 
+2026-10-21T02:05:13.5693292Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#@react-native-google-signin/google-signin: Mapping package-lock path/hash do not match current bytes.
+2026-10-21T02:05:13.5697293Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#expo-image: Mapping package-lock path/hash do not match current bytes.
+2026-10-21T02:05:13.5698418Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#react-native: Mapping package-lock path/hash do not match current bytes.
+2026-10-21T02:05:13.5699956Z iOS privacy source audit failed strict validation.
+2026-10-21T02:05:13.5859109Z ##[error]Process completed with exit code 1.
+2026-10-21T02:05:13.6005052Z Post job cleanup.
+2026-10-21T02:05:13.7382796Z Caching is not enabled. Caching is skipped.
+2026-10-21T02:05:13.7601731Z Post job cleanup.
+2026-10-21T02:05:13.8702531Z [command]/usr/bin/git version
+2026-10-21T02:05:13.8778750Z git version 2.55.0
+2026-10-21T02:05:13.8830584Z Temporarily overriding HOME='/home/runner/work/_temp/148c7255-12b6-47b8-8c37-b76d3143a891' before making global git config changes
+2026-10-21T02:05:13.8834371Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T02:05:13.8837384Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-21T02:05:13.8906730Z Removing SSH command configuration
+2026-10-21T02:05:13.8921808Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T02:05:13.8994317Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T02:05:13.9351254Z Removing HTTP extra header
+2026-10-21T02:05:13.9357260Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T02:05:13.9403326Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T02:05:13.9709916Z Removing includeIf entries pointing to credentials config files
+2026-10-21T02:05:13.9719540Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T02:05:13.9780044Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T02:05:14.0226815Z Print service container logs: de238b1c45e048c6a9cf485437b8577e_postgres15alpine_cf0d8c
+2026-10-21T02:05:14.0232117Z ##[command]/usr/bin/docker logs --details 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:05:14.0386998Z  The files belonging to this database system will be owned by user "postgres".
+2026-10-21T02:05:14.0388234Z  This user must also own the server process.
+2026-10-21T02:05:14.0390753Z  sh: locale: not found
+2026-10-21T02:05:14.0391459Z  2026-10-21 02:04:00.865 UTC [35] WARNING:  no usable system locales were found
+2026-10-21T02:05:14.0391957Z  initdb: warning: enabling "trust" authentication for local connections
+2026-10-21T02:05:14.0392863Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+2026-10-21T02:05:14.0393443Z  
+2026-10-21T02:05:14.0393716Z  The database cluster will be initialized with locale "en_US.utf8".
+2026-10-21T02:05:14.0394231Z  The default database encoding has accordingly been set to "UTF8".
+2026-10-21T02:05:14.0394683Z  The default text search configuration will be set to "english".
+2026-10-21T02:05:14.0395011Z  
+2026-10-21T02:05:14.0395204Z  Data page checksums are disabled.
+2026-10-21T02:05:14.0395447Z  
+2026-10-21T02:05:14.0395743Z  fixing permissions on existing directory /var/lib/postgresql/data ... ok
+2026-10-21T02:05:14.0396131Z  creating subdirectories ... ok
+2026-10-21T02:05:14.0396433Z  selecting dynamic shared memory implementation ... posix
+2026-10-21T02:05:14.0396776Z  selecting default max_connections ... 100
+2026-10-21T02:05:14.0397071Z  selecting default shared_buffers ... 128MB
+2026-10-21T02:05:14.0397354Z  selecting default time zone ... UTC
+2026-10-21T02:05:14.0397627Z  creating configuration files ... ok
+2026-10-21T02:05:14.0397893Z  running bootstrap script ... ok
+2026-10-21T02:05:14.0398205Z  performing post-bootstrap initialization ... ok
+2026-10-21T02:05:14.0398507Z  syncing data to disk ... ok
+2026-10-21T02:05:14.0398736Z  
+2026-10-21T02:05:14.0399225Z  
+2026-10-21T02:05:14.0399446Z  Success. You can now start the database server using:
+2026-10-21T02:05:14.0399756Z  
+2026-10-21T02:05:14.0399983Z      pg_ctl -D /var/lib/postgresql/data -l logfile start
+2026-10-21T02:05:14.0400589Z  
+2026-10-21T02:05:14.0401618Z  waiting for server to start....2026-10-21 02:04:01.442 UTC [41] LOG:  starting PostgreSQL 15.19 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+2026-10-21T02:05:14.0402567Z  2026-10-21 02:04:01.443 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-21T02:05:14.0403144Z  2026-10-21 02:04:01.446 UTC [44] LOG:  database system was shut down at 2026-10-21 02:04:01 UTC
+2026-10-21T02:05:14.0403655Z  2026-10-21 02:04:01.450 UTC [41] LOG:  database system is ready to accept connections
+2026-10-21T02:05:14.0404024Z   done
+2026-10-21T02:05:14.0404203Z  server started
+2026-10-21T02:05:14.0404392Z  
+2026-10-21T02:05:14.0404716Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+2026-10-21T02:05:14.0405115Z  
+2026-10-21T02:05:14.0405470Z  waiting for server to shut down...2026-10-21 02:04:01.541 UTC [41] LOG:  received fast shutdown request
+2026-10-21T02:05:14.0405990Z  .2026-10-21 02:04:01.542 UTC [41] LOG:  aborting any active transactions
+2026-10-21T02:05:14.0406571Z  2026-10-21 02:04:01.544 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+2026-10-21T02:05:14.0407105Z  2026-10-21 02:04:01.546 UTC [42] LOG:  shutting down
+2026-10-21T02:05:14.0407682Z  2026-10-21 02:04:01.664 UTC [1] LOG:  starting PostgreSQL 15.19 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+2026-10-21T02:05:14.0408317Z  2026-10-21 02:04:01.664 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-10-21T02:05:14.0408784Z  2026-10-21 02:04:01.664 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-10-21T02:05:14.0409577Z  2026-10-21 02:04:01.665 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-21T02:05:14.0425751Z  2026-10-21 02:04:01.668 UTC [55] LOG:  database system was shut down at 2026-10-21 02:04:01 UTC
+2026-10-21T02:05:14.0426856Z  2026-10-21 02:04:01.672 UTC [1] LOG:  database system is ready to accept connections
+2026-10-21T02:05:14.0427435Z  2026-10-21 02:04:01.547 UTC [42] LOG:  checkpoint starting: shutdown immediate
+2026-10-21T02:05:14.0428425Z  2026-10-21 02:04:01.549 UTC [42] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.003 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
+2026-10-21T02:05:14.0429359Z  2026-10-21 02:04:01.554 UTC [41] LOG:  database system is shut down
+2026-10-21T02:05:14.0429688Z   done
+2026-10-21T02:05:14.0429895Z  server stopped
+2026-10-21T02:05:14.0430094Z  
+2026-10-21T02:05:14.0430903Z  PostgreSQL init process complete; ready for start up.
+2026-10-21T02:05:14.0431245Z  
+2026-10-21T02:05:14.0438477Z Stop and remove container: de238b1c45e048c6a9cf485437b8577e_postgres15alpine_cf0d8c
+2026-10-21T02:05:14.0444092Z ##[command]/usr/bin/docker rm --force 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:05:16.6556004Z 6146b0edec6f0b622967f880e21f8e6348799c3a55d8a48505eb9bb4ed38b0af
+2026-10-21T02:05:16.6592897Z Remove container network: github_network_1efab847de1448a498f41dec21e5b97c
+2026-10-21T02:05:16.6597606Z ##[command]/usr/bin/docker network rm github_network_1efab847de1448a498f41dec21e5b97c
+2026-10-21T02:05:16.7623829Z github_network_1efab847de1448a498f41dec21e5b97c
+2026-10-21T02:05:16.7713814Z Cleaning up orphan processes
+

@@ -1,0 +1,2468 @@
+﻿2026-10-21T02:03:55.0756443Z Current runner version: '2.338.0'
+2026-10-21T02:03:55.0775720Z ##[group]Runner Image Provisioner
+2026-10-21T02:03:55.0776457Z Hosted Compute Agent
+2026-10-21T02:03:55.0776880Z Version: 20261015.610
+2026-10-21T02:03:55.0777320Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-21T02:03:55.0777826Z Build Date: 2026-10-14T17:06:54Z
+2026-10-21T02:03:55.0778539Z Worker ID: {14fb2f9c-3801-4297-8b51-0416e3867ba4}
+2026-10-21T02:03:55.0779076Z Region: centralus
+2026-10-21T02:03:55.0779468Z Cloud: Azure
+2026-10-21T02:03:55.0779834Z ##[endgroup]
+2026-10-21T02:03:55.0780783Z ##[group]Operating System
+2026-10-21T02:03:55.0781198Z Ubuntu
+2026-10-21T02:03:55.0781575Z 24.04.5
+2026-10-21T02:03:55.0781936Z LTS
+2026-10-21T02:03:55.0782266Z ##[endgroup]
+2026-10-21T02:03:55.0782655Z ##[group]Runner Image
+2026-10-21T02:03:55.0783055Z Image: ubuntu-24.04
+2026-10-21T02:03:55.0783470Z Version: 20261018.339.1
+2026-10-21T02:03:55.0784328Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-21T02:03:55.0785376Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-21T02:03:55.0786013Z ##[endgroup]
+2026-10-21T02:03:55.0786788Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T02:03:55.0788606Z Contents: read
+2026-10-21T02:03:55.0789067Z Metadata: read
+2026-10-21T02:03:55.0789446Z ##[endgroup]
+2026-10-21T02:03:55.0790957Z Secret source: Actions
+2026-10-21T02:03:55.0791621Z Cache mode: write
+2026-10-21T02:03:55.0792128Z Prepare workflow directory
+2026-10-21T02:03:55.1037083Z Prepare all required actions
+2026-10-21T02:03:55.1073786Z Getting action download info
+2026-10-21T02:03:55.3333436Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-21T02:03:55.7188463Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-21T02:03:56.0727154Z Download action repository 'denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282' (SHA:667a34cdef165d8d2b2e98dde39547c9daac7282)
+2026-10-21T02:03:56.4287080Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-21T02:03:56.8610387Z Complete job name: Code security gates
+2026-10-21T02:03:56.9172579Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-21T02:03:56.9173184Z with:
+2026-10-21T02:03:56.9173410Z   persist-credentials: false
+2026-10-21T02:03:56.9173766Z   repository: TasfiqJ/onSkin
+2026-10-21T02:03:56.9175801Z   token: ***
+2026-10-21T02:03:56.9176074Z   ssh-strict: true
+2026-10-21T02:03:56.9176354Z   ssh-user: git
+2026-10-21T02:03:56.9176599Z   clean: true
+2026-10-21T02:03:56.9176891Z   sparse-checkout-cone-mode: true
+2026-10-21T02:03:56.9177191Z   fetch-depth: 1
+2026-10-21T02:03:56.9177510Z   fetch-tags: false
+2026-10-21T02:03:56.9177774Z   show-progress: true
+2026-10-21T02:03:56.9178048Z   lfs: false
+2026-10-21T02:03:56.9178507Z   submodules: false
+2026-10-21T02:03:56.9178773Z   set-safe-directory: true
+2026-10-21T02:03:56.9179227Z ##[endgroup]
+2026-10-21T02:03:57.0044936Z Syncing repository: TasfiqJ/onSkin
+2026-10-21T02:03:57.0047088Z ##[group]Getting Git version info
+2026-10-21T02:03:57.0047866Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-21T02:03:57.0049178Z [command]/usr/bin/git version
+2026-10-21T02:03:57.0064250Z git version 2.55.0
+2026-10-21T02:03:57.0081769Z ##[endgroup]
+2026-10-21T02:03:57.0091871Z Temporarily overriding HOME='/home/runner/work/_temp/c7cfdc3b-ad84-498d-b5ef-c3d73ae1a8d8' before making global git config changes
+2026-10-21T02:03:57.0093134Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T02:03:57.0095510Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-21T02:03:57.0148038Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-21T02:03:57.0151752Z ##[group]Determining repository object format
+2026-10-21T02:03:57.0152987Z ##[endgroup]
+2026-10-21T02:03:57.0154524Z ##[group]Initializing the repository
+2026-10-21T02:03:57.0157042Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-21T02:03:57.0246691Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-21T02:03:57.0248387Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-21T02:03:57.0249917Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-21T02:03:57.0250824Z hint: call:
+2026-10-21T02:03:57.0251563Z hint:
+2026-10-21T02:03:57.0252484Z hint: 	git config --global init.defaultBranch <name>
+2026-10-21T02:03:57.0253397Z hint:
+2026-10-21T02:03:57.0254183Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-21T02:03:57.0255248Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-21T02:03:57.0256112Z hint:
+2026-10-21T02:03:57.0256902Z hint: 	git branch -m <name>
+2026-10-21T02:03:57.0257547Z hint:
+2026-10-21T02:03:57.0258477Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-21T02:03:57.0260068Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-21T02:03:57.0262358Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-21T02:03:57.0330971Z ##[endgroup]
+2026-10-21T02:03:57.0331655Z ##[group]Disabling automatic garbage collection
+2026-10-21T02:03:57.0334595Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-21T02:03:57.0362866Z ##[endgroup]
+2026-10-21T02:03:57.0363704Z ##[group]Setting up auth
+2026-10-21T02:03:57.0364455Z Removing SSH command configuration
+2026-10-21T02:03:57.0368992Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T02:03:57.0395432Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T02:03:57.0715606Z Removing HTTP extra header
+2026-10-21T02:03:57.0722737Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T02:03:57.0753898Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T02:03:57.0924171Z Removing includeIf entries pointing to credentials config files
+2026-10-21T02:03:57.0930404Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T02:03:57.0956782Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T02:03:57.1137257Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-21T02:03:57.1177030Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:03:57.1209343Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:03:57.1244042Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:03:57.1279032Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:03:57.1314928Z ##[endgroup]
+2026-10-21T02:03:57.1315389Z ##[group]Fetching the repository
+2026-10-21T02:03:57.1316101Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5278d2cd9b36c8079e8c9c9024c0976694ef48b7:refs/remotes/pull/9/merge
+2026-10-21T02:04:05.4044731Z From https://github.com/TasfiqJ/onSkin
+2026-10-21T02:04:05.4045454Z  * [new ref]         5278d2cd9b36c8079e8c9c9024c0976694ef48b7 -> pull/9/merge
+2026-10-21T02:04:05.4050786Z ##[endgroup]
+2026-10-21T02:04:05.4051478Z ##[group]Determining the checkout info
+2026-10-21T02:04:05.4052097Z ##[endgroup]
+2026-10-21T02:04:05.4056929Z [command]/usr/bin/git sparse-checkout disable
+2026-10-21T02:04:05.4105582Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-21T02:04:05.4132360Z ##[group]Checking out the ref
+2026-10-21T02:04:05.4135737Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/9/merge
+2026-10-21T02:04:06.4318465Z Updating files:  36% (6872/18640)
+2026-10-21T02:04:06.4674865Z Updating files:  37% (6897/18640)
+2026-10-21T02:04:06.5060221Z Updating files:  38% (7084/18640)
+2026-10-21T02:04:06.5244933Z Updating files:  39% (7270/18640)
+2026-10-21T02:04:06.5396020Z Updating files:  40% (7456/18640)
+2026-10-21T02:04:06.5441625Z Updating files:  41% (7643/18640)
+2026-10-21T02:04:06.5488934Z Updating files:  42% (7829/18640)
+2026-10-21T02:04:06.5625359Z Updating files:  43% (8016/18640)
+2026-10-21T02:04:06.5721809Z Updating files:  44% (8202/18640)
+2026-10-21T02:04:06.5841282Z Updating files:  45% (8388/18640)
+2026-10-21T02:04:06.5977729Z Updating files:  46% (8575/18640)
+2026-10-21T02:04:06.6110106Z Updating files:  47% (8761/18640)
+2026-10-21T02:04:06.8452133Z Updating files:  48% (8948/18640)
+2026-10-21T02:04:06.8548360Z Updating files:  49% (9134/18640)
+2026-10-21T02:04:06.8668624Z Updating files:  50% (9320/18640)
+2026-10-21T02:04:06.8756172Z Updating files:  51% (9507/18640)
+2026-10-21T02:04:06.8835649Z Updating files:  52% (9693/18640)
+2026-10-21T02:04:06.8907876Z Updating files:  53% (9880/18640)
+2026-10-21T02:04:06.8973420Z Updating files:  54% (10066/18640)
+2026-10-21T02:04:06.9057242Z Updating files:  55% (10252/18640)
+2026-10-21T02:04:06.9157874Z Updating files:  56% (10439/18640)
+2026-10-21T02:04:06.9231926Z Updating files:  57% (10625/18640)
+2026-10-21T02:04:06.9345337Z Updating files:  58% (10812/18640)
+2026-10-21T02:04:06.9453262Z Updating files:  59% (10998/18640)
+2026-10-21T02:04:06.9577917Z Updating files:  60% (11184/18640)
+2026-10-21T02:04:06.9682330Z Updating files:  61% (11371/18640)
+2026-10-21T02:04:06.9782536Z Updating files:  62% (11557/18640)
+2026-10-21T02:04:06.9874102Z Updating files:  63% (11744/18640)
+2026-10-21T02:04:06.9958815Z Updating files:  64% (11930/18640)
+2026-10-21T02:04:07.0062889Z Updating files:  65% (12116/18640)
+2026-10-21T02:04:07.0236120Z Updating files:  66% (12303/18640)
+2026-10-21T02:04:07.0405714Z Updating files:  67% (12489/18640)
+2026-10-21T02:04:07.0552480Z Updating files:  68% (12676/18640)
+2026-10-21T02:04:07.0676491Z Updating files:  69% (12862/18640)
+2026-10-21T02:04:07.0944760Z Updating files:  70% (13048/18640)
+2026-10-21T02:04:07.1222782Z Updating files:  71% (13235/18640)
+2026-10-21T02:04:07.1453283Z Updating files:  72% (13421/18640)
+2026-10-21T02:04:07.1815720Z Updating files:  73% (13608/18640)
+2026-10-21T02:04:07.2108645Z Updating files:  74% (13794/18640)
+2026-10-21T02:04:07.2390245Z Updating files:  75% (13980/18640)
+2026-10-21T02:04:07.2582480Z Updating files:  76% (14167/18640)
+2026-10-21T02:04:07.2754125Z Updating files:  77% (14353/18640)
+2026-10-21T02:04:07.3089690Z Updating files:  78% (14540/18640)
+2026-10-21T02:04:07.3468365Z Updating files:  79% (14726/18640)
+2026-10-21T02:04:07.3849197Z Updating files:  80% (14912/18640)
+2026-10-21T02:04:07.4217890Z Updating files:  81% (15099/18640)
+2026-10-21T02:04:07.4273639Z Updating files:  82% (15285/18640)
+2026-10-21T02:04:07.4517406Z Updating files:  82% (15308/18640)
+2026-10-21T02:04:07.4862490Z Updating files:  83% (15472/18640)
+2026-10-21T02:04:07.5239814Z Updating files:  84% (15658/18640)
+2026-10-21T02:04:07.5589833Z Updating files:  85% (15844/18640)
+2026-10-21T02:04:07.5793743Z Updating files:  86% (16031/18640)
+2026-10-21T02:04:07.6007990Z Updating files:  87% (16217/18640)
+2026-10-21T02:04:07.6204396Z Updating files:  88% (16404/18640)
+2026-10-21T02:04:07.6296940Z Updating files:  89% (16590/18640)
+2026-10-21T02:04:07.6428677Z Updating files:  90% (16776/18640)
+2026-10-21T02:04:07.6892689Z Updating files:  91% (16963/18640)
+2026-10-21T02:04:07.7040054Z Updating files:  92% (17149/18640)
+2026-10-21T02:04:07.7195113Z Updating files:  93% (17336/18640)
+2026-10-21T02:04:07.7326090Z Updating files:  94% (17522/18640)
+2026-10-21T02:04:07.7622543Z Updating files:  95% (17708/18640)
+2026-10-21T02:04:07.7783696Z Updating files:  96% (17895/18640)
+2026-10-21T02:04:07.7913606Z Updating files:  97% (18081/18640)
+2026-10-21T02:04:07.8224205Z Updating files:  98% (18268/18640)
+2026-10-21T02:04:07.8545866Z Updating files:  99% (18454/18640)
+2026-10-21T02:04:07.8546214Z Updating files: 100% (18640/18640)
+2026-10-21T02:04:07.8546659Z Updating files: 100% (18640/18640), done.
+2026-10-21T02:04:07.8687111Z Note: switching to 'refs/remotes/pull/9/merge'.
+2026-10-21T02:04:07.8687425Z 
+2026-10-21T02:04:07.8687706Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-21T02:04:07.8688277Z changes and commit them, and you can discard any commits you make in this
+2026-10-21T02:04:07.8688704Z state without impacting any branches by switching back to a branch.
+2026-10-21T02:04:07.8688926Z 
+2026-10-21T02:04:07.8689116Z If you want to create a new branch to retain commits you create, you may
+2026-10-21T02:04:07.8689499Z do so (now or later) by using -c with the switch command. Example:
+2026-10-21T02:04:07.8689702Z 
+2026-10-21T02:04:07.8689817Z   git switch -c <new-branch-name>
+2026-10-21T02:04:07.8690021Z 
+2026-10-21T02:04:07.8690117Z Or undo this operation with:
+2026-10-21T02:04:07.8690282Z 
+2026-10-21T02:04:07.8690361Z   git switch -
+2026-10-21T02:04:07.8690497Z 
+2026-10-21T02:04:07.8690698Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-21T02:04:07.8690923Z 
+2026-10-21T02:04:07.8691196Z HEAD is now at 5278d2c Merge 9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562 into bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+2026-10-21T02:04:07.8732496Z ##[endgroup]
+2026-10-21T02:04:07.8770447Z [command]/usr/bin/git log -1 --format=%H
+2026-10-21T02:04:07.8792436Z 5278d2cd9b36c8079e8c9c9024c0976694ef48b7
+2026-10-21T02:04:07.8809375Z ##[group]Removing auth
+2026-10-21T02:04:07.8809851Z Removing SSH command configuration
+2026-10-21T02:04:07.8810379Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T02:04:07.8833267Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T02:04:07.9009251Z Removing HTTP extra header
+2026-10-21T02:04:07.9012103Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T02:04:07.9036748Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T02:04:07.9206914Z Removing includeIf entries pointing to credentials config files
+2026-10-21T02:04:07.9209659Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T02:04:07.9230905Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-21T02:04:07.9231480Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-21T02:04:07.9231879Z includeif.gitdir:/github/workspace/.git.path
+2026-10-21T02:04:07.9232292Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T02:04:07.9240440Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-21T02:04:07.9256463Z /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9264915Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9294130Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-21T02:04:07.9310937Z /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9319771Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9345999Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-21T02:04:07.9364014Z /github/runner_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9375634Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9403172Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T02:04:07.9420442Z /github/runner_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9429537Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config
+2026-10-21T02:04:07.9455439Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T02:04:07.9624767Z Removing credentials config '/home/runner/work/_temp/git-credentials-032c3296-58d2-4afc-ab19-257414ae9cfa.config'
+2026-10-21T02:04:07.9635481Z ##[endgroup]
+2026-10-21T02:04:07.9833456Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-21T02:04:07.9833818Z with:
+2026-10-21T02:04:07.9834049Z   node-version: 22.21.0
+2026-10-21T02:04:07.9834307Z   cache: npm
+2026-10-21T02:04:07.9834523Z   check-latest: false
+2026-10-21T02:04:07.9836308Z   token: ***
+2026-10-21T02:04:07.9836559Z   package-manager-cache: true
+2026-10-21T02:04:07.9836912Z ##[endgroup]
+2026-10-21T02:04:08.0981239Z Attempting to download 22.21.0...
+2026-10-21T02:04:08.8589370Z Acquiring 22.21.0 - x64 from https://github.com/actions/node-versions/releases/download/22.21.0-18671149699/node-22.21.0-linux-x64.tar.gz
+2026-10-21T02:04:09.3712931Z Extracting ...
+2026-10-21T02:04:09.3815300Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/b32a94de-8ca4-434d-8cef-007821eb412c -f /home/runner/work/_temp/b2b519f5-3213-4a6d-9f0d-c3d905ac5a4f
+2026-10-21T02:04:10.3635169Z Adding to the cache ...
+2026-10-21T02:04:12.2225091Z ##[group]Environment details
+2026-10-21T02:04:12.3888305Z node: v22.21.0
+2026-10-21T02:04:12.3888790Z npm: 10.9.4
+2026-10-21T02:04:12.3889046Z yarn: 1.22.22
+2026-10-21T02:04:12.3889650Z ##[endgroup]
+2026-10-21T02:04:12.3904734Z [command]/opt/hostedtoolcache/node/22.21.0/x64/bin/npm config get cache
+2026-10-21T02:04:12.4538082Z /home/runner/.npm
+2026-10-21T02:04:12.6029771Z npm cache is not found
+2026-10-21T02:04:12.6185610Z ##[group]Run denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282
+2026-10-21T02:04:12.6186004Z with:
+2026-10-21T02:04:12.6186232Z   deno-version: v2.7.5
+2026-10-21T02:04:12.6186461Z   deno-binary-name: deno
+2026-10-21T02:04:12.6186729Z   cache: false
+2026-10-21T02:04:12.6186950Z ##[endgroup]
+2026-10-21T02:04:12.8244446Z Going to install stable version 2.7.5.
+2026-10-21T02:04:12.8246355Z Downloading Deno from https://github.com/denoland/deno/releases/download/v2.7.5/deno-x86_64-unknown-linux-gnu.zip.
+2026-10-21T02:04:13.2549765Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/5910c0e3-cf4b-4d98-8e02-95463fded92e
+2026-10-21T02:04:14.5817602Z Cached Deno to /opt/hostedtoolcache/deno/2.7.5/x64.
+2026-10-21T02:04:14.5824617Z Installation complete.
+2026-10-21T02:04:14.5940802Z ##[group]Run npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+2026-10-21T02:04:14.5941416Z [36;1mnpm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund[0m
+2026-10-21T02:04:14.6609314Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:04:14.6609692Z ##[endgroup]
+2026-10-21T02:04:18.0287854Z 
+2026-10-21T02:04:18.0289065Z removed 74 packages, and changed 105 packages in 3s
+2026-10-21T02:04:18.0570560Z ##[group]Run npm ci
+2026-10-21T02:04:18.0570858Z [36;1mnpm ci[0m
+2026-10-21T02:04:18.0602500Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:04:18.0602892Z ##[endgroup]
+2026-10-21T02:04:33.1845839Z npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-21T02:04:40.8656795Z 
+2026-10-21T02:04:40.8657703Z > layerwell@0.1.0 postinstall
+2026-10-21T02:04:40.8658094Z > node scripts/postinstall.mjs
+2026-10-21T02:04:40.8658531Z 
+2026-10-21T02:04:40.9727898Z {"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+2026-10-21T02:04:41.0613001Z 
+2026-10-21T02:04:41.0613881Z added 1035 packages, and audited 1039 packages in 23s
+2026-10-21T02:04:41.0614490Z 
+2026-10-21T02:04:41.0614859Z 203 packages are looking for funding
+2026-10-21T02:04:41.0615232Z   run `npm fund` for details
+2026-10-21T02:04:41.1500625Z 
+2026-10-21T02:04:41.1501992Z 25 high severity vulnerabilities
+2026-10-21T02:04:41.1502794Z 
+2026-10-21T02:04:41.1503668Z To address all issues (including breaking changes), run:
+2026-10-21T02:04:41.1504084Z   npm audit fix --force
+2026-10-21T02:04:41.1504217Z 
+2026-10-21T02:04:41.1504346Z Run `npm audit` for details.
+2026-10-21T02:04:41.1509607Z npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+2026-10-21T02:04:41.1510261Z npm warn install-scripts   @sentry/cli@2.58.4 (postinstall: node ./scripts/install.js)
+2026-10-21T02:04:41.1510809Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-21T02:04:41.1511210Z npm warn install-scripts
+2026-10-21T02:04:41.1511676Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-21T02:04:41.2322586Z ##[group]Run npm run phase9:verify
+2026-10-21T02:04:41.2322917Z [36;1mnpm run phase9:verify[0m
+2026-10-21T02:04:41.2351095Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:04:41.2351500Z ##[endgroup]
+2026-10-21T02:04:41.3047054Z 
+2026-10-21T02:04:41.3047879Z > layerwell@0.1.0 phase9:verify
+2026-10-21T02:04:41.3056216Z > npm run phase9:tooling-security:test && npm run launch:contract:verify && npm run core07:share-admission-source-contract:test && npm run postinstall:check && npm run phase5:expo-widgets-lifecycle:test && npm run phase9:view-shot-privacy:check && npm run phase9:view-shot-privacy:test && npm run phase9:ios-privacy-source-audit:test && npm run phase9:ios-privacy-source-audit:check && npm run phase9:ios-archive-privacy-evidence:test && npm run phase9:release-qa-integrity:test && npm run phase9:governed-evidence-chain:test && npm run phase9:governed-publication-coverage:test && npm run phase9:git-status-exclusion:test && npm run phase9:dependency-sbom:test && npm run e2e:human:manifest:contract:test && npm run phase7:qa-packet:contract:test && npm run phase9:release-candidate-git-contract:test && npm run phase9:verification-wiring:test && npm run phase9:store-build-inspect:check && npm run phase9:release-contact-smoke && npm run phase9:evidence-normalization-smoke && npm run phase9:rls-adversarial-smoke && npm run phase9:release-smoke && npm run phase9:rls-adversarial && npm run phase9:supabase-policy-lint && npm run phase9:live-supabase-adversarial && npm run phase2:edge-app-env-smoke && npm run phase2:deploy-env-smoke && npm run phase4:catalog-serving-contract:test && npm run phase4:catalog-report-privacy-smoke && npm run phase9:edge-auth-smoke && npm run phase9:edge-manifest-smoke && npm run phase9:rate-limit-index-smoke && npm run phase9:supabase-key-resolution-smoke && npm run phase9:edge-functions-check && npm run phase6:subscription-grants-smoke && npm run phase6:subscription-reconciliation-smoke && npm run phase9:live-edge-auth && npm run phase9:live-public-forms && npm run phase9:live-catalog-rate-limit && npm run phase9:live-order-report-poll && npm run phase9:live-revenuecat-webhook && npm run phase9:security-ci-smoke && npm run phase9:data-rights-smoke && npm run phase9:data-export-contract-smoke && npm run phase9:storage-path-privacy-smoke && npm run phase9:account-deletion-photo-storage-smoke && npm run phase9:account-provider-deletion-smoke && npm run phase9:account-service-scrub-smoke && npm run phase9:account-deletion-durable-smoke && npm run phase9:account-deletion-work-lane-smoke && npm run phase9:apple-auth-work-lane-smoke && npm run phase9:order-attribution-integrity-smoke && npm run phase9:revenuecat-webhook-atomic-smoke && npm run phase9:live-data-rights && npm run phase9:consent-withdrawal && npm run phase9:live-consent-withdrawal && npm run phase9:privacy-payload-audit && npm run phase9:store-build-inspect && npm run phase9:dependency-sbom && npm run typecheck && npm run lint && npm test
+2026-10-21T02:04:41.3062438Z 
+2026-10-21T02:04:41.3713549Z 
+2026-10-21T02:04:41.3714334Z > layerwell@0.1.0 phase9:tooling-security:test
+2026-10-21T02:04:41.3715313Z > node --test scripts/phase9/patch-tooling-security.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs
+2026-10-21T02:04:41.3715851Z 
+2026-10-21T02:04:41.4046700Z TAP version 13
+2026-10-21T02:04:41.5109775Z # Subtest: exact reviewed files and every nested copy are checked without audit clearance
+2026-10-21T02:04:41.5114144Z ok 1 - exact reviewed files and every nested copy are checked without audit clearance
+2026-10-21T02:04:41.5114880Z   ---
+2026-10-21T02:04:41.5115405Z   duration_ms: 12.420019
+2026-10-21T02:04:41.5116148Z   type: 'test'
+2026-10-21T02:04:41.5116595Z   ...
+2026-10-21T02:04:41.5117362Z # Subtest: an unexpected nested copy fails the entire preflight without writing any other target
+2026-10-21T02:04:41.5118564Z ok 2 - an unexpected nested copy fails the entire preflight without writing any other target
+2026-10-21T02:04:41.5119317Z   ---
+2026-10-21T02:04:41.5120066Z   duration_ms: 7.014458
+2026-10-21T02:04:41.5120523Z   type: 'test'
+2026-10-21T02:04:41.5120953Z   ...
+2026-10-21T02:04:41.5121658Z # Subtest: wrong lock version, SRI, registry URL, package version and link records fail closed
+2026-10-21T02:04:41.5122488Z     # Subtest: identity mismatch
+2026-10-21T02:04:41.5122979Z     ok 1 - identity mismatch
+2026-10-21T02:04:41.5123440Z       ---
+2026-10-21T02:04:41.5123865Z       duration_ms: 3.346589
+2026-10-21T02:04:41.5124315Z       type: 'test'
+2026-10-21T02:04:41.5124788Z       ...
+2026-10-21T02:04:41.5125247Z     # Subtest: identity mismatch
+2026-10-21T02:04:41.5125723Z     ok 2 - identity mismatch
+2026-10-21T02:04:41.5126175Z       ---
+2026-10-21T02:04:41.5126606Z       duration_ms: 3.593377
+2026-10-21T02:04:41.5127082Z       type: 'test'
+2026-10-21T02:04:41.5127505Z       ...
+2026-10-21T02:04:41.5127938Z     # Subtest: identity mismatch
+2026-10-21T02:04:41.5128529Z     ok 3 - identity mismatch
+2026-10-21T02:04:41.5150585Z       ---
+2026-10-21T02:04:41.5151236Z       duration_ms: 3.824215
+2026-10-21T02:04:41.5151692Z       type: 'test'
+2026-10-21T02:04:41.5152147Z       ...
+2026-10-21T02:04:41.5152611Z     # Subtest: identity mismatch
+2026-10-21T02:04:41.5153134Z     ok 4 - identity mismatch
+2026-10-21T02:04:41.5153611Z       ---
+2026-10-21T02:04:41.5154117Z       duration_ms: 3.702723
+2026-10-21T02:04:41.5154715Z       type: 'test'
+2026-10-21T02:04:41.5155264Z       ...
+2026-10-21T02:04:41.5155862Z     # Subtest: identity mismatch
+2026-10-21T02:04:41.5156537Z     ok 5 - identity mismatch
+2026-10-21T02:04:41.5157078Z       ---
+2026-10-21T02:04:41.5157715Z       duration_ms: 3.083096
+2026-10-21T02:04:41.5158762Z       type: 'test'
+2026-10-21T02:04:41.5159338Z       ...
+2026-10-21T02:04:41.5159940Z     1..5
+2026-10-21T02:04:41.5160872Z ok 3 - wrong lock version, SRI, registry URL, package version and link records fail closed
+2026-10-21T02:04:41.5162103Z   ---
+2026-10-21T02:04:41.5162822Z   duration_ms: 18.258874
+2026-10-21T02:04:41.5163499Z   type: 'test'
+2026-10-21T02:04:41.5164111Z   ...
+2026-10-21T02:04:41.5164845Z # Subtest: installed identity and payload tampering fail before writes
+2026-10-21T02:04:41.5165753Z     # Subtest: installed package
+2026-10-21T02:04:41.5166384Z     ok 1 - installed package
+2026-10-21T02:04:41.5167086Z       ---
+2026-10-21T02:04:41.5169063Z       duration_ms: 3.370384
+2026-10-21T02:04:41.5169653Z       type: 'test'
+2026-10-21T02:04:41.5170475Z       ...
+2026-10-21T02:04:41.5170895Z     # Subtest: payload
+2026-10-21T02:04:41.5171397Z     ok 2 - payload
+2026-10-21T02:04:41.5171801Z       ---
+2026-10-21T02:04:41.5172317Z       duration_ms: 3.411889
+2026-10-21T02:04:41.5172865Z       type: 'test'
+2026-10-21T02:04:41.5173265Z       ...
+2026-10-21T02:04:41.5174038Z     1..2
+2026-10-21T02:04:41.5174702Z ok 4 - installed identity and payload tampering fail before writes
+2026-10-21T02:04:41.5175390Z   ---
+2026-10-21T02:04:41.5175787Z   duration_ms: 7.050805
+2026-10-21T02:04:41.5176639Z   type: 'test'
+2026-10-21T02:04:41.5177135Z   ...
+2026-10-21T02:04:41.5177832Z # Subtest: junction targets cannot redirect a reviewed package outside its root
+2026-10-21T02:04:41.5178885Z ok 5 - junction targets cannot redirect a reviewed package outside its root
+2026-10-21T02:04:41.5179572Z   ---
+2026-10-21T02:04:41.5179958Z   duration_ms: 3.716277
+2026-10-21T02:04:41.5180436Z   type: 'test'
+2026-10-21T02:04:41.5180948Z   ...
+2026-10-21T02:04:41.5181755Z # Subtest: official original preimages require application; application is exact and idempotent
+2026-10-21T02:04:41.5182691Z ok 6 - official original preimages require application; application is exact and idempotent
+2026-10-21T02:04:41.5183403Z   ---
+2026-10-21T02:04:41.5183959Z   duration_ms: 16.608004
+2026-10-21T02:04:41.5184468Z   type: 'test'
+2026-10-21T02:04:41.5184915Z   ...
+2026-10-21T02:04:41.5185673Z # Subtest: a commit failure still restores earlier files when temporary cleanup also fails
+2026-10-21T02:04:41.5186580Z ok 7 - a commit failure still restores earlier files when temporary cleanup also fails
+2026-10-21T02:04:41.5187469Z   ---
+2026-10-21T02:04:41.5187914Z   duration_ms: 9.965513
+2026-10-21T02:04:41.5188655Z   type: 'test'
+2026-10-21T02:04:41.5189069Z   ...
+2026-10-21T02:04:41.5496947Z # Subtest: braces preserves ordinary parse, compile, expansion and escaping behavior
+2026-10-21T02:04:41.5497956Z ok 8 - braces preserves ordinary parse, compile, expansion and escaping behavior
+2026-10-21T02:04:41.5498803Z   ---
+2026-10-21T02:04:41.5499206Z   duration_ms: 2.009025
+2026-10-21T02:04:41.5499679Z   type: 'test'
+2026-10-21T02:04:41.5502320Z   ...
+2026-10-21T02:04:41.5503365Z # Subtest: braces rejects deeply nested strings before recursive traversal, regardless of caller options
+2026-10-21T02:04:41.5504469Z ok 9 - braces rejects deeply nested strings before recursive traversal, regardless of caller options
+2026-10-21T02:04:41.5505163Z   ---
+2026-10-21T02:04:41.5505573Z   duration_ms: 2.620128
+2026-10-21T02:04:41.5505999Z   type: 'test'
+2026-10-21T02:04:41.5506365Z   ...
+2026-10-21T02:04:41.5506950Z # Subtest: braces direct AST APIs cannot bypass the fixed recursion bound
+2026-10-21T02:04:41.5507661Z ok 10 - braces direct AST APIs cannot bypass the fixed recursion bound
+2026-10-21T02:04:41.5508432Z   ---
+2026-10-21T02:04:41.5508841Z   duration_ms: 12.771387
+2026-10-21T02:04:41.5509277Z   type: 'test'
+2026-10-21T02:04:41.5509728Z   ...
+2026-10-21T02:04:41.5519581Z # Subtest: node-forge rejects extra nested DigestAlgorithm elements that native verification rejects
+2026-10-21T02:04:41.5540128Z ok 11 - node-forge rejects extra nested DigestAlgorithm elements that native verification rejects
+2026-10-21T02:04:41.5545858Z   ---
+2026-10-21T02:04:41.5546427Z   duration_ms: 14.929412
+2026-10-21T02:04:41.5548724Z   type: 'test'
+2026-10-21T02:04:41.5549564Z   ...
+2026-10-21T02:04:41.5550203Z # Subtest: node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures
+2026-10-21T02:04:41.5551484Z ok 12 - node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures
+2026-10-21T02:04:41.5552018Z   ---
+2026-10-21T02:04:41.5552438Z   duration_ms: 6.994814
+2026-10-21T02:04:41.5552737Z   type: 'test'
+2026-10-21T02:04:41.5553093Z   ...
+2026-10-21T02:04:41.5553576Z # Subtest: node-forge ASN.1 capture never inherits prototype parameter markers
+2026-10-21T02:04:41.5554356Z ok 13 - node-forge ASN.1 capture never inherits prototype parameter markers
+2026-10-21T02:04:41.5554766Z   ---
+2026-10-21T02:04:41.5555053Z   duration_ms: 50.142206
+2026-10-21T02:04:41.5555357Z   type: 'test'
+2026-10-21T02:04:41.5555618Z   ...
+2026-10-21T02:04:41.5634389Z 1..13
+2026-10-21T02:04:41.5635035Z # tests 20
+2026-10-21T02:04:41.5635925Z # suites 0
+2026-10-21T02:04:41.5636275Z # pass 20
+2026-10-21T02:04:41.5636559Z # fail 0
+2026-10-21T02:04:41.5636880Z # cancelled 0
+2026-10-21T02:04:41.5637184Z # skipped 0
+2026-10-21T02:04:41.5637519Z # todo 0
+2026-10-21T02:04:41.5637862Z # duration_ms 170.081597
+2026-10-21T02:04:41.6334523Z 
+2026-10-21T02:04:41.6335174Z > layerwell@0.1.0 launch:contract:verify
+2026-10-21T02:04:41.6336828Z > npm run launch:contract:check && npm run launch:contract:smoke && npm run ask02:gateway-source-contract:test && npm run photo01:source-contract:test && npm run photo02:source-contract:test && npm run photo03:source-contract:test && npm run photo04:source-contract:test && npm run photo05:trend-admission-source-contract:test && npm run photo07:source-contract:test && npm run com01:commerce-admission-source-contract:test && npm run pay08:ios-win-back-source-contract:test
+2026-10-21T02:04:41.6337903Z 
+2026-10-21T02:04:41.6980680Z 
+2026-10-21T02:04:41.6981511Z > layerwell@0.1.0 launch:contract:check
+2026-10-21T02:04:41.6982110Z > node scripts/launch/check-contract.mjs
+2026-10-21T02:04:41.6982308Z 
+2026-10-21T02:04:41.7197821Z iOS lean V1 launch contract
+2026-10-21T02:04:41.7198568Z Path: docs/hugeToDo/launch-contract.json
+2026-10-21T02:04:41.7199325Z Program: ios-lean-v1-2026
+2026-10-21T02:04:41.7200249Z Platforms: ios
+2026-10-21T02:04:41.7200726Z Mode: lean-v1
+2026-10-21T02:04:41.7201080Z Required features: 10
+2026-10-21T02:04:41.7201806Z Deferred features: 10
+2026-10-21T02:04:41.7202268Z Required optional Phase 7/8 surfaces: 0
+2026-10-21T02:04:41.7202866Z iOS release evidence: required
+2026-10-21T02:04:41.7203309Z Android release evidence: not_applicable
+2026-10-21T02:04:41.7203797Z Launch contract is valid.
+2026-10-21T02:04:41.7882031Z 
+2026-10-21T02:04:41.7882871Z > layerwell@0.1.0 launch:contract:smoke
+2026-10-21T02:04:41.7883523Z > node scripts/launch/contract-smoke.mjs
+2026-10-21T02:04:41.7883755Z 
+2026-10-21T02:04:41.8124895Z Lean V1 launch contract smoke tests passed.
+2026-10-21T02:04:41.8797250Z 
+2026-10-21T02:04:41.8798053Z > layerwell@0.1.0 ask02:gateway-source-contract:test
+2026-10-21T02:04:41.8799207Z > node --test scripts/ask02/ask-gateway-source-contract.test.mjs && deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/ask-layerwell/*.test.ts
+2026-10-21T02:04:41.8799790Z 
+2026-10-21T02:04:41.9088292Z TAP version 13
+2026-10-21T02:04:42.4150163Z # Subtest: current ASK-02 executable source contract passes
+2026-10-21T02:04:42.4168132Z ok 1 - current ASK-02 executable source contract passes
+2026-10-21T02:04:42.4182928Z   ---
+2026-10-21T02:04:42.4183366Z   duration_ms: 41.079722
+2026-10-21T02:04:42.4183650Z   type: 'test'
+2026-10-21T02:04:42.4183889Z   ...
+2026-10-21T02:04:42.4184409Z # Subtest: comments and dead text cannot forge disabled executable admission
+2026-10-21T02:04:42.4184908Z ok 2 - comments and dead text cannot forge disabled executable admission
+2026-10-21T02:04:42.4185375Z   ---
+2026-10-21T02:04:42.4185613Z   duration_ms: 17.699184
+2026-10-21T02:04:42.4185862Z   type: 'test'
+2026-10-21T02:04:42.4186068Z   ...
+2026-10-21T02:04:42.4186407Z # Subtest: auth and adjacent purpose-consent ordering are AST anchored
+2026-10-21T02:04:42.4186862Z ok 3 - auth and adjacent purpose-consent ordering are AST anchored
+2026-10-21T02:04:42.4187575Z   ---
+2026-10-21T02:04:42.4187797Z   duration_ms: 85.800417
+2026-10-21T02:04:42.4188029Z   type: 'test'
+2026-10-21T02:04:42.4188443Z   ...
+2026-10-21T02:04:42.4188813Z # Subtest: dead comments cannot forge registry-authority quarantine
+2026-10-21T02:04:42.4189244Z ok 4 - dead comments cannot forge registry-authority quarantine
+2026-10-21T02:04:42.4189544Z   ---
+2026-10-21T02:04:42.4189755Z   duration_ms: 7.253494
+2026-10-21T02:04:42.4190009Z   type: 'test'
+2026-10-21T02:04:42.4190222Z   ...
+2026-10-21T02:04:42.4190576Z # Subtest: provider SDK imports and credential environment reads are rejected
+2026-10-21T02:04:42.4191019Z ok 5 - provider SDK imports and credential environment reads are rejected
+2026-10-21T02:04:42.4191323Z   ---
+2026-10-21T02:04:42.4191551Z   duration_ms: 22.933842
+2026-10-21T02:04:42.4191778Z   type: 'test'
+2026-10-21T02:04:42.4191969Z   ...
+2026-10-21T02:04:42.4192452Z # Subtest: endpoint cannot inject a fingerprint implementation
+2026-10-21T02:04:42.4192939Z ok 6 - endpoint cannot inject a fingerprint implementation
+2026-10-21T02:04:42.4193255Z   ---
+2026-10-21T02:04:42.4193463Z   duration_ms: 12.84432
+2026-10-21T02:04:42.4193674Z   type: 'test'
+2026-10-21T02:04:42.4193931Z   ...
+2026-10-21T02:04:42.4194261Z # Subtest: manifest, config, package, and launch wiring mutations fail closed
+2026-10-21T02:04:42.4194721Z ok 7 - manifest, config, package, and launch wiring mutations fail closed
+2026-10-21T02:04:42.4195023Z   ---
+2026-10-21T02:04:42.4195218Z   duration_ms: 29.681346
+2026-10-21T02:04:42.4195470Z   type: 'test'
+2026-10-21T02:04:42.4195699Z   ...
+2026-10-21T02:04:42.4318899Z 1..7
+2026-10-21T02:04:42.4319282Z # tests 7
+2026-10-21T02:04:42.4319560Z # suites 0
+2026-10-21T02:04:42.4319805Z # pass 7
+2026-10-21T02:04:42.4320013Z # fail 0
+2026-10-21T02:04:42.4320291Z # cancelled 0
+2026-10-21T02:04:42.4320515Z # skipped 0
+2026-10-21T02:04:42.4320714Z # todo 0
+2026-10-21T02:04:42.4320963Z # duration_ms 530.857071
+2026-10-21T02:04:43.1868358Z [0m[38;5;245mrunning 2 tests from ./supabase/functions/ask-layerwell/consentAdmission.test.ts[0m
+2026-10-21T02:04:43.1873383Z purpose consent requires exact owner-scoped generation and base-health epoch ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.1875236Z purpose consent rejects missing, withdrawn, placeholder, malformed, and unavailable receipts ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.2429870Z [0m[38;5;245mrunning 2 tests from ./supabase/functions/ask-layerwell/contract.test.ts[0m
+2026-10-21T02:04:43.2436640Z ASK gateway request accepts only the exact minimized English contract ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.2440106Z ASK gateway request rejects malformed identity, purpose, locale, and unbounded fields ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3024390Z [0m[38;5;245mrunning 13 tests from ./supabase/functions/ask-layerwell/gatewayCore.test.ts[0m
+2026-10-21T02:04:43.3139924Z full canonical request fingerprint is bound atomically before provider work ... [0m[32mok[0m [0m[38;5;245m(11ms)[0m
+2026-10-21T02:04:43.3142883Z strict runtime config rejects malformed and out-of-range values before quota/provider ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3149509Z throwing request coercion is redacted before fingerprint and reservation ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3169258Z every reservation variant is exact and identity-bound before provider work ... [0m[32mok[0m [0m[38;5;245m(1ms)[0m
+2026-10-21T02:04:43.3178826Z provider and stored outputs require exact keys and canonical construction ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3182629Z live provider output is snapshotted once before validation and delivery ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3186207Z stored replay output is snapshotted once before validation and delivery ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3191341Z replay fingerprint mismatch fails and replay bypasses circuit admission ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.3206776Z circuit admission is exact, bounded, and releases before failing closed ... [0m[32mok[0m [0m[38;5;245m(1ms)[0m
+2026-10-21T02:04:43.3212337Z throwing reservation and replay proxies are redacted before provider ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.5740309Z ambiguous timeout receives exactly one provider attempt ... [0m[32mok[0m [0m[38;5;245m(252ms)[0m
+2026-10-21T02:04:43.5747488Z rate-limit failures receive exactly one provider attempt ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-21T02:04:43.5775918Z quota denials, disabled gateway, bounds, and commit failures fail closed ... [0m[32mok[0m [0m[38;5;245m(2ms)[0m
+2026-10-21T02:04:43.5805045Z 
+2026-10-21T02:04:43.5806809Z [0m[32mok[0m | 17 passed | 0 failed [0m[38;5;245m(393ms)[0m
+2026-10-21T02:04:43.5807066Z 
+2026-10-21T02:04:43.6574508Z 
+2026-10-21T02:04:43.6575272Z > layerwell@0.1.0 photo01:source-contract:test
+2026-10-21T02:04:43.6575811Z > node --test scripts/photo01/photo01-source-contract.test.mjs
+2026-10-21T02:04:43.6576040Z 
+2026-10-21T02:04:43.6872449Z TAP version 13
+2026-10-21T02:04:43.7163451Z # Subtest: the repository satisfies the aggregate PHOTO-01 source contract
+2026-10-21T02:04:43.7165684Z ok 1 - the repository satisfies the aggregate PHOTO-01 source contract
+2026-10-21T02:04:43.7166239Z   ---
+2026-10-21T02:04:43.7166656Z   duration_ms: 2.155228
+2026-10-21T02:04:43.7167082Z   type: 'test'
+2026-10-21T02:04:43.7167393Z   ...
+2026-10-21T02:04:43.7167902Z # Subtest: the contract rejects thumbnail network capability
+2026-10-21T02:04:43.7169586Z ok 2 - the contract rejects thumbnail network capability
+2026-10-21T02:04:43.7170462Z   ---
+2026-10-21T02:04:43.7171037Z   duration_ms: 0.617566
+2026-10-21T02:04:43.7171381Z   type: 'test'
+2026-10-21T02:04:43.7171841Z   ...
+2026-10-21T02:04:43.7174259Z # Subtest: the contract rejects raw deletion before metadata publication
+2026-10-21T02:04:43.7175237Z ok 3 - the contract rejects raw deletion before metadata publication
+2026-10-21T02:04:43.7176017Z   ---
+2026-10-21T02:04:43.7177175Z   duration_ms: 1.054865
+2026-10-21T02:04:43.7177778Z   type: 'test'
+2026-10-21T02:04:43.7178580Z   ...
+2026-10-21T02:04:43.7179214Z # Subtest: the contract rejects omission of thumbnail deletion
+2026-10-21T02:04:43.7179875Z ok 4 - the contract rejects omission of thumbnail deletion
+2026-10-21T02:04:43.7180300Z   ---
+2026-10-21T02:04:43.7180731Z   duration_ms: 0.366092
+2026-10-21T02:04:43.7181352Z   type: 'test'
+2026-10-21T02:04:43.7181706Z   ...
+2026-10-21T02:04:43.7223034Z 1..4
+2026-10-21T02:04:43.7223485Z # tests 4
+2026-10-21T02:04:43.7223874Z # suites 0
+2026-10-21T02:04:43.7224178Z # pass 4
+2026-10-21T02:04:43.7224479Z # fail 0
+2026-10-21T02:04:43.7224772Z # cancelled 0
+2026-10-21T02:04:43.7225102Z # skipped 0
+2026-10-21T02:04:43.7225377Z # todo 0
+2026-10-21T02:04:43.7225714Z # duration_ms 43.156643
+2026-10-21T02:04:43.7906362Z 
+2026-10-21T02:04:43.7907141Z > layerwell@0.1.0 photo02:source-contract:test
+2026-10-21T02:04:43.7907640Z > node --test scripts/photo02/photo02-source-contract.test.mjs
+2026-10-21T02:04:43.7907971Z 
+2026-10-21T02:04:43.8200421Z TAP version 13
+2026-10-21T02:04:44.5549283Z # Subtest: the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+2026-10-21T02:04:44.5551440Z ok 1 - the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+2026-10-21T02:04:44.5552243Z   ---
+2026-10-21T02:04:44.5553155Z   duration_ms: 103.493009
+2026-10-21T02:04:44.5553579Z   type: 'test'
+2026-10-21T02:04:44.5554120Z   ...
+2026-10-21T02:04:44.5556463Z # Subtest: rejects an additive Stack mounted before AppLockProvider
+2026-10-21T02:04:44.5557528Z ok 2 - rejects an additive Stack mounted before AppLockProvider
+2026-10-21T02:04:44.5558085Z   ---
+2026-10-21T02:04:44.5558580Z   duration_ms: 31.022137
+2026-10-21T02:04:44.5559007Z   type: 'test'
+2026-10-21T02:04:44.5559306Z   ...
+2026-10-21T02:04:44.5560654Z # Subtest: rejects additive children mounted before the loaded decision
+2026-10-21T02:04:44.5561301Z ok 3 - rejects additive children mounted before the loaded decision
+2026-10-21T02:04:44.5561765Z   ---
+2026-10-21T02:04:44.5562129Z   duration_ms: 27.679789
+2026-10-21T02:04:44.5562478Z   type: 'test'
+2026-10-21T02:04:44.5562765Z   ...
+2026-10-21T02:04:44.5563397Z # Subtest: rejects an early corrupt preference unlock
+2026-10-21T02:04:44.5563928Z ok 4 - rejects an early corrupt preference unlock
+2026-10-21T02:04:44.5564472Z   ---
+2026-10-21T02:04:44.5564775Z   duration_ms: 23.668308
+2026-10-21T02:04:44.5565100Z   type: 'test'
+2026-10-21T02:04:44.5565438Z   ...
+2026-10-21T02:04:44.5565917Z # Subtest: rejects an early unsupported_version preference unlock
+2026-10-21T02:04:44.5566500Z ok 5 - rejects an early unsupported_version preference unlock
+2026-10-21T02:04:44.5566965Z   ---
+2026-10-21T02:04:44.5567235Z   duration_ms: 23.722126
+2026-10-21T02:04:44.5567588Z   type: 'test'
+2026-10-21T02:04:44.5567921Z   ...
+2026-10-21T02:04:44.5568752Z # Subtest: rejects unauthenticated preference disable
+2026-10-21T02:04:44.5569346Z ok 6 - rejects unauthenticated preference disable
+2026-10-21T02:04:44.5569675Z   ---
+2026-10-21T02:04:44.5570006Z   duration_ms: 19.736107
+2026-10-21T02:04:44.5570345Z   type: 'test'
+2026-10-21T02:04:44.5570613Z   ...
+2026-10-21T02:04:44.5571024Z # Subtest: rejects an additive unauthenticated setLocked(false)
+2026-10-21T02:04:44.5571561Z ok 7 - rejects an additive unauthenticated setLocked(false)
+2026-10-21T02:04:44.5571997Z   ---
+2026-10-21T02:04:44.5572309Z   duration_ms: 16.114892
+2026-10-21T02:04:44.5572615Z   type: 'test'
+2026-10-21T02:04:44.5572908Z   ...
+2026-10-21T02:04:44.5573374Z # Subtest: rejects usePhotos in the route component before PhotoTimelineLockGate
+2026-10-21T02:04:44.5615152Z ok 8 - rejects usePhotos in the route component before PhotoTimelineLockGate
+2026-10-21T02:04:44.5627888Z   ---
+2026-10-21T02:04:44.5641683Z   duration_ms: 23.586071
+2026-10-21T02:04:44.5642249Z   type: 'test'
+2026-10-21T02:04:44.5642496Z   ...
+2026-10-21T02:04:44.5642878Z # Subtest: rejects malformed-preference deletion moved before authentication
+2026-10-21T02:04:44.5643723Z ok 9 - rejects malformed-preference deletion moved before authentication
+2026-10-21T02:04:44.5644072Z   ---
+2026-10-21T02:04:44.5644288Z   duration_ms: 24.127718
+2026-10-21T02:04:44.5644530Z   type: 'test'
+2026-10-21T02:04:44.5644748Z   ...
+2026-10-21T02:04:44.5645194Z # Subtest: rejects native success publication without current-request revalidation
+2026-10-21T02:04:44.5645696Z ok 10 - rejects native success publication without current-request revalidation
+2026-10-21T02:04:44.5646029Z   ---
+2026-10-21T02:04:44.5646235Z   duration_ms: 16.410309
+2026-10-21T02:04:44.5646469Z   type: 'test'
+2026-10-21T02:04:44.5646768Z   ...
+2026-10-21T02:04:44.5647165Z # Subtest: rejects a preference authentication failure guard weakened with && false
+2026-10-21T02:04:44.5647627Z ok 11 - rejects a preference authentication failure guard weakened with && false
+2026-10-21T02:04:44.5647956Z   ---
+2026-10-21T02:04:44.5648335Z   duration_ms: 16.740227
+2026-10-21T02:04:44.5648610Z   type: 'test'
+2026-10-21T02:04:44.5648861Z   ...
+2026-10-21T02:04:44.5649193Z # Subtest: rejects a reset authentication failure guard weakened with && false
+2026-10-21T02:04:44.5649628Z ok 12 - rejects a reset authentication failure guard weakened with && false
+2026-10-21T02:04:44.5649943Z   ---
+2026-10-21T02:04:44.5650160Z   duration_ms: 16.251001
+2026-10-21T02:04:44.5650426Z   type: 'test'
+2026-10-21T02:04:44.5650627Z   ...
+2026-10-21T02:04:44.5650930Z # Subtest: rejects provider success dominance weakened with || true
+2026-10-21T02:04:44.5651336Z ok 13 - rejects provider success dominance weakened with || true
+2026-10-21T02:04:44.5651634Z   ---
+2026-10-21T02:04:44.5651840Z   duration_ms: 14.671785
+2026-10-21T02:04:44.5652096Z   type: 'test'
+2026-10-21T02:04:44.5652301Z   ...
+2026-10-21T02:04:44.5652699Z # Subtest: rejects timeline unlock predicate weakened with || true
+2026-10-21T02:04:44.5653402Z ok 14 - rejects timeline unlock predicate weakened with || true
+2026-10-21T02:04:44.5653703Z   ---
+2026-10-21T02:04:44.5653911Z   duration_ms: 20.127727
+2026-10-21T02:04:44.5654180Z   type: 'test'
+2026-10-21T02:04:44.5654419Z   ...
+2026-10-21T02:04:44.5654725Z # Subtest: rejects private readiness predicate weakened with || true
+2026-10-21T02:04:44.5655138Z ok 15 - rejects private readiness predicate weakened with || true
+2026-10-21T02:04:44.5655424Z   ---
+2026-10-21T02:04:44.5655662Z   duration_ms: 17.565953
+2026-10-21T02:04:44.5655912Z   type: 'test'
+2026-10-21T02:04:44.5656115Z   ...
+2026-10-21T02:04:44.5656435Z # Subtest: rejects an aliased photo hook call before the timeline gate
+2026-10-21T02:04:44.5656833Z ok 16 - rejects an aliased photo hook call before the timeline gate
+2026-10-21T02:04:44.5657104Z   ---
+2026-10-21T02:04:44.5657383Z   duration_ms: 17.024382
+2026-10-21T02:04:44.5657605Z   type: 'test'
+2026-10-21T02:04:44.5657815Z   ...
+2026-10-21T02:04:44.5658338Z # Subtest: rejects preference authentication failure falling through after its return is removed
+2026-10-21T02:04:44.5658911Z ok 17 - rejects preference authentication failure falling through after its return is removed
+2026-10-21T02:04:44.5659349Z   ---
+2026-10-21T02:04:44.5659551Z   duration_ms: 13.013306
+2026-10-21T02:04:44.5659792Z   type: 'test'
+2026-10-21T02:04:44.5660038Z   ...
+2026-10-21T02:04:44.5660474Z # Subtest: rejects reset authentication failure falling through after its return is removed
+2026-10-21T02:04:44.5661146Z ok 18 - rejects reset authentication failure falling through after its return is removed
+2026-10-21T02:04:44.5661681Z   ---
+2026-10-21T02:04:44.5661975Z   duration_ms: 13.180341
+2026-10-21T02:04:44.5662296Z   type: 'test'
+2026-10-21T02:04:44.5662558Z   ...
+2026-10-21T02:04:44.5791699Z 1..18
+2026-10-21T02:04:44.5792090Z # tests 18
+2026-10-21T02:04:44.5792689Z # suites 0
+2026-10-21T02:04:44.5792966Z # pass 18
+2026-10-21T02:04:44.5793245Z # fail 0
+2026-10-21T02:04:44.5793578Z # cancelled 0
+2026-10-21T02:04:44.5793891Z # skipped 0
+2026-10-21T02:04:44.5794212Z # todo 0
+2026-10-21T02:04:44.5794501Z # duration_ms 766.995846
+2026-10-21T02:04:44.6474514Z 
+2026-10-21T02:04:44.6475612Z > layerwell@0.1.0 photo03:source-contract:test
+2026-10-21T02:04:44.6476461Z > node --test scripts/photo03/photo03-source-contract.test.mjs
+2026-10-21T02:04:44.6476815Z 
+2026-10-21T02:04:44.6818460Z TAP version 13
+2026-10-21T02:04:45.1586179Z # Subtest: repository satisfies aggregate PHOTO-03 AST/dataflow contract
+2026-10-21T02:04:45.1590509Z ok 1 - repository satisfies aggregate PHOTO-03 AST/dataflow contract
+2026-10-21T02:04:45.1591592Z   ---
+2026-10-21T02:04:45.1591969Z   duration_ms: 55.895052
+2026-10-21T02:04:45.1592379Z   type: 'test'
+2026-10-21T02:04:45.1592657Z   ...
+2026-10-21T02:04:45.1594271Z # Subtest: rejects enabling native face tracking
+2026-10-21T02:04:45.1596551Z ok 2 - rejects enabling native face tracking
+2026-10-21T02:04:45.1596987Z   ---
+2026-10-21T02:04:45.1597342Z   duration_ms: 17.590563
+2026-10-21T02:04:45.1597732Z   type: 'test'
+2026-10-21T02:04:45.1598076Z   ...
+2026-10-21T02:04:45.1598728Z # Subtest: rejects adding identity-capable face observation fields
+2026-10-21T02:04:45.1599510Z ok 3 - rejects adding identity-capable face observation fields
+2026-10-21T02:04:45.1600012Z   ---
+2026-10-21T02:04:45.1600231Z   duration_ms: 17.155571
+2026-10-21T02:04:45.1600462Z   type: 'test'
+2026-10-21T02:04:45.1600724Z   ...
+2026-10-21T02:04:45.1601201Z # Subtest: rejects matched framing without complete pose signals
+2026-10-21T02:04:45.1601975Z ok 4 - rejects matched framing without complete pose signals
+2026-10-21T02:04:45.1602573Z   ---
+2026-10-21T02:04:45.1603386Z   duration_ms: 12.017393
+2026-10-21T02:04:45.1603769Z   type: 'test'
+2026-10-21T02:04:45.1604073Z   ...
+2026-10-21T02:04:45.1604509Z # Subtest: rejects raw native face publication
+2026-10-21T02:04:45.1604972Z ok 5 - rejects raw native face publication
+2026-10-21T02:04:45.1605335Z   ---
+2026-10-21T02:04:45.1605677Z   duration_ms: 10.015611
+2026-10-21T02:04:45.1606474Z   type: 'test'
+2026-10-21T02:04:45.1652263Z   ...
+2026-10-21T02:04:45.1652865Z # Subtest: rejects lighting success before plaintext cleanup
+2026-10-21T02:04:45.1653485Z ok 6 - rejects lighting success before plaintext cleanup
+2026-10-21T02:04:45.1653906Z   ---
+2026-10-21T02:04:45.1654180Z   duration_ms: 10.483123
+2026-10-21T02:04:45.1654526Z   type: 'test'
+2026-10-21T02:04:45.1654808Z   ...
+2026-10-21T02:04:45.1655166Z # Subtest: rejects network egress added to capture analysis
+2026-10-21T02:04:45.1655692Z ok 7 - rejects network egress added to capture analysis
+2026-10-21T02:04:45.1656041Z   ---
+2026-10-21T02:04:45.1656360Z   duration_ms: 9.417865
+2026-10-21T02:04:45.1656671Z   type: 'test'
+2026-10-21T02:04:45.1656912Z   ...
+2026-10-21T02:04:45.1657321Z # Subtest: rejects production-accessible analysis fixtures
+2026-10-21T02:04:45.1657813Z ok 8 - rejects production-accessible analysis fixtures
+2026-10-21T02:04:45.1658373Z   ---
+2026-10-21T02:04:45.1658733Z   duration_ms: 9.024604
+2026-10-21T02:04:45.1659031Z   type: 'test'
+2026-10-21T02:04:45.1659342Z   ...
+2026-10-21T02:04:45.1659781Z # Subtest: rejects an object spread that overrides disabled detector options
+2026-10-21T02:04:45.1660415Z ok 9 - rejects an object spread that overrides disabled detector options
+2026-10-21T02:04:45.1660867Z   ---
+2026-10-21T02:04:45.1661165Z   duration_ms: 9.930665
+2026-10-21T02:04:45.1661491Z   type: 'test'
+2026-10-21T02:04:45.1661750Z   ...
+2026-10-21T02:04:45.1662173Z # Subtest: rejects pose completeness replaced with a true initializer
+2026-10-21T02:04:45.1662786Z ok 10 - rejects pose completeness replaced with a true initializer
+2026-10-21T02:04:45.1663192Z   ---
+2026-10-21T02:04:45.1663512Z   duration_ms: 6.744077
+2026-10-21T02:04:45.1663816Z   type: 'test'
+2026-10-21T02:04:45.1664093Z   ...
+2026-10-21T02:04:45.1664595Z # Subtest: rejects an effective 4096px lighting resize while the bounded constant remains
+2026-10-21T02:04:45.1665231Z ok 11 - rejects an effective 4096px lighting resize while the bounded constant remains
+2026-10-21T02:04:45.1665722Z   ---
+2026-10-21T02:04:45.1665974Z   duration_ms: 8.767734
+2026-10-21T02:04:45.1666245Z   type: 'test'
+2026-10-21T02:04:45.1666518Z   ...
+2026-10-21T02:04:45.1667266Z # Subtest: rejects cleanupOwnedSample returning before owned cleanup
+2026-10-21T02:04:45.1667894Z ok 12 - rejects cleanupOwnedSample returning before owned cleanup
+2026-10-21T02:04:45.1668494Z   ---
+2026-10-21T02:04:45.1668813Z   duration_ms: 9.083538
+2026-10-21T02:04:45.1669120Z   type: 'test'
+2026-10-21T02:04:45.1669372Z   ...
+2026-10-21T02:04:45.1669685Z # Subtest: rejects aliased expo fetch egress
+2026-10-21T02:04:45.1670118Z ok 13 - rejects aliased expo fetch egress
+2026-10-21T02:04:45.1670467Z   ---
+2026-10-21T02:04:45.1670731Z   duration_ms: 7.419599
+2026-10-21T02:04:45.1671024Z   type: 'test'
+2026-10-21T02:04:45.1671301Z   ...
+2026-10-21T02:04:45.1824504Z 1..13
+2026-10-21T02:04:45.1824974Z # tests 13
+2026-10-21T02:04:45.1825214Z # suites 0
+2026-10-21T02:04:45.1825463Z # pass 13
+2026-10-21T02:04:45.1825707Z # fail 0
+2026-10-21T02:04:45.1825906Z # cancelled 0
+2026-10-21T02:04:45.1826116Z # skipped 0
+2026-10-21T02:04:45.1826362Z # todo 0
+2026-10-21T02:04:45.1826595Z # duration_ms 508.423059
+2026-10-21T02:04:45.2500162Z 
+2026-10-21T02:04:45.2501182Z > layerwell@0.1.0 photo04:source-contract:test
+2026-10-21T02:04:45.2501651Z > node --test scripts/photo04/photo04-source-contract.test.mjs
+2026-10-21T02:04:45.2501892Z 
+2026-10-21T02:04:45.2789172Z TAP version 13
+2026-10-21T02:04:45.7775882Z # Subtest: repository satisfies aggregate PHOTO-04 AST/control-flow contract
+2026-10-21T02:04:45.7781403Z ok 1 - repository satisfies aggregate PHOTO-04 AST/control-flow contract
+2026-10-21T02:04:45.7781982Z   ---
+2026-10-21T02:04:45.7782532Z   duration_ms: 53.58999
+2026-10-21T02:04:45.7783010Z   type: 'test'
+2026-10-21T02:04:45.7783402Z   ...
+2026-10-21T02:04:45.7786926Z # Subtest: rejects background playback that remains active
+2026-10-21T02:04:45.7788784Z ok 2 - rejects background playback that remains active
+2026-10-21T02:04:45.7789880Z   ---
+2026-10-21T02:04:45.7790252Z   duration_ms: 16.491646
+2026-10-21T02:04:45.7790665Z   type: 'test'
+2026-10-21T02:04:45.7790904Z   ...
+2026-10-21T02:04:45.7791187Z # Subtest: rejects foreground auto-resume
+2026-10-21T02:04:45.7792382Z ok 3 - rejects foreground auto-resume
+2026-10-21T02:04:45.7793057Z   ---
+2026-10-21T02:04:45.7793365Z   duration_ms: 18.555626
+2026-10-21T02:04:45.7793629Z   type: 'test'
+2026-10-21T02:04:45.7793853Z   ...
+2026-10-21T02:04:45.7794415Z # Subtest: rejects playback admission without Reduce Motion protection
+2026-10-21T02:04:45.7795423Z ok 4 - rejects playback admission without Reduce Motion protection
+2026-10-21T02:04:45.7795978Z   ---
+2026-10-21T02:04:45.7796369Z   duration_ms: 10.864681
+2026-10-21T02:04:45.7796758Z   type: 'test'
+2026-10-21T02:04:45.7797228Z   ...
+2026-10-21T02:04:45.7797646Z # Subtest: rejects stale frame readiness starting playback
+2026-10-21T02:04:45.7798545Z ok 5 - rejects stale frame readiness starting playback
+2026-10-21T02:04:45.7798947Z   ---
+2026-10-21T02:04:45.7799171Z   duration_ms: 10.267305
+2026-10-21T02:04:45.7799516Z   type: 'test'
+2026-10-21T02:04:45.7799831Z   ...
+2026-10-21T02:04:45.7800290Z # Subtest: rejects dwell timers that do not require a ready displayed frame
+2026-10-21T02:04:45.7800863Z ok 6 - rejects dwell timers that do not require a ready displayed frame
+2026-10-21T02:04:45.7801426Z   ---
+2026-10-21T02:04:45.7801918Z   duration_ms: 10.580412
+2026-10-21T02:04:45.7802428Z   type: 'test'
+2026-10-21T02:04:45.7802869Z   ...
+2026-10-21T02:04:45.7803361Z # Subtest: rejects animated modal transitions
+2026-10-21T02:04:45.7803901Z ok 7 - rejects animated modal transitions
+2026-10-21T02:04:45.7804493Z   ---
+2026-10-21T02:04:45.7804858Z   duration_ms: 9.031252
+2026-10-21T02:04:45.7805207Z   type: 'test'
+2026-10-21T02:04:45.7805517Z   ...
+2026-10-21T02:04:45.7836192Z # Subtest: rejects removal of accessibility escape
+2026-10-21T02:04:45.7881897Z ok 8 - rejects removal of accessibility escape
+2026-10-21T02:04:45.7882536Z   ---
+2026-10-21T02:04:45.7882859Z   duration_ms: 6.924878
+2026-10-21T02:04:45.7883189Z   type: 'test'
+2026-10-21T02:04:45.7883478Z   ...
+2026-10-21T02:04:45.7883780Z # Subtest: rejects direct network capability
+2026-10-21T02:04:45.7884463Z ok 9 - rejects direct network capability
+2026-10-21T02:04:45.7884838Z   ---
+2026-10-21T02:04:45.7885108Z   duration_ms: 10.142009
+2026-10-21T02:04:45.7885389Z   type: 'test'
+2026-10-21T02:04:45.7885627Z   ...
+2026-10-21T02:04:45.7886497Z # Subtest: rejects time-lapse content mounted outside the timeline lock
+2026-10-21T02:04:45.7887081Z ok 10 - rejects time-lapse content mounted outside the timeline lock
+2026-10-21T02:04:45.7887492Z   ---
+2026-10-21T02:04:45.7887759Z   duration_ms: 11.608521
+2026-10-21T02:04:45.7888022Z   type: 'test'
+2026-10-21T02:04:45.7888475Z   ...
+2026-10-21T02:04:45.7888940Z # Subtest: rejects an early active app-state branch that resumes playback
+2026-10-21T02:04:45.7889569Z ok 11 - rejects an early active app-state branch that resumes playback
+2026-10-21T02:04:45.7889934Z   ---
+2026-10-21T02:04:45.7890168Z   duration_ms: 6.592214
+2026-10-21T02:04:45.7890413Z   type: 'test'
+2026-10-21T02:04:45.7890666Z   ...
+2026-10-21T02:04:45.7891163Z # Subtest: rejects reversing frames after the checked oldest-first sort
+2026-10-21T02:04:45.7891871Z ok 12 - rejects reversing frames after the checked oldest-first sort
+2026-10-21T02:04:45.7892210Z   ---
+2026-10-21T02:04:45.7892462Z   duration_ms: 8.361869
+2026-10-21T02:04:45.7892781Z   type: 'test'
+2026-10-21T02:04:45.7893087Z   ...
+2026-10-21T02:04:45.7893545Z # Subtest: rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+2026-10-21T02:04:45.7894066Z ok 13 - rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+2026-10-21T02:04:45.7894420Z   ---
+2026-10-21T02:04:45.7894740Z   duration_ms: 11.356537
+2026-10-21T02:04:45.7895017Z   type: 'test'
+2026-10-21T02:04:45.7895290Z   ...
+2026-10-21T02:04:45.7895652Z # Subtest: rejects an early Reduce Motion branch that keeps playback active
+2026-10-21T02:04:45.7896353Z ok 14 - rejects an early Reduce Motion branch that keeps playback active
+2026-10-21T02:04:45.7896750Z   ---
+2026-10-21T02:04:45.7896984Z   duration_ms: 7.191135
+2026-10-21T02:04:45.7897293Z   type: 'test'
+2026-10-21T02:04:45.7897527Z   ...
+2026-10-21T02:04:45.7897861Z # Subtest: rejects aliased axios network capability
+2026-10-21T02:04:45.7898591Z ok 15 - rejects aliased axios network capability
+2026-10-21T02:04:45.7898898Z   ---
+2026-10-21T02:04:45.7899143Z   duration_ms: 10.036111
+2026-10-21T02:04:45.7899494Z   type: 'test'
+2026-10-21T02:04:45.7899716Z   ...
+2026-10-21T02:04:45.8056266Z 1..15
+2026-10-21T02:04:45.8056659Z # tests 15
+2026-10-21T02:04:45.8057051Z # suites 0
+2026-10-21T02:04:45.8057362Z # pass 15
+2026-10-21T02:04:45.8057727Z # fail 0
+2026-10-21T02:04:45.8058058Z # cancelled 0
+2026-10-21T02:04:45.8058493Z # skipped 0
+2026-10-21T02:04:45.8058782Z # todo 0
+2026-10-21T02:04:45.8059110Z # duration_ms 534.449223
+2026-10-21T02:04:45.8847213Z 
+2026-10-21T02:04:45.8848100Z > layerwell@0.1.0 photo05:trend-admission-source-contract:test
+2026-10-21T02:04:45.8849229Z > node --test scripts/photo05/trend-admission-source-contract.test.mjs
+2026-10-21T02:04:45.8849801Z 
+2026-10-21T02:04:45.9177808Z TAP version 13
+2026-10-21T02:05:02.5625881Z # Subtest: real PHOTO-05A sources enforce immutable literal-zero Trend admission
+2026-10-21T02:05:02.5630171Z ok 1 - real PHOTO-05A sources enforce immutable literal-zero Trend admission
+2026-10-21T02:05:02.5631030Z   ---
+2026-10-21T02:05:02.5631387Z   duration_ms: 716.773906
+2026-10-21T02:05:02.5631771Z   type: 'test'
+2026-10-21T02:05:02.5632079Z   ...
+2026-10-21T02:05:02.5632621Z # Subtest: the audit is deterministic, frozen, path-sorted, and inventory-complete
+2026-10-21T02:05:02.5633393Z ok 2 - the audit is deterministic, frozen, path-sorted, and inventory-complete
+2026-10-21T02:05:02.5633921Z   ---
+2026-10-21T02:05:02.5634277Z   duration_ms: 738.629372
+2026-10-21T02:05:02.5634625Z   type: 'test'
+2026-10-21T02:05:02.5634910Z   ...
+2026-10-21T02:05:02.5635811Z # Subtest: missing checkpoint, runtime, contract, type, and database authority sources fail closed
+2026-10-21T02:05:02.5637128Z ok 3 - missing checkpoint, runtime, contract, type, and database authority sources fail closed
+2026-10-21T02:05:02.5637710Z   ---
+2026-10-21T02:05:02.5638019Z   duration_ms: 17.417999
+2026-10-21T02:05:02.5638566Z   type: 'test'
+2026-10-21T02:05:02.5638929Z   ...
+2026-10-21T02:05:02.5639443Z # Subtest: capability and surface flags cannot be opened or made environment-driven
+2026-10-21T02:05:02.5640175Z ok 4 - capability and surface flags cannot be opened or made environment-driven
+2026-10-21T02:05:02.5640647Z   ---
+2026-10-21T02:05:02.5640935Z   duration_ms: 979.936475
+2026-10-21T02:05:02.5641309Z   type: 'test'
+2026-10-21T02:05:02.5641600Z   ...
+2026-10-21T02:05:02.5643666Z # Subtest: every machine admission field is immutable false and extra keys are rejected
+2026-10-21T02:05:02.5644463Z ok 5 - every machine admission field is immutable false and extra keys are rejected
+2026-10-21T02:05:02.5644886Z   ---
+2026-10-21T02:05:02.5645214Z   duration_ms: 3295.670738
+2026-10-21T02:05:02.5645490Z   type: 'test'
+2026-10-21T02:05:02.5645723Z   ...
+2026-10-21T02:05:02.5646347Z # Subtest: simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+2026-10-21T02:05:02.5647197Z ok 6 - simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+2026-10-21T02:05:02.5647711Z   ---
+2026-10-21T02:05:02.5647962Z   duration_ms: 1893.212609
+2026-10-21T02:05:02.5648373Z   type: 'test'
+2026-10-21T02:05:02.5648806Z   ...
+2026-10-21T02:05:02.5649449Z # Subtest: isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+2026-10-21T02:05:02.5650285Z ok 7 - isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+2026-10-21T02:05:02.5650842Z   ---
+2026-10-21T02:05:02.5651169Z   duration_ms: 1081.295088
+2026-10-21T02:05:02.5651473Z   type: 'test'
+2026-10-21T02:05:02.5652090Z   ...
+2026-10-21T02:05:02.5652598Z # Subtest: disabled routes cannot load or invoke a dynamically required positive receipt factory
+2026-10-21T02:05:02.5653133Z ok 8 - disabled routes cannot load or invoke a dynamically required positive receipt factory
+2026-10-21T02:05:02.5653475Z   ---
+2026-10-21T02:05:02.5653721Z   duration_ms: 281.108708
+2026-10-21T02:05:02.5653955Z   type: 'test'
+2026-10-21T02:05:02.5654187Z   ...
+2026-10-21T02:05:02.5654577Z # Subtest: ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+2026-10-21T02:05:02.5655124Z ok 9 - ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+2026-10-21T02:05:02.5655515Z   ---
+2026-10-21T02:05:02.5655723Z   duration_ms: 280.468464
+2026-10-21T02:05:02.5655967Z   type: 'test'
+2026-10-21T02:05:02.5656171Z   ...
+2026-10-21T02:05:02.5656540Z # Subtest: ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+2026-10-21T02:05:02.5657070Z ok 10 - ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+2026-10-21T02:05:02.5657455Z   ---
+2026-10-21T02:05:02.5669439Z   duration_ms: 543.944177
+2026-10-21T02:05:02.5669855Z   type: 'test'
+2026-10-21T02:05:02.5670251Z   ...
+2026-10-21T02:05:02.5670861Z # Subtest: ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+2026-10-21T02:05:02.5671638Z ok 11 - ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+2026-10-21T02:05:02.5672142Z   ---
+2026-10-21T02:05:02.5672451Z   duration_ms: 1099.429218
+2026-10-21T02:05:02.5672817Z   type: 'test'
+2026-10-21T02:05:02.5673167Z   ...
+2026-10-21T02:05:02.5673812Z # Subtest: photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+2026-10-21T02:05:02.5674698Z ok 12 - photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+2026-10-21T02:05:02.5675237Z   ---
+2026-10-21T02:05:02.5675561Z   duration_ms: 1384.882145
+2026-10-21T02:05:02.5675937Z   type: 'test'
+2026-10-21T02:05:02.5676208Z   ...
+2026-10-21T02:05:02.5676898Z # Subtest: caller, fixture, legacy, E2E, and development bypasses are rejected
+2026-10-21T02:05:02.5677569Z ok 13 - caller, fixture, legacy, E2E, and development bypasses are rejected
+2026-10-21T02:05:02.5678031Z   ---
+2026-10-21T02:05:02.5678566Z   duration_ms: 1843.750461
+2026-10-21T02:05:02.5678951Z   type: 'test'
+2026-10-21T02:05:02.5679327Z   ...
+2026-10-21T02:05:02.5679828Z # Subtest: positive consent grants and enabled consent-choice delegation are rejected
+2026-10-21T02:05:02.5680541Z ok 14 - positive consent grants and enabled consent-choice delegation are rejected
+2026-10-21T02:05:02.5681025Z   ---
+2026-10-21T02:05:02.5681347Z   duration_ms: 797.662726
+2026-10-21T02:05:02.5681686Z   type: 'test'
+2026-10-21T02:05:02.5682040Z   ...
+2026-10-21T02:05:02.5682658Z # Subtest: direct route analytics and hidden enabled fairness or consent branches are rejected
+2026-10-21T02:05:02.5683435Z ok 15 - direct route analytics and hidden enabled fairness or consent branches are rejected
+2026-10-21T02:05:02.5683946Z   ---
+2026-10-21T02:05:02.5684438Z   duration_ms: 808.074713
+2026-10-21T02:05:02.5684767Z   type: 'test'
+2026-10-21T02:05:02.5685091Z   ...
+2026-10-21T02:05:02.5685638Z # Subtest: Progress and any future production consumer cannot import disabled Trend runtime code
+2026-10-21T02:05:02.5686386Z ok 16 - Progress and any future production consumer cannot import disabled Trend runtime code
+2026-10-21T02:05:02.5686933Z   ---
+2026-10-21T02:05:02.5687189Z   duration_ms: 272.768965
+2026-10-21T02:05:02.5687514Z   type: 'test'
+2026-10-21T02:05:02.5687778Z   ...
+2026-10-21T02:05:02.5688454Z # Subtest: package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+2026-10-21T02:05:02.5689165Z ok 17 - package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+2026-10-21T02:05:02.5689594Z   ---
+2026-10-21T02:05:02.5689895Z   duration_ms: 280.408849
+2026-10-21T02:05:02.5690409Z   type: 'test'
+2026-10-21T02:05:02.5690634Z   ...
+2026-10-21T02:05:02.5905007Z 1..17
+2026-10-21T02:05:02.5905450Z # tests 17
+2026-10-21T02:05:02.5906393Z # suites 0
+2026-10-21T02:05:02.5906677Z # pass 17
+2026-10-21T02:05:02.5906906Z # fail 0
+2026-10-21T02:05:02.5907201Z # cancelled 0
+2026-10-21T02:05:02.5907490Z # skipped 0
+2026-10-21T02:05:02.5921834Z # todo 0
+2026-10-21T02:05:02.5922518Z # duration_ms 16681.661404
+2026-10-21T02:05:02.6587677Z 
+2026-10-21T02:05:02.6588509Z > layerwell@0.1.0 photo07:source-contract:test
+2026-10-21T02:05:02.6589101Z > node --test scripts/photo07/photo07-source-contract.test.mjs
+2026-10-21T02:05:02.6589337Z 
+2026-10-21T02:05:02.6877836Z TAP version 13
+2026-10-21T02:05:03.1197454Z # Subtest: repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+2026-10-21T02:05:03.1200523Z ok 1 - repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+2026-10-21T02:05:03.1201246Z   ---
+2026-10-21T02:05:03.1201910Z   duration_ms: 37.563333
+2026-10-21T02:05:03.1202481Z   type: 'test'
+2026-10-21T02:05:03.1202906Z   ...
+2026-10-21T02:05:03.1205401Z # Subtest: rejects absolute welcome no-egress copy that omits explicit sharing
+2026-10-21T02:05:03.1206712Z ok 2 - rejects absolute welcome no-egress copy that omits explicit sharing
+2026-10-21T02:05:03.1207255Z   ---
+2026-10-21T02:05:03.1207689Z   duration_ms: 15.183286
+2026-10-21T02:05:03.1208115Z   type: 'test'
+2026-10-21T02:05:03.1208681Z   ...
+2026-10-21T02:05:03.1209239Z # Subtest: rejects capture disclosure without device-loss risk
+2026-10-21T02:05:03.1209931Z ok 3 - rejects capture disclosure without device-loss risk
+2026-10-21T02:05:03.1210601Z   ---
+2026-10-21T02:05:03.1211844Z   duration_ms: 12.287733
+2026-10-21T02:05:03.1212270Z   type: 'test'
+2026-10-21T02:05:03.1212672Z   ...
+2026-10-21T02:05:03.1213141Z # Subtest: rejects capture disclosure without the explicit-share exception
+2026-10-21T02:05:03.1213677Z ok 4 - rejects capture disclosure without the explicit-share exception
+2026-10-21T02:05:03.1214093Z   ---
+2026-10-21T02:05:03.1214430Z   duration_ms: 13.046118
+2026-10-21T02:05:03.1214725Z   type: 'test'
+2026-10-21T02:05:03.1215034Z   ...
+2026-10-21T02:05:03.1215755Z # Subtest: rejects enabling Trend while no validated engine ships
+2026-10-21T02:05:03.1216237Z ok 5 - rejects enabling Trend while no validated engine ships
+2026-10-21T02:05:03.1217440Z   ---
+2026-10-21T02:05:03.1217842Z   duration_ms: 7.739827
+2026-10-21T02:05:03.1218470Z   type: 'test'
+2026-10-21T02:05:03.1218929Z   ...
+2026-10-21T02:05:03.1219501Z # Subtest: rejects photo bytes being included in local export
+2026-10-21T02:05:03.1229839Z ok 6 - rejects photo bytes being included in local export
+2026-10-21T02:05:03.1230525Z   ---
+2026-10-21T02:05:03.1231057Z   duration_ms: 7.435231
+2026-10-21T02:05:03.1231431Z   type: 'test'
+2026-10-21T02:05:03.1231821Z   ...
+2026-10-21T02:05:03.1232269Z # Subtest: rejects omission of encrypted photo cleanup
+2026-10-21T02:05:03.1232819Z ok 7 - rejects omission of encrypted photo cleanup
+2026-10-21T02:05:03.1233356Z   ---
+2026-10-21T02:05:03.1233672Z   duration_ms: 6.993677
+2026-10-21T02:05:03.1234085Z   type: 'test'
+2026-10-21T02:05:03.1234438Z   ...
+2026-10-21T02:05:03.1234915Z # Subtest: rejects deletion that hides partial cleanup failure
+2026-10-21T02:05:03.1235562Z ok 8 - rejects deletion that hides partial cleanup failure
+2026-10-21T02:05:03.1235989Z   ---
+2026-10-21T02:05:03.1236356Z   duration_ms: 9.911565
+2026-10-21T02:05:03.1236731Z   type: 'test'
+2026-10-21T02:05:03.1237125Z   ...
+2026-10-21T02:05:03.1237844Z # Subtest: rejects contradictory visible automatic-upload copy appended to welcome
+2026-10-21T02:05:03.1238794Z ok 9 - rejects contradictory visible automatic-upload copy appended to welcome
+2026-10-21T02:05:03.1239374Z   ---
+2026-10-21T02:05:03.1239710Z   duration_ms: 6.18229
+2026-10-21T02:05:03.1240126Z   type: 'test'
+2026-10-21T02:05:03.1240476Z   ...
+2026-10-21T02:05:03.1240953Z # Subtest: rejects visible automatic-backup copy with an intervening also
+2026-10-21T02:05:03.1242062Z ok 10 - rejects visible automatic-backup copy with an intervening also
+2026-10-21T02:05:03.1242539Z   ---
+2026-10-21T02:05:03.1242901Z   duration_ms: 4.407711
+2026-10-21T02:05:03.1243246Z   type: 'test'
+2026-10-21T02:05:03.1243557Z   ...
+2026-10-21T02:05:03.1244035Z # Subtest: rejects a spread overriding the literal disabled Trend flag
+2026-10-21T02:05:03.1244650Z ok 11 - rejects a spread overriding the literal disabled Trend flag
+2026-10-21T02:05:03.1245160Z   ---
+2026-10-21T02:05:03.1245474Z   duration_ms: 5.372487
+2026-10-21T02:05:03.1245816Z   type: 'test'
+2026-10-21T02:05:03.1246176Z   ...
+2026-10-21T02:05:03.1246661Z # Subtest: rejects local cleanup returning immediately at function entry
+2026-10-21T02:05:03.1247327Z ok 12 - rejects local cleanup returning immediately at function entry
+2026-10-21T02:05:03.1247774Z   ---
+2026-10-21T02:05:03.1248082Z   duration_ms: 3.677749
+2026-10-21T02:05:03.1248675Z   type: 'test'
+2026-10-21T02:05:03.1249011Z   ...
+2026-10-21T02:05:03.1249568Z # Subtest: rejects returning immediately before terminal partial-failure propagation
+2026-10-21T02:05:03.1250281Z ok 13 - rejects returning immediately before terminal partial-failure propagation
+2026-10-21T02:05:03.1250736Z   ---
+2026-10-21T02:05:03.1251119Z   duration_ms: 3.763276
+2026-10-21T02:05:03.1251465Z   type: 'test'
+2026-10-21T02:05:03.1251827Z   ...
+2026-10-21T02:05:03.1456111Z 1..13
+2026-10-21T02:05:03.1456486Z # tests 13
+2026-10-21T02:05:03.1456848Z # suites 0
+2026-10-21T02:05:03.1457108Z # pass 13
+2026-10-21T02:05:03.1457393Z # fail 0
+2026-10-21T02:05:03.1457693Z # cancelled 0
+2026-10-21T02:05:03.1457925Z # skipped 0
+2026-10-21T02:05:03.1458140Z # todo 0
+2026-10-21T02:05:03.1458485Z # duration_ms 465.548038
+2026-10-21T02:05:03.2157726Z 
+2026-10-21T02:05:03.2158928Z > layerwell@0.1.0 com01:commerce-admission-source-contract:test
+2026-10-21T02:05:03.2159728Z > node --test scripts/com01/commerce-admission-source-contract.test.mjs
+2026-10-21T02:05:03.2160055Z 
+2026-10-21T02:05:03.2460718Z TAP version 13
+2026-10-21T02:05:19.5317257Z # Subtest: current COM-01A commerce source snapshot passes
+2026-10-21T02:05:19.5320084Z ok 1 - current COM-01A commerce source snapshot passes
+2026-10-21T02:05:19.5320551Z   ---
+2026-10-21T02:05:19.5350208Z   duration_ms: 769.780846
+2026-10-21T02:05:19.5389309Z   type: 'test'
+2026-10-21T02:05:19.5389876Z   ...
+2026-10-21T02:05:19.5417389Z # Subtest: missing authority files fail closed
+2026-10-21T02:05:19.5422449Z ok 2 - missing authority files fail closed
+2026-10-21T02:05:19.5423079Z   ---
+2026-10-21T02:05:19.5423399Z   duration_ms: 16.54485
+2026-10-21T02:05:19.5423695Z   type: 'test'
+2026-10-21T02:05:19.5424098Z   ...
+2026-10-21T02:05:19.5424552Z # Subtest: environment and literal capability bypasses are rejected
+2026-10-21T02:05:19.5425125Z ok 3 - environment and literal capability bypasses are rejected
+2026-10-21T02:05:19.5425454Z   ---
+2026-10-21T02:05:19.5425659Z   duration_ms: 807.149925
+2026-10-21T02:05:19.5425925Z   type: 'test'
+2026-10-21T02:05:19.5426175Z   ...
+2026-10-21T02:05:19.5426498Z # Subtest: machine admission cannot be opened or extended
+2026-10-21T02:05:19.5426851Z ok 4 - machine admission cannot be opened or extended
+2026-10-21T02:05:19.5427099Z   ---
+2026-10-21T02:05:19.5427340Z   duration_ms: 733.295933
+2026-10-21T02:05:19.5427581Z   type: 'test'
+2026-10-21T02:05:19.5427824Z   ...
+2026-10-21T02:05:19.5428153Z # Subtest: direct commerce routes cannot add consent, analytics, or state reads
+2026-10-21T02:05:19.5428805Z ok 5 - direct commerce routes cannot add consent, analytics, or state reads
+2026-10-21T02:05:19.5429149Z   ---
+2026-10-21T02:05:19.5429376Z   duration_ms: 728.569267
+2026-10-21T02:05:19.5429645Z   type: 'test'
+2026-10-21T02:05:19.5429845Z   ...
+2026-10-21T02:05:19.5430202Z # Subtest: commerce layout must remain a transparent Slot without refusal or canonicalization
+2026-10-21T02:05:19.5430739Z ok 6 - commerce layout must remain a transparent Slot without refusal or canonicalization
+2026-10-21T02:05:19.5431088Z   ---
+2026-10-21T02:05:19.5431339Z   duration_ms: 1399.250389
+2026-10-21T02:05:19.5431910Z   type: 'test'
+2026-10-21T02:05:19.5432101Z   ...
+2026-10-21T02:05:19.5432499Z # Subtest: shared commerce recovery cannot regain analytics, network, or unguarded telemetry
+2026-10-21T02:05:19.5433122Z ok 7 - shared commerce recovery cannot regain analytics, network, or unguarded telemetry
+2026-10-21T02:05:19.5433525Z   ---
+2026-10-21T02:05:19.5433786Z   duration_ms: 693.060535
+2026-10-21T02:05:19.5434061Z   type: 'test'
+2026-10-21T02:05:19.5434377Z   ...
+2026-10-21T02:05:19.5434811Z # Subtest: concrete commerce routes cannot redirect or canonicalize direct URLs
+2026-10-21T02:05:19.5435382Z ok 8 - concrete commerce routes cannot redirect or canonicalize direct URLs
+2026-10-21T02:05:19.5435697Z   ---
+2026-10-21T02:05:19.5435892Z   duration_ms: 355.511587
+2026-10-21T02:05:19.5436165Z   type: 'test'
+2026-10-21T02:05:19.5436368Z   ...
+2026-10-21T02:05:19.5437243Z # Subtest: development retailer fixtures and reviewer bypasses are rejected
+2026-10-21T02:05:19.5437683Z ok 9 - development retailer fixtures and reviewer bypasses are rejected
+2026-10-21T02:05:19.5437986Z   ---
+2026-10-21T02:05:19.5438397Z   duration_ms: 723.956959
+2026-10-21T02:05:19.5438634Z   type: 'test'
+2026-10-21T02:05:19.5438851Z   ...
+2026-10-21T02:05:19.5439164Z # Subtest: catalog reads and click writes are rejected
+2026-10-21T02:05:19.5439488Z ok 10 - catalog reads and click writes are rejected
+2026-10-21T02:05:19.5439791Z   ---
+2026-10-21T02:05:19.5439992Z   duration_ms: 802.35345
+2026-10-21T02:05:19.5440308Z   type: 'test'
+2026-10-21T02:05:19.5440572Z   ...
+2026-10-21T02:05:19.5441078Z # Subtest: dormant consent, disclosure, and attribution helpers cannot issue a positive result
+2026-10-21T02:05:19.5441764Z ok 11 - dormant consent, disclosure, and attribution helpers cannot issue a positive result
+2026-10-21T02:05:19.5442202Z   ---
+2026-10-21T02:05:19.5442415Z   duration_ms: 1430.307908
+2026-10-21T02:05:19.5442653Z   type: 'test'
+2026-10-21T02:05:19.5442873Z   ...
+2026-10-21T02:05:19.5443306Z # Subtest: dormant presentation modules cannot gain a production consumer
+2026-10-21T02:05:19.5444035Z ok 12 - dormant presentation modules cannot gain a production consumer
+2026-10-21T02:05:19.5444545Z   ---
+2026-10-21T02:05:19.5445156Z   duration_ms: 697.520145
+2026-10-21T02:05:19.5445592Z   type: 'test'
+2026-10-21T02:05:19.5445992Z   ...
+2026-10-21T02:05:19.5446653Z # Subtest: computed commerce imports and retired environment consumers are rejected globally
+2026-10-21T02:05:19.5447620Z ok 13 - computed commerce imports and retired environment consumers are rejected globally
+2026-10-21T02:05:19.5448363Z   ---
+2026-10-21T02:05:19.5448741Z   duration_ms: 1102.234927
+2026-10-21T02:05:19.5449186Z   type: 'test'
+2026-10-21T02:05:19.5449469Z   ...
+2026-10-21T02:05:19.5450032Z # Subtest: positive consent mutation is rejected while withdrawal cleanup remains required
+2026-10-21T02:05:19.5450805Z ok 14 - positive consent mutation is rejected while withdrawal cleanup remains required
+2026-10-21T02:05:19.5451337Z   ---
+2026-10-21T02:05:19.5451713Z   duration_ms: 683.627629
+2026-10-21T02:05:19.5452047Z   type: 'test'
+2026-10-21T02:05:19.5452342Z   ...
+2026-10-21T02:05:19.5452858Z # Subtest: Shelf replenishment and You cannot retain commerce entry points
+2026-10-21T02:05:19.5453561Z ok 15 - Shelf replenishment and You cannot retain commerce entry points
+2026-10-21T02:05:19.5454033Z   ---
+2026-10-21T02:05:19.5454326Z   duration_ms: 673.274974
+2026-10-21T02:05:19.5454642Z   type: 'test'
+2026-10-21T02:05:19.5454927Z   ...
+2026-10-21T02:05:19.5455395Z # Subtest: provider credentials cannot activate order polling
+2026-10-21T02:05:19.5455990Z ok 16 - provider credentials cannot activate order polling
+2026-10-21T02:05:19.5456442Z   ---
+2026-10-21T02:05:19.5456731Z   duration_ms: 356.151761
+2026-10-21T02:05:19.5457056Z   type: 'test'
+2026-10-21T02:05:19.5457364Z   ...
+2026-10-21T02:05:19.5457938Z # Subtest: dormant order-attribution core and alternate server consumers stay inventoried
+2026-10-21T02:05:19.5458982Z ok 17 - dormant order-attribution core and alternate server consumers stay inventoried
+2026-10-21T02:05:19.5459877Z   ---
+2026-10-21T02:05:19.5460212Z   duration_ms: 1004.75947
+2026-10-21T02:05:19.5460536Z   type: 'test'
+2026-10-21T02:05:19.5461181Z   ...
+2026-10-21T02:05:19.5461659Z # Subtest: database publication reads and click inserts cannot be restored
+2026-10-21T02:05:19.5462419Z ok 18 - database publication reads and click inserts cannot be restored
+2026-10-21T02:05:19.5462970Z   ---
+2026-10-21T02:05:19.5463260Z   duration_ms: 340.991843
+2026-10-21T02:05:19.5463599Z   type: 'test'
+2026-10-21T02:05:19.5463869Z   ...
+2026-10-21T02:05:19.5464338Z # Subtest: legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary
+2026-10-21T02:05:19.5464958Z ok 19 - legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary
+2026-10-21T02:05:19.5465299Z   ---
+2026-10-21T02:05:19.5465518Z   duration_ms: 991.554261
+2026-10-21T02:05:19.5465738Z   type: 'test'
+2026-10-21T02:05:19.5465924Z   ...
+2026-10-21T02:05:19.5466342Z # Subtest: stale pollers cannot regain order-attribution publication authority
+2026-10-21T02:05:19.5466788Z ok 20 - stale pollers cannot regain order-attribution publication authority
+2026-10-21T02:05:19.5467123Z   ---
+2026-10-21T02:05:19.5467329Z   duration_ms: 1002.333662
+2026-10-21T02:05:19.5467546Z   type: 'test'
+2026-10-21T02:05:19.5467793Z   ...
+2026-10-21T02:05:19.5468135Z # Subtest: WhereToBuy cannot inspect provenance or mount runtime effects
+2026-10-21T02:05:19.5468782Z ok 21 - WhereToBuy cannot inspect provenance or mount runtime effects
+2026-10-21T02:05:19.5469087Z   ---
+2026-10-21T02:05:19.5469281Z   duration_ms: 340.872276
+2026-10-21T02:05:19.5469550Z   type: 'test'
+2026-10-21T02:05:19.5469778Z   ...
+2026-10-21T02:05:19.5470061Z # Subtest: un-inventoried commerce source is rejected
+2026-10-21T02:05:19.5470392Z ok 22 - un-inventoried commerce source is rejected
+2026-10-21T02:05:19.5470650Z   ---
+2026-10-21T02:05:19.5471041Z   duration_ms: 341.048876
+2026-10-21T02:05:19.5471328Z   type: 'test'
+2026-10-21T02:05:19.5471608Z   ...
+2026-10-21T02:05:19.5665594Z 1..22
+2026-10-21T02:05:19.5666075Z # tests 22
+2026-10-21T02:05:19.5666362Z # suites 0
+2026-10-21T02:05:19.5666608Z # pass 22
+2026-10-21T02:05:19.5667099Z # fail 0
+2026-10-21T02:05:19.5667360Z # cancelled 0
+2026-10-21T02:05:19.5667633Z # skipped 0
+2026-10-21T02:05:19.5667892Z # todo 0
+2026-10-21T02:05:19.5668121Z # duration_ms 16328.493718
+2026-10-21T02:05:19.6356461Z 
+2026-10-21T02:05:19.6357481Z > layerwell@0.1.0 pay08:ios-win-back-source-contract:test
+2026-10-21T02:05:19.6358380Z > node --test scripts/pay08/ios-win-back-source-contract.test.mjs
+2026-10-21T02:05:19.6358734Z 
+2026-10-21T02:05:19.6648084Z TAP version 13
+2026-10-21T02:05:20.3949671Z # Subtest: current PAY-08 no-offer source contract passes
+2026-10-21T02:05:20.3956264Z ok 1 - current PAY-08 no-offer source contract passes
+2026-10-21T02:05:20.3957139Z   ---
+2026-10-21T02:05:20.3957646Z   duration_ms: 86.131439
+2026-10-21T02:05:20.3958315Z   type: 'test'
+2026-10-21T02:05:20.3958735Z   ...
+2026-10-21T02:05:20.3959224Z # Subtest: missing governed source fails closed
+2026-10-21T02:05:20.3959757Z ok 2 - missing governed source fails closed
+2026-10-21T02:05:20.3960155Z   ---
+2026-10-21T02:05:20.3960530Z   duration_ms: 1.443995
+2026-10-21T02:05:20.3960896Z   type: 'test'
+2026-10-21T02:05:20.3961251Z   ...
+2026-10-21T02:05:20.3969845Z # Subtest: forged positive launch admission is rejected
+2026-10-21T02:05:20.3970997Z ok 3 - forged positive launch admission is rejected
+2026-10-21T02:05:20.3971683Z   ---
+2026-10-21T02:05:20.3972092Z   duration_ms: 34.776422
+2026-10-21T02:05:20.3972666Z   type: 'test'
+2026-10-21T02:05:20.3973108Z   ...
+2026-10-21T02:05:20.3973820Z # Subtest: EAS profile or app-config override cannot enable the closed admission
+2026-10-21T02:05:20.3974704Z ok 4 - EAS profile or app-config override cannot enable the closed admission
+2026-10-21T02:05:20.3975303Z   ---
+2026-10-21T02:05:20.3975740Z   duration_ms: 50.068525
+2026-10-21T02:05:20.3976215Z   type: 'test'
+2026-10-21T02:05:20.3977083Z   ...
+2026-10-21T02:05:20.3977758Z # Subtest: automatic or unconditional StoreKit win-back messages are rejected
+2026-10-21T02:05:20.3978789Z ok 5 - automatic or unconditional StoreKit win-back messages are rejected
+2026-10-21T02:05:20.3979443Z   ---
+2026-10-21T02:05:20.3979877Z   duration_ms: 97.751351
+2026-10-21T02:05:20.3980424Z   type: 'test'
+2026-10-21T02:05:20.3980804Z   ...
+2026-10-21T02:05:20.3981428Z # Subtest: disabled discovery and purchase must return before provider calls
+2026-10-21T02:05:20.3982272Z ok 6 - disabled discovery and purchase must return before provider calls
+2026-10-21T02:05:20.3982876Z   ---
+2026-10-21T02:05:20.3983367Z   duration_ms: 43.235355
+2026-10-21T02:05:20.3983823Z   type: 'test'
+2026-10-21T02:05:20.3984188Z   ...
+2026-10-21T02:05:20.3984996Z # Subtest: manual recovery-message retry cannot lose binding, cache, or foreground reachability
+2026-10-21T02:05:20.3986000Z ok 7 - manual recovery-message retry cannot lose binding, cache, or foreground reachability
+2026-10-21T02:05:20.3986708Z   ---
+2026-10-21T02:05:20.3987244Z   duration_ms: 55.101438
+2026-10-21T02:05:20.3987649Z   type: 'test'
+2026-10-21T02:05:20.3988405Z   ...
+2026-10-21T02:05:20.3989160Z # Subtest: hardcoded discount claims and ungoverned wiring are rejected
+2026-10-21T02:05:20.3990458Z ok 8 - hardcoded discount claims and ungoverned wiring are rejected
+2026-10-21T02:05:20.3991003Z   ---
+2026-10-21T02:05:20.3991344Z   duration_ms: 49.572542
+2026-10-21T02:05:20.3991751Z   type: 'test'
+2026-10-21T02:05:20.3992073Z   ...
+2026-10-21T02:05:20.3992540Z # Subtest: source checkpoint cannot erase the external App Store Connect boundary
+2026-10-21T02:05:20.3993116Z ok 9 - source checkpoint cannot erase the external App Store Connect boundary
+2026-10-21T02:05:20.3993555Z   ---
+2026-10-21T02:05:20.3993931Z   duration_ms: 16.563655
+2026-10-21T02:05:20.3994261Z   type: 'test'
+2026-10-21T02:05:20.3994556Z   ...
+2026-10-21T02:05:20.4236941Z 1..9
+2026-10-21T02:05:20.4237521Z # tests 9
+2026-10-21T02:05:20.4237905Z # suites 0
+2026-10-21T02:05:20.4238357Z # pass 9
+2026-10-21T02:05:20.4238706Z # fail 0
+2026-10-21T02:05:20.4238965Z # cancelled 0
+2026-10-21T02:05:20.4635150Z # skipped 0
+2026-10-21T02:05:20.4635768Z # todo 0
+2026-10-21T02:05:20.4636446Z # duration_ms 766.47262
+2026-10-21T02:05:20.5126885Z 
+2026-10-21T02:05:20.5127443Z > layerwell@0.1.0 core07:share-admission-source-contract:test
+2026-10-21T02:05:20.5127959Z > node --test scripts/core07/share-admission-source-contract.test.mjs
+2026-10-21T02:05:20.5128327Z 
+2026-10-21T02:05:20.5464445Z TAP version 13
+2026-10-21T02:05:21.0872169Z # Subtest: the real CORE-07A source is literal-zero-admission and side-effect free
+2026-10-21T02:05:21.0879581Z ok 1 - the real CORE-07A source is literal-zero-admission and side-effect free
+2026-10-21T02:05:21.0880087Z   ---
+2026-10-21T02:05:21.0880359Z   duration_ms: 52.184805
+2026-10-21T02:05:21.0880661Z   type: 'test'
+2026-10-21T02:05:21.0880904Z   ...
+2026-10-21T02:05:21.0885107Z # Subtest: the audit is deterministic, immutable, and path-sorted
+2026-10-21T02:05:21.0886016Z ok 2 - the audit is deterministic, immutable, and path-sorted
+2026-10-21T02:05:21.0886369Z   ---
+2026-10-21T02:05:21.0886613Z   duration_ms: 34.723535
+2026-10-21T02:05:21.0887018Z   type: 'test'
+2026-10-21T02:05:21.0887238Z   ...
+2026-10-21T02:05:21.0887806Z # Subtest: missing mandatory admission, projection, renderer, route, and public HTML sources fail closed
+2026-10-21T02:05:21.0889138Z ok 3 - missing mandatory admission, projection, renderer, route, and public HTML sources fail closed
+2026-10-21T02:05:21.0889663Z   ---
+2026-10-21T02:05:21.0890260Z   duration_ms: 0.710007
+2026-10-21T02:05:21.0890513Z   type: 'test'
+2026-10-21T02:05:21.0890713Z   ...
+2026-10-21T02:05:21.0891039Z # Subtest: raw DetectedConflict renderer authority is rejected
+2026-10-21T02:05:21.0939350Z ok 4 - raw DetectedConflict renderer authority is rejected
+2026-10-21T02:05:21.0961420Z   ---
+2026-10-21T02:05:21.0962140Z   duration_ms: 13.016467
+2026-10-21T02:05:21.0962957Z   type: 'test'
+2026-10-21T02:05:21.0963699Z   ...
+2026-10-21T02:05:21.0964202Z # Subtest: share and public-link capabilities cannot be opened by literals or flags
+2026-10-21T02:05:21.0964907Z ok 5 - share and public-link capabilities cannot be opened by literals or flags
+2026-10-21T02:05:21.0965361Z   ---
+2026-10-21T02:05:21.0965611Z   duration_ms: 37.373595
+2026-10-21T02:05:21.0965895Z   type: 'test'
+2026-10-21T02:05:21.0966150Z   ...
+2026-10-21T02:05:21.0966614Z # Subtest: environment, development, and E2E admission bypasses are rejected
+2026-10-21T02:05:21.0967279Z ok 6 - environment, development, and E2E admission bypasses are rejected
+2026-10-21T02:05:21.0967732Z   ---
+2026-10-21T02:05:21.0968044Z   duration_ms: 10.394109
+2026-10-21T02:05:21.0968522Z   type: 'test'
+2026-10-21T02:05:21.0968779Z   ...
+2026-10-21T02:05:21.0969268Z # Subtest: capture, temporary-file, network, and native-share side effects are rejected
+2026-10-21T02:05:21.0969981Z ok 7 - capture, temporary-file, network, and native-share side effects are rejected
+2026-10-21T02:05:21.0970388Z   ---
+2026-10-21T02:05:21.0970570Z   duration_ms: 16.149657
+2026-10-21T02:05:21.0970769Z   type: 'test'
+2026-10-21T02:05:21.0970942Z   ...
+2026-10-21T02:05:21.0971313Z # Subtest: public-link identifier, crypto, digest, and URL creation side effects are rejected
+2026-10-21T02:05:21.0971861Z ok 8 - public-link identifier, crypto, digest, and URL creation side effects are rejected
+2026-10-21T02:05:21.0972188Z   ---
+2026-10-21T02:05:21.0972360Z   duration_ms: 8.460185
+2026-10-21T02:05:21.0972551Z   type: 'test'
+2026-10-21T02:05:21.0972719Z   ...
+2026-10-21T02:05:21.0973065Z # Subtest: projection fields are an exact public allowlist and private aliases are rejected
+2026-10-21T02:05:21.0973567Z ok 9 - projection fields are an exact public allowlist and private aliases are rejected
+2026-10-21T02:05:21.0973877Z   ---
+2026-10-21T02:05:21.0974046Z   duration_ms: 9.855335
+2026-10-21T02:05:21.0974233Z   type: 'test'
+2026-10-21T02:05:21.0974401Z   ...
+2026-10-21T02:05:21.0974681Z # Subtest: record-implying native and static public copy is rejected
+2026-10-21T02:05:21.0975087Z ok 10 - record-implying native and static public copy is rejected
+2026-10-21T02:05:21.0975353Z   ---
+2026-10-21T02:05:21.0975723Z   duration_ms: 14.898969
+2026-10-21T02:05:21.0975919Z   type: 'test'
+2026-10-21T02:05:21.0976106Z   ...
+2026-10-21T02:05:21.0976439Z # Subtest: public-link analytics, token parsing, beacons, and destinations are rejected
+2026-10-21T02:05:21.0976917Z ok 11 - public-link analytics, token parsing, beacons, and destinations are rejected
+2026-10-21T02:05:21.0977216Z   ---
+2026-10-21T02:05:21.0977377Z   duration_ms: 13.562887
+2026-10-21T02:05:21.0977563Z   type: 'test'
+2026-10-21T02:05:21.0977734Z   ...
+2026-10-21T02:05:21.0978075Z # Subtest: future receipt, confirmation, and public-link authority types remain issuerless
+2026-10-21T02:05:21.0978849Z ok 12 - future receipt, confirmation, and public-link authority types remain issuerless
+2026-10-21T02:05:21.0979163Z   ---
+2026-10-21T02:05:21.0979323Z   duration_ms: 13.523977
+2026-10-21T02:05:21.0979517Z   type: 'test'
+2026-10-21T02:05:21.0979689Z   ...
+2026-10-21T02:05:21.0980034Z # Subtest: future authority schemas cannot drift review roles or exact confirmation literals
+2026-10-21T02:05:21.0980532Z ok 13 - future authority schemas cannot drift review roles or exact confirmation literals
+2026-10-21T02:05:21.0980837Z   ---
+2026-10-21T02:05:21.0980994Z   duration_ms: 18.624634
+2026-10-21T02:05:21.0981183Z   type: 'test'
+2026-10-21T02:05:21.0981337Z   ...
+2026-10-21T02:05:21.0981676Z # Subtest: CORE-07A enforcement is mandatory in every bound phase and launch verification
+2026-10-21T02:05:21.0982155Z ok 14 - CORE-07A enforcement is mandatory in every bound phase and launch verification
+2026-10-21T02:05:21.0982459Z   ---
+2026-10-21T02:05:21.0982619Z   duration_ms: 0.923379
+2026-10-21T02:05:21.0982804Z   type: 'test'
+2026-10-21T02:05:21.0982954Z   ...
+2026-10-21T02:05:21.1116163Z 1..14
+2026-10-21T02:05:21.1116465Z # tests 14
+2026-10-21T02:05:21.1116707Z # suites 0
+2026-10-21T02:05:21.1117253Z # pass 14
+2026-10-21T02:05:21.1117493Z # fail 0
+2026-10-21T02:05:21.1117667Z # cancelled 0
+2026-10-21T02:05:21.1117846Z # skipped 0
+2026-10-21T02:05:21.1118002Z # todo 0
+2026-10-21T02:05:21.1118319Z # duration_ms 573.985808
+2026-10-21T02:05:21.1900929Z 
+2026-10-21T02:05:21.1901486Z > layerwell@0.1.0 postinstall:check
+2026-10-21T02:05:21.1901833Z > node scripts/postinstall.mjs --check
+2026-10-21T02:05:21.1902000Z 
+2026-10-21T02:05:21.2363535Z {"check":true,"viewShot":"checked","widgets":"checked","toolingSecurity":"checked"}
+2026-10-21T02:05:21.3123215Z 
+2026-10-21T02:05:21.3124015Z > layerwell@0.1.0 phase5:expo-widgets-lifecycle:test
+2026-10-21T02:05:21.3124862Z > node --test scripts/phase5/patch-expo-widgets-lifecycle.test.mjs scripts/phase5/expo-widgets-lifecycle-source.test.mjs
+2026-10-21T02:05:21.3125376Z 
+2026-10-21T02:05:21.3487665Z TAP version 13
+2026-10-21T02:05:21.3832552Z # Subtest: SDK57 bridge accepts the new API while native authority owns deadlines and deep links
+2026-10-21T02:05:21.3840666Z ok 1 - SDK57 bridge accepts the new API while native authority owns deadlines and deep links
+2026-10-21T02:05:21.3841241Z   ---
+2026-10-21T02:05:21.3841528Z   duration_ms: 1.597026
+2026-10-21T02:05:21.3841853Z   type: 'test'
+2026-10-21T02:05:21.3842095Z   ...
+2026-10-21T02:05:21.3842630Z # Subtest: native authority is cross-process serialized, durable, and ABA-resistant
+2026-10-21T02:05:21.3843354Z ok 2 - native authority is cross-process serialized, durable, and ABA-resistant
+2026-10-21T02:05:21.3843753Z   ---
+2026-10-21T02:05:21.3843977Z   duration_ms: 0.53528
+2026-10-21T02:05:21.3844211Z   type: 'test'
+2026-10-21T02:05:21.3844439Z   ...
+2026-10-21T02:05:21.3845006Z # Subtest: unconditional cleanup closes authority before clearing derived presentation and activities
+2026-10-21T02:05:21.3845802Z ok 3 - unconditional cleanup closes authority before clearing derived presentation and activities
+2026-10-21T02:05:21.3850443Z   ---
+2026-10-21T02:05:21.3850968Z   duration_ms: 0.555765
+2026-10-21T02:05:21.3852170Z   type: 'test'
+2026-10-21T02:05:21.3852402Z   ...
+2026-10-21T02:05:21.3853097Z # Subtest: SQLite is the sole Layerwell timeline authority with a killed-app redaction entry
+2026-10-21T02:05:21.3855384Z ok 4 - SQLite is the sole Layerwell timeline authority with a killed-app redaction entry
+2026-10-21T02:05:21.3855833Z   ---
+2026-10-21T02:05:21.3856023Z   duration_ms: 0.375818
+2026-10-21T02:05:21.3856214Z   type: 'test'
+2026-10-21T02:05:21.3856378Z   ...
+2026-10-21T02:05:21.3869718Z # Subtest: AppIntent commits the native outbox and never writes Layerwell UserDefaults
+2026-10-21T02:05:21.3871063Z ok 5 - AppIntent commits the native outbox and never writes Layerwell UserDefaults
+2026-10-21T02:05:21.3871386Z   ---
+2026-10-21T02:05:21.3871633Z   duration_ms: 0.272184
+2026-10-21T02:05:21.3871895Z   type: 'test'
+2026-10-21T02:05:21.3872134Z   ...
+2026-10-21T02:05:21.3873485Z # Subtest: reconciliation is exact all-or-redact and persisted rows are strictly bounded
+2026-10-21T02:05:21.3874542Z ok 6 - reconciliation is exact all-or-redact and persisted rows are strictly bounded
+2026-10-21T02:05:21.3875051Z   ---
+2026-10-21T02:05:21.3875227Z   duration_ms: 0.901619
+2026-10-21T02:05:21.3875510Z   type: 'test'
+2026-10-21T02:05:21.3875680Z   ...
+2026-10-21T02:05:21.3876333Z # Subtest: Live Activity APIs globally gate Layerwell and destroy aliases or duplicates
+2026-10-21T02:05:21.3877028Z ok 7 - Live Activity APIs globally gate Layerwell and destroy aliases or duplicates
+2026-10-21T02:05:21.3877556Z   ---
+2026-10-21T02:05:21.3877861Z   duration_ms: 0.573167
+2026-10-21T02:05:21.3878337Z   type: 'test'
+2026-10-21T02:05:21.3878645Z   ...
+2026-10-21T02:05:21.3879049Z # Subtest: signed flags remain literal false and cleanup does not consult them
+2026-10-21T02:05:21.3883019Z ok 8 - signed flags remain literal false and cleanup does not consult them
+2026-10-21T02:05:21.3883626Z   ---
+2026-10-21T02:05:21.3883855Z   duration_ms: 0.589679
+2026-10-21T02:05:21.3884183Z   type: 'test'
+2026-10-21T02:05:21.3884664Z   ...
+2026-10-21T02:05:21.3885135Z # Subtest: the exact dependency patch links SQLite and exposes only bounded JSON bridge methods
+2026-10-21T02:05:21.3885867Z ok 9 - the exact dependency patch links SQLite and exposes only bounded JSON bridge methods
+2026-10-21T02:05:21.3886398Z   ---
+2026-10-21T02:05:21.3886693Z   duration_ms: 0.653222
+2026-10-21T02:05:21.3887046Z   type: 'test'
+2026-10-21T02:05:21.3887339Z   ...
+2026-10-21T02:05:21.4868876Z # Subtest: pins every reviewed original and patched source hash
+2026-10-21T02:05:21.4870132Z ok 10 - pins every reviewed original and patched source hash
+2026-10-21T02:05:21.4870719Z   ---
+2026-10-21T02:05:21.4870967Z   duration_ms: 2.560056
+2026-10-21T02:05:21.4871210Z   type: 'test'
+2026-10-21T02:05:21.4871421Z   ...
+2026-10-21T02:05:21.4872734Z # Subtest: rejects an extra copy hidden below an unreviewed transitive dependency
+2026-10-21T02:05:21.4874109Z ok 11 - rejects an extra copy hidden below an unreviewed transitive dependency
+2026-10-21T02:05:21.4874655Z   ---
+2026-10-21T02:05:21.4875014Z   duration_ms: 12.091215
+2026-10-21T02:05:21.4875353Z   type: 'test'
+2026-10-21T02:05:21.4875608Z   ...
+2026-10-21T02:05:21.4876189Z # Subtest: durably stages files and synchronizes each POSIX rename for crash recovery
+2026-10-21T02:05:21.4877044Z ok 12 - durably stages files and synchronizes each POSIX rename for crash recovery
+2026-10-21T02:05:21.4877493Z   ---
+2026-10-21T02:05:21.4889144Z   duration_ms: 0.392698
+2026-10-21T02:05:21.4898957Z   type: 'test'
+2026-10-21T02:05:21.4899143Z   ...
+2026-10-21T02:05:21.4899613Z # Subtest: check mode accepts a complete reviewed patch without writing
+2026-10-21T02:05:21.4900257Z ok 13 - check mode accepts a complete reviewed patch without writing
+2026-10-21T02:05:21.4900631Z   ---
+2026-10-21T02:05:21.4900952Z   duration_ms: 9.518761
+2026-10-21T02:05:21.4901280Z   type: 'test'
+2026-10-21T02:05:21.4901602Z   ...
+2026-10-21T02:05:21.4902111Z # Subtest: accepts one exact workspace-nested reviewed installation
+2026-10-21T02:05:21.4902628Z ok 14 - accepts one exact workspace-nested reviewed installation
+2026-10-21T02:05:21.4902995Z   ---
+2026-10-21T02:05:21.4903224Z   duration_ms: 9.017896
+2026-10-21T02:05:21.4903454Z   type: 'test'
+2026-10-21T02:05:21.4903870Z   ...
+2026-10-21T02:05:21.4904392Z # Subtest: idempotently completes a reviewed partial install by adding the missing native store
+2026-10-21T02:05:21.4905178Z ok 15 - idempotently completes a reviewed partial install by adding the missing native store
+2026-10-21T02:05:21.4905657Z   ---
+2026-10-21T02:05:21.4905903Z   duration_ms: 17.273383
+2026-10-21T02:05:21.4906162Z   type: 'test'
+2026-10-21T02:05:21.4906391Z   ...
+2026-10-21T02:05:21.4906835Z # Subtest: classifies only explicitly reviewed prior patch generations as upgradeable
+2026-10-21T02:05:21.4907517Z ok 16 - classifies only explicitly reviewed prior patch generations as upgradeable
+2026-10-21T02:05:21.4907915Z   ---
+2026-10-21T02:05:21.4908121Z   duration_ms: 0.232162
+2026-10-21T02:05:21.4908538Z   type: 'test'
+2026-10-21T02:05:21.4908772Z   ...
+2026-10-21T02:05:21.4909149Z # Subtest: rejects payload or installed target byte drift before mutation
+2026-10-21T02:05:21.4909555Z     # Subtest: payload drift
+2026-10-21T02:05:21.4909827Z     ok 1 - payload drift
+2026-10-21T02:05:21.4910061Z       ---
+2026-10-21T02:05:21.4910276Z       duration_ms: 7.21119
+2026-10-21T02:05:21.4910512Z       type: 'test'
+2026-10-21T02:05:21.4910723Z       ...
+2026-10-21T02:05:21.4910929Z     # Subtest: target drift
+2026-10-21T02:05:21.4911192Z     ok 2 - target drift
+2026-10-21T02:05:21.4911405Z       ---
+2026-10-21T02:05:21.4911609Z       duration_ms: 7.737095
+2026-10-21T02:05:21.4911849Z       type: 'test'
+2026-10-21T02:05:21.4912059Z       ...
+2026-10-21T02:05:21.4912248Z     1..2
+2026-10-21T02:05:21.4912622Z ok 17 - rejects payload or installed target byte drift before mutation
+2026-10-21T02:05:21.4912964Z   ---
+2026-10-21T02:05:21.4913166Z   duration_ms: 15.361322
+2026-10-21T02:05:21.4913392Z   type: 'test'
+2026-10-21T02:05:21.4913595Z   ...
+2026-10-21T02:05:21.4914234Z # Subtest: rejects reviewed package and lock provenance drift
+2026-10-21T02:05:21.4914609Z     # Subtest: mobile range
+2026-10-21T02:05:21.4914881Z     ok 1 - mobile range
+2026-10-21T02:05:21.4915135Z       ---
+2026-10-21T02:05:21.4915354Z       duration_ms: 7.784508
+2026-10-21T02:05:21.4915609Z       type: 'test'
+2026-10-21T02:05:21.4915827Z       ...
+2026-10-21T02:05:21.4916085Z     # Subtest: workspace range
+2026-10-21T02:05:21.4916431Z     ok 2 - workspace range
+2026-10-21T02:05:21.4916676Z       ---
+2026-10-21T02:05:21.4916884Z       duration_ms: 7.974315
+2026-10-21T02:05:21.4917121Z       type: 'test'
+2026-10-21T02:05:21.4917322Z       ...
+2026-10-21T02:05:21.4917528Z     # Subtest: artifact URL
+2026-10-21T02:05:21.4917771Z     ok 3 - artifact URL
+2026-10-21T02:05:21.4918492Z       ---
+2026-10-21T02:05:21.4918926Z       duration_ms: 7.714903
+2026-10-21T02:05:21.4919164Z       type: 'test'
+2026-10-21T02:05:21.4919374Z       ...
+2026-10-21T02:05:21.4919583Z     # Subtest: integrity
+2026-10-21T02:05:21.4919833Z     ok 4 - integrity
+2026-10-21T02:05:21.4920051Z       ---
+2026-10-21T02:05:21.4920268Z       duration_ms: 7.959688
+2026-10-21T02:05:21.4920508Z       type: 'test'
+2026-10-21T02:05:21.4920724Z       ...
+2026-10-21T02:05:21.4920978Z     # Subtest: installed version
+2026-10-21T02:05:21.4921251Z     ok 5 - installed version
+2026-10-21T02:05:21.4921493Z       ---
+2026-10-21T02:05:21.4921703Z       duration_ms: 8.138802
+2026-10-21T02:05:21.4921920Z       type: 'test'
+2026-10-21T02:05:21.4922088Z       ...
+2026-10-21T02:05:21.4922239Z     1..5
+2026-10-21T02:05:21.4922487Z ok 18 - rejects reviewed package and lock provenance drift
+2026-10-21T02:05:21.4922732Z   ---
+2026-10-21T02:05:21.4922902Z   duration_ms: 40.102103
+2026-10-21T02:05:21.4923082Z   type: 'test'
+2026-10-21T02:05:21.4923245Z   ...
+2026-10-21T02:05:21.4972604Z 1..18
+2026-10-21T02:05:21.4972914Z # tests 25
+2026-10-21T02:05:21.4973145Z # suites 0
+2026-10-21T02:05:21.4973365Z # pass 25
+2026-10-21T02:05:21.4973556Z # fail 0
+2026-10-21T02:05:21.4973801Z # cancelled 0
+2026-10-21T02:05:21.4973981Z # skipped 0
+2026-10-21T02:05:21.4974140Z # todo 0
+2026-10-21T02:05:21.4974319Z # duration_ms 160.447487
+2026-10-21T02:05:21.5754352Z 
+2026-10-21T02:05:21.5755079Z > layerwell@0.1.0 phase9:view-shot-privacy:check
+2026-10-21T02:05:21.5755558Z > node scripts/phase9/patch-react-native-view-shot-privacy.mjs --check
+2026-10-21T02:05:21.5755796Z 
+2026-10-21T02:05:21.6093916Z react-native-view-shot privacy manifest: checked (7a411ba0c8b0c43834b84b23b3959aa98df450c52db9e0a4efb4ba1b2786f0c9)
+2026-10-21T02:05:21.6852868Z 
+2026-10-21T02:05:21.6853297Z > layerwell@0.1.0 phase9:view-shot-privacy:test
+2026-10-21T02:05:21.6853761Z > node --test scripts/phase9/patch-react-native-view-shot-privacy.test.mjs
+2026-10-21T02:05:21.6854003Z 
+2026-10-21T02:05:21.7176771Z TAP version 13
+2026-10-21T02:05:21.8763110Z # Subtest: pins the reviewed source and minimal target bytes
+2026-10-21T02:05:21.8767367Z ok 1 - pins the reviewed source and minimal target bytes
+2026-10-21T02:05:21.8767862Z   ---
+2026-10-21T02:05:21.8768354Z   duration_ms: 1.06759
+2026-10-21T02:05:21.8768781Z   type: 'test'
+2026-10-21T02:05:21.8769012Z   ...
+2026-10-21T02:05:21.8772446Z # Subtest: atomically patches only the reviewed original bytes
+2026-10-21T02:05:21.8773995Z ok 2 - atomically patches only the reviewed original bytes
+2026-10-21T02:05:21.8774442Z   ---
+2026-10-21T02:05:21.8774762Z   duration_ms: 6.763127
+2026-10-21T02:05:21.8775107Z   type: 'test'
+2026-10-21T02:05:21.8775408Z   ...
+2026-10-21T02:05:21.8775820Z # Subtest: is idempotent without rewriting the reviewed target
+2026-10-21T02:05:21.8776966Z ok 3 - is idempotent without rewriting the reviewed target
+2026-10-21T02:05:21.8777499Z   ---
+2026-10-21T02:05:21.8777671Z   duration_ms: 3.000891
+2026-10-21T02:05:21.8777865Z   type: 'test'
+2026-10-21T02:05:21.8778024Z   ...
+2026-10-21T02:05:21.8781960Z # Subtest: --check accepts only the patched state and never writes
+2026-10-21T02:05:21.8782908Z ok 4 - --check accepts only the patched state and never writes
+2026-10-21T02:05:21.8783629Z   ---
+2026-10-21T02:05:21.8809393Z   duration_ms: 2.562958
+2026-10-21T02:05:21.8811029Z   type: 'test'
+2026-10-21T02:05:21.8811414Z   ...
+2026-10-21T02:05:21.8812099Z # Subtest: rejects every unreviewed manifest byte variant without mutation
+2026-10-21T02:05:21.8812689Z     # Subtest: one-byte drift
+2026-10-21T02:05:21.8813093Z     ok 1 - one-byte drift
+2026-10-21T02:05:21.8813462Z       ---
+2026-10-21T02:05:21.8813780Z       duration_ms: 1.918751
+2026-10-21T02:05:21.8814162Z       type: 'test'
+2026-10-21T02:05:21.8814500Z       ...
+2026-10-21T02:05:21.8814872Z     # Subtest: UTF-8 BOM
+2026-10-21T02:05:21.8815258Z     ok 2 - UTF-8 BOM
+2026-10-21T02:05:21.8815618Z       ---
+2026-10-21T02:05:21.8815975Z       duration_ms: 0.967579
+2026-10-21T02:05:21.8816340Z       type: 'test'
+2026-10-21T02:05:21.8816676Z       ...
+2026-10-21T02:05:21.8817067Z     # Subtest: CRLF normalization
+2026-10-21T02:05:21.8817489Z     ok 3 - CRLF normalization
+2026-10-21T02:05:21.8817921Z       ---
+2026-10-21T02:05:21.8818525Z       duration_ms: 0.876944
+2026-10-21T02:05:21.8818940Z       type: 'test'
+2026-10-21T02:05:21.8819266Z       ...
+2026-10-21T02:05:21.8819713Z     # Subtest: semantically plausible but unreviewed
+2026-10-21T02:05:21.8820271Z     ok 4 - semantically plausible but unreviewed
+2026-10-21T02:05:21.8820710Z       ---
+2026-10-21T02:05:21.8821047Z       duration_ms: 1.007538
+2026-10-21T02:05:21.8821436Z       type: 'test'
+2026-10-21T02:05:21.8821787Z       ...
+2026-10-21T02:05:21.8822133Z     # Subtest: malformed XML
+2026-10-21T02:05:21.8822530Z     ok 5 - malformed XML
+2026-10-21T02:05:21.8822901Z       ---
+2026-10-21T02:05:21.8823255Z       duration_ms: 1.03499
+2026-10-21T02:05:21.8823640Z       type: 'test'
+2026-10-21T02:05:21.8823983Z       ...
+2026-10-21T02:05:21.8831892Z     1..5
+2026-10-21T02:05:21.8843178Z ok 5 - rejects every unreviewed manifest byte variant without mutation
+2026-10-21T02:05:21.8843779Z   ---
+2026-10-21T02:05:21.8844161Z   duration_ms: 6.684071
+2026-10-21T02:05:21.8844574Z   type: 'test'
+2026-10-21T02:05:21.8844905Z   ...
+2026-10-21T02:05:21.8845387Z # Subtest: rejects all reviewed lock provenance drift
+2026-10-21T02:05:21.8845909Z     # Subtest: lockfile version
+2026-10-21T02:05:21.8846578Z     ok 1 - lockfile version
+2026-10-21T02:05:21.8846975Z       ---
+2026-10-21T02:05:21.8847327Z       duration_ms: 1.211571
+2026-10-21T02:05:21.8848049Z       type: 'test'
+2026-10-21T02:05:21.8848726Z       ...
+2026-10-21T02:05:21.8849299Z     # Subtest: workspace spec
+2026-10-21T02:05:21.8849619Z     ok 2 - workspace spec
+2026-10-21T02:05:21.8849891Z       ---
+2026-10-21T02:05:21.8850150Z       duration_ms: 1.101934
+2026-10-21T02:05:21.8850446Z       type: 'test'
+2026-10-21T02:05:21.8850697Z       ...
+2026-10-21T02:05:21.8850947Z     # Subtest: entry version
+2026-10-21T02:05:21.8851225Z     ok 3 - entry version
+2026-10-21T02:05:21.8851472Z       ---
+2026-10-21T02:05:21.8851710Z       duration_ms: 1.112875
+2026-10-21T02:05:21.8852001Z       type: 'test'
+2026-10-21T02:05:21.8852263Z       ...
+2026-10-21T02:05:21.8852540Z     # Subtest: resolved artifact
+2026-10-21T02:05:21.8852871Z     ok 4 - resolved artifact
+2026-10-21T02:05:21.8853238Z       ---
+2026-10-21T02:05:21.8853492Z       duration_ms: 1.088888
+2026-10-21T02:05:21.8853779Z       type: 'test'
+2026-10-21T02:05:21.8854029Z       ...
+2026-10-21T02:05:21.8854272Z     # Subtest: integrity
+2026-10-21T02:05:21.8864641Z     ok 5 - integrity
+2026-10-21T02:05:21.8876185Z       ---
+2026-10-21T02:05:21.8876593Z       duration_ms: 1.074369
+2026-10-21T02:05:21.8876928Z       type: 'test'
+2026-10-21T02:05:21.8877224Z       ...
+2026-10-21T02:05:21.8877513Z     # Subtest: placement flag
+2026-10-21T02:05:21.8877866Z     ok 6 - placement flag
+2026-10-21T02:05:21.8878383Z       ---
+2026-10-21T02:05:21.8878683Z       duration_ms: 1.046346
+2026-10-21T02:05:21.8878998Z       type: 'test'
+2026-10-21T02:05:21.8879297Z       ...
+2026-10-21T02:05:21.8879685Z     # Subtest: nested duplicate
+2026-10-21T02:05:21.8880096Z     ok 7 - nested duplicate
+2026-10-21T02:05:21.8880776Z       ---
+2026-10-21T02:05:21.8881123Z       duration_ms: 1.105779
+2026-10-21T02:05:21.8881537Z       type: 'test'
+2026-10-21T02:05:21.8881877Z       ...
+2026-10-21T02:05:21.8882256Z     # Subtest: moved entry
+2026-10-21T02:05:21.8882646Z     ok 8 - moved entry
+2026-10-21T02:05:21.8882990Z       ---
+2026-10-21T02:05:21.8883315Z       duration_ms: 1.454643
+2026-10-21T02:05:21.8883703Z       type: 'test'
+2026-10-21T02:05:21.8884056Z       ...
+2026-10-21T02:05:21.8884388Z     1..8
+2026-10-21T02:05:21.8884894Z ok 6 - rejects all reviewed lock provenance drift
+2026-10-21T02:05:21.8885366Z   ---
+2026-10-21T02:05:21.8885767Z   duration_ms: 9.879697
+2026-10-21T02:05:21.8886158Z   type: 'test'
+2026-10-21T02:05:21.8886549Z   ...
+2026-10-21T02:05:21.8887089Z # Subtest: rejects package declaration and installed identity drift
+2026-10-21T02:05:21.8887741Z     # Subtest: mobile dependency
+2026-10-21T02:05:21.8888318Z     ok 1 - mobile dependency
+2026-10-21T02:05:21.8888773Z       ---
+2026-10-21T02:05:21.8889137Z       duration_ms: 1.452605
+2026-10-21T02:05:21.8889582Z       type: 'test'
+2026-10-21T02:05:21.8889933Z       ...
+2026-10-21T02:05:21.8890271Z     # Subtest: installed name
+2026-10-21T02:05:21.8890741Z     ok 2 - installed name
+2026-10-21T02:05:21.8891086Z       ---
+2026-10-21T02:05:21.8891373Z       duration_ms: 1.67248
+2026-10-21T02:05:21.8891764Z       type: 'test'
+2026-10-21T02:05:21.8892113Z       ...
+2026-10-21T02:05:21.8892420Z     # Subtest: installed version
+2026-10-21T02:05:21.8892742Z     ok 3 - installed version
+2026-10-21T02:05:21.8893115Z       ---
+2026-10-21T02:05:21.8894901Z       duration_ms: 1.199162
+2026-10-21T02:05:21.8895334Z       type: 'test'
+2026-10-21T02:05:21.8895697Z       ...
+2026-10-21T02:05:21.8895941Z     1..3
+2026-10-21T02:05:21.8896363Z ok 7 - rejects package declaration and installed identity drift
+2026-10-21T02:05:21.8896771Z   ---
+2026-10-21T02:05:21.8897033Z   duration_ms: 4.749151
+2026-10-21T02:05:21.8897533Z   type: 'test'
+2026-10-21T02:05:21.8897748Z   ...
+2026-10-21T02:05:21.8898121Z # Subtest: rejects malformed or non-object provenance JSON
+2026-10-21T02:05:21.8898672Z ok 8 - rejects malformed or non-object provenance JSON
+2026-10-21T02:05:21.8898917Z   ---
+2026-10-21T02:05:21.8899282Z   duration_ms: 7.06904
+2026-10-21T02:05:21.8899478Z   type: 'test'
+2026-10-21T02:05:21.8899647Z   ...
+2026-10-21T02:05:21.8899922Z # Subtest: rejects missing, moved, or wrong-type manifest paths
+2026-10-21T02:05:21.8900287Z ok 9 - rejects missing, moved, or wrong-type manifest paths
+2026-10-21T02:05:21.8900536Z   ---
+2026-10-21T02:05:21.8900705Z   duration_ms: 2.052116
+2026-10-21T02:05:21.8900899Z   type: 'test'
+2026-10-21T02:05:21.8901059Z   ...
+2026-10-21T02:05:21.8901341Z # Subtest: rejects a linked dependency directory before following it
+2026-10-21T02:05:21.8901729Z ok 10 - rejects a linked dependency directory before following it
+2026-10-21T02:05:21.8901986Z   ---
+2026-10-21T02:05:21.8902151Z   duration_ms: 0.817279
+2026-10-21T02:05:21.8902341Z   type: 'test'
+2026-10-21T02:05:21.8902506Z   ...
+2026-10-21T02:05:21.8902802Z # Subtest: rejects a linked manifest before reading or replacing its target
+2026-10-21T02:05:21.8903216Z ok 11 - rejects a linked manifest before reading or replacing its target
+2026-10-21T02:05:21.8903488Z   ---
+2026-10-21T02:05:21.8903648Z   duration_ms: 0.862423
+2026-10-21T02:05:21.8903834Z   type: 'test'
+2026-10-21T02:05:21.8903994Z   ...
+2026-10-21T02:05:21.8904205Z # Subtest: rejects non-boolean check options
+2026-10-21T02:05:21.8904477Z ok 12 - rejects non-boolean check options
+2026-10-21T02:05:21.8904685Z   ---
+2026-10-21T02:05:21.8904878Z   duration_ms: 0.633149
+2026-10-21T02:05:21.8905093Z   type: 'test'
+2026-10-21T02:05:21.8905248Z   ...
+2026-10-21T02:05:21.8905563Z # Subtest: CLI rejects unknown and duplicate flags before inspecting dependencies
+2026-10-21T02:05:21.8906093Z ok 13 - CLI rejects unknown and duplicate flags before inspecting dependencies
+2026-10-21T02:05:21.8906436Z   ---
+2026-10-21T02:05:21.8906650Z   duration_ms: 51.234521
+2026-10-21T02:05:21.8906951Z   type: 'test'
+2026-10-21T02:05:21.8907111Z   ...
+2026-10-21T02:05:21.8907396Z # Subtest: CLI root is anchored to its script location, not the caller cwd
+2026-10-21T02:05:21.8907794Z ok 14 - CLI root is anchored to its script location, not the caller cwd
+2026-10-21T02:05:21.8908061Z   ---
+2026-10-21T02:05:21.8908351Z   duration_ms: 28.439844
+2026-10-21T02:05:21.8908560Z   type: 'test'
+2026-10-21T02:05:21.8908719Z   ...
+2026-10-21T02:05:21.8929125Z 1..14
+2026-10-21T02:05:21.8929576Z # tests 30
+2026-10-21T02:05:21.8930094Z # suites 0
+2026-10-21T02:05:21.8930465Z # pass 30
+2026-10-21T02:05:21.8930701Z # fail 0
+2026-10-21T02:05:21.8930936Z # cancelled 0
+2026-10-21T02:05:21.8931128Z # skipped 0
+2026-10-21T02:05:21.8931288Z # todo 0
+2026-10-21T02:05:21.8931465Z # duration_ms 184.117508
+2026-10-21T02:05:21.9696498Z 
+2026-10-21T02:05:21.9696874Z > layerwell@0.1.0 phase9:ios-privacy-source-audit:test
+2026-10-21T02:05:21.9697300Z > node --test scripts/phase9/ios-privacy-source-audit.test.mjs
+2026-10-21T02:05:21.9697541Z 
+2026-10-21T02:05:22.0014277Z TAP version 13
+2026-10-21T02:05:22.2301723Z # Subtest: pins and parses the installed react-native-view-shot privacy manifest
+2026-10-21T02:05:22.2305719Z ok 1 - pins and parses the installed react-native-view-shot privacy manifest
+2026-10-21T02:05:22.2308905Z   ---
+2026-10-21T02:05:22.2309383Z   duration_ms: 5.007324
+2026-10-21T02:05:22.2310038Z   type: 'test'
+2026-10-21T02:05:22.2310405Z   ...
+2026-10-21T02:05:22.2311064Z # Subtest: checked-in SDK mapping resolves hoisted lock entries and installed source pins
+2026-10-21T02:05:22.2312040Z ok 2 - checked-in SDK mapping resolves hoisted lock entries and installed source pins
+2026-10-21T02:05:22.2312860Z   ---
+2026-10-21T02:05:22.2313213Z   duration_ms: 5.146147
+2026-10-21T02:05:22.2313611Z   type: 'test'
+2026-10-21T02:05:22.2313958Z   ...
+2026-10-21T02:05:22.2314757Z # Subtest: accepts a minimal dictionary and deterministically normalizes a complete valid manifest
+2026-10-21T02:05:22.2315907Z ok 3 - accepts a minimal dictionary and deterministically normalizes a complete valid manifest
+2026-10-21T02:05:22.2316587Z   ---
+2026-10-21T02:05:22.2316901Z   duration_ms: 1.574942
+2026-10-21T02:05:22.2317380Z   type: 'test'
+2026-10-21T02:05:22.2318123Z   ...
+2026-10-21T02:05:22.2319230Z # Subtest: rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs
+2026-10-21T02:05:22.2320110Z     # Subtest: non-buffer
+2026-10-21T02:05:22.2372457Z     ok 1 - non-buffer
+2026-10-21T02:05:22.2392367Z       ---
+2026-10-21T02:05:22.2392901Z       duration_ms: 0.176776
+2026-10-21T02:05:22.2393269Z       type: 'test'
+2026-10-21T02:05:22.2393584Z       ...
+2026-10-21T02:05:22.2393952Z     # Subtest: incomplete XML
+2026-10-21T02:05:22.2394326Z     ok 2 - incomplete XML
+2026-10-21T02:05:22.2394668Z       ---
+2026-10-21T02:05:22.2394979Z       duration_ms: 0.138943
+2026-10-21T02:05:22.2395322Z       type: 'test'
+2026-10-21T02:05:22.2395631Z       ...
+2026-10-21T02:05:22.2396095Z     # Subtest: malformed XML that passes the document boundary check
+2026-10-21T02:05:22.2396749Z     ok 3 - malformed XML that passes the document boundary check
+2026-10-21T02:05:22.2397195Z       ---
+2026-10-21T02:05:22.2397508Z       duration_ms: 0.331375
+2026-10-21T02:05:22.2397853Z       type: 'test'
+2026-10-21T02:05:22.2398156Z       ...
+2026-10-21T02:05:22.2419197Z     # Subtest: non-XML junk before the plist root
+2026-10-21T02:05:22.2439628Z     ok 4 - non-XML junk before the plist root
+2026-10-21T02:05:22.2442169Z       ---
+2026-10-21T02:05:22.2442546Z       duration_ms: 0.106508
+2026-10-21T02:05:22.2442938Z       type: 'test'
+2026-10-21T02:05:22.2443285Z       ...
+2026-10-21T02:05:22.2443577Z     # Subtest: binary plist
+2026-10-21T02:05:22.2443956Z     ok 5 - binary plist
+2026-10-21T02:05:22.2444319Z       ---
+2026-10-21T02:05:22.2444648Z       duration_ms: 0.223117
+2026-10-21T02:05:22.2444990Z       type: 'test'
+2026-10-21T02:05:22.2445246Z       ...
+2026-10-21T02:05:22.2445578Z     # Subtest: non-dictionary root
+2026-10-21T02:05:22.2446307Z     ok 6 - non-dictionary root
+2026-10-21T02:05:22.2446681Z       ---
+2026-10-21T02:05:22.2447006Z       duration_ms: 0.51363
+2026-10-21T02:05:22.2447350Z       type: 'test'
+2026-10-21T02:05:22.2447667Z       ...
+2026-10-21T02:05:22.2447977Z     # Subtest: UTF-8 BOM
+2026-10-21T02:05:22.2448544Z     ok 7 - UTF-8 BOM
+2026-10-21T02:05:22.2449089Z       ---
+2026-10-21T02:05:22.2449892Z       duration_ms: 0.297476
+2026-10-21T02:05:22.2450256Z       type: 'test'
+2026-10-21T02:05:22.2450496Z       ...
+2026-10-21T02:05:22.2450770Z     # Subtest: invalid UTF-8
+2026-10-21T02:05:22.2451113Z     ok 8 - invalid UTF-8
+2026-10-21T02:05:22.2451374Z       ---
+2026-10-21T02:05:22.2451600Z       duration_ms: 0.169717
+2026-10-21T02:05:22.2451880Z       type: 'test'
+2026-10-21T02:05:22.2452119Z       ...
+2026-10-21T02:05:22.2452343Z     1..8
+2026-10-21T02:05:22.2452878Z ok 4 - rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs
+2026-10-21T02:05:22.2453364Z   ---
+2026-10-21T02:05:22.2453627Z   duration_ms: 2.79775
+2026-10-21T02:05:22.2453872Z   type: 'test'
+2026-10-21T02:05:22.2454090Z   ...
+2026-10-21T02:05:22.2454573Z # Subtest: rejects duplicate top-level dictionary keys before parser last-value recovery
+2026-10-21T02:05:22.2455289Z ok 5 - rejects duplicate top-level dictionary keys before parser last-value recovery
+2026-10-21T02:05:22.2455748Z   ---
+2026-10-21T02:05:22.2455962Z   duration_ms: 0.343334
+2026-10-21T02:05:22.2456202Z   type: 'test'
+2026-10-21T02:05:22.2456410Z   ...
+2026-10-21T02:05:22.2456798Z # Subtest: rejects unknown top-level keys and wrong top-level value types
+2026-10-21T02:05:22.2457194Z     # Subtest: unknown key
+2026-10-21T02:05:22.2457447Z     ok 1 - unknown key
+2026-10-21T02:05:22.2457672Z       ---
+2026-10-21T02:05:22.2457902Z       duration_ms: 0.326557
+2026-10-21T02:05:22.2458372Z       type: 'test'
+2026-10-21T02:05:22.2458646Z       ...
+2026-10-21T02:05:22.2458919Z     # Subtest: tracking string
+2026-10-21T02:05:22.2459230Z     ok 2 - tracking string
+2026-10-21T02:05:22.2459531Z       ---
+2026-10-21T02:05:22.2459766Z       duration_ms: 0.197331
+2026-10-21T02:05:22.2460058Z       type: 'test'
+2026-10-21T02:05:22.2460307Z       ...
+2026-10-21T02:05:22.2460800Z     # Subtest: domains string
+2026-10-21T02:05:22.2461100Z     ok 3 - domains string
+2026-10-21T02:05:22.2461383Z       ---
+2026-10-21T02:05:22.2461624Z       duration_ms: 0.222941
+2026-10-21T02:05:22.2461905Z       type: 'test'
+2026-10-21T02:05:22.2462139Z       ...
+2026-10-21T02:05:22.2462422Z     # Subtest: accessed API dictionary
+2026-10-21T02:05:22.2462795Z     ok 4 - accessed API dictionary
+2026-10-21T02:05:22.2463107Z       ---
+2026-10-21T02:05:22.2463346Z       duration_ms: 1.089741
+2026-10-21T02:05:22.2463627Z       type: 'test'
+2026-10-21T02:05:22.2463874Z       ...
+2026-10-21T02:05:22.2464154Z     # Subtest: collected data dictionary
+2026-10-21T02:05:22.2464539Z     ok 5 - collected data dictionary
+2026-10-21T02:05:22.2464855Z       ---
+2026-10-21T02:05:22.2465093Z       duration_ms: 0.341299
+2026-10-21T02:05:22.2465388Z       type: 'test'
+2026-10-21T02:05:22.2465634Z       ...
+2026-10-21T02:05:22.2465856Z     1..5
+2026-10-21T02:05:22.2466296Z ok 6 - rejects unknown top-level keys and wrong top-level value types
+2026-10-21T02:05:22.2466735Z   ---
+2026-10-21T02:05:22.2466982Z   duration_ms: 2.54497
+2026-10-21T02:05:22.2467256Z   type: 'test'
+2026-10-21T02:05:22.2467499Z   ...
+2026-10-21T02:05:22.2467884Z # Subtest: rejects an explicitly empty accessed-API array
+2026-10-21T02:05:22.2468551Z ok 7 - rejects an explicitly empty accessed-API array
+2026-10-21T02:05:22.2468928Z   ---
+2026-10-21T02:05:22.2469170Z   duration_ms: 0.235564
+2026-10-21T02:05:22.2469411Z   type: 'test'
+2026-10-21T02:05:22.2469633Z   ...
+2026-10-21T02:05:22.2470107Z # Subtest: rejects required-reason mismatches, duplicate reasons, and duplicate categories
+2026-10-21T02:05:22.2470666Z     # Subtest: reason belongs to another category
+2026-10-21T02:05:22.2471078Z     ok 1 - reason belongs to another category
+2026-10-21T02:05:22.2471644Z       ---
+2026-10-21T02:05:22.2471888Z       duration_ms: 0.259432
+2026-10-21T02:05:22.2472163Z       type: 'test'
+2026-10-21T02:05:22.2472411Z       ...
+2026-10-21T02:05:22.2472681Z     # Subtest: duplicate reason
+2026-10-21T02:05:22.2473004Z     ok 2 - duplicate reason
+2026-10-21T02:05:22.2473270Z       ---
+2026-10-21T02:05:22.2473500Z       duration_ms: 0.21007
+2026-10-21T02:05:22.2473779Z       type: 'test'
+2026-10-21T02:05:22.2474023Z       ...
+2026-10-21T02:05:22.2474281Z     # Subtest: duplicate category
+2026-10-21T02:05:22.2474596Z     ok 3 - duplicate category
+2026-10-21T02:05:22.2474877Z       ---
+2026-10-21T02:05:22.2475112Z       duration_ms: 0.302212
+2026-10-21T02:05:22.2475394Z       type: 'test'
+2026-10-21T02:05:22.2475623Z       ...
+2026-10-21T02:05:22.2475881Z     # Subtest: unknown category
+2026-10-21T02:05:22.2476174Z     ok 4 - unknown category
+2026-10-21T02:05:22.2476450Z       ---
+2026-10-21T02:05:22.2476684Z       duration_ms: 0.185875
+2026-10-21T02:05:22.2476956Z       type: 'test'
+2026-10-21T02:05:22.2477197Z       ...
+2026-10-21T02:05:22.2477434Z     # Subtest: empty reasons
+2026-10-21T02:05:22.2477728Z     ok 5 - empty reasons
+2026-10-21T02:05:22.2478006Z       ---
+2026-10-21T02:05:22.2481669Z       duration_ms: 0.196102
+2026-10-21T02:05:22.2482052Z       type: 'test'
+2026-10-21T02:05:22.2482312Z       ...
+2026-10-21T02:05:22.2482537Z     1..5
+2026-10-21T02:05:22.2483062Z ok 8 - rejects required-reason mismatches, duplicate reasons, and duplicate categories
+2026-10-21T02:05:22.2483590Z   ---
+2026-10-21T02:05:22.2483833Z   duration_ms: 1.495758
+2026-10-21T02:05:22.2484100Z   type: 'test'
+2026-10-21T02:05:22.2484373Z   ...
+2026-10-21T02:05:22.2484887Z # Subtest: rejects collected-data values outside Apple enums and invalid field values
+2026-10-21T02:05:22.2485453Z     # Subtest: unknown collected data type
+2026-10-21T02:05:22.2485846Z     ok 1 - unknown collected data type
+2026-10-21T02:05:22.2486159Z       ---
+2026-10-21T02:05:22.2486403Z       duration_ms: 0.381345
+2026-10-21T02:05:22.2486701Z       type: 'test'
+2026-10-21T02:05:22.2486940Z       ...
+2026-10-21T02:05:22.2487241Z     # Subtest: unknown collected data purpose
+2026-10-21T02:05:22.2487645Z     ok 2 - unknown collected data purpose
+2026-10-21T02:05:22.2488426Z       ---
+2026-10-21T02:05:22.2488701Z       duration_ms: 0.233739
+2026-10-21T02:05:22.2488987Z       type: 'test'
+2026-10-21T02:05:22.2489230Z       ...
+2026-10-21T02:05:22.2489475Z     # Subtest: empty purposes
+2026-10-21T02:05:22.2489801Z     ok 3 - empty purposes
+2026-10-21T02:05:22.2490079Z       ---
+2026-10-21T02:05:22.2490317Z       duration_ms: 0.258145
+2026-10-21T02:05:22.2490589Z       type: 'test'
+2026-10-21T02:05:22.2490819Z       ...
+2026-10-21T02:05:22.2491036Z     1..3
+2026-10-21T02:05:22.2491487Z ok 9 - rejects collected-data values outside Apple enums and invalid field values
+2026-10-21T02:05:22.2491930Z   ---
+2026-10-21T02:05:22.2492133Z   duration_ms: 1.284539
+2026-10-21T02:05:22.2492444Z   type: 'test'
+2026-10-21T02:05:22.2492688Z   ...
+2026-10-21T02:05:22.2493002Z # Subtest: rejects duplicate collected types
+2026-10-21T02:05:22.2493419Z ok 10 - rejects duplicate collected types
+2026-10-21T02:05:22.2493737Z   ---
+2026-10-21T02:05:22.2493967Z   duration_ms: 0.372642
+2026-10-21T02:05:22.2494241Z   type: 'test'
+2026-10-21T02:05:22.2494467Z   ...
+2026-10-21T02:05:22.2494785Z # Subtest: rejects every tracking contradiction
+2026-10-21T02:05:22.2495210Z     # Subtest: domains while tracking is false
+2026-10-21T02:05:22.2495568Z     ok 1 - domains while tracking is false
+2026-10-21T02:05:22.2495818Z       ---
+2026-10-21T02:05:22.2496016Z       duration_ms: 0.264615
+2026-10-21T02:05:22.2496238Z       type: 'test'
+2026-10-21T02:05:22.2496442Z       ...
+2026-10-21T02:05:22.2496713Z     # Subtest: tracking true without domains
+2026-10-21T02:05:22.2497062Z     ok 2 - tracking true without domains
+2026-10-21T02:05:22.2497368Z       ---
+2026-10-21T02:05:22.2497603Z       duration_ms: 0.140353
+2026-10-21T02:05:22.2497885Z       type: 'test'
+2026-10-21T02:05:22.2498111Z       ...
+2026-10-21T02:05:22.2498942Z     # Subtest: collected item tracks while top-level tracking is false
+2026-10-21T02:05:22.2499513Z     ok 3 - collected item tracks while top-level tracking is false
+2026-10-21T02:05:22.2499920Z       ---
+2026-10-21T02:05:22.2500173Z       duration_ms: 0.20689
+2026-10-21T02:05:22.2500454Z       type: 'test'
+2026-10-21T02:05:22.2500695Z       ...
+2026-10-21T02:05:22.2500926Z     1..3
+2026-10-21T02:05:22.2501246Z ok 11 - rejects every tracking contradiction
+2026-10-21T02:05:22.2501579Z   ---
+2026-10-21T02:05:22.2501821Z   duration_ms: 0.840585
+2026-10-21T02:05:22.2502090Z   type: 'test'
+2026-10-21T02:05:22.2502319Z   ...
+2026-10-21T02:05:22.2502927Z # Subtest: accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts
+2026-10-21T02:05:22.2503458Z     # Subtest: query
+2026-10-21T02:05:22.2503711Z     ok 1 - query
+2026-10-21T02:05:22.2503929Z       ---
+2026-10-21T02:05:22.2504161Z       duration_ms: 0.289614
+2026-10-21T02:05:22.2504432Z       type: 'test'
+2026-10-21T02:05:22.2504657Z       ...
+2026-10-21T02:05:22.2504895Z     # Subtest: wildcard
+2026-10-21T02:05:22.2505159Z     ok 2 - wildcard
+2026-10-21T02:05:22.2505388Z       ---
+2026-10-21T02:05:22.2505630Z       duration_ms: 0.155605
+2026-10-21T02:05:22.2505898Z       type: 'test'
+2026-10-21T02:05:22.2506138Z       ...
+2026-10-21T02:05:22.2506390Z     # Subtest: leading hyphen
+2026-10-21T02:05:22.2506689Z     ok 3 - leading hyphen
+2026-10-21T02:05:22.2506959Z       ---
+2026-10-21T02:05:22.2507191Z       duration_ms: 0.142904
+2026-10-21T02:05:22.2507462Z       type: 'test'
+2026-10-21T02:05:22.2507699Z       ...
+2026-10-21T02:05:22.2507975Z     # Subtest: trailing hyphen
+2026-10-21T02:05:22.2508470Z     ok 4 - trailing hyphen
+2026-10-21T02:05:22.2508818Z       ---
+2026-10-21T02:05:22.2509068Z       duration_ms: 0.152412
+2026-10-21T02:05:22.2509351Z       type: 'test'
+2026-10-21T02:05:22.2509597Z       ...
+2026-10-21T02:05:22.2509843Z     # Subtest: empty label
+2026-10-21T02:05:22.2510128Z     ok 5 - empty label
+2026-10-21T02:05:22.2510395Z       ---
+2026-10-21T02:05:22.2510631Z       duration_ms: 0.163421
+2026-10-21T02:05:22.2510910Z       type: 'test'
+2026-10-21T02:05:22.2511146Z       ...
+2026-10-21T02:05:22.2511585Z     # Subtest: IPv4
+2026-10-21T02:05:22.2511890Z     ok 6 - IPv4
+2026-10-21T02:05:22.2512136Z       ---
+2026-10-21T02:05:22.2512379Z       duration_ms: 0.176247
+2026-10-21T02:05:22.2512653Z       type: 'test'
+2026-10-21T02:05:22.2512906Z       ...
+2026-10-21T02:05:22.2513138Z     # Subtest: IPv6
+2026-10-21T02:05:22.2513392Z     ok 7 - IPv6
+2026-10-21T02:05:22.2513630Z       ---
+2026-10-21T02:05:22.2513869Z       duration_ms: 0.163325
+2026-10-21T02:05:22.2514144Z       type: 'test'
+2026-10-21T02:05:22.2514462Z       ...
+2026-10-21T02:05:22.2514712Z     # Subtest: localhost
+2026-10-21T02:05:22.2514999Z     ok 8 - localhost
+2026-10-21T02:05:22.2515246Z       ---
+2026-10-21T02:05:22.2515480Z       duration_ms: 0.158018
+2026-10-21T02:05:22.2515744Z       type: 'test'
+2026-10-21T02:05:22.2515972Z       ...
+2026-10-21T02:05:22.2516176Z     # Subtest: port
+2026-10-21T02:05:22.2516411Z     ok 9 - port
+2026-10-21T02:05:22.2516641Z       ---
+2026-10-21T02:05:22.2516867Z       duration_ms: 0.176726
+2026-10-21T02:05:22.2517135Z       type: 'test'
+2026-10-21T02:05:22.2517351Z       ...
+2026-10-21T02:05:22.2517582Z     # Subtest: scheme
+2026-10-21T02:05:22.2517813Z     ok 10 - scheme
+2026-10-21T02:05:22.2518026Z       ---
+2026-10-21T02:05:22.2518457Z       duration_ms: 0.152133
+2026-10-21T02:05:22.2518726Z       type: 'test'
+2026-10-21T02:05:22.2518948Z       ...
+2026-10-21T02:05:22.2519189Z     # Subtest: path
+2026-10-21T02:05:22.2519434Z     ok 11 - path
+2026-10-21T02:05:22.2519653Z       ---
+2026-10-21T02:05:22.2519861Z       duration_ms: 0.167246
+2026-10-21T02:05:22.2520107Z       type: 'test'
+2026-10-21T02:05:22.2520325Z       ...
+2026-10-21T02:05:22.2520568Z     # Subtest: unicode label
+2026-10-21T02:05:22.2520834Z     ok 12 - unicode label
+2026-10-21T02:05:22.2521081Z       ---
+2026-10-21T02:05:22.2521553Z       duration_ms: 0.162696
+2026-10-21T02:05:22.2521835Z       type: 'test'
+2026-10-21T02:05:22.2522072Z       ...
+2026-10-21T02:05:22.2522375Z     # Subtest: case-insensitive duplicate
+2026-10-21T02:05:22.2522788Z     ok 13 - case-insensitive duplicate
+2026-10-21T02:05:22.2523099Z       ---
+2026-10-21T02:05:22.2523318Z       duration_ms: 0.285463
+2026-10-21T02:05:22.2523574Z       type: 'test'
+2026-10-21T02:05:22.2523811Z       ...
+2026-10-21T02:05:22.2524215Z     # Subtest: case-insensitive two-label duplicate
+2026-10-21T02:05:22.2524741Z     ok 14 - case-insensitive two-label duplicate
+2026-10-21T02:05:22.2525152Z       ---
+2026-10-21T02:05:22.2525452Z       duration_ms: 0.365142
+2026-10-21T02:05:22.2525825Z       type: 'test'
+2026-10-21T02:05:22.2526121Z       ...
+2026-10-21T02:05:22.2526421Z     # Subtest: overlong label
+2026-10-21T02:05:22.2526812Z     ok 15 - overlong label
+2026-10-21T02:05:22.2527151Z       ---
+2026-10-21T02:05:22.2527440Z       duration_ms: 0.299179
+2026-10-21T02:05:22.2527781Z       type: 'test'
+2026-10-21T02:05:22.2528081Z       ...
+2026-10-21T02:05:22.2528509Z     1..15
+2026-10-21T02:05:22.2529211Z ok 12 - accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts
+2026-10-21T02:05:22.2529822Z   ---
+2026-10-21T02:05:22.2530136Z   duration_ms: 3.952292
+2026-10-21T02:05:22.2530461Z   type: 'test'
+2026-10-21T02:05:22.2530749Z   ...
+2026-10-21T02:05:22.2531449Z # Subtest: rejects source-only reports that make archive, labels, signatures, review, or acceptance claims
+2026-10-21T02:05:22.2532580Z ok 13 - rejects source-only reports that make archive, labels, signatures, review, or acceptance claims
+2026-10-21T02:05:22.2533216Z   ---
+2026-10-21T02:05:22.2533486Z   duration_ms: 1.100967
+2026-10-21T02:05:22.2533831Z   type: 'test'
+2026-10-21T02:05:22.2534159Z   ...
+2026-10-21T02:05:22.2534918Z # Subtest: rejects nested archive-inclusion and signature claims anywhere in report arrays or records
+2026-10-21T02:05:22.2535979Z ok 14 - rejects nested archive-inclusion and signature claims anywhere in report arrays or records
+2026-10-21T02:05:22.2536610Z   ---
+2026-10-21T02:05:22.2536877Z   duration_ms: 0.335085
+2026-10-21T02:05:22.2537154Z   type: 'test'
+2026-10-21T02:05:22.2537597Z   ...
+2026-10-21T02:05:22.2538328Z # Subtest: audits a minimal fixture deterministically and still requires archive follow-up
+2026-10-21T02:05:22.2539094Z ok 15 - audits a minimal fixture deterministically and still requires archive follow-up
+2026-10-21T02:05:22.2539562Z   ---
+2026-10-21T02:05:22.2539794Z   duration_ms: 5.150528
+2026-10-21T02:05:22.2540106Z   type: 'test'
+2026-10-21T02:05:22.2540395Z   ...
+2026-10-21T02:05:22.2541058Z # Subtest: deeply freezes the audit report so mutation cannot alter deterministic serialization
+2026-10-21T02:05:22.2542020Z ok 16 - deeply freezes the audit report so mutation cannot alter deterministic serialization
+2026-10-21T02:05:22.2542597Z   ---
+2026-10-21T02:05:22.2542908Z   duration_ms: 2.974464
+2026-10-21T02:05:22.2543240Z   type: 'test'
+2026-10-21T02:05:22.2543542Z   ...
+2026-10-21T02:05:22.2544205Z # Subtest: rejects a mutated baseline even when its published and sorted digests are recomputed
+2026-10-21T02:05:22.2545170Z ok 17 - rejects a mutated baseline even when its published and sorted digests are recomputed
+2026-10-21T02:05:22.2545754Z   ---
+2026-10-21T02:05:22.2546061Z   duration_ms: 2.749577
+2026-10-21T02:05:22.2546421Z   type: 'test'
+2026-10-21T02:05:22.2546703Z   ...
+2026-10-21T02:05:22.2547316Z # Subtest: binds exact podspec privacy resources and ignores Ruby comments as evidence
+2026-10-21T02:05:22.2548339Z ok 18 - binds exact podspec privacy resources and ignores Ruby comments as evidence
+2026-10-21T02:05:22.2548879Z   ---
+2026-10-21T02:05:22.2549124Z   duration_ms: 4.016863
+2026-10-21T02:05:22.2549407Z   type: 'test'
+2026-10-21T02:05:22.2549641Z   ...
+2026-10-21T02:05:22.2550136Z # Subtest: retains unresolved standalone manifests as archive-required warnings
+2026-10-21T02:05:22.2550862Z ok 19 - retains unresolved standalone manifests as archive-required warnings
+2026-10-21T02:05:22.2551561Z   ---
+2026-10-21T02:05:22.2551804Z   duration_ms: 2.137079
+2026-10-21T02:05:22.2552077Z   type: 'test'
+2026-10-21T02:05:22.2552299Z   ...
+2026-10-21T02:05:22.2552788Z # Subtest: does not treat an arbitrary quoted podspec string as a resource binding
+2026-10-21T02:05:22.2553502Z ok 20 - does not treat an arbitrary quoted podspec string as a resource binding
+2026-10-21T02:05:22.2553941Z   ---
+2026-10-21T02:05:22.2554185Z   duration_ms: 2.083521
+2026-10-21T02:05:22.2554466Z   type: 'test'
+2026-10-21T02:05:22.2554700Z   ...
+2026-10-21T02:05:22.2555239Z # Subtest: does not parse a .resources assignment token embedded inside a Ruby string literal
+2026-10-21T02:05:22.2556056Z ok 21 - does not parse a .resources assignment token embedded inside a Ruby string literal
+2026-10-21T02:05:22.2556553Z   ---
+2026-10-21T02:05:22.2556786Z   duration_ms: 2.168693
+2026-10-21T02:05:22.2557057Z   type: 'test'
+2026-10-21T02:05:22.2557290Z   ...
+2026-10-21T02:05:22.2557790Z # Subtest: treats an embedded XCFramework manifest as source-container bound
+2026-10-21T02:05:22.2560301Z ok 22 - treats an embedded XCFramework manifest as source-container bound
+2026-10-21T02:05:22.2560748Z   ---
+2026-10-21T02:05:22.2561016Z   duration_ms: 2.860506
+2026-10-21T02:05:22.2561289Z   type: 'test'
+2026-10-21T02:05:22.2561524Z   ...
+2026-10-21T02:05:22.2562017Z # Subtest: rejects non-exact, escaping, and missing podspec privacy resources
+2026-10-21T02:05:22.2562517Z     # Subtest: glob reference
+2026-10-21T02:05:22.2562827Z     ok 1 - glob reference
+2026-10-21T02:05:22.2563095Z       ---
+2026-10-21T02:05:22.2563332Z       duration_ms: 2.480842
+2026-10-21T02:05:22.2563614Z       type: 'test'
+2026-10-21T02:05:22.2563845Z       ...
+2026-10-21T02:05:22.2564093Z     # Subtest: package escape
+2026-10-21T02:05:22.2585157Z     ok 2 - package escape
+2026-10-21T02:05:22.2595172Z       ---
+2026-10-21T02:05:22.2595718Z       duration_ms: 2.121755
+2026-10-21T02:05:22.2596167Z       type: 'test'
+2026-10-21T02:05:22.2596548Z       ...
+2026-10-21T02:05:22.2596936Z     # Subtest: missing exact target
+2026-10-21T02:05:22.2597404Z     ok 3 - missing exact target
+2026-10-21T02:05:22.2597803Z       ---
+2026-10-21T02:05:22.2598628Z       duration_ms: 2.125859
+2026-10-21T02:05:22.2599047Z       type: 'test'
+2026-10-21T02:05:22.2599405Z       ...
+2026-10-21T02:05:22.2599748Z     1..3
+2026-10-21T02:05:22.2600324Z ok 23 - rejects non-exact, escaping, and missing podspec privacy resources
+2026-10-21T02:05:22.2600882Z   ---
+2026-10-21T02:05:22.2601235Z   duration_ms: 7.065677
+2026-10-21T02:05:22.2601697Z   type: 'test'
+2026-10-21T02:05:22.2602157Z   ...
+2026-10-21T02:05:22.2602690Z # Subtest: does not silently skip a malformed native package.json
+2026-10-21T02:05:22.2603379Z ok 24 - does not silently skip a malformed native package.json
+2026-10-21T02:05:22.2603867Z   ---
+2026-10-21T02:05:22.2604215Z   duration_ms: 2.379757
+2026-10-21T02:05:22.2604617Z   type: 'test'
+2026-10-21T02:05:22.2604919Z   ...
+2026-10-21T02:05:22.2605366Z # Subtest: ledgers a malformed installed package.json even without another native root signal
+2026-10-21T02:05:22.2606028Z ok 25 - ledgers a malformed installed package.json even without another native root signal
+2026-10-21T02:05:22.2606436Z   ---
+2026-10-21T02:05:22.2606689Z   duration_ms: 1.632272
+2026-10-21T02:05:22.2606949Z   type: 'test'
+2026-10-21T02:05:22.2607188Z   ...
+2026-10-21T02:05:22.2607567Z # Subtest: applies the total native traversal bound globally across packages
+2026-10-21T02:05:22.2608142Z ok 26 - applies the total native traversal bound globally across packages
+2026-10-21T02:05:22.2608879Z   ---
+2026-10-21T02:05:22.2609139Z   duration_ms: 1.81129
+2026-10-21T02:05:22.2609389Z   type: 'test'
+2026-10-21T02:05:22.2609594Z   ...
+2026-10-21T02:05:22.2610048Z # Subtest: rejects oversized manifests, excessive depth, and unreviewed bound overrides
+2026-10-21T02:05:22.2610775Z ok 27 - rejects oversized manifests, excessive depth, and unreviewed bound overrides
+2026-10-21T02:05:22.2611194Z   ---
+2026-10-21T02:05:22.2611616Z   duration_ms: 3.275569
+2026-10-21T02:05:22.2611870Z   type: 'test'
+2026-10-21T02:05:22.2612090Z   ...
+2026-10-21T02:05:22.2612517Z # Subtest: rejects a symlink or junction inside native source traversal
+2026-10-21T02:05:22.2613106Z ok 28 - rejects a symlink or junction inside native source traversal
+2026-10-21T02:05:22.2613497Z   ---
+2026-10-21T02:05:22.2613741Z   duration_ms: 1.588723
+2026-10-21T02:05:22.2613998Z   type: 'test'
+2026-10-21T02:05:22.2614223Z   ...
+2026-10-21T02:05:22.2614727Z # Subtest: CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments
+2026-10-21T02:05:22.2615459Z ok 29 - CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments
+2026-10-21T02:05:22.2615907Z   ---
+2026-10-21T02:05:22.2616151Z   duration_ms: 90.555203
+2026-10-21T02:05:22.2616424Z   type: 'test'
+2026-10-21T02:05:22.2616671Z   ...
+2026-10-21T02:05:22.2617152Z # Subtest: CLI --write is deterministic and --check is read-only on success and drift
+2026-10-21T02:05:22.2617898Z ok 30 - CLI --write is deterministic and --check is read-only on success and drift
+2026-10-21T02:05:22.2618597Z   ---
+2026-10-21T02:05:22.2618846Z   duration_ms: 6.891793
+2026-10-21T02:05:22.2619131Z   type: 'test'
+2026-10-21T02:05:22.2619372Z   ...
+2026-10-21T02:05:22.2619824Z # Subtest: CLI strict mode fails closed before writing invalid source evidence
+2026-10-21T02:05:22.2620418Z ok 31 - CLI strict mode fails closed before writing invalid source evidence
+2026-10-21T02:05:22.2620910Z   ---
+2026-10-21T02:05:22.2621134Z   duration_ms: 2.055216
+2026-10-21T02:05:22.2621412Z   type: 'test'
+2026-10-21T02:05:22.2621640Z   ...
+2026-10-21T02:05:22.2622096Z # Subtest: CLI refuses a generated-output directory link without touching its target
+2026-10-21T02:05:22.2622845Z ok 32 - CLI refuses a generated-output directory link without touching its target
+2026-10-21T02:05:22.2623305Z   ---
+2026-10-21T02:05:22.2623534Z   duration_ms: 1.656906
+2026-10-21T02:05:22.2623793Z   type: 'test'
+2026-10-21T02:05:22.2624026Z   ...
+2026-10-21T02:05:22.2624497Z # Subtest: CLI refuses existing output paths that are distinct hardlinks to one inode
+2026-10-21T02:05:22.2625403Z ok 33 - CLI refuses existing output paths that are distinct hardlinks to one inode
+2026-10-21T02:05:22.2625821Z   ---
+2026-10-21T02:05:22.2626049Z   duration_ms: 1.278035
+2026-10-21T02:05:22.2626319Z   type: 'test'
+2026-10-21T02:05:22.2626532Z   ...
+2026-10-21T02:05:22.2626965Z # Subtest: CLI follows host case rules when output paths differ only by case
+2026-10-21T02:05:22.2627596Z ok 34 - CLI follows host case rules when output paths differ only by case
+2026-10-21T02:05:22.2628002Z   ---
+2026-10-21T02:05:22.2628456Z   duration_ms: 4.564283
+2026-10-21T02:05:22.2628719Z   type: 'test'
+2026-10-21T02:05:22.2628930Z   ...
+2026-10-21T02:05:22.2629396Z # Subtest: CLI refuses an existing output-file symlink without mutating its target
+2026-10-21T02:05:22.2630060Z ok 35 - CLI refuses an existing output-file symlink without mutating its target
+2026-10-21T02:05:22.2630525Z   ---
+2026-10-21T02:05:22.2630755Z   duration_ms: 3.11615
+2026-10-21T02:05:22.2630992Z   type: 'test'
+2026-10-21T02:05:22.2631207Z   ...
+2026-10-21T02:05:22.2639115Z 1..35
+2026-10-21T02:05:22.2639450Z # tests 77
+2026-10-21T02:05:22.2639710Z # suites 0
+2026-10-21T02:05:22.2639934Z # pass 77
+2026-10-21T02:05:22.2640161Z # fail 0
+2026-10-21T02:05:22.2640391Z # cancelled 0
+2026-10-21T02:05:22.2640645Z # skipped 0
+2026-10-21T02:05:22.2640872Z # todo 0
+2026-10-21T02:05:22.2641127Z # duration_ms 271.121622
+2026-10-21T02:05:22.3419666Z 
+2026-10-21T02:05:22.3420809Z > layerwell@0.1.0 phase9:ios-privacy-source-audit:check
+2026-10-21T02:05:22.3421546Z > node scripts/phase9/ios-privacy-source-audit.mjs --check --strict
+2026-10-21T02:05:22.3421895Z 
+2026-10-21T02:05:23.1540872Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#@react-native-google-signin/google-signin: Mapping package-lock path/hash do not match current bytes.
+2026-10-21T02:05:23.1542183Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#expo-image: Mapping package-lock path/hash do not match current bytes.
+2026-10-21T02:05:23.1543687Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#react-native: Mapping package-lock path/hash do not match current bytes.
+2026-10-21T02:05:23.1544351Z iOS privacy source audit failed strict validation.
+2026-10-21T02:05:23.1710359Z ##[error]Process completed with exit code 1.
+2026-10-21T02:05:23.1764486Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-21T02:05:23.1764946Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-21T02:05:23.1765214Z [36;1mset +e[0m
+2026-10-21T02:05:23.1765408Z [36;1mnpm run phase9:dependency-sbom[0m
+2026-10-21T02:05:23.1765630Z [36;1msbom_exit=$?[0m
+2026-10-21T02:05:23.1765811Z [36;1mset -e[0m
+2026-10-21T02:05:23.1766119Z [36;1mecho "$sbom_exit" > docs/phase-9/generated/ci-scanner-evidence/dependency-sbom.exit-code[0m
+2026-10-21T02:05:23.1766714Z [36;1mcp -- docs/phase-9/generated/dependency-inventory.json docs/phase-9/generated/ci-scanner-evidence/dependency-inventory.json[0m
+2026-10-21T02:05:23.1767405Z [36;1mcp -- docs/phase-9/generated/dependency-sbom-audit.json docs/phase-9/generated/ci-scanner-evidence/dependency-sbom-audit.json[0m
+2026-10-21T02:05:23.1768429Z [36;1mcp -- docs/phase-9/generated/dependency-sbom-audit.exit-code docs/phase-9/generated/ci-scanner-evidence/dependency-sbom-audit.exit-code[0m
+2026-10-21T02:05:23.1768937Z [36;1mexit "$sbom_exit"[0m
+2026-10-21T02:05:23.1800038Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:23.1800257Z env:
+2026-10-21T02:05:23.1800434Z   PHASE9_RUN_NPM_AUDIT: true
+2026-10-21T02:05:23.1800636Z ##[endgroup]
+2026-10-21T02:05:23.2570892Z 
+2026-10-21T02:05:23.2571359Z > layerwell@0.1.0 phase9:dependency-sbom
+2026-10-21T02:05:23.2571790Z > node scripts/phase9/dependency-sbom.mjs
+2026-10-21T02:05:23.2572000Z 
+2026-10-21T02:05:26.4954966Z Phase 9 dependency SBOM
+2026-10-21T02:05:26.4955934Z WARN Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts.
+2026-10-21T02:05:26.4956744Z FAIL braces: review is expired or dates are invalid
+2026-10-21T02:05:26.4957269Z FAIL node-forge: review is expired or dates are invalid
+2026-10-21T02:05:26.4957597Z 
+2026-10-21T02:05:26.4958112Z Phase 9 dependency SBOM has 2 blockers.
+2026-10-21T02:05:26.5059157Z ##[error]Process completed with exit code 1.
+2026-10-21T02:05:26.5083961Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-21T02:05:26.5084326Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-21T02:05:26.5084563Z [36;1mset +e[0m
+2026-10-21T02:05:26.5084863Z [36;1mnpm audit --audit-level=high --json > docs/phase-9/generated/ci-scanner-evidence/npm-audit-high.json[0m
+2026-10-21T02:05:26.5085200Z [36;1maudit_exit=$?[0m
+2026-10-21T02:05:26.5085368Z [36;1mset -e[0m
+2026-10-21T02:05:26.5085640Z [36;1mecho "$audit_exit" > docs/phase-9/generated/ci-scanner-evidence/npm-audit-high.exit-code[0m
+2026-10-21T02:05:26.5085966Z [36;1mexit "$audit_exit"[0m
+2026-10-21T02:05:26.5116083Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:26.5116307Z ##[endgroup]
+2026-10-21T02:05:28.1340298Z ##[error]Process completed with exit code 1.
+2026-10-21T02:05:28.1365464Z ##[group]Run node --test scripts/phase9/security-advisory-exceptions.test.mjs
+2026-10-21T02:05:28.1365885Z [36;1mnode --test scripts/phase9/security-advisory-exceptions.test.mjs[0m
+2026-10-21T02:05:28.1396351Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:28.1396559Z ##[endgroup]
+2026-10-21T02:05:28.1712367Z TAP version 13
+2026-10-21T02:05:28.2024967Z # Subtest: accepts only the reviewed npm and OSV findings, including inherited npm findings
+2026-10-21T02:05:28.2028098Z ok 1 - accepts only the reviewed npm and OSV findings, including inherited npm findings
+2026-10-21T02:05:28.2029136Z   ---
+2026-10-21T02:05:28.2029440Z   duration_ms: 2.343755
+2026-10-21T02:05:28.2029699Z   type: 'test'
+2026-10-21T02:05:28.2029968Z   ...
+2026-10-21T02:05:28.2032139Z # Subtest: rejects any new High advisory and any unreviewed OSV finding
+2026-10-21T02:05:28.2034259Z ok 2 - rejects any new High advisory and any unreviewed OSV finding
+2026-10-21T02:05:28.2034852Z   ---
+2026-10-21T02:05:28.2035280Z   duration_ms: 0.41169
+2026-10-21T02:05:28.2035668Z   type: 'test'
+2026-10-21T02:05:28.2035970Z   ...
+2026-10-21T02:05:28.2036454Z # Subtest: resolves an inherited npm advisory through a dependency cycle
+2026-10-21T02:05:28.2037085Z ok 3 - resolves an inherited npm advisory through a dependency cycle
+2026-10-21T02:05:28.2042568Z   ---
+2026-10-21T02:05:28.2042887Z   duration_ms: 0.269711
+2026-10-21T02:05:28.2043126Z   type: 'test'
+2026-10-21T02:05:28.2043309Z   ...
+2026-10-21T02:05:28.2043686Z # Subtest: rejects changed package versions, removed scanner evidence, and scanner errors
+2026-10-21T02:05:28.2050054Z ok 4 - rejects changed package versions, removed scanner evidence, and scanner errors
+2026-10-21T02:05:28.2050647Z   ---
+2026-10-21T02:05:28.2051346Z   duration_ms: 0.278414
+2026-10-21T02:05:28.2051667Z   type: 'test'
+2026-10-21T02:05:28.2051905Z   ...
+2026-10-21T02:05:28.2052400Z # Subtest: fails closed when an approved advisory disappears from either scanner report
+2026-10-21T02:05:28.2053098Z ok 5 - fails closed when an approved advisory disappears from either scanner report
+2026-10-21T02:05:28.2064000Z   ---
+2026-10-21T02:05:28.2064275Z   duration_ms: 0.222963
+2026-10-21T02:05:28.2068649Z   type: 'test'
+2026-10-21T02:05:28.2068947Z   ...
+2026-10-21T02:05:28.2069365Z # Subtest: rejects expanded, expired, and weakened exception records
+2026-10-21T02:05:28.2069907Z ok 6 - rejects expanded, expired, and weakened exception records
+2026-10-21T02:05:28.2070250Z   ---
+2026-10-21T02:05:28.2070470Z   duration_ms: 0.237551
+2026-10-21T02:05:28.2070712Z   type: 'test'
+2026-10-21T02:05:28.2070910Z   ...
+2026-10-21T02:05:28.2071316Z # Subtest: fails when upstream lists a newer release or a patched advisory range
+2026-10-21T02:05:28.2071934Z ok 7 - fails when upstream lists a newer release or a patched advisory range
+2026-10-21T02:05:28.2072353Z   ---
+2026-10-21T02:05:28.2072569Z   duration_ms: 0.399262
+2026-10-21T02:05:28.2072789Z   type: 'test'
+2026-10-21T02:05:28.2072978Z   ...
+2026-10-21T02:05:28.2073402Z # Subtest: retains the real Vite high aggregate with two moderate primary children
+2026-10-21T02:05:28.2074017Z ok 8 - retains the real Vite high aggregate with two moderate primary children
+2026-10-21T02:05:28.2074397Z   ---
+2026-10-21T02:05:28.2074602Z   duration_ms: 2.21782
+2026-10-21T02:05:28.2074836Z   type: 'test'
+2026-10-21T02:05:28.2075036Z   ...
+2026-10-21T02:05:28.2114739Z 1..8
+2026-10-21T02:05:28.2114965Z # tests 8
+2026-10-21T02:05:28.2115164Z # suites 0
+2026-10-21T02:05:28.2115363Z # pass 8
+2026-10-21T02:05:28.2115569Z # fail 0
+2026-10-21T02:05:28.2115738Z # cancelled 0
+2026-10-21T02:05:28.2115905Z # skipped 0
+2026-10-21T02:05:28.2116058Z # todo 0
+2026-10-21T02:05:28.2116230Z # duration_ms 47.964469
+2026-10-21T02:05:28.2167911Z ##[group]Run set +e
+2026-10-21T02:05:28.2168599Z [36;1mset +e[0m
+2026-10-21T02:05:28.2169370Z [36;1mnode scripts/phase9/security-advisory-exceptions.mjs npm > docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stdout 2> docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stderr[0m
+2026-10-21T02:05:28.2169940Z [36;1mgate_exit=$?[0m
+2026-10-21T02:05:28.2170109Z [36;1mset -e[0m
+2026-10-21T02:05:28.2170386Z [36;1mecho "$gate_exit" > docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.exit-code[0m
+2026-10-21T02:05:28.2170791Z [36;1mcat -- docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stdout[0m
+2026-10-21T02:05:28.2171175Z [36;1mcat -- docs/phase-9/generated/ci-scanner-evidence/npm-exception-gate.stderr >&2[0m
+2026-10-21T02:05:28.2171463Z [36;1mexit "$gate_exit"[0m
+2026-10-21T02:05:28.2199805Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:28.2200012Z ##[endgroup]
+2026-10-21T02:05:28.5025370Z braces: review is expired or dates are invalid
+2026-10-21T02:05:28.5025961Z node-forge: review is expired or dates are invalid
+2026-10-21T02:05:28.5029050Z ##[error]Process completed with exit code 1.
+2026-10-21T02:05:28.5064141Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-21T02:05:28.5064505Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-21T02:05:28.5064853Z [36;1mcat > docs/phase-9/generated/ci-scanner-evidence/code-gates-outcomes.json <<JSON[0m
+2026-10-21T02:05:28.5065153Z [36;1m{[0m
+2026-10-21T02:05:28.5065313Z [36;1m  "job": "code-gates",[0m
+2026-10-21T02:05:28.5065491Z [36;1m  "sha": "${GITHUB_SHA}",[0m
+2026-10-21T02:05:28.5065678Z [36;1m  "run_id": "${GITHUB_RUN_ID}",[0m
+2026-10-21T02:05:28.5065898Z [36;1m  "phase9_verify": "${G97_PHASE9_VERIFY_OUTCOME}",[0m
+2026-10-21T02:05:28.5066158Z [36;1m  "dependency_sbom": "${G97_DEPENDENCY_SBOM_OUTCOME}",[0m
+2026-10-21T02:05:28.5066422Z [36;1m  "npm_audit_high": "${G97_NPM_AUDIT_HIGH_OUTCOME}",[0m
+2026-10-21T02:05:28.5066690Z [36;1m  "npm_exception_gate": "${G97_NPM_EXCEPTION_GATE_OUTCOME}"[0m
+2026-10-21T02:05:28.5066917Z [36;1m}[0m
+2026-10-21T02:05:28.5067063Z [36;1mJSON[0m
+2026-10-21T02:05:28.5097294Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:28.5097491Z env:
+2026-10-21T02:05:28.5097665Z   G97_PHASE9_VERIFY_OUTCOME: failure
+2026-10-21T02:05:28.5097863Z   G97_DEPENDENCY_SBOM_OUTCOME: failure
+2026-10-21T02:05:28.5098055Z   G97_NPM_AUDIT_HIGH_OUTCOME: failure
+2026-10-21T02:05:28.5098464Z   G97_NPM_EXCEPTION_GATE_OUTCOME: failure
+2026-10-21T02:05:28.5098657Z ##[endgroup]
+2026-10-21T02:05:28.5213579Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-21T02:05:28.5213893Z with:
+2026-10-21T02:05:28.5214075Z   name: code-security-evidence-39530897028
+2026-10-21T02:05:28.5214323Z   path: docs/phase-9/generated/ci-scanner-evidence/
+2026-10-21T02:05:28.5214563Z   if-no-files-found: error
+2026-10-21T02:05:28.5214745Z   retention-days: 30
+2026-10-21T02:05:28.5214917Z   compression-level: 6
+2026-10-21T02:05:28.5215087Z   overwrite: false
+2026-10-21T02:05:28.5215258Z   include-hidden-files: false
+2026-10-21T02:05:28.5215460Z ##[endgroup]
+2026-10-21T02:05:28.6427362Z (node:2936) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-21T02:05:28.6428077Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-21T02:05:28.6485034Z With the provided path, there will be 10 files uploaded
+2026-10-21T02:05:28.6485552Z Artifact name is valid!
+2026-10-21T02:05:28.6485860Z Root directory input is valid!
+2026-10-21T02:05:28.9804680Z Beginning upload of artifact content to blob storage
+2026-10-21T02:05:29.0070104Z (node:2936) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-21T02:05:29.1916779Z Uploaded bytes 38789
+2026-10-21T02:05:29.2318381Z Finished uploading artifact content to blob storage!
+2026-10-21T02:05:29.2319046Z SHA256 digest of uploaded artifact zip is 9dd3476421952df585a807c9ca4bf5f0dbbb9859a340bfc506c4bca13af8c4b4
+2026-10-21T02:05:29.2319791Z Finalizing artifact upload
+2026-10-21T02:05:29.4591188Z Artifact code-security-evidence-39530897028.zip successfully finalized. Artifact ID 12315670330
+2026-10-21T02:05:29.4592069Z Artifact code-security-evidence-39530897028 has been successfully uploaded! Final size is 38789 bytes. Artifact ID is 12315670330
+2026-10-21T02:05:29.4597554Z Artifact download URL: https://github.com/TasfiqJ/onSkin/actions/runs/39530897028/artifacts/12315670330
+2026-10-21T02:05:29.4708093Z ##[group]Run test "${G97_PHASE9_VERIFY_OUTCOME}" = "success"
+2026-10-21T02:05:29.4708741Z [36;1mtest "${G97_PHASE9_VERIFY_OUTCOME}" = "success"[0m
+2026-10-21T02:05:29.4709081Z [36;1mtest "${G97_DEPENDENCY_SBOM_OUTCOME}" = "failure"[0m
+2026-10-21T02:05:29.4709506Z [36;1mnode scripts/phase9/security_acceptance/workflow_contract.mjs sbom[0m
+2026-10-21T02:05:29.4749869Z shell: /usr/bin/bash -e {0}
+2026-10-21T02:05:29.4750295Z env:
+2026-10-21T02:05:29.4750679Z   G97_PHASE9_VERIFY_OUTCOME: failure
+2026-10-21T02:05:29.4750974Z   G97_DEPENDENCY_SBOM_OUTCOME: failure
+2026-10-21T02:05:29.4751258Z   G97_NPM_EXCEPTION_GATE_OUTCOME: failure
+2026-10-21T02:05:29.4751539Z ##[endgroup]
+2026-10-21T02:05:29.4810923Z ##[error]Process completed with exit code 1.
+2026-10-21T02:05:29.4861859Z Post job cleanup.
+2026-10-21T02:05:29.5720261Z Caching is not enabled. Caching is skipped.
+2026-10-21T02:05:29.5819282Z Post job cleanup.
+2026-10-21T02:05:29.6481700Z [command]/usr/bin/git version
+2026-10-21T02:05:29.6516409Z git version 2.55.0
+2026-10-21T02:05:29.6543268Z Temporarily overriding HOME='/home/runner/work/_temp/3340e7f0-13ee-44f9-ad00-45d6e4eae5a2' before making global git config changes
+2026-10-21T02:05:29.6544216Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T02:05:29.6547380Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-21T02:05:29.6572622Z Removing SSH command configuration
+2026-10-21T02:05:29.6581092Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T02:05:29.6608701Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T02:05:29.6802288Z Removing HTTP extra header
+2026-10-21T02:05:29.6806733Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T02:05:29.6840986Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T02:05:29.7123215Z Removing includeIf entries pointing to credentials config files
+2026-10-21T02:05:29.7124397Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T02:05:29.7146579Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T02:05:29.7461010Z Cleaning up orphan processes
+2026-10-21T02:05:29.7635678Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

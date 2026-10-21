@@ -1,0 +1,84 @@
+{
+  "authorization": "M103-OVERNIGHT01-SOURCE-AND-DIAGNOSTIC-01",
+  "admission": "NONE",
+  "base": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "base_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "native_lock_entries_unchanged": true,
+  "preimages": "ALL_EXACT",
+  "original_main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "recovered_logs": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/expo-web.log",
+      "bytes": 10468,
+      "sha256": "7ad6206f9c48555eb8070cd1596d6bb7b29b460ea3382c2591da5e74c9ed4a61",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/expo-web.log",
+      "bytes": 17059,
+      "sha256": "e7b40eda50931d4850d0ff49c35603dfe3d814a5ad7973f341457719aa26e6fe",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/expo-web.log",
+      "bytes": 17277,
+      "sha256": "be93c470eb7b6cee0cd373814a197c9a52caa1f030f44f556968a0cf8df7fcb6",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/expo-web.log",
+      "bytes": 17291,
+      "sha256": "b982e0215cedf7e017e125788b83a2fb45f681dfda8892ca90aacbc17b123b18",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/expo-web.log",
+      "bytes": 13420,
+      "sha256": "065bb2b77f044ab2f8ad80c35ef51f261738689830bd6840ae65cc295a028c78",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/expo-web.log",
+      "bytes": 3708,
+      "sha256": "e0bd537372689d341621974c727436cba4a5394f85939ec72d4f015a0022224f",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser/server.log",
+      "bytes": 73,
+      "sha256": "3282c3929d5e62a7a39e769d6d6578158da62418dc1d0bd0949844837fe1f500",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275609.log",
+      "bytes": 32851,
+      "sha256": "2cdc2dba0ff83d9c91ed7abfa9dede7edb548601d1a7d764b4204288a3b1fdb9",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275892.log",
+      "bytes": 82199,
+      "sha256": "964fa775e7335ef634c16be9bccdeb8a8334d96e8d6f7622fde2024f190d1441",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275954.log",
+      "bytes": 158234,
+      "sha256": "95f0b3877b00e44a120bcc40121ab26a72752e7fc0b387abc7372ca58133929d",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996276257.log",
+      "bytes": 89760,
+      "sha256": "d2f43a69e5e507179ba603b29a161546d9cbdc88bcf0789a6d8a2486a75b3ff5",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118997685565.log",
+      "bytes": 42753,
+      "sha256": "957b5228af058d4294069e50e570498f518808b79c9a3c217b5a6e90f9396350",
+      "publication": "LATE_RECOVERY_NOT_NEW_EXECUTION"
+    }
+  ],
+  "handoff_preimage_note": "Issued handoff hash/length describes CRLF working bytes; Git blob b5237fd1051811fa7148df767129f44864eefe3ad119540d29e8c19ed16401c0 is LF-normalized and semantically identical. Other preimages exact Git bytes."
+}

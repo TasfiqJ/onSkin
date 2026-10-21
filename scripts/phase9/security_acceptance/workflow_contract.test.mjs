@@ -48,13 +48,32 @@ const readFixture = name => JSON.parse(gunzipSync(readFileSync(new URL(name, imp
 const actualSbomExecution = readFixture('./legacy-sbom-fixture.json.gz');
 const actualAuditedSbom = actualSbomExecution.packet;
 const actualNpmAudit = actualSbomExecution.audit;
-const sbomLock = JSON.parse(readFileSync(new URL('../../../package-lock.json', import.meta.url)));
+import { createHash } from 'node:crypto';
+const historicalLockUrl = new URL('./fixtures/m103-pre-vite-package-lock.json.gz', import.meta.url);
+function historicalLock(read = readFileSync) {
+  const archive = read(historicalLockUrl);
+  assert.equal(createHash('sha256').update(archive).digest('hex'), '947de598d95a5093fe2a13fb5b0390ad3eb61124e4f44bb3aa180fdacbbf14d0');
+  const raw = gunzipSync(archive);
+  assert.equal(raw.length, 574165);
+  assert.equal(createHash('sha256').update(raw).digest('hex'), '474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223');
+  return JSON.parse(raw);
+}
+const sbomLock = historicalLock();
 const legacyPolicy = JSON.parse(readFileSync(new URL('../../../docs/phase-9/security-advisory-exceptions.json', import.meta.url)));
 const sbomInputs = () => ({ packet: structuredClone(actualAuditedSbom), audit: structuredClone(actualNpmAudit), lock: structuredClone(sbomLock), policy: structuredClone(legacyPolicy), auditExit: 1, sbomExit: 1, now: new Date(Date.parse(actualAuditedSbom.generatedAt) + 1000) });
 const rejectSbom = change => { const value = sbomInputs(); change(value); assert.throws(() => assertLegacyAuditedSbom(value)); };
 test('actual source-generated audited SBOM has only the two unchanged expired-policy refusals', () => {
   const result = assertLegacyAuditedSbom(sbomInputs());
   assert.equal(result.rawScannerPass, false); assert.equal(result.approval, false); assert.equal(result.expiredBlockers, 2);
+});
+
+test('historical SBOM rejects the current lock and missing/corrupt historical bytes', () => {
+  rejectSbom(v => v.lock = JSON.parse(readFileSync(new URL('../../../package-lock.json', import.meta.url))));
+  assert.throws(() => historicalLock(() => { throw new Error('missing fixture'); }));
+  assert.throws(() => historicalLock(() => Buffer.from('corrupt')));
+  const source = readFileSync(new URL('./workflow_contract.test.mjs', import.meta.url), 'utf8');
+  assert.equal(/(?:execFileSync|execSync|spawnSync)\s*\(/.test(source), false);
+  assert.deepEqual(historicalLock(), sbomLock);
 });
 test('original audited command, raw exit, packet capture and mandatory structural decision cannot be omitted', () => {
   reject(w => w.jobs['code-gates'].steps.find(s => s.id === 'dependency_sbom').env.PHASE9_RUN_NPM_AUDIT = 'false');
