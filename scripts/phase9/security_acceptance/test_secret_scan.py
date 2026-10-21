@@ -12,6 +12,7 @@ def synthetic_proof(scope, run_id='123987', history_results=None):
             stdout='8.24.3\n' if name == 'gitleaks' else 'trufflehog 3.99.3\n', stderr='')
         tools[name] = dict(**pin, path=path, version_result=version)
     proof = dict(schema=1, purpose='ORIGINAL_SECRET_DIAGNOSTIC_NOT_G97_ACCEPTANCE',
+        context=dict(kind='LOCAL_DIAGNOSTIC_NO_CI_AUTHORITY'),
         source=scope, source_ref=scope['refs'][0].split()[0], run_id=run_id,
         started=now, finished=now, tools=tools, commands={}, mirror='/synthetic/history.git',
         snapshot='/synthetic/current', sarif='/synthetic/evidence/gitleaks-results.sarif',
@@ -31,6 +32,7 @@ def synthetic_proof(scope, run_id='123987', history_results=None):
 
 class SecretScanTests(unittest.TestCase):
     def setUp(self):
+        environment=mock.patch.dict(os.environ,{'GITHUB_ACTIONS':'false'});environment.start();self.addCleanup(environment.stop)
         self.temp = tempfile.TemporaryDirectory(prefix='onskin-secret-unit-'); self.addCleanup(self.temp.cleanup)
         self.root = pathlib.Path(self.temp.name) / 'source'; self.root.mkdir()
         self.out = pathlib.Path(self.temp.name) / 'evidence'; self.out.mkdir()
@@ -135,5 +137,16 @@ class SecretScanTests(unittest.TestCase):
             with mock.patch.object(s.subprocess,'run') as execute, self.assertRaisesRegex(ValueError,'ASSET_BYTES'):
                 s.acquire(pathlib.Path(self.temp.name)/'new-tools')
             execute.assert_not_called()
+    def test_CI_repository_job_attempt_and_local_receipts_cannot_be_substituted(self):
+        env=dict(GITHUB_ACTIONS='true',GITHUB_REPOSITORY='TasfiqJ/onSkin',GITHUB_WORKFLOW='Security',
+            GITHUB_JOB='secret-scan',GITHUB_SHA=self.scope['head'],GITHUB_REF=self.proof['source_ref'],
+            GITHUB_RUN_ID='123987',GITHUB_RUN_ATTEMPT='1')
+        with mock.patch.dict(os.environ,env):
+            with self.assertRaisesRegex(ValueError,'GITHUB_JOB_IDENTITY_DRIFT'):self.validate()
+            self.proof['context']=s.execution_context();self.save();self.validate()
+            original=copy.deepcopy(self.proof)
+            for key,value in [('repository','other/repo'),('job','other-job'),('workflow','other-workflow'),('attempt','2')]:
+                self.proof=copy.deepcopy(original);self.proof['context'][key]=value;self.save()
+                with self.assertRaises(ValueError):self.validate()
 
 if __name__ == '__main__': unittest.main()

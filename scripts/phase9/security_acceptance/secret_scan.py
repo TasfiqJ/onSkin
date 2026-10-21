@@ -22,6 +22,12 @@ def require(ok, message):
 def sha(body): return hashlib.sha256(body).hexdigest()
 def canon(value): return json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
 def stamp(): return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def execution_context():
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        return dict(kind='ORIGINAL_SECRET_GITHUB_ACTIONS', repository=os.environ.get('GITHUB_REPOSITORY'),
+            workflow=os.environ.get('GITHUB_WORKFLOW'), job=os.environ.get('GITHUB_JOB'),
+            attempt=os.environ.get('GITHUB_RUN_ATTEMPT'))
+    return dict(kind='LOCAL_DIAGNOSTIC_NO_CI_AUTHORITY')
 def write(path, value):
     with pathlib.Path(path).open('xb') as f: f.write(canon(value) + b'\n')
 def git(root, *args):
@@ -199,6 +205,7 @@ def scan(root, tools_directory, work, output, run_id, expected_head, source_ref)
     require(git_scope(root) == scope and verify_tools(tools_directory) == tools, 'SOURCE_OR_TOOL_CHANGED')
     write(output / 'gitleaks-tool.json', dict(version='8.24.3', sha256=PINS['gitleaks']['binary'], exit=0))
     proof = dict(schema=1, purpose='ORIGINAL_SECRET_DIAGNOSTIC_NOT_G97_ACCEPTANCE',
+        context=execution_context(),
         source=scope, source_ref=source_ref, run_id=run_id, started=started, finished=stamp(),
         tools=tools, commands=results, mirror=str(mirror), snapshot=str(snapshot),
         sarif=str(sarif), current_report=str(current),
@@ -221,7 +228,7 @@ def current_disposition(root, records, prefix, commit):
 
 def validate_proof(directory, root, commit, run_id, now=None):
     directory = pathlib.Path(directory); proof = load(directory / PROOF)
-    require(set(proof) == {'schema', 'purpose', 'source', 'source_ref', 'run_id', 'started', 'finished',
+    require(set(proof) == {'schema', 'purpose', 'context', 'source', 'source_ref', 'run_id', 'started', 'finished',
         'tools', 'commands', 'mirror', 'snapshot', 'sarif', 'current_report', 'sarif_sha256'}, 'PROOF_SCHEMA')
     require(type(proof['schema']) is int and proof['schema'] == 1 and
         proof['purpose'] == 'ORIGINAL_SECRET_DIAGNOSTIC_NOT_G97_ACCEPTANCE', 'PROOF_SCHEMA')
@@ -236,6 +243,11 @@ def validate_proof(directory, root, commit, run_id, now=None):
     if os.environ.get('GITHUB_ACTIONS') == 'true':
         require(proof['source_ref'] == os.environ.get('GITHUB_REF') and
                 commit == os.environ.get('GITHUB_SHA') and run_id == os.environ.get('GITHUB_RUN_ID'), 'GITHUB_CONTEXT_DRIFT')
+        require(proof['context'] == dict(kind='ORIGINAL_SECRET_GITHUB_ACTIONS', repository='TasfiqJ/onSkin',
+                workflow='Security', job='secret-scan', attempt=os.environ.get('GITHUB_RUN_ATTEMPT')) and
+                re.fullmatch('[1-9][0-9]*', proof['context']['attempt'] or ''), 'GITHUB_JOB_IDENTITY_DRIFT')
+    else:
+        require(proof['context'] == dict(kind='LOCAL_DIAGNOSTIC_NO_CI_AUTHORITY'), 'LOCAL_CONTEXT_DRIFT')
     tools = proof['tools']; require(set(tools) == set(PINS), 'TOOL_INVENTORY')
     for name, pin in PINS.items():
         value = tools[name]

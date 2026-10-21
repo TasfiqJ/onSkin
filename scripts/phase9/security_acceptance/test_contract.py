@@ -276,6 +276,7 @@ class ContractTests(unittest.TestCase):
   # exercised against >30 real Git commits in test_secret_scan, never mocked there.
   from unittest import mock
   from test_secret_scan import synthetic_proof
+  environment=mock.patch.dict(os.environ,{'GITHUB_ACTIONS':'false'});environment.start();self.addCleanup(environment.stop)
   scope=dict(head=commit,tree='b'*40,parents=[],refs=['refs/heads/synthetic '+commit],
              commits=[commit],patch_commits=[commit],snapshot=[],snapshot_sha256=w.secret_scan.sha(b'[]'))
   patch=mock.patch.object(w.secret_scan,'git_scope',return_value=scope);patch.start();self.addCleanup(patch.stop)
