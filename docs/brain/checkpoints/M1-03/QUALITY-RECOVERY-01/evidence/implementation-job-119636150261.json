@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "kind": "PROVIDER_LOG_EXCERPT",
+  "repository": "TasfiqJ/onSkin",
+  "head_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+  "run_id": 39721621804,
+  "job_id": 119636150261,
+  "selection": "Exact source/DB failure lines only; no raw secret logs fetched",
+  "lines": [
+    "2026-10-22T04:19:41.0406125Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#@react-native-google-signin/google-signin: Mapping package-lock path/hash do not match current bytes.",
+    "2026-10-22T04:19:41.0411142Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#expo-image: Mapping package-lock path/hash do not match current bytes.",
+    "2026-10-22T04:19:41.0413071Z MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#react-native: Mapping package-lock path/hash do not match current bytes.",
+    "2026-10-22T04:19:41.0414213Z iOS privacy source audit failed strict validation.",
+    "2026-10-22T04:19:41.0591181Z ##[error]Process completed with exit code 1.",
+    "2026-10-22T04:19:41.4953661Z  2026-10-22 04:18:28.989 UTC [42] LOG:  background worker \"logical replication launcher\" (PID 48) exited with exit code 1"
+  ]
+}
