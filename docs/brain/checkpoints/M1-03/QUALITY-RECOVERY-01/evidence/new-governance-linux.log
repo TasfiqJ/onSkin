@@ -1,0 +1,12 @@
+test_exact_report_and_authority_refusals (test_m103_quality_recovery01_profile.QualityRecovery.test_exact_report_and_authority_refusals) ... ok
+test_false_report_and_uncommitted_evidence_refuse (test_m103_quality_recovery01_profile.QualityRecovery.test_false_report_and_uncommitted_evidence_refuse) ... ok
+test_immutable_input_review_and_preimage_tampering (test_m103_quality_recovery01_profile.QualityRecovery.test_immutable_input_review_and_preimage_tampering) ... ok
+test_mobile_edit_scope_and_global_newline_changes_refuse (test_m103_quality_recovery01_profile.QualityRecovery.test_mobile_edit_scope_and_global_newline_changes_refuse) ... warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+ok
+test_prior_grants_extra_edits_and_intermediate_revert_refuse (test_m103_quality_recovery01_profile.QualityRecovery.test_prior_grants_extra_edits_and_intermediate_revert_refuse) ... ok
+test_wrong_actual_branch_and_head (test_m103_quality_recovery01_profile.QualityRecovery.test_wrong_actual_branch_and_head) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 103.460s
+
+OK

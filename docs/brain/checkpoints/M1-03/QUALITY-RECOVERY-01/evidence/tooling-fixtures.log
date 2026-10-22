@@ -1,0 +1,34 @@
+
+> layerwell@0.1.0 phase9:tooling-security:test
+> node --test scripts/phase9/patch-tooling-security.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs
+
+✔ exact reviewed files and every nested copy are checked without audit clearance (19.817305ms)
+✔ an unexpected nested copy fails the entire preflight without writing any other target (13.779005ms)
+▶ wrong lock version, SRI, registry URL, package version and link records fail closed
+  ✔ identity mismatch (6.634052ms)
+  ✔ identity mismatch (6.644663ms)
+  ✔ identity mismatch (6.603591ms)
+  ✔ identity mismatch (6.98477ms)
+  ✔ identity mismatch (6.639013ms)
+✔ wrong lock version, SRI, registry URL, package version and link records fail closed (34.236486ms)
+▶ installed identity and payload tampering fail before writes
+  ✔ installed package (6.849576ms)
+  ✔ payload (7.099133ms)
+✔ installed identity and payload tampering fail before writes (14.298416ms)
+✔ junction targets cannot redirect a reviewed package outside its root (7.32728ms)
+✔ official original preimages require application; application is exact and idempotent (25.376963ms)
+✔ a commit failure still restores earlier files when temporary cleanup also fails (20.545721ms)
+✔ braces preserves ordinary parse, compile, expansion and escaping behavior (2.462753ms)
+✔ braces rejects deeply nested strings before recursive traversal, regardless of caller options (3.880403ms)
+✔ braces direct AST APIs cannot bypass the fixed recursion bound (12.08616ms)
+✔ node-forge rejects extra nested DigestAlgorithm elements that native verification rejects (9.79169ms)
+✔ node-forge still accepts reviewed ordinary signatures and unaffected PSS signatures (4.694279ms)
+✔ node-forge ASN.1 capture never inherits prototype parameter markers (46.222274ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 190.055579

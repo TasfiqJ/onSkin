@@ -1,0 +1,521 @@
+{
+  "outcome": "PARTIAL_SAFE_BLOCKED",
+  "admission": "NONE",
+  "source_executions": [
+    {
+      "id": "archive-privacy-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/archive-privacy-fixtures.log",
+        "sha256": "64319908115d75137dc18efe6347755058e4db6bcfadace131bf3cc144c99fa1"
+      }
+    },
+    {
+      "id": "baseline-ci-clean",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-clean.log",
+        "sha256": "5ebaf8c27650e2cb40cdec03828a91f2723c48fee09f14e58ee0c40fa2638245"
+      }
+    },
+    {
+      "id": "baseline-ci-reviewed",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-reviewed.log",
+        "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+      }
+    },
+    {
+      "id": "baseline-ci",
+      "status": "FAIL",
+      "raw_exit": 2,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci.log",
+        "sha256": "ca77d18801c629d89f78d4546071cadaf843c9369e74fa31bebbfc252ffa5232"
+      }
+    },
+    {
+      "id": "baseline-expo-check",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-expo-check.log",
+        "sha256": "c0a3503596ce257d134bd942388c53911886d34bba0b80f152034e19403d983d"
+      }
+    },
+    {
+      "id": "environment",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/environment.log",
+        "sha256": "9af2c00300bf814b2d173cff344f58c1aaba71ea5de7905fcfa3783f0948c09c"
+      }
+    },
+    {
+      "id": "expo-compatibility",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/expo-compatibility.log",
+        "sha256": "75bc0562158f22eca1daead940e59625bb3ee6327b29956ab852db4717ea442a"
+      }
+    },
+    {
+      "id": "expo-doctor",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/expo-doctor.log",
+        "sha256": "74606bfd8dd7df5aa281ee0edc3ebb60e6a3680a04797531a4bfe7aa2f3acfbf"
+      }
+    },
+    {
+      "id": "final-ci",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "8dc7721b2d169e15d916f2bb3a9034bafbdb67b9",
+      "source_tree": "3121a99f228073def750a92ab87daa02bb326753",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-ci.log",
+        "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+      }
+    },
+    {
+      "id": "final-forced-lint",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "8dc7721b2d169e15d916f2bb3a9034bafbdb67b9",
+      "source_tree": "3121a99f228073def750a92ab87daa02bb326753",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-lint.log",
+        "sha256": "f776275dc7eab74476c3b070fa91508923c620fea0cd1858ac5b2b57ede8b29c"
+      }
+    },
+    {
+      "id": "final-forced-test",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "8dc7721b2d169e15d916f2bb3a9034bafbdb67b9",
+      "source_tree": "3121a99f228073def750a92ab87daa02bb326753",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-test.log",
+        "sha256": "43ac592e20f3b370d1992e34cb4ee3ffa7b94dc686e650451b903dc4f24010e6"
+      }
+    },
+    {
+      "id": "final-forced-typecheck",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "8dc7721b2d169e15d916f2bb3a9034bafbdb67b9",
+      "source_tree": "3121a99f228073def750a92ab87daa02bb326753",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-typecheck.log",
+        "sha256": "2d6a4042fd484b7a455e2e021925f1c62990b1085a36a1f3258009939f59fa09"
+      }
+    },
+    {
+      "id": "final-source-profile",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "8dc7721b2d169e15d916f2bb3a9034bafbdb67b9",
+      "source_tree": "3121a99f228073def750a92ab87daa02bb326753",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-source-profile.log",
+        "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+      }
+    },
+    {
+      "id": "final-worklist-check",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "8dc7721b2d169e15d916f2bb3a9034bafbdb67b9",
+      "source_tree": "3121a99f228073def750a92ab87daa02bb326753",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-worklist-check.log",
+        "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+      }
+    },
+    {
+      "id": "forced-lint",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-lint.log",
+        "sha256": "70b9ed24e4e62c1e45963a88a1f48c7ce2110fb71de7d922136e288414215576"
+      }
+    },
+    {
+      "id": "forced-test",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-test.log",
+        "sha256": "fa0a1f33b6fe8880c75f88307f5efba7b6d456f55388d78de770125ee5aabacb"
+      }
+    },
+    {
+      "id": "forced-typecheck",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-typecheck.log",
+        "sha256": "998745137b14f9a4f488a41294cc733f06f368100ae634bdf58fcfc40f2c9338"
+      }
+    },
+    {
+      "id": "fresh-ci",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/fresh-ci.log",
+        "sha256": "bbb7807adeb42d207ab132ce0b466e4bea379985890a96ce376498e0d7cb6523"
+      }
+    },
+    {
+      "id": "governance",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/governance.log",
+        "sha256": "e4a21b529b66fcde92dc71151273f209da5455066fb2b9909f9d1711004aab95"
+      }
+    },
+    {
+      "id": "historical-custody",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/historical-custody.log",
+        "sha256": "3911dbeb470b24e225372d134c83bc2a0fde243387b73b60db794a47a6159ae6"
+      }
+    },
+    {
+      "id": "installed-native",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/installed-native.log",
+        "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb"
+      }
+    },
+    {
+      "id": "ios-privacy-check",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-privacy-check.log",
+        "sha256": "b131dad9faaa5bdddacf38686b23df9544d44660b6165c73f9aa210dbfc8f290"
+      }
+    },
+    {
+      "id": "ios-privacy-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-privacy-fixtures.log",
+        "sha256": "0e3874ac44f7bf58ca3dc4d1c453a0d0f7dda73533e5a27d3411dfdc98ef818c"
+      }
+    },
+    {
+      "id": "ios-workflow-contract",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-workflow-contract.log",
+        "sha256": "ee6ef213a3d4f0595e969cf98cf312ef1613064b02d8f5581a9e8323a9c1e56a"
+      }
+    },
+    {
+      "id": "lock-regenerate-linux",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate-linux.log",
+        "sha256": "97ac6b678d01232a4b4c6e7e48192ff745351980bc0aaff39ac935d00fb3144d"
+      }
+    },
+    {
+      "id": "lock-regenerate",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate.log",
+        "sha256": "6313db14c24852fb644518a22e529ef34df22340399b9d4a3265675bbe432195"
+      }
+    },
+    {
+      "id": "new-governance-linux",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-linux.log",
+        "sha256": "24bc61bf49c1b9327ed6222de7ce53246a063735db508044919a86c657389b1a"
+      }
+    },
+    {
+      "id": "new-governance-precheck",
+      "status": "FAIL",
+      "raw_exit": 2,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-precheck.log",
+        "sha256": "e6a95b62f182de4fe8a0350d02754cd2f5bfaeab1619c0b5e5315ee9b1fdd968"
+      }
+    },
+    {
+      "id": "original-secret-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-secret-fixtures.log",
+        "sha256": "1c89c51c7a89a16cbeafe1b4341777e4346775889e999d679bfbbbfe5ce7bee4"
+      }
+    },
+    {
+      "id": "original-security-contracts",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-security-contracts.log",
+        "sha256": "9bde318d7c5a822906aa24e296ba96e7ba45f692ab2bea5f0dd79581859ad3f6"
+      }
+    },
+    {
+      "id": "patched-ci-precheck",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/patched-ci-precheck.log",
+        "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+      }
+    },
+    {
+      "id": "registry-expo",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/registry-expo.log",
+        "sha256": "2f44537e53f03948dd2781438510990cefd5da0cf1d66b345acc86c572ef657a"
+      }
+    },
+    {
+      "id": "registry-network",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/registry-network.log",
+        "sha256": "c45b7db948fc7c709dd3b776363a477474d52e57b8b39d4b4bf7bf3792d99a39"
+      }
+    },
+    {
+      "id": "release-git-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/release-git-fixtures.log",
+        "sha256": "e325d7037461ddc86e86da9701814939194a487a8a80027482c25ec7b1eae769"
+      }
+    },
+    {
+      "id": "store-source-contract",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/store-source-contract.log",
+        "sha256": "06fe918d5b64c70a551769f8e59febfaf2efa5444374b376067d24a1900ba83c"
+      }
+    },
+    {
+      "id": "strict-source-profile",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-source-profile.log",
+        "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+      }
+    },
+    {
+      "id": "tooling-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/tooling-fixtures.log",
+        "sha256": "8a2cc65fa4810e0047ba49c37a3f5d9c9ba731f4d191aded2dc5c7aed38f6fdf"
+      }
+    },
+    {
+      "id": "view-shot-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/view-shot-fixtures.log",
+        "sha256": "d912356b2524e2b2375c1317fb04503785a0d7238f27a88774c2f27e72a8e16d"
+      }
+    },
+    {
+      "id": "widgets-contract",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/widgets-contract.log",
+        "sha256": "0426e06c017d783b82f2f780fbbb178d836fc4ca4f20ea88d6bb14429f6f9502"
+      }
+    },
+    {
+      "id": "wiring-fixtures",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/wiring-fixtures.log",
+        "sha256": "2e345478848f8762929d270c70c7beb10c7223e7db15643a85fe35cfb625c9e6"
+      }
+    },
+    {
+      "id": "worklist-check",
+      "status": "FAIL",
+      "raw_exit": 1,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-check.log",
+        "sha256": "5f9071c14af7ecce70b5a08754b3a6e8b59cdea197727989795f861317bee149"
+      }
+    },
+    {
+      "id": "worklist-clean-generate",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+      "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-clean-generate.log",
+        "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad"
+      }
+    },
+    {
+      "id": "worklist-generate",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+      "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-generate.log",
+        "sha256": "a935b14c3d93614831424b6679cc6d17bb636688edd8d15a8c900df377d4c6a1"
+      }
+    }
+  ],
+  "root_tests": {
+    "passed": 6067,
+    "mobile": 6043,
+    "console": 24,
+    "failed": 0,
+    "cached_tasks": 0
+  },
+  "governance": {
+    "total": 77,
+    "passed": 75,
+    "failed": 0,
+    "skipped": 2,
+    "skips": [
+      "test_f4_dangling_and_existing_directory_junctions_do_not_create_targets: Windows junction test only",
+      "test_windows_junction_input_and_output_rejected: Windows junction test only"
+    ]
+  },
+  "secret_fixtures": {
+    "total": 12,
+    "passed": 12
+  },
+  "original_security_contracts": {
+    "total_cases_including_secret": 82,
+    "original_contract_cases": 70,
+    "failure_reports": 23,
+    "errors": 2,
+    "raw_exit": 1
+  },
+  "doctor": {
+    "total": 21,
+    "passed": 20,
+    "failed": 1
+  },
+  "spend_usd": 0,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ]
+}

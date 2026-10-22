@@ -1,0 +1,21 @@
+
+> layerwell@0.1.0 phase9:verification-wiring:test
+> node --test scripts/phase9/verification-wiring-contract.test.mjs
+
+✔ accepts exact definitions, fail-closed parent chains, and one unconditional CI step (7.484352ms)
+✔ rejects verifier definitions that can short-circuit or substitute the reviewed command (3.85858ms)
+✔ rejects parent scripts with control flow, unsafe commands, whitespace tricks, or duplicates (4.337182ms)
+✔ rejects any command before, after, between, or out of order in the audited CI step (3.095374ms)
+✔ rejects conditional, non-failing, custom-shell, environment, and duplicate audited steps (2.298114ms)
+✔ rejects workflow and job controls that can make the audited step non-mandatory (3.630398ms)
+✔ rejects filtered or incomplete triggers and unreviewed root environment (1.347006ms)
+✔ fails closed on duplicate YAML keys, aliases, oversized input, and missing jobs (1.176475ms)
+✔ rejects malformed definitions, parent names, job identifiers, and step names (0.302525ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90.902652

@@ -1,0 +1,8 @@
+
+> layerwell@0.1.0 phase9:ios-privacy-source-audit:check
+> node scripts/phase9/ios-privacy-source-audit.mjs --check --strict
+
+MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#@react-native-google-signin/google-signin: Mapping package-lock path/hash do not match current bytes.
+MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#expo-image: Mapping package-lock path/hash do not match current bytes.
+MAPPING_LOCK_DRIFT: docs/phase-9/ios-sdk-package-mapping.json#react-native: Mapping package-lock path/hash do not match current bytes.
+iOS privacy source audit failed strict validation.

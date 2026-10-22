@@ -1,0 +1,14 @@
+
+> layerwell@0.1.0 phase5:ios-simulator-compile-workflow:test
+> node --test scripts/phase5/ios-simulator-compile-workflow.test.mjs
+
+✔ macOS workflow is a manual, unsigned Simulator compile/link release gate (10.086056ms)
+✔ workflow contract rejects privilege, signing, submission, portability, and proof regressions (17.68519ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.057428

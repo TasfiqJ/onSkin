@@ -1,0 +1,14 @@
+
+> layerwell@0.1.0 phase9:store-build-inspect:check
+> node scripts/phase9/store-build-inspect.mjs --check
+
+Phase 9 store build inspection
+WARN Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.
+WARN Exact iOS archive evidence not supplied: set PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH to the completed RC JSON.
+WARN Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.
+WARN Missing iOS privacy-report reviewer metadata flag: PHASE9_IOS_PRIVACY_REPORT_PASS=true. This flag is not archive evidence.
+WARN A hash-bound, named-reviewed production archive evidence index remains required: archive, aggregate privacy report PDF, manifest ledger, required-reason APIs, SDK signatures, entitlements, symbols, binary processing, observed traffic, and App Privacy answers. Index validation proves archive-container integrity, release-identity binding, file binding, and matching review metadata; it does not prove opaque report truth, Apple trust, legal compliance, or App Store acceptance.
+WARN Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true.
+FAIL Installed iOS privacy source audit is invalid (3 errors).
+
+Phase 9 store build inspection has 1 blocker.
