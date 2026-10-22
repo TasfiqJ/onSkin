@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "admission": "NONE",
+  "protected_source_go": false,
+  "measured_source": {
+    "commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+    "tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd"
+  },
+  "current_lock_sha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85",
+  "original_contract_predicate": "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT",
+  "frozen_artifacts": [
+    {
+      "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
+      "sha256": "e120caae4c8b367bb1e2bdb69f652ed355a7e25ade21fe8e67ad743723a5149f",
+      "git_blob": "1bf1038828720ea749145cbebed351c870ade0c5",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
+      "sha256": "764d4e1ae88747600b3e35b3ed1bced181465052a0a6c4ff8889a3ca3b572c1c",
+      "git_blob": "5b6e69a633dd067e8d2e8e9450faec919677743b",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "sha256": "aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510",
+      "git_blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
+      "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655",
+      "git_blob": "e169484d968c9270ae2dbaa5eb113069025281db",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "sha256": "1c2e05e245db33ed7635de68e73488f568fc0ace2a7b35f52a7b4ebc1e061552",
+      "git_blob": "69123bd77b7af0c97f55d9e47b3bad975498cbd7",
+      "unchanged": true
+    }
+  ],
+  "affected_current_source_hashes": [
+    {
+      "path": "package-lock.json",
+      "original_frozen_inventory_sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+      "current_sha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85",
+      "current_git_blob": "73acb61106d0de4d499fb89c01719417a3230d24",
+      "equal_to_frozen_inventory": false
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "original_frozen_inventory_sha256": "9e45bbad2c2efe1a9a26e1e62d347ca578327d56ce41dbf0a2d2ac66323063bd",
+      "current_sha256": "1e14b3956f7940a11f7cd18161b5ab8bad4023a94974830041e5879952e630a3",
+      "current_git_blob": "f340bd05c9258957e7dc33a55dba517f9d3f7637",
+      "equal_to_frozen_inventory": false
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "original_frozen_inventory_sha256": "6f51f8fa5a7fc0abed168c4a0e89531ccbd1d33924e38cbbca284762ee09c246",
+      "current_sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c",
+      "current_git_blob": "f86cfa007bf90881d2fa0c93ae0f60f229e9b3fd",
+      "equal_to_frozen_inventory": false
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "original_frozen_inventory_sha256": "5b26b47d893d76bdc3b8aa087171979d5461eb71b056afd9752d3f21520a6bed",
+      "current_sha256": "8a80e8afe3fd8565767440fbd5093fdefc9caf9812236a53430ed5c3600c8a6a",
+      "current_git_blob": "666aea67ceef9a1d7b66d799a9652f58a103fbd7",
+      "equal_to_frozen_inventory": false
+    }
+  ],
+  "proposal_expiry_utc": "2026-10-21T00:00:00Z",
+  "proposal_status": "EXPIRED",
+  "original_security": "RED; technical tests and current-source scanners are distinct; fixture success cannot admit current source",
+  "owner_action": "Qualified Security custodian must inspect original producer/consumer discrepancy and issue a new exact review; no fingerprint, fixture, proposal, rule, scanner, exception or expiry refresh is authorized",
+  "current_secret_advisory_coverage": "OWNER_CONTROLLED_UNREVIEWED; no raw source scanner findings copied or credentials tested",
+  "canonical_db": "BLOCKED_ECR_DATA_LIMIT_EXCEEDED; no retry, replacement, credentials or payment",
+  "protected_gate_admission": "CLOSED",
+  "original_technical_suite": {
+    "command": "python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+    "ran": 70,
+    "outcome": "failures=23, errors=2",
+    "exit_code": 1,
+    "log_sha256": "e9c3b995604ea52fd5c4257e60ccf2dc50aea729660b3c27df53e475763c81fe"
+  },
+  "historical_object_availability": "192 required frozen-witness/current-fixture objects verified available; no source fixture edits; earlier environmental errors retained separately",
+  "delivery_ref": "refs/heads/stage/m1-retained-safety"
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"npm\", \"run\", \"phase9:ios-archive-privacy-evidence:test\"]",
+  "working_directory": "/root/onskin-quality-recovery02-source",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+  "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+  "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+  "started_utc": "2026-10-22T15:04:56.945165+00:00",
+  "duration_seconds": 1.912,
+  "exit_code": 0,
+  "status": "PASS",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-archive-privacy-tests.log",
+    "sha256": "98f71ab35d350d819e51a1e235b05b2e2887d24a698477271d9cc5e63f30aa5e"
+  },
+  "admission": "NONE",
+  "counts": {
+    "passed": 238,
+    "failed": 0,
+    "skipped": 0
+  }
+}

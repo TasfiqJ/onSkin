@@ -1,0 +1,7 @@
+{
+  "no_alternates": true,
+  "regular_object_file_count": 3448,
+  "hardlinked_object_files": 0,
+  "clone_method": "git clone --no-hardlinks; same existing stage branch; no borrowed node_modules",
+  "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34"
+}

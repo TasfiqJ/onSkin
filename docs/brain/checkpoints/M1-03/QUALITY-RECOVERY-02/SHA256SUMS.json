@@ -1,0 +1,930 @@
+{
+  "schema_version": 1,
+  "policy": "Every listed file must be a committed regular Git blob; excludes this checksum manifest to avoid self-reference",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 2129,
+      "sha256": "58cc1493e2dd014812689be2685973a3a9150242b2bd1b45f50a174ea10e4c7b",
+      "git_blob_sha1": "4df6bf56c6e79c84899654e20287919562e55fec"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "bytes": 3007,
+      "sha256": "1e14b3956f7940a11f7cd18161b5ab8bad4023a94974830041e5879952e630a3",
+      "git_blob_sha1": "f340bd05c9258957e7dc33a55dba517f9d3f7637"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/BLOCKERS.md",
+      "bytes": 1585,
+      "sha256": "8edbdf950b419c9654c66246d35ef28d15b6982dd1d513c406901b518268bbb4",
+      "git_blob_sha1": "263fcd93e75b21049275e67cbe8b30d7fee6c6a6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/README.md",
+      "bytes": 3349,
+      "sha256": "d9835c98008f238fa4aa3b0d83cabf430c79341705503775be375cee19a04862",
+      "git_blob_sha1": "bd1d70830c1cb0e4c5daf8f8b156851df6ebc7bb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/RESULTS.md",
+      "bytes": 3353,
+      "sha256": "e77f2ae27cbd271385968222edc49fb2a144693bc57464ac35e643bf37d42edd",
+      "git_blob_sha1": "ef605830a862c3db0d4f47b734d0fb8a0c47f765"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/completion-report.json",
+      "bytes": 50028,
+      "sha256": "9a702a4cd5ed37aad2f48dc8a97537e49b0a804a80edf1b1dbdf650aa65034dd",
+      "git_blob_sha1": "d78d747680db9d9c2c0763aa5442d3053dfd9d80"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.log",
+      "bytes": 479,
+      "sha256": "cadceedc53e76085977e4d30d24e570790a8fd1c5de4538fcd4e88ec692e0a0c",
+      "git_blob_sha1": "25640fb768c7d3c14bd5e4ed4bf3dcc298383cf9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.receipt.json",
+      "bytes": 904,
+      "sha256": "c8c85ea45bc7fa54a44b502afdc5ff5f61b3729d7c2101357dbb17b1e2f27cd5",
+      "git_blob_sha1": "8f7ceeb26baf461d0b03a1547ef6d76540f4e215"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.log",
+      "bytes": 712,
+      "sha256": "0e41a22f0d6e0314b3a395c8f2dd258757157d101cf4ab86979aec1a61910d99",
+      "git_blob_sha1": "166d2f5547f963ed2a04e9b413f5d9b2eece1ae1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.receipt.json",
+      "bytes": 876,
+      "sha256": "1f104e98ee417026031c125a52743deec5034581aa67d0fe8b57b9a65ddc583f",
+      "git_blob_sha1": "10244ccc3cb25c8ba15c5cfddd56fd42a7e3e215"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.log",
+      "bytes": 237,
+      "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb",
+      "git_blob_sha1": "75cf4b879859dc18c34c3a4f52ff202594d42afb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.receipt.json",
+      "bytes": 825,
+      "sha256": "31596e8ef81922006e85ed28f37d8189dd2a35f2228a4ac29c2a4b6b56454f66",
+      "git_blob_sha1": "cb56afcec7f64ac7538200a892c4a25ba9c77f02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/current-fixture-object-hydration.json",
+      "bytes": 434,
+      "sha256": "65de8c538f3e83571ee62516371bdda049d8909d5a5b4c00c8d4b1d71b5b2713",
+      "git_blob_sha1": "076a8ddd3b58c339e2285b718e1f0a5cba1a30a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.log",
+      "bytes": 979,
+      "sha256": "ed42d2906c4200ee1df696f544591ef8fb81d1e89de49ac3c8cac89d540f9569",
+      "git_blob_sha1": "8498651e9c824a1890c8d71167f43a8edc27df03"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.receipt.json",
+      "bytes": 946,
+      "sha256": "793a36941503776b159de23e5b00293ddcd11b00ae16c11406b154b993b406f4",
+      "git_blob_sha1": "455e6e0afc4cec5642d8963ba803ea7e74dd9ab6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.log",
+      "bytes": 276,
+      "sha256": "8225fed7bda745afcf581844a0dab84bf962f013f0bebb70e13642550a02f761",
+      "git_blob_sha1": "9717e7d06d5a8f386152cf4616fba87042407729"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.receipt.json",
+      "bytes": 895,
+      "sha256": "a1e8f4bfb8982e72df2478c2b79c7fb8adda79e74725a6a75bb6370a7c65f774",
+      "git_blob_sha1": "748fe3dfdb50fd6349ac2e508fae7dca1bc588aa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor-provenance.json",
+      "bytes": 1254,
+      "sha256": "dbb026ea9d0daa7d8718952a1dcc3ee7ecf5124af677db22097e880e962bc5ce",
+      "git_blob_sha1": "b2df9d0b2ae4bf20cc68c4e0179474a24b631d96"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.log",
+      "bytes": 993,
+      "sha256": "f16e22efb6c7dfd1336687d8ceb09ca5b94985a7514a152a9c0191970b74b955",
+      "git_blob_sha1": "3b48c79d2706ba378ca8433f69627db7339da654"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.receipt.json",
+      "bytes": 914,
+      "sha256": "fbf546441ff91ec1e2eae620df0218d85efbe9974b0504000306532cfb5c79b5",
+      "git_blob_sha1": "3eb6dcf3767abd0dc5e42b53a98183f0217e3376"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.log",
+      "bytes": 3611,
+      "sha256": "410d06cacac55162ec59c1776d637298aea4d81394efaae8c34d3c31815c883c",
+      "git_blob_sha1": "d79660a5e9f263fa22f64cbed21c5c5c1a526da0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.receipt.json",
+      "bytes": 878,
+      "sha256": "23e151c3c5341081fa2b5e169000e21953b7b8dc45779b69082b721ff4036438",
+      "git_blob_sha1": "68dfc4d0c1d96eddd191e058348ec36d29660028"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-archive-privacy-tests.log",
+      "bytes": 14364,
+      "sha256": "98f71ab35d350d819e51a1e235b05b2e2887d24a698477271d9cc5e63f30aa5e",
+      "git_blob_sha1": "d2e58e661fb75fb2b356a3c1ad79d802b35184d2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-archive-privacy-tests.receipt.json",
+      "bytes": 910,
+      "sha256": "c75faa85ca46fc78ea15874533820a66457dc3606fa823137c50957acf19b62b",
+      "git_blob_sha1": "cbfe658cb3bf04a74815c69a6a71966e22911450"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-environment.log",
+      "bytes": 18149,
+      "sha256": "45598a704892b742ac3e711772e3336fafbbc69b01af857f62d49d8a1d56b0fa",
+      "git_blob_sha1": "830685778f0283f0aeedb1d16b8741ff284f0ed2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-environment.receipt.json",
+      "bytes": 871,
+      "sha256": "22bb4a08fe07a72806c76b4a9814e5045ace9de3ccaafee3b4e227d97f9837ef",
+      "git_blob_sha1": "ed3b3871ea4e2987474b0d3b52db5e1b408103ba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-check.log",
+      "bytes": 276,
+      "sha256": "8225fed7bda745afcf581844a0dab84bf962f013f0bebb70e13642550a02f761",
+      "git_blob_sha1": "9717e7d06d5a8f386152cf4616fba87042407729"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-check.receipt.json",
+      "bytes": 838,
+      "sha256": "036144254cdcd09e1efde1f4d03686b8a561a30f3db7d17d33c2d10fffea6885",
+      "git_blob_sha1": "d316204fd3a752e167cd9d61fd20f487ae34295c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-doctor.log",
+      "bytes": 993,
+      "sha256": "f16e22efb6c7dfd1336687d8ceb09ca5b94985a7514a152a9c0191970b74b955",
+      "git_blob_sha1": "3b48c79d2706ba378ca8433f69627db7339da654"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-doctor.receipt.json",
+      "bytes": 857,
+      "sha256": "7ba765f1e4c78981613260d5819868a48997b4d553f1f5cbe841d613540a91f8",
+      "git_blob_sha1": "fc496312218aa9767e214d85da0c38ff092f5cc9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-extension.log",
+      "bytes": 3609,
+      "sha256": "8710f9f85ece547913a0c6c4d682fb4a502a73661726dc7e4f2dea99cc4dbaf5",
+      "git_blob_sha1": "c83d7200f252b8d1c433f80b610bb56b9a760a8b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-extension.receipt.json",
+      "bytes": 892,
+      "sha256": "441315263d0361c8469dcb1abe83e7d6bc8a4738e77d82d16ffa309cd1ea306e",
+      "git_blob_sha1": "6816286b42ed3efa4b2bc19535ab48ac86774be4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-lint.log",
+      "bytes": 1161,
+      "sha256": "80c960d099d088408507d32db53b5ec660321efdb181e3f6e0ec61ce0c4b240b",
+      "git_blob_sha1": "3957cb3c196ef5f2855fe5a275ab84c277437573"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-lint.receipt.json",
+      "bytes": 814,
+      "sha256": "364c59ea3566a62a90b82d3ad5e3a9a3c7e651fc98bef460392a9f6bf1092c7e",
+      "git_blob_sha1": "0b93dd8f5d6fd08e9bd28db48c187ad452413db2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-tests.log",
+      "bytes": 315375,
+      "sha256": "2d963e7699310b8aed91a4f2c8bd05bec7cd1f7ce213ff952a1ac0fc725b45b2",
+      "git_blob_sha1": "7cc42287a08d55f42775833f22b4009c20477cb0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-tests.receipt.json",
+      "bytes": 879,
+      "sha256": "4604988ec4294de7e6376bfffab2ea58c9a6f39ea924c25b2ad07be8bea957fa",
+      "git_blob_sha1": "f4f59cb759d38f6e8af33f8d0c3c1d7d31c5b7c5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-typecheck.log",
+      "bytes": 1152,
+      "sha256": "8e12d75c7ef09c868c27829657ff08a1b37f4c73c2bbd07244d43f7e40490353",
+      "git_blob_sha1": "30458a393e4f7e08c5f6c52c5fd481f6e73e981a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-typecheck.receipt.json",
+      "bytes": 824,
+      "sha256": "16824732d16b4594453552fd6ce12cab281a5583445f9e54cf4d685874b44b9c",
+      "git_blob_sha1": "8946c41fb7a0548b1f601ab4db579a7314dfca1e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-fresh-ci.log",
+      "bytes": 712,
+      "sha256": "a99a6fa6f56be82c457bb21aac94d6c406045afe7cbecdd9b905fdefa93e493a",
+      "git_blob_sha1": "a49394246e7b07e7f7b645175a3322d373030b84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-fresh-ci.receipt.json",
+      "bytes": 810,
+      "sha256": "055dfc7b89fdcfde6f9be3d1dc05a8ed4ecb5751aeee2ab28c5f0e4a243eb72b",
+      "git_blob_sha1": "10c747c655dd5b66b00d23c79064a431fae2ad57"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-governance.log",
+      "bytes": 13037,
+      "sha256": "2445a905b8abcb6920b6a4318266299fe132238251c0d6baf189b75556184720",
+      "git_blob_sha1": "2eff8141946f5ce8a57512d896ff47230cc6b731"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-governance.receipt.json",
+      "bytes": 951,
+      "sha256": "aa72c80c3555a747ec4dc87d7aba010fdecca2ef4735aa8629306291024419c4",
+      "git_blob_sha1": "767685e5913025f62599f9250690edfd20c4dde0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-notifications-scope-witness.log",
+      "bytes": 795,
+      "sha256": "45931dd8179d7ca8ccd49cff8aaf54f10ef4e2a8e27007ea2a24ec69016fff1b",
+      "git_blob_sha1": "4c4ff2d2133fae3b77d39e255ac56cfe665840ca"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-notifications-scope-witness.receipt.json",
+      "bytes": 909,
+      "sha256": "c61fb99bcd03125aad2d2893e324c8329114b98274431bd0ba1e97eaa7f7bc79",
+      "git_blob_sha1": "cc0f178f28d742e7ff3994617dc95f7c5281c9a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-postinstall.log",
+      "bytes": 161,
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb",
+      "git_blob_sha1": "ae3db5bcda96c086ae97d2b69088e6481f3bde05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-postinstall.receipt.json",
+      "bytes": 805,
+      "sha256": "00bf7c465d79893ecdb535addcf3050398f0bad951d55a0e30733152a76e108c",
+      "git_blob_sha1": "1610c1eb3572e332df4098126b2e5f6a1e3e2f8a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-check.log",
+      "bytes": 288,
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c",
+      "git_blob_sha1": "fd1da54831d41bc2d3f78c0b074ed64a3c347741"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-check.receipt.json",
+      "bytes": 827,
+      "sha256": "71c4605a219eb9d2bdf931b0f7c551e587f7c12ea8e09bb78a0e37ca840bdd10",
+      "git_blob_sha1": "1a6c8f79a3a9cd3e259092668b76743382129d8e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-tests.log",
+      "bytes": 5485,
+      "sha256": "241a3b68935fadf614cd37bd4f9d8b05974040674c5d8eab86aeaab920187677",
+      "git_blob_sha1": "6922f721df49f165137ed42f2922e43ef367425b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-tests.receipt.json",
+      "bytes": 897,
+      "sha256": "191ee220c7d296aeae9950e2f244eff8080bb0cda9e46f246196f7edd9c8c437",
+      "git_blob_sha1": "33a814005dfee6e22ba5dc12ea89bb8f74e2e605"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-profile.log",
+      "bytes": 72,
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "git_blob_sha1": "4739689312052a4a3292a4c6f9c39be7742a0890"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-profile.receipt.json",
+      "bytes": 849,
+      "sha256": "dfb092042a3ff9eeaf1d3107c62d5be5a8df7538e20c4a8f38890fc12d412856",
+      "git_blob_sha1": "76cd7d7e8169f227e105650279a7eb8f01b8aa27"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-secret12.log",
+      "bytes": 2103,
+      "sha256": "b136f30c0d40213f75fbf33476fcb5755d8067cd553cda283fe6a216b6126a99",
+      "git_blob_sha1": "d73822f67c3d7dfb46b3db1966045b8c288463dd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-secret12.receipt.json",
+      "bytes": 978,
+      "sha256": "15abb14cccd09aa70479c36c08ea1d0bb99353c2b505f47601bb041e76965cbc",
+      "git_blob_sha1": "321817aaa0e595313e2c5297bee4c788459f59fd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-complete-history.log",
+      "bytes": 39703,
+      "sha256": "e9c3b995604ea52fd5c4257e60ccf2dc50aea729660b3c27df53e475763c81fe",
+      "git_blob_sha1": "14a26707c4ac1376d21b16a1aaff9c738ff2cbf7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-complete-history.receipt.json",
+      "bytes": 925,
+      "sha256": "3c0b61d9404ac65f14c63e6979f597bbfdda2b54a2836bf10377974dfb873c43",
+      "git_blob_sha1": "3ac6ff1f39911fb43fc22b49a325ed10392cb744"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-hydrated.log",
+      "bytes": 41810,
+      "sha256": "8880bdb631ad3f995add6431dd8806a66aed86631d2e837ebb7bef06b29ff17f",
+      "git_blob_sha1": "305accc9f271f046f895c1a912fbc100f8fc6587"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-hydrated.receipt.json",
+      "bytes": 917,
+      "sha256": "990c02220ef3cf98ad85363d1434a91e797497822c1d44f0c8c52eafa9beff98",
+      "git_blob_sha1": "cf2aecc46338c2521b68afd286970856b8ab0a9a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70.log",
+      "bytes": 45806,
+      "sha256": "eef157fbb4132e876a87116a69b8773d3264bcf1faa1df4bfe472070cb6274c5",
+      "git_blob_sha1": "e899629b291f8fedc4021c538d3b1202c1e1a5db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70.receipt.json",
+      "bytes": 908,
+      "sha256": "79d0d611dad9db5abfbcc574582124fcccb528b69e164f1655771d5245ef31f1",
+      "git_blob_sha1": "0b9ef999241209a14538f02b3aa79200d86668b5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-store-source.log",
+      "bytes": 1259,
+      "sha256": "739fa4da6e8e132cbb7a2a06a8c96d2506cd9a2990c6209e3bd8d19e828348ed",
+      "git_blob_sha1": "0fa5cb660fc31bc0c4b3ec9f416fbe4bfacc6943"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-store-source.receipt.json",
+      "bytes": 821,
+      "sha256": "2695041ee4672a6360cd409174da0f60eff2a3420a8c0ce85cddafa3443f562a",
+      "git_blob_sha1": "b6383e2023967dddff238328632d60196264b72d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-widgets.log",
+      "bytes": 2261,
+      "sha256": "32a10eb275d4639cb7c59110bed052e2ce3b62d361390f63c301b0312b72364f",
+      "git_blob_sha1": "8e766005e4e78239ec8023c46efdeb80dc868b1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-widgets.receipt.json",
+      "bytes": 889,
+      "sha256": "4d0e99686a1e12838d60fec6cc93f10304b1aa7a5042bf056310e53ab8ff388d",
+      "git_blob_sha1": "a0d26611452ce0ce29e1976380f45cd07abc2c7d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/frozen-custody.json",
+      "bytes": 13689,
+      "sha256": "4acf961c4944ebb9d65fd5e0b489ec49cebacfb50ec23956882d01cf19ec921e",
+      "git_blob_sha1": "c9feb390f74af443fe21399696800b02eee45132"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/historical-object-hydration.json",
+      "bytes": 8369,
+      "sha256": "99561d874318cb29253197b2d73de46252731555dd0cde1656b5e31f5c6ad246",
+      "git_blob_sha1": "a37ddc191207510a6619329ea6925c1624e392df"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.log",
+      "bytes": 290,
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb",
+      "git_blob_sha1": "4632fabe35ce40796950a4c1f9eadf24d87a5b82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.receipt.json",
+      "bytes": 982,
+      "sha256": "e48f74f2014e5a5221e965356f97522dace21e8de8c734833388c6bf08610a7b",
+      "git_blob_sha1": "8846d1b2cb24d111eae9bfbac18c4e4fb84ed6bd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-snapshot.json",
+      "bytes": 136,
+      "sha256": "0d0135bb73416bb5975518d8375cbbbf6613d3a20c521f6dc7ea94677a8d37a3",
+      "git_blob_sha1": "48c7ada0c9ced3335692fae02bcb798a56a1ee26"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-worklist-generate.log",
+      "bytes": 351,
+      "sha256": "d4b07d17da5bd205569e45918b7d9d523bbcf2da2fc5d9eb82723fbfd99ebc7f",
+      "git_blob_sha1": "1fe97c13c0ed41eb24ebc47a4c48d9f14311b7ed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-worklist-generate.receipt.json",
+      "bytes": 981,
+      "sha256": "cfe2be675a0d77b0740b77cc6d5de1e667933f0e01e67797872c0e7724f5c062",
+      "git_blob_sha1": "bc139eff8c6bcaa9804979d25c13dc3ee6e026d6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/inspect_environment.py",
+      "bytes": 2443,
+      "sha256": "9c0091607ba1b31eb8073e39c575dc548849a6202f4714d068f440672f343df3",
+      "git_blob_sha1": "1a0671c50fb23e3a6d167d49432d6714d2350f1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/linux-checkout-isolation.json",
+      "bytes": 260,
+      "sha256": "7984b33da593f6ef1e703ae8eaa0220234f26ec1cf1b80c084bf90be53df1881",
+      "git_blob_sha1": "41a74fa6e3c948b225d0926df2fd0f5e89d5f099"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-entry-delta.json",
+      "bytes": 17031,
+      "sha256": "4dad54349618e5e12a752b461edfe315fe6b6cd06eceb0e073ea0b65eb263a6d",
+      "git_blob_sha1": "bc439b2a7f0133eb700e95961d7f92ddd3973f5a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.log",
+      "bytes": 18,
+      "sha256": "e64af586ea357f57559d65d1407e250bb430d9affd6f6fb18035db10efc3efe1",
+      "git_blob_sha1": "263ce831fb50639c675347cdab0e63e4fbb78a31"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.receipt.json",
+      "bytes": 927,
+      "sha256": "f9c3b4bc47e6444c4f3c68fadb7ea1d4dc8fc72f105a4c5408bd74917fd26396",
+      "git_blob_sha1": "dbafc5c339aa42d1d07b640f0022c7bc2a7962a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-ci.json",
+      "bytes": 5982,
+      "sha256": "8ed9812072ad06ee44dc34631d9c66e6bb9ae986cc5a0a719af13420e493429e",
+      "git_blob_sha1": "2705e85eaf5424b19c804469d65762694b7c7fd0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-snapshot.json",
+      "bytes": 136,
+      "sha256": "20d7a0469766b00ad9fbc071a6eb8bdbe07c76a0344c4f725f6e767ef9719dec",
+      "git_blob_sha1": "4f59d3898c85afd79cc6cae51e3f71f190d2e554"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/native-mapping-witnesses.json",
+      "bytes": 4080,
+      "sha256": "202ffba9f773bbdb46bec8af17e1feee4e61d8661de1b1dc5cb399a624940f43",
+      "git_blob_sha1": "b47a6c29955be66517f6e965433e5a017f6fc2f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.log",
+      "bytes": 712,
+      "sha256": "136a20bdd45f0808e86ef53c2f2ee158d7e646ea7e5f3159d61dd384413fd514",
+      "git_blob_sha1": "ec0f30480153ded8992687d1942f7fc38fd5e4a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.receipt.json",
+      "bytes": 875,
+      "sha256": "b2b60e6bbd0a9a7751be4065e3f7e3473d845efaea510b40cf5ce1f927d92094",
+      "git_blob_sha1": "d9911270bb986f0c9b79113c628540cedb00dbb3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.log",
+      "bytes": 161,
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb",
+      "git_blob_sha1": "ae3db5bcda96c086ae97d2b69088e6481f3bde05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.receipt.json",
+      "bytes": 862,
+      "sha256": "e2210124c995aebff718c3e326cb4d61f93f5adc1572e7fd6e74ae3d94977eaf",
+      "git_blob_sha1": "6340928e36f416dfce91a965b51b1d45ee436868"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.log",
+      "bytes": 72,
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "git_blob_sha1": "4739689312052a4a3292a4c6f9c39be7742a0890"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.receipt.json",
+      "bytes": 1002,
+      "sha256": "7cf0a93471af8e30157611e85cabd66b46901390936446fc843847edd41d321a",
+      "git_blob_sha1": "a03d28a1944361d8267c5d21758133778416ba59"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/preimages.json",
+      "bytes": 5312,
+      "sha256": "3c9624456b26e3b061a19898bb09a159c826374a79631f029789b401d2237c90",
+      "git_blob_sha1": "a9a825b2e07c7a24b035f7b52dee611fcd4e9cf5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.log",
+      "bytes": 288,
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c",
+      "git_blob_sha1": "fd1da54831d41bc2d3f78c0b074ed64a3c347741"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.receipt.json",
+      "bytes": 884,
+      "sha256": "22fc89cf2c27df705a6e0a17f3d402b4fc7f2a73551b7ecd64b45494c44fec85",
+      "git_blob_sha1": "bdb9a02df633d2e48faa35ad1d2c1fd79c1dd41c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.log",
+      "bytes": 290,
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb",
+      "git_blob_sha1": "4632fabe35ce40796950a4c1f9eadf24d87a5b82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.receipt.json",
+      "bytes": 880,
+      "sha256": "181e8b88df04421292bbf6fa1096bb469b706be6b9c780b245680db1c12ef434",
+      "git_blob_sha1": "105a08db8ee0005a69183870454835e2d97cdcbf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.log",
+      "bytes": 5486,
+      "sha256": "b05d02c14be966c7fbd6080dc45e4044f2ed3abc65349be7bae62b469137a71a",
+      "git_blob_sha1": "a2974b3cab824decfb506f3da22bbc49b63d4a9c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.receipt.json",
+      "bytes": 883,
+      "sha256": "ae156726b859e85e23362ffe5d0c157bce546f5a98920d7523462bbe5cad4a0a",
+      "git_blob_sha1": "af7f6fa6eb26a2bb841ca01e57599a8eceb81303"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.log",
+      "bytes": 1382,
+      "sha256": "6133e46a1fbe2f053ec6cc03fd4aab33141748050b3f7688e7876d85154b216d",
+      "git_blob_sha1": "ca2e5136dcad3885bf5cce205cfe8eafbc33bbd2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.receipt.json",
+      "bytes": 969,
+      "sha256": "63aab3ad35222f3ad882d0b006e7d68452601706d988170b59c970debef9dd15",
+      "git_blob_sha1": "1cf37342baf9429acb92e59c37ff6df93a2b5a17"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.log",
+      "bytes": 72,
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "git_blob_sha1": "4739689312052a4a3292a4c6f9c39be7742a0890"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.receipt.json",
+      "bytes": 919,
+      "sha256": "b8878d3f3dbdf68eaab71811d2526f354a8c49db983032ac1ddf24042eec4b4e",
+      "git_blob_sha1": "fc379eed881dc9f998d7d4c87b20c77d9dbd289f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.log",
+      "bytes": 2260,
+      "sha256": "626197ef21b1d6aae1c75d3d2c12508f72af8b8f5776d2db35d8b614296fc22c",
+      "git_blob_sha1": "886da954e5381d47d4bee9f7597a3eb0668fc230"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.receipt.json",
+      "bytes": 992,
+      "sha256": "2351bdc46cb1a17db7884e3c8298b552369d68b8f6ff9255f3d4d1ea7a1afae9",
+      "git_blob_sha1": "898c6691fada57893734d901f756d380b7523ebe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.log",
+      "bytes": 1000,
+      "sha256": "c234bc667797865af1729177327e939c6322329e8165dd37f4e44988bf15b6a7",
+      "git_blob_sha1": "041ebc773c83203e4ac3866c356f612f6b13be3e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.receipt.json",
+      "bytes": 994,
+      "sha256": "fe7e7d683d00d676403102666abebaecbf95ac9a992790d0c7dbe00af58ae9cf",
+      "git_blob_sha1": "db8084d05144079d5f156f4d35e2a17dbbb4e1f8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.log",
+      "bytes": 1023,
+      "sha256": "218766d4ee33d4455777637fe4dc046bf2cce0552b655c33a7d3b057798101fa",
+      "git_blob_sha1": "80611a96b551ef1f8272c806fc03a87e7f89855a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.receipt.json",
+      "bytes": 985,
+      "sha256": "2a4b27e3b2c60912dae241dae44433bd2813c321c46fd50f82cf7b5ba208981a",
+      "git_blob_sha1": "f7aecb3c303624c2c9a3ec2fe88f26f4e7aaca9c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.log",
+      "bytes": 951,
+      "sha256": "21c469b441fcaca2ab73231cc103d3fbd3c606dcaf26d2c788aeb1cb5d1fe0ab",
+      "git_blob_sha1": "387c6802b113b2e138fedf77a2f086ad070c021d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.receipt.json",
+      "bytes": 993,
+      "sha256": "76c15b65648138916eab22adf9243ef2a3d454061dd9b16499578dbab273cd13",
+      "git_blob_sha1": "0379cc859a9e31cbd1dcf05892100f6ab7abaa63"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.log",
+      "bytes": 782,
+      "sha256": "28090c8b82a53c78b23562ac346cea159be810362f4e94f660c8b68be07e3fea",
+      "git_blob_sha1": "d22edb938a451ba449ac478cabfd2f50bdf164e2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.receipt.json",
+      "bytes": 951,
+      "sha256": "0d77864cbe781eebf9fdf1152913f7c4ed2fece8a3663dc72d830999d0669732",
+      "git_blob_sha1": "038d3323cb1fe09ec70a6adccadeb0ef642400a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.log",
+      "bytes": 782,
+      "sha256": "cf7533417ac80df8bbc2a04578b9e679dff3f8cabadfe70553eddc4472f38d96",
+      "git_blob_sha1": "62dca46156c133b7ef5f934baddd43ce693239c6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.receipt.json",
+      "bytes": 952,
+      "sha256": "7f3b13de8b74e929354816e82a3b90bfcfce3ffa80fdf78867ebba45e93608b8",
+      "git_blob_sha1": "4740d1cb3792120395f35a686cb100436995c114"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.log",
+      "bytes": 770,
+      "sha256": "0b2fdbc00e61baf5d672b2c8a48ac8b6ba0ce778869adf347c49099803336bd1",
+      "git_blob_sha1": "046120caf384afea0973af6eb976132b52af0e2d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.receipt.json",
+      "bytes": 944,
+      "sha256": "183cb068d79bcd24a4f3d1804f01e1839fa89632c328e125d9f6804883d5a315",
+      "git_blob_sha1": "0bffa090409cc123f1e0f8c35490ce919bdb1b45"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.log",
+      "bytes": 782,
+      "sha256": "66e717ca09df601e57b2d9a29b8b78c18222c69f4bbc8cefcdae080d364f8406",
+      "git_blob_sha1": "06a7e999e0e797b5bb6f4df26c0570f376763472"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.receipt.json",
+      "bytes": 953,
+      "sha256": "6c5a1d75cc4cf4bab77fd0986435bec7a3f585f49c2ed9f7d245f149406319b6",
+      "git_blob_sha1": "5812006f06846486f58f6dcead193d098a6ad4b0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.log",
+      "bytes": 807,
+      "sha256": "7cf0bd804b7a83e5b0fe87dc1ac5c5a8590c96c3172677c8bc63f7fe48534cea",
+      "git_blob_sha1": "e925f907cf84821fc579c42e2faa6c0b1eee9120"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.receipt.json",
+      "bytes": 980,
+      "sha256": "80a0f63f34ce17a902d05bfb806a344ed1713fe0d0f9b397ba6c699bd5eef159",
+      "git_blob_sha1": "8c91526e67553eb99b001f49a6f326aac281d311"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolved-tarball-witnesses.json",
+      "bytes": 2596,
+      "sha256": "fc8d89d13b59daea37c3615e198e4ad50a02301104bcc8cb318f421466680564",
+      "git_blob_sha1": "259222a36d20b78a82ab325e2e622393e5d36f96"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/results-summary.json",
+      "bytes": 2237,
+      "sha256": "b4d96dcff4b7cf458fa1acb0bd60f8b609bdca6757ca614bfb0eb4da4e6f1cc8",
+      "git_blob_sha1": "65fdae3e08a6dabf5c1676331471fa5f04ec5685"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.log",
+      "bytes": 31,
+      "sha256": "8f8126ad4d4b03c930db74861968e34b23387ecb685ea65927cfe8b57fd1b665",
+      "git_blob_sha1": "4d9e8f4260c452526e39d07febfe0e7ef1d464a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.receipt.json",
+      "bytes": 904,
+      "sha256": "e3c24093e689e40db0a4fb66784d880f9ce7dc67ffbe0f3345c7cf7c9cf00c7a",
+      "git_blob_sha1": "bcec538dfeb5261fc5c54b67522e80e7b22fdbc7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/security-owner-discrepancy.json",
+      "bytes": 5205,
+      "sha256": "1cbf9647b6758915a27d990f2adb4d1a47330c641bed9a2938233b1f2ebf8f76",
+      "git_blob_sha1": "42f9d580dbfc45fc846236c709e3a591c7104b28"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.log",
+      "bytes": 1259,
+      "sha256": "739fa4da6e8e132cbb7a2a06a8c96d2506cd9a2990c6209e3bd8d19e828348ed",
+      "git_blob_sha1": "0fa5cb660fc31bc0c4b3ec9f416fbe4bfacc6943"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.receipt.json",
+      "bytes": 878,
+      "sha256": "2ecc8995e10f055a424796b993480736f471270a25669e624c831f89fa035d28",
+      "git_blob_sha1": "2dbcc4cf1f0dcfc020622988de8392d6589f6192"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/upstream-native-equivalence.json",
+      "bytes": 8306,
+      "sha256": "61acede125e349565894f64d282192920a605e50f849d37077a4140d2b61d187",
+      "git_blob_sha1": "383135aca7aee8a39b19b3d99278f17128ff29b9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.log",
+      "bytes": 2263,
+      "sha256": "106e8496a88e9465d40c86a7314821fde4933b318123f3912f124a3e1c3282ae",
+      "git_blob_sha1": "0bb06e8cf6a3cf13985b3943541cf77741641dbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.receipt.json",
+      "bytes": 875,
+      "sha256": "0a9e6675ac2f10dc79ab6e022243e1906c87284134165006cca906c695dbae36",
+      "git_blob_sha1": "37b9866625cd6d54cb0128541c95fad6f3f44239"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/00_READ_FIRST.md",
+      "bytes": 2673,
+      "sha256": "8f89f06fa44892ea1d776a52e207b22b2eeea4e3e66247bc8b5c4d9f9dca0b58",
+      "git_blob_sha1": "f45ceaeab84c280ac3a8dfac56c680676289ec75"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/01_BRAIN_AUDIT.md",
+      "bytes": 3339,
+      "sha256": "2ce368cf3a32043d6ab0b7c1866750df12ebaa840b1dba3ab0e7d229c9559b86",
+      "git_blob_sha1": "8ddb2a1c0826ecfd3e840f8154441dfd2380ce36"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/02_TASK.md",
+      "bytes": 4674,
+      "sha256": "d50c2b7a6ce364acc3ba2de655144e94f041f9fe98d13fe88464318b60a942df",
+      "git_blob_sha1": "1f8b8a789757765cc382f33b65b73609c634b343"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/03_SOURCE_EDIT_AUTHORIZATION.md",
+      "bytes": 2465,
+      "sha256": "c4a81dada9bfa2e76929cc03f81da9fdc14d58438efea444fc0cb062d881994e",
+      "git_blob_sha1": "49bb5bbc4b7b4dc5812e8eb0a58648582abc014e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/04_UPSTREAM_WIDGET_EQUIVALENCE.md",
+      "bytes": 1924,
+      "sha256": "aae71e0dba72f8acdfd76198d5770141f29d087486f5c4f441e1b666433991b3",
+      "git_blob_sha1": "3f3b5abd49c2d4762640eab1adc5f52ca17eb2f9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/05_PRIVACY_MAPPING_RULES.md",
+      "bytes": 2005,
+      "sha256": "8e5dd540e0f0e8e4bbd8e3e06e207a82bfd02ab95ef3d64d7b5d26e0c0976162",
+      "git_blob_sha1": "06eae92db116fc8a82b469e388fe7179aa0267a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/06_REPRODUCERS.md",
+      "bytes": 1934,
+      "sha256": "46eca6a5409760a3654cd62c12bddf5ac43e6a49437fe1487b452b7b49ed470a",
+      "git_blob_sha1": "622239cc47d476c8206b6bda31be305621dd3239"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/07_TEST_AND_ACCEPTANCE.md",
+      "bytes": 1999,
+      "sha256": "6c86ad0508e40b5a774de45c9fb4851e4233bf97ec68e5408bb7051962966835",
+      "git_blob_sha1": "135ee90ac63c1dd8484641679899c26395728438"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/08_PROTECTED_GATES.md",
+      "bytes": 1933,
+      "sha256": "7ad5287f58d6e55b382c1ef5d81a14acd4a67bd6dd97d830df2224a0c79b2b69",
+      "git_blob_sha1": "c1af25fa916ac1bf8f239ed2491d1653b1763e0b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/09_DELIVERY_PROTOCOL.md",
+      "bytes": 2296,
+      "sha256": "b17b1b2bcb7babc24d590b9377c855203c59f559e009fbd4d752e629666294a6",
+      "git_blob_sha1": "d2987f834cc6e436c305579809a1596d3eb5a7bc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/10_STOP_RULES.md",
+      "bytes": 1667,
+      "sha256": "45209f01aa387e51032c80d3bfd04f9588c2bab1989aa431498ed3767ff90024",
+      "git_blob_sha1": "be4b22ef3026dc8dbe4bdf8e31ecd0acb92a9231"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 7010,
+      "sha256": "44992018817701bbe8977f129df7b9d00ea8558e2bef8eb7b0883a9381d59995",
+      "git_blob_sha1": "2e6ab99b94a29be52c1be7ecb75b8af858f1cfab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/TASK_MANIFEST.json",
+      "bytes": 2700,
+      "sha256": "78f4dc0753bc1ad8c05d3253645f2a34ff3b57714866de68dda396a6af210339",
+      "git_blob_sha1": "1253b8389903886306df1565893dbdfcf0173fc3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/TASK_STATE.json",
+      "bytes": 1194,
+      "sha256": "e1a46c7074072661d71c4068b9b4c4c48f172a7f1299fbe6f371aaa49f36ceb9",
+      "git_blob_sha1": "838a9704adaa1da1ef2277fe6b4db091f0ea523d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/UPSTREAM_WIDGET_WITNESSES.json",
+      "bytes": 1978,
+      "sha256": "712f034f7a50ed413c76c457f4138201a4336e96453b2bd191dcc4398ca54497",
+      "git_blob_sha1": "170c3715aef40295785a7ac8b1e47b4806bb7f53"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/verify_context.py",
+      "bytes": 2097,
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193",
+      "git_blob_sha1": "8569906b92b59322c2398d5ce412e44fd0086e95"
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery02-active.json",
+      "bytes": 1047,
+      "sha256": "9449aa72f422ceab9f228d072630457f068dc65655e597b93e97b4723c5b5040",
+      "git_blob_sha1": "b3627c612b0ec20ff83daccf8d70a5d29903269e"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/01_BRAIN_AUDIT.md",
+      "bytes": 3339,
+      "sha256": "2ce368cf3a32043d6ab0b7c1866750df12ebaa840b1dba3ab0e7d229c9559b86",
+      "git_blob_sha1": "8ddb2a1c0826ecfd3e840f8154441dfd2380ce36"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 7010,
+      "sha256": "44992018817701bbe8977f129df7b9d00ea8558e2bef8eb7b0883a9381d59995",
+      "git_blob_sha1": "2e6ab99b94a29be52c1be7ecb75b8af858f1cfab"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/TASK_MANIFEST.json",
+      "bytes": 2700,
+      "sha256": "78f4dc0753bc1ad8c05d3253645f2a34ff3b57714866de68dda396a6af210339",
+      "git_blob_sha1": "1253b8389903886306df1565893dbdfcf0173fc3"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/external-digest-proof.json",
+      "bytes": 375,
+      "sha256": "d1d62f9df22c73b635dffe205114e6896e5b484c931b6a98225bc7c406eb0d04",
+      "git_blob_sha1": "a2040c26dc1d74d5d8cbccb5c29bd23fd674cb18"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "bytes": 137486,
+      "sha256": "dc7c49a0e3bdb7e05b4372753f8f77218648d33ed1694cab237b3f637af88bd8",
+      "git_blob_sha1": "e8b036d36f0cf2b83b672edb6f2f21509da1613b"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "bytes": 81878,
+      "sha256": "0b4275d9a7c38a3ca33b448be2dc09446b1e104be04b180529ee26e3e2156f98",
+      "git_blob_sha1": "917d757f1e2477a2c2eb4d4ed6f901d57d8fbf98"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "bytes": 247820,
+      "sha256": "3f1e6a5d1186266d2c9945f0ae19655e083d59c1c1191b33d800f354191893a9",
+      "git_blob_sha1": "322a8b374a39de8df7c22d9fba384aa951561373"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "bytes": 19517,
+      "sha256": "1a85694f9a3945b80c802ebfbc7bf7b303a8a892b059b12fc93e4814c0112f0c",
+      "git_blob_sha1": "a7a1593cc3a9893759e4e245907c0b3e619823ac"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "8a80e8afe3fd8565767440fbd5093fdefc9caf9812236a53430ed5c3600c8a6a",
+      "git_blob_sha1": "666aea67ceef9a1d7b66d799a9652f58a103fbd7"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 572797,
+      "sha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85",
+      "git_blob_sha1": "73acb61106d0de4d499fb89c01719417a3230d24"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "bytes": 54251,
+      "sha256": "c9732ec5567dd610f0a39a43b3e9b3cb6774ae9de02b4678de2b8d3dba678c58",
+      "git_blob_sha1": "eed208833fb9fe672b6691233c4a8ef9f22003da"
+    },
+    {
+      "path": "scripts/brain/test_m103_quality_recovery02_profile.py",
+      "bytes": 8057,
+      "sha256": "77b1520a0594ca737303148586572d98e4211d739d89f712ae0a87842cfc2bf0",
+      "git_blob_sha1": "71cf7490212eb8483dcb4eb9a9e7c1caa8db10c8"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "bytes": 16969,
+      "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c",
+      "git_blob_sha1": "f86cfa007bf90881d2fa0c93ae0f60f229e9b3fd"
+    }
+  ]
+}

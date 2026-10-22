@@ -1,0 +1,237 @@
+{
+  "measured_source": {
+    "commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+    "tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd"
+  },
+  "protected": [
+    {
+      "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
+      "sha256": "e120caae4c8b367bb1e2bdb69f652ed355a7e25ade21fe8e67ad743723a5149f",
+      "git_blob": "1bf1038828720ea749145cbebed351c870ade0c5",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
+      "sha256": "764d4e1ae88747600b3e35b3ed1bced181465052a0a6c4ff8889a3ca3b572c1c",
+      "git_blob": "5b6e69a633dd067e8d2e8e9450faec919677743b",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "sha256": "aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510",
+      "git_blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
+      "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655",
+      "git_blob": "e169484d968c9270ae2dbaa5eb113069025281db",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "sha256": "1c2e05e245db33ed7635de68e73488f568fc0ace2a7b35f52a7b4ebc1e061552",
+      "git_blob": "69123bd77b7af0c97f55d9e47b3bad975498cbd7",
+      "unchanged": true
+    }
+  ],
+  "native_payloads": [
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29",
+      "git_blob": "b460498538e210bfb2854759f8404df8aefc0eab",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/EntryView.swift",
+      "sha256": "67df36562fd9d2d64069ae9ad7b300f88717599ce492febdb5ba61fda38f0450",
+      "git_blob": "b35938453338bd7294e8055da2f463fb23659cc3",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/ExpoWidgets.podspec",
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a",
+      "git_blob": "f7665925bcc63c1d93ac8b782a9fb195c74a2abf",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30",
+      "git_blob": "2237cab55ba1da2cd64e3a731cedef93851f8457",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LiveActivity.swift",
+      "sha256": "14edb955c8f0ad15f72d9770298d9bdfb9a036f8d92f88c3b51d7f2e3cbd540e",
+      "git_blob": "264edc81a48e7fe206a075d21672b70b555d94e7",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LiveActivityFactory.swift",
+      "sha256": "f888fc22dd8b805b5ce2ade067479afcd6e894860e5cdffdf8ebce07b6658999",
+      "git_blob": "ffecf86ee5edf87424782bd658bf9818dba0d1ea",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/TimelineProvider.swift",
+      "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e",
+      "git_blob": "4b794b78e56d0e21bb2fcb4fbb8b0c861673a3b1",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/Utils.swift",
+      "sha256": "76887d9a3f1e076785d330dfdd6f2069df439c592b74b7e89812b0383205bd56",
+      "git_blob": "7ef3b3008d2990cd762195c707a463bc849ae825",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/WidgetLiveActivity.swift",
+      "sha256": "5f1817d220a63b9a64faf2d7cc06803458655dcf34de160cff279e241e451f89",
+      "git_blob": "1b84563291e1c3121a953eee176a34bf5c5a8bd7",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/WidgetObject.swift",
+      "sha256": "2ccab1755d4889c93def15e2fa2715672d6f578fb982f81824496c749e5bf83d",
+      "git_blob": "7c0893a4d158b4a00e0dd7f51c6d0ab680fce55d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/WidgetsModule.swift",
+      "sha256": "3213cc92fff7922bdc60a8e1b94ecc84a0b3729a323629ca9b25fd964b92421c",
+      "git_blob": "fd01f95b1588accb1af9145d8e00a47e850cbf92",
+      "unchanged": true
+    }
+  ],
+  "root_manifest_unchanged": true,
+  "changed_paths": [
+    ".gitattributes",
+    "apps/mobile/package.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor-provenance.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-snapshot.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-worklist-generate.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-worklist-generate.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-entry-delta.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-snapshot.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/native-mapping-witnesses.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/preimages.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolved-tarball-witnesses.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/upstream-native-equivalence.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.log",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.receipt.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/00_READ_FIRST.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/01_BRAIN_AUDIT.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/02_TASK.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/03_SOURCE_EDIT_AUTHORIZATION.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/04_UPSTREAM_WIDGET_EQUIVALENCE.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/05_PRIVACY_MAPPING_RULES.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/06_REPRODUCERS.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/07_TEST_AND_ACCEPTANCE.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/08_PROTECTED_GATES.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/09_DELIVERY_PROTOCOL.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/10_STOP_RULES.md",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/TASK_MANIFEST.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/TASK_STATE.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/UPSTREAM_WIDGET_WITNESSES.json",
+    "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/verify_context.py",
+    "docs/brain/m103-quality-recovery02-active.json",
+    "docs/brain/reviews/M1-03/QR01-REVIEW01/01_BRAIN_AUDIT.md",
+    "docs/brain/reviews/M1-03/QR01-REVIEW01/SOURCE_EDIT_AUTHORIZATION.json",
+    "docs/brain/reviews/M1-03/QR01-REVIEW01/TASK_MANIFEST.json",
+    "docs/brain/reviews/M1-03/QR01-REVIEW01/external-digest-proof.json",
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md",
+    "docs/phase-9/generated/ios-privacy-source-audit.json",
+    "docs/phase-9/generated/ios-privacy-source-audit.md",
+    "docs/phase-9/ios-sdk-package-mapping.json",
+    "package-lock.json",
+    "scripts/brain/m103_profile.py",
+    "scripts/brain/test_m103_quality_recovery02_profile.py",
+    "scripts/phase5/patch-expo-widgets-lifecycle.mjs"
+  ],
+  "roadmap_tasks": 47,
+  "module_identities": 27,
+  "prior_adrs": 51,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "admission": "NONE"
+}

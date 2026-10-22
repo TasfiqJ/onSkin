@@ -1,0 +1,1052 @@
+{
+  "schema_version": 3,
+  "task_id": "M1-03",
+  "iteration": "QUALITY-RECOVERY-02",
+  "branch": "stage/m1-retained-safety",
+  "status": "BLOCKED",
+  "measured": {
+    "commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+    "tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "command": "[\"npm\", \"run\", \"phase9:ios-archive-privacy-evidence:test\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-archive-privacy-tests",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-archive-privacy-tests.receipt.json",
+      "sha256": "c75faa85ca46fc78ea15874533820a66457dc3606fa823137c50957acf19b62b"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/inspect_environment.py\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-environment",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-environment.receipt.json",
+      "sha256": "22bb4a08fe07a72806c76b4a9814e5045ace9de3ccaafee3b4e227d97f9837ef"
+    },
+    {
+      "command": "[\"npx\", \"--no-install\", \"expo\", \"install\", \"--check\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source/apps/mobile",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "final-expo-check",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-check.receipt.json",
+      "sha256": "036144254cdcd09e1efde1f4d03686b8a561a30f3db7d17d33c2d10fffea6885"
+    },
+    {
+      "command": "[\"node\", \"/root/onskin-quality-recovery02-doctor/package/bin/expo-doctor.js\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source/apps/mobile",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "final-expo-doctor",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-doctor.receipt.json",
+      "sha256": "7ba765f1e4c78981613260d5819868a48997b4d553f1f5cbe841d613540a91f8"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"phase5:ios-extension-contract:smoke\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-extension",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-extension.receipt.json",
+      "sha256": "441315263d0361c8469dcb1abe83e7d6bc8a4738e77d82d16ffa309cd1ea306e"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"lint\", \"--\", \"--force\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-forced-lint",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-lint.receipt.json",
+      "sha256": "364c59ea3566a62a90b82d3ad5e3a9a3c7e651fc98bef460392a9f6bf1092c7e"
+    },
+    {
+      "command": "[\"npm\", \"test\", \"--\", \"--force\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-forced-tests",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-tests.receipt.json",
+      "sha256": "4604988ec4294de7e6376bfffab2ea58c9a6f39ea924c25b2ad07be8bea957fa"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"typecheck\", \"--\", \"--force\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-forced-typecheck",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-typecheck.receipt.json",
+      "sha256": "16824732d16b4594453552fd6ce12cab281a5583445f9e54cf4d685874b44b9c"
+    },
+    {
+      "command": "[\"npm\", \"ci\", \"--no-audit\", \"--no-fund\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-fresh-ci",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-fresh-ci.receipt.json",
+      "sha256": "055dfc7b89fdcfde6f9be3d1dc05a8ed4ecb5751aeee2ab28c5f0e4a243eb72b"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/brain\", \"-p\", \"test_*.py\", \"-v\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-governance",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-governance.receipt.json",
+      "sha256": "aa72c80c3555a747ec4dc87d7aba010fdecca2ef4735aa8629306291024419c4"
+    },
+    {
+      "command": "[\"npm\", \"view\", \"expo-notifications@57.0.24\", \"version\", \"dist\", \"--json\", \"--registry=https://registry.npmjs.org\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-notifications-scope-witness",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-notifications-scope-witness.receipt.json",
+      "sha256": "c61fb99bcd03125aad2d2893e324c8329114b98274431bd0ba1e97eaa7f7bc79"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"postinstall:check\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-postinstall",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-postinstall.receipt.json",
+      "sha256": "00bf7c465d79893ecdb535addcf3050398f0bad951d55a0e30733152a76e108c"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"phase9:ios-privacy-source-audit:check\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-privacy-check",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-check.receipt.json",
+      "sha256": "71c4605a219eb9d2bdf931b0f7c551e587f7c12ea8e09bb78a0e37ca840bdd10"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"phase9:ios-privacy-source-audit:test\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-privacy-tests",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-tests.receipt.json",
+      "sha256": "191ee220c7d296aeae9950e2f244eff8080bb0cda9e46f246196f7edd9c8c437"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"scripts/brain/brain.py\", \"--profile\", \"M1-03\", \"validate\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-profile",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-profile.receipt.json",
+      "sha256": "dfb092042a3ff9eeaf1d3107c62d5be5a8df7538e20c4a8f38890fc12d412856"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/phase9/security_acceptance\", \"-p\", \"test_secret_scan.py\", \"-v\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-secret12",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-secret12.receipt.json",
+      "sha256": "15abb14cccd09aa70479c36c08ea1d0bb99353c2b505f47601bb041e76965cbc"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/phase9/security_acceptance\", \"-p\", \"test_contract.py\", \"-v\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "final-security70-complete-history",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-complete-history.receipt.json",
+      "sha256": "3c0b61d9404ac65f14c63e6979f597bbfdda2b54a2836bf10377974dfb873c43"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/phase9/security_acceptance\", \"-p\", \"test_contract.py\", \"-v\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "final-security70-hydrated",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-hydrated.receipt.json",
+      "sha256": "990c02220ef3cf98ad85363d1434a91e797497822c1d44f0c8c52eafa9beff98"
+    },
+    {
+      "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/phase9/security_acceptance\", \"-p\", \"test_contract.py\", \"-v\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "final-security70",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70.receipt.json",
+      "sha256": "79d0d611dad9db5abfbcc574582124fcccb528b69e164f1655771d5245ef31f1"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"phase9:store-build-inspect:check\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-store-source",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-store-source.receipt.json",
+      "sha256": "2695041ee4672a6360cd409174da0f60eff2a3420a8c0ce85cddafa3443f562a"
+    },
+    {
+      "command": "[\"npm\", \"run\", \"phase5:expo-widgets-lifecycle:test\"]",
+      "working_directory": "/root/onskin-quality-recovery02-source",
+      "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+      "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-widgets",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-widgets.receipt.json",
+      "sha256": "4d0e99686a1e12838d60fec6cc93f10304b1aa7a5042bf056310e53ab8ff388d"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".gitattributes",
+      "sha256": "58cc1493e2dd014812689be2685973a3a9150242b2bd1b45f50a174ea10e4c7b"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "sha256": "1e14b3956f7940a11f7cd18161b5ab8bad4023a94974830041e5879952e630a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/BLOCKERS.md",
+      "sha256": "8edbdf950b419c9654c66246d35ef28d15b6982dd1d513c406901b518268bbb4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/README.md",
+      "sha256": "d9835c98008f238fa4aa3b0d83cabf430c79341705503775be375cee19a04862"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/RESULTS.md",
+      "sha256": "e77f2ae27cbd271385968222edc49fb2a144693bc57464ac35e643bf37d42edd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.log",
+      "sha256": "cadceedc53e76085977e4d30d24e570790a8fd1c5de4538fcd4e88ec692e0a0c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.receipt.json",
+      "sha256": "c8c85ea45bc7fa54a44b502afdc5ff5f61b3729d7c2101357dbb17b1e2f27cd5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.log",
+      "sha256": "0e41a22f0d6e0314b3a395c8f2dd258757157d101cf4ab86979aec1a61910d99"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.receipt.json",
+      "sha256": "1f104e98ee417026031c125a52743deec5034581aa67d0fe8b57b9a65ddc583f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.log",
+      "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.receipt.json",
+      "sha256": "31596e8ef81922006e85ed28f37d8189dd2a35f2228a4ac29c2a4b6b56454f66"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/current-fixture-object-hydration.json",
+      "sha256": "65de8c538f3e83571ee62516371bdda049d8909d5a5b4c00c8d4b1d71b5b2713"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.log",
+      "sha256": "ed42d2906c4200ee1df696f544591ef8fb81d1e89de49ac3c8cac89d540f9569"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.receipt.json",
+      "sha256": "793a36941503776b159de23e5b00293ddcd11b00ae16c11406b154b993b406f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.log",
+      "sha256": "8225fed7bda745afcf581844a0dab84bf962f013f0bebb70e13642550a02f761"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.receipt.json",
+      "sha256": "a1e8f4bfb8982e72df2478c2b79c7fb8adda79e74725a6a75bb6370a7c65f774"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor-provenance.json",
+      "sha256": "dbb026ea9d0daa7d8718952a1dcc3ee7ecf5124af677db22097e880e962bc5ce"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.log",
+      "sha256": "f16e22efb6c7dfd1336687d8ceb09ca5b94985a7514a152a9c0191970b74b955"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.receipt.json",
+      "sha256": "fbf546441ff91ec1e2eae620df0218d85efbe9974b0504000306532cfb5c79b5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.log",
+      "sha256": "410d06cacac55162ec59c1776d637298aea4d81394efaae8c34d3c31815c883c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.receipt.json",
+      "sha256": "23e151c3c5341081fa2b5e169000e21953b7b8dc45779b69082b721ff4036438"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-archive-privacy-tests.log",
+      "sha256": "98f71ab35d350d819e51a1e235b05b2e2887d24a698477271d9cc5e63f30aa5e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-archive-privacy-tests.receipt.json",
+      "sha256": "c75faa85ca46fc78ea15874533820a66457dc3606fa823137c50957acf19b62b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-environment.log",
+      "sha256": "45598a704892b742ac3e711772e3336fafbbc69b01af857f62d49d8a1d56b0fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-environment.receipt.json",
+      "sha256": "22bb4a08fe07a72806c76b4a9814e5045ace9de3ccaafee3b4e227d97f9837ef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-check.log",
+      "sha256": "8225fed7bda745afcf581844a0dab84bf962f013f0bebb70e13642550a02f761"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-check.receipt.json",
+      "sha256": "036144254cdcd09e1efde1f4d03686b8a561a30f3db7d17d33c2d10fffea6885"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-doctor.log",
+      "sha256": "f16e22efb6c7dfd1336687d8ceb09ca5b94985a7514a152a9c0191970b74b955"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-expo-doctor.receipt.json",
+      "sha256": "7ba765f1e4c78981613260d5819868a48997b4d553f1f5cbe841d613540a91f8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-extension.log",
+      "sha256": "8710f9f85ece547913a0c6c4d682fb4a502a73661726dc7e4f2dea99cc4dbaf5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-extension.receipt.json",
+      "sha256": "441315263d0361c8469dcb1abe83e7d6bc8a4738e77d82d16ffa309cd1ea306e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-lint.log",
+      "sha256": "80c960d099d088408507d32db53b5ec660321efdb181e3f6e0ec61ce0c4b240b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-lint.receipt.json",
+      "sha256": "364c59ea3566a62a90b82d3ad5e3a9a3c7e651fc98bef460392a9f6bf1092c7e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-tests.log",
+      "sha256": "2d963e7699310b8aed91a4f2c8bd05bec7cd1f7ce213ff952a1ac0fc725b45b2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-tests.receipt.json",
+      "sha256": "4604988ec4294de7e6376bfffab2ea58c9a6f39ea924c25b2ad07be8bea957fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-typecheck.log",
+      "sha256": "8e12d75c7ef09c868c27829657ff08a1b37f4c73c2bbd07244d43f7e40490353"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-forced-typecheck.receipt.json",
+      "sha256": "16824732d16b4594453552fd6ce12cab281a5583445f9e54cf4d685874b44b9c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-fresh-ci.log",
+      "sha256": "a99a6fa6f56be82c457bb21aac94d6c406045afe7cbecdd9b905fdefa93e493a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-fresh-ci.receipt.json",
+      "sha256": "055dfc7b89fdcfde6f9be3d1dc05a8ed4ecb5751aeee2ab28c5f0e4a243eb72b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-governance.log",
+      "sha256": "2445a905b8abcb6920b6a4318266299fe132238251c0d6baf189b75556184720"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-governance.receipt.json",
+      "sha256": "aa72c80c3555a747ec4dc87d7aba010fdecca2ef4735aa8629306291024419c4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-notifications-scope-witness.log",
+      "sha256": "45931dd8179d7ca8ccd49cff8aaf54f10ef4e2a8e27007ea2a24ec69016fff1b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-notifications-scope-witness.receipt.json",
+      "sha256": "c61fb99bcd03125aad2d2893e324c8329114b98274431bd0ba1e97eaa7f7bc79"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-postinstall.log",
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-postinstall.receipt.json",
+      "sha256": "00bf7c465d79893ecdb535addcf3050398f0bad951d55a0e30733152a76e108c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-check.log",
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-check.receipt.json",
+      "sha256": "71c4605a219eb9d2bdf931b0f7c551e587f7c12ea8e09bb78a0e37ca840bdd10"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-tests.log",
+      "sha256": "241a3b68935fadf614cd37bd4f9d8b05974040674c5d8eab86aeaab920187677"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-privacy-tests.receipt.json",
+      "sha256": "191ee220c7d296aeae9950e2f244eff8080bb0cda9e46f246196f7edd9c8c437"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-profile.receipt.json",
+      "sha256": "dfb092042a3ff9eeaf1d3107c62d5be5a8df7538e20c4a8f38890fc12d412856"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-secret12.log",
+      "sha256": "b136f30c0d40213f75fbf33476fcb5755d8067cd553cda283fe6a216b6126a99"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-secret12.receipt.json",
+      "sha256": "15abb14cccd09aa70479c36c08ea1d0bb99353c2b505f47601bb041e76965cbc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-complete-history.log",
+      "sha256": "e9c3b995604ea52fd5c4257e60ccf2dc50aea729660b3c27df53e475763c81fe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-complete-history.receipt.json",
+      "sha256": "3c0b61d9404ac65f14c63e6979f597bbfdda2b54a2836bf10377974dfb873c43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-hydrated.log",
+      "sha256": "8880bdb631ad3f995add6431dd8806a66aed86631d2e837ebb7bef06b29ff17f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70-hydrated.receipt.json",
+      "sha256": "990c02220ef3cf98ad85363d1434a91e797497822c1d44f0c8c52eafa9beff98"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70.log",
+      "sha256": "eef157fbb4132e876a87116a69b8773d3264bcf1faa1df4bfe472070cb6274c5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-security70.receipt.json",
+      "sha256": "79d0d611dad9db5abfbcc574582124fcccb528b69e164f1655771d5245ef31f1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-store-source.log",
+      "sha256": "739fa4da6e8e132cbb7a2a06a8c96d2506cd9a2990c6209e3bd8d19e828348ed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-store-source.receipt.json",
+      "sha256": "2695041ee4672a6360cd409174da0f60eff2a3420a8c0ce85cddafa3443f562a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-widgets.log",
+      "sha256": "32a10eb275d4639cb7c59110bed052e2ce3b62d361390f63c301b0312b72364f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-widgets.receipt.json",
+      "sha256": "4d0e99686a1e12838d60fec6cc93f10304b1aa7a5042bf056310e53ab8ff388d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/frozen-custody.json",
+      "sha256": "4acf961c4944ebb9d65fd5e0b489ec49cebacfb50ec23956882d01cf19ec921e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/historical-object-hydration.json",
+      "sha256": "99561d874318cb29253197b2d73de46252731555dd0cde1656b5e31f5c6ad246"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.log",
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.receipt.json",
+      "sha256": "e48f74f2014e5a5221e965356f97522dace21e8de8c734833388c6bf08610a7b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-snapshot.json",
+      "sha256": "0d0135bb73416bb5975518d8375cbbbf6613d3a20c521f6dc7ea94677a8d37a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-worklist-generate.log",
+      "sha256": "d4b07d17da5bd205569e45918b7d9d523bbcf2da2fc5d9eb82723fbfd99ebc7f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-worklist-generate.receipt.json",
+      "sha256": "cfe2be675a0d77b0740b77cc6d5de1e667933f0e01e67797872c0e7724f5c062"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/inspect_environment.py",
+      "sha256": "9c0091607ba1b31eb8073e39c575dc548849a6202f4714d068f440672f343df3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/linux-checkout-isolation.json",
+      "sha256": "7984b33da593f6ef1e703ae8eaa0220234f26ec1cf1b80c084bf90be53df1881"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-entry-delta.json",
+      "sha256": "4dad54349618e5e12a752b461edfe315fe6b6cd06eceb0e073ea0b65eb263a6d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.log",
+      "sha256": "e64af586ea357f57559d65d1407e250bb430d9affd6f6fb18035db10efc3efe1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.receipt.json",
+      "sha256": "f9c3b4bc47e6444c4f3c68fadb7ea1d4dc8fc72f105a4c5408bd74917fd26396"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-ci.json",
+      "sha256": "8ed9812072ad06ee44dc34631d9c66e6bb9ae986cc5a0a719af13420e493429e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-snapshot.json",
+      "sha256": "20d7a0469766b00ad9fbc071a6eb8bdbe07c76a0344c4f725f6e767ef9719dec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/native-mapping-witnesses.json",
+      "sha256": "202ffba9f773bbdb46bec8af17e1feee4e61d8661de1b1dc5cb399a624940f43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.log",
+      "sha256": "136a20bdd45f0808e86ef53c2f2ee158d7e646ea7e5f3159d61dd384413fd514"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.receipt.json",
+      "sha256": "b2b60e6bbd0a9a7751be4065e3f7e3473d845efaea510b40cf5ce1f927d92094"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.log",
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.receipt.json",
+      "sha256": "e2210124c995aebff718c3e326cb4d61f93f5adc1572e7fd6e74ae3d94977eaf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.receipt.json",
+      "sha256": "7cf0a93471af8e30157611e85cabd66b46901390936446fc843847edd41d321a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/preimages.json",
+      "sha256": "3c9624456b26e3b061a19898bb09a159c826374a79631f029789b401d2237c90"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.log",
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.receipt.json",
+      "sha256": "22fc89cf2c27df705a6e0a17f3d402b4fc7f2a73551b7ecd64b45494c44fec85"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.log",
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.receipt.json",
+      "sha256": "181e8b88df04421292bbf6fa1096bb469b706be6b9c780b245680db1c12ef434"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.log",
+      "sha256": "b05d02c14be966c7fbd6080dc45e4044f2ed3abc65349be7bae62b469137a71a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.receipt.json",
+      "sha256": "ae156726b859e85e23362ffe5d0c157bce546f5a98920d7523462bbe5cad4a0a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.log",
+      "sha256": "6133e46a1fbe2f053ec6cc03fd4aab33141748050b3f7688e7876d85154b216d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.receipt.json",
+      "sha256": "63aab3ad35222f3ad882d0b006e7d68452601706d988170b59c970debef9dd15"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.receipt.json",
+      "sha256": "b8878d3f3dbdf68eaab71811d2526f354a8c49db983032ac1ddf24042eec4b4e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.log",
+      "sha256": "626197ef21b1d6aae1c75d3d2c12508f72af8b8f5776d2db35d8b614296fc22c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.receipt.json",
+      "sha256": "2351bdc46cb1a17db7884e3c8298b552369d68b8f6ff9255f3d4d1ea7a1afae9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.log",
+      "sha256": "c234bc667797865af1729177327e939c6322329e8165dd37f4e44988bf15b6a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.receipt.json",
+      "sha256": "fe7e7d683d00d676403102666abebaecbf95ac9a992790d0c7dbe00af58ae9cf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.log",
+      "sha256": "218766d4ee33d4455777637fe4dc046bf2cce0552b655c33a7d3b057798101fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.receipt.json",
+      "sha256": "2a4b27e3b2c60912dae241dae44433bd2813c321c46fd50f82cf7b5ba208981a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.log",
+      "sha256": "21c469b441fcaca2ab73231cc103d3fbd3c606dcaf26d2c788aeb1cb5d1fe0ab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.receipt.json",
+      "sha256": "76c15b65648138916eab22adf9243ef2a3d454061dd9b16499578dbab273cd13"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.log",
+      "sha256": "28090c8b82a53c78b23562ac346cea159be810362f4e94f660c8b68be07e3fea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.receipt.json",
+      "sha256": "0d77864cbe781eebf9fdf1152913f7c4ed2fece8a3663dc72d830999d0669732"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.log",
+      "sha256": "cf7533417ac80df8bbc2a04578b9e679dff3f8cabadfe70553eddc4472f38d96"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.receipt.json",
+      "sha256": "7f3b13de8b74e929354816e82a3b90bfcfce3ffa80fdf78867ebba45e93608b8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.log",
+      "sha256": "0b2fdbc00e61baf5d672b2c8a48ac8b6ba0ce778869adf347c49099803336bd1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.receipt.json",
+      "sha256": "183cb068d79bcd24a4f3d1804f01e1839fa89632c328e125d9f6804883d5a315"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.log",
+      "sha256": "66e717ca09df601e57b2d9a29b8b78c18222c69f4bbc8cefcdae080d364f8406"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.receipt.json",
+      "sha256": "6c5a1d75cc4cf4bab77fd0986435bec7a3f585f49c2ed9f7d245f149406319b6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.log",
+      "sha256": "7cf0bd804b7a83e5b0fe87dc1ac5c5a8590c96c3172677c8bc63f7fe48534cea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.receipt.json",
+      "sha256": "80a0f63f34ce17a902d05bfb806a344ed1713fe0d0f9b397ba6c699bd5eef159"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolved-tarball-witnesses.json",
+      "sha256": "fc8d89d13b59daea37c3615e198e4ad50a02301104bcc8cb318f421466680564"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/results-summary.json",
+      "sha256": "b4d96dcff4b7cf458fa1acb0bd60f8b609bdca6757ca614bfb0eb4da4e6f1cc8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.log",
+      "sha256": "8f8126ad4d4b03c930db74861968e34b23387ecb685ea65927cfe8b57fd1b665"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.receipt.json",
+      "sha256": "e3c24093e689e40db0a4fb66784d880f9ce7dc67ffbe0f3345c7cf7c9cf00c7a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/security-owner-discrepancy.json",
+      "sha256": "1cbf9647b6758915a27d990f2adb4d1a47330c641bed9a2938233b1f2ebf8f76"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.log",
+      "sha256": "739fa4da6e8e132cbb7a2a06a8c96d2506cd9a2990c6209e3bd8d19e828348ed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.receipt.json",
+      "sha256": "2ecc8995e10f055a424796b993480736f471270a25669e624c831f89fa035d28"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/upstream-native-equivalence.json",
+      "sha256": "61acede125e349565894f64d282192920a605e50f849d37077a4140d2b61d187"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.log",
+      "sha256": "106e8496a88e9465d40c86a7314821fde4933b318123f3912f124a3e1c3282ae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.receipt.json",
+      "sha256": "0a9e6675ac2f10dc79ab6e022243e1906c87284134165006cca906c695dbae36"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/00_READ_FIRST.md",
+      "sha256": "8f89f06fa44892ea1d776a52e207b22b2eeea4e3e66247bc8b5c4d9f9dca0b58"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/01_BRAIN_AUDIT.md",
+      "sha256": "2ce368cf3a32043d6ab0b7c1866750df12ebaa840b1dba3ab0e7d229c9559b86"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/02_TASK.md",
+      "sha256": "d50c2b7a6ce364acc3ba2de655144e94f041f9fe98d13fe88464318b60a942df"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/03_SOURCE_EDIT_AUTHORIZATION.md",
+      "sha256": "c4a81dada9bfa2e76929cc03f81da9fdc14d58438efea444fc0cb062d881994e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/04_UPSTREAM_WIDGET_EQUIVALENCE.md",
+      "sha256": "aae71e0dba72f8acdfd76198d5770141f29d087486f5c4f441e1b666433991b3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/05_PRIVACY_MAPPING_RULES.md",
+      "sha256": "8e5dd540e0f0e8e4bbd8e3e06e207a82bfd02ab95ef3d64d7b5d26e0c0976162"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/06_REPRODUCERS.md",
+      "sha256": "46eca6a5409760a3654cd62c12bddf5ac43e6a49437fe1487b452b7b49ed470a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/07_TEST_AND_ACCEPTANCE.md",
+      "sha256": "6c86ad0508e40b5a774de45c9fb4851e4233bf97ec68e5408bb7051962966835"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/08_PROTECTED_GATES.md",
+      "sha256": "7ad5287f58d6e55b382c1ef5d81a14acd4a67bd6dd97d830df2224a0c79b2b69"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/09_DELIVERY_PROTOCOL.md",
+      "sha256": "b17b1b2bcb7babc24d590b9377c855203c59f559e009fbd4d752e629666294a6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/10_STOP_RULES.md",
+      "sha256": "45209f01aa387e51032c80d3bfd04f9588c2bab1989aa431498ed3767ff90024"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "44992018817701bbe8977f129df7b9d00ea8558e2bef8eb7b0883a9381d59995"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/TASK_MANIFEST.json",
+      "sha256": "78f4dc0753bc1ad8c05d3253645f2a34ff3b57714866de68dda396a6af210339"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/TASK_STATE.json",
+      "sha256": "e1a46c7074072661d71c4068b9b4c4c48f172a7f1299fbe6f371aaa49f36ceb9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/UPSTREAM_WIDGET_WITNESSES.json",
+      "sha256": "712f034f7a50ed413c76c457f4138201a4336e96453b2bd191dcc4398ca54497"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/verify_context.py",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193"
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery02-active.json",
+      "sha256": "9449aa72f422ceab9f228d072630457f068dc65655e597b93e97b4723c5b5040"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/01_BRAIN_AUDIT.md",
+      "sha256": "2ce368cf3a32043d6ab0b7c1866750df12ebaa840b1dba3ab0e7d229c9559b86"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "44992018817701bbe8977f129df7b9d00ea8558e2bef8eb7b0883a9381d59995"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/TASK_MANIFEST.json",
+      "sha256": "78f4dc0753bc1ad8c05d3253645f2a34ff3b57714866de68dda396a6af210339"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR01-REVIEW01/external-digest-proof.json",
+      "sha256": "d1d62f9df22c73b635dffe205114e6896e5b484c931b6a98225bc7c406eb0d04"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "sha256": "dc7c49a0e3bdb7e05b4372753f8f77218648d33ed1694cab237b3f637af88bd8"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "sha256": "0b4275d9a7c38a3ca33b448be2dc09446b1e104be04b180529ee26e3e2156f98"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "sha256": "3f1e6a5d1186266d2c9945f0ae19655e083d59c1c1191b33d800f354191893a9"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "sha256": "1a85694f9a3945b80c802ebfbc7bf7b303a8a892b059b12fc93e4814c0112f0c"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "sha256": "8a80e8afe3fd8565767440fbd5093fdefc9caf9812236a53430ed5c3600c8a6a"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "sha256": "c9732ec5567dd610f0a39a43b3e9b3cb6774ae9de02b4678de2b8d3dba678c58"
+    },
+    {
+      "path": "scripts/brain/test_m103_quality_recovery02_profile.py",
+      "sha256": "77b1520a0594ca737303148586572d98e4211d739d89f712ae0a87842cfc2bf0"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+    }
+  ],
+  "scope_matrix": [
+    {
+      "id": "Q1",
+      "status": "PASS",
+      "evidence": [
+        "final-fresh-ci"
+      ]
+    },
+    {
+      "id": "Q2",
+      "status": "PASS",
+      "evidence": [
+        "final-widgets",
+        "final-extension"
+      ]
+    },
+    {
+      "id": "Q3",
+      "status": "PASS",
+      "evidence": [
+        "final-privacy-check",
+        "final-privacy-tests"
+      ]
+    },
+    {
+      "id": "Q4",
+      "status": "BLOCKED",
+      "evidence": [
+        "final-expo-check",
+        "final-expo-doctor",
+        "final-forced-tests",
+        "final-forced-typecheck",
+        "final-forced-lint"
+      ]
+    },
+    {
+      "id": "Q5",
+      "status": "FAIL",
+      "evidence": [
+        "final-security70-complete-history"
+      ]
+    },
+    {
+      "id": "Q6",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "Q7",
+      "status": "PASS",
+      "evidence": [
+        "final-profile",
+        "final-governance"
+      ]
+    }
+  ],
+  "axes": {
+    "source": "PARTIAL_TESTED_NOT_COMPLETE",
+    "integration": "BLOCKED",
+    "surface": "NOT_RUN",
+    "physical_device": "NOT_RUN",
+    "live_provider": "NOT_ADMITTED",
+    "qualified_review": "NOT_RUN",
+    "clinical": "NOT_ADMITTED",
+    "commercial": "NOT_RUN",
+    "release": "NOT_ADMITTED"
+  },
+  "blockers": [
+    "SCOPE_EXCEEDED_EXPO_NOTIFICATIONS: installed57.0.23, official expected~57.0.24; fifth manifest edit is not authorized",
+    "Original Security RED; frozen SBOM failure and owner-controlled findings/expiry remain",
+    "Canonical DB ECR Data limit exceeded; no substitute or paid retry",
+    "Independent Brain review required; M1-03 not accepted"
+  ],
+  "context_health": {
+    "level": "MODERATE",
+    "compaction_observed": false
+  },
+  "ci": [
+    {
+      "name": "iOS launch contract",
+      "run_id": 39801427684,
+      "workflow_id": 312030667,
+      "head_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-ci.json"
+    },
+    {
+      "name": "Security",
+      "run_id": 39801427756,
+      "workflow_id": 308213475,
+      "head_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-ci.json"
+    },
+    {
+      "name": "Quality",
+      "run_id": 39801428343,
+      "workflow_id": 312030668,
+      "head_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/measured-ci.json"
+    }
+  ]
+}
