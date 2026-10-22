@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "PROVIDER_LOG_EXCERPT",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "repository": "TasfiqJ/onSkin",
+  "run_id": 39715993772,
+  "job_id": 119618228381,
+  "selection": "Only dependency mismatch lines and exit; no secret logs fetched",
+  "lines": [
+    "2026-10-22T03:23:47.0701164Z The following packages should be updated for best compatibility with the installed expo version:",
+    "2026-10-22T03:23:47.0702424Z   @expo/ui@57.0.25 - expected version: ~57.0.26",
+    "2026-10-22T03:23:47.0703402Z   expo@57.0.30 - expected version: ~57.0.31",
+    "2026-10-22T03:23:47.0706548Z   expo-network@57.0.2 - expected version: ~57.0.3",
+    "2026-10-22T03:23:47.0707355Z   expo-router@57.0.28 - expected version: ~57.0.29",
+    "2026-10-22T03:23:47.0708057Z   expo-sharing@57.0.23 - expected version: ~57.0.24",
+    "2026-10-22T03:23:47.0708732Z   expo-widgets@57.0.26 - expected version: ~57.0.27",
+    "2026-10-22T03:23:47.0710146Z Your project may not work correctly until you install the expected versions of the packages.",
+    "2026-10-22T03:23:47.0712568Z Found outdated dependencies",
+    "2026-10-22T03:23:47.0849443Z ##[error]Process completed with exit code 1.",
+    "2026-10-22T03:23:47.5008656Z  2026-10-22 03:17:46.479 UTC [41] LOG:  background worker \"logical replication launcher\" (PID 47) exited with exit code 1"
+  ]
+}

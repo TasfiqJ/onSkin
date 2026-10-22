@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-21T23:44:23.330Z",
+  "generatedAt": "2026-10-22T04:16:04.753Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "79db3088b42e0de2671cbeda27e1cfc0bdc3c9db",
-  "gitStatus": "",
+  "gitSha": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+  "gitStatus": "M .gitattributes\n M apps/mobile/package.json\n M package-lock.json\n M scripts/brain/m103_profile.py\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/README.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-clean.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-reviewed.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-expo-check.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/context-verification.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-delta.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate-linux.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-precheck.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-quality-excerpt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-security-jobs.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/patched-ci-precheck.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/preflight.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/run_command.py\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/00_READ_FIRST.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/01_BRAIN_AUDIT.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/02_TASK.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/03_SOURCE_EDIT_AUTHORIZATION.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/04_REPRODUCERS.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/05_ACCEPTANCE_MATRIX.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/06_TEST_PLAN.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/07_PROTECTED_GATES_AND_OWNER_PACKET.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/08_DELIVERY_PROTOCOL.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/09_STOP_RULES.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/10_BRANCH_AUTHORITY.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/11_SOURCE_ORIENTATION.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/12_EVIDENCE_INDEX.md\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/SOURCE_EDIT_AUTHORIZATION.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/TASK_MANIFEST.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/TASK_STATE.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/verify_context.py\n?? docs/brain/m103-quality-recovery01-active.json\n?? docs/brain/reviews/M1-03/SC03-REVIEW01/01_BRAIN_AUDIT.md\n?? docs/brain/reviews/M1-03/SC03-REVIEW01/SOURCE_EDIT_AUTHORIZATION.json\n?? docs/brain/reviews/M1-03/SC03-REVIEW01/TASK_MANIFEST.json\n?? docs/brain/reviews/M1-03/SC03-REVIEW01/external-digest-proof.json\n?? scripts/brain/test_m103_quality_recovery01_profile.py",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 414,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -3088,5 +3088,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
+  ]
 }

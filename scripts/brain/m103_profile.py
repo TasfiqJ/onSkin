@@ -58,6 +58,8 @@ def _validate_initial(root):
 
 
 def validate(root):
+    if (root / QR_ACTIVE).exists():
+        return validate_quality_recovery01(root)
     if (root / SC03_ACTIVE).exists():
         return validate_source_closure03(root)
     if (root / SC_ACTIVE).exists():
@@ -70,6 +72,16 @@ def validate(root):
 
 
 def report(root, name):
+    if name.startswith(QR_INPUT.rsplit('/', 1)[0] + '/'):
+        value = m1_profile.report(root, name, task='M1-03', base=QR_BASE,
+            validator=validate_quality_recovery01, checkpoint=QR_INPUT.rsplit('/', 1)[0] + '/',
+            continuation_bindings={'QUALITY-RECOVERY-01': (QR_INPUT, QR_BASE)})
+        brain.require(value['schema_version'] == 3 and value['iteration'] == 'QUALITY-RECOVERY-01',
+                      'Wrong Quality recovery report iteration')
+        brain.identities(value['scope_matrix'], QR_SCOPE)
+        brain.require(bool(value['executions']), 'Quality recovery requires actual executions')
+        committed_artifacts(root, value['artifacts'])
+        return value
     if name.startswith(SC03_INPUT.rsplit('/',1)[0]+'/'):
         value=m1_profile.report(root,name,task='M1-03',base=SC03_BASE,
             validator=validate_source_closure03,checkpoint=SC03_INPUT.rsplit('/',1)[0]+'/',
@@ -415,7 +427,7 @@ SC03_DIGEST='c86be8cb7055c5784b8739531cab897508708e61a23dc094a7b63262456e0a46'
 SC03_SCOPE=['K01','K02','K03','K04','K05','K06','K07']
 
 
-def validate_source_closure03(root):
+def validate_source_closure03(root, *, fixed=False):
     import fnmatch, subprocess
     validate_source_closure01(root,fixed=True)
     brain.git_snapshot(root,dict(commit=SC03_BASE,tree=SC03_TREE),'SC03 exact reviewed base')
@@ -447,8 +459,9 @@ def validate_source_closure03(root):
     brain.ancestor(root,SC03_BASE,brain.git(root,'rev-parse','HEAD'),'SC03 base -> head')
     existing={row['path']:row for row in authority['preimages']+authority['derived_existing_preimages']}
     new=[path.split(' (',1)[0] for path in authority['allowed_new_paths']]
-    changes=brain.git(root,'diff','--name-only',SC03_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
-    for commit in brain.git(root,'rev-list',SC03_BASE+'..HEAD').splitlines():
+    endpoint=QR_BASE if fixed else 'HEAD'
+    changes=brain.git(root,'diff','--name-only',SC03_BASE,endpoint).splitlines() if fixed else brain.git(root,'diff','--name-only',SC03_BASE).splitlines()+brain.git(root,'ls-files','--others','--exclude-standard').splitlines()
+    for commit in brain.git(root,'rev-list',SC03_BASE+'..'+endpoint).splitlines():
         changes+=brain.git(root,'diff-tree','--root','--no-commit-id','--name-only','-r',commit).splitlines()
         brain.require(not brain.git(root,'diff-tree','--diff-filter=D','--no-commit-id','--name-only','-r',commit),'SC03 deletion refused')
     for path in set(changes):
@@ -458,8 +471,91 @@ def validate_source_closure03(root):
             brain.require(prior.returncode==0 and brain.digest(prior.stdout)==row['sha256'] and
                 brain.git(root,'rev-parse',SC03_BASE+':'+path)==row['git_blob_sha1'],'SC03 preimage mismatch: '+path)
             if path=='.gitattributes':
-                brain.require(brain.read(root,path)==prior.stdout+b'\n# Immutable SC03 recovery Brain input.\n'+(SC03_REVIEW+'/** -text\n').encode(),'SC03 attributes must be additive exact freeze')
+                actual=subprocess.check_output(['git','-C',str(root),'show',endpoint+':'+path]) if fixed else brain.read(root,path)
+                brain.require(actual==prior.stdout+b'\n# Immutable SC03 recovery Brain input.\n'+(SC03_REVIEW+'/** -text\n').encode(),'SC03 attributes must be additive exact freeze')
         else:
             brain.require(prior.returncode!=0 and any(fnmatch.fnmatchcase(path,pattern) for pattern in new),'SC03 path outside exact authorization: '+path)
         brain.safe_file(root,path)
+    return current
+
+
+# Independent Quality issuance. Previous intervals end at their reviewed heads.
+QR_INPUT = 'docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs'
+QR_REVIEW = 'docs/brain/reviews/M1-03/SC03-REVIEW01'
+QR_ACTIVE = 'docs/brain/m103-quality-recovery01-active.json'
+QR_BASE = '6c9c280669ccce07cab0b57f7b2118ec7bbd3a35'
+QR_TREE = '43ab1a4a7597c8572850b98fdc420080ec834b07'
+QR_DIGEST = '99985ffc1dbe1fa0a94fe0af092bf42ccfb12ed7d48cdc30d12fca47ed1f634d'
+QR_SCOPE = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7']
+QR_ATTRIBUTES = (b'\n# Immutable QUALITY-RECOVERY-01 issuance and independent SC03 review.\n'
+    b'docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/** -text\n'
+    b'docs/brain/reviews/M1-03/SC03-REVIEW01/** -text\n')
+
+
+def validate_quality_recovery01(root):
+    import subprocess
+    validate_source_closure03(root, fixed=True)
+    brain.git_snapshot(root, dict(commit=QR_BASE, tree=QR_TREE), 'Quality exact reviewed base')
+    raw = brain.read(root, QR_INPUT + '/TASK_MANIFEST.json')
+    brain.require(brain.digest(raw) == QR_DIGEST, 'Quality independent manifest differs')
+    manifest = brain.decode(raw)
+    for row in manifest['files']:
+        blob = brain.read(root, QR_INPUT + '/' + row['path'])
+        brain.require(len(blob) == row['bytes'] and brain.digest(blob) == row['sha256'],
+                      'Quality immutable input differs: ' + row['path'])
+    for path in ['01_BRAIN_AUDIT.md', 'SOURCE_EDIT_AUTHORIZATION.json', 'TASK_MANIFEST.json']:
+        brain.require(brain.read(root, QR_REVIEW + '/' + path) == brain.read(root, QR_INPUT + '/' + path),
+                      'Quality immutable review differs: ' + path)
+    proof = brain.load(root, QR_REVIEW + '/external-digest-proof.json')
+    brain.require(proof == dict(schema_version=1, claim_origin='LITERAL_USER_PROMPT_EXTERNAL_SHA256',
+        manifest_sha256=QR_DIGEST, command='python -B verify_context.py --expected-manifest-sha256 ' + QR_DIGEST,
+        exit_code=0, members_verified=16, admission='NONE'), 'Quality external digest proof differs')
+    authority = brain.load(root, QR_INPUT + '/SOURCE_EDIT_AUTHORIZATION.json')
+    expected = dict(schema_version=1, task_id='M1-03', iteration='QUALITY-RECOVERY-01', branch=BRANCH,
+        base_commit=QR_BASE, base_tree=QR_TREE, input_manifest_sha256=QR_DIGEST,
+        authorization_id='M103-QUALITY-RECOVERY01-SOURCE-EDIT-01',
+        accepted_tasks=['M0-01', 'M0-02', 'M1-01', 'M1-02'], protected_source_go=False,
+        main_promotion_authorized=False, hosted_replay_authorized=False, release_or_m2_authorized=False,
+        active_writers=1, incremental_spend_usd=0, source_edit_union_permitted=False,
+        source_extensions_permitted=False, protected_security_db_admission='CLOSED',
+        next_task=None, research_requests=[], proposal_expires_utc='2026-10-21T00:00:00Z')
+    current = brain.load(root, QR_ACTIVE)
+    brain.require(set(current) == set(expected) | {'submission_status'} and
+        all(type(current[k]) is type(v) and current[k] == v for k, v in expected.items()),
+        'Quality unissued authority or false acceptance')
+    brain.require(current['submission_status'] in ['IN_PROGRESS', 'PARTIAL', 'BLOCKED',
+        'SUBMITTED_REVIEW_REQUIRED'], 'Quality cannot self-accept')
+    brain.require(brain.git(root, 'branch', '--show-current') == BRANCH, 'Wrong Quality branch')
+    brain.ancestor(root, QR_BASE, brain.git(root, 'rev-parse', 'HEAD'), 'Quality base -> head')
+    # Verify every preimage, including unchanged optional and generated files.
+    existing = {row['path']: row for row in authority['existing_file_preimages']}
+    for path, row in existing.items():
+        prior = subprocess.check_output(['git', '-C', str(root), 'show', QR_BASE + ':' + path])
+        brain.require(len(prior) == row['bytes'] and brain.digest(prior) == row['sha256'] and
+            brain.git(root, 'rev-parse', QR_BASE + ':' + path) == row['git_blob'],
+            'Quality preimage mismatch: ' + path)
+    changes = brain.git(root, 'diff', '--name-only', QR_BASE).splitlines()
+    changes += brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()
+    for commit in brain.git(root, 'rev-list', QR_BASE + '..HEAD').splitlines():
+        brain.require(len(brain.git(root, 'rev-list', '--parents', '-n', '1', commit).split()) == 2,
+                      'Quality merge or unrelated root refused')
+        changes += brain.git(root, 'diff-tree', '--root', '--no-commit-id', '--name-only', '-r', commit).splitlines()
+        brain.require(not brain.git(root, 'diff-tree', '--diff-filter=D', '--no-commit-id', '--name-only', '-r', commit),
+                      'Quality deletion refused')
+    for path in set(changes):
+        brain.safe_file(root, path)
+        if path not in existing:
+            prior = subprocess.run(['git', '-C', str(root), 'cat-file', '-e', QR_BASE + ':' + path], capture_output=True)
+            brain.require(prior.returncode != 0 and (path in authority['new_exact_files'] or
+                any(path.startswith(prefix) for prefix in authority['new_prefixes'])),
+                'Quality path outside exact authorization: ' + path)
+    if '.gitattributes' in changes:
+        prior = subprocess.check_output(['git', '-C', str(root), 'show', QR_BASE + ':.gitattributes'])
+        brain.require(brain.read(root, '.gitattributes') == prior + QR_ATTRIBUTES,
+                      'Quality attributes must freeze only new input bytes')
+    if 'apps/mobile/package.json' in changes:
+        prior = brain.decode(subprocess.check_output(['git', '-C', str(root), 'show', QR_BASE + ':apps/mobile/package.json']))
+        actual = brain.load(root, 'apps/mobile/package.json')
+        prior['dependencies'].update(expo='~57.0.31', **{'expo-network': '~57.0.3'})
+        brain.require(actual == prior, 'Quality mobile changes exceed measured two-package patch')
     return current
