@@ -1,0 +1,3214 @@
+{
+  "registry": {
+    "version": "57.0.24",
+    "dist": {
+      "shasum": "03a0538b01cf53b3a145b53f1add2a7cde04ccef",
+      "tarball": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.24.tgz",
+      "fileCount": 622,
+      "integrity": "sha512-Hi5PBQlcrDDQ3MTqkH28NkUfeTvr80cXv1xUlvYaxy4AOmgkd3jDN1s7fWzaO5CYyb42BC5mPlIin6C3DJJzxA==",
+      "signatures": [
+        {
+          "sig": "MEYCIQCo6StmFmMGuSE8n/pLQjBrIWVkN8eX75a9AvpHLdw/CgIhANmkwgmgaxmh2D0XHzLHr2t6cvj6u5yY7q0CF5dKbeX/",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIFyvL5UF26NruDQM6pVMqELesWoHCEm2UFHGsudCF7fqAiAC7sU9JFk/FSYgACor1jf36BHy4X94SUVcUhyyxN5z6Q=="
+        }
+      ],
+      "unpackedSize": 1642141
+    },
+    "dependencies": {
+      "badgin": "^1.1.5",
+      "expo-constants": "~57.0.22",
+      "abort-controller": "^3.0.0",
+      "expo-application": "~57.0.3",
+      "@expo/image-utils": "^0.11.6"
+    },
+    "peerDependencies": {
+      "expo": "*",
+      "react": "*",
+      "react-native": "*"
+    }
+  },
+  "tar_sha256": "9f4e0c35ea12943b3948302264e686b000275da142240b6b7208b5c589359144",
+  "tar_sha1": "03a0538b01cf53b3a145b53f1add2a7cde04ccef",
+  "tar_sri": "sha512-Hi5PBQlcrDDQ3MTqkH28NkUfeTvr80cXv1xUlvYaxy4AOmgkd3jDN1s7fWzaO5CYyb42BC5mPlIin6C3DJJzxA==",
+  "tar_bytes": 748807,
+  "package_manifest": {
+    "name": "expo-notifications",
+    "version": "57.0.24",
+    "description": "Provides an API to fetch push notification tokens and to present, schedule, receive, and respond to notifications.",
+    "main": "build/index.js",
+    "types": "build/index.d.ts",
+    "sideEffects": [
+      "./build/DevicePushTokenAutoRegistration.fx.js"
+    ],
+    "keywords": [
+      "react-native",
+      "expo",
+      "notifications",
+      "expo-notifications",
+      "push-nofifications"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/expo/expo.git",
+      "directory": "packages/expo-notifications"
+    },
+    "bugs": {
+      "url": "https://github.com/expo/expo/issues"
+    },
+    "author": "650 Industries, Inc.",
+    "license": "MIT",
+    "homepage": "https://docs.expo.dev/versions/latest/sdk/notifications/",
+    "jest": {
+      "projects": [
+        {
+          "preset": "jest-expo/ios"
+        }
+      ]
+    },
+    "dependencies": {
+      "@expo/image-utils": "^0.11.6",
+      "abort-controller": "^3.0.0",
+      "badgin": "^1.1.5",
+      "expo-application": "~57.0.3",
+      "expo-constants": "~57.0.22"
+    },
+    "devDependencies": {
+      "@types/node": "^22.14.0",
+      "@types/react": "~19.2.0",
+      "memfs": "^3.2.0",
+      "expo": "57.0.31",
+      "expo-module-scripts": "56.0.3"
+    },
+    "peerDependencies": {
+      "expo": "*",
+      "react": "*",
+      "react-native": "*"
+    },
+    "gitHead": "b667d77588d2cdf13e6fb83572040dbc2bc8781e",
+    "scripts": {
+      "build": "expo-module build",
+      "build:plugin": "expo-module build plugin",
+      "clean": "expo-module clean",
+      "lint": "expo-module lint",
+      "test": "expo-module test",
+      "expo-module": "expo-module"
+    }
+  },
+  "source_files": [
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.aar",
+      "bytes": 426108,
+      "sha256": "8c5e2d464ce2d4a6949fa4f9336c68c9b3a8858730d2859f8127be8cd2be5b37"
+    },
+    {
+      "path": "package/android/build.gradle",
+      "bytes": 1448,
+      "sha256": "452f025b04fdd4ee1f4d7832692a9adb1ddc8623a199299d9db3e85ef017b597"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24-sources.jar",
+      "bytes": 100345,
+      "sha256": "8bef8f6783c27ec017bbd26ea19033cf467d6fc8b6e1422bb3766e27b120474b"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/managers/AndroidXNotificationsChannelGroupManager.java",
+      "bytes": 2393,
+      "sha256": "cc12dcd69ec1662434490057b4375f3488ae75c56f7f8bdde42f00e123198bb0"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/managers/AndroidXNotificationsChannelManager.java",
+      "bytes": 9960,
+      "sha256": "dc072518282419369c8632220c2a203c728bcae80307fd5d37e3074e43989fe4"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/ArgumentsNotificationContentBuilder.java",
+      "bytes": 5192,
+      "sha256": "0f4a4d98f5d9aea1160d9a5f1ae28b9929033da592674df35be7ab674952aa11"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/enums/AudioContentType.java",
+      "bytes": 1240,
+      "sha256": "5a0d138abf1beeb581a02f012ca1b7f320d3e39447f1fe965c33247e4eb0766d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/enums/AudioUsage.java",
+      "bytes": 1959,
+      "sha256": "e3c6b6f58c87701e37e27d053b0b98188348d90afbfcbd297729dc519c874d48"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/categories/serializers/ExpoNotificationsCategoriesSerializer.java",
+      "bytes": 2268,
+      "sha256": "b8449d2549e74134881b3358fa0a916cbe994319d1dd55d43d7e7fd5231d161f"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/serializers/ExpoNotificationsChannelGroupSerializer.java",
+      "bytes": 1758,
+      "sha256": "11826a34693c30a23373836bb8be293f3b94f3085dddfb5e2bfa5de6ef4982e8"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/serializers/ExpoNotificationsChannelSerializer.java",
+      "bytes": 3427,
+      "sha256": "e78ec4a88c33cdbd51dca1ef7c0678a0d99db80ab9eec2769fd356a4070c43d6"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/serverregistration/InstallationId.java",
+      "bytes": 4462,
+      "sha256": "8f215a858629ff60324662508f5f7980cf49c2361c20c6bf633569521850b1f8"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/Notification.java",
+      "bytes": 1433,
+      "sha256": "ef28c729f4de9943ce66e40240a452fccf05b5c8652374ff3c89e2092d55a8f7"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationAction.java",
+      "bytes": 1648,
+      "sha256": "da3286155d9b11068ef740806a5806d4a35260d1aa23a4ec698d79b28820ef38"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationCategory.java",
+      "bytes": 1584,
+      "sha256": "5682354a2d49771a53cfdac17f5cc90c471ae512423db210da6d38b0103ca631"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java",
+      "bytes": 10861,
+      "sha256": "138b27a6967e7959fe6da0bc23f05cd262b8a1825af92bc1b51eefe35a5873e1"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/enums/NotificationImportance.java",
+      "bytes": 1676,
+      "sha256": "a7666cec9e7355a2438e564321d1b63deba7b4c8e65a8fa8b82548eaf0e0157c"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/enums/NotificationPriority.java",
+      "bytes": 1383,
+      "sha256": "6aea29e50f854518e2c4c7fbc419f3520878faf45f074ab076a26f88ad1b6b69"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationRequest.java",
+      "bytes": 1892,
+      "sha256": "a46b0138eaefddd8304301638fab405e9129040e59a178349b4307decaa30f18"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationResponse.java",
+      "bytes": 1639,
+      "sha256": "9b7566bd98ab7db3a3e18f834dfc796f59b0b2eda8b70d93046b643afaddefbc"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/managers/NotificationsChannelGroupManager.java",
+      "bytes": 945,
+      "sha256": "8e1d22e6cb8603f36ba4c70a70bf0b67c7c6fa05b0678c2c033ae73591e439c7"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/managers/NotificationsChannelManager.java",
+      "bytes": 977,
+      "sha256": "66d929d1aaa0cad764552b97e23bd37c30a0953bfc930abed6c027780486bdf6"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/NotificationSerializer.java",
+      "bytes": 9559,
+      "sha256": "73835adc3f69d6ba2109ff7cd25d9d545fcb140600b8a3cfec1f998fac7d7056"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/enums/NotificationVisibility.java",
+      "bytes": 1219,
+      "sha256": "4a399986f65646cd9ba2185f9543aaa9331553967fd70d26ecf77e0ef4b2865b"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/RemoteMessageSerializer.java",
+      "bytes": 5440,
+      "sha256": "7e38e7e7936912b5c85708d13c11a88720d7c083b0cd2ffb3804b8bc1b60c95e"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/handling/SingleNotificationHandlerTask.java",
+      "bytes": 4477,
+      "sha256": "249cde9012e260d632c504e82798c6ddeec9df15797b135d2b81785f444fbd53"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/TextInputNotificationAction.java",
+      "bytes": 1190,
+      "sha256": "fda26435e3f2d541a664296edbc382e080ff9a7279110967da6c43e872cc77aa"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/TextInputNotificationResponse.java",
+      "bytes": 1162,
+      "sha256": "e06567d5999044cdb53663f7e848db43f706f014ebe17723a69400520f92d613"
+    },
+    {
+      "path": "package/.eslintrc.js",
+      "bytes": 103,
+      "sha256": "fe55757d154f21bc2d929a503441b247d05191782a2e0c63349fc41560367fab"
+    },
+    {
+      "path": "package/app.plugin.js",
+      "bytes": 62,
+      "sha256": "25f2f3930c3bc853547b83149314174ea81e967a2fadaf2dc343f8a665f1c4e2"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.js",
+      "bytes": 219,
+      "sha256": "c75aa36ccc9aede7dba1da71cef09a212aeefb99d9fceff3a74f75ff82133482"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.native.js",
+      "bytes": 202,
+      "sha256": "55d37bbaecc01f6e900697616c9602a94139b036d908fc20153ba0baccdd8907"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.types.js",
+      "bytes": 78,
+      "sha256": "6e586c7dcee6b63cae29a7334151da7add5b1921debef35b0127754b7568017a"
+    },
+    {
+      "path": "package/build/utils/backoff.js",
+      "bytes": 1312,
+      "sha256": "3183ce6566d3ab861c937f92eaeac7e2b5111bc462fd2b379572d57f4da43e59"
+    },
+    {
+      "path": "package/build/BadgeModule.js",
+      "bytes": 119,
+      "sha256": "04f4f7b4ea66c76bb3c0dbb5911072d06eb987cdc0a3f65e80346713e2f7c15b"
+    },
+    {
+      "path": "package/build/BadgeModule.native.js",
+      "bytes": 459,
+      "sha256": "354660f57834d020b00d1e52a09f4b17c9d55fad4e382f94cddb491fc6baf4ac"
+    },
+    {
+      "path": "package/build/BadgeModule.types.js",
+      "bytes": 56,
+      "sha256": "8d23dbb870b2e7860e5125e0c28c8eaec433339b10e73dbb12241434054783cd"
+    },
+    {
+      "path": "package/build/BadgeModule.web.js",
+      "bytes": 819,
+      "sha256": "5e3fcfbc858dd720f3e85a1e6b4dd0c9752bf0c855d22bad46009c8ea58943cd"
+    },
+    {
+      "path": "package/build/cancelAllScheduledNotificationsAsync.js",
+      "bytes": 710,
+      "sha256": "59107ad9b24fbf320b1ebe6e9af2eb88fd8cb9247658c23fc9787c2c484b2d1f"
+    },
+    {
+      "path": "package/build/cancelScheduledNotificationAsync.js",
+      "bytes": 1353,
+      "sha256": "b9a0bfb44fdbcc33a4a10816c3c5455b49b24c15608931d1bc022b63edaf93cd"
+    },
+    {
+      "path": "package/build/deleteNotificationCategoryAsync.js",
+      "bytes": 992,
+      "sha256": "5d98e89c20b1176f28f65ab5068341a43f1c25341baa5854d73f164695f69d03"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.android.js",
+      "bytes": 515,
+      "sha256": "3ed4b427db6cb14608acf6ea69cc6f5aa331b4420e070e23cd672aff2b5dbf57"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.js",
+      "bytes": 454,
+      "sha256": "b7af3b58cab3d9b7333ecb7f6e8aae27290b0db7077faad645035ed5a4caa728"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.android.js",
+      "bytes": 556,
+      "sha256": "15706ed9c7e2a943d92f05d9c58fc7c34fc80d4822cc2bd1f84530e77ff9528b"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.js",
+      "bytes": 531,
+      "sha256": "a0eea73e2fda78a77db8eed50f5bfb4caac8512dd335e0562c2b40837c818ea0"
+    },
+    {
+      "path": "package/build/DevicePushTokenAutoRegistration.fx.js",
+      "bytes": 5211,
+      "sha256": "7db3af2878f05fbda859c8225574b4ac46099d205eff3f02557b2dcd5c44e1b8"
+    },
+    {
+      "path": "package/build/dismissAllNotificationsAsync.js",
+      "bytes": 732,
+      "sha256": "e4fc8fa029cdda88496b60e496ef6550ddc271582796b6c40993e002984a4d7c"
+    },
+    {
+      "path": "package/build/dismissNotificationAsync.js",
+      "bytes": 915,
+      "sha256": "135785ab8f66795de54212d3b506fb9ab08095dd23694a48a75a5c4200175478"
+    },
+    {
+      "path": "package/build/getAllScheduledNotificationsAsync.js",
+      "bytes": 819,
+      "sha256": "c75de0376aa5b766ef5976b7428e28ca84ebc20f59efc1986df7a3e4db87c5b2"
+    },
+    {
+      "path": "package/build/getBadgeCountAsync.js",
+      "bytes": 795,
+      "sha256": "914ec3a5e009944197347426f7dc9de0c5a589c24fcfe837cfa2eaf74842786d"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.js",
+      "bytes": 1192,
+      "sha256": "a88c53f8f2121551d2f19886b9e8cb3dfc6d3f9c107d6eb265303f6612891e11"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.web.js",
+      "bytes": 4366,
+      "sha256": "e6effe3d9bebe7d6698a7f71cded34acdd0d81e07bf2277d7689539a4c7085ec"
+    },
+    {
+      "path": "package/build/getExpoPushTokenAsync.js",
+      "bytes": 7585,
+      "sha256": "73b7d6a5a16c8ea341c55ae1f27189a43ce1dbad52e993e90b4244be0d953047"
+    },
+    {
+      "path": "package/build/getNextTriggerDateAsync.js",
+      "bytes": 1557,
+      "sha256": "f1488bec25440ad48fc1244f705a71e11cfc2981431ef40a6169f0a3e83a59e3"
+    },
+    {
+      "path": "package/build/getNotificationCategoriesAsync.js",
+      "bytes": 806,
+      "sha256": "4aefbd9f39fde9590936b1ec50e64096277d6bfa88186f4e8df7b7871c48842e"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.android.js",
+      "bytes": 500,
+      "sha256": "6b1f536fec937152b45079b3ffce94e659008a12e9588e3cfbc951dbeff82565"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.js",
+      "bytes": 645,
+      "sha256": "3afb2bb86366e878a6bd7329ef7725692ec3296ca27a052d1d6c82809d409ce2"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.android.js",
+      "bytes": 541,
+      "sha256": "4d2b1c66b8e2c1088b7c1c259ab2a984deeca20ab5f728cc3bd61fc8cc9ea97b"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.js",
+      "bytes": 688,
+      "sha256": "18667e9c84f02d603afb45676d083730aa567db67ac25c8dffe4d8c276252bea"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.android.js",
+      "bytes": 532,
+      "sha256": "c72cf68923bc97837a47094778cbe3e71ed9250831e91dccbbffaa7be53a0c9f"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.js",
+      "bytes": 510,
+      "sha256": "4cf0cc38e67ca0ad684edc067a92931225744478849420a8b22842305f0df7d0"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.android.js",
+      "bytes": 495,
+      "sha256": "7ac4f1c5cb7d8e8a8088ff3ef782eca672b8689520b71c3ef3ed9e4b6763d5b0"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.js",
+      "bytes": 483,
+      "sha256": "a6da7241491bd05e8e33df4950281fdf51a355b885f2a8944957df897c9d6be9"
+    },
+    {
+      "path": "package/build/getPresentedNotificationsAsync.js",
+      "bytes": 1018,
+      "sha256": "81312544fcec267649d3539149037fc62106560c011f6e7dfed6cae8fbd9c24b"
+    },
+    {
+      "path": "package/build/hasValidTriggerObject.js",
+      "bytes": 221,
+      "sha256": "6b5686605fcbd2099070e44d0d53e9d24d6b127c0d47321acf12e22cd0d1aa1f"
+    },
+    {
+      "path": "package/build/index.js",
+      "bytes": 3213,
+      "sha256": "11af78abd74e6f84929b9598fa909bb5379858249e0a4316c934f5501393286f"
+    },
+    {
+      "path": "package/plugin/build/index.js",
+      "bytes": 142,
+      "sha256": "51a54a485ca8313891d0e5851c1bcee14c5e0c65398ea990ad139a63ff794eed"
+    },
+    {
+      "path": "package/plugin/index.js",
+      "bytes": 37,
+      "sha256": "b6275f41c7508ff9f8eb4514da9638f193b771b6971d748b12ee50c3d038ceed"
+    },
+    {
+      "path": "package/plugin/jest.config.js",
+      "bytes": 68,
+      "sha256": "8624c03b70e20a400a6b23335e45d21db7a5be71948f9071a292b4daa82b507a"
+    },
+    {
+      "path": "package/build/utils/mapNotificationResponse.js",
+      "bytes": 2492,
+      "sha256": "df5d4f6beb8b31115e76016fac40f2ec9f7fd9e95da272d0c62e439c1535ea42"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.js",
+      "bytes": 534,
+      "sha256": "8b0c9ca89059ff38c1b5d1679d4af37e2f72251486b7c16925fea579cb254bcb"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.native.js",
+      "bytes": 192,
+      "sha256": "a343c8e4d2ce0f9c7bcbb9796d4636ce5719eb6b48e36ec972dffea73eddca8c"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.types.js",
+      "bytes": 73,
+      "sha256": "e94205a9b97465f15d065d85781dad316399239bc27c1a41ffd11ba97e84f106"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.js",
+      "bytes": 139,
+      "sha256": "427b49831aab0dc7eee743353bfb52e66774ba492db4546b94aa49ac87b0fa00"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.native.js",
+      "bytes": 198,
+      "sha256": "e4676fc6bb1090594499ebcfe9662aae69dfacfe492f45c65fe652c714070fea"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.types.js",
+      "bytes": 76,
+      "sha256": "14d485ea6b77fc360e91b13daf06ea80b7df3086306ccf6daf0821b529cd4017"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.js",
+      "bytes": 134,
+      "sha256": "0296540ac23d7fb933cb009a850b74aac608c8250c5ef7a72d32a7468da98799"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.native.js",
+      "bytes": 188,
+      "sha256": "c12c43a051efffdd069968eda567bde01cdd34f11f01af3f8bc39cc958ee994a"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.types.js",
+      "bytes": 3596,
+      "sha256": "57ef629ef64f90516797614693a78a72587d60872560f7bee66c2909b1c51860"
+    },
+    {
+      "path": "package/build/NotificationPermissions.js",
+      "bytes": 3099,
+      "sha256": "9ac516969ee548a5995bd56ac696bf954ad7edd0d50ca2c8116fa23bb8d0354f"
+    },
+    {
+      "path": "package/build/NotificationPermissions.types.js",
+      "bytes": 1300,
+      "sha256": "9997cfd8e15ecc7133fa6d4e993931fadec12009e0d0722e0718412b2de6ecb4"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.js",
+      "bytes": 2458,
+      "sha256": "289560273ca6e55cc10b863cfa876e615a9e2593e7037555f1ee45ef6be46e49"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.native.js",
+      "bytes": 194,
+      "sha256": "7802c4b45dee33637d1f6196bf6f6763501419287e36a76bffc5b63e373bcbc6"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.types.js",
+      "bytes": 74,
+      "sha256": "f4a2815d795f93773c55baa591e652eb3279cacfab7c8bea1a1a950db5f1cc4c"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.js",
+      "bytes": 135,
+      "sha256": "d0935d794aece99daf3ee3c767d7a24583f5e550faa0fb35a2b2f07a1a66cdee"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.native.js",
+      "bytes": 184,
+      "sha256": "4dc4483244c5093790bdc0181c4c69bd53054062eab2e1b3fe2e5f3b6e5c77a2"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.types.js",
+      "bytes": 72,
+      "sha256": "f4840e38d83b3a5a97b99c623431e17e99fdf9cb4e28a47f7eaca17730e9ddd8"
+    },
+    {
+      "path": "package/build/Notifications.types.js",
+      "bytes": 1472,
+      "sha256": "86e4ceccc954a68054096655e097d73fdac6699c3e9b41af27dce6de76a0c58e"
+    },
+    {
+      "path": "package/build/NotificationScheduler.js",
+      "bytes": 129,
+      "sha256": "b7d7e662b167603058cf629585e44c2d2211acaeda3044daead2a62b5a8df9f9"
+    },
+    {
+      "path": "package/build/NotificationScheduler.native.js",
+      "bytes": 178,
+      "sha256": "afb2233ee0f9f0a1a2168540a955fbd6e85913566256b9049c63a9928c1620a8"
+    },
+    {
+      "path": "package/build/NotificationScheduler.types.js",
+      "bytes": 66,
+      "sha256": "6266d02a5fc73adbdfae95717c4ee4f81808a8591364974b42cefe83bb13f5cc"
+    },
+    {
+      "path": "package/build/NotificationsEmitter.js",
+      "bytes": 6823,
+      "sha256": "743fa142c5de316ca70cb0d0e7321a3a16c65389e91cc96205231e1c52b5f70f"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.js",
+      "bytes": 461,
+      "sha256": "ee8479a3fc6faba3eff75518168b04e4f16fe2845ee2b5bf672bbaea7da28c87"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.native.js",
+      "bytes": 182,
+      "sha256": "cfb840f48ee8610a6051201b2e2ff9b473cec8e6f7d0f320f325c20b3b1ee568"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.types.js",
+      "bytes": 71,
+      "sha256": "7493ded5311c8c11d49686dbc2f6d605fd230312b765aa11765d4e7cabc371f4"
+    },
+    {
+      "path": "package/build/NotificationsHandler.js",
+      "bytes": 3873,
+      "sha256": "b027dbea1829c28c40d171a7a7c67f8e858a9a71ccbafefa27ea6c432f58d387"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.js",
+      "bytes": 466,
+      "sha256": "db729da6fbd5cd68f0f6bf72cc1d2e60ae5902862d3a60b567d870dbecb31694"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.native.js",
+      "bytes": 188,
+      "sha256": "d40bbc19cb591cd7db7136dd4d8d226b7178f05d78d2148bc319af354fd17fd0"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.types.js",
+      "bytes": 71,
+      "sha256": "1ba3dbc4ed6108ec9840e899b9f0aa9ef2326d1ee07092ffd7b9d1caf71b9cba"
+    },
+    {
+      "path": "package/build/PushTokenManager.js",
+      "bytes": 602,
+      "sha256": "c4df870e182f2ab60ccc1e97047891bd9785b752bc800e8ec3e9445d5f803247"
+    },
+    {
+      "path": "package/build/PushTokenManager.native.js",
+      "bytes": 168,
+      "sha256": "c36a25dfc6c24afc1d392fabfcc57c950ef11a31dc09051e358964267678a5f3"
+    },
+    {
+      "path": "package/build/PushTokenManager.types.js",
+      "bytes": 227,
+      "sha256": "5e41c9afbe5a54bc50bf49e4698a42257be268bec9ff8bbdf37cc74be6678541"
+    },
+    {
+      "path": "package/build/registerTaskAsync.js",
+      "bytes": 4365,
+      "sha256": "97cfd5bebc9d961269a392621c22ffcc9f40e3a7ea4592cb2645928c5bed1ecf"
+    },
+    {
+      "path": "package/build/scheduleNotificationAsync.js",
+      "bytes": 11993,
+      "sha256": "ba9d33317df349228c3d5c21f9dc7585bc1a900f1bb7723625f4fa02e0190be6"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.js",
+      "bytes": 132,
+      "sha256": "1ce4caf945825547a70b3763f92124ab78c7374059e98e167dc958735c7b4398"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.native.js",
+      "bytes": 193,
+      "sha256": "d90361dde218ba282fcf5db89c495648736b2f1e3854826c1c2c56bda41afbae"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.types.js",
+      "bytes": 69,
+      "sha256": "8d49f39f263e992be5c5e1879b7ff8008d96eaed06d063b4f62d0159501e5961"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.web.js",
+      "bytes": 1835,
+      "sha256": "afe6c73e1be54abd28cbffdde152bba57a30158191d60f948a9621df2495901e"
+    },
+    {
+      "path": "package/build/setBadgeCountAsync.js",
+      "bytes": 1253,
+      "sha256": "342ef467214b7297c6c3d635275b5116a34f2e6ea45f2502538455d4c73da1ec"
+    },
+    {
+      "path": "package/build/setNotificationCategoryAsync.js",
+      "bytes": 1303,
+      "sha256": "5bee1ba56b0db097c01b2730fdeb1a6c9705f4a36820de35618bd74bc5ad91a1"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.android.js",
+      "bytes": 930,
+      "sha256": "48bc6843563c80e10d2d68623df2a37dca0f7bd5cbd7205d2d6cb229b12b7201"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.js",
+      "bytes": 1694,
+      "sha256": "1e5a2262ac194fd25fa5e1423ecceb8af0d950d0b1c3179496cb333519ff6dbc"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.android.js",
+      "bytes": 555,
+      "sha256": "96b176442493d2d4038d49d5334cc9d0a8fd89c5ac27f23ac3c29db10282b8d8"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.js",
+      "bytes": 733,
+      "sha256": "e1cabf9bcee1c0bf8f829599f948ae1bbd4a58aa11b2531e9790959feba73e96"
+    },
+    {
+      "path": "package/build/TokenEmitter.js",
+      "bytes": 1608,
+      "sha256": "acd242d6f5c57a4e1c6096eefb41a23e4e168ad736130b0f54996d7f2ebcc88f"
+    },
+    {
+      "path": "package/build/Tokens.types.js",
+      "bytes": 51,
+      "sha256": "a11a14c55602c71fe5b308990b633a57a4ee54c055d13d56cefc9fb53c610b11"
+    },
+    {
+      "path": "package/build/topicSubscription.js",
+      "bytes": 1436,
+      "sha256": "6e253be49eb4382af0ad14b503aee2059233aa219c0836d17ad69d973a1a8fef"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.android.js",
+      "bytes": 183,
+      "sha256": "d44b83f0c2662f9f5e5bb076b39bb186463a9dfd0854417049928fcc6d643aff"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.js",
+      "bytes": 318,
+      "sha256": "8565aef199b11f1ceab9b8d06c815427f222f22635bb8746d19760ace27062ca"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.types.js",
+      "bytes": 68,
+      "sha256": "72e3b63486d6fac8d694c80118272234a41079144380abeaf17e15253bc29ca6"
+    },
+    {
+      "path": "package/build/unregisterForNotificationsAsync.js",
+      "bytes": 468,
+      "sha256": "c2e9064c19213e457c4cc6cc542909a139821226b5fa4292cedb69aa817c3adb"
+    },
+    {
+      "path": "package/build/unregisterTaskAsync.js",
+      "bytes": 675,
+      "sha256": "b64a6991c03a727c0adb6d25d43f7675d7333bd531a1be5ee1d03f997868b721"
+    },
+    {
+      "path": "package/build/utils/updateDevicePushTokenAsync.js",
+      "bytes": 6827,
+      "sha256": "9646898ed893f06f90efc32272690ca5e6231255c76235e8d2cc9ac052d511e5"
+    },
+    {
+      "path": "package/build/useLastNotificationResponse.js",
+      "bytes": 3549,
+      "sha256": "ef65207e4806b1e51704d4585d0ea6ad2844cae73c8693f34bd299c2d9bab0ba"
+    },
+    {
+      "path": "package/build/warnOfExpoGoPushUsage.js",
+      "bytes": 762,
+      "sha256": "c1eec32734a19b32d7f9b965399b48443f6ea33bf701a783b5d4eedfba0a267c"
+    },
+    {
+      "path": "package/plugin/build/withNotifications.js",
+      "bytes": 665,
+      "sha256": "192b0744360b4740457b1026fa8201285e827b19538d22838a66de07e476e8fd"
+    },
+    {
+      "path": "package/plugin/build/withNotificationsAndroid.js",
+      "bytes": 9970,
+      "sha256": "ae1bc74da338bbedf73322aadf5525e31b8159472194a33953afa71fb807f8d1"
+    },
+    {
+      "path": "package/plugin/build/withNotificationsIOS.js",
+      "bytes": 3657,
+      "sha256": "e67534e6ea7a3778f8a5585bb8d7a686a46860f400e60d23cc518a9b206dcca2"
+    },
+    {
+      "path": "package/expo-module.config.json",
+      "bytes": 1791,
+      "sha256": "cc89b8b15ce18df7eb33b39facdbe64a6c5fd827859ff3f924e26d5cc1eb9c5b"
+    },
+    {
+      "path": "package/package.json",
+      "bytes": 1613,
+      "sha256": "53210d3afd139de0c35f79bbf18d5e83825030b5c97befbb25f820b881c7a961"
+    },
+    {
+      "path": "package/spm.config.json",
+      "bytes": 1041,
+      "sha256": "f9249b4a78871ed060efb0e6c0b958088de888c552e31a0dfd40dfc834702243"
+    },
+    {
+      "path": "package/plugin/tsconfig.json",
+      "bytes": 225,
+      "sha256": "f082fe94b93c19c318b6cf5b1d6f4b7100703bf239f120de1aab58034a79f423"
+    },
+    {
+      "path": "package/tsconfig.json",
+      "bytes": 263,
+      "sha256": "c47e79bd86e360fc929d8bef85e0c111e005c324ff450109e8a821aa64096992"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/AndroidXNotificationsChannelsProvider.kt",
+      "bytes": 1278,
+      "sha256": "415556b277bb4cb831427be6591e3e5b55999ad15945ea3dbf3721a8b83fc12d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/background/BackgroundRemoteNotificationTaskConsumer.kt",
+      "bytes": 3380,
+      "sha256": "e2fe6b43a5e30f45d6acb8552804e2b3576f4cb49d7de74e68f560d8d193332c"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/badge/BadgeHelper.kt",
+      "bytes": 956,
+      "sha256": "29ab943f73765c7ec51da46373e9247041e5508b4d2c9cf0f2d96a821c7f7c3b"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/badge/BadgeModule.kt",
+      "bytes": 582,
+      "sha256": "7efa1b4a27b5710ec808b1dd5305c178cab4bcb81dea87194d0a9ad136c26760"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/Base64Serialization.kt",
+      "bytes": 1155,
+      "sha256": "21aa6e1364cc74bb5736e6ac3539ba212456a9dc3ac5b8010faccaec20364424"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/BaseNotificationBuilder.kt",
+      "bytes": 5341,
+      "sha256": "551d011843603b030e2c8f198884c25ef6e1b8d754966c5f91490c1f63578945"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/interfaces/CategoriesDelegate.kt",
+      "bytes": 525,
+      "sha256": "67f3e53259b005e8df8df7e2adb23c25cbd7c9d3bed87fa0c97164d1ebdac63b"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/debug/DebugLogging.kt",
+      "bytes": 3394,
+      "sha256": "6fe60b34983a145db8253cac672bf9bd6b19a1e92c7909642c0505f04e65c64a"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/DownloadImage.kt",
+      "bytes": 805,
+      "sha256": "34f780cccb2037322e81ec633443f1d73a2c979ea352d6d97f57f231a68f32ca"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/Exceptions.kt",
+      "bytes": 380,
+      "sha256": "1f8838c2332d716cf5627f2f42bda3fede5f54bf36fdc3b26d9d7adee1af3462"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/background/ExpoBackgroundNotificationTasksModule.kt",
+      "bytes": 1011,
+      "sha256": "ec5560cc037fd2ffb7417d4f7e4b28b931ee9e76fbec175d33c19f3689ef0e96"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/ExpoCategoriesDelegate.kt",
+      "bytes": 777,
+      "sha256": "8c2232f167b0dd4e4e18ae29d03d5fc39f29ebf1f04408de00e3cc2b29e8731d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/ExpoFirebaseMessagingService.kt",
+      "bytes": 774,
+      "sha256": "61d266837fac8925c192990b0019bcc4d6b80aea7715517877fbd40621b545d4"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/ExpoHandlingDelegate.kt",
+      "bytes": 8653,
+      "sha256": "0d49598a7d5290d68f296171a71786a2e35d99b9c25a6c72f41d5ab9cb0961f1"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.kt",
+      "bytes": 15550,
+      "sha256": "2fa8ace01c7b0654c3df716e015731e4ca014ffea634817b3aaecad0cd323ccb"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/categories/ExpoNotificationCategoriesModule.kt",
+      "bytes": 5303,
+      "sha256": "c1c97ef3aae83bd2d355da8a25596a00089ff35e971425e664746a0f4c4ed77c"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/ExpoNotificationLifecycleListener.kt",
+      "bytes": 2966,
+      "sha256": "acaf5b038a387dfb5884a08fcca73c83f5d1959d43541546ac47e83ec346c7d2"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/presentation/ExpoNotificationPresentationModule.kt",
+      "bytes": 3445,
+      "sha256": "7b18f70e85afaa8712293a1b1580450d87d3f4c803b181a07c76d2a104298083"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/ExpoPresentationDelegate.kt",
+      "bytes": 9695,
+      "sha256": "77eff09dd4b1c41bba8ff3f178ee9a8f8a256d027a480161fdbb74dac57f1a51"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/ExpoSchedulingDelegate.kt",
+      "bytes": 5011,
+      "sha256": "639dfa8b30c24fc2d02df0132a04f96191bca3e9947dbf7c2b817e6244645f33"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt",
+      "bytes": 6454,
+      "sha256": "51d866114bd62a329c05d45eeb6a18a532849056bec1068ef0101d319a769f32"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/interfaces/FirebaseMessagingDelegate.kt",
+      "bytes": 565,
+      "sha256": "096bd1145af48cd2a202d594e41f49eac1ac100d4e0a3897e3f50902f171101b"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/triggers/FirebaseNotificationTrigger.kt",
+      "bytes": 1716,
+      "sha256": "103abdca750225136f999534a862c6757ae46a1bceac7ecf9b39db432c1840f1"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/tokens/interfaces/FirebaseTokenListener.kt",
+      "bytes": 337,
+      "sha256": "3f50e57d74ed4b64b737e1e68bee13baaaded7995f702cbd7f74d7cea3a44cbf"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/interfaces/HandlingDelegate.kt",
+      "bytes": 394,
+      "sha256": "e05c3f173b8d3fc94b3012fcf38958663a204c7f6520b9558e4826295b3c41a1"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/interfaces/INotificationContent.kt",
+      "bytes": 1455,
+      "sha256": "1c67521e2da88834f860c46944ab3946da404409b66c015944c55bee230b54eb"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/InvalidVibrationPatternException.kt",
+      "bytes": 403,
+      "sha256": "58b295ba4fb38043509f396e2ea1066bda55eccaa707d85a5d3724c896851314"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationBehaviorRecord.kt",
+      "bytes": 933,
+      "sha256": "274833375b9ab42ffb1328144b6b1abe1ef7eba4d8027cd788506f11cf473d72"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/interfaces/NotificationBuilder.kt",
+      "bytes": 952,
+      "sha256": "a163b2a01392cbfb304806fe35aced1946e1966ce5c227d86d2bddc2b705d76d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/NotificationChannelGroupManagerModule.kt",
+      "bytes": 2209,
+      "sha256": "d88ad90c79e713f40a4071e13b9de599d58e3f8ea73ac02bb4f8d53d001789b7"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/NotificationChannelManagerModule.kt",
+      "bytes": 3205,
+      "sha256": "409ed96f1a817a935b27802700d93ff5abd0dd0f14676fe2daebfb8d7b42fdc6"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/NotificationData.kt",
+      "bytes": 1646,
+      "sha256": "e2738084e976acb11958d53dd2da35af0e1ae3281fb83f845e47c5be9e4a9230"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/NotificationForwarderActivity.kt",
+      "bytes": 1642,
+      "sha256": "7f180c40758de6e6b37f7f93d35b3e4e687a3fbbf0477d6133103993925150c1"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/interfaces/NotificationListener.kt",
+      "bytes": 1157,
+      "sha256": "672680a40e656afda350dd896b21241fede16a612a5e865aa6c91017ccce21ed"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/NotificationManager.kt",
+      "bytes": 4965,
+      "sha256": "c034c0996077df84fcc840126a8f559cee4a926140bfcc0f17dc8a5a8f8df18e"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/permissions/NotificationPermissionsModule.kt",
+      "bytes": 5010,
+      "sha256": "6e69f11656970ed24a9784a546021d58c91aa8713906f3568c1a3cad63e586e6"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/categories/serializers/NotificationsCategoriesSerializer.kt",
+      "bytes": 277,
+      "sha256": "35a62c84d80c5253be901604f00c7b47aba45fbcd8fbc6d3e50fc425af032ac3"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/serializers/NotificationsChannelGroupSerializer.kt",
+      "bytes": 569,
+      "sha256": "a8ab0da786b8855f3b8abbf47892573061d1a75b9cc15714b7e6368be3b89cdf"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/NotificationsChannelProviderAccessor.kt",
+      "bytes": 348,
+      "sha256": "409b7ccd6438e29276fb41f0a63f31bd14030d1ff57c5417f934027da552f618"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/serializers/NotificationsChannelSerializer.kt",
+      "bytes": 1350,
+      "sha256": "3eb630480b907bc882b0ee4bba3da44bbaa18a9d67fc454a0951fa9a01d88007"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/channels/NotificationsChannelsProvider.kt",
+      "bytes": 720,
+      "sha256": "7c018f756df506001ea50843a462dd5a2905735163008c4b07245302abbd220d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/scheduling/NotificationScheduler.kt",
+      "bytes": 10565,
+      "sha256": "38f2e4233828a499e99e7ed7efb37f5c195b307feac86e08cef82a781f56eae1"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/emitting/NotificationsEmitter.kt",
+      "bytes": 3380,
+      "sha256": "3633d78a47602abf7cf0ceeea163960cd0c093973c1757ab45a65ef53494c51a"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/handling/NotificationsHandler.kt",
+      "bytes": 4446,
+      "sha256": "5f1603ce28f061a3386bc9279eb2050b7a9eeba6b68071865f0704109f0254dc"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/NotificationsPackage.kt",
+      "bytes": 497,
+      "sha256": "255ed0e3164e93e25b8a5519a7198f641a00496084fbe21b577a50006c63a17a"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/NotificationsService.kt",
+      "bytes": 33231,
+      "sha256": "77b498370167e32d1dc724f61834c31bca3985d041c31fd6cf76118a69691b10"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/interfaces/NotificationTrigger.kt",
+      "bytes": 498,
+      "sha256": "921afc8795774cad1c6cee947b0d144891f75b17d17f06e1b63ff1364a4981ae"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/triggers/NotificationTriggers.kt",
+      "bytes": 6248,
+      "sha256": "4737b0c7050bf5b2108cd5787abb5fc3392d4b1f3efb6715afc6794e2903d068"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/interfaces/PresentationDelegate.kt",
+      "bytes": 487,
+      "sha256": "3635eb2e056258dbc9dbb4d24f66df5a0b4fc76a169d822872999090d17824cb"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/tokens/PushTokenModule.kt",
+      "bytes": 3604,
+      "sha256": "102a9274962904a40090e945f2dfc22bc3f63abf5f1fc8f6dc9c8ba5fc2998f2"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/serverregistration/RegistrationInfo.kt",
+      "bytes": 726,
+      "sha256": "9f5c259f157724ad35fdd7304545f43189f34eeb72da49681c23ecf8a2e79c16"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/model/RemoteNotificationContent.kt",
+      "bytes": 3594,
+      "sha256": "50cd5fd75a11517fae91d64e462bc3d3e3868799116d59ab13f0ee5de19cca33"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/interfaces/SchedulableNotificationTrigger.kt",
+      "bytes": 651,
+      "sha256": "f4eddba2daa94b0f6057db0b6a3144a3925ee08ab7661643896b78eddb64bbf8"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/interfaces/SchedulingDelegate.kt",
+      "bytes": 553,
+      "sha256": "9cdc7eeb54356d70cd310efbbc073ad435064a488779003dcccc867656a19b74"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/serverregistration/ServerRegistrationModule.kt",
+      "bytes": 1032,
+      "sha256": "4a2614bb8440b344ddf17431bf9405e7b7efa28841d1dad2cabf999ad11be48e"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/SharedPreferencesNotificationCategoriesStore.kt",
+      "bytes": 3988,
+      "sha256": "98c8a1eb6b3da7a0447716281eb15b99ad41e54c6cf7f05d2b0840c685cebb9d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/service/delegates/SharedPreferencesNotificationsStore.kt",
+      "bytes": 4454,
+      "sha256": "d3e8f73b031e6fa737443d639dbc9490c247f7c2201cbea9c3512ec421c0d9fb"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/notifications/SoundResolver.kt",
+      "bytes": 1862,
+      "sha256": "9609e9787b7ad3a978e97b7cfff94329faecd98d77de403e4d49c1b6f305727d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/topics/TopicSubscriptionModule.kt",
+      "bytes": 1909,
+      "sha256": "7d231e755ca031f8bbf5fae7d179cb7407a51c35aa33b066da14627a67675d9d"
+    },
+    {
+      "path": "package/android/src/main/java/expo/modules/notifications/Utils.kt",
+      "bytes": 3158,
+      "sha256": "7919fe93bc249e3308728c3dfb045ed9b636ad21acf4c105e91e8cc978bc386c"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.d.ts.map",
+      "bytes": 247,
+      "sha256": "364e74ea46f22a989700e81be17880d04deef65199c0ed451e233cca33185d84"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.js.map",
+      "bytes": 523,
+      "sha256": "173c96f7d36368dce29179b9c877879f342e027eb6574d2d4ad25097238d75cb"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.native.d.ts.map",
+      "bytes": 235,
+      "sha256": "afdc2e284ca2cfc82c7be1d270cfdd438e697eaf9b365f28b1b2f6664e0270cd"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.native.js.map",
+      "bytes": 561,
+      "sha256": "0bccfeae9b02ca3507e7853f69ea513d8dbca8525277cdb64c51cad9a8204ae6"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.types.d.ts.map",
+      "bytes": 397,
+      "sha256": "742b5ac304d1d3adb60e83094d69ffe997389a6a90eb5f55d4678595637ac755"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.types.js.map",
+      "bytes": 458,
+      "sha256": "994163cea692c156e65fbb8f0ba1030a1f0bf5ea0e688afa5f6f58a0c999d7c7"
+    },
+    {
+      "path": "package/build/utils/backoff.d.ts.map",
+      "bytes": 264,
+      "sha256": "4c697473fa256959c4b27f98a66169679f5ee4992007462e3576ea068ba6eee9"
+    },
+    {
+      "path": "package/build/utils/backoff.js.map",
+      "bytes": 2181,
+      "sha256": "7605e35f6fb3d71f293c6455106c349a7b54252b7efd6f8dabbe34cc6e87c291"
+    },
+    {
+      "path": "package/build/BadgeModule.d.ts.map",
+      "bytes": 187,
+      "sha256": "ca9e2388e5e1400ab46a5042b61990133cf5f3a4c391821f9a2adf16889e99cc"
+    },
+    {
+      "path": "package/build/BadgeModule.js.map",
+      "bytes": 378,
+      "sha256": "3b712e15f65b28a7ce4a05afd557446e92ca9653d1b64a323c794cea52fe2e21"
+    },
+    {
+      "path": "package/build/BadgeModule.native.d.ts.map",
+      "bytes": 201,
+      "sha256": "806dcaf882c72decb0cb65bd4fd03e466efdb0a884f9725fcf5c37306a7243a4"
+    },
+    {
+      "path": "package/build/BadgeModule.native.js.map",
+      "bytes": 920,
+      "sha256": "2528dbd66961ec8eac79706aa923a5f0450c260c56a4cab9ea24cc9e88dd4f7f"
+    },
+    {
+      "path": "package/build/BadgeModule.types.d.ts.map",
+      "bytes": 502,
+      "sha256": "57fca653e5fcdb95fe01c452e573af05f0a6314c37a929542c18662c8427736f"
+    },
+    {
+      "path": "package/build/BadgeModule.types.js.map",
+      "bytes": 595,
+      "sha256": "d652300b6f5198903327b183b5eeaf18353485d5d5e70edd48d1287d38e728b7"
+    },
+    {
+      "path": "package/build/BadgeModule.web.d.ts.map",
+      "bytes": 228,
+      "sha256": "701e912bc2830fb66eeb26d97078d8e703234a519540b4fff256401fd7d817f1"
+    },
+    {
+      "path": "package/build/BadgeModule.web.js.map",
+      "bytes": 1560,
+      "sha256": "55261dc22f054fdf6e0a4f93e5a9996ebaea22a87d43624e7284e83391676e99"
+    },
+    {
+      "path": "package/build/cancelAllScheduledNotificationsAsync.d.ts.map",
+      "bytes": 228,
+      "sha256": "7cdfd630ff4abf5eeb5d886a6a3643c124deab08ff8dfa0ee1e13fa7b61798ea"
+    },
+    {
+      "path": "package/build/cancelAllScheduledNotificationsAsync.js.map",
+      "bytes": 1146,
+      "sha256": "a4a0a79c1c673305d87d317126f61076aee74025a20cb284d545474cf753c292"
+    },
+    {
+      "path": "package/build/cancelScheduledNotificationAsync.d.ts.map",
+      "bytes": 256,
+      "sha256": "d36b241eefffa836c71ba90be4ef17c97c2ccd9268d4f240d879252fa709611e"
+    },
+    {
+      "path": "package/build/cancelScheduledNotificationAsync.js.map",
+      "bytes": 1845,
+      "sha256": "43988d842f7ab018eed3172c6e6def11e7374cee53052562809fe53486bada79"
+    },
+    {
+      "path": "package/build/deleteNotificationCategoryAsync.d.ts.map",
+      "bytes": 242,
+      "sha256": "54fdf217bffcf1b8a98e9320970bf9e913e258a37e7080824c8e5e9d60b9f527"
+    },
+    {
+      "path": "package/build/deleteNotificationCategoryAsync.js.map",
+      "bytes": 1463,
+      "sha256": "2147eacb429161f5ebb1710df82c9d495fb12377e2c7ea30c0f6a014a1abafe4"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.android.d.ts.map",
+      "bytes": 239,
+      "sha256": "1ed183a7d16610b59368919a60441a02dae56144e23817158b673df18e6aa53a"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.android.js.map",
+      "bytes": 964,
+      "sha256": "95500c192e0694753384d110486a6da3e7557b6f801223f3185d954f187c2dd8"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.d.ts.map",
+      "bytes": 238,
+      "sha256": "05d2ae942be11fad16f139ca8ab0210c0f2768bceee60bcee787f399c8b5de56"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.js.map",
+      "bytes": 712,
+      "sha256": "ba934d6180bf192b9b05262c394ec970c626849acdcac9314132fb21c986315a"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.android.d.ts.map",
+      "bytes": 249,
+      "sha256": "dbf92781d2d7a0dc3f5e15d7f8c2a0fd347900d7bd9e4f111f31178ac2e96d26"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.android.js.map",
+      "bytes": 1009,
+      "sha256": "b842a6b1523141767345531f82de0c79857d59d44043158057ce2bd82f0262db"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.d.ts.map",
+      "bytes": 248,
+      "sha256": "b4f8a9c0e187fc53dce1cdcc35bd880072cb2fe621fed44756a3028312952c75"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.js.map",
+      "bytes": 793,
+      "sha256": "a27e5ba053d3b87bf2dac1f458e9e587066e4252aad705e54e4427569ebb01b0"
+    },
+    {
+      "path": "package/build/DevicePushTokenAutoRegistration.fx.d.ts.map",
+      "bytes": 392,
+      "sha256": "1a8cd23b19b544926c615883615fa120584de0f761338e68be58131216402003"
+    },
+    {
+      "path": "package/build/DevicePushTokenAutoRegistration.fx.js.map",
+      "bytes": 8618,
+      "sha256": "3dff370a9aad6754f57e40fe75b4e6102290209b544f1206fed87703f0754bd8"
+    },
+    {
+      "path": "package/build/dismissAllNotificationsAsync.d.ts.map",
+      "bytes": 212,
+      "sha256": "3287785855a71188191e283d0adfc781fd788bd34423872c61c01ded29196737"
+    },
+    {
+      "path": "package/build/dismissAllNotificationsAsync.js.map",
+      "bytes": 1160,
+      "sha256": "4234b674f243cbdedfaf57dcbeb87e6b3c85a8a67beaa5e5d663c1992805eaf4"
+    },
+    {
+      "path": "package/build/dismissNotificationAsync.d.ts.map",
+      "bytes": 227,
+      "sha256": "6d7fddc79cb3d3cc93a1585845a70221b16e07583fb4b1892663f87abb76e4ea"
+    },
+    {
+      "path": "package/build/dismissNotificationAsync.js.map",
+      "bytes": 1373,
+      "sha256": "468fdd57caf3e285385674955bfe3821630d802a98afcf501d0f1b9c3f694cfe"
+    },
+    {
+      "path": "package/build/getAllScheduledNotificationsAsync.d.ts.map",
+      "bytes": 279,
+      "sha256": "801ed833c63e5593692d77052b26093bde981339c9ff6e148a87834f7db9508a"
+    },
+    {
+      "path": "package/build/getAllScheduledNotificationsAsync.js.map",
+      "bytes": 1469,
+      "sha256": "54c886f571a0da3383e4dcf13c76cb62a0b59660bac8866370aa3c5d740ccb05"
+    },
+    {
+      "path": "package/build/getBadgeCountAsync.d.ts.map",
+      "bytes": 193,
+      "sha256": "bb859dde4a94c999a8024f43074bcbfd86c5a3d6ce31855f89768a615bc82a4b"
+    },
+    {
+      "path": "package/build/getBadgeCountAsync.js.map",
+      "bytes": 1211,
+      "sha256": "7f6f0b85e6c4da1fd0301e831a6c383b8d95280f559a444693ca7f9beedb557c"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.d.ts.map",
+      "bytes": 251,
+      "sha256": "bdddc7895dd67af583c4390d6e8e14e950d827831cf8094d575375b4fffa37bd"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.js.map",
+      "bytes": 2055,
+      "sha256": "3fb302d555e42362c5fcc23f29390ea159e8f6b63c6a22f33688e6d39cb3e101"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.web.d.ts.map",
+      "bytes": 245,
+      "sha256": "142b9007a1f4c5a3a8c9cd0726e8d2a1dac057d3be04dab20d4a8c530f257450"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.web.js.map",
+      "bytes": 7641,
+      "sha256": "97f2624d4fee336a4bebdcc3d0b0f87e92df0e7a343519bcd9876a50f09e354c"
+    },
+    {
+      "path": "package/build/getExpoPushTokenAsync.d.ts.map",
+      "bytes": 317,
+      "sha256": "31fcc6e8f7a8dd6b493d9af754d63517c5486f40cd9775b4e5323d3add5ee306"
+    },
+    {
+      "path": "package/build/getExpoPushTokenAsync.js.map",
+      "bytes": 12286,
+      "sha256": "b268679d5660037c471bf66ad6ebf49430c4da42d5fb444ed38ea2b1732bb77a"
+    },
+    {
+      "path": "package/build/getNextTriggerDateAsync.d.ts.map",
+      "bytes": 305,
+      "sha256": "d6955ddb8ba7a4d8f0ab5e42e669548c775c1c3bead54476810b2293375e5f95"
+    },
+    {
+      "path": "package/build/getNextTriggerDateAsync.js.map",
+      "bytes": 2235,
+      "sha256": "60ed9e1c27d6b428a3b98163385dc85de5df67bba770e07eb29abffe94ac7a1b"
+    },
+    {
+      "path": "package/build/getNotificationCategoriesAsync.d.ts.map",
+      "bytes": 276,
+      "sha256": "34be903a6371ccdbeffb58b96c9c490ab122f5d7dac87125294509e00a62b39a"
+    },
+    {
+      "path": "package/build/getNotificationCategoriesAsync.js.map",
+      "bytes": 1328,
+      "sha256": "b486edeb1370393ad745ba2c7e765dfcb732a76402fb2a0ff2f76273e594f608"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.android.d.ts.map",
+      "bytes": 297,
+      "sha256": "aee7976ffe97f9463ceb0d5df4df3d390a1429edba7b094e986ee5801d374010"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.android.js.map",
+      "bytes": 1053,
+      "sha256": "0bcc950aba232d0c2a275c12664db9aa9cb18b6ae25abfd07ee0877e022fd31a"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.d.ts.map",
+      "bytes": 297,
+      "sha256": "80b20dab4c6dd318ab74d5867980f300b0bc3a19a5544a1c755b20b6c31553c0"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.js.map",
+      "bytes": 1032,
+      "sha256": "40217cd111db587c4e361df0312c23fbd85ccbfcfb9cbb4f0ea087ae9a4393dc"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.android.d.ts.map",
+      "bytes": 306,
+      "sha256": "5584a8f28e6aee4414346503ce663becf7f44c80775679028d381cbd487da4ad"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.android.js.map",
+      "bytes": 1114,
+      "sha256": "1bfb2739ecd2fea67d2c7d3a70906466e32f2441b43c0fafb321a4c71551b4a9"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.d.ts.map",
+      "bytes": 307,
+      "sha256": "1b4033f65531f1d95be11f1bcac47ea6a7dd83a53aef96c8a54a5faee35c7437"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.js.map",
+      "bytes": 1095,
+      "sha256": "563857640fac0b7a8313ff10e6ec7cb7c11dc9a19577802b3cc569c2f99be0cd"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.android.d.ts.map",
+      "bytes": 282,
+      "sha256": "50669050ce4ce5a1da2306bf285bbf6e38782cbef52c5790e2cad51feb9ddd8a"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.android.js.map",
+      "bytes": 1065,
+      "sha256": "375a6f9c174dbef97e1b804a4ff4a8e1a59b3c070c377b97a900be58078c539a"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.d.ts.map",
+      "bytes": 281,
+      "sha256": "4304e697852dcb897972f17970f7b9e9f8235110149474d9fadaaf753a579819"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.js.map",
+      "bytes": 885,
+      "sha256": "dd0427ac331119933302d76c9914645d671f59db7394b3be6aec000c50f8c9d0"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.android.d.ts.map",
+      "bytes": 272,
+      "sha256": "de87b24919485ccbb50edd2d96bc7498a833f594d4b978c799735e1a5a7b71e3"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.android.js.map",
+      "bytes": 1028,
+      "sha256": "1d7a057ae7ddafd380a83a369f077c3ee85710cd600b5187e0dc4f440af03a4b"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.d.ts.map",
+      "bytes": 271,
+      "sha256": "43440e2ae5e57a0fd608c4598374f7731ce4438095233af30ad0d3a3ff02c181"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.js.map",
+      "bytes": 838,
+      "sha256": "cf7bacbaa09cdce230b7c41ff2ffc10660337202700f4592a9c66611610151b2"
+    },
+    {
+      "path": "package/build/getPresentedNotificationsAsync.d.ts.map",
+      "bytes": 270,
+      "sha256": "4eb086ea21bb9ae61912e70b7b6f1da1e976dbce63e24a7a13b2467113cf1244"
+    },
+    {
+      "path": "package/build/getPresentedNotificationsAsync.js.map",
+      "bytes": 1649,
+      "sha256": "7f894c8af6dae5e4b1ed97754a32baf39e345065a08eda03b53b6bda307ffd8c"
+    },
+    {
+      "path": "package/build/hasValidTriggerObject.d.ts.map",
+      "bytes": 181,
+      "sha256": "370ea06f0b1e2b3754ebebd633a8176683392079f5f43d379409a2d12b0d7452"
+    },
+    {
+      "path": "package/build/hasValidTriggerObject.js.map",
+      "bytes": 515,
+      "sha256": "aba2978b335e0035b5fb9fe5b290530cd067cd67d6202923ab376946574b0ceb"
+    },
+    {
+      "path": "package/build/index.d.ts.map",
+      "bytes": 1638,
+      "sha256": "090ad23acd28608f5e7ab61adcf968108dd2dd6b4750a025de6207ee5a1ce6dc"
+    },
+    {
+      "path": "package/build/index.js.map",
+      "bytes": 5216,
+      "sha256": "483611a925442e8fe96cff01b7c5c4f7a87b535eb9f89b6709dd382bf572e8e8"
+    },
+    {
+      "path": "package/build/utils/mapNotificationResponse.d.ts.map",
+      "bytes": 575,
+      "sha256": "81e3539db55f16426b6180529008d4153b9211d854b415fd5420e6d15439b1f9"
+    },
+    {
+      "path": "package/build/utils/mapNotificationResponse.js.map",
+      "bytes": 4002,
+      "sha256": "4209a97e197fef2c7856884ff97aa0d37fd0436499a67fc34d486fa7fd21db7a"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.d.ts.map",
+      "bytes": 260,
+      "sha256": "3fdf5529355bc8266c43f8057bc4f1e20f9dd68172feed30de1045cbb4b78936"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.js.map",
+      "bytes": 1096,
+      "sha256": "a2f6e1a434812268d5dcfe20c6d0e93100c4622f982e3b74ecb6201ad64c9770"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.native.d.ts.map",
+      "bytes": 225,
+      "sha256": "3e322fcdb39d4d674d8dc25129ba4a15a33e9559f0c4d9b4291d5f6b36e96f4a"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.native.js.map",
+      "bytes": 531,
+      "sha256": "d65dab2020cb932ad988e6a74ef6421ca4d7c2594a7d7f4fb2fef17e5780c4f2"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.types.d.ts.map",
+      "bytes": 824,
+      "sha256": "8e29752ca96fc63bc6d73186babd061da184c87716db74134067d2b1aae927f5"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.types.js.map",
+      "bytes": 1002,
+      "sha256": "5baf2782365906912a2e601fd2529780386f26253aaaa6da734c4672170c6a6e"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.d.ts.map",
+      "bytes": 231,
+      "sha256": "a8d182a7f6baadb751f0e10ef33fe4307238521df7c97c111f01d6e448c5ce4d"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.js.map",
+      "bytes": 478,
+      "sha256": "0b840f550ad626dea57e47adfb990d2a1a23caa30aa9c82b72d0dc9f37589a40"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.native.d.ts.map",
+      "bytes": 231,
+      "sha256": "ea1b103257240e4a323f4761e19da678b80790b032429c0e32111e2938253751"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.native.js.map",
+      "bytes": 549,
+      "sha256": "380201e8f75db2d40a32f9a846f3333db650715225cd73d92d13b98fea891afe"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.types.d.ts.map",
+      "bytes": 957,
+      "sha256": "43231a95fbb43242ce8d6480815ccc5046befdbe918c526174e57b5e86904a78"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.types.js.map",
+      "bytes": 1316,
+      "sha256": "94cc5eb06ae1c8e3d44151cc05f49bd7363a26a76e72c470965b0131e8502f99"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.d.ts.map",
+      "bytes": 221,
+      "sha256": "ad711652a9b19961432895142b471278f4d31418ac08e0d670edce18552e8cc6"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.js.map",
+      "bytes": 453,
+      "sha256": "f26ff06a1b0a31bffebe169e27d7de8fcd996add2b0da3ef9217ca946dc0f972"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.native.d.ts.map",
+      "bytes": 222,
+      "sha256": "70fbfec5efea871d5e47168d23622c29b793c9e471a6c9b5b2781587a1732b9d"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.native.js.map",
+      "bytes": 512,
+      "sha256": "5ed858ec2dacbf29cfc09f7c726754fb68cf7580497ad66be492e541611ba3cb"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.types.d.ts.map",
+      "bytes": 2339,
+      "sha256": "9f02eba0a6bf03158cbd04f252e90a08bab8cb2e3e1ec334a31fd70006bb100e"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.types.js.map",
+      "bytes": 4429,
+      "sha256": "5f57608dcd609bf6a499fae2f788f648edeb4ff05291dff1761b23c7e13b32b1"
+    },
+    {
+      "path": "package/build/NotificationPermissions.d.ts.map",
+      "bytes": 328,
+      "sha256": "6253de9dd45c015adb87c9d4449538495e490fdf7b65478102bd68811d8bdca7"
+    },
+    {
+      "path": "package/build/NotificationPermissions.js.map",
+      "bytes": 4160,
+      "sha256": "b1549b9cba5844284bcb7ddf356e1bdd4a1ea5d202ef54e945847bdf3c7cd863"
+    },
+    {
+      "path": "package/build/NotificationPermissions.types.d.ts.map",
+      "bytes": 1577,
+      "sha256": "d35ab77e9c514827a2e3420149c7d6b46a3a8619c343be4f89151d70f489d672"
+    },
+    {
+      "path": "package/build/NotificationPermissions.types.js.map",
+      "bytes": 3478,
+      "sha256": "01122dc014db8a3c1ad5f152c01e6061b1301cef1852342d3e7a9958facb6faf"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.d.ts.map",
+      "bytes": 228,
+      "sha256": "05a12761043d7d966e4a5116bb463494fbdd9094bae9eef11af573ab34c55633"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.js.map",
+      "bytes": 4737,
+      "sha256": "f718d67fa3ec2d06481294a80dacd81208d7858eb709a6ef65ec9f3f7f12d677"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.native.d.ts.map",
+      "bytes": 227,
+      "sha256": "549f779dd44732752ddd2ca2bba2f4c26cd458b8bae130c2803bb9e3c677270b"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.native.js.map",
+      "bytes": 537,
+      "sha256": "7af8443d2a9243d48cf80a78dcac0b529f1143a3e7021ade6b7acf653900295e"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.types.d.ts.map",
+      "bytes": 451,
+      "sha256": "01a5fd15958999da426dc6ba79c5fed56f45357d404fdf52d5f31967f5f0fe4f"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.types.js.map",
+      "bytes": 662,
+      "sha256": "8628264efb7c6c7baad8a8007af6cde2efef8a6675dddf6bca790fa610f8e801"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.d.ts.map",
+      "bytes": 223,
+      "sha256": "36fa6908f906fdb9e8135108d872336667299421e2e75f93124499ed6d521626"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.js.map",
+      "bytes": 458,
+      "sha256": "ccc2c246a901ef1344476f713c0f793b11c3074b00545bf29e6e02516f30d62f"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.native.d.ts.map",
+      "bytes": 224,
+      "sha256": "25e5430848b9ffa8dcf4e2ba9087a08e87f1702fe9ec39509cde24fffe946493"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.native.js.map",
+      "bytes": 512,
+      "sha256": "0842f0bfc0449656f208f13cac226c56291ae97559bb5ba2d3b2300dbf4c0ad6"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.types.d.ts.map",
+      "bytes": 481,
+      "sha256": "e00c8352f5aff296949a83e7dcd470dc764dfd70013cc8dc30fdac8444f00bc1"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.types.js.map",
+      "bytes": 573,
+      "sha256": "fa31cb4c75da0e302b96be001bd98504a117f20e063325fe2d2b263f9bc90cd8"
+    },
+    {
+      "path": "package/build/Notifications.types.d.ts.map",
+      "bytes": 10863,
+      "sha256": "c0d8ea45653eaa85428e628058a9022249cfa54d8817db82de7ca3cd979a939c"
+    },
+    {
+      "path": "package/build/Notifications.types.js.map",
+      "bytes": 30813,
+      "sha256": "045bcadf808d2e32e5b8a5be0652170a478a65c650deccf821893eb5ca1ec025"
+    },
+    {
+      "path": "package/build/NotificationScheduler.d.ts.map",
+      "bytes": 211,
+      "sha256": "11393a10a2fb1fe9742de7eb486e38dd9adbe3d192dab25d6fddf3452b04ae74"
+    },
+    {
+      "path": "package/build/NotificationScheduler.js.map",
+      "bytes": 440,
+      "sha256": "bb78ee7c98742d8f6083acdadab0240ed91c435231a337f49918e89fddd63143"
+    },
+    {
+      "path": "package/build/NotificationScheduler.native.d.ts.map",
+      "bytes": 212,
+      "sha256": "c1883a1c02f5430d2364afa1b8cf6530ac35ca24f7665394bea7f1d684035014"
+    },
+    {
+      "path": "package/build/NotificationScheduler.native.js.map",
+      "bytes": 494,
+      "sha256": "865e8524185423ba3ef4202bfa46efafcabc2f62b671fbc35de39d4c574b0ae7"
+    },
+    {
+      "path": "package/build/NotificationScheduler.types.d.ts.map",
+      "bytes": 2251,
+      "sha256": "ddc226bfcd8e481a707aa168384b10e68170d022c1c77a0f421874c9497070fa"
+    },
+    {
+      "path": "package/build/NotificationScheduler.types.js.map",
+      "bytes": 2548,
+      "sha256": "c6f5884b5187a3dabda866e48e998cdb80ca1b1aab6052b6a4a7a6081336faeb"
+    },
+    {
+      "path": "package/build/NotificationsEmitter.d.ts.map",
+      "bytes": 932,
+      "sha256": "21692d61eba3e1ed9a048afa539928c6d2121a32c32e71565914dbabb18d800b"
+    },
+    {
+      "path": "package/build/NotificationsEmitter.js.map",
+      "bytes": 9431,
+      "sha256": "b07484419cc352ce8e45009f2169a4cf4e694cdee8a4aaff453e408666aeccb6"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.d.ts.map",
+      "bytes": 221,
+      "sha256": "855a45378d673b415f36784068247f228312573c3d89316b96b49e7f9593022a"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.js.map",
+      "bytes": 1000,
+      "sha256": "79580d975e3eaed00f18ebf9e77f405286a428907312121d38041948f27f40eb"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.native.d.ts.map",
+      "bytes": 222,
+      "sha256": "0cd8a598d2cdf50d0e605a0cf7e2f01b195b99064c0464194bec608f40f9cad9"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.native.js.map",
+      "bytes": 506,
+      "sha256": "b959323f82b53e3cf9799bf1d1afdb04c4665554317b2cd9a9cf98643fcde188"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.types.d.ts.map",
+      "bytes": 385,
+      "sha256": "926794ac9c9e874e7331621c7d51f3cbaf3732c075f1e9d765002b5f83b3892a"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.types.js.map",
+      "bytes": 502,
+      "sha256": "41194121c94c0c67aac92f50a7846236a425bf26c8ec86465148683c8851d613"
+    },
+    {
+      "path": "package/build/NotificationsHandler.d.ts.map",
+      "bytes": 824,
+      "sha256": "bf6db1c94549dae0cdeb482dcd96fdc13cf974ae2e0941761cdcf10ad51d9aff"
+    },
+    {
+      "path": "package/build/NotificationsHandler.js.map",
+      "bytes": 7398,
+      "sha256": "b7fef26c7633087eefeb3dd24ba4929885905c6cfb0f810963a23e7619caef4b"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.d.ts.map",
+      "bytes": 221,
+      "sha256": "5807efdf7e11e2e38a73a8afbecd6e0cc03b42e149a23202dc530a60fb0d6a50"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.js.map",
+      "bytes": 1005,
+      "sha256": "e6a1960954293beed7c75f1f44d80cfdf2dd26116256f841e68ce32813a2d612"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.native.d.ts.map",
+      "bytes": 222,
+      "sha256": "f0cedad84bdf54d89b7e93a33bd2bcf9fe4c2c0a3de7febb5cc6c1ad6c461680"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.native.js.map",
+      "bytes": 512,
+      "sha256": "8f77d1dbb8af7cbbd35b135c7a88c8f6ffb963de4f38fffeb6aa4ab4e93fa26e"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.types.d.ts.map",
+      "bytes": 397,
+      "sha256": "e94a0c5deda9b1a2767a34e057559e39c9ff5ccb7f460e7fedd586c46d356686"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.types.js.map",
+      "bytes": 518,
+      "sha256": "8ccaceb10ad42cffb67d6994d9a21634ede548fcf2c639221c111cbb9b4c0c85"
+    },
+    {
+      "path": "package/build/PushTokenManager.d.ts.map",
+      "bytes": 204,
+      "sha256": "be80dc7f7655849915fcebcce2e3c9bc64a075765c5f395eaa1e7d3de414168a"
+    },
+    {
+      "path": "package/build/PushTokenManager.js.map",
+      "bytes": 1261,
+      "sha256": "9c425c4b479032c8b496d2a62ed0a02c9ff9649d55d5a40ced9c7adeb17db12b"
+    },
+    {
+      "path": "package/build/PushTokenManager.native.d.ts.map",
+      "bytes": 202,
+      "sha256": "3fc4446b1aa9019ea5c12b900740760502a3dad3aba49488bd1f1ef2b800b9f5"
+    },
+    {
+      "path": "package/build/PushTokenManager.native.js.map",
+      "bytes": 464,
+      "sha256": "37b478758b1bb40a50144d9526d5b2a292e80ba2d34eb48082eccfbb04be3fcc"
+    },
+    {
+      "path": "package/build/PushTokenManager.types.d.ts.map",
+      "bytes": 453,
+      "sha256": "468247d7da8626d1e79524c721f95cc67b1aaaaba7f748c06fcf97ea41c11f59"
+    },
+    {
+      "path": "package/build/PushTokenManager.types.js.map",
+      "bytes": 654,
+      "sha256": "432b30144f05cfe0a7b28f60472e23f80b415808cab37f55713c3cc89de08801"
+    },
+    {
+      "path": "package/build/registerTaskAsync.d.ts.map",
+      "bytes": 319,
+      "sha256": "dcca7eb90960f5c1261a72ee630bafe47e72a74005295c0b3b84c8bfbd85d34b"
+    },
+    {
+      "path": "package/build/registerTaskAsync.js.map",
+      "bytes": 4676,
+      "sha256": "5ab65834839b14ae135f77c20b876cd8df9581ffe4afc15dfdad9ec571ff23c0"
+    },
+    {
+      "path": "package/build/scheduleNotificationAsync.d.ts.map",
+      "bytes": 461,
+      "sha256": "4f136e438abb23f78cb7741f2ab3ae9694b58dda088bce8ecb2873568e1cd388"
+    },
+    {
+      "path": "package/build/scheduleNotificationAsync.js.map",
+      "bytes": 20803,
+      "sha256": "2b2d6e94970d14d1ebce8754bac2b473e9e0f9e0684d43c28c74bf464009e2b6"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.d.ts.map",
+      "bytes": 217,
+      "sha256": "c840e3a4283e553d48c0fc44ce39224090631e86f2c74df3bb188cc46bf93e9b"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.js.map",
+      "bytes": 443,
+      "sha256": "ba80652612ee84a743ccfd3d97a72be9757457587aa495aa1acac420cc8217d8"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.native.d.ts.map",
+      "bytes": 217,
+      "sha256": "1cb58e9ede1108be0724b3a0eb3f3602f85c84671d9c1a491ef0a59f0785505c"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.native.js.map",
+      "bytes": 516,
+      "sha256": "e1288569e7e4d687c355510b7e91ec11d6af7dcd42d027276d698d2374b350a8"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.types.d.ts.map",
+      "bytes": 454,
+      "sha256": "1f29d79739d7d397c29a59f8cc5d03ae2233e41bf54dcccb3a50e1adf53d4bb0"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.types.js.map",
+      "bytes": 516,
+      "sha256": "35e0bf88be9104a548b38fb5ce613e094b1a4e2e6ee23f9a4d7ab8122cc429ee"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.web.d.ts.map",
+      "bytes": 228,
+      "sha256": "ac54449bd82943976e2734a06eb672118d77c6a9f5d93212a278041eadc85cfa"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.web.js.map",
+      "bytes": 3291,
+      "sha256": "8094a08d74505676c8ceb360c8e7308bb0c68f16286bb1dd1d6928d168a223e4"
+    },
+    {
+      "path": "package/build/setBadgeCountAsync.d.ts.map",
+      "bytes": 369,
+      "sha256": "297e1f6698522739056f81e7b2e0e6f37ae907de1e557977d8d5d3b08fc91476"
+    },
+    {
+      "path": "package/build/setBadgeCountAsync.js.map",
+      "bytes": 2131,
+      "sha256": "8730d9fe53ac234abc0e233acd3f804eeed55bc3d52c948ee386c4a168734501"
+    },
+    {
+      "path": "package/build/setNotificationCategoryAsync.d.ts.map",
+      "bytes": 376,
+      "sha256": "fed83f85216e8450296b1458553aeb34c6076653428f0022503da6e6c239861e"
+    },
+    {
+      "path": "package/build/setNotificationCategoryAsync.js.map",
+      "bytes": 2047,
+      "sha256": "6ea85ecc477ccbf788d31ec86114cd39793b0d4a76ba7316aff9f8c0bf4be016"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.android.d.ts.map",
+      "bytes": 334,
+      "sha256": "c8d703407ac8057e61e50c6bb9d0fbec8f4e71308adede6e103d61bfb6cf870b"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.android.js.map",
+      "bytes": 1772,
+      "sha256": "7cc9f609215da5ed5f176719b42030fe23df402b820aa2e2f2f7e8ec76bdeea0"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.d.ts.map",
+      "bytes": 348,
+      "sha256": "5212bd0a93285164e16d7393eb0e0dfb8bf5cdb71707816586c0efd6683a6802"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.js.map",
+      "bytes": 2183,
+      "sha256": "ccff6574642b25dd2c08e47adf9acbc9fa196bc7282b50dde957003c79609db4"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.android.d.ts.map",
+      "bytes": 343,
+      "sha256": "6b80d70d3d96903e5a04e9fb98fd7d8897b19f0f88c038079f29871e2442c8b5"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.android.js.map",
+      "bytes": 1223,
+      "sha256": "30a58849b3a733c752a61b55728c79961fb2c8a7847b160144662e326ccc259b"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.d.ts.map",
+      "bytes": 344,
+      "sha256": "e00ba974faaacdba42d44d088bd122684428adbc5873bcf622e1be498f75c470"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.js.map",
+      "bytes": 1225,
+      "sha256": "6f81931b1f1d1229a1ea1e607642d20a72b74cd7af13af7aeeb9d63bfa977843"
+    },
+    {
+      "path": "package/build/TokenEmitter.d.ts.map",
+      "bytes": 385,
+      "sha256": "d408357cbbe9ab75b3694be8ab919e91fa1aea0a80fc15170e6a8f8ea9844e19"
+    },
+    {
+      "path": "package/build/TokenEmitter.js.map",
+      "bytes": 2648,
+      "sha256": "fa16b2c14591a3b4e8dfd982b87866ba0e476afa9f0d538e7be116315479b709"
+    },
+    {
+      "path": "package/build/Tokens.types.d.ts.map",
+      "bytes": 1241,
+      "sha256": "842893c08efe0da2dc9e97f7cd4a4c9e4c69a2b49b924a2bdee89e45d8be8ad5"
+    },
+    {
+      "path": "package/build/Tokens.types.js.map",
+      "bytes": 3654,
+      "sha256": "82c5f1c834a53db3f143a9869ea024bf9f719d45e24d752bde5f2de53a0b8dba"
+    },
+    {
+      "path": "package/build/topicSubscription.d.ts.map",
+      "bytes": 295,
+      "sha256": "c5012562fe5f6ac8cb59e2ea0b1ce016eeee5da733ff0d70c95949461c434297"
+    },
+    {
+      "path": "package/build/topicSubscription.js.map",
+      "bytes": 2228,
+      "sha256": "161921105205ebbcdffb06aabf1dc31dd1f7f09cc8487e62feca9a54244d5e9b"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.android.d.ts.map",
+      "bytes": 218,
+      "sha256": "ee15e5a3955e83cf8187d3495a5677c341163f32265c32ca6dd2a73dd7459fb4"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.android.js.map",
+      "bytes": 496,
+      "sha256": "2a10e9fd76e5e40ed541654dfed90fa5f4e740927bef5429647949b1cee643c6"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.d.ts.map",
+      "bytes": 262,
+      "sha256": "302b8b523754c1e8bcdb4d7d0fec90610b7ab46903232384345d73afdb3cddf1"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.js.map",
+      "bytes": 827,
+      "sha256": "1bbe99435e3d8076a467dbc8b552c2c0a5f5cd6d66bb09f00bb86882679bfcbf"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.types.d.ts.map",
+      "bytes": 387,
+      "sha256": "9813bf1df3386529affb7d5ca3daee704660ad62e019d448da6e5aa52a60dcbf"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.types.js.map",
+      "bytes": 434,
+      "sha256": "420ee63efd0d7d6469324bdf715e1acea47b9951fc252659a633be2716a93954"
+    },
+    {
+      "path": "package/build/unregisterForNotificationsAsync.d.ts.map",
+      "bytes": 205,
+      "sha256": "d566b5243153ba5532bcc607b1c9e18ecf8f356b8cb1eb9accb4433053b3dd59"
+    },
+    {
+      "path": "package/build/unregisterForNotificationsAsync.js.map",
+      "bytes": 887,
+      "sha256": "c2d0964d856e1e429f5919f88f8cdbe54a26d015f5f384c5e8b217ca54dbcba9"
+    },
+    {
+      "path": "package/build/unregisterTaskAsync.d.ts.map",
+      "bytes": 214,
+      "sha256": "1878096bdd3e0593c02cb025e625303991b4b34609235a936160c39fc1e7da77"
+    },
+    {
+      "path": "package/build/unregisterTaskAsync.js.map",
+      "bytes": 1123,
+      "sha256": "b9d0029dff4a477e35f5bdc1ef9170f4aceacb2c2d918e85f90d2df03cfc5051"
+    },
+    {
+      "path": "package/build/utils/updateDevicePushTokenAsync.d.ts.map",
+      "bytes": 353,
+      "sha256": "074d7b30c6e7c566fac11f52ae2c09b8bc46a13f1e11106127694121ba13b4a9"
+    },
+    {
+      "path": "package/build/utils/updateDevicePushTokenAsync.js.map",
+      "bytes": 11808,
+      "sha256": "100cb287b1800c627bbda5571f8473ae9f9d86d9f5bd239a3aa0079746f92051"
+    },
+    {
+      "path": "package/build/useLastNotificationResponse.d.ts.map",
+      "bytes": 363,
+      "sha256": "fcb293a895ae873b82adf987af724b674231361d9789d1a31035f83e288b54c4"
+    },
+    {
+      "path": "package/build/useLastNotificationResponse.js.map",
+      "bytes": 5101,
+      "sha256": "fc1dc6c64083473f30323d8fb6ad4259aed54f4f2b1857d6a5776d01f2e75a60"
+    },
+    {
+      "path": "package/build/warnOfExpoGoPushUsage.d.ts.map",
+      "bytes": 168,
+      "sha256": "3c8120c8f55856df838ba3cb5bd20f56855dc0189a20030a3260bb2c301dc025"
+    },
+    {
+      "path": "package/build/warnOfExpoGoPushUsage.js.map",
+      "bytes": 1307,
+      "sha256": "912f7682994c0aa5a4b8648f956ed0af2c7f4e30e4c7d59330d3b84c809a6eb9"
+    },
+    {
+      "path": "package/CHANGELOG.md",
+      "bytes": 69597,
+      "sha256": "7d27eea880cbe86ac0eea992f8ad3890554babf8eefee6f378983a5874e6cf52"
+    },
+    {
+      "path": "package/README.md",
+      "bytes": 1480,
+      "sha256": "8b5a3d650966137a8f8896b6dcb6a51de46b2c9f9b5eb2dae03bce6403307643"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24-sources.jar.md5",
+      "bytes": 32,
+      "sha256": "cc3319a8d93909b8e1fe89a44e117d434fa8f9b9c8141e393e0ebd672c5161a2"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.aar.md5",
+      "bytes": 32,
+      "sha256": "451c26d767a57da8a64eefa7fca17e31628e07f24f9ce2be93c9f49ed488585b"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.module.md5",
+      "bytes": 32,
+      "sha256": "3b4fb3fb9f4e9a51a334974d35d08360183d760a007f3a38089ac6ec0301ef67"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.pom.md5",
+      "bytes": 32,
+      "sha256": "0ea01939edfe892d489152eb0e94a9835d012d9ceb0617ba8cc84d4bb6254cac"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/maven-metadata.xml.md5",
+      "bytes": 32,
+      "sha256": "5b1dff774e2dff33a21b07e78e074fd686e05cb655ed4dad49275ebe72189220"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.module",
+      "bytes": 5023,
+      "sha256": "1ef22335d65ef48cdc1402d48cadaea97fb048021b9581d98b8d6764a7f5c127"
+    },
+    {
+      "path": "package/ios/ExpoNotifications.podspec",
+      "bytes": 1086,
+      "sha256": "20d85106721d50f113a0122969556134e06159643a05ccf087e4ed3183bc737c"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.pom",
+      "bytes": 3907,
+      "sha256": "69bf4a69b0936055127ec2ecf198bd9841a3988417466d21febe626f1bae2e21"
+    },
+    {
+      "path": "package/android/proguard-rules.pro",
+      "bytes": 46,
+      "sha256": "ecb9f58ba3fb5ad6f52ca3c9c4eb9cbf2cdb7d3a43b5840b900279ce9254b24a"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24-sources.jar.sha1",
+      "bytes": 40,
+      "sha256": "947a2a1e8c2252c2e5dac9e77e4efcb12dc9ecbcd0c7404687f1c51e3a0a52c1"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.aar.sha1",
+      "bytes": 40,
+      "sha256": "82b60ea8fe78a9942a802fa7104d664549c09ac7407ced330751e2bcddfac4f6"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.module.sha1",
+      "bytes": 40,
+      "sha256": "f8164cfbd3d489e5da97b4674cc35794a94eaa7d9d875db56cbcfec0e927597d"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.pom.sha1",
+      "bytes": 40,
+      "sha256": "2ca50a36e1bc35cdaf58a6dfce35d419670fbca5b05325f87ede692df5fd5d32"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/maven-metadata.xml.sha1",
+      "bytes": 40,
+      "sha256": "0cb131e8956a1d7b8ff9f6cd988adaea35477b43a081b35cb7bf658450badcca"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24-sources.jar.sha256",
+      "bytes": 64,
+      "sha256": "610c371000ef6c4513c99b544f08077bd695948ad9a8b522f0e16f6b5437f9ca"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.aar.sha256",
+      "bytes": 64,
+      "sha256": "8ec7f90ad0d378dab7c34c3cf14e6386490b94ddae45b8a2baa22a7335d1f4ca"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.module.sha256",
+      "bytes": 64,
+      "sha256": "64f7fed8043058bae305e3b4e391de2f3e7356466c9e8a6103c161c49a5c8e15"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.pom.sha256",
+      "bytes": 64,
+      "sha256": "cce7a05c2abb543c1d954993d6644227cf61ae34823d4e7dca560a2de38de470"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/maven-metadata.xml.sha256",
+      "bytes": 64,
+      "sha256": "4d1733e3d0023cc83c3cf6227c1a2fc51220800dc44774df72dc30f636d0ea95"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24-sources.jar.sha512",
+      "bytes": 128,
+      "sha256": "985ac2c25e43096de4ff5cc00bfc745c9cd61b7dd081206f93a1836f69aeb4e1"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.aar.sha512",
+      "bytes": 128,
+      "sha256": "bed67b1bc7134cc183d1d41b27426c0f7ca25a5c7b8d6dc82031f8c2555d4ea2"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.module.sha512",
+      "bytes": 128,
+      "sha256": "56686387519aa3d3483e418b9eabddbb0b240a4f64269fb171fbe84b92f35fdc"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/57.0.24/expo.modules.notifications-57.0.24.pom.sha512",
+      "bytes": 128,
+      "sha256": "c30896bcbdacd4463c53200f3435c0c59ef84275cf580a42c1df0a0439b1b074"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/maven-metadata.xml.sha512",
+      "bytes": 128,
+      "sha256": "3e6faa1042e3bec35078921de23402167b571fe37a9e6f28c816b178ad258fef"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Background/BackgroundEventTransformer.swift",
+      "bytes": 1699,
+      "sha256": "060c413ea6b8e5980e9fbc0d4d76eb1f3b62258c99c425d26c96b1cda566d160"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Background/BackgroundModule.swift",
+      "bytes": 1609,
+      "sha256": "a112deff453c71e8dbceff966dfdb5f44a52b4d62212f8de39228eb0d0f1149d"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Badge/BadgeModule.swift",
+      "bytes": 911,
+      "sha256": "a4f7f380225fb5feaf332ec37ad9166a756db7c06380757ab587656525aac351"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Categories/CategoriesModule.swift",
+      "bytes": 2837,
+      "sha256": "8e7f37e4681e198acdb5061d9b335acb449c92cfeff5b6f730fc2d7d2b68c9e6"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/DateComponentsSerializer.swift",
+      "bytes": 1304,
+      "sha256": "05db15cc478064981c90d4c98f1e999866245ea7f918f46e1ab8d58ecbc5d667"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Emitter/EmitterModule.swift",
+      "bytes": 1896,
+      "sha256": "8e8556ba36b9934f0a2f0d35ec8c84389f1bc8061e66eb48245a71a129f5e23a"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Permissions/ExpoNotificationsPermissionsRequester.swift",
+      "bytes": 3999,
+      "sha256": "3d992939504d2c796502250e4221871faeeaa80a2892b061b24eabbbf75c4816"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Handler/HandlerModule.swift",
+      "bytes": 3157,
+      "sha256": "907526d896e9d672227cc806661e2cef28e7c82092687288d1615dce8eddbebb"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/NotificationCenterManager.swift",
+      "bytes": 6849,
+      "sha256": "0c7b1a7b05cfe127d14a775895bf2a71b41d77aaafdc47c6397ed306c450ea6a"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/NotificationRecords.swift",
+      "bytes": 13250,
+      "sha256": "5bfb23f4d82577ef7e4c67c289d14529d1c6b522265a4f62ea275489e8aaaf08"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/NotificationsAppDelegateSubscriber.swift",
+      "bytes": 1028,
+      "sha256": "121e4ec8ab6e030e196005e4e209696c4893831bb98b6eb118cfc5bc8dd2b0ff"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Background/NotificationsBackgroundTaskConsumer.swift",
+      "bytes": 1182,
+      "sha256": "645866ad947c017cdce0ecb90ecd5a3e74d5ed2cf8ab5e656cc6cf1b0ce32442"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/NotificationSerializer.swift",
+      "bytes": 366,
+      "sha256": "203c30925fbc7ba082701a438f7acc9b9f81330e13c3633e66e3655eb33ce17f"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Permissions/PermissionsModule.swift",
+      "bytes": 1949,
+      "sha256": "4dcb8382bbeb9177109df774c5bcb6ead8911f8196cbe0b564ffb4148fb13b4e"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Presenting/PresentationModule.swift",
+      "bytes": 1201,
+      "sha256": "98413263974a23263212d203e5ec5455ceec6dab8a2f781c5105828e8115e268"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/PushToken/PushTokenModule.swift",
+      "bytes": 2088,
+      "sha256": "4749667ca17a98194a3876f845394e92ef312e8c28d828d052dbe1a1d3bb8870"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Scheduling/SchedulerModule.swift",
+      "bytes": 5917,
+      "sha256": "e729b011df1ab27f501325699a9df35c8027628824a9ebffc1076da3fe7cf510"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/ServerRegistration/ServerRegistrationModule.swift",
+      "bytes": 6436,
+      "sha256": "63813368a740d7fe39de7a7e3980dfa4c17f68dc6d20a1e3c81dee7a92ff6dd0"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/Handler/SingleNotificationHandlerTask.swift",
+      "bytes": 1728,
+      "sha256": "16bd8e175b6661ab34fb13670f2d0a7e83ec934628ccead1794eefca9186995a"
+    },
+    {
+      "path": "package/ios/ExpoNotifications/Notifications/TriggerRecords.swift",
+      "bytes": 11999,
+      "sha256": "b586edcd58fd1397f061b6d0323697c8aee9d6c5affdd2c7f12cd065a1d266d2"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.d.ts",
+      "bytes": 231,
+      "sha256": "d767dbaebc77489011979a5189c9b9e0227fa5aedecf7ad00ebe3ad44feb3602"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.native.d.ts",
+      "bytes": 254,
+      "sha256": "2f1b23e2c09050eb4e52fde9a276d8bf17d8a6c8151fb7b94c097177f611a911"
+    },
+    {
+      "path": "package/src/BackgroundNotificationTasksModule.native.ts",
+      "bytes": 275,
+      "sha256": "343f9f3168a5fac5d93dc6e1885de814b63209cdd8d9bcd6f1911c51962e4bc6"
+    },
+    {
+      "path": "package/src/BackgroundNotificationTasksModule.ts",
+      "bytes": 188,
+      "sha256": "bdfac10d2da3245e1581c91b15ea055a8d313448aeef9bf5309fe8ca28cb544e"
+    },
+    {
+      "path": "package/build/BackgroundNotificationTasksModule.types.d.ts",
+      "bytes": 332,
+      "sha256": "c29c463fb1cc56a7ad9c448110c9f0446c6bb5667a30838b0de341efe55ba332"
+    },
+    {
+      "path": "package/src/BackgroundNotificationTasksModule.types.ts",
+      "bytes": 260,
+      "sha256": "a957784fcf39269689d50cdcd22ffc9314d0f2722a1a2531b21b37a5e9c4d358"
+    },
+    {
+      "path": "package/build/utils/backoff.d.ts",
+      "bytes": 374,
+      "sha256": "c00eed151d100b06aa4ca0638a18e174ae1e52b61cff095f0989ece3dd12242c"
+    },
+    {
+      "path": "package/src/utils/backoff.ts",
+      "bytes": 1270,
+      "sha256": "796423dca78b75e300cd94ac6035fe56a395c4b1de26f37f402c62eab9ffbffd"
+    },
+    {
+      "path": "package/build/BadgeModule.d.ts",
+      "bytes": 159,
+      "sha256": "45a3d8215f57b2b0358051a09835339036ba1bbb4def761eaed5c3334cb1620d"
+    },
+    {
+      "path": "package/build/BadgeModule.native.d.ts",
+      "bytes": 166,
+      "sha256": "d334218fd5c2830c75ebb3b1d934a7192f79c7930555e87949878201fe39c165"
+    },
+    {
+      "path": "package/src/BadgeModule.native.ts",
+      "bytes": 471,
+      "sha256": "d6d34eeec334edda813b171f2ef1ce18ba0094843ec50bf0a129175fd5cbe709"
+    },
+    {
+      "path": "package/src/BadgeModule.ts",
+      "bytes": 146,
+      "sha256": "25b98b987f0a1ef1d327e9efef33620e553211c22609eab55334ae1282df21c4"
+    },
+    {
+      "path": "package/build/BadgeModule.types.d.ts",
+      "bytes": 497,
+      "sha256": "bfcac95e540fbbb6c1099c8e6bcac44e994138b0ae7af8f72d4b7c60e2aa9195"
+    },
+    {
+      "path": "package/src/BadgeModule.types.ts",
+      "bytes": 437,
+      "sha256": "ed0009e86ab8603ef64f423d352926ea879247c970ab724413d92f36de9371ef"
+    },
+    {
+      "path": "package/build/BadgeModule.web.d.ts",
+      "bytes": 169,
+      "sha256": "4db59720e972fcefe7a59fa58dcd7d4d036a01b09d107cdb1f59bea88bb17e0b"
+    },
+    {
+      "path": "package/src/BadgeModule.web.ts",
+      "bytes": 764,
+      "sha256": "9aef56ee029a549e2087f7b95cce8ba39e24198ffcf7c77be032c471a1e5ff8a"
+    },
+    {
+      "path": "package/build/cancelAllScheduledNotificationsAsync.d.ts",
+      "bytes": 356,
+      "sha256": "8442a72b4a36e167f1331162e595b0d25d1b1f056f3378ee4b07aa86870090b0"
+    },
+    {
+      "path": "package/src/cancelAllScheduledNotificationsAsync.ts",
+      "bytes": 654,
+      "sha256": "7c1227cf79af32b3ecd387fc5c1282d3db1b1306e0775c92d9b11f103b7e51e6"
+    },
+    {
+      "path": "package/build/cancelScheduledNotificationAsync.d.ts",
+      "bytes": 1009,
+      "sha256": "611660b526c4d887d6a7047d2b01669a0eeaef7eedf1250677c476a1a5146867"
+    },
+    {
+      "path": "package/src/cancelScheduledNotificationAsync.ts",
+      "bytes": 1309,
+      "sha256": "34f7248d1c7cae026f24fa843359743f81cdd8320c4c98310bb4115b566597d1"
+    },
+    {
+      "path": "package/build/deleteNotificationCategoryAsync.d.ts",
+      "bytes": 626,
+      "sha256": "ec4465d63dbc05bf4e21403ef13d7f50836a370cb23f6c03e75a64f80c654674"
+    },
+    {
+      "path": "package/src/deleteNotificationCategoryAsync.ts",
+      "bytes": 952,
+      "sha256": "1bdf515ed509b2b43ad1caea882a81ac4593c5c27429a166ad47a427c0c1c676"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.android.d.ts",
+      "bytes": 158,
+      "sha256": "a6fd393e281c327875988fca0603c4f4ad8c8f87b176be51c4604abdcd6588eb"
+    },
+    {
+      "path": "package/src/deleteNotificationChannelAsync.android.ts",
+      "bytes": 465,
+      "sha256": "15f926b49e9d41db3ef0ec907145243356197d4fd15ecccf0c2318b7c524856c"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelAsync.d.ts",
+      "bytes": 396,
+      "sha256": "e99870b419374fa5d9144617b6112e65aea65f2875d719ca7aaa28d1df6743f8"
+    },
+    {
+      "path": "package/src/deleteNotificationChannelAsync.ts",
+      "bytes": 417,
+      "sha256": "570437313257c3a030e303709fe65073210d5c6a16a72364e37bb108f720d136"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.android.d.ts",
+      "bytes": 166,
+      "sha256": "de5ff6caac4c92f3962b14444b32db0b4b09c1bbd6e576ee841ef1c449a41cf6"
+    },
+    {
+      "path": "package/src/deleteNotificationChannelGroupAsync.android.ts",
+      "bytes": 501,
+      "sha256": "a273f00cc67a85a63d7c960645858812d7853a58494b72a7e189c887d876cfce"
+    },
+    {
+      "path": "package/build/deleteNotificationChannelGroupAsync.d.ts",
+      "bytes": 473,
+      "sha256": "4428bc8467ff3029ea486177ca46e45a485abb45860322e31fb5b39e97033734"
+    },
+    {
+      "path": "package/src/deleteNotificationChannelGroupAsync.ts",
+      "bytes": 489,
+      "sha256": "d4c0b57dbd85e13ce320f437435487abef6289f63dbac8399d13f4dbf7d5cba7"
+    },
+    {
+      "path": "package/build/DevicePushTokenAutoRegistration.fx.d.ts",
+      "bytes": 688,
+      "sha256": "a99842d3efcf548b1b0b9395f2f0f65ab0c49b20a0b8e610e38dfc5b47ee8d53"
+    },
+    {
+      "path": "package/src/DevicePushTokenAutoRegistration.fx.ts",
+      "bytes": 5300,
+      "sha256": "48afd2a1fc8bc489b0db05e2c858dcc83118599d0f3215f3d2faa819f1ffa757"
+    },
+    {
+      "path": "package/build/dismissAllNotificationsAsync.d.ts",
+      "bytes": 396,
+      "sha256": "7a4cd86888940948b0e60ae88692315ee8116035b26a0e731fc0a8379b22a508"
+    },
+    {
+      "path": "package/src/dismissAllNotificationsAsync.ts",
+      "bytes": 684,
+      "sha256": "d569ed79b6680ac029adb84f7e17264fcb77235013b4ee9437d91af21e6e8a34"
+    },
+    {
+      "path": "package/build/dismissNotificationAsync.d.ts",
+      "bytes": 577,
+      "sha256": "c18a86df5cc54f5e73f9218aa93d756ada7a70cb06ed526f1e2eb4c289a51413"
+    },
+    {
+      "path": "package/src/dismissNotificationAsync.ts",
+      "bytes": 879,
+      "sha256": "b9bc9957830598c7851175047cf66b2536ca9cb6cbb0148beebb207fb366e321"
+    },
+    {
+      "path": "package/build/getAllScheduledNotificationsAsync.d.ts",
+      "bytes": 431,
+      "sha256": "bbe0f22efbcda87d4dc7e093b78303d6c689d143295bf40643275481cd033fb9"
+    },
+    {
+      "path": "package/src/getAllScheduledNotificationsAsync.ts",
+      "bytes": 856,
+      "sha256": "b76c907ebc3cc8cb05e015e5002ea7809323b67742632e3ee5fa2965e24b75a0"
+    },
+    {
+      "path": "package/build/getBadgeCountAsync.d.ts",
+      "bytes": 533,
+      "sha256": "91f59075797f14dd102f75d3b3a9e0774e2d94cbca51d54de7a6f6e7341a8107"
+    },
+    {
+      "path": "package/src/getBadgeCountAsync.ts",
+      "bytes": 759,
+      "sha256": "e9768bf0acf25ce71338057cf9eb055e42c0fca86ceb2d5cf283b1e31de1a1da"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.d.ts",
+      "bytes": 404,
+      "sha256": "4a5afafb094144877e7a8d0998aa51193421bc4a241b7e2329779ae8cff425cf"
+    },
+    {
+      "path": "package/src/getDevicePushTokenAsync.ts",
+      "bytes": 1213,
+      "sha256": "0b5d2c3eb3f93bedeabd0c7efdbfbb59323dc5274da938e86b4a58e588751939"
+    },
+    {
+      "path": "package/build/getDevicePushTokenAsync.web.d.ts",
+      "bytes": 189,
+      "sha256": "44a670592a690c09ebd6e90b21dd227aba87783bbe18501870cd5daff615b682"
+    },
+    {
+      "path": "package/src/getDevicePushTokenAsync.web.ts",
+      "bytes": 4505,
+      "sha256": "f54233313f90bfcdbb91ed37680e64b08de0578c8dafbb66fd229c818c0278d0"
+    },
+    {
+      "path": "package/build/getExpoPushTokenAsync.d.ts",
+      "bytes": 1782,
+      "sha256": "df2952ebbfec5e0a69f834eb5b21c0fcca49d4c114d4077cd49eb28b38e16be7"
+    },
+    {
+      "path": "package/src/getExpoPushTokenAsync.ts",
+      "bytes": 7638,
+      "sha256": "efaa142bc2a669fd71330d1396b3ddb55597f20c340d4f06b35833bdcea50e58"
+    },
+    {
+      "path": "package/build/getNextTriggerDateAsync.d.ts",
+      "bytes": 1285,
+      "sha256": "23a183d230af060655900aa46791f6f6d45d1f330bea83a364986f6c2c89d954"
+    },
+    {
+      "path": "package/src/getNextTriggerDateAsync.ts",
+      "bytes": 1646,
+      "sha256": "ab22c81f00080dd83b641b1cf992215c7b74c6276ad2dcb4046a6c27d37a1a7a"
+    },
+    {
+      "path": "package/build/getNotificationCategoriesAsync.d.ts",
+      "bytes": 527,
+      "sha256": "11fdcc23b690d82de322db7902d1e23b765fbc8a5b895fa854c9eea74ba2ded7"
+    },
+    {
+      "path": "package/src/getNotificationCategoriesAsync.ts",
+      "bytes": 841,
+      "sha256": "bc9412b3ddde0612222d185dd8c18b17b150c112071b52e4299b33c3a1e4ad07"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.android.d.ts",
+      "bytes": 253,
+      "sha256": "5c4a335ea7175bbff136c9d02573db3e66b337d8f769d215a5ff14ad0bc385c8"
+    },
+    {
+      "path": "package/src/getNotificationChannelAsync.android.ts",
+      "bytes": 557,
+      "sha256": "759c5b5c8e41ad8b55ab5b9fe693c41af4f51bc347081d6b0ba6628fa7c9ae5e"
+    },
+    {
+      "path": "package/build/getNotificationChannelAsync.d.ts",
+      "bytes": 671,
+      "sha256": "e6334962d5051391ee3846df3d3946d3955ff8a6e3afc1a25e585c2f733db7b1"
+    },
+    {
+      "path": "package/src/getNotificationChannelAsync.ts",
+      "bytes": 715,
+      "sha256": "454fb38acfac77397c41aab9fefa68ee7aa4fcef127917a0f21d31ff7aff73fa"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.android.d.ts",
+      "bytes": 276,
+      "sha256": "67824acd90b91ccb53aa072757255cc2cec83bf15aa13d4ee0eee1863096293c"
+    },
+    {
+      "path": "package/src/getNotificationChannelGroupAsync.android.ts",
+      "bytes": 609,
+      "sha256": "45798f13bb8fb2d09797a723ec4deb0840faeed90e23cbaa9c697b9e23ba37c3"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupAsync.d.ts",
+      "bytes": 729,
+      "sha256": "97b0fa91626d8526ba681b75a84848c3e29743e0ba2d0815eb52a09ad8dbbfce"
+    },
+    {
+      "path": "package/src/getNotificationChannelGroupAsync.ts",
+      "bytes": 768,
+      "sha256": "975ad347e0f88d331693e88589d7f9aa12f2883025a7eaa902f5d1ad6f986985"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.android.d.ts",
+      "bytes": 258,
+      "sha256": "e16f78a4d0eebc386d212a6adf862038e7180a2fe7e028f4256663a73102818d"
+    },
+    {
+      "path": "package/src/getNotificationChannelGroupsAsync.android.ts",
+      "bytes": 581,
+      "sha256": "41402d4cb9106ed5b922fc5d54703028b8dba066be00210a02e1495ad34f6d68"
+    },
+    {
+      "path": "package/build/getNotificationChannelGroupsAsync.d.ts",
+      "bytes": 540,
+      "sha256": "18bb3c68c2c94b48a37ae3bb5e4e1de3ab1c9471d97aa067babfcfff06e1c72a"
+    },
+    {
+      "path": "package/src/getNotificationChannelGroupsAsync.ts",
+      "bytes": 572,
+      "sha256": "36541c71fdf8c388b2aa9bc262694d0371c33f8635806d802c187441b487aad2"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.android.d.ts",
+      "bytes": 233,
+      "sha256": "0300eef3a1f27fac7303769c868b17c0a334e6ef54aafaa53d23c7c8abf9bd41"
+    },
+    {
+      "path": "package/src/getNotificationChannelsAsync.android.ts",
+      "bytes": 534,
+      "sha256": "26c8dd336760df8ee3f36d5c3638c983aa522f7647075be9757b370122babf5a"
+    },
+    {
+      "path": "package/build/getNotificationChannelsAsync.d.ts",
+      "bytes": 498,
+      "sha256": "97d159c9829cf815b1777731dbaad1026a9efda707d11c37f7f6d8de8d6d655b"
+    },
+    {
+      "path": "package/src/getNotificationChannelsAsync.ts",
+      "bytes": 535,
+      "sha256": "6effebea766509c2c14650f7ebbf30231399d988b979d2a07394d2cafa9884d7"
+    },
+    {
+      "path": "package/build/getPresentedNotificationsAsync.d.ts",
+      "bytes": 623,
+      "sha256": "7d8395194c59d42797b1121f6223817c289e3886baec27dbbfcb16d850612733"
+    },
+    {
+      "path": "package/src/getPresentedNotificationsAsync.ts",
+      "bytes": 1044,
+      "sha256": "a9febfa6bf61d3d3cb71c077bc4938aa97bdcc6d750a84b1a478ad44e8937537"
+    },
+    {
+      "path": "package/build/hasValidTriggerObject.d.ts",
+      "bytes": 212,
+      "sha256": "b521bb9452ccf1947a6274c64892bf7fb7dc289e1e2e474bc5177c20fe58cfa6"
+    },
+    {
+      "path": "package/src/hasValidTriggerObject.ts",
+      "bytes": 183,
+      "sha256": "c0bd653e67b788d5e123667dd6d77a60d21d2e5d2a15c576e2db1a84ed5fa305"
+    },
+    {
+      "path": "package/build/index.d.ts",
+      "bytes": 2732,
+      "sha256": "ee6f07c6beaf027626df04fdecbd5a5279a6a25bc1c892330f98194eb33f913a"
+    },
+    {
+      "path": "package/plugin/build/index.d.ts",
+      "bytes": 158,
+      "sha256": "8c36a69ced0aed7a99b00d7bdb5a6f0c2bbbb2c84b488ac2c50de8418d15b794"
+    },
+    {
+      "path": "package/plugin/index.d.ts",
+      "bytes": 35,
+      "sha256": "4f1577365cc095fec3b9283ae10873c8807dcead476330b8ae817d59b2fa2e94"
+    },
+    {
+      "path": "package/plugin/src/index.ts",
+      "bytes": 160,
+      "sha256": "2144c2aba04cff279436daaedb439cfe52586b4552446963db92c612f230e13b"
+    },
+    {
+      "path": "package/src/index.ts",
+      "bytes": 3177,
+      "sha256": "2effc43c0f08b589d75f5e9b912b0c0ed42312411d5e840a98ec0e618c086aca"
+    },
+    {
+      "path": "package/build/utils/mapNotificationResponse.d.ts",
+      "bytes": 4575,
+      "sha256": "ac54c30364f51758001cf4fcc77f37129c1834d1013b14b6c9fa3e51209fe48a"
+    },
+    {
+      "path": "package/src/utils/mapNotificationResponse.ts",
+      "bytes": 2544,
+      "sha256": "da43fc2acde7b979ea6987c51063fe4b304c0bb3630406627fc4223a2c313cb2"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.d.ts",
+      "bytes": 267,
+      "sha256": "5f1da4438399022291f97b6684145b81b7ca89c9857a248f5adf4321401894f4"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.native.d.ts",
+      "bytes": 234,
+      "sha256": "76d3dab90498c32beb9b5bc212d2c4bbb9adc8c8cffafbc6be475cd64a95a2e1"
+    },
+    {
+      "path": "package/src/NotificationCategoriesModule.native.ts",
+      "bytes": 255,
+      "sha256": "ed15bb07c07ee158fa4ad017d9ada2525ceed48a1238643e969e558e50f35606"
+    },
+    {
+      "path": "package/src/NotificationCategoriesModule.ts",
+      "bytes": 571,
+      "sha256": "781804250eab74e1364813dd9359a694ac27904cabea1b48900c5c354108b19c"
+    },
+    {
+      "path": "package/build/NotificationCategoriesModule.types.d.ts",
+      "bytes": 866,
+      "sha256": "ac7f39798024459dc2cd79af8128719d0714018122ec5c2b2c94707ade9ebc0f"
+    },
+    {
+      "path": "package/src/NotificationCategoriesModule.types.ts",
+      "bytes": 798,
+      "sha256": "20b22b3545ba14aea24be000add29f48f0a6610dd22d2cc1f162973832b4a204"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.d.ts",
+      "bytes": 239,
+      "sha256": "7b45fe4426aeae7ddc7d91f9fe64afd72bb86f2fc4d11d2a00f2d5e82b502bdc"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.native.d.ts",
+      "bytes": 246,
+      "sha256": "36fcaf31e5b76575d54b0570ee5453a7ba5766ccf5402551fcea2f8261813a41"
+    },
+    {
+      "path": "package/src/NotificationChannelGroupManager.native.ts",
+      "bytes": 267,
+      "sha256": "1ef7678ef71cc310e48ba6119dd6b54940c99fb8ff8df6551f5b3f268c62e61b"
+    },
+    {
+      "path": "package/src/NotificationChannelGroupManager.ts",
+      "bytes": 206,
+      "sha256": "3406e9331d76a338693f863dcf3fd4e972f6029f8375ed33b39a185f83278161"
+    },
+    {
+      "path": "package/build/NotificationChannelGroupManager.types.d.ts",
+      "bytes": 1167,
+      "sha256": "7067554473ee593cc0c79eb5bb6990b9ed71b2a5796ef09c469c1462fe02b625"
+    },
+    {
+      "path": "package/src/NotificationChannelGroupManager.types.ts",
+      "bytes": 1094,
+      "sha256": "aab68206c2f2f0c2a09ad0a02193190f4a94b2206434a4bdcec5c07d8671b232"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.d.ts",
+      "bytes": 219,
+      "sha256": "47f9656b134e8656bc18e604ad06ac6d2122c90eb51f94c1444c4d91735cebd8"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.native.d.ts",
+      "bytes": 226,
+      "sha256": "e731cb11b76f99b1b933117495466a7a634872d5a7a10edbe66eb2fb6a80cfee"
+    },
+    {
+      "path": "package/src/NotificationChannelManager.native.ts",
+      "bytes": 243,
+      "sha256": "d84f6d90c29a259a3dc934d5abd9808f7078a228ab31f18954c7467d07ea8fce"
+    },
+    {
+      "path": "package/src/NotificationChannelManager.ts",
+      "bytes": 191,
+      "sha256": "b4b9d04b8ec9dc2d4576522a3072e63e57fe4206a8a82dc922ad4408e8160835"
+    },
+    {
+      "path": "package/build/NotificationChannelManager.types.d.ts",
+      "bytes": 2984,
+      "sha256": "e70a224bdb0c2c5f0889b2158040383ba57ce4e39792ae091c53877a36e712fa"
+    },
+    {
+      "path": "package/src/NotificationChannelManager.types.ts",
+      "bytes": 3148,
+      "sha256": "74f756d44a73002c756670c38e4415211927af5406249da43f0775c995978929"
+    },
+    {
+      "path": "package/build/NotificationPermissions.d.ts",
+      "bytes": 2430,
+      "sha256": "415f84fa9c6aed30e2ff3eb7f7b7ddade4ef903536a152589bb9443d50866562"
+    },
+    {
+      "path": "package/src/NotificationPermissions.ts",
+      "bytes": 3161,
+      "sha256": "a17af40506e4ce4eb9413b614f192dec3d9775db5b782caf9d108ef7351f186c"
+    },
+    {
+      "path": "package/build/NotificationPermissions.types.d.ts",
+      "bytes": 2957,
+      "sha256": "05c5e8cd0224567b3e827856ccc43e12ad5f813f67991503de7680860fc9c616"
+    },
+    {
+      "path": "package/src/NotificationPermissions.types.ts",
+      "bytes": 2742,
+      "sha256": "c3ab23d82e583773fb40ca9e8f25a69f7f1f48af5bf2d8a9f5473324965d07bd"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.d.ts",
+      "bytes": 231,
+      "sha256": "36e6462d66293680932b22f0d3c44d4595872a5cdd8f557282526ef2b595258f"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.native.d.ts",
+      "bytes": 238,
+      "sha256": "05786587773e8099b5dec4b1df211cec1e1ce2fa80b99ce688b4855627fdebf8"
+    },
+    {
+      "path": "package/src/NotificationPermissionsModule.native.ts",
+      "bytes": 259,
+      "sha256": "ad99122bcc97ee49d95f493fd115e6f7b54750bdb7933b991b6eeb50a152d7f3"
+    },
+    {
+      "path": "package/src/NotificationPermissionsModule.ts",
+      "bytes": 2623,
+      "sha256": "c1fd0551f09e02a306befe8153881a6b79f2bb30a6007638c383991e1d461cf3"
+    },
+    {
+      "path": "package/build/NotificationPermissionsModule.types.d.ts",
+      "bytes": 519,
+      "sha256": "158b111b73847b12b7eee59970d35688dc1e6245ddd84e675ea7dfd6ef45b154"
+    },
+    {
+      "path": "package/src/NotificationPermissionsModule.types.ts",
+      "bytes": 465,
+      "sha256": "23c7ae420ab241f4ba25db5a8019fd95618c284f2afe0833606edd7c4ba6a5e0"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.d.ts",
+      "bytes": 223,
+      "sha256": "054b95c77d6a1e015805399cf92e86dc5d15cc46739641ca5d079e8d562a79f3"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.native.d.ts",
+      "bytes": 230,
+      "sha256": "d300a66c00e5a439330e0dc90a3ec24b1a5c7b6e920705aad4fb7b2390f306c3"
+    },
+    {
+      "path": "package/src/NotificationPresenterModule.native.ts",
+      "bytes": 241,
+      "sha256": "0617fb8d2a94e95c9bc564e33eefd475102ac4dfd5415008950e4ca993fb2885"
+    },
+    {
+      "path": "package/src/NotificationPresenterModule.ts",
+      "bytes": 194,
+      "sha256": "147a5dfc77da62374614ce921347004abf8a81408a1ce700dfa38fcd9c92bf82"
+    },
+    {
+      "path": "package/build/NotificationPresenterModule.types.d.ts",
+      "bytes": 451,
+      "sha256": "240f78b9f980cfe53649508c20b5b64e917b10201676036ad4a0e96c086bd05c"
+    },
+    {
+      "path": "package/src/NotificationPresenterModule.types.ts",
+      "bytes": 384,
+      "sha256": "a2056a86220a3b69c46f459bdc39dfff4fa4b5305c813eea43ef095293de7f2f"
+    },
+    {
+      "path": "package/build/Notifications.types.d.ts",
+      "bytes": 29468,
+      "sha256": "d10a7141364b375e8d1a55fc1510efe08574d5e20a55c57302012289fd0fdac0"
+    },
+    {
+      "path": "package/src/Notifications.types.ts",
+      "bytes": 29331,
+      "sha256": "7b8bc17484007fbeade289b4b5831d96614fb2d63fdbb65c8f557439bd54b650"
+    },
+    {
+      "path": "package/build/NotificationScheduler.d.ts",
+      "bytes": 211,
+      "sha256": "733f97f4d49ead0b6580aad8da3ab229c715559b0334196db548c47012cbda25"
+    },
+    {
+      "path": "package/build/NotificationScheduler.native.d.ts",
+      "bytes": 218,
+      "sha256": "7091ec2eb8d01e02f0eba6237319f5e080d7b203e10b83c97c748d1027b851e0"
+    },
+    {
+      "path": "package/src/NotificationScheduler.native.ts",
+      "bytes": 235,
+      "sha256": "faa7f9b5e47f55a2e6186ff01726ea8c3ee538d69e7cb4373b8dee2cd240d8bb"
+    },
+    {
+      "path": "package/src/NotificationScheduler.ts",
+      "bytes": 188,
+      "sha256": "25194c994eed3930859ba12aa9055e8fcbb0d80513487f9fa02e7c4cbb0d5290"
+    },
+    {
+      "path": "package/build/NotificationScheduler.types.d.ts",
+      "bytes": 2333,
+      "sha256": "d1167618e4e270d0ee157d9b871501bbb5b1084b97f905dd6892f63a5f6f344e"
+    },
+    {
+      "path": "package/src/NotificationScheduler.types.ts",
+      "bytes": 2286,
+      "sha256": "79b3b03e08e9b182553a75c5941a36ac73834e8beaf05b0268b6f3753a33eb9a"
+    },
+    {
+      "path": "package/build/NotificationsEmitter.d.ts",
+      "bytes": 5241,
+      "sha256": "a889e7922977008170b1415d208f2661679ee24614b461ab41e1b8bd8216cc5d"
+    },
+    {
+      "path": "package/src/NotificationsEmitter.ts",
+      "bytes": 7218,
+      "sha256": "605bd0042493ce586290189c67f7e8bb61cd05014c2876892f9146521da358dc"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.d.ts",
+      "bytes": 219,
+      "sha256": "cfe819aea14a48117b58232a5cc4def916358c6968f6fb8ca53b72dd4a0fe36a"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.native.d.ts",
+      "bytes": 226,
+      "sha256": "0eaa3b64226e1bb5d692a71eb1e66dad02628513f7488e35c8567358d01447f5"
+    },
+    {
+      "path": "package/src/NotificationsEmitterModule.native.ts",
+      "bytes": 237,
+      "sha256": "c0d91c52e21dd90aba56c120e96209434ecc9b3299454fbdf7349955548bb3fa"
+    },
+    {
+      "path": "package/src/NotificationsEmitterModule.ts",
+      "bytes": 515,
+      "sha256": "3d8933248f76cd7966ed203ca99c322ab222e48bffdf0252c4d5002b35add9e9"
+    },
+    {
+      "path": "package/build/NotificationsEmitterModule.types.d.ts",
+      "bytes": 380,
+      "sha256": "6bdc52db71966e983eaf562594637de2672ca7a97998e47b4cfba9666fba173c"
+    },
+    {
+      "path": "package/src/NotificationsEmitterModule.types.ts",
+      "bytes": 316,
+      "sha256": "4fa92d23c1a4519452858b13ffc6cd0659af069ca35b2a8daa90baf6df688c14"
+    },
+    {
+      "path": "package/build/NotificationsHandler.d.ts",
+      "bytes": 2851,
+      "sha256": "49ee99717c48b35821bf3a7031ff76f2c5274ea7a4fbe49dec53ee0c9b9fa7b4"
+    },
+    {
+      "path": "package/src/NotificationsHandler.ts",
+      "bytes": 5290,
+      "sha256": "fae01299bee9fe1e4739bb73af58442f431dbf6e1c44aef4cecf49b02ec352d3"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.d.ts",
+      "bytes": 219,
+      "sha256": "de8a98fefe44f7a1b2bb873296bea0e88a768a2a05681f91c5409e3b1a6a4515"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.native.d.ts",
+      "bytes": 226,
+      "sha256": "22bce5e6c90a50c82165e7293768d921faac8e4f3558119e8c82daae83e420a1"
+    },
+    {
+      "path": "package/src/NotificationsHandlerModule.native.ts",
+      "bytes": 243,
+      "sha256": "0c2b196eec807c1e5ade9f8f6815e44fc7bde6d218a412d0d44214ddeea8d267"
+    },
+    {
+      "path": "package/src/NotificationsHandlerModule.ts",
+      "bytes": 520,
+      "sha256": "cd7dcae8f7a4d5e6c87a14886063052e9df66e3b6c2c9234a10f9dc7275f60ae"
+    },
+    {
+      "path": "package/build/NotificationsHandlerModule.types.d.ts",
+      "bytes": 380,
+      "sha256": "39c244dde6d98ac74bffc5f63d1086ac53e9602e811b78e587fed2d8cb9ef4b4"
+    },
+    {
+      "path": "package/src/NotificationsHandlerModule.types.ts",
+      "bytes": 330,
+      "sha256": "4c5dd8d9e0e11263ca87ffcbcb5be54d10bfa6d500fea7aba2e0c8b19d911172"
+    },
+    {
+      "path": "package/build/PushTokenManager.d.ts",
+      "bytes": 191,
+      "sha256": "330534ba7daf8780d1e51538c42a7ccfea52ab200b97de0d8b3be69175a35a3f"
+    },
+    {
+      "path": "package/build/PushTokenManager.native.d.ts",
+      "bytes": 198,
+      "sha256": "531c2347b0b34f194b5577f8b6c049a915b7a629bd16a3408f8d91a5ae527fc3"
+    },
+    {
+      "path": "package/src/PushTokenManager.native.ts",
+      "bytes": 215,
+      "sha256": "f8c401870987728657b6278963de05aef0551f6ebb5099cfcdf6fe75ab3304da"
+    },
+    {
+      "path": "package/src/PushTokenManager.ts",
+      "bytes": 625,
+      "sha256": "0e7d1ad177061d4b7253a4660a941e39bbc984651cee164d5a30994fe5768e58"
+    },
+    {
+      "path": "package/build/PushTokenManager.types.d.ts",
+      "bytes": 444,
+      "sha256": "a4ffd01054d1841751d7328e3c3d2a2a5bbb440b9f5b9bc783c0c656dd3d08a5"
+    },
+    {
+      "path": "package/src/PushTokenManager.types.ts",
+      "bytes": 367,
+      "sha256": "5049adf4a02be671a1c6fe10365c3f9cb0a325dbc8477acb36170e499504696e"
+    },
+    {
+      "path": "package/build/registerTaskAsync.d.ts",
+      "bytes": 3444,
+      "sha256": "ff9e59861ae621547809698b81aa3f3beacf5272c88b913e4fb6dc4ecf0c8bfe"
+    },
+    {
+      "path": "package/src/registerTaskAsync.ts",
+      "bytes": 3963,
+      "sha256": "f43538439c9c8334305b368ccc7b8fdc10d4e89664dad71a782794d6f3873474"
+    },
+    {
+      "path": "package/build/scheduleNotificationAsync.d.ts",
+      "bytes": 2432,
+      "sha256": "ad9e7c15ad53beb56c345e238440f4aa56fcb889e6629bce1c19aa78b0b194ac"
+    },
+    {
+      "path": "package/src/scheduleNotificationAsync.ts",
+      "bytes": 12518,
+      "sha256": "27fda97460c6024ebb68d156165012b7b74b3134ff204ccf3fe66974aa14f97b"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.d.ts",
+      "bytes": 211,
+      "sha256": "f046cf668b1250ea7bedf4647272194bb1088abd73201c8a08a3902bd5bfaae3"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.native.d.ts",
+      "bytes": 218,
+      "sha256": "5360cdacb9083da1e92eff6f7d04353862effbfc5adca0fecc32b8bf2c402e1d"
+    },
+    {
+      "path": "package/src/ServerRegistrationModule.native.ts",
+      "bytes": 248,
+      "sha256": "92d2cd3762d38b589bbf8967749a53784e8513988971935dfa7aaa7069079a25"
+    },
+    {
+      "path": "package/src/ServerRegistrationModule.ts",
+      "bytes": 185,
+      "sha256": "7c90fa906a122e1453edd90d5c39da84696e44827570cb92f1eb0bce08f7e7f2"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.types.d.ts",
+      "bytes": 400,
+      "sha256": "880d73e3eb088a5a4b7da1f80f967e5aaa9b23fed4931bb2e93d85369e49481d"
+    },
+    {
+      "path": "package/src/ServerRegistrationModule.types.ts",
+      "bytes": 335,
+      "sha256": "1492ac0c9b8ef6f26c243127a89751e0e0d619bb5c7c3cc1a8fd27781c9b37c1"
+    },
+    {
+      "path": "package/build/ServerRegistrationModule.web.d.ts",
+      "bytes": 215,
+      "sha256": "db15b3cf729c2a70c774969bac8dfa494a48240c0a1d508fe968952fa983f538"
+    },
+    {
+      "path": "package/src/ServerRegistrationModule.web.ts",
+      "bytes": 1738,
+      "sha256": "36d19d5794cfcff47f6b822b92d75baf7dc382a7b2f82ce168584abb1795f5e0"
+    },
+    {
+      "path": "package/build/setBadgeCountAsync.d.ts",
+      "bytes": 1209,
+      "sha256": "1dbc5cd6866c7345ed172165525ab7d54f4700b4508313c96dbbbddf6c946092"
+    },
+    {
+      "path": "package/src/setBadgeCountAsync.ts",
+      "bytes": 1544,
+      "sha256": "80497b2bb7a4c08a6e88cdf503134aef75f661ce4aa3e6880be3682637fff4ea"
+    },
+    {
+      "path": "package/build/setNotificationCategoryAsync.d.ts",
+      "bytes": 1109,
+      "sha256": "0aa509f87b482f2635103572e022f05bfd62aa05f7580fbca52cdc69bffd7b67"
+    },
+    {
+      "path": "package/src/setNotificationCategoryAsync.ts",
+      "bytes": 1478,
+      "sha256": "a3a266160e25bb8216489248d8c4af9c4ba88df0e9066239207d91bb1f9d01cf"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.android.d.ts",
+      "bytes": 314,
+      "sha256": "084ebfdb8a1fc50d675264361d9b86692341f0bd6e886f8cb388e5424a0e39d3"
+    },
+    {
+      "path": "package/src/setNotificationChannelAsync.android.ts",
+      "bytes": 1043,
+      "sha256": "fe9f4b6304630b384890b2c927a21c144c5e36a170ae240321a471259b23fa1b"
+    },
+    {
+      "path": "package/build/setNotificationChannelAsync.d.ts",
+      "bytes": 1772,
+      "sha256": "6b3fe344795e53b764466d87c90b0b5a9488b0718cb387ec23f8e3be61425db5"
+    },
+    {
+      "path": "package/src/setNotificationChannelAsync.ts",
+      "bytes": 1823,
+      "sha256": "a10f320eb3ccf8110cd4378afb97f73a0bba922c87b591960e9c32479fe9b5eb"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.android.d.ts",
+      "bytes": 345,
+      "sha256": "73d23cb39857eb4a017349ad34224f0535b463128999124e326af5167c062934"
+    },
+    {
+      "path": "package/src/setNotificationChannelGroupAsync.android.ts",
+      "bytes": 692,
+      "sha256": "3a00a2c9a03f6d8e624a593d99be644c9e79b9f203850fa7df4f07aba3b8622e"
+    },
+    {
+      "path": "package/build/setNotificationChannelGroupAsync.d.ts",
+      "bytes": 836,
+      "sha256": "23832d8959cc1091f61c293dd382991b2a79fb963d5cc936a78d25d848488046"
+    },
+    {
+      "path": "package/src/setNotificationChannelGroupAsync.ts",
+      "bytes": 882,
+      "sha256": "98faa9b4517f8bc95f2a2cce28ade34327f46cfa858072de842319566354c295"
+    },
+    {
+      "path": "package/build/TokenEmitter.d.ts",
+      "bytes": 1691,
+      "sha256": "5d1cb2ad61f1fc00a097c8ce2e1caf1bd2b272812ecad3ed61f3d35821c86302"
+    },
+    {
+      "path": "package/src/TokenEmitter.ts",
+      "bytes": 2028,
+      "sha256": "70f6ee78312bbfe13296bad0eb7079de20f7529d30acf435d5873483375f9875"
+    },
+    {
+      "path": "package/build/Tokens.types.d.ts",
+      "bytes": 3468,
+      "sha256": "a830fe7f41cdfa75f816a4541b6f93fb45a98e5f63869c79601e389916e20924"
+    },
+    {
+      "path": "package/src/Tokens.types.ts",
+      "bytes": 3399,
+      "sha256": "c1413699056bfa534c565d0f07c03358c287896823372a4dbb9dca991b90eec2"
+    },
+    {
+      "path": "package/build/topicSubscription.d.ts",
+      "bytes": 797,
+      "sha256": "a43af76c1ef3875a63c74f69d6e873eb0398856caae1dc6e2ffa5d6808f8df07"
+    },
+    {
+      "path": "package/src/topicSubscription.ts",
+      "bytes": 1418,
+      "sha256": "4a1ff77a08cf785089f8dba66f23c9b38c2e0a65b4a432bd7e27bc017946835b"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.android.d.ts",
+      "bytes": 215,
+      "sha256": "91733c772dca6ae36fe90a3d044c10b74eaa87fc1bf410cb94b9fb88b9a845be"
+    },
+    {
+      "path": "package/src/TopicSubscriptionModule.android.ts",
+      "bytes": 231,
+      "sha256": "b59c20481ae939b468a49dea987165f10cd3ceb235e87d0956b552d28ff9a376"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.d.ts",
+      "bytes": 213,
+      "sha256": "eb66920b89805fdb80981a74ec7fdb8cf0f46296afde6b35f067cf65e2c58688"
+    },
+    {
+      "path": "package/src/TopicSubscriptionModule.ts",
+      "bytes": 362,
+      "sha256": "082c71218de75d19065676085141662435379d23d72a1557b9cae97fed5e9f55"
+    },
+    {
+      "path": "package/build/TopicSubscriptionModule.types.d.ts",
+      "bytes": 318,
+      "sha256": "2bc8231d69b3af218cb6554da40c9b6bd5da2eeedaf6d7d8132ef81daa59cfbd"
+    },
+    {
+      "path": "package/src/TopicSubscriptionModule.types.ts",
+      "bytes": 256,
+      "sha256": "409e96caa0debce3ae72df872e09e7f1b693ea8e61437e136ef71a4b316db225"
+    },
+    {
+      "path": "package/build/unregisterForNotificationsAsync.d.ts",
+      "bytes": 135,
+      "sha256": "0566f35fa99edeb5e3daacb5ae036f7989559941d1edba3a164e902fe4439ce0"
+    },
+    {
+      "path": "package/src/unregisterForNotificationsAsync.ts",
+      "bytes": 416,
+      "sha256": "3cf0f15323f9970a0432508b597ec56234f87c057de4ad98f63f8e8763312900"
+    },
+    {
+      "path": "package/build/unregisterTaskAsync.d.ts",
+      "bytes": 324,
+      "sha256": "f51350f7a00003f6128514820925651fc6e4e8d650ed7745ba3c10e048658936"
+    },
+    {
+      "path": "package/src/unregisterTaskAsync.ts",
+      "bytes": 644,
+      "sha256": "01ef44b4a8b9c5f5c4620e8669a8a48c55f078575948832588a16cc80cbc5910"
+    },
+    {
+      "path": "package/build/utils/updateDevicePushTokenAsync.d.ts",
+      "bytes": 480,
+      "sha256": "8a32fac01f7b9b04643b8930cf514f7221887c707ceced869ac04eb1d1ecb72f"
+    },
+    {
+      "path": "package/src/utils/updateDevicePushTokenAsync.ts",
+      "bytes": 6607,
+      "sha256": "14b967322a60882d6fe67f26d8780949987c8dad8b73c851014a6e4dff94c08d"
+    },
+    {
+      "path": "package/build/useLastNotificationResponse.d.ts",
+      "bytes": 2052,
+      "sha256": "0113caaf89a34fb65e31bcaba144cb2c37efc1ff564a27b84437fba309962807"
+    },
+    {
+      "path": "package/src/useLastNotificationResponse.ts",
+      "bytes": 3610,
+      "sha256": "e97a72eeaf397463b3d2306904476fbefc66e3c5dcdce700778705ea17f2a8a4"
+    },
+    {
+      "path": "package/build/warnOfExpoGoPushUsage.d.ts",
+      "bytes": 107,
+      "sha256": "c76ef2362d1958dacf3557abeecf8234e57a89074b81379bcc3732a2ec93e778"
+    },
+    {
+      "path": "package/src/warnOfExpoGoPushUsage.ts",
+      "bytes": 670,
+      "sha256": "45ddf2594f24743c58fa1ff089c5631d439370b5a211f6858169cb25df25685b"
+    },
+    {
+      "path": "package/plugin/build/withNotifications.d.ts",
+      "bytes": 1544,
+      "sha256": "0758b0740c19f9da024a7f403796505de875cf75142fa3b46b9549925d4e456a"
+    },
+    {
+      "path": "package/plugin/src/withNotifications.ts",
+      "bytes": 1884,
+      "sha256": "df2f043d9a641ade67f4d8fe5a23d20a19f2128ba2679ffdc75a86af17c7e5b8"
+    },
+    {
+      "path": "package/plugin/build/withNotificationsAndroid.d.ts",
+      "bytes": 2318,
+      "sha256": "ad89f807e9ad581b7b90a83308c84f188d4c3b8e67110cfe2de6fab3e748ed10"
+    },
+    {
+      "path": "package/plugin/src/withNotificationsAndroid.ts",
+      "bytes": 9186,
+      "sha256": "f46377ea095c4670b2e8f80df86d54af520faaf4bd73c6e7c697a826f638b61f"
+    },
+    {
+      "path": "package/plugin/build/withNotificationsIOS.d.ts",
+      "bytes": 510,
+      "sha256": "6e9bbf5597855f8656902dd038c5e18bb7c83a20b52f719baa930e141aad5094"
+    },
+    {
+      "path": "package/plugin/src/withNotificationsIOS.ts",
+      "bytes": 3539,
+      "sha256": "e829a92816e48259b55fa0731b41124712778e9812d8ccdd5749b05fa80d45d9"
+    },
+    {
+      "path": "package/plugin/tsconfig.tsbuildinfo",
+      "bytes": 125,
+      "sha256": "2c86ce1b46f22397790674f308b919a92eb5490c4337306afe7402d4da98379c"
+    },
+    {
+      "path": "package/ios/PrivacyInfo.xcprivacy",
+      "bytes": 607,
+      "sha256": "2b2d8edb71d51c5b1f1ace4cdb28a94baf22fdde9bbf2e2bfc17d187ff7b5f47"
+    },
+    {
+      "path": "package/android/src/main/AndroidManifest.xml",
+      "bytes": 1487,
+      "sha256": "08d7b7174ad2a11749980f2b759244afd66c95a8832b910ecc0067d6cfd98730"
+    },
+    {
+      "path": "package/local-maven-repo/host/exp/exponent/expo.modules.notifications/maven-metadata.xml",
+      "bytes": 356,
+      "sha256": "82c28f87ec04e4a5d048c04f8e486ef758c14806486e6b083ab2a0500b2949bd"
+    },
+    {
+      "path": "package/android/src/main/res/values/strings.xml",
+      "bytes": 145,
+      "sha256": "4d197edb7bb0224be7f01f5ee20bae4c355f4d90068821b9cf5cda1d5a8ca704"
+    },
+    {
+      "path": "package/LICENSE",
+      "bytes": 1106,
+      "sha256": "fb3ca4a837f5779e83cef89b78253a8949cfb9429c340309f62d0465ec6610b4"
+    }
+  ],
+  "admission": "NONE"
+}

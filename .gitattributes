@@ -61,3 +61,7 @@ docs/brain/reviews/M1-03/SC03-REVIEW01/** -text
 # Immutable QUALITY-RECOVERY-02 R1 issuance and independent QR01 review.
 docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/** -text
 docs/brain/reviews/M1-03/QR01-REVIEW01/** -text
+
+# Immutable QUALITY-RECOVERY-03 issuance and independent QR02 review.
+docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/inputs/** -text
+docs/brain/reviews/M1-03/QR02-REVIEW01/** -text

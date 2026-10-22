@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals\", \"-v\"]",
+  "working_directory": "/root/onskin-quality-recovery03-source/scripts/brain",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; isolated no-hardlink checkout; dedicated cache; no shared node_modules",
+  "source_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "source_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "started_utc": "2026-10-22T16:09:59.089746+00:00",
+  "duration_seconds": 10.718,
+  "tracked_dirty_paths_at_start": [
+    ".gitattributes",
+    "apps/mobile/package.json",
+    "docs/phase-9/generated/ios-privacy-source-audit.json",
+    "docs/phase-9/generated/ios-privacy-source-audit.md",
+    "docs/phase-9/ios-sdk-package-mapping.json",
+    "package-lock.json",
+    "scripts/brain/m103_profile.py"
+  ],
+  "exit_code": 1,
+  "status": "FAIL",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr02-positive-preserved.log",
+    "sha256": "5e17f34e73377329205f22e75a597f25942f1f0aa66d20dc391429abeb76ed11"
+  },
+  "admission": "NONE",
+  "phase": "PRECOMMIT_DIAGNOSTIC; not exact measured-source acceptance"
+}

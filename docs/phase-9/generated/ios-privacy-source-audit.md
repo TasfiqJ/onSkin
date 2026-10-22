@@ -14,8 +14,8 @@ resolution, and the release archive require separate verification.
 ## Input bindings
 
 - Baseline: `docs/phase-9/apple-ios-privacy-baseline.json` - `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `8a80e8afe3fd8565767440fbd5093fdefc9caf9812236a53430ed5c3600c8a6a`
-- Package lock: `package-lock.json` - `67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85`
+- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246`
+- Package lock: `package-lock.json` - `99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568`
 
 ## Summary
 
@@ -73,7 +73,7 @@ resolution, and the release archive require separate verification.
 | expo-modules-core                              | 57.0.24 | archive_required | 0         | 3        | 0            | 0          | 0            |
 | expo-modules-jsi                               | 57.1.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-network                                   | 57.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-notifications                             | 57.0.23 | archive_required | 1         | 1        | 0            | 0          | 0            |
+| expo-notifications                             | 57.0.24 | archive_required | 1         | 1        | 0            | 0          | 0            |
 | expo-router                                    | 57.0.29 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-secure-store                              | 57.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-sharing                                   | 57.0.24 | archive_required | 0         | 1        | 0            | 0          | 0            |

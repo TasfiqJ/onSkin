@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "QUALITY-RECOVERY-03",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "base_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "input_manifest_sha256": "658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200",
+  "authorization_id": "M103-QUALITY-RECOVERY03-SOURCE-EDIT-01",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "active_writers": 1,
+  "incremental_spend_usd": 0,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "clinical_research_or_release_authorized": false,
+  "source_edit_union_permitted": false,
+  "prior_reviews_mutable": false,
+  "protected_security_and_db_admission": "CLOSED",
+  "next_task": null,
+  "original_security_proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED"
+}

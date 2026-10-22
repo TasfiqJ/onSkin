@@ -610,9 +610,10 @@ def qr02_predecessor_source(prior):
     return prior
 
 
-def validate_qr02_deltas(root):
+def validate_qr02_deltas(root, *, fixed=False):
     import copy, subprocess
     original = lambda path: subprocess.check_output(['git', '-C', str(root), 'show', QR02_BASE + ':' + path])
+    read = lambda path: subprocess.check_output(['git', '-C', str(root), 'show', QR03_BASE + ':' + path]) if fixed and not path.startswith('node_modules/') else brain.read(root, path)
     path = 'apps/mobile/package.json'
     raw = original(path)
     for old, new in [(b'"@expo/ui": "~57.0.25"', b'"@expo/ui": "~57.0.26"'),
@@ -621,7 +622,7 @@ def validate_qr02_deltas(root):
         (b'"expo-widgets": "57.0.26"', b'"expo-widgets": "57.0.27"')]:
         brain.require(raw.count(old) == 1, 'QR02 mobile preimage differs')
         raw = raw.replace(old, new)
-    brain.require(brain.read(root, path) in [original(path), raw], 'QR02 mobile exceeds four exact patches')
+    brain.require(read(path) in [original(path), raw], 'QR02 mobile exceeds four exact patches')
     path = 'scripts/phase5/patch-expo-widgets-lifecycle.mjs'
     raw = original(path)
     witnesses = brain.load(root, QR02_INPUT + '/UPSTREAM_WIDGET_WITNESSES.json')
@@ -630,11 +631,11 @@ def validate_qr02_deltas(root):
         (b'sha512-gXVYxNeYR08QvohfnyyqTVxGgsF07PtK0Pg/i4vdFs2akT6mf/m4/vc3Co1F5lMDzbQSTpZyCDMxVOImv3F46g==', witnesses['registry_integrity'].encode())]:
         brain.require(raw.count(old) == 1, 'QR02 widget preimage differs')
         raw = raw.replace(old, new)
-    brain.require(brain.read(root, path) in [original(path), raw], 'QR02 widget descriptors, payload path or guard changed')
+    brain.require(read(path) in [original(path), raw], 'QR02 widget descriptors, payload path or guard changed')
     path = 'docs/phase-9/ios-sdk-package-mapping.json'
     raw = original(path)
     mapping = brain.decode(raw)
-    lock_raw = brain.read(root, 'package-lock.json')
+    lock_raw = read('package-lock.json')
     lock = brain.decode(lock_raw)
     old_lock = brain.decode(original('package-lock.json'))
     permitted = {'apps/mobile', 'node_modules/@expo/ui', 'node_modules/expo-router',
@@ -671,11 +672,11 @@ def validate_qr02_deltas(root):
             brain.require(all(actual.get(k) == entry[k] for k in ['version', 'integrity']), 'QR02 mapped npm pin drift')
         for pin in package['notes']['sourcePins']:
             if (root / pin['path']).exists():
-                brain.require(brain.digest(brain.read(root, pin['path'])) == pin['sha256'], 'QR02 installed source pin drift')
+                brain.require(brain.digest(read(pin['path'])) == pin['sha256'], 'QR02 installed source pin drift')
     old = b'"packageLockSha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c"'
     brain.require(raw.count(old) == 3, 'QR02 original mapping lock field count differs')
     rebound = raw.replace(old, ('"packageLockSha256": "' + brain.digest(lock_raw) + '"').encode())
-    actual_raw = brain.read(root, path)
+    actual_raw = read(path)
     brain.require(actual_raw in [raw, rebound], 'QR02 mapping exceeds three digest fields')
     if actual_raw != raw:
         proof = brain.load(root, QR02_INPUT.rsplit('/', 1)[0] + '/evidence/native-mapping-witnesses.json')
@@ -689,11 +690,11 @@ def validate_qr02_deltas(root):
             all_other_mapping_bytes_unchanged=True, evidence_level='source_candidate', archive_missing=True,
             admission='NONE'), 'QR02 mapping proof differs')
         brain.require(brain.decode(actual_raw) == expected, 'QR02 mapping semantic drift')
-    brain.require(brain.digest(brain.read(root, mapping['generatedAgainst']['baselinePath'])) ==
+    brain.require(brain.digest(read(mapping['generatedAgainst']['baselinePath'])) ==
                   mapping['generatedAgainst']['sha256'], 'QR02 Apple baseline changed')
 
 
-def validate_quality_recovery02(root):
+def validate_quality_recovery02(root, *, fixed=False):
     import subprocess
     validate_quality_recovery01(root, fixed=True)
     brain.git_snapshot(root, dict(commit=QR02_BASE, tree=QR02_TREE), 'QR02 exact reviewed base')
@@ -726,9 +727,9 @@ def validate_quality_recovery02(root):
         brain.require(brain.digest(prior) == row['sha256'] and
             brain.git(root, 'rev-parse', QR02_BASE + ':' + path) == row['git_blob'] and
             ('bytes' not in row or len(prior) == row['bytes']), 'QR02 preimage mismatch: ' + path)
-    changes = brain.git(root, 'diff', '--name-only', QR02_BASE).splitlines()
-    changes += brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()
-    for commit in brain.git(root, 'rev-list', QR02_BASE + '..HEAD').splitlines():
+    endpoint = QR03_BASE if fixed else 'HEAD'
+    changes = brain.git(root, 'diff', '--name-only', QR02_BASE, endpoint).splitlines() if fixed else brain.git(root, 'diff', '--name-only', QR02_BASE).splitlines() + brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()
+    for commit in brain.git(root, 'rev-list', QR02_BASE + '..' + endpoint).splitlines():
         brain.require(len(brain.git(root, 'rev-list', '--parents', '-n', '1', commit).split()) == 2,
                       'QR02 merge or extra root refused')
         changes += brain.git(root, 'diff-tree', '--no-commit-id', '--name-only', '-r', commit).splitlines()
@@ -742,12 +743,14 @@ def validate_quality_recovery02(root):
                 any(path.startswith(prefix) for prefix in authority['new_prefixes'])),
                 'QR02 path outside exact authorization: ' + path)
     attributes = subprocess.check_output(['git', '-C', str(root), 'show', QR02_BASE + ':.gitattributes'])
-    brain.require(brain.read(root, '.gitattributes') == attributes + QR02_ATTRIBUTES,
+    actual_attributes = subprocess.check_output(['git', '-C', str(root), 'show', endpoint + ':.gitattributes']) if fixed else brain.read(root, '.gitattributes')
+    brain.require(actual_attributes == attributes + QR02_ATTRIBUTES,
                   'QR02 attributes must freeze only R1 input and review')
     original = subprocess.check_output(['git', '-C', str(root), 'show', QR02_BASE + ':scripts/brain/m103_profile.py']).decode()
-    prefix = brain.read(root, 'scripts/brain/m103_profile.py').decode().split('\n\n# Independent QR02 reissuance;', 1)[0]
+    source = subprocess.check_output(['git', '-C', str(root), 'show', endpoint + ':scripts/brain/m103_profile.py']) if fixed else brain.read(root, 'scripts/brain/m103_profile.py')
+    prefix = source.decode().split('\n\n# Independent QR02 reissuance;', 1)[0]
     brain.require(prefix == qr02_predecessor_source(original), 'QR02 predecessor source changed')
-    validate_qr02_deltas(root)
+    validate_qr02_deltas(root, fixed=fixed)
     return current
 
 
@@ -761,3 +764,173 @@ def report_quality_recovery02(root, name):
     brain.require(bool(value['executions']), 'QR02 requires actual executions')
     committed_artifacts(root, value['artifacts'])
     return value
+
+
+# Independent QR03 issuance; only the fifth patch and conditional lock binding.
+QR03_INPUT = 'docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/inputs'
+QR03_REVIEW = 'docs/brain/reviews/M1-03/QR02-REVIEW01'
+QR03_ACTIVE = 'docs/brain/m103-quality-recovery03-active.json'
+QR03_BASE = '3dcaf50633024ec652fe7b14a5c9072eac92642e'
+QR03_TREE = 'fd98eedb0cef6644d8e1538047aacbe44f10d837'
+QR03_DIGEST = '658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200'
+QR03_SCOPE = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8']
+QR03_ATTRIBUTES = (b'\n# Immutable QUALITY-RECOVERY-03 issuance and independent QR02 review.\n'
+    b'docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/inputs/** -text\n'
+    b'docs/brain/reviews/M1-03/QR02-REVIEW01/** -text\n')
+
+
+def qr03_active_expected():
+    return dict(schema_version=1, task_id='M1-03', iteration='QUALITY-RECOVERY-03', branch=BRANCH,
+        base_commit=QR03_BASE, base_tree=QR03_TREE, input_manifest_sha256=QR03_DIGEST,
+        authorization_id='M103-QUALITY-RECOVERY03-SOURCE-EDIT-01',
+        accepted_tasks=['M0-01', 'M0-02', 'M1-01', 'M1-02'], active_writers=1, incremental_spend_usd=0,
+        protected_source_go=False, main_promotion_authorized=False, hosted_replay_authorized=False,
+        clinical_research_or_release_authorized=False, source_edit_union_permitted=False,
+        prior_reviews_mutable=False, protected_security_and_db_admission='CLOSED',
+        next_task=None, original_security_proposal_expires_utc='2026-10-21T00:00:00Z')
+
+
+def qr03_predecessor_source(prior):
+    """Freeze QR02 at the issued endpoint; its default live refusals are unchanged."""
+    def once(text, old, new):
+        brain.require(text.count(old) == 1, 'QR03 predecessor patch ambiguous')
+        return text.replace(old, new)
+    start = prior.index('def validate_qr02_deltas(root):')
+    end = prior.index('\ndef validate_quality_recovery02(root):', start)
+    segment = prior[start:end].replace('def validate_qr02_deltas(root):', 'def validate_qr02_deltas(root, *, fixed=False):')
+    segment = segment.replace('brain.read(root, ', 'read(')
+    needle = "    original = lambda path: subprocess.check_output(['git', '-C', str(root), 'show', QR02_BASE + ':' + path])\n"
+    segment = once(segment, needle, needle + "    read = lambda path: subprocess.check_output(['git', '-C', str(root), 'show', QR03_BASE + ':' + path]) if fixed and not path.startswith('node_modules/') else brain.read(root, path)\n")
+    prior = prior[:start] + segment + prior[end:]
+    start = prior.index('def validate_quality_recovery02(root):')
+    end = prior.index('\ndef report_quality_recovery02(root, name):', start)
+    segment = prior[start:end]
+    for old, new in [
+        ('def validate_quality_recovery02(root):', 'def validate_quality_recovery02(root, *, fixed=False):'),
+        ("    changes = brain.git(root, 'diff', '--name-only', QR02_BASE).splitlines()\n    changes += brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()\n    for commit in brain.git(root, 'rev-list', QR02_BASE + '..HEAD').splitlines():",
+         "    endpoint = QR03_BASE if fixed else 'HEAD'\n    changes = brain.git(root, 'diff', '--name-only', QR02_BASE, endpoint).splitlines() if fixed else brain.git(root, 'diff', '--name-only', QR02_BASE).splitlines() + brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()\n    for commit in brain.git(root, 'rev-list', QR02_BASE + '..' + endpoint).splitlines():"),
+        ("    brain.require(brain.read(root, '.gitattributes') == attributes + QR02_ATTRIBUTES,",
+         "    actual_attributes = subprocess.check_output(['git', '-C', str(root), 'show', endpoint + ':.gitattributes']) if fixed else brain.read(root, '.gitattributes')\n    brain.require(actual_attributes == attributes + QR02_ATTRIBUTES,"),
+        ("    prefix = brain.read(root, 'scripts/brain/m103_profile.py').decode().split('\\n\\n# Independent QR02 reissuance;', 1)[0]",
+         "    source = subprocess.check_output(['git', '-C', str(root), 'show', endpoint + ':scripts/brain/m103_profile.py']) if fixed else brain.read(root, 'scripts/brain/m103_profile.py')\n    prefix = source.decode().split('\\n\\n# Independent QR02 reissuance;', 1)[0]"),
+        ('    validate_qr02_deltas(root)', '    validate_qr02_deltas(root, fixed=fixed)'),
+    ]:
+        segment = once(segment, old, new)
+    return prior[:start] + segment + prior[end:]
+
+
+def validate_qr03_deltas(root):
+    import copy, subprocess
+    old = lambda path: subprocess.check_output(['git', '-C', str(root), 'show', QR03_BASE + ':' + path])
+    mobile = old('apps/mobile/package.json')
+    brain.require(mobile.count(b'"expo-notifications": "~57.0.23"') == 1, 'QR03 mobile preimage differs')
+    expected_mobile = mobile.replace(b'"expo-notifications": "~57.0.23"', b'"expo-notifications": "~57.0.24"')
+    brain.require(brain.read(root, 'apps/mobile/package.json') in [mobile, expected_mobile], 'QR03 mobile exceeds one patch')
+    lock_raw = brain.read(root, 'package-lock.json')
+    lock = brain.decode(lock_raw)
+    baseline = brain.decode(old('package-lock.json'))
+    expected = copy.deepcopy(baseline)
+    expected['packages']['apps/mobile']['dependencies']['expo-notifications'] = '~57.0.24'
+    witness = brain.load(root, QR03_INPUT + '/UPSTREAM_NOTIFICATIONS_WITNESS.json')
+    expected['packages']['node_modules/expo-notifications'].update(version='57.0.24',
+        resolved=witness['dist_tarball'], integrity=witness['registry_sri'])
+    brain.require(lock in [baseline, expected], 'QR03 unrelated lock entry, dependency edge or integrity change')
+    path = 'docs/phase-9/ios-sdk-package-mapping.json'
+    mapping_raw = old(path)
+    mapping = brain.decode(mapping_raw)
+    old_digest = b'"packageLockSha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85"'
+    brain.require(mapping_raw.count(old_digest) == 3, 'QR03 original mapping field count differs')
+    rebound = mapping_raw.replace(old_digest, ('"packageLockSha256": "' + brain.digest(lock_raw) + '"').encode())
+    current = brain.read(root, path)
+    brain.require(current in [mapping_raw, rebound], 'QR03 mapping exceeds three digest fields')
+    rows = []
+    for package in mapping['mappings']:
+        for row in package['lockIntegrity']['entries']:
+            actual = lock['packages'].get(row['path'], {})
+            brain.require(all(actual.get(k) == row[k] for k in ['version', 'integrity']), 'QR03 mapped npm identity drift')
+            rows.append(dict(kind='npm_entry', package=package['packageName'], **row, matches=True))
+        for row in package['notes']['sourcePins']:
+            if (root / row['path']).exists():
+                brain.require(brain.digest(brain.read(root, row['path'])) == row['sha256'], 'QR03 installed source pin drift')
+            rows.append(dict(kind='installed_source', package=package['packageName'], **row, matches=True))
+    brain.require(len([r for r in rows if r['kind'] == 'npm_entry']) == 4 and len(rows) == 14, 'QR03 mapping witnesses missing')
+    if current != mapping_raw:
+        proof = brain.load(root, QR03_INPUT.rsplit('/', 1)[0] + '/evidence/native-mapping-witnesses.json')
+        brain.require(proof == dict(lock_sha256=brain.digest(lock_raw), witnesses=rows,
+            baseline_unchanged=True, all_other_mapping_bytes_unchanged=True,
+            evidence_level='source_candidate', archive_missing=True, admission='NONE'), 'QR03 mapping proof differs')
+    brain.require(brain.digest(brain.read(root, mapping['generatedAgainst']['baselinePath'])) ==
+                  mapping['generatedAgainst']['sha256'], 'QR03 privacy baseline drift')
+
+
+def validate_quality_recovery03(root):
+    import subprocess
+    brain.git_snapshot(root, dict(commit=QR03_BASE, tree=QR03_TREE), 'QR03 exact issued base')
+    raw = brain.read(root, QR03_INPUT + '/TASK_MANIFEST.json')
+    brain.require(brain.digest(raw) == QR03_DIGEST, 'QR03 external manifest differs')
+    for row in brain.decode(raw)['files']:
+        data = brain.read(root, QR03_INPUT + '/' + row['path'])
+        brain.require(len(data) == row['bytes'] and brain.digest(data) == row['sha256'], 'QR03 immutable input differs')
+    for path in ['01_BRAIN_AUDIT.md', 'SOURCE_EDIT_AUTHORIZATION.json', 'TASK_MANIFEST.json', 'TASK_STATE.json']:
+        brain.require(brain.read(root, QR03_REVIEW + '/' + path) == brain.read(root, QR03_INPUT + '/' + path), 'QR03 independent review differs')
+    brain.require(brain.load(root, QR03_REVIEW + '/external-digest-proof.json') == dict(schema_version=1,
+        claim_origin='LITERAL_USER_PROMPT_EXTERNAL_SHA256', manifest_sha256=QR03_DIGEST,
+        command='python -B verify_context.py --expected-manifest-sha256 ' + QR03_DIGEST,
+        exit_code=0, members_verified=13, admission='NONE'), 'QR03 external digest proof differs')
+    active = brain.load(root, QR03_ACTIVE)
+    expected = qr03_active_expected()
+    brain.require(set(active) == set(expected) | {'submission_status'} and
+        all(type(active[k]) is type(v) and active[k] == v for k, v in expected.items()), 'QR03 false authority or acceptance')
+    brain.require(active['submission_status'] in ['IN_PROGRESS', 'PARTIAL', 'BLOCKED', 'SUBMITTED_REVIEW_REQUIRED'], 'QR03 cannot self-accept')
+    brain.require(brain.git(root, 'branch', '--show-current') == BRANCH, 'Wrong QR03 branch')
+    brain.ancestor(root, QR03_BASE, brain.git(root, 'rev-parse', 'HEAD'), 'QR03 base -> head')
+    authority = brain.load(root, QR03_INPUT + '/SOURCE_EDIT_AUTHORIZATION.json')
+    existing = {row['path']: row for row in authority['allowed_existing_files']}
+    for row in authority['allowed_existing_files'] + authority['protected_unchanged']:
+        path = row['path']
+        data = subprocess.check_output(['git', '-C', str(root), 'show', QR03_BASE + ':' + path])
+        brain.require(len(data) == row['bytes'] and brain.digest(data) == row['sha256'] and
+            brain.git(root, 'rev-parse', QR03_BASE + ':' + path) == row['git_blob'], 'QR03 preimage mismatch: ' + path)
+    validate_quality_recovery02(root, fixed=True)
+    changes = brain.git(root, 'diff', '--name-only', QR03_BASE).splitlines() + brain.git(root, 'ls-files', '--others', '--exclude-standard').splitlines()
+    for commit in brain.git(root, 'rev-list', QR03_BASE + '..HEAD').splitlines():
+        brain.require(len(brain.git(root, 'rev-list', '--parents', '-n', '1', commit).split()) == 2, 'QR03 merge or unrelated root refused')
+        changes += brain.git(root, 'diff-tree', '--no-commit-id', '--name-only', '-r', commit).splitlines()
+        brain.require(not brain.git(root, 'diff-tree', '--diff-filter=D', '--no-commit-id', '--name-only', '-r', commit), 'QR03 deletion refused')
+    for path in set(changes):
+        brain.safe_file(root, path)
+        if path not in existing:
+            prior = subprocess.run(['git', '-C', str(root), 'cat-file', '-e', QR03_BASE + ':' + path], capture_output=True)
+            brain.require(prior.returncode != 0 and (path in authority['new_exact_files'] or
+                any(path.startswith(p) for p in authority['new_prefixes'])), 'QR03 path outside exact authorization: ' + path)
+    attrs = subprocess.check_output(['git', '-C', str(root), 'show', QR03_BASE + ':.gitattributes'])
+    brain.require(brain.read(root, '.gitattributes') == attrs + QR03_ATTRIBUTES, 'QR03 attributes exceed immutable markers')
+    original = subprocess.check_output(['git', '-C', str(root), 'show', QR03_BASE + ':scripts/brain/m103_profile.py']).decode()
+    prefix = brain.read(root, 'scripts/brain/m103_profile.py').decode().split('\n\n# Independent QR03 issuance;', 1)[0]
+    brain.require(prefix == qr03_predecessor_source(original), 'QR03 predecessor source differs')
+    validate_qr03_deltas(root)
+    return active
+
+
+def report_quality_recovery03(root, name):
+    value = m1_profile.report(root, name, task='M1-03', base=QR03_BASE,
+        validator=validate_quality_recovery03, checkpoint=QR03_INPUT.rsplit('/', 1)[0] + '/',
+        continuation_bindings={'QUALITY-RECOVERY-03': (QR03_INPUT, QR03_BASE)})
+    brain.require(value['schema_version'] == 3 and value['iteration'] == 'QUALITY-RECOVERY-03', 'Wrong QR03 report iteration')
+    brain.identities(value['scope_matrix'], QR03_SCOPE)
+    brain.require(bool(value['executions']), 'QR03 requires actual executions')
+    committed_artifacts(root, value['artifacts'])
+    return value
+
+
+# Append-only dispatch keeps every prior callable and refusal available.
+_validate_before_qr03 = validate
+_report_before_qr03 = report
+
+
+def validate(root):
+    return validate_quality_recovery03(root) if (root / QR03_ACTIVE).exists() else _validate_before_qr03(root)
+
+
+def report(root, name):
+    return report_quality_recovery03(root, name) if name.startswith(QR03_INPUT.rsplit('/', 1)[0] + '/') else _report_before_qr03(root, name)

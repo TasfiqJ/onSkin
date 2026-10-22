@@ -1,0 +1,23 @@
+{
+  "kind": "GIT_PROVIDER_PREFLIGHT",
+  "recorded_at_utc": "2026-10-22T16:16:55.168Z",
+  "pr": {
+    "number": 9,
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "head": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+    "base": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "merge_ref": "52f396b283f0f96b03e9f0b9da6593c09393bde4"
+  },
+  "stage": {
+    "commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+    "tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837"
+  },
+  "main": {
+    "commit": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653"
+  },
+  "active_writers": 1,
+  "admission": "NONE"
+}

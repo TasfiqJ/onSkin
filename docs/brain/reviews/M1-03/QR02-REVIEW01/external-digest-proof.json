@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "claim_origin": "LITERAL_USER_PROMPT_EXTERNAL_SHA256",
+  "manifest_sha256": "658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200",
+  "command": "python -B verify_context.py --expected-manifest-sha256 658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200",
+  "exit_code": 0,
+  "members_verified": 13,
+  "admission": "NONE"
+}

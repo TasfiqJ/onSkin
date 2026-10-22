@@ -1,0 +1,77 @@
+{
+  "authorization_id": "M103-QUALITY-RECOVERY03-SOURCE-EDIT-01",
+  "base_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "base_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "branch": "stage/m1-retained-safety",
+  "file_count": 13,
+  "files": [
+    {
+      "bytes": 1851,
+      "path": "00_READ_FIRST.md",
+      "sha256": "89dc9b52eb39b994cd4cbe746765afe038c06a3159f34785fbc70abe58a443b9"
+    },
+    {
+      "bytes": 3250,
+      "path": "01_BRAIN_AUDIT.md",
+      "sha256": "b2563e8dc8432f2cb35467fd4ba2289b4ebedeb20d510c8122f07b84d881b3dd"
+    },
+    {
+      "bytes": 4112,
+      "path": "02_TASK.md",
+      "sha256": "0dc6d654b73a4b0917d09ffb291b9bb8f0339e294f6f36e315ab8eac18c0f851"
+    },
+    {
+      "bytes": 1973,
+      "path": "03_SOURCE_EDIT_AUTHORIZATION.md",
+      "sha256": "65a15c7c5d247b84219336f544eb97240ffbdef691c93d70069e0ca649127a70"
+    },
+    {
+      "bytes": 2253,
+      "path": "04_REPRODUCERS.md",
+      "sha256": "0467cdacc4f335d0886543fd6c898b07dfeafdd9575977153b19a833d771aa19"
+    },
+    {
+      "bytes": 2346,
+      "path": "05_TEST_AND_ACCEPTANCE.md",
+      "sha256": "cf9e388469b8f7a64516b885fcb096ba8e583d7811292f9e2d00948c7ceae81d"
+    },
+    {
+      "bytes": 1842,
+      "path": "06_PROTECTED_GATES.md",
+      "sha256": "932fdd8c62c7ae931913523c010e9bffc1121a3715cae39f55fcac7ba1825416"
+    },
+    {
+      "bytes": 2202,
+      "path": "07_DELIVERY_PROTOCOL.md",
+      "sha256": "8325a8ed2e950db2fa3c713186276b10a74b0f283627e3eb9e4a02ffc924aea8"
+    },
+    {
+      "bytes": 1646,
+      "path": "08_STOP_RULES.md",
+      "sha256": "eb971c7db0a93bed63944bb746b9eb85cf8408e9c0006472f4fedd6b201614be"
+    },
+    {
+      "bytes": 7848,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "5ab0b49e1b8c3fa0fd0dd1e103715e363e6d743b0858e07d90c0ae0a68da906a"
+    },
+    {
+      "bytes": 1053,
+      "path": "TASK_STATE.json",
+      "sha256": "c484172245d5bf470f09018dbeb64920ac1c7d2a99b60e80eaa0184444e56f9d"
+    },
+    {
+      "bytes": 641,
+      "path": "UPSTREAM_NOTIFICATIONS_WITNESS.json",
+      "sha256": "148df58f97566918dab8686e5e8645367864859a8cb18e8d0ce9d95aa3289aac"
+    },
+    {
+      "bytes": 2097,
+      "path": "verify_context.py",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193"
+    }
+  ],
+  "iteration": "QUALITY-RECOVERY-03",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

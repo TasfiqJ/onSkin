@@ -1,0 +1,14 @@
+FIXTURE_ENDPOINT test_m103_quality_recovery02_profile /root/onskin-quality-recovery02-source
+test_exact_report_and_false_authority_refusals (test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals) ... ok
+test_fake_mapping_mobile_and_lock_changes_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_fake_mapping_mobile_and_lock_changes_refuse) ... ok
+test_input_review_and_stale_preimage_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_input_review_and_stale_preimage_refuse) ... ok
+test_old_interval_cannot_admit_new_paths (test_m103_quality_recovery02_profile.QualityRecovery02.test_old_interval_cannot_admit_new_paths) ... ok
+test_report_false_go_and_artifact_tamper_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_report_false_go_and_artifact_tamper_refuse) ... ok
+test_unauthorized_source_and_intermediate_revert_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_unauthorized_source_and_intermediate_revert_refuse) ... ok
+test_widget_guard_hash_and_payload_path_changes_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_widget_guard_hash_and_payload_path_changes_refuse) ... ok
+test_wrong_actual_branch_and_old_head_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_wrong_actual_branch_and_old_head_refuse) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 146.335s
+
+OK

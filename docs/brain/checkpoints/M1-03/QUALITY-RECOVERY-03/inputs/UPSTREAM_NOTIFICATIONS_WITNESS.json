@@ -1,0 +1,11 @@
+{
+  "brain_observed_tarball_bytes": 748807,
+  "brain_observed_tarball_sha256": "9f4e0c35ea12943b3948302264e686b000275da142240b6b7208b5c589359144",
+  "dist_tarball": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.24.tgz",
+  "name": "expo-notifications",
+  "note": "Codex MUST independently revalidate official registry tarball, integrity and source, not adopt this witness as new protected review policy.",
+  "range": "~57.0.24",
+  "registry": "https://registry.npmjs.org",
+  "registry_sri": "sha512-Hi5PBQlcrDDQ3MTqkH28NkUfeTvr80cXv1xUlvYaxy4AOmgkd3jDN1s7fWzaO5CYyb42BC5mPlIin6C3DJJzxA==",
+  "version": "57.0.24"
+}

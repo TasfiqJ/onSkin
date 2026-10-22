@@ -29,12 +29,12 @@
     "mapping": {
       "path": "docs/phase-9/ios-sdk-package-mapping.json",
       "bytes": 8350,
-      "sha256": "8a80e8afe3fd8565767440fbd5093fdefc9caf9812236a53430ed5c3600c8a6a"
+      "sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246"
     },
     "packageLock": {
       "path": "package-lock.json",
       "bytes": 572797,
-      "sha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85"
+      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568"
     }
   },
   "summary": {
@@ -52,9 +52,9 @@
     "warningCount": 16
   },
   "ledgerHashes": {
-    "nativePackagesSha256": "5a192ff4a5540ccb67884bea682657e4741b4191b80779839aee2631ab64ad2c",
+    "nativePackagesSha256": "9931a7efdd83d7907bac94bc06ca38e1a1c416f2fa34e160c911d78b5284748f",
     "privacyManifestsSha256": "079a9873a342d30b93469e88304bff5063a6f77129df3f1bf758236c6729a01c",
-    "podspecsSha256": "81887b55f6cb83b500458d904976c1640392c5f7d5828f132c76d9124b79c08f",
+    "podspecsSha256": "361f81a8577bb4fce042a3b379b866ab4a97939c797839d102190f36272ceb64",
     "xcframeworksSha256": "665d974c5d5fd27c4fffba4d09db5ac4c65bcc642314bac62fa664bd5eedd024",
     "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
@@ -989,10 +989,10 @@
     {
       "packageName": "expo-notifications",
       "packagePath": "node_modules/expo-notifications",
-      "version": "57.0.23",
-      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.23.tgz",
-      "integrity": "sha512-KdHROY5tvbzlDJImJKF91F8GRpV4hP+RLPC7NJgiFNyzb0clETpV0hJNdbFrfyubZf+cqx88+WuwFsH9Yl+kzg==",
-      "packageJsonSha256": "d3dbd8afa4f3449037c700691a5f8308ea06e0587785a3d1011d51f1ab2e97a1",
+      "version": "57.0.24",
+      "resolved": "https://registry.npmjs.org/expo-notifications/-/expo-notifications-57.0.24.tgz",
+      "integrity": "sha512-Hi5PBQlcrDDQ3MTqkH28NkUfeTvr80cXv1xUlvYaxy4AOmgkd3jDN1s7fWzaO5CYyb42BC5mPlIin6C3DJJzxA==",
+      "packageJsonSha256": "53210d3afd139de0c35f79bbf18d5e83825030b5c97befbb25f820b881c7a961",
       "rootSignals": [
         "ios",
         "spm.config.json"
@@ -3234,7 +3234,7 @@
     {
       "path": "node_modules/expo-notifications/ios/ExpoNotifications.podspec",
       "packageName": "expo-notifications",
-      "packageVersion": "57.0.23",
+      "packageVersion": "57.0.24",
       "packagePath": "node_modules/expo-notifications",
       "bytes": 1086,
       "sha256": "20d85106721d50f113a0122969556134e06159643a05ccf087e4ed3183bc737c",
