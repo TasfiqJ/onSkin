@@ -34,9 +34,9 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/completion-report.json",
-      "bytes": 50028,
-      "sha256": "9a702a4cd5ed37aad2f48dc8a97537e49b0a804a80edf1b1dbdf650aa65034dd",
-      "git_blob_sha1": "d78d747680db9d9c2c0763aa5442d3053dfd9d80"
+      "bytes": 50852,
+      "sha256": "9046283333c6624620f461ac8065c0efee764a1b7d43c36c2de055f8d306ba7d",
+      "git_blob_sha1": "de6b1b41475486090ae46a29d1c49a1252cb3fb6"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.log",
@@ -553,6 +553,30 @@
       "bytes": 883,
       "sha256": "ae156726b859e85e23362ffe5d0c157bce546f5a98920d7523462bbe5cad4a0a",
       "git_blob_sha1": "af7f6fa6eb26a2bb841ca01e57599a8eceb81303"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-strict-report.log",
+      "bytes": 72,
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "git_blob_sha1": "4739689312052a4a3292a4c6f9c39be7742a0890"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-strict-report.receipt.json",
+      "bytes": 936,
+      "sha256": "3ced71f09db9008178bf6eca6e5ae80a7ca518eaf2dfeaebb8ba5ffbd77216ec",
+      "git_blob_sha1": "cd5c6ab22d63a2cb1dbb35a69ef178c2b7f902fd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-worklist-check.log",
+      "bytes": 182,
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "git_blob_sha1": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-worklist-check.receipt.json",
+      "bytes": 825,
+      "sha256": "c10845cd76c82a132cf48a28dda75cd37e7449fe73086d696614d674c90824f1",
+      "git_blob_sha1": "ae2be4c6b454d7ffd1c5def173e36ae894143b2e"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.log",

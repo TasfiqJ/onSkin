@@ -692,6 +692,22 @@
       "sha256": "ae156726b859e85e23362ffe5d0c157bce546f5a98920d7523462bbe5cad4a0a"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-strict-report.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-strict-report.receipt.json",
+      "sha256": "3ced71f09db9008178bf6eca6e5ae80a7ca518eaf2dfeaebb8ba5ffbd77216ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-worklist-check.log",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/publication-worklist-check.receipt.json",
+      "sha256": "c10845cd76c82a132cf48a28dda75cd37e7449fe73086d696614d674c90824f1"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.log",
       "sha256": "6133e46a1fbe2f053ec6cc03fd4aab33141748050b3f7688e7876d85154b216d"
     },
