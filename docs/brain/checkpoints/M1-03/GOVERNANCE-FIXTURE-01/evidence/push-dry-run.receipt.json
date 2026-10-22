@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "PUSH_DRY_RUN",
+  "command": "git push --dry-run origin HEAD:refs/heads/stage/m1-retained-safety",
+  "working_directory": "//wsl.localhost/onskin-r6-verification/root/onskin-governance-fixture01",
+  "exit_code": 0,
+  "remote_mutation": false,
+  "observed_from": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "proposed_to": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "output": "To https://github.com/TasfiqJ/onSkin.git\n   dbcfce97..1dc58a5c  HEAD -> stage/m1-retained-safety\n",
+  "force": false,
+  "admission": "NONE"
+}

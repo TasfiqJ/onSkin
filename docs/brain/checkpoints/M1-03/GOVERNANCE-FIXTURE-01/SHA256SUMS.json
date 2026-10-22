@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "kind": "COMMITTED_REGULAR_GIT_BLOB_SHA256_MANIFEST",
+  "measured_source": {
+    "commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+    "tree": "b0a80f55a472fc28f02a5e993912314a17726f6c"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "self_excluded_to_avoid_hash_cycle": true,
+  "entries": [
+    {
+      "path": ".gitattributes",
+      "git_blob": "3c6f10f0aff17acb5e7438b17c8773431b1ae1e3",
+      "sha256": "6c27bcb17651fadff9242a5a02f7afa7f2820c885584d0be8f63010ec0254dd2",
+      "bytes": 2501,
+      "git_mode": "100644"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "git_blob": "c0af474371cc339e4bb41b107dc0a99647ed8a36",
+      "sha256": "a64b3e0e8e6d64b96cd3673dad928b6d0bb7715d1d0d606470d6899c76c92aed",
+      "bytes": 2135,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/BLOCKERS.md",
+      "git_blob": "36ec56afb2036a91ae827d85f04e40bdd33881ec",
+      "sha256": "2c71e0a3fcd2cafe7eac60556905c047bcdbc4be652d43053b123662ecfc77bf",
+      "bytes": 1549,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/README.md",
+      "git_blob": "ee7dd4fa300c26fcf4e6c974344d3c8d0dbdda4e",
+      "sha256": "5933491f1fa8c84f4d3b0df3b495cc6226da0a0ad9f9975edf424634e462258c",
+      "bytes": 2691,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/RESULTS.md",
+      "git_blob": "3524f07eef33efe692c142e74d0db704844ab0c7",
+      "sha256": "725a9bc18acc0898d4c2a5d694f3694acef04e15344bfee663124cc7201651e4",
+      "bytes": 2584,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/completion-report.json",
+      "git_blob": "8a451d998fc1b2453ecf3a452e8bc7160b2e71e0",
+      "sha256": "00a2b878741a815f648591c1bea09965109582ab16d648ebb4ddb891dc74a71f",
+      "bytes": 28792,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/approach01-smoke.log",
+      "git_blob": "3c40b086dd011e007a4b07ea706c6f73d8c305c9",
+      "sha256": "e982b7efa2453640684a72f3c8518d17f5a6262202ce443a10a2810bf08f5115",
+      "bytes": 601,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/baseline-governance.log",
+      "git_blob": "b41975d96b986071ead32211aa80552afa9f4b4e",
+      "sha256": "397483eb6db1429b9f13e687a4cea6c0d414824c7626f0088723bf9bdfbb9757",
+      "bytes": 19530,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/baseline-governance.receipt.json",
+      "git_blob": "68997b3489ada4130dfcbfc457fe5a815f272553",
+      "sha256": "91f7e4cd83509661597fa49e9afc1b44717cff8ea8484e155b38ad071abc2f68",
+      "bytes": 1076,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/custody-summary.json",
+      "git_blob": "ca31c6867e8fbb8ba1eb34633726f5a2da23ef82",
+      "sha256": "177b1f50c08cb4a3b1875ec29eeba908ac07f405c76f6f6eb86cb9df4ca73674",
+      "bytes": 1492,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/external-context-verification.receipt.json",
+      "git_blob": "876ab6b279e0382b0e2b9a7a8debbae3a0d204f7",
+      "sha256": "bd528f9dcc6944efbda459a94d96b3d0b9c40b5cdcbe5832a7b43f3bdadeeaa1",
+      "bytes": 591,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/fixture-ast-proof.log",
+      "git_blob": "7bc4b6a4932f2f3ce2b69aeda1a092e8b39d722f",
+      "sha256": "3bf897b808dcd81b0b58c7e5279c38cb4a8679fe403b1a69533fb5c34439b19f",
+      "bytes": 412,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/fixture-ast-proof.receipt.json",
+      "git_blob": "d4a403785542cef13061f593cd828f82d42632d3",
+      "sha256": "a9e42fe3eca5ece4f2bf3468324e87d210289bcae30e2982a631758415b4f3bb",
+      "bytes": 1070,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log",
+      "git_blob": "54ed4b03ddad17dcd5b057a08c20500eb7b2b4ae",
+      "sha256": "e37e684f6feeb2d048e5556abe83c294f9da56e9f7db56a7cd466210e729c7ae",
+      "bytes": 1161,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.receipt.json",
+      "git_blob": "20354996d6a88de3b4b6731c7b77c94d8c4de59f",
+      "sha256": "537f34ea0b8cb8057bf18e3516679383570fadfd63bd538a1eedcf842e5791c5",
+      "bytes": 952,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log",
+      "git_blob": "808811e5c2a75b32eeedaeae1cf70e01fa64c3c5",
+      "sha256": "5ce7e3c18260d20474cb69264bcf9e477e3c8980c17516856106f5f04039fe85",
+      "bytes": 315361,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.receipt.json",
+      "git_blob": "cb4a925d1fb0d2118348128d2c75d4bdc5050cd6",
+      "sha256": "e7e0058be47ffcece69b2b9da83cdfc2ef4581a560d42ccfa2eac6225546a70c",
+      "bytes": 993,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log",
+      "git_blob": "5397dc1473eebb7a59653741c3dd80daae0493de",
+      "sha256": "2e9545597e3c961888f1411ffb675cbca2e1e38ac2c336c9b9fa5fd0e443b691",
+      "bytes": 1152,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.receipt.json",
+      "git_blob": "4912f8757cb9bd20aa1c3b07b987f8d7981d2cc6",
+      "sha256": "5bb7645ecca1838caaf8f9eab39ce17b8ae70a1af1f21a62495e45d2961a119b",
+      "bytes": 967,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/fresh-npm-ci.log",
+      "git_blob": "5784621ca6b99cfdab72c6adc625ba9e719edc73",
+      "sha256": "fbc088e3de9613ed385c98971b64c4b032fbb1b97bd9ef3ede360f64c962cd5e",
+      "bytes": 1033,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/fresh-npm-ci.receipt.json",
+      "git_blob": "b998a12c82c41a31b796cddae2c60228df5fca3b",
+      "sha256": "aa683a5f7b19701adf03a867b800e71e876d78b2c4c9da6c18eb2cc6a6b63ef4",
+      "bytes": 883,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/full-governance.log",
+      "git_blob": "208d6324a21b8282a20aede3f3b0e4167843aadc",
+      "sha256": "78607e44a9be2152ea97854ca46ecd26a5315f8b5e0de83eb24fe9f80821569b",
+      "bytes": 16208,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/full-governance.receipt.json",
+      "git_blob": "623d6669ea8f79da870dbaa6fc490b9778eb986c",
+      "sha256": "8ae449e758d0a7b1b41ba99583c36907888ea37c8b5132fa7ba0bc6315b5d511",
+      "bytes": 1158,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_commit_source.py",
+      "git_blob": "22491c4dc49590031e27ac161f0eb502169a1fc0",
+      "sha256": "bfb78a7d1ce13b34c9faa1567e51f3b5ad1e09da73fc39242012bdcad0a30436",
+      "bytes": 1650,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_install.py",
+      "git_blob": "30a93c6f7ea9b6d802c280690773198cb186c6a6",
+      "sha256": "21e94a96233ca878bedb5ba4965d3a207b611cf569428bdc62b1c08c2fc35e8c",
+      "bytes": 2828,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_intake_evidence.py",
+      "git_blob": "20a41074a97cc0232a8ed5ad457a563cd8e3b670",
+      "sha256": "3d56b8c641d04b95c43279e370ae8e4eba32560067c07df932383df54ade86aa",
+      "bytes": 4080,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_preflight.py",
+      "git_blob": "520511d0f993eae7f121f07616b2c1bd766868ba",
+      "sha256": "ff7b1da74cb99c7eec00259b044a3e5ce1e52b0bd3fea0c5d9231ca58e280d82",
+      "bytes": 1469,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_profile_append.py",
+      "git_blob": "6e763a183775e868c7ef3f42c90ff3da410011d6",
+      "sha256": "4b5c9443b598d2dd4b4ff03e1cf77be81b4e28071a69c2fb0bd44f3079defb1e",
+      "bytes": 12451,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_report.py",
+      "git_blob": "9158c0e422c6a4ae58f4f6012b35c4f0f7036c0b",
+      "sha256": "71e03ab4d0f21c7e648d48f16012debc34b7b66851925c20174bcbb5e257cfbc",
+      "bytes": 16261,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_run.py",
+      "git_blob": "31082c0cbe0f69968dc0b9d5dcb0a20861e6ff37",
+      "sha256": "a0ae5c03da1b04752842551cadfbb18f4ce93d07abb87d88aa292cac4625c712",
+      "bytes": 5035,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_suite.py",
+      "git_blob": "f897747baa963462f5f3b9ed0383014ca6b53a41",
+      "sha256": "4b6ab130df22b5085e59eb2524ce1b65606e90b3cb48e6e78fe2cfbcbb177630",
+      "bytes": 764,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_test.py",
+      "git_blob": "5194307cc62b079e9eb43a1f88cdb7c49272e02c",
+      "sha256": "9271c21d1a7a370d63b4c791b29cfc2871ee2fa7e841b37cf42d671fecc5d67a",
+      "bytes": 11153,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_verify_delivery.py",
+      "git_blob": "abcc433fdfbb7d4f438308014b53b8188c6618c0",
+      "sha256": "1cb238c7c4c5a51a4588cf4ceee0a4d77c24524d175cbbfacae1c1dd49dd80a2",
+      "bytes": 1608,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/live-preflight.json",
+      "git_blob": "9d74d3e5266bc5930c901393f5bc796749f5378e",
+      "sha256": "6e8362e56e0bfe3dad027480c9da11b5c1fde0c69dd325b924d54e2146d8fe41",
+      "bytes": 1344,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-secret12.log",
+      "git_blob": "ad5df487270596bdb238af4ac1fd8f6edeb325d3",
+      "sha256": "bccd9c5fef7e3b0ad053a31001927343a2ee0b34a367496d375ab53494b3751b",
+      "bytes": 2103,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-secret12.receipt.json",
+      "git_blob": "7f31d496dc4597f083c440b56b89695dc97a748f",
+      "sha256": "d8a3df326a0015a358b08c2cbae2561d4465b107dd3e52499f279e1988c73023",
+      "bytes": 1221,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-security70.log",
+      "git_blob": "ba2b91211326957a80ed4b32e7d73006751dc644",
+      "sha256": "58235cc661d4f808d4a6ce67a65725e4743c4eba157e2d5b3a791e31f2c8dd2a",
+      "bytes": 39558,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-security70.receipt.json",
+      "git_blob": "172684a3c482dc0d8823328af2756e94b379e154",
+      "sha256": "3ce6244b9bdb35f2aa17dbf071164841d4ee8a84bca2f5e98884af7ac4f45954",
+      "bytes": 2198,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/precommit-diagnostics.json",
+      "git_blob": "904af677c346d9fc896b2fae081a4d99d88aa7c7",
+      "sha256": "42d7279bd621276880719fd72fcef6757797ac9da8787f69d325b17ead7fd345",
+      "bytes": 1316,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/precommit-profile.log",
+      "git_blob": "4739689312052a4a3292a4c6f9c39be7742a0890",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "bytes": 72,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/preflight.log",
+      "git_blob": "ddf5bf7be2226ab5c4a5b8871a6f716c411072ff",
+      "sha256": "33692699cbe33b9fcc25c77736889fe3cb74a2fc3ce8665247b886fa105785fe",
+      "bytes": 25684,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/push-dry-run.receipt.json",
+      "git_blob": "49c5bb362ae9075433d30475842bec33e4bc3007",
+      "sha256": "669cd1d44a613b2c03c1cd1d96ca48a78d2fbfba4e8e43afd7f7720d5a09be9e",
+      "bytes": 559,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/source-worklist-check.log",
+      "git_blob": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "bytes": 182,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/source-worklist-check.receipt.json",
+      "git_blob": "e6a7920a8e0a03a7aeadc5571d2205f51a947d90",
+      "sha256": "9e6b57618ba3ea4daeebe7826efcede031bbc39397d6a4ce01d75759006f87c9",
+      "bytes": 900,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/strict-profile.log",
+      "git_blob": "4739689312052a4a3292a4c6f9c39be7742a0890",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "bytes": 72,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/strict-profile.receipt.json",
+      "git_blob": "8f469b5da2052b38cc766392c3eacc98ed40d169",
+      "sha256": "e541de452caf29592cce8821576be1d2dea1d83f4b4e6894f102d853649dcb19",
+      "bytes": 1043,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/targeted-qr02.log",
+      "git_blob": "3443e64428b28c96e225a366eb9c061cb639205c",
+      "sha256": "d31fff3e6dfbfe5db83c1a51c9d3569535bce9dc42173660b3d31ac230fabc01",
+      "bytes": 1382,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/targeted-qr02.receipt.json",
+      "git_blob": "0d0251cd01272af9da1d37290dd88cd3a9b575d4",
+      "sha256": "82f792ec5c6dad562f6bd9c428cdc7fa3926b4fbd9f7d24f7ff12bb1fad34575",
+      "bytes": 1116,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/targeted-qr03.log",
+      "git_blob": "5ebba12c74ff515a3e48eb373f9446f77d39b83d",
+      "sha256": "456ffadf87c0ca1b1bcd55481c610bd8a54d5106afb2394ad47041b117c90976",
+      "bytes": 1428,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/targeted-qr03.receipt.json",
+      "git_blob": "f4a1bfa9a681747cd20df650d806d49409b00566",
+      "sha256": "05b203d8ee6d93a9431da5d7a59d765c70eae39e35eef8e8c64e2ff3fa35d32a",
+      "bytes": 1116,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/test-inventory.json",
+      "git_blob": "e0148324c2033b36d0a742dda070c16c6c292489",
+      "sha256": "e84488474c8caaedef60fd5573f67375dfa4d61f6c888582fd756090fbfb5418",
+      "bytes": 21331,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/00_READ_FIRST.md",
+      "git_blob": "06875818b81c76410df18ec2b630e9bee6cc800a",
+      "sha256": "83fe21f8c9b988ebb4aacc5dd624638d6a6c0822505507577443ed9e72a41359",
+      "bytes": 1455,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/01_BRAIN_REVIEW.md",
+      "git_blob": "fd8c41b6ac49bff8a6be992707d9a379ac710c43",
+      "sha256": "d940a7080d57597ba2d2391a916ab7b2d04da406c11424cf101626ecbe4f7f08",
+      "bytes": 2473,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/02_TASK.md",
+      "git_blob": "fbb15ddb854164d2ec981dac14cb7010afe0be46",
+      "sha256": "30a037b7b5829a04856c89c352232a4ae9070f9a4359ec2f86442c214280ed8d",
+      "bytes": 4118,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/03_SCOPE_AND_AUTHORITY.md",
+      "git_blob": "f7ee49dcbda7994282febb517cc6ccb998de082a",
+      "sha256": "39afce662b6975541291cce890c9e17aa57db3a2f263e9de890a504ebd054a5a",
+      "bytes": 1679,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/04_REPRODUCERS.md",
+      "git_blob": "42d06bf7a68eec1731f3e4d628c2c1aa3eb9c087",
+      "sha256": "0ef189e4ed38d250395240004fb47dc086e2d578cff28bb1bfccabada77faa2f",
+      "bytes": 1594,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/05_ACCEPTANCE.md",
+      "git_blob": "a9866c8e99b9cd6fe2635b899a80a60fee56df32",
+      "sha256": "01e2a715d97879dc98c713c0fe740c0ea704e4d94434ed10dc65a46055fdfe28",
+      "bytes": 1492,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/06_PROTECTED_GATES.md",
+      "git_blob": "0e10e07959010bc49fc4ca45fd7ac2fd980dc8e5",
+      "sha256": "7c98c9e3941d7d6ef9cf8ff481f00b72ac6c77cf9663d9d8cf39661a5ddb329a",
+      "bytes": 1618,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/07_DELIVERY_PROTOCOL.md",
+      "git_blob": "cc8382416ff9b5390bfff876c67189c0e7246fba",
+      "sha256": "d3f502e242f2d97462e3fa50954de9207e95c0f1e8956222852ac2450aea1170",
+      "bytes": 1970,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/08_STOP_RULES.md",
+      "git_blob": "2a0dae2933e0d9003d7592ab74fcdc391bcaa51f",
+      "sha256": "ea83a4fa988c85d3acd0e34d301602ec18e39012a5389921bf65863b08fca18b",
+      "bytes": 1072,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/FROZEN_FIXTURE_WITNESSES.json",
+      "git_blob": "2221d942378d7526f681c90db56ff9225a0c2c70",
+      "sha256": "22f6f9f05552e4c48c43c0fc9471537134a3ae29d3081daff07f946f551d52d8",
+      "bytes": 922,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "git_blob": "844da482f39248aee3581fcb2e1894a003a540f5",
+      "sha256": "bfd3a9827efc7c972a5bf395a05b4e010271e6d236d42eb097a375761b7240f8",
+      "bytes": 7864,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/TASK_MANIFEST.json",
+      "git_blob": "98a92fb49445d7fb59c767c4bbff82e6bac473d5",
+      "sha256": "6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+      "bytes": 2358,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/TASK_STATE.json",
+      "git_blob": "81051b6c83aaf851f6d5918c3791c42e13531b74",
+      "sha256": "c2b7c8c0075ab1e223e7262756924d0f327ef8c80a349060f155a503abcf1de8",
+      "bytes": 1490,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/verify_context.py",
+      "git_blob": "8569906b92b59322c2398d5ce412e44fd0086e95",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193",
+      "bytes": 2097,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/m103-governance-fixture01-active.json",
+      "git_blob": "c35aca6c9cd79e63cbb2033b9500355e43d6353d",
+      "sha256": "9863a2f3ddf4c20dfa34b42dd611eb94da562699e3395d600acf146995f7ff92",
+      "bytes": 1052,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/00_READ_FIRST.md",
+      "git_blob": "06875818b81c76410df18ec2b630e9bee6cc800a",
+      "sha256": "83fe21f8c9b988ebb4aacc5dd624638d6a6c0822505507577443ed9e72a41359",
+      "bytes": 1455,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/01_BRAIN_REVIEW.md",
+      "git_blob": "fd8c41b6ac49bff8a6be992707d9a379ac710c43",
+      "sha256": "d940a7080d57597ba2d2391a916ab7b2d04da406c11424cf101626ecbe4f7f08",
+      "bytes": 2473,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/02_TASK.md",
+      "git_blob": "fbb15ddb854164d2ec981dac14cb7010afe0be46",
+      "sha256": "30a037b7b5829a04856c89c352232a4ae9070f9a4359ec2f86442c214280ed8d",
+      "bytes": 4118,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/03_SCOPE_AND_AUTHORITY.md",
+      "git_blob": "f7ee49dcbda7994282febb517cc6ccb998de082a",
+      "sha256": "39afce662b6975541291cce890c9e17aa57db3a2f263e9de890a504ebd054a5a",
+      "bytes": 1679,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/04_REPRODUCERS.md",
+      "git_blob": "42d06bf7a68eec1731f3e4d628c2c1aa3eb9c087",
+      "sha256": "0ef189e4ed38d250395240004fb47dc086e2d578cff28bb1bfccabada77faa2f",
+      "bytes": 1594,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/05_ACCEPTANCE.md",
+      "git_blob": "a9866c8e99b9cd6fe2635b899a80a60fee56df32",
+      "sha256": "01e2a715d97879dc98c713c0fe740c0ea704e4d94434ed10dc65a46055fdfe28",
+      "bytes": 1492,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/06_PROTECTED_GATES.md",
+      "git_blob": "0e10e07959010bc49fc4ca45fd7ac2fd980dc8e5",
+      "sha256": "7c98c9e3941d7d6ef9cf8ff481f00b72ac6c77cf9663d9d8cf39661a5ddb329a",
+      "bytes": 1618,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/07_DELIVERY_PROTOCOL.md",
+      "git_blob": "cc8382416ff9b5390bfff876c67189c0e7246fba",
+      "sha256": "d3f502e242f2d97462e3fa50954de9207e95c0f1e8956222852ac2450aea1170",
+      "bytes": 1970,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/08_STOP_RULES.md",
+      "git_blob": "2a0dae2933e0d9003d7592ab74fcdc391bcaa51f",
+      "sha256": "ea83a4fa988c85d3acd0e34d301602ec18e39012a5389921bf65863b08fca18b",
+      "bytes": 1072,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/FROZEN_FIXTURE_WITNESSES.json",
+      "git_blob": "2221d942378d7526f681c90db56ff9225a0c2c70",
+      "sha256": "22f6f9f05552e4c48c43c0fc9471537134a3ae29d3081daff07f946f551d52d8",
+      "bytes": 922,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/SOURCE_EDIT_AUTHORIZATION.json",
+      "git_blob": "844da482f39248aee3581fcb2e1894a003a540f5",
+      "sha256": "bfd3a9827efc7c972a5bf395a05b4e010271e6d236d42eb097a375761b7240f8",
+      "bytes": 7864,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/TASK_MANIFEST.json",
+      "git_blob": "98a92fb49445d7fb59c767c4bbff82e6bac473d5",
+      "sha256": "6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+      "bytes": 2358,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/TASK_STATE.json",
+      "git_blob": "81051b6c83aaf851f6d5918c3791c42e13531b74",
+      "sha256": "c2b7c8c0075ab1e223e7262756924d0f327ef8c80a349060f155a503abcf1de8",
+      "bytes": 1490,
+      "git_mode": "100755"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/QR03-REVIEW01/verify_context.py",
+      "git_blob": "8569906b92b59322c2398d5ce412e44fd0086e95",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193",
+      "bytes": 2097,
+      "git_mode": "100755"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "git_blob": "da16c85453b463fa0cc8851a4784715f94a5af86",
+      "sha256": "405ebe4a3c39fea20375fe5b062ac13348c94e76e2bb7e5d2e34d126fef7a87f",
+      "bytes": 80078,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/brain/test_m103_governance_fixture01_profile.py",
+      "git_blob": "5194307cc62b079e9eb43a1f88cdb7c49272e02c",
+      "sha256": "9271c21d1a7a370d63b4c791b29cfc2871ee2fa7e841b37cf42d671fecc5d67a",
+      "bytes": 11153,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/brain/test_m103_quality_recovery02_profile.py",
+      "git_blob": "3f8575f662958186d452e0a1ba3c9a158875abe6",
+      "sha256": "9c65b7ae0ecf8b9d4b3ec92a91af314dfcd9022cf2420228fad685f14ab2da5b",
+      "bytes": 8949,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/brain/test_m103_quality_recovery03_profile.py",
+      "git_blob": "bac70f94721532846de20a6155907a572bd278be",
+      "sha256": "731d1c6390930d422f3f9ba8be1d7cd36275222fddd4c37875bfe53c6dc7a683",
+      "bytes": 9141,
+      "git_mode": "100644"
+    }
+  ]
+}

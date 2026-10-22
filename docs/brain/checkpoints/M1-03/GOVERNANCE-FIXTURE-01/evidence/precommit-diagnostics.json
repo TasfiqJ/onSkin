@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "PRECOMMIT_DIAGNOSTIC",
+  "admission": "NONE",
+  "source_snapshot_kind": "UNCOMMITTED_AUTHORIZED_DIFF",
+  "base_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "commands": [
+    {
+      "command": "python3.12 -B gf01_install.py",
+      "exit_code": 1,
+      "outcome": "Guard rejected its baseline-summary string check before creating the writer lock or editing any repository file; corrected the orchestration guard and reran successfully."
+    },
+    {
+      "command": "python3.12 -B gf01_install.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python3.12 -B scripts/brain/brain.py --profile M1-03 validate",
+      "exit_code": 0,
+      "output": "precommit-profile.log"
+    },
+    {
+      "command": "python3.12 -B -m unittest test_m103_governance_fixture01_profile.GovernanceFixture01.test_exact_report_and_predecessor_default_refusals test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals test_m103_quality_recovery02_profile.QualityRecovery02.test_widget_guard_hash_and_payload_path_changes_refuse -v",
+      "working_directory": "/root/onskin-governance-fixture01/scripts/brain",
+      "exit_code": 0,
+      "output": "approach01-smoke.log",
+      "tests_run": 3
+    }
+  ],
+  "fixture_repair_approaches": 1
+}

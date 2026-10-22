@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3.12\", \"-B\", \"scripts/brain/brain.py\", \"--profile\", \"M1-03\", \"validate\"]",
+  "working_directory": "/root/onskin-governance-fixture01",
+  "environment": "Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; CI=true; fresh no-hardlink full clone; dedicated npm cache; admission NONE",
+  "source_commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "source_tree": "b0a80f55a472fc28f02a5e993912314a17726f6c",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/strict-profile.log",
+    "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+  },
+  "counts": null,
+  "argv": [
+    "python3.12",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-03",
+    "validate"
+  ],
+  "started_at_utc": "2026-10-22T17:32:29.154989+00:00",
+  "finished_at_utc": "2026-10-22T17:32:33.323772+00:00"
+}

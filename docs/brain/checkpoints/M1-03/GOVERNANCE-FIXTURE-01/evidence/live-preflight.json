@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "PREFLIGHT_OBSERVATION",
+  "recorded_at_utc": "2026-10-22 17:10:13 UTC",
+  "repository": "TasfiqJ/onSkin",
+  "stage": {
+    "ref": "refs/heads/stage/m1-retained-safety",
+    "commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+    "tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64"
+  },
+  "main": {
+    "commit": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653"
+  },
+  "pr": {
+    "url": "https://github.com/TasfiqJ/onSkin/pull/9",
+    "number": 9,
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "head": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+    "base": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "head_ref": "stage/m1-retained-safety"
+  },
+  "external_manifest_sha256": "6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+  "verification": {
+    "command": "python -B verify_context.py --expected-manifest-sha256 6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+    "exit_code": 0,
+    "members_verified": 13
+  },
+  "source_writer_count": 1,
+  "source_writer_evidence": "Fresh independent Linux clone; process inventory found no other source writer in this checkout; only this root agent edits it; other observed review processes were read-only in separate checkouts.",
+  "admission": "NONE"
+}

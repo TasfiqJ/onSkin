@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3.12\", \"-B\", \"/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/gf01_run.py\", \"ast-proof\"]",
+  "working_directory": "/root/onskin-governance-fixture01",
+  "environment": "Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; CI=true; fresh no-hardlink full clone; dedicated npm cache; admission NONE",
+  "source_commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "source_tree": "b0a80f55a472fc28f02a5e993912314a17726f6c",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/fixture-ast-proof.log",
+    "sha256": "3bf897b808dcd81b0b58c7e5279c38cb4a8679fe403b1a69533fb5c34439b19f"
+  },
+  "counts": null,
+  "argv": [
+    "python3.12",
+    "-B",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/gf01_run.py",
+    "ast-proof"
+  ],
+  "started_at_utc": "2026-10-22T17:32:29.081431+00:00",
+  "finished_at_utc": "2026-10-22T17:32:29.151435+00:00"
+}

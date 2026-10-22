@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3.12\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/brain\", \"-p\", \"test_*.py\", \"-v\"]",
+  "working_directory": "/root/onskin-governance-fixture01",
+  "environment": "Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; CI=true; fresh no-hardlink full clone; dedicated npm cache; admission NONE",
+  "source_commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "source_tree": "b0a80f55a472fc28f02a5e993912314a17726f6c",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/full-governance.log",
+    "sha256": "78607e44a9be2152ea97854ca46ecd26a5315f8b5e0de83eb24fe9f80821569b"
+  },
+  "counts": {
+    "passed": 101,
+    "failed": 0,
+    "skipped": 2
+  },
+  "argv": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "started_at_utc": "2026-10-22T17:15:53.051663+00:00",
+  "finished_at_utc": "2026-10-22T17:28:29.508384+00:00"
+}

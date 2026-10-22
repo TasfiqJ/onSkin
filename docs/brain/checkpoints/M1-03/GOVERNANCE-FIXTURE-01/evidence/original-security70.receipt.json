@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3.12\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/phase9/security_acceptance\", \"-p\", \"test_contract.py\", \"-v\"]",
+  "working_directory": "/root/onskin-governance-fixture01",
+  "environment": "Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; CI=true; fresh no-hardlink full clone; dedicated npm cache; admission NONE",
+  "source_commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "source_tree": "b0a80f55a472fc28f02a5e993912314a17726f6c",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-security70.log",
+    "sha256": "58235cc661d4f808d4a6ce67a65725e4743c4eba157e2d5b3a791e31f2c8dd2a"
+  },
+  "counts": {
+    "passed": 62,
+    "failed": 8,
+    "skipped": 0
+  },
+  "argv": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_contract.py",
+    "-v"
+  ],
+  "started_at_utc": "2026-10-22T17:18:21.592368+00:00",
+  "finished_at_utc": "2026-10-22T17:21:08.059346+00:00",
+  "observed_inventory": {
+    "tests_run": 70,
+    "failure_events": 23,
+    "errors": 2,
+    "failed_test_methods": [
+      "test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder",
+      "test_contract.ContractTests.test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject",
+      "test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived",
+      "test_contract.ContractTests.test_original_workflow_omitted_added_or_linked_artifacts_reject",
+      "test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects",
+      "test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects",
+      "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+      "test_contract.ContractTests.test_owner_decision_digest_changes_for_any_original_raw_byte_change"
+    ]
+  }
+}
