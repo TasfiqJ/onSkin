@@ -1,0 +1,188 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "active_writers": 1,
+  "allowed_existing_files": [
+    {
+      "bytes": 2313,
+      "git_blob": "c06492f174db13630da9f8deb043a890d8d313f0",
+      "path": ".gitattributes",
+      "restriction": "Only append immutable checkpoint/review -text markers; no broad normalization changes",
+      "sha256": "0989b8860a3146dafc0821f6ffd18caa27c87c53bd25dbbd3819ca78991d52be"
+    },
+    {
+      "bytes": 2880,
+      "git_blob": "2a38ac20a7a0647b6a17a3a946a794ee88392227",
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "restriction": "Truthful current source, test, CI and blocked-gate delivery notes only",
+      "sha256": "2ba3170e4770b12cc96dda4e032f73a7609fb9bb0119959c0eaac8cfbb54b72e"
+    },
+    {
+      "bytes": 67627,
+      "git_blob": "7024ccaf09c0c64362fa4b185f59ff29c24aa878",
+      "path": "scripts/brain/m103_profile.py",
+      "restriction": "Append exact disjoint governance-fixture01 interval; historical QR01/QR02/QR03 defaults and refusal guards must not weaken",
+      "sha256": "8661c05110c04503154eca169be6a99f9c15d1ba0e0b4686d5263f674b4acf0c"
+    },
+    {
+      "bytes": 8057,
+      "git_blob": "71cf7490212eb8483dcb4eb9a9e7c1caa8db10c8",
+      "path": "scripts/brain/test_m103_quality_recovery02_profile.py",
+      "restriction": "Only setUp fixture source selection: copy exact frozen predecessor .gitattributes, m103_profile.py and QR02 active from historical Git bytes, never current ROOT; keep original test_ methods and assertions intact",
+      "sha256": "77b1520a0594ca737303148586572d98e4211d739d89f712ae0a87842cfc2bf0"
+    },
+    {
+      "bytes": 8250,
+      "git_blob": "80af42eb1310f05ddcb575f3aa164f6c2074cb22",
+      "path": "scripts/brain/test_m103_quality_recovery03_profile.py",
+      "restriction": "Only setUp fixture source selection: pin QR03 predecessor inputs to immutable delivered Git head rather than future current ROOT; preserve original test methods and assertions",
+      "sha256": "c9be236b649704b1c0cd01f0e178d7f8fb2d27122472bd9fc7a4506e064710e7"
+    },
+    {
+      "bytes": 137486,
+      "git_blob": "a7f1ef62d6f95bf021f36644721d1b1e75441f5c",
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "restriction": "Conditional, canonical clean producer only",
+      "sha256": "9a23dcb35c5a92c8932c5f761c443ba84b1b9b429d1158d4860488388fda3839"
+    },
+    {
+      "bytes": 81878,
+      "git_blob": "131edfa0b43a2a069636333e28b7aaa30a816257",
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "restriction": "Conditional, canonical clean producer only",
+      "sha256": "f0631ceef2c6976edd135bd178bbf1dd6aa3cda0cf36059a2edbfb23746ebf64"
+    }
+  ],
+  "authorization_id": "M103-GOVERNANCE-FIXTURE01-SOURCE-EDIT-01",
+  "base_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "base_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "branch": "stage/m1-retained-safety",
+  "clinical_research_or_release_authorized": false,
+  "hosted_replay_authorized": false,
+  "incremental_spend_usd": 0,
+  "iteration": "GOVERNANCE-FIXTURE-01",
+  "license_to_edit_scope": "ONLY two predecessor unittest setUp fixture source closures and disjoint M1 governance. No Security/DB/native/dependency or clinical source.",
+  "main_promotion_authorized": false,
+  "module_identities_count": 27,
+  "new_exact_files": [
+    "docs/brain/m103-governance-fixture01-active.json",
+    "scripts/brain/test_m103_governance_fixture01_profile.py"
+  ],
+  "new_prefixes": [
+    "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/",
+    "docs/brain/reviews/M1-03/QR03-REVIEW01/"
+  ],
+  "observed_main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "original_security_proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "prior_adr_count": 51,
+  "prior_reviews_mutable": false,
+  "protected_security_and_db_admission": "CLOSED",
+  "protected_source_go": false,
+  "protected_unchanged": [
+    {
+      "bytes": 3007,
+      "git_blob": "6217bd03730c530445861cc3e1e438a92f401b83",
+      "path": "apps/mobile/package.json",
+      "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f"
+    },
+    {
+      "bytes": 572797,
+      "git_blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "path": "package-lock.json",
+      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568"
+    },
+    {
+      "bytes": 46730,
+      "git_blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "path": "package.json",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
+    },
+    {
+      "bytes": 8350,
+      "git_blob": "9776ac1b83e79c39e71b34867481d71cb56a29a4",
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246"
+    },
+    {
+      "bytes": 247820,
+      "git_blob": "36eb99e320de7873bc569f1e88e93cdb7bbca158",
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "sha256": "e7158aaae26d12fa90cc6d6a002d9b45d325d8633c8c5b9ec19860b06e02a388"
+    },
+    {
+      "bytes": 19517,
+      "git_blob": "c8247b85acb7b123279411644fbb83f7efce7936",
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "sha256": "60930f751eb83bc95cdb2122099dda2bd7beeb9a17fe5e108d4296cda878eee5"
+    },
+    {
+      "bytes": 16969,
+      "git_blob": "f86cfa007bf90881d2fa0c93ae0f60f229e9b3fd",
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+    },
+    {
+      "bytes": 78932,
+      "git_blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c",
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "sha256": "aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510"
+    },
+    {
+      "bytes": 2327707,
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d"
+    },
+    {
+      "bytes": 13797,
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "bytes": 574209,
+      "git_blob": "e169484d968c9270ae2dbaa5eb113069025281db",
+      "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
+      "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655"
+    },
+    {
+      "bytes": 38158,
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+    },
+    {
+      "bytes": 17412,
+      "git_blob": "34e7b277c934f05bd102ef646b4c82a3453408ee",
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8"
+    },
+    {
+      "bytes": 2693,
+      "git_blob": "438e7d4388c9e04a13416e1acb216e0a920fa1d5",
+      "path": "docs/brain/current.json",
+      "sha256": "794244fc73f11c923c21a36d248d8301147d6a8a4a8fd61ddce34f1e315ba943"
+    },
+    {
+      "bytes": 44273,
+      "git_blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "path": "docs/brain/state/roadmap.json",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877"
+    },
+    {
+      "bytes": 961,
+      "git_blob": "1bfeaad1a9b32a472d77e11a52981d5ed6480f99",
+      "path": "docs/brain/m103-quality-recovery03-active.json",
+      "sha256": "7b10de99c1472a9cbd9260b915e3432ba10bec8d36c9fdaacf9475a764491413"
+    }
+  ],
+  "repository": "TasfiqJ/onSkin",
+  "roadmap_tasks_count": 47,
+  "schema_version": 1,
+  "source_edit_union_permitted": false,
+  "task_id": "M1-03"
+}

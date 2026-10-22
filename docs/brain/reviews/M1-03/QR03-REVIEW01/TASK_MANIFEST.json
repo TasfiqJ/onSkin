@@ -1,0 +1,77 @@
+{
+  "authorization_id": "M103-GOVERNANCE-FIXTURE01-SOURCE-EDIT-01",
+  "base_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "base_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "branch": "stage/m1-retained-safety",
+  "file_count": 13,
+  "files": [
+    {
+      "bytes": 1455,
+      "path": "00_READ_FIRST.md",
+      "sha256": "83fe21f8c9b988ebb4aacc5dd624638d6a6c0822505507577443ed9e72a41359"
+    },
+    {
+      "bytes": 2473,
+      "path": "01_BRAIN_REVIEW.md",
+      "sha256": "d940a7080d57597ba2d2391a916ab7b2d04da406c11424cf101626ecbe4f7f08"
+    },
+    {
+      "bytes": 4118,
+      "path": "02_TASK.md",
+      "sha256": "30a037b7b5829a04856c89c352232a4ae9070f9a4359ec2f86442c214280ed8d"
+    },
+    {
+      "bytes": 1679,
+      "path": "03_SCOPE_AND_AUTHORITY.md",
+      "sha256": "39afce662b6975541291cce890c9e17aa57db3a2f263e9de890a504ebd054a5a"
+    },
+    {
+      "bytes": 1594,
+      "path": "04_REPRODUCERS.md",
+      "sha256": "0ef189e4ed38d250395240004fb47dc086e2d578cff28bb1bfccabada77faa2f"
+    },
+    {
+      "bytes": 1492,
+      "path": "05_ACCEPTANCE.md",
+      "sha256": "01e2a715d97879dc98c713c0fe740c0ea704e4d94434ed10dc65a46055fdfe28"
+    },
+    {
+      "bytes": 1618,
+      "path": "06_PROTECTED_GATES.md",
+      "sha256": "7c98c9e3941d7d6ef9cf8ff481f00b72ac6c77cf9663d9d8cf39661a5ddb329a"
+    },
+    {
+      "bytes": 1970,
+      "path": "07_DELIVERY_PROTOCOL.md",
+      "sha256": "d3f502e242f2d97462e3fa50954de9207e95c0f1e8956222852ac2450aea1170"
+    },
+    {
+      "bytes": 1072,
+      "path": "08_STOP_RULES.md",
+      "sha256": "ea83a4fa988c85d3acd0e34d301602ec18e39012a5389921bf65863b08fca18b"
+    },
+    {
+      "bytes": 922,
+      "path": "FROZEN_FIXTURE_WITNESSES.json",
+      "sha256": "22f6f9f05552e4c48c43c0fc9471537134a3ae29d3081daff07f946f551d52d8"
+    },
+    {
+      "bytes": 7864,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "bfd3a9827efc7c972a5bf395a05b4e010271e6d236d42eb097a375761b7240f8"
+    },
+    {
+      "bytes": 1490,
+      "path": "TASK_STATE.json",
+      "sha256": "c2b7c8c0075ab1e223e7262756924d0f327ef8c80a349060f155a503abcf1de8"
+    },
+    {
+      "bytes": 2097,
+      "path": "verify_context.py",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193"
+    }
+  ],
+  "iteration": "GOVERNANCE-FIXTURE-01",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

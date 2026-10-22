@@ -35,8 +35,13 @@ class QualityRecovery03(unittest.TestCase):
             target.write_bytes(subprocess.check_output(['git', '-C', str(self.root), 'show', p.QR03_BASE + ':' + name]))
         for name in [self.checkpoint.rstrip('/'), p.QR03_REVIEW]:
             shutil.copytree(brain.ROOT / name, self.root / name)
-        for name in [p.QR03_ACTIVE, '.gitattributes', 'scripts/brain/m103_profile.py']:
-            shutil.copyfile(brain.ROOT / name, self.root / name)
+        frozen = 'dbcfce9770850d4655221bd3d4c3b5799553aed2'
+        brain.git_snapshot(brain.ROOT, dict(commit=frozen, tree='93d9a5789c1ce443cf0bcd86696fff044ff2fd64'), 'QR03 frozen fixture')
+        for name, oid, sha256, size in [('docs/brain/m103-quality-recovery03-active.json', '1bfeaad1a9b32a472d77e11a52981d5ed6480f99', '7b10de99c1472a9cbd9260b915e3432ba10bec8d36c9fdaacf9475a764491413', 961), ('.gitattributes', 'c06492f174db13630da9f8deb043a890d8d313f0', '0989b8860a3146dafc0821f6ffd18caa27c87c53bd25dbbd3819ca78991d52be', 2313), ('scripts/brain/m103_profile.py', '7024ccaf09c0c64362fa4b185f59ff29c24aa878', '8661c05110c04503154eca169be6a99f9c15d1ba0e0b4686d5263f674b4acf0c', 67627)]:
+            raw = subprocess.check_output(['git', '-C', str(brain.ROOT), 'show', frozen + ':' + name])
+            brain.require(brain.git(brain.ROOT, 'rev-parse', frozen + ':' + name) == oid and
+                brain.digest(raw) == sha256 and len(raw) == size, 'QR03 historical fixture bytes differ')
+            (self.root / name).write_bytes(raw)
         names = subprocess.check_output(['git', '-C', str(self.root), 'ls-files', '-z'])
         subprocess.run(['git', '-C', str(self.root), 'update-index', '--skip-worktree', '-z', '--stdin'], input=names, check=True)
         indexed = set(names.decode().strip('\0').split('\0'))

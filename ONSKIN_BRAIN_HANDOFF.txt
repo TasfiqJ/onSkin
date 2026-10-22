@@ -1,32 +1,8 @@
-onSkin V2 M1-03 QUALITY-RECOVERY-03
-PARTIAL SAFE SOURCE PATCH / SUBMITTED_REVIEW_REQUIRED; admission NONE.
-Authority M103-QUALITY-RECOVERY03-SOURCE-EDIT-01, external manifest 658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200;13 members verified.
-All10 writable +13 protected preimages verified before source edits;one writer,exact stage base.
-Implementation 30bbe8b5b75d1708aabcf630711767a1cb84506c / tree c3402d39118af4eca3873128c867f81dd2dab43b.
-Clean measured source 8f79f90da1b4ecb1f721ea55c93998173ed910ef / tree db1c3db6f93e2d341a6bd85de2ad9d87db76d0af.
-Delivery refs/heads/stage/m1-retained-safety;resolve final pushed SHA/tree from live ref.
-All later commits are QR03 checkpoint/root-handoff evidence only.
-Checkpoint docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/README.md,RESULTS.md,BLOCKERS.md,completion-report.json,SHA256SUMS.json.
-
-Only notifications~57.0.23 to~57.0.24;authentic npm11.20 lock exactly2 entries,no other package edges.
-Official tarball SHA256/SRI matches witness. Mobile Expo check PASS;Doctor21/21 PASS.
-Four mapped native entries+ten source pins unchanged;onlythree full-lock digest fields rebound.
-source_candidate/archiveRequired unchanged;no archive/device/privacy-review approval.
-Fresh npm ci1,032;root6,067 pass;typecheck/lint pass;0 cached tasks.
-Widget25,extension42,privacy77,archive fixtures238 pass. Secret12 pass.
-Ordinary full Linux discovery93 FAIL: failures=3, errors=1, skipped=2;original QR02 fixture copies current markers into old interval.
-Original test fixture correction is outside scope;Brain review/new exact authority required.
-Separate frozen-endpoint diagnostic93:91pass/2 genuine Windows-only skips;not a substitute for ordinary discovery.
-Original tests and default refusal rules retained;first failed diagnostics preserved. Original Security70 failures=23, errors=2,exit1,RED.
-Measured provider snapshot: iOS launch contract 39812735988 completed/success; Quality 39812735782 completed/failure; Security 39812735639 completed/failure.
-Fetch final-head CI separately;PENDING remains PENDING;no stale CI borrowing.
-
-Original Security findings/advisories/SBOM/coverage and expired2026-10-21 proposal remain owner-controlled.
-Canonical ECR DB Data limit exceeded unresolved;no image replacement,credentials,paid retry or hosted replay.
-Protected Security/native/widget/root manifest/DB/workflows/privacy baseline/Brain state unchanged.
-47 roadmap tasks,27 modules,51 prior ADRs;acceptedonlyM0-01/M0-02/M1-01/M1-02.
-PR9 draft/open/unmerged;main bbc28dc3d1f945191a81be56945b8bda7bb6ef73 unchanged.
-protected_source_go=false;main_promotion_authorized=false;hosted_replay_authorized=false.
-No self-acceptance,M2,J05,clinical,provider,archive/device,signing,TestFlight,deployment or release.
-Spend $0. Context MODERATE;compaction observed. Stop for independent Brain review.
-Founder handback: Codex is done.
+M1-03 / GOVERNANCE-FIXTURE-01
+Authorization M103-GOVERNANCE-FIXTURE01-SOURCE-EDIT-01.
+Exact external manifest verified; all 7 writable + 16 protected preimages match.
+Implementation and checks IN_PROGRESS. Historical test bodies remain unchanged.
+PR9 draft/open/unmerged; main unchanged.
+protected_source_go=false; main_promotion_authorized=false; hosted_replay_authorized=false.
+Accepted tasks M0-01/M0-02/M1-01/M1-02; spending USD0.
+Original Security and canonical ECR database owner gates remain closed.

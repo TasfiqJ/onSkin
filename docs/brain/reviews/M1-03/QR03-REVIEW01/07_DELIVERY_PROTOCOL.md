@@ -1,0 +1,9 @@
+# Branch, execution, evidence and stop protocol
+
+1. Read/verify exact R1-less GF01 context external manifest; independently verify protected and writable Git preimages. Confirm current stage exactly `dbcfce9770850d4655221bd3d4c3b5799553aed2` and PR9 draft/unmerged, main `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`. No force/rebase/reset/alternate branch.
+2. New task checkpoint has its own `inputs/` and immutable Brain review `docs/brain/reviews/M1-03/QR03-REVIEW01/`. Install the files byte-for-byte. Original reviews, source fixtures, acceptance records and previous checkpoints remain unchanged.
+3. Fix only the two synthetic predecessor fixture `setUp` sources, new disjoint governance and its new negative tests. Preserve old method bodies; use authentic frozen Git bytes. No borrow of prior grant.
+4. Run actual current-checkout full governance + root/secret/type/lint and worklist/report in a fresh no-hardlink checkout. Preserve failures and raw exits, even if initially red. Commit measured code, regenerate optional canonical outputs only from clean measured checkout, commit evidence-only tail, and normally push safe stage.
+5. Under `docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/`, provide `README.md`, `RESULTS.md`, `BLOCKERS.md`, strict `completion-report.json`, `SHA256SUMS.json`, sanitized hash-bound logs/receipts, clear implementation SHA/tree, measured source SHA/tree and final evidence head. Do not include raw secrets/patient sources.
+6. Fetch final-head exact GitHub PR9 Quality/Security/iOS jobs and merge checkout tree. State PASS/FAIL/PENDING correctly. Original canonical DB/owner Security will likely remain red; do not borrow historical green or mark them approved.
+7. Stop for independent Brain review. Founder handoff is `Codex is done`. `protected_source_go=false`, `main_promotion_authorized=false`, `hosted_replay_authorized=false`, spend0, accepted tasks only M0-01/M0-02/M1-01/M1-02. Context health report; no self-acceptance.
